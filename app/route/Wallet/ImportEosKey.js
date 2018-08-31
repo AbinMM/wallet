@@ -1,17 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, TextInput, TouchableHighlight, TouchableOpacity, Modal,Platform,KeyboardAvoidingView,ScrollView  } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import UImage from '../../utils/Img';
 import UColor from '../../utils/Colors'
+import { Eos } from "react-native-eosjs";
 import Button from '../../components/Button'
+import Header from '../../components/Header'
+import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
-import { Eos } from "react-native-eosjs";
-import UImage from '../../utils/Img';
-import Header from '../../components/Header'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
-import Constants from '../../utils/Constants'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
@@ -23,7 +23,6 @@ class ImportEosKey extends BaseComponent {
     title: '导入EOS私钥',
     header:null,
   }
-
 
   constructor(props) {
     super(props);
@@ -617,9 +616,9 @@ class ImportEosKey extends BaseComponent {
               {/* <View style={[styles.headout,{backgroundColor: UColor.arrow}]}>
                   <Text style={[styles.headtitle,{color: UColor.arrow}]}>直接复制粘贴钱包私钥文件内容至输入框。或者直接输入私钥</Text>
               </View>      */}
-              <View style={{backgroundColor: UColor.mainColor}}>
+              <View style={{paddingTop: ScreenUtil.autoheight(10),backgroundColor: UColor.mainColor}}>
                 {this.state.isSenior==true &&
-                <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]} >
+                <View style={[styles.biginptout,{backgroundColor: UColor.mainColor}]} >
                   {/* <Text style={[styles.inptitle,{color: UColor.fontColor}]}>私钥</Text> */}
                   <TextInput ref={(ref) => this._lphone = ref} value={this.state.ownerPk} returnKeyType="next" editable={true}
                     selectionColor={UColor.tintColor} placeholderTextColor={UColor.arrow} autoFocus={false} maxLength={51}
@@ -628,7 +627,7 @@ class ImportEosKey extends BaseComponent {
                     placeholder="粘贴或输入owner私钥" underlineColorAndroid="transparent"  multiline={true}  />
                 </View>}
 
-                <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]} >
+                <View style={[styles.biginptout,{backgroundColor: UColor.mainColor}]} >
                   {/* <Text style={[styles.inptitle,{color: UColor.fontColor}]}>私钥</Text> */}
                   <TextInput ref={(ref) => this._lphone = ref} value={this.state.activePk} returnKeyType="next" editable={true}
                     selectionColor={UColor.tintColor} placeholderTextColor={UColor.arrow} autoFocus={false} maxLength={51}
@@ -637,8 +636,8 @@ class ImportEosKey extends BaseComponent {
                     placeholder="粘贴或输入active私钥" underlineColorAndroid="transparent"  multiline={true}  />
                 </View>
 
-
-              <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]}>
+              </View>
+              <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderTopColor: UColor.secdColor}]}>
                   <View style={{flexDirection: 'row',}}>
                     <Text style={[styles.inptitle,{color: UColor.fontColor}]}>设置密码</Text>
                     <View style={{flexDirection: 'row',}}>
@@ -652,7 +651,7 @@ class ImportEosKey extends BaseComponent {
                     onChangeText={(password) => this.setState({walletpwd: password })} underlineColorAndroid="transparent"
                     placeholder="输入密码至少8位,建议大小写字母与数字混合" secureTextEntry={true} onChange={this.intensity()} />
               </View>
-              <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]} >
+              <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderTopColor: UColor.secdColor}]} >
                   <View style={{flexDirection: 'row',}}>
                     <Text style={[styles.inptitle,{color: UColor.fontColor}]}>确认密码</Text>
                   </View>
@@ -661,7 +660,7 @@ class ImportEosKey extends BaseComponent {
                       placeholder="重复密码" underlineColorAndroid="transparent"  autoFocus={false} onChange={this.intensity()}
                       onChangeText={(reWalletpwd) => this.setState({ reWalletpwd })} />  
                 </View>
-              </View>
+              
               <View style={styles.readout}>
                   <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
                       <Image source={this.state.isChecked?UImage.aab1:UImage.aab2} style={styles.readoutimg}/>
@@ -772,45 +771,46 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headout: {
-    paddingHorizontal: ScreenUtil.autowidth(25),
     paddingTop: ScreenUtil.autoheight(10),
-    paddingBottom: ScreenUtil.autoheight(15),
     marginBottom: ScreenUtil.autoheight(5),
+    paddingBottom: ScreenUtil.autoheight(15),
+    paddingHorizontal: ScreenUtil.autowidth(25),
   },
   headtitle: {
     fontSize: ScreenUtil.setSpText(15),
     lineHeight: ScreenUtil.autoheight(25),
   },
-
-  inptout: {
+  biginptout: {
+    paddingBottom: ScreenUtil.autoheight(10), 
     paddingHorizontal: ScreenUtil.autowidth(15),
-    borderBottomWidth: 1,
+  },
+  inptout: {
+    borderTopWidth: 1,
+    paddingHorizontal: ScreenUtil.autowidth(15),
   },
   inptitle: {
     flex: 1,
     fontSize: ScreenUtil.setSpText(15),
-    lineHeight: ScreenUtil.autoheight(30),
     paddingLeft: ScreenUtil.autowidth(5),
+    lineHeight: ScreenUtil.autoheight(30),
   },
   inpt: {
     height: ScreenUtil.autoheight(50),
     fontSize: ScreenUtil.setSpText(16),
   },
- 
   inptgo: {
+    borderWidth: 1,
+    borderRadius: 5,
+    textAlignVertical: 'top', 
     height: ScreenUtil.autoheight(90), 
     fontSize: ScreenUtil.setSpText(16),
     lineHeight: ScreenUtil.autoheight(25),
-    borderRadius: 5,
     paddingHorizontal: ScreenUtil.autowidth(10),
-    textAlignVertical: 'top', 
-    borderWidth: 1,
   },
-
   readout: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: ScreenUtil.autoheight(20),
   },
   readoutimg: {
@@ -824,14 +824,13 @@ const styles = StyleSheet.create({
   servicetext: {
     fontSize: ScreenUtil.setSpText(14),
   },
-
   importPriout: { 
-    height: ScreenUtil.autoheight(45), 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginHorizontal: ScreenUtil.autowidth(20),
-    marginTop: ScreenUtil.autoheight(20), 
     borderRadius: 5, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    height: ScreenUtil.autoheight(45), 
+    marginTop: ScreenUtil.autoheight(20), 
+    marginHorizontal: ScreenUtil.autowidth(20),
   },
   importPritext: {
     fontSize: ScreenUtil.setSpText(15),
@@ -842,17 +841,17 @@ const styles = StyleSheet.create({
   },
   pupuo: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   modalStyle: {
-    width: ScreenWidth - 20,
     borderRadius: 5,
+    width: ScreenWidth - 20,
     paddingHorizontal: ScreenUtil.autowidth(25),
   },
   modalStyle1: {
-    width: ScreenWidth,
     borderRadius: 5,
+    width: ScreenWidth,
     paddingHorizontal: ScreenUtil.autowidth(10),
   },
   subView: {
@@ -863,29 +862,29 @@ const styles = StyleSheet.create({
     marginVertical: ScreenUtil.autoheight(15),
   },
   buttonView: {
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
     height: ScreenUtil.autoheight(50),
     marginVertical: ScreenUtil.autoheight(10),
-    borderRadius: 6,
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   buttoncols: {
     fontSize: ScreenUtil.setSpText(16),
   },
   titleText: {
     flex: 1,
-    fontSize: ScreenUtil.setSpText(18),
     fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: ScreenUtil.setSpText(18),
   },
   titleout: {
+    textAlign: 'center',
     width: ScreenUtil.autowidth(40),
     fontSize: ScreenUtil.setSpText(28),
-    textAlign: 'center',
   },
   contentText: {
-    fontSize: ScreenUtil.setSpText(14),
     textAlign: 'left',
+    fontSize: ScreenUtil.setSpText(14),
     marginVertical: ScreenUtil.autoheight(20),
   },
   prompttext: {
@@ -898,10 +897,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   copytext: {
+    textAlign: 'left',
     fontSize: ScreenUtil.setSpText(14),
-    textAlign: 'left'
   },
-
   logout:{
     flex: 1,
     alignItems: 'center',
@@ -916,68 +914,63 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(14),
     lineHeight: ScreenUtil.autoheight(30),
   },
-
   businesmodal: {
     flex: 1,
     flexDirection:'column',
     justifyContent: 'flex-end',
   },
   businestouchable: {
-      flex: 1, 
-      justifyContent: 'flex-end', 
+    flex: 1, 
+    justifyContent: 'flex-end', 
   },
-
   businessout: {
-    height: ScreenUtil.autoheight(40),
     borderRadius: 5,
+    flexDirection: "row",
+    alignItems: 'center',
+    borderBottomWidth: 0.5,
+    justifyContent: 'center',
+    height: ScreenUtil.autoheight(40),
     marginVertical: ScreenUtil.autoheight(2),
     marginHorizontal: ScreenUtil.autowidth(5),
     paddingHorizontal: ScreenUtil.autowidth(20),
-    flexDirection: "row",
-    borderBottomWidth: 0.5,
-    justifyContent: 'center',
-    alignItems: 'center'
-},
-liststrip: {
+  },
+  liststrip: {
     flex: 1,
     flexDirection: "row",
     alignItems: 'center',
-},
-
-payertext: {
-  flex: 3,
-  fontSize: ScreenUtil.setSpText(18),
-  textAlign: 'left'
-},
-
+  },
+  payertext: {
+    flex: 3,
+    textAlign: 'left',
+    fontSize: ScreenUtil.setSpText(18),
+  },
   buttonViewEnter: {
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
     height: ScreenUtil.autoheight(50),
     marginVertical: ScreenUtil.autoheight(10),
-    borderRadius: 6,
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   buttonEnter: {
     fontSize: ScreenUtil.setSpText(16),
   },
-
   taboue: {
-    justifyContent: 'center', 
     alignItems: 'center',
+    justifyContent: 'center', 
   },
   tabview: {
-      width: ScreenUtil.autowidth(27),
-      height: ScreenUtil.autowidth(27),
-      margin: ScreenUtil.autowidth(5),
-      borderWidth: 1,
+    borderWidth: 1,
+    margin: ScreenUtil.autowidth(5),
+    width: ScreenUtil.autowidth(27),
+    height: ScreenUtil.autowidth(27),
   },
   tabimg: {
-      width: ScreenUtil.autowidth(25), 
-      height: ScreenUtil.autowidth(25),
+    width: ScreenUtil.autowidth(25), 
+    height: ScreenUtil.autowidth(25),
   },
   tab: {
     flex: 1,
-}
+  }
 });
 
 export default ImportEosKey;

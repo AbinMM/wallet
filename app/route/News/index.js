@@ -2,22 +2,20 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { BackHandler, NavigationActions, Dimensions,NativeModules, Image, ScrollView, DeviceEventEmitter, InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, WebView, FlatList, Platform, Clipboard, TouchableHighlight,Linking, } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
-import Swiper from 'react-native-swiper';
-import store from 'react-native-simple-store';
-import UColor from '../../utils/Colors'
-import Button from '../../components/Button'
 import moment from 'moment';
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
+import Swiper from 'react-native-swiper';
+import Button from '../../components/Button'
 import Header from '../../components/Header'
+import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import NavigationUtil from '../../utils/NavigationUtil'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import Constants from '../../utils/Constants'
 require('moment/locale/zh-cn');
 var WeChat = require('react-native-wechat');
-
 const pages = [];
 let loadMoreTime = 0;
 let currentLoadMoreTypeId;
@@ -25,6 +23,7 @@ var ScreenWidth = Dimensions.get('window').width;
 var ScreenHeight = Dimensions.get('window').height;
 var cangoback = false;
 var ITEM_HEIGHT = 100;
+
 @connect(({ banner, newsType, news, wallet}) => ({ ...banner, ...newsType, ...news, ...wallet }))
 class News extends React.Component {
 
@@ -246,12 +245,7 @@ class News extends React.Component {
             </View>
           </Button>}
 
-          <Swiper
-            height={this.state.h}
-            loop={true}  
-            autoplay={true}
-            horizontal={true}  
-            autoplayTimeout={5} 
+          <Swiper height={this.state.h} loop={true} autoplay={true} horizontal={true} autoplayTimeout={5} 
             paginationStyle={{ bottom: ScreenUtil.autoheight(10) }}
             dotStyle={{ backgroundColor: 'rgba(255,255,255,.2)', width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}
             activeDotStyle={{ backgroundColor: UColor.tintColor, width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}>
@@ -345,43 +339,44 @@ class News extends React.Component {
 
 const styles = StyleSheet.create({
   labelStyleB: {
+    margin: 0, 
     fontSize: ScreenUtil.setSpText(15), 
-    margin: 0, marginBottom: ScreenUtil.autoheight(12), 
     paddingTop: ScreenUtil.autoheight(12), 
+    marginBottom: ScreenUtil.autoheight(12), 
   },
   labelStyleY: {
-    fontSize: ScreenUtil.setSpText(15), 
     margin: 0, 
+    fontSize: ScreenUtil.setSpText(15), 
+    paddingTop: ScreenUtil.autoheight(18),
     marginBottom: ScreenUtil.autoheight(12), 
-    paddingTop: ScreenUtil.autoheight(18), 
+    
   },
   indicatorStyleB: {
-    width: ScreenWidth / 3 - ScreenUtil.autowidth(20),
+    borderRadius:25, 
     height: ScreenUtil.autoheight(21), 
     marginLeft: ScreenUtil.autowidth(10),
-    borderRadius:25, 
     marginBottom: ScreenUtil.autoheight(11), 
+    width: ScreenWidth / 3 - ScreenUtil.autowidth(20),
   },
   indicatorStyleY: {
-    width: ScreenWidth / 3 - 40, 
-    marginLeft: 20
+    marginLeft: 20,
+    width: ScreenWidth / 3 - 40,
   },
   txt: {
+    color: 'white',
     textAlign: 'center',
     textAlignVertical: 'center',
-    color: 'white',
     fontSize: ScreenUtil.setSpText(30),
-},
+  },
   container: {
     flex: 1,
     flexDirection: 'column',
   },
- 
   row: {
     flex: 1,
     flexDirection: "column",
-    paddingHorizontal: ScreenUtil.autowidth(15),
     paddingTop: ScreenUtil.autoheight(10),
+    paddingHorizontal: ScreenUtil.autowidth(15),
   },
   rowFooter: {
     flex: 1,
@@ -389,37 +384,35 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: ScreenUtil.autoheight(10),
   },
-
   systemSettingTip: {
     width: ScreenWidth,
-    height: ScreenUtil.autoheight(40),
     flexDirection: "row",
     alignItems: 'center', 
+    height: ScreenUtil.autoheight(40),
   },
   systemSettingText: {
     flex: 1,
     textAlign: 'center',
-    fontSize: ScreenUtil.setSpText(14)
+    fontSize: ScreenUtil.setSpText(14),
   },
   systemSettingArrow: {
-    marginRight: ScreenUtil.autowidth(5)
+    marginRight: ScreenUtil.autowidth(5),
   },
 
   journalism: {
     fontSize: ScreenUtil.setSpText(15),  
     marginTop: ScreenUtil.autoheight(10), 
-    lineHeight: ScreenUtil.autoheight(25)
+    lineHeight: ScreenUtil.autoheight(25),
   },
   moretext: {
+    textAlign: "right", 
     fontSize: ScreenUtil.setSpText(13), 
     lineHeight: ScreenUtil.autoheight(20), 
-    textAlign: "right", 
   },
-
   pastTime: {
     fontSize: ScreenUtil.setSpText(13), 
+    marginTop: ScreenUtil.autoheight(10),
     paddingBottom: ScreenUtil.autoheight(10), 
-    marginTop: ScreenUtil.autoheight(10)
   },
   spotout: {
     flex: 1, 
@@ -431,8 +424,8 @@ const styles = StyleSheet.create({
     height: ScreenUtil.autowidth(18)
   },
   updowntext: {
-    marginLeft: ScreenUtil.autowidth(5), 
     fontSize: ScreenUtil.setSpText(13),
+    marginLeft: ScreenUtil.autowidth(5), 
   },
 });
 

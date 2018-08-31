@@ -82,7 +82,7 @@ var ScreenHeight = Dimensions.get('window').height;
 // import Eosjs from '../components/eosjs/Eosjs'
 var WeChat = require('react-native-wechat');
 
-var isRam = false;
+var isRam = true;
 export const setIsRamSelect = (isRam) =>{
   isRam = isRam;
 }
