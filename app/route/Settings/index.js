@@ -164,34 +164,40 @@ class Setting extends React.Component {
         if(this.props.loginUser){
           try {
             this.props.dispatch({type:'login/getselectPoint',payload:{},callback:(integral)=>{
+              const view = <Text style={styles.inptpasstext}>此次活动已圆满结束, 期待下一次有您的参与。</Text>
+              EasyShowLD.dialogShow("温馨提示", view, "查看", "关闭", () => {
+                navigate('Web', { title: "活动奖励领取条件", url: "http://static.eostoken.im/html/20180827/1535368470588.html" });
+                EasyShowLD.dialogClose()
+              }, () => { EasyShowLD.dialogClose() });
+
               // EasyShowLD.loadingClose();
-              if(integral.code == 605){
-                const view = <Text style={styles.inptpasstext}>您当前的积分还不符合领取条件,请继续努力！</Text>
-                EasyShowLD.dialogShow("温馨提示", view, "查看", "关闭", () => {
-                  navigate('Web', { title: "活动奖励领取条件", url: "http://static.eostoken.im/html/20180827/1535368470588.html" });
-                  EasyShowLD.dialogClose()
-                }, () => { EasyShowLD.dialogClose() });
-              }else if(integral.code == 607){
-                const view = <Text style={styles.inptpasstext}>您没有活动奖励可领取！</Text>
-                EasyShowLD.dialogShow("温馨提示",view,"知道了",null,()=>{EasyShowLD.dialogClose()}); 
-              }else if(integral.code == 0){         
-                EasyShowLD.loadingClose();
-                if (Platform.OS == 'ios') {
-                  var th = this;
-                    this.handle = setTimeout(() => {
-                      th._setModalVisible();
-                      th.setState({walletName: this.props.defaultWallet ? this.props.defaultWallet.name : ''}); 
-                    }, 100);
-                  }else{
-                    this._setModalVisible();
-                    this.setState({walletName: this.props.defaultWallet ? this.props.defaultWallet.name : ''}); 
-                  }
-                // this._setModalVisible();
-                // this.setState({walletName: this.props.defaultWallet ? this.props.defaultWallet.name : ''}); 
-              }else{
-                EasyShowLD.loadingClose();
-                EasyToast.show(integral && integral.msg ? integral.msg : "抱歉,您未达到奖励获取条件");
-              }
+              // if(integral.code == 605){
+              //   const view = <Text style={styles.inptpasstext}>您当前的积分还不符合领取条件,请继续努力！</Text>
+              //   EasyShowLD.dialogShow("温馨提示", view, "查看", "关闭", () => {
+              //     navigate('Web', { title: "活动奖励领取条件", url: "http://static.eostoken.im/html/20180827/1535368470588.html" });
+              //     EasyShowLD.dialogClose()
+              //   }, () => { EasyShowLD.dialogClose() });
+              // }else if(integral.code == 607){
+              //   const view = <Text style={styles.inptpasstext}>您没有活动奖励可领取！</Text>
+              //   EasyShowLD.dialogShow("温馨提示",view,"知道了",null,()=>{EasyShowLD.dialogClose()}); 
+              // }else if(integral.code == 0){         
+              //   EasyShowLD.loadingClose();
+              //   if (Platform.OS == 'ios') {
+              //     var th = this;
+              //       this.handle = setTimeout(() => {
+              //         th._setModalVisible();
+              //         th.setState({walletName: this.props.defaultWallet ? this.props.defaultWallet.name : ''}); 
+              //       }, 100);
+              //     }else{
+              //       this._setModalVisible();
+              //       this.setState({walletName: this.props.defaultWallet ? this.props.defaultWallet.name : ''}); 
+              //     }
+              //   // this._setModalVisible();
+              //   // this.setState({walletName: this.props.defaultWallet ? this.props.defaultWallet.name : ''}); 
+              // }else{
+              //   EasyShowLD.loadingClose();
+              //   EasyToast.show(integral && integral.msg ? integral.msg : "抱歉,您未达到奖励获取条件");
+              // }
             }})
           }catch (error) {
             EasyShowLD.dialogClose();
@@ -282,9 +288,9 @@ class Setting extends React.Component {
             </View>
             
             <View style={styles.footer}>
-              <Text style={[styles.foottext,{color: UColor.arrow}]}>© 2018 eostoken all rights reserved </Text>
-              {/* <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text> */}
-              <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V2.3.2</Text>
+              <Text style={styles.foottext}>© 2018 eostoken all rights reserved </Text>
+              {/* <Text style={styles.foottext}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text> */}
+              <Text style={styles.foottext}>EOS专业版钱包 V2.3.2.1</Text>
             </View>
       </ScrollView>
       <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
