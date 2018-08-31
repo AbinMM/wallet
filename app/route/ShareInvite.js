@@ -95,7 +95,7 @@ class ShareInvite extends React.Component {
           }
         });
     });
-     });
+     },() => { EasyShowLD.dialogClose() });
   }
 
   render() {
