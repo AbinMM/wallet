@@ -57,6 +57,17 @@ class Splash extends React.Component {
           UColor.riseColor= '#F25C49'; //涨卖收色 UColor.riseColor
           UColor.fallColor= '#25B36B'; //跌买出色 UColor.fallColor
           UColor.navigation= '#2279C5', //顶部标题背景色 UColor.navigation
+          // UImage.add=require('../img/day/add.png');
+          // UImage.more=require('../img/day/more.png');
+          // UImage.qr=require('../img/day/qr.png');
+          // UImage.resources=require('../img/day/resources.png');
+          // UImage.transfer=require('../img/day/transfer.png');
+         
+
+
+
+
+
           UImage.guide=require('../img/day/guide.png');
           UImage.my_community=require('../img/day/my_community.png');
           UImage.account_manage=require('../img/day/account_manage.png');
@@ -79,7 +90,7 @@ class Splash extends React.Component {
           UImage.up=require('../img/day/up.png');
           UImage.down=require('../img/day/down.png');
           UImage.newscoins=require('../img/day/newscoins.png');
-
+          UImage.home_bg=require('../img/day/home_bg.png');
           UImage.lock=require('../img/day/lock.png');
           UImage.privatekey=require('../img/day/privatekey.png');
           UImage.publickey=require('../img/day/publickey.png');
