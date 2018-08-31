@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, } from 'react-native';
 import ScreenUtil from '../../utils/ScreenUtil'
 import UColor from '../../utils/Colors'
+import Header from '../../components/Header'
 import Button from '../../components/Button'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import QRCode from 'react-native-qrcode-svg';
@@ -20,25 +21,14 @@ var dismissKeyboard = require('dismissKeyboard');
 
 @connect(({wallet, login }) => ({ ...wallet, ...login }))
 class ActivationAt extends BaseComponent {
-    static navigationOptions = ({ navigation }) => {
-       
-        return {                       
-          headerTitle:'激活账户',
-          headerStyle:{
-                paddingTop: ScreenUtil.autoheight(20),
-                backgroundColor: UColor.mainColor,
-                borderBottomWidth:0,
-            },
-          headerRight: (<Button  onPress={navigation.state.params.onPress}>  
-                <Text style={{color: UColor.arrow, fontSize: ScreenUtil.setSpText(18),justifyContent: 'flex-end',paddingRight:15}}>删除该账号</Text>
-          </Button>),                  
-        };
-      };
-
-      // 构造函数  
+    static navigationOptions = {                    
+        headerTitle:'激活账户',
+        header:null,                
+    };
+     
+    // 构造函数  
     constructor(props) { 
         super(props);
-        this.props.navigation.setParams({ onPress: this.checkDeleteWallet });
         this.state = {
             cpu:"0.1",
             net:"0.1",
@@ -159,7 +149,8 @@ class ActivationAt extends BaseComponent {
         const view =
         <View style={styles.passoutsource}>
             <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-            selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  style={styles.inptpass} maxLength={Constants.PWD_MAX_LENGTH}
+            selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
+            style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}     
             placeholderTextColor={UColor.arrow}  placeholder="请输入密码"  underlineColorAndroid="transparent" />
         </View>
         EasyShowLD.dialogShow("密码", view, "确定", "取消", () => {
@@ -273,52 +264,53 @@ class ActivationAt extends BaseComponent {
     }
 
     render() {
-        return (<View style={styles.container}>
+        return (<View style={[styles.container,{backgroundColor: UColor.mainColor}]}>
+         <Header {...this.props} onPressLeft={true} title="激活账户" onPressRight={this.checkDeleteWallet.bind()} subName="删除该账号"/>
         <ScrollView keyboardShouldPersistTaps="always">
             <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-                <View style={styles.header}>
-                    <View style={styles.inptoutbg}>
+                <View style={[styles.header,{borderTopColor: UColor.secdColor,backgroundColor: UColor.mainColor}]}>
+                    <View style={[styles.inptoutbg,{backgroundColor: UColor.mainColor}]}>
                         <View style={styles.headout}>
-                            <Text style={styles.inptitle}>重要说明：</Text>
-                            <Text style={styles.headtitle}>激活EOS主网账户需要消耗EOS，支付完成后将激活该账户.目前激活EOS账户最低内存约需1.5EOS</Text>
+                            <Text style={[styles.inptitle,{color: UColor.fontColor}]}>重要说明：</Text>
+                            <Text style={[styles.headtitle,{color: UColor.arrow}]}>激活EOS主网账户需要消耗EOS，支付完成后将激活该账户.目前激活EOS账户最低内存约需1.5EOS</Text>
                         </View>  
-                        <View style={styles.inptoutgo} >
+                        <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
                             <TouchableOpacity onPress={() => this._onPressListItem()}>
                                 <View style={styles.ionicout}>
-                                    <Text style={styles.prompttext}>您的EOS账户信息如下</Text>
+                                    <Text style={[styles.prompttext,{color: UColor.tintColor}]}>您的EOS账户信息如下</Text>
                                     <Ionicons name={this.state.Invalid ? "ios-arrow-down-outline" : "ios-arrow-forward-outline"} size={14} color={UColor.tintColor}/>
                                 </View>
                             </TouchableOpacity>
                             {this.state.Invalid&&
-                            <View style={styles.inptgo}>
-                                <Text style={styles.headtitle}>账户名称：{this.state.name}</Text>
-                                <Text style={styles.headtitle}>Active公钥：{this.state.activePublic}</Text>
-                                <Text style={styles.headtitle}>Owner公钥：{this.state.ownerPublic}</Text>
+                            <View style={[styles.inptgo,{backgroundColor: UColor.secdColor}]}>
+                                <Text style={[styles.headtitle,{color: UColor.arrow}]}>账户名称：{this.state.name}</Text>
+                                <Text style={[styles.headtitle,{color: UColor.arrow}]}>Active公钥：{this.state.activePublic}</Text>
+                                <Text style={[styles.headtitle,{color: UColor.arrow}]}>Owner公钥：{this.state.ownerPublic}</Text>
                             </View>}
                         </View>
                         <View style={styles.headout}>
-                            <Text style={styles.inptitle}>扫码激活说明</Text>
-                            <Text style={styles.headtitle}>用另一个有效的EOS账号自助激活或请求朋友帮助您支付激活，还可以联系官方小助手付费激活。</Text>
+                            <Text style={[styles.inptitle,{color: UColor.fontColor}]}>扫码激活说明</Text>
+                            <Text style={[styles.headtitle,{color: UColor.arrow}]}>用另一个有效的EOS账号自助激活或请求朋友帮助您支付激活，还可以联系官方小助手付费激活。</Text>
                         </View>
                         <View style={styles.codeout}>
-                            <View style={styles.qrcode}>
+                            <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
                                <QRCode size={ScreenUtil.setSpText(120)}  value = {this.getQRCode()} />
                             </View>
                         </View> 
                     </View> 
                     <Button onPress={() => this.contactWeChataide()}>
-                        <View style={styles.importPriout}>
-                            <Text style={styles.importPritext}>联系官方小助手激活</Text>
+                        <View style={[styles.importPriout,{backgroundColor: UColor.tintColor}]}>
+                            <Text style={[styles.importPritext,{color: UColor.btnColor}]}>联系官方小助手激活</Text>
                         </View>
                     </Button>
                     <Button onPress={() => this.onShareFriend()}>
-                        <View style={styles.importPriout}>
-                            <Text style={styles.importPritext}>请朋友协助激活</Text>
+                        <View style={[styles.importPriout,{backgroundColor: UColor.tintColor}]}>
+                            <Text style={[styles.importPritext,{color: UColor.btnColor}]}>请朋友协助激活</Text>
                         </View>
                     </Button>
                     <Button onPress={() => this.checkAccountActive()}>
-                        <View style={styles.importPriout}>
-                            <Text style={styles.importPritext}>激活（已支付完成）</Text>
+                        <View style={[styles.importPriout,{backgroundColor: UColor.tintColor}]}>
+                            <Text style={[styles.importPritext,{color: UColor.btnColor}]}>激活（已支付完成）</Text>
                         </View>
                     </Button>
                 </View>
@@ -328,25 +320,32 @@ class ActivationAt extends BaseComponent {
     }
 }
 const styles = StyleSheet.create({
+    passoutsource: {
+        flexDirection: 'column', 
+        alignItems: 'center'
+    },
+    inptpass: {
+        textAlign: "center",
+        height: ScreenUtil.autoheight(45),
+        width: ScreenWidth-100,
+        paddingBottom: ScreenUtil.autoheight(5),
+        fontSize: ScreenUtil.setSpText(16),
+        borderBottomWidth: 1,
+    },
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: UColor.mainColor,
     },
     header: {
         borderTopWidth: ScreenUtil.autowidth(10),
-        borderTopColor: UColor.secdColor,
-        backgroundColor: UColor.mainColor,
     },
     inptoutbg: {
-        backgroundColor: UColor.mainColor,
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
     headout: {
         paddingTop: ScreenUtil.autoheight(10),
     },
     inptoutgo: {
-        backgroundColor: UColor.mainColor,
     },
     ionicout: {
         flexDirection: "row",
@@ -355,7 +354,6 @@ const styles = StyleSheet.create({
     },
     prompttext: {
         fontSize: ScreenUtil.setSpText(15),
-        color: UColor.tintColor,
         marginVertical: ScreenUtil.autoheight(5),
         marginRight: ScreenUtil.autowidth(10),
     },
@@ -363,15 +361,12 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: ScreenUtil.setSpText(15),
         lineHeight: ScreenUtil.autoheight(30),
-        color: UColor.fontColor,
     },
     inptgo: {
         paddingHorizontal: ScreenUtil.autowidth(20),
         paddingTop: ScreenUtil.autoheight(15),
-        backgroundColor: UColor.secdColor,
     },
     headtitle: {
-        color: UColor.arrow,
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(25),
         marginBottom: ScreenUtil.autoheight(10),
@@ -385,7 +380,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     qrcode: {
-        backgroundColor: UColor.fontColor,
         padding: ScreenUtil.autowidth(5),
     },
 
@@ -396,11 +390,9 @@ const styles = StyleSheet.create({
         marginHorizontal: ScreenUtil.autowidth(20),
         marginBottom: ScreenUtil.autoheight(15),
         borderRadius: 5,
-        backgroundColor:  UColor.tintColor,
     },
     importPritext: {
         fontSize: ScreenUtil.setSpText(15),
-        color: UColor.fontColor,
     },
 
 });

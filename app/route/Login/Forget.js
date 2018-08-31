@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { StyleSheet, View, Text, ScrollView, Image, TextInput, TouchableOpacity, } from 'react-native';
 import UImage from '../../utils/Img';
 import UColor from '../../utils/Colors'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import Button from  '../../components/Button'
 import { EasyToast } from '../../components/Toast';
@@ -19,11 +20,7 @@ class Forget extends BaseComponent {
 
   static navigationOptions = {
     title: '忘记密码',
-    headerStyle: {
-      paddingTop: ScreenUtil.autoheight(20),
-      backgroundColor: UColor.mainColor,
-      borderBottomWidth:0,
-    },
+    header:null, 
   };
 
   state = {
@@ -104,8 +101,9 @@ class Forget extends BaseComponent {
              <Image onError={(e)=>{this.loaderror()}} style={styles.countimg} source={{uri:img}} />
           </Button>
           <TextInput autoFocus={true} onChangeText={(kcode) => this.setState({kcode})} returnKeyType="go" 
-              selectionColor={UColor.tintColor} keyboardType="ascii-capable"  style={styles.countinpt} 
-              placeholderTextColor={UColor.arrow} placeholder="请输入计算结果" underlineColorAndroid="transparent" maxLength={8}
+              selectionColor={UColor.tintColor} keyboardType="ascii-capable"  maxLength={8}
+              style={[styles.countinpt,{color: UColor.tintColor,backgroundColor: UColor.riceWhite,}]} 
+              placeholderTextColor={UColor.arrow} placeholder="请输入计算结果" underlineColorAndroid="transparent" 
           />
       </View>
   
@@ -180,54 +178,55 @@ class Forget extends BaseComponent {
   }
 
   render() {
-    return <View style={styles.container}>
+    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+      <Header {...this.props} onPressLeft={true} title="忘记密码" />
       <ScrollView  keyboardShouldPersistTaps="always">
         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex: 1,}}>
-          <View style={styles.outsource}>
-            <View style={styles.phoneoue} >
-                <Text style={styles.texttitle}> 手机号</Text>
+          <View style={[styles.outsource,{backgroundColor: UColor.secdColor}]}>
+            <View style={[styles.phoneoue,{backgroundColor: UColor.mainColor}]} >
+                <Text style={[styles.texttitle,{color: UColor.fontColor}]}> 手机号</Text>
                 <TextInput ref={(ref) => this._rphone = ref}  value={this.state.phone}  returnKeyType="next" 
-                  selectionColor={UColor.tintColor} style={styles.textinpt}  placeholderTextColor={UColor.arrow}
+                  selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow}
                   placeholder="请输入您注册时的手机号" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
                   onChangeText={(phone) => this.setState({phone})}
                 />
             </View>
-            <View style={styles.separate}></View>
-            <View style={styles.codeoutsource}>
+            <View style={[styles.separate,{backgroundColor: UColor.secdColor}]}></View>
+            <View style={[styles.codeoutsource,{backgroundColor: UColor.mainColor}]}>
                 <View style={styles.codeout} >
-                    <Text style={styles.texttitle}> 验证码</Text>
+                    <Text style={[styles.texttitle,{color: UColor.fontColor}]}> 验证码</Text>
                     <TextInput  value={this.state.code} ref={(ref) => this._rcode = ref}  returnKeyType="next" 
-                      selectionColor={UColor.tintColor} style={styles.textinpt}  placeholderTextColor={UColor.arrow} 
+                      selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
                       placeholder="输入验证码" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={6}
                       onChangeText={(code) => this.setState({code})}
                     />
                 </View>
                 <View style={styles.btnoutsource}>
                   <Button onPress={() => this.kcaptrue()}>
-                    <View style={styles.btnout}>
-                      <Text style={styles.btntext}>{this.state.capture}</Text>
+                    <View style={[styles.btnout,{backgroundColor: UColor.tintColor}]}>
+                      <Text style={[styles.btntext,{color: UColor.btnColor}]}>{this.state.capture}</Text>
                     </View>
                   </Button>
                 </View>
             </View>
-            <View style={styles.separate}></View>
-            <View style={styles.phoneoue} >
-                <Text style={styles.texttitle}> 新密码</Text>
+            <View style={[styles.separate,{backgroundColor: UColor.secdColor}]}></View>
+            <View style={[styles.phoneoue,{backgroundColor: UColor.mainColor}]} >
+                <Text style={[styles.texttitle,{color: UColor.fontColor}]}> 新密码</Text>
                 <TextInput ref={(ref) => this._rpass = ref}  value={this.state.password} returnKeyType="next" 
-                  selectionColor={UColor.tintColor} style={styles.textinpt}  placeholderTextColor={UColor.arrow} 
+                  selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow} 
                   placeholder="设置新的登录密码"  underlineColorAndroid="transparent" secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
                   onChangeText={(password) => this.setState({password})}
                 />
             </View>
           </View>
           <Button onPress={() => this.regSubmit()}>
-            <View style={styles.referbtn}>
-              <Text style={styles.refertext}>提交</Text>
+            <View style={[styles.referbtn,{backgroundColor: UColor.tintColor}]}>
+              <Text style={[styles.refertext,{color: UColor.btnColor}]}>提交</Text>
             </View>
           </Button>
           <View style={styles.logout}>
             <Image source={UImage.bottom_log} style={styles.logimg}/>
-            <Text style={styles.logtext}>EosToken 专注柚子生态</Text>
+            <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
           </View>
         </TouchableOpacity>
       </ScrollView>
@@ -244,38 +243,32 @@ const styles = StyleSheet.create({
     height: ScreenUtil.autoheight(45),
   },   
   countinpt: {
-    color: UColor.tintColor,
+    textAlign: "center",
     marginLeft: ScreenUtil.autowidth(10),
     width: ScreenUtil.autowidth(120),
     height: ScreenUtil.autoheight(45),
     fontSize: ScreenUtil.setSpText(15),
-    backgroundColor: UColor.riceWhite,
   },
 
   container: {
     flex: 1,
     flexDirection:'column',
-    backgroundColor: UColor.secdColor,
   },
   
   outsource: {
-    backgroundColor: UColor.secdColor,
     flexDirection: 'column',
     paddingBottom: ScreenUtil.autoheight(80),
   },
   phoneoue: {
     padding: ScreenUtil.autowidth(20),
     height: ScreenUtil.autoheight(80),
-    backgroundColor: UColor.mainColor
   },
 
   texttitle:{
     fontSize: ScreenUtil.setSpText(14),
-    color: UColor.fontColor
   },
   codeoutsource: {
     flexDirection:'row',
-    backgroundColor: UColor.mainColor
   },
   codeout: {
     padding: ScreenUtil.autowidth(20),
@@ -283,12 +276,7 @@ const styles = StyleSheet.create({
     width: ScreenUtil.autowidth(200)
   },
 
-  phonetitle: {
-    fontSize: ScreenUtil.setSpText(12),
-    color: UColor.arrow
-  },
   textinpt: {
-    color: UColor.arrow,
     fontSize: ScreenUtil.setSpText(15),
     height: ScreenUtil.autoheight(40),
     paddingLeft: ScreenUtil.autowidth(2),
@@ -301,7 +289,6 @@ const styles = StyleSheet.create({
     marginRight: ScreenUtil.autowidth(10),
   },
   btnout: {
-    backgroundColor: UColor.tintColor,
     borderRadius: 5,
     width: ScreenUtil.autowidth(100),
     height: ScreenUtil.autoheight(40),
@@ -311,16 +298,13 @@ const styles = StyleSheet.create({
   },
   btntext: {
     fontSize: ScreenUtil.setSpText(15),
-    color: UColor.fontColor
   },
   separate: {
     height: 0.5,
-    backgroundColor: UColor.secdColor
   },
 
   referbtn: {
     height: ScreenUtil.autoheight(45),
-    backgroundColor: UColor.tintColor,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: ScreenUtil.autowidth(10),
@@ -328,7 +312,6 @@ const styles = StyleSheet.create({
   },
   refertext: {
     fontSize: ScreenUtil.setSpText(15),
-    color: UColor.fontColor
   },
   logout:{
     height: ScreenUtil.autoheight(300),
@@ -342,7 +325,6 @@ const styles = StyleSheet.create({
   },
   logtext: {
     fontSize: ScreenUtil.setSpText(14),
-    color: UColor.arrow,
     lineHeight: ScreenUtil.autoheight(30),
   }
 

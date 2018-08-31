@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, TouchableOpacity, TextInput, } from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
+import Header from '../../components/Header'
 import Button from '../../components/Button'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
@@ -21,13 +22,9 @@ class MortgageRecord extends React.Component {
 
   static navigationOptions = {
     title: "抵押记录",
-    headerStyle: {
-      paddingTop: ScreenUtil.autoheight(20),
-      backgroundColor: UColor.mainColor,
-      borderBottomWidth:0,
-    },
+    header:null,
   };
-
+ 
   constructor(props) {
     super(props);
     this.state = {
@@ -98,9 +95,9 @@ class MortgageRecord extends React.Component {
   _setModalVisible(redeem) {
     this. dismissKeyboardClick();
     EasyShowLD.dialogShow("您确认要赎回这笔抵押吗？", (
-        <View style={styles.warningout}>
+        <View style={[styles.warningout,{borderColor: UColor.showy}]}>
             <Image source={UImage.warning_h} style={styles.imgBtn} />
-            <Text style={styles.headtitle}>建议保留少量抵押，否则可能影响您的账号正常使用！赎回的EOS将于3天后，返还到您的账户。</Text>
+            <Text style={[styles.headtitle,{color: UColor.showy}]}>建议保留少量抵押，否则可能影响您的账号正常使用！赎回的EOS将于3天后，返还到您的账户。</Text>
         </View>
     ), "执意赎回", "取消", () => {
       this.undelegateb(redeem);
@@ -112,9 +109,10 @@ class MortgageRecord extends React.Component {
     const view =
     <View style={styles.passoutsource}>
         <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go"  
-            selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" style={styles.inptpass} maxLength={Constants.PWD_MAX_LENGTH}
+            selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
+            style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor, borderBottomColor: UColor.baseline,}]} 
             placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
-        {/* <Text style={styles.inptpasstext}>提示：赎回 {Number(redeem.cpu_weight.replace("EOS", ""))+Number(redeem.net_weight.replace("EOS", ""))} EOS</Text> */}
+        {/* <Text style={[styles.inptpasstext,{color: UColor.lightgray}]}>提示：赎回 {Number(redeem.cpu_weight.replace("EOS", ""))+Number(redeem.net_weight.replace("EOS", ""))} EOS</Text> */}
     </View>
     EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
         if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -146,9 +144,9 @@ class MortgageRecord extends React.Component {
                                 { 
                                     //弹出提示框,可申请免费抵押功能
                                     const view =
-                                    <View style={styles.passoutsource2}>
-                                    <Text style={styles.Explaintext2}>该账号资源(NET/CPU)不足！</Text>
-                                    <Text style={styles.Explaintext2}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                    <View style={styles.Explainout}>
+                                      <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                      <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                     </View>
                                     EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                         
@@ -192,12 +190,13 @@ class MortgageRecord extends React.Component {
   }
 
   render() {
-    return (<View style={styles.container}>
-      <View style={styles.header}>  
-          <View style={styles.inptout} >
+    return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+     <Header {...this.props} onPressLeft={true} title="抵押记录" />
+      <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
+          <View style={[styles.inptout,{backgroundColor: UColor.riceWhite}]} >
               <Image source={UImage.Magnifier_ash} style={styles.headleftimg}></Image>
               <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
-                  selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow} maxLength={12} 
+                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={12} 
                   placeholder="输入EOS账号" underlineColorAndroid="transparent" keyboardType="default"
                   onChangeText={(labelname) => this.setState({ labelname })}  numberOfLines={1} 
                   />    
@@ -206,17 +205,17 @@ class MortgageRecord extends React.Component {
               </TouchableOpacity>  
           </View>    
           <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>  
-              <Text style={styles.canceltext}>查询</Text>
+              <Text style={[styles.canceltext,{color: UColor.fontColor}]}>查询</Text>
           </TouchableOpacity>   
           <TouchableOpacity   onPress={this._empty.bind(this)}>  
-              <Text style={styles.canceltext}>清空</Text>
+              <Text style={[styles.canceltext,{color: UColor.fontColor}]}>清空</Text>
           </TouchableOpacity>  
       </View>   
-      {this.state.show && <View style={styles.nothave}><Text style={styles.copytext}>还没有抵押记录哟~</Text></View>}       
+      {this.state.show && <View style={[styles.nothave,{backgroundColor: UColor.mainColor}]}><Text style={[styles.copytext,{color: UColor.fontColor}]}>还没有抵押记录哟~</Text></View>}       
       <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true} 
         dataSource={this.state.dataSource.cloneWithRows(this.state.delegateLoglist == null ? [] : this.state.delegateLoglist)} 
         renderRow={(rowData, sectionID, rowID) => (   
-            <View style={styles.outsource}>
+            <View style={[styles.outsource,{backgroundColor: UColor.mainColor}]}>
               <View style={styles.leftout}>
                 <Button onPress={this._setModalVisible.bind(this,rowData)} style={{flex: 1,}}>
                     <View >
@@ -224,15 +223,15 @@ class MortgageRecord extends React.Component {
                     </View>
                 </Button> 
                 <View style={{flex: 1,justifyContent: 'space-between',}}>
-                  <Text style={styles.fromtotext}>{rowData.to}</Text>
-                  <Text style={styles.Receivercpu}>Receiver</Text>
+                  <Text style={[styles.fromtotext,{color: UColor.fontColor}]}>{rowData.to}</Text>
+                  <Text style={[styles.Receivercpu,{color: UColor.arrow}]}>Receiver</Text>
                 </View>
               </View>
               <View style={styles.rightout}>
-                  <Text style={styles.fromtotext}>{rowData.net_weight}</Text>
-                  <Text style={styles.payernet}>Net bandwidth</Text>
-                  <Text style={styles.fromtotext}>{rowData.cpu_weight}</Text>
-                  <Text style={styles.Receivercpu}>CPU bandwidth</Text>
+                  <Text style={[styles.fromtotext,{color: UColor.fontColor}]}>{rowData.net_weight}</Text>
+                  <Text style={[styles.payernet,{color: UColor.arrow}]}>Net bandwidth</Text>
+                  <Text style={[styles.fromtotext,{color: UColor.fontColor}]}>{rowData.cpu_weight}</Text>
+                  <Text style={[styles.Receivercpu,{color: UColor.arrow}]}>CPU bandwidth</Text>
               </View>
             </View>
         )}                   
@@ -247,13 +246,11 @@ const styles = StyleSheet.create({
       flex: 1,
       paddingTop: 1,
       flexDirection: "column",
-      backgroundColor: UColor.secdColor,
     },
     header: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: UColor.mainColor,
       paddingVertical: ScreenUtil.autoheight(7), 
       marginBottom: ScreenUtil.autoheight(5),
     },
@@ -271,19 +268,16 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center",
       justifyContent: 'center',
-      backgroundColor: UColor.fontColor,
       height: ScreenUtil.autoheight(30),
       marginHorizontal: ScreenUtil.autowidth(10),
     },
     inpt: {
       flex: 1,
-      color: UColor.arrow,
       height: ScreenUtil.autoheight(45),
       fontSize: ScreenUtil.setSpText(14),
     },
     canceltext: {
       textAlign: 'center',
-      color: UColor.fontColor,
       fontSize: ScreenUtil.setSpText(15),
       paddingRight: ScreenUtil.autowidth(15),
     },
@@ -297,19 +291,16 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: "center",
       margin: ScreenUtil.autowidth(5),
-      backgroundColor: UColor.mainColor,
       height: ScreenUtil.autoheight(110),
       paddingHorizontal: ScreenUtil.autowidth(20),
     },
     copytext: {
-      color: UColor.fontColor,
       fontSize: ScreenUtil.setSpText(16), 
     },
     outsource: {
       borderRadius: 5,
       flexDirection: "row",
       margin: ScreenUtil.autowidth(5),
-      backgroundColor: UColor.mainColor,
       height: ScreenUtil.autoheight(90),
       paddingHorizontal: ScreenUtil.autowidth(20),
       paddingVertical: ScreenUtil.autoheight(10),
@@ -324,15 +315,12 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
     },
     fromtotext: {
-      color: UColor.fontColor,
       fontSize: ScreenUtil.setSpText(12),
     },
     payernet: {
-      color: UColor.arrow,
       fontSize: ScreenUtil.setSpText(12),
     },
     Receivercpu: {
-      color: UColor.arrow,
       fontSize: ScreenUtil.setSpText(12),
     },
 
@@ -342,7 +330,6 @@ const styles = StyleSheet.create({
       width: ScreenWidth-80,
       flexDirection: "row",
       alignItems: 'center', 
-      borderColor: UColor.showy,
     },
     imgBtn: {
       width: ScreenUtil.autowidth(30),
@@ -351,7 +338,6 @@ const styles = StyleSheet.create({
     },
     headtitle: {
       flex: 1,
-      color: UColor.showy,
       fontSize: ScreenUtil.setSpText(14),
       lineHeight: ScreenUtil.autoheight(25),
       paddingLeft: ScreenUtil.autowidth(10),
@@ -364,17 +350,14 @@ const styles = StyleSheet.create({
       alignItems: 'center'
     },
     inptpass: {
+      textAlign: "center",
       width: ScreenWidth-100,
       borderBottomWidth: 1,
-      color: UColor.tintColor,
       height: ScreenUtil.autoheight(45),
       paddingBottom: ScreenUtil.autoheight(5),
       fontSize: ScreenUtil.setSpText(16),
-      backgroundColor: UColor.fontColor,
-      borderBottomColor: UColor.baseline,
     },
     inptpasstext: {
-      color: UColor.lightgray,
       marginTop: ScreenUtil.autoheight(5),
       fontSize: ScreenUtil.setSpText(14),
       lineHeight: ScreenUtil.autoheight(25),
@@ -393,13 +376,7 @@ const styles = StyleSheet.create({
       width: ScreenUtil.autowidth(30),
       height: ScreenUtil.autoheight(20),
     },
-    buttontext: {
-      color: UColor.baseline,
-      textAlign: 'right',
-      width: ScreenUtil.autowidth(40),
-      fontSize: ScreenUtil.setSpText(28),
-    },
-
+   
     contentText: {
       fontWeight: 'bold',
       textAlign: 'center',
@@ -410,26 +387,13 @@ const styles = StyleSheet.create({
       alignItems: 'flex-end',
     },
 
-    deleteout: {
-      borderRadius: 6,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: UColor.tintColor,
-      height: ScreenUtil.autoheight(50),
-      marginHorizontal: ScreenUtil.autowidth(60),
-      marginVertical: ScreenUtil.autoheight(15),
-    },
-    deletetext: {
-      fontSize: ScreenUtil.setSpText(16),
-    },
-    
-    passoutsource2: {
+  
+    Explainout: {
       flexDirection: 'column', 
       alignItems: 'flex-start'
     },
-    Explaintext2: {
+    Explaintext: {
         fontSize: ScreenUtil.setSpText(15),
-        color: UColor.arrow, 
         lineHeight: ScreenUtil.autoheight(30), 
     },
 

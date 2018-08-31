@@ -7,11 +7,15 @@ import Button from  '../../components/Button'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import UImage from '../../utils/Img'
 import ScreenUtil from '../../utils/ScreenUtil'
+import Header from '../../components/Header'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import { EasyShowLD } from '../../components/EasyShow'
 import { EasyToast } from '../../components/Toast';
 import JPush from 'jpush-react-native';
+import codePush from 'react-native-code-push'
 import JPushModule from 'jpush-react-native';
+import Constants from '../../utils/Constants'
+import NavigationUtil from '../../utils/NavigationUtil';
 import BaseComponent from "../../components/BaseComponent";
 var DeviceInfo = require('react-native-device-info');
 const ScreenWidth = Dimensions.get('window').width;
@@ -23,21 +27,27 @@ class Set extends BaseComponent {
 
   static navigationOptions = {
     title: '系统设置',
+    header:null, 
   };
 
   constructor(props) {
     super(props);
     this.state = {
       value: true,
-      gesture: false
+      gesture: false,
+      skin: false,
     }
   }
   componentDidMount() {
     const {dispatch}=this.props;
     dispatch({type:'login/getJpush',callback:(jpush)=>{
-     
       this.setState({
         value:jpush.jpush,
+      });
+    }});
+    dispatch({type:'login/getthemeSwitching',callback:(theme)=>{
+      this.setState({
+        skin:theme.theme,
       });
     }});
 
@@ -94,6 +104,16 @@ class Set extends BaseComponent {
     }
   }
 
+  changeTheme() {
+    var th = this;
+    this.props.dispatch({type:'login/changethemeSwitching',callback:(theme)=>{
+      this.setState({
+        skin:theme.theme,
+      });
+      codePush.restartApp();
+    }})
+  }
+
   doUpgrade = (url, version) => {
     if (Platform.OS !== 'ios') {
       this.setState({ visable: false });
@@ -104,38 +124,33 @@ class Set extends BaseComponent {
   }
 
   checkVersion(){
-    try {
-      EasyShowLD.loadingShow();
-      //升级
-      this.props.dispatch({
-        type: 'common/upgrade', payload: { os: DeviceInfo.getSystemName() }, callback: (data) => {
-          EasyShowLD.loadingClose();
-          if (data.code == 0) {
-            if (DeviceInfo.getVersion() < data.data.version) {
-              if (data.data.must == 1) {
-                EasyShowLD.dialogShow("版本更新", data.data.intr, "升级", null, () => { this.doUpgrade(data.data.url, data.data.version) })
-              } else {
-                EasyShowLD.dialogShow("版本更新", data.data.intr, "升级", "取消", () => { this.doUpgrade(data.data.url, data.data.version) })
-              }
-            }else{
-              EasyToast.show("当前已是最新版本");
+    //升级
+    this.props.dispatch({
+      type: 'common/upgrade', payload: { os: DeviceInfo.getSystemName() }, callback: (data) => {
+        if (data.code == 0) {
+          if (DeviceInfo.getVersion() < data.data.version) {
+            if (data.data.must == 1) {
+              EasyShowLD.dialogShow("版本更新", data.data.intr, "升级", null, () => { this.doUpgrade(data.data.url, data.data.version) })
+            } else {
+              EasyShowLD.dialogShow("版本更新", data.data.intr, "升级", "取消", () => { this.doUpgrade(data.data.url, data.data.version) })
             }
+          }else{
+            EasyToast.show("当前已是最新版本");
           }
         }
-      });      
-    } catch (error) {
-      EasyShowLD.loadingClose();
-    }
+      }
+    });
   }
 
   render() {
-    return <View style={styles.container}>
+    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+      <Header {...this.props} onPressLeft={true} title="系统设置" />
       <View style={styles.scrollView}>
           <Button onPress={() => this.gesturepass()}>
-            <View style={styles.listItem}>
-                <View style={styles.listInfo}>
+            <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
+                <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
                   <View style={styles.scrollView}>
-                    <Text style={styles.listInfoTitle}>货币单位</Text>
+                    <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>货币单位</Text>
                   </View>
                   <View style={styles.listInfoRight}>            
                     <Font.Ionicons name="ios-arrow-forward-outline" size={16} color={UColor.arrow} />
@@ -143,33 +158,45 @@ class Set extends BaseComponent {
                 </View>
               </View>
           </Button>
-          <View style={styles.listItem}>
-              <View style={styles.listInfo}>
+          <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
+              <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
                 <View style={styles.scrollView}>
-                  <Text style={styles.listInfoTitle}>手势密码</Text>
+                  <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>手势密码</Text>
                 </View>
                 <View style={styles.listInfoRight}>
-                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontColor}
+                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.secdColor}
                   value={this.state.gesture} onValueChange={(gesture)=>{this.setState({gesture:gesture,});this.gesturepass(gesture);}}/>
                 </View>
               </View>
           </View>
-          <View style={styles.listItem}>
-              <View style={styles.listInfo}>
+          <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
+              <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
                 <View style={styles.scrollView}>
-                  <Text style={styles.listInfoTitle}>消息推送</Text>
+                  <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>消息推送</Text>
                 </View>
                 <View style={styles.listInfoRight}>
-                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontColor}
+                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.secdColor}
                   value={this.state.value} onValueChange={(value)=>{ this.setState({ value:value, });this.changeJpush(value);}}/>
                 </View>
               </View>
           </View>
+          
+          <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
+              <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
+                <View style={styles.scrollView}>
+                  <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>主题切换</Text>
+                </View>
+                <View style={styles.listInfoRight}>
+                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.secdColor}
+                  value={this.state.skin} onValueChange={(value)=>{ this.setState({ skin:value, });this.changeTheme(value);}}/>
+                </View>
+              </View>
+          </View>
           <Button onPress={() => this.checkVersion()}>
-            <View style={styles.listItem}>
-                <View style={styles.listInfo}>
+            <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
+                <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
                   <View style={styles.scrollView}>
-                    <Text style={styles.listInfoTitle}>检测新版本</Text>
+                    <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>检查新版本</Text>
                   </View>
                   {/* <View style={styles.listInfoRight}>            
                     <Font.Ionicons name="ios-arrow-forward-outline" size={16} color={UColor.arrow} />
@@ -182,7 +209,7 @@ class Set extends BaseComponent {
         <View style={styles.btnout}>
           <Button onPress={() => this.logout()}>
             <View style={styles.btnloginUser}>
-              <Text style={styles.btntext}>{this.props.loginUser?"退出登陆":"登陆"}</Text>
+              <Text style={[styles.btntext,{color: UColor.btnColor}]}>{this.props.loginUser?"退出登陆":"登陆"}</Text>
             </View>
           </Button>
         </View>
@@ -199,13 +226,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection:'column',
-    backgroundColor: UColor.secdColor,
   },
   scrollView: {
     flex: 1,
   },
   listItem: {
-    backgroundColor: UColor.mainColor,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -219,10 +244,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderTopWidth:1,
-    borderTopColor: UColor.secdColor
   },
   listInfoTitle: {
-    color:UColor.fontColor, 
     fontSize: ScreenUtil.setSpText(16),
   },
   listInfoRight: {
@@ -243,7 +266,6 @@ const styles = StyleSheet.create({
   },
   btntext: {
     fontSize: ScreenUtil.setSpText(15),
-    color: UColor.fontColor,
   },
 
   logout:{

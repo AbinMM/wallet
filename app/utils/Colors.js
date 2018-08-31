@@ -18,5 +18,6 @@ export default {
   fallColor: '#25B36B', //跌买出色 UColor.fallColor
   bgEchar: "#2f3b50", // Echar背景色
   warningRed:"#FF4F4F",//警告字体色彩
-  
+  navigation: '#2279C5', //顶部标题背景色
+  theme: false,
 };

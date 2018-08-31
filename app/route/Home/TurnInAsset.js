@@ -4,6 +4,7 @@ import { DeviceEventEmitter, Clipboard, StyleSheet, Image, ScrollView, View, Tex
 import UColor from "../../utils/Colors";
 import Button from "../../components/Button";
 import UImage from "../../utils/Img";
+import Header from '../../components/Header'
 import QRCode from "react-native-qrcode-svg";
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast";
@@ -12,24 +13,10 @@ let dismissKeyboard = require("dismissKeyboard");
 
 @connect(({ wallet }) => ({ ...wallet }))
 class TurnInAsset extends BaseComponent {
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {};
-    return {
-      headerTitle: "收款信息",
-      headerStyle: {
-        paddingTop: ScreenUtil.autoheight(20),
-        backgroundColor: UColor.mainColor,
-        borderBottomWidth:0,
-      },
-      headerRight: (
-        <Button name="share" onPress={navigation.state.params.onPress}>
-          <View style={{ padding: 15 }}>
-          <Image source={UImage.share_i} style={{ width: 22, height: 22 }}></Image>
-          </View>
-        </Button>
-      )
-    };
-  };
+  static navigationOptions = {
+    headerTitle: "收款信息",
+    header:null, 
+};
 
   //组件加载完成
   componentDidMount() {
@@ -59,7 +46,6 @@ class TurnInAsset extends BaseComponent {
   // 构造函数
   constructor(props) {
     super(props);
-    this.props.navigation.setParams({ onPress: this._rightTopClick });
     this.state = {
       symbol: "",
       toAccount: "",
@@ -133,34 +119,35 @@ class TurnInAsset extends BaseComponent {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+        <Header {...this.props} onPressLeft={true} title="收款信息" avatar={UImage.share_i} onPressRight={this._rightTopClick.bind()}/> 
         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={styles.tab}>
           <View style={styles.taboutsource}>
-            <View style={styles.outsource}>
-              <Text style={styles.accountText}> 账户：{this.props.defaultWallet == null ? "" : this.props.defaultWallet.account}</Text>
+            <View style={[styles.outsource,{backgroundColor: UColor.secdColor}]}>
+              <Text style={[styles.accountText,{color: UColor.arrow}]}> 账户：{this.props.defaultWallet == null ? "" : this.props.defaultWallet.account}</Text>
               <View style={styles.codeout}>
-                <View style={styles.qrcode}>
+                <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
                   <QRCode size={170} style={{ width: 170 }} value = {this.getQRCode()}/>
                 </View>
               </View>
-              <Text style={styles.prompttext}>扫一扫，向我转账</Text>
-              <View style={styles.inptoutsource}>
+              <Text style={[styles.prompttext,{color: UColor.fontColor}]}>扫一扫，向我转账</Text>
+              <View style={[styles.inptoutsource,{borderBottomColor: UColor.mainColor}]}>
               <Text style={styles.tokenText} />
                 <TextInput autoFocus={false} onChangeText={amount => this.setState({ amount: this.chkPrice(amount) })}
                   value = {this.state.amount} maxLength = {15} returnKeyType="go" selectionColor={UColor.tintColor}
-                  style={styles.inpt} placeholderTextColor={UColor.tintColor} placeholder="请输入金额(可不填)"
+                  style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.tintColor} placeholder="请输入金额(可不填)"
                   underlineColorAndroid="transparent" secureTextEntry={false} keyboardType="numeric"
                 />
-                <Text style={styles.tokenText}>{this.state.symbol}</Text>
+                <Text style={[styles.tokenText,{color: UColor.arrow}]}>{this.state.symbol}</Text>
               </View>
               <Button onPress={this.copy.bind()} style={styles.btnnextstep}>
-                <View style={styles.nextstep}>
-                  <Text style={styles.nextsteptext}>复制账户</Text>
+                <View style={[styles.nextstep,{backgroundColor: UColor.tintColor}]}>
+                  <Text style={[styles.nextsteptext,{color: UColor.btnColor}]}>复制账户</Text>
                 </View>
               </Button>
               <View style={styles.logout}>
                   <Image source={UImage.bottom_log} style={styles.logimg}/>
-                  <Text style={styles.logtext}>EosToken 专注柚子生态</Text>
+                  <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
               </View>
             </View>
           </View>
@@ -174,21 +161,17 @@ const styles = StyleSheet.create({
    container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: UColor.secdColor,
-    paddingTop: ScreenUtil.autoheight(5)
   },
   taboutsource: {
     flex: 1,
     flexDirection: "column"
   },
   outsource: {
-    backgroundColor: UColor.secdColor,
     flexDirection: "column",
     padding: ScreenUtil.autowidth(20),
     flex: 1
   },
   accountText: {
-    color: UColor.arrow,
     fontSize: ScreenUtil.setSpText(15),
     height: ScreenUtil.autoheight(40),
     paddingLeft: ScreenUtil.autowidth(2),
@@ -203,12 +186,10 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   qrcode: {
-    backgroundColor: UColor.fontColor,
     padding: ScreenUtil.autowidth(5),
   },
   prompttext: {
     marginTop: ScreenUtil.autoheight(5),
-    color: UColor.fontColor,
     fontSize: ScreenUtil.setSpText(15),
     height: ScreenUtil.autoheight(30),
     paddingLeft: ScreenUtil.autowidth(2),
@@ -217,14 +198,12 @@ const styles = StyleSheet.create({
   inptoutsource: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: UColor.mainColor,
     marginBottom: ScreenUtil.autoheight(10),
     paddingLeft: ScreenUtil.autowidth(10),
     justifyContent: "center",
     alignItems: "center"
   },
   tokenText: {
-    color: UColor.arrow,
     fontSize: ScreenUtil.setSpText(15),
     width: ScreenUtil.autowidth(60),
     height: ScreenUtil.autoheight(40),
@@ -234,7 +213,6 @@ const styles = StyleSheet.create({
   },
   inpt: {
     flex: 1,
-    color: UColor.arrow,
     fontSize: ScreenUtil.setSpText(15),
     height: ScreenUtil.autoheight(40),
     paddingLeft: ScreenUtil.autowidth(2),
@@ -245,7 +223,6 @@ const styles = StyleSheet.create({
   },
   nextstep: {
     height: ScreenUtil.autoheight(45),
-    backgroundColor: UColor.tintColor,
     justifyContent: "center",
     alignItems: "center",
     margin: ScreenUtil.autowidth(20),
@@ -253,7 +230,6 @@ const styles = StyleSheet.create({
   },
   nextsteptext: {
     fontSize: ScreenUtil.setSpText(15),
-    color: UColor.fontColor
   },
   logout:{
     flex: 1,
@@ -267,7 +243,6 @@ const styles = StyleSheet.create({
   },
   logtext: {
     fontSize: ScreenUtil.setSpText(14),
-    color: UColor.arrow,
     lineHeight: ScreenUtil.autoheight(30),
   },
   tab: {

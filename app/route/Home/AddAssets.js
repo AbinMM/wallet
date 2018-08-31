@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import {DeviceEventEmitter,ListView,StyleSheet,Image,View,Text,Switch} from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
+import Header from '../../components/Header'
 import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
@@ -10,27 +11,15 @@ import BaseComponent from "../../components/BaseComponent";
 
 @connect(({wallet, assets}) => ({...wallet, ...assets}))
 class AddAssets extends BaseComponent {
-    static navigationOptions = ({ navigation }) => {
-       
-        return {                       
-          headerTitle:'添加资产',
-          headerStyle:{
-              paddingTop: ScreenUtil.autoheight(20),
-              backgroundColor: UColor.mainColor,
-              borderBottomWidth:0,
-          },
-          headerRight: (<Button name="search" onPress={navigation.state.params.onPress}>
-            <View style={{ padding: 15 }}>
-                <Image source={UImage.Magnifier} style={{ width: 30, height: 30 }}></Image>
-            </View>
-          </Button>),                  
-        };
-      };
+
+      static navigationOptions = {
+        headerTitle: "添加资产",
+        header:null, 
+    };
 
   // 构造函数  
   constructor(props) { 
     super(props);
-    this.props.navigation.setParams({ onPress: this._rightTopClick });
     this.state = {
       show:false,
       value: false,
@@ -138,19 +127,22 @@ class AddAssets extends BaseComponent {
   
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+          <Header {...this.props} onPressLeft={true} title="添加资产" avatar={UImage.Magnifier} onPressRight={this._rightTopClick.bind()}/> 
           <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} 
             dataSource={this.state.dataSource.cloneWithRows(this.props.assetsList == null ? [] : this.props.assetsList)} 
             renderRow={(rowData, sectionID, rowID) => (      
-            <View style={styles.listItem}>
-                <View style={styles.listInfo}>
-                  <Image source={rowData.icon==null ? UImage.eos : { uri: rowData.icon }} style={styles.logimg}/>
+            <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
+                <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
+                  <View style={{borderRadius: 25,backgroundColor: UColor.secdColor,marginRight: ScreenUtil.autowidth(10),}}>
+                    <Image source={rowData.icon==null ? UImage.eos : { uri: rowData.icon }} style={styles.logimg}/>
+                  </View>
                   <View style={styles.scrollView}>
-                    <Text style={styles.listInfoTitle}>{rowData.name}</Text>
-                    <Text style={styles.quantity}>合约账户 : {rowData.contractAccount == null ? "" : rowData.contractAccount}</Text>
+                    <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>{rowData.name}</Text>
+                    <Text style={[styles.quantity,{color: UColor.arrow}]}>合约账户 : {rowData.contractAccount == null ? "" : rowData.contractAccount}</Text>
                   </View>
                   <View style={styles.listInfoRight}>
-                    <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontColor}
+                    <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.secdColor}
                         value={this.isMyAsset(rowData)} onValueChange={(value)=>{
                           if(this.state.isAdding){
                             return;
@@ -173,12 +165,9 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       flexDirection:'column',
-      backgroundColor: UColor.secdColor,
-      paddingTop: ScreenUtil.autoheight(5),
     },
 
     listItem: {
-      backgroundColor: UColor.mainColor,
       flexDirection: "column",
       justifyContent: "flex-start",
       alignItems: "flex-start",
@@ -190,7 +179,6 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center",
       borderTopWidth:1,
-      borderTopColor: UColor.secdColor
     },
     logimg: {
       width: ScreenUtil.autowidth(28), 
@@ -198,7 +186,6 @@ const styles = StyleSheet.create({
       resizeMode: "cover", 
       overflow:"hidden", 
       borderRadius: 10, 
-      marginRight: ScreenUtil.autowidth(10),
     },
     scrollView: {
       flex: 1,
@@ -206,7 +193,6 @@ const styles = StyleSheet.create({
       justifyContent: "center",
     },
     listInfoTitle: {
-      color:UColor.fontColor, 
       fontSize: ScreenUtil.setSpText(16)
     },
     listInfoRight: {
@@ -216,7 +202,6 @@ const styles = StyleSheet.create({
 
     quantity: {
       fontSize: ScreenUtil.setSpText(14),
-      color: UColor.arrow,
     },
    
 })

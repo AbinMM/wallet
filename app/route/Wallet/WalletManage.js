@@ -6,6 +6,7 @@ import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from '../../components/EasyShow'
 import BaseComponent from "../../components/BaseComponent";
@@ -14,12 +15,12 @@ import BaseComponent from "../../components/BaseComponent";
 class WalletManage extends BaseComponent {
 
   static navigationOptions = {
-    header:null,  //隐藏顶部导航栏
+    title: '钱包管理',
+    header:null,  
   };
 
   constructor(props) {
     super(props);
-    this.props.navigation.setParams({ onPress: this._rightTopClick });
     this.state = {
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
       isEye: false,
@@ -103,8 +104,9 @@ class WalletManage extends BaseComponent {
   }
 
   render() {
-    return (<View style={styles.container}>  
-      <View style={styles.header}>  
+    return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>  
+      <Header {...this.props} onPressLeft={true} title="钱包管理" onPressRight={this._rightTopClick.bind()} avatar={this.state.isEye ? UImage.reveal_wallet : UImage.reveal_h_wallet}/>
+      {/* <View style={styles.header}>  
         <View style={styles.leftout} >
         {Platform.OS === 'ios' && <Ionicons style={{ color: UColor.fontColor,   }} name="ios-arrow-back" size={ScreenUtil.setSpText(38)} onPress={this._leftTopClick.bind()}/>}
         {Platform.OS === 'android' && <Ionicons style={{ color: UColor.fontColor,   }} name="md-arrow-back" size={ScreenUtil.setSpText(30)} onPress={this._leftTopClick.bind()}/> }
@@ -117,7 +119,7 @@ class WalletManage extends BaseComponent {
               <Image source={this.state.isEye ? UImage.reveal_wallet : UImage.reveal_h_wallet} style={styles.imgTeOy}/>
             </View>
           </TouchableOpacity>
-      </View> 
+      </View>  */}
 
       <View style={{paddingBottom: 60}}>
         <ListView initialListSize={10} style={{ backgroundColor: UColor.secdColor, }} enableEmptySections={true}
@@ -126,21 +128,21 @@ class WalletManage extends BaseComponent {
           dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
           renderRow={(rowData, sectionID, rowID) => (
             <Button onPress={this.onPress.bind(this, rowData, sectionID, rowID)}>
-              <View style={styles.row} > 
+              <View style={[styles.row,{backgroundColor:UColor.mainColor}]} > 
                 <View style={{flex: 1,}}>
                   <View style={styles.topout}>
                       <Button onPress={this.copyname.bind(this,rowData)} underlayColor={UColor.mainColor}>
                         <View style={{flexDirection: "row",}}>
-                          <Text style={styles.outname}>{rowData.name}</Text>
+                          <Text style={[styles.outname,{color: UColor.fontColor}]}>{rowData.name}</Text>
                           <Image source={UImage.copy} style={styles.imgBtn} />
                         </View>
                       </Button>
-                      {(!rowData.isactived|| !rowData.hasOwnProperty('isactived')) ? <View style={styles.notactivedout}><Text style={styles.notactived}>未激活</Text></View>:(rowData.isBackups ? null : <View style={styles.stopoutBackupsout}><Text style={styles.stopoutBackups}>未备份</Text></View>) }   
-                      {(rowData.ownerPublic==null || rowData.ownerPublic=="" )&&(rowData.activePublic !=null && rowData.activePublic.length==53 ) ? <View style={styles.stopoutBackupsout}><Text style={styles.stopoutBackups}>Active</Text></View>:null}
-                      {(rowData.ownerPublic!=null && rowData.ownerPublic.length==53 )&&(rowData.activePublic==null || rowData.activePublic=="" )? <View style={styles.stopoutBackupsout}><Text style={styles.stopoutBackups}>Owner</Text></View>:null  }
+                      {(!rowData.isactived|| !rowData.hasOwnProperty('isactived')) ? <View style={[styles.notactivedout,{borderColor: UColor.showy}]}><Text style={[styles.notactived,{color: UColor.showy}]}>未激活</Text></View>:(rowData.isBackups ? null : <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}><Text style={[styles.stopoutBackups,{color: UColor.tintColor}]}>未备份</Text></View>) }   
+                      {(rowData.ownerPublic==null || rowData.ownerPublic=="" )&&(rowData.activePublic !=null && rowData.activePublic.length==53 ) ? <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}><Text style={[styles.stopoutBackups,{color: UColor.tintColor}]}>Active</Text></View>:null}
+                      {(rowData.ownerPublic!=null && rowData.ownerPublic.length==53 )&&(rowData.activePublic==null || rowData.activePublic=="" )? <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}><Text style={[styles.stopoutBackups,{color: UColor.tintColor}]}>Owner</Text></View>:null  }
                   </View>
                   <View style={styles.topout}>               
-                    <Text style={styles.outaccount} numberOfLines={1} ellipsizeMode='middle'>{this.getAssertDisp(rowData)}<Text style={styles.topouttext}> EOS</Text></Text>
+                    <Text style={[styles.outaccount,{color: UColor.fontColor}]} numberOfLines={1} ellipsizeMode='middle'>{this.getAssertDisp(rowData)}<Text style={[styles.topouttext,{color: UColor.arrow}]}> EOS</Text></Text>
                   </View>
                 </View> 
                 <View style={styles.bomout}> 
@@ -152,17 +154,17 @@ class WalletManage extends BaseComponent {
           )}
         /> 
       </View> 
-      <View style={styles.footer}>
+      <View style={[styles.footer,{backgroundColor:UColor.secdColor}]}>
           <Button  onPress={() => this.createWallet()} style={{flex:1}}>
-              <View  style={styles.footoutsource}>
+              <View  style={[styles.footoutsource,{backgroundColor:UColor.mainColor}]}>
                   <Image source={UImage.xin1} style={styles.footimg}/>
-                  <Text style={styles.footText}>创建账户</Text>
+                  <Text style={[styles.footText,{color:UColor.fontColor}]}>创建账户</Text>
               </View>
           </Button>
           <Button  onPress={this.importWallet.bind(this)} style={{flex:1}}>
-              <View style={styles.footoutsource}>
+              <View style={[styles.footoutsource,{backgroundColor:UColor.mainColor}]}>
                   <Image source={UImage.xin0} style={styles.footimg}/>
-                  <Text style={styles.footText}>导入钱包</Text>
+                  <Text style={[styles.footText,{color:UColor.fontColor}]}>导入钱包</Text>
               </View>
           </Button>
       </View> 
@@ -174,7 +176,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: UColor.secdColor,
   },
   header: {
     flexDirection: "row",
@@ -182,7 +183,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: ScreenUtil.autoheight(20),
     paddingBottom: ScreenUtil.autoheight(5),
-    backgroundColor: UColor.mainColor,
   },
   leftout: {
     paddingLeft: ScreenUtil.autowidth(15)
@@ -206,7 +206,6 @@ const styles = StyleSheet.create({
 
   row:{
     height: ScreenUtil.autoheight(80),
-    backgroundColor:UColor.mainColor,
     flexDirection:"row",
     paddingVertical: ScreenUtil.autoheight(10),
     paddingHorizontal: ScreenUtil.autowidth(15),
@@ -222,7 +221,6 @@ const styles = StyleSheet.create({
   },
   outname: {
     fontSize: ScreenUtil.setSpText(14),
-    color: UColor.fontColor,
     textAlign: 'left',
   },
   imgBtn: {
@@ -234,13 +232,11 @@ const styles = StyleSheet.create({
     marginHorizontal: ScreenUtil.autowidth(2),
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: UColor.tintColor,
     justifyContent: 'center',
     alignItems: 'center',
   },
   stopoutBackups: {
     fontSize: ScreenUtil.setSpText(10),
-    color: UColor.tintColor,
     textAlign: 'center',
     paddingHorizontal: ScreenUtil.autowidth(8),
     paddingVertical: ScreenUtil.autoheight(1),
@@ -249,14 +245,12 @@ const styles = StyleSheet.create({
   notactivedout: {
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: UColor.showy,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   notactived: {
     fontSize: ScreenUtil.setSpText(10),
-    color: UColor.showy,
     textAlign: 'center', 
     paddingHorizontal: ScreenUtil.autowidth(8),
     paddingVertical: 1,
@@ -265,14 +259,12 @@ const styles = StyleSheet.create({
   outaccount: {
     flex: 1,
     fontSize: ScreenUtil.setSpText(18),
-    color: UColor.fontColor,
     textAlign: 'left',
     justifyContent: 'center',
     alignItems: 'center',
   },
   topouttext: {
     fontSize: ScreenUtil.setSpText(18),
-    color: UColor.arrow,
   },
   bomout: {
     width: ScreenUtil.autowidth(40),
@@ -285,7 +277,6 @@ const styles = StyleSheet.create({
       height: ScreenUtil.autoheight(60),    
       flexDirection:'row',  
       position:'absolute',
-      backgroundColor:UColor.secdColor,
       bottom: 0,
       left: 0,
       right: 0,
@@ -296,7 +287,6 @@ const styles = StyleSheet.create({
       justifyContent: 'center', 
       flexDirection:'row',
       marginRight:1,
-      backgroundColor:UColor.mainColor,
   },
   footimg: {
       width: ScreenUtil.autowidth(30),
@@ -305,7 +295,6 @@ const styles = StyleSheet.create({
   footText:{
       marginLeft: ScreenUtil.autowidth(20),
       fontSize: ScreenUtil.setSpText(18),
-      color:UColor.fontColor
   },
 });
 

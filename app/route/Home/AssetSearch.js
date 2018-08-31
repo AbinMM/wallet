@@ -4,6 +4,7 @@ import { Dimensions, DeviceEventEmitter, ListView, StyleSheet, Image, View, Text
 import UColor from '../../utils/Colors'
 import Button from  '../../components/Button'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
 import { EasyToast } from '../../components/Toast';
@@ -16,11 +17,7 @@ class AssetSearch extends BaseComponent {
 
   static navigationOptions = {
     title: '资产搜索',
-    headerStyle:{
-        paddingTop: ScreenUtil.autoheight(20),
-        backgroundColor: UColor.mainColor,
-        borderBottomWidth:0,
-    }    
+    header:null,  
   };
 
   // 构造函数  
@@ -189,12 +186,13 @@ class AssetSearch extends BaseComponent {
   }
     render() {
         return (
-            <View style={styles.container}>
-                <View style={styles.header}>  
-                    <View style={styles.inptout} >
+            <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+            <Header {...this.props} onPressLeft={true} title="资产搜索" />
+                <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
+                    <View style={[styles.inptout,{backgroundColor: UColor.riceWhite}]} >
                         <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
                         <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
-                            selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow} autoCorrect={true}
+                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} autoCorrect={true}
                             placeholder="输入token名称或合约账户" underlineColorAndroid="transparent" keyboardType="default"
                             onChangeText={(labelname) => this.setState({ labelname })} 
                             />
@@ -203,37 +201,40 @@ class AssetSearch extends BaseComponent {
                         </TouchableOpacity>       
                     </View>    
                     <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>  
-                        <Text style={styles.canceltext}>查询</Text>
+                        <Text style={[styles.canceltext,{color: UColor.fontColor}]}>查询</Text>
                     </TouchableOpacity>  
                     <TouchableOpacity   onPress={this._empty.bind(this,this.state.labelname)}>  
-                        <Text style={styles.canceltext}>清空</Text>
+                        <Text style={[styles.canceltext,{color: UColor.fontColor}]}>清空</Text>
                     </TouchableOpacity>  
                 </View> 
                 {this.state.reveal&&<View style={styles.btnout}>
                   <View style={styles.manualout}>
-                      <Text style={styles.prompttext}>提示：如果您没有搜索到您要找的Token，可以使用手动添加。</Text>
+                      <Text style={[styles.prompttext,{color: UColor.arrow}]}>提示：如果您没有搜索到您要找的Token，可以使用手动添加。</Text>
                       <Button onPress={() => this.logout()}>
-                          <View style={styles.btnloginUser}>
-                              <Text style={styles.btntext}>手动添加</Text>
+                          <View style={[styles.btnloginUser,{backgroundColor: UColor.tintColor}]}>
+                              <Text style={[styles.btntext,{color: UColor.btnColor}]}>手动添加</Text>
                           </View>
                       </Button>
                   </View>
                   <View style={styles.logout}>
                       <Image source={UImage.bottom_log} style={styles.logimg}/>
-                      <Text style={styles.logtext}>EosToken 专注柚子生态</Text>
+                      <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
                   </View>
                 </View>}
                 <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} 
                   dataSource={this.state.dataSource.cloneWithRows(this.state.newAssetsList == null ? [] : this.state.newAssetsList)} 
                   renderRow={(rowData, sectionID, rowID) => (      
-                  <View style={styles.listItem}>
-                      <View style={styles.listInfo}>
-                        <Image source={rowData.icon==null ? UImage.eos : { uri: rowData.icon }} style={{width: ScreenUtil.autowidth(28), height: ScreenUtil.autowidth(28), resizeMode: "cover", overflow:"hidden", borderRadius: 10, marginRight: ScreenUtil.autowidth(10),}}/>
+                  <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
+                      <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
+                        <View style={{borderRadius: 25,backgroundColor: UColor.secdColor,marginRight: ScreenUtil.autowidth(10),}}>
+                          <Image source={rowData.icon==null ? UImage.eos : { uri: rowData.icon }} style={{width: ScreenUtil.autowidth(28), height: ScreenUtil.autowidth(28), resizeMode: "cover", overflow:"hidden", borderRadius: 10,}}/>
+                        </View>
                         <View style={styles.scrollView}>
-                          <Text style={styles.listInfoTitle}>{rowData.name}</Text>
+                          <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>{rowData.name}</Text>
+                          <Text style={[styles.quantity,{color: UColor.arrow}]}>合约账户 : {rowData.contractAccount == null ? "" : rowData.contractAccount}</Text>
                         </View>
                         <View style={styles.listInfoRight}>
-                          <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontColor}
+                          <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.secdColor}
                               value={this.isMyAsset(rowData)} onValueChange={(value)=>{
                               this.setState({selectasset: rowData, value: value});
                               this.addAsset(rowData, value);
@@ -243,28 +244,30 @@ class AssetSearch extends BaseComponent {
                   </View>
                   )}                
                 /> 
-                <View style={styles.pupuo}>
+                <View style={{backgroundColor: UColor.riceWhite}}>
                   <Modal animationType='slide' transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
-                    <View style={styles.modalStyle}>
-                      <View style={styles.subView} >
+                    <View style={[styles.modalStyle,{backgroundColor: UColor.mask}]}>
+                      <View style={[styles.subView,{borderColor: UColor.mask,backgroundColor: UColor.btnColor}]} >
                         <Button style={styles.buttonView} onPress={this._setModalVisible.bind(this)}>
-                          <Text style={styles.butclose}>×</Text>
+                          <Text style={[styles.butclose,{color: UColor.baseline}]}>×</Text>
                         </Button>
                         <Text style={styles.titleText}>手动添加</Text>
                         <View style={styles.passoutsource}>
                             <TextInput ref={(ref) => this._raccount = ref} value={this.state.tokenname}  returnKeyType="next" 
-                                selectionColor={UColor.tintColor}  style={styles.inptpass}  placeholderTextColor={UColor.arrow} 
+                                selectionColor={UColor.tintColor}  placeholderTextColor={UColor.arrow}
+                                style={[styles.inptpass,{backgroundColor: UColor.riceWhite,color: UColor.tintColor}]}   
                                 placeholder="输入Token名称" underlineColorAndroid="transparent" keyboardType="default"   
                                 onChangeText={(tokenname) => this.setState({ tokenname })}/>
                                 
-                            <TextInput ref={(ref) => this._raccount = ref} value={this.state.address}   returnKeyType="go" 
-                                selectionColor={UColor.tintColor}  style={styles.inptpass} placeholderTextColor={UColor.arrow} 
+                            <TextInput ref={(ref) => this._raccount = ref} value={this.state.address}  returnKeyType="go"  
+                                selectionColor={UColor.tintColor}  placeholderTextColor={UColor.arrow} maxLength = {12}
+                                style={[styles.inptpass,{backgroundColor: UColor.riceWhite,color: UColor.tintColor}]} 
                                 placeholder="输入合约账户" underlineColorAndroid="transparent"  keyboardType="default"  
-                                onChangeText={(address) => this.setState({ address })} maxLength = {12}/>
+                                onChangeText={(address) => this.setState({ address })} />
                         </View>
                         <Button onPress={() => { this.submit() }}>
-                          <View style={styles.copyout}>
-                            <Text style={styles.copytext}>提交</Text>
+                          <View style={[styles.copyout,{backgroundColor: UColor.tintColor}]}>
+                            <Text style={[styles.copytext,{color: UColor.btnColor}]}>提交</Text>
                           </View>
                         </Button>
                       </View>
@@ -279,15 +282,12 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       flexDirection:'column',
-      backgroundColor: UColor.secdColor,
-      paddingTop: 1,
     },
     header: {
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
-      paddingVertical: 7,
-      backgroundColor: UColor.mainColor,
+      paddingVertical: ScreenUtil.autoheight(7),
     },
     leftout: {
       paddingLeft: ScreenUtil.autowidth(15),
@@ -305,19 +305,16 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center",
       justifyContent: 'center',
-      backgroundColor: UColor.fontColor,
     },
 
     inpt: {
       flex: 1,
       height: ScreenUtil.autoheight(45),
       fontSize: ScreenUtil.setSpText(14),
-      color: UColor.arrow,
     },
 
     listItem: {
       flex: 1,
-      backgroundColor: UColor.mainColor,
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
@@ -331,13 +328,11 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "space-between",
       borderTopWidth:1,
-      borderTopColor: UColor.secdColor
     },
     scrollView: {
       flex: 1,
     },
     listInfoTitle: {
-      color:UColor.fontColor, 
       fontSize: ScreenUtil.setSpText(16)
     },
     listInfoRight: {
@@ -345,12 +340,8 @@ const styles = StyleSheet.create({
       alignItems: "center"
     },
 
-    pupuo: {
-      backgroundColor: UColor.riceWhite,
-    },
     // modal的样式  
     modalStyle: {
-      backgroundColor: UColor.mask,
       alignItems: 'center',
       justifyContent: 'center',
       flex: 1,
@@ -358,12 +349,10 @@ const styles = StyleSheet.create({
     // modal上子View的样式  
     subView: {
       marginHorizontal: ScreenUtil.autowidth(10),
-      backgroundColor: UColor.fontColor,
       alignSelf: 'stretch',
       justifyContent: 'center',
       borderRadius: 5,
       borderWidth: 0.5,
-      borderColor: UColor.mask,
     },
      // 关闭按钮  
      buttonView: {
@@ -372,7 +361,6 @@ const styles = StyleSheet.create({
     butclose: {
       width: ScreenUtil.autowidth(30),
       height: ScreenUtil.autowidth(30),
-      color: UColor.baseline,
       fontSize: ScreenUtil.setSpText(28),
     },
     // 标题  
@@ -389,25 +377,21 @@ const styles = StyleSheet.create({
       
     },
     inptpass: {
-        color: UColor.tintColor,
         height: ScreenUtil.autoheight(45),
         width: '100%',
         paddingHorizontal: ScreenUtil.autowidth(15),
         marginVertical: ScreenUtil.autoheight(10),
         fontSize: ScreenUtil.setSpText(16),
-        backgroundColor: UColor.riceWhite,
     },
     copyout: {
       margin: ScreenUtil.autowidth(10), 
       height: ScreenUtil.autoheight(45), 
-      borderRadius: 3, 
-      backgroundColor: UColor.tintColor, 
+      borderRadius: 3,  
       justifyContent: 'center', 
       alignItems: 'center' 
     },
     copytext: {
-      fontSize: ScreenUtil.setSpText(16), 
-      color: UColor.fontColor,
+      fontSize: ScreenUtil.setSpText(16),
     },
   
     tab1:{
@@ -419,13 +403,11 @@ const styles = StyleSheet.create({
     }, 
     
     canceltext: {
-      color: UColor.arrow,
       fontSize: ScreenUtil.setSpText(18),
       justifyContent: 'flex-end',
       paddingRight: ScreenUtil.autowidth(10),
     },
     prompttext: {
-      color: UColor.arrow,
       fontSize: ScreenUtil.setSpText(15),
       lineHeight: ScreenUtil.autoheight(30),
       padding: ScreenUtil.autowidth(30),
@@ -444,14 +426,12 @@ const styles = StyleSheet.create({
     btnloginUser: {
       width: ScreenUtil.autowidth(150),
       height: ScreenUtil.autoheight(45),
-      backgroundColor: UColor.tintColor,
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 5
     },
     btntext: {
       fontSize: ScreenUtil.setSpText(17),
-      color: UColor.fontColor,
     },
     logout:{
       flex: 1,
@@ -465,7 +445,6 @@ const styles = StyleSheet.create({
     },
     logtext: {
       fontSize: ScreenUtil.setSpText(14),
-      color: UColor.arrow,
       lineHeight: ScreenUtil.autoheight(30),
     },
 })

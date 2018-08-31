@@ -4,6 +4,7 @@ import { Animated,DeviceEventEmitter,StyleSheet,Image,View,Text,Platform,Dimensi
 import UColor from '../../utils/Colors'
 import Button from  '../../components/Button'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
 import BaseComponent from "../../components/BaseComponent";
@@ -13,18 +14,9 @@ const ScreenHeight = Dimensions.get('window').height;
 @connect(({vote, wallet}) => ({...vote, ...wallet}))
 class Bvote extends BaseComponent {
 
-    static navigationOptions = ({ navigation }) => {
-        return {    
-          title: "节点投票",
-          headerStyle: {
-            paddingTop: ScreenUtil.autoheight(20),
-            backgroundColor: UColor.mainColor,
-            borderBottomWidth:0,
-          },
-          headerRight: (<Button onPress={navigation.state.params.onPress}>
-            <Text style={{color: UColor.arrow, fontSize: ScreenUtil.setSpText(18),justifyContent: 'flex-end',paddingRight: ScreenUtil.autowidth(15)}}>邀请投票</Text>
-          </Button>),            
-        };
+    static navigationOptions = { 
+        title: "节点投票",
+        header:null, 
     };
 
   _rightTopClick = () =>{  
@@ -34,7 +26,6 @@ class Bvote extends BaseComponent {
   // 构造函数  
   constructor(props) { 
     super(props);
-    this.props.navigation.setParams({ onPress: this._rightTopClick });
     this.state = {
       transformY: new Animated.Value(200),
       transformY1: new Animated.Value(-1000),
@@ -80,32 +71,33 @@ class Bvote extends BaseComponent {
     render() {
         const c = this.props.navigation.state.params.coinType;
         return (
-            <View style={styles.container}>
-                 <View style={styles.outsource}>
+            <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+                <Header {...this.props} onPressLeft={true} title="节点投票" subName="邀请投票" onPressRight={this._rightTopClick.bind()}/>  
+                 <View style={[styles.outsource,{backgroundColor: UColor.mainColor}]}>
                     <View style={styles.headoutsource}>
-                        <Text style={styles.headSizeone}>进度：37.131%</Text>
-                        <Text style={styles.headSizetwo}>可投票数：{30 - this.state.arr}</Text>
+                        <Text style={[styles.headSizeone,{color: UColor.fontColor}]}>进度：37.131%</Text>
+                        <Text style={[styles.headSizetwo,{color: UColor.fontColor}]}>可投票数：{30 - this.state.arr}</Text>
                     </View>
                     <View>
-                      <View style={styles.Underschedule}></View> 
+                      <View style={[styles.Underschedule,{backgroundColor: UColor.secdColor}]}></View> 
                       <View style={styles.Aboveschedule}>
-                        <View style={styles.Abovestrip}></View>
-                        <View style={styles.Abovecircular}></View>
+                        <View style={[styles.Abovestrip,{backgroundColor: UColor.tintColor}]}></View>
+                        <View style={[styles.Abovecircular,{backgroundColor: UColor.tintColor}]}></View>
                       </View>                     
                     </View>             
                 </View>
                 
-                <TouchableHighlight onPress={this.goPage.bind(this, 'Imvote')}>
+                <TouchableHighlight onPress={this.goPage.bind(this, 'Imvote')} style={{marginHorizontal: ScreenUtil.autowidth(5)}}>
                   <ImageBackground  style={styles.lockoutsource} source={UImage.votea_bj} resizeMode="stretch">              
-                    <Text style={styles.locktitle}>我的投票</Text>
+                    <Text style={[styles.locktitle,{color: UColor.btnColor}]}>我的投票</Text>
                     <View style={styles.locktext}>
                         <Image source={UImage.voteb} style={styles.lockimg}/>
                     </View>     
                   </ImageBackground>     
                 </TouchableHighlight> 
-                <TouchableHighlight onPress={this.goPage.bind(this, 'Nodevoting')} >      
+                <TouchableHighlight onPress={this.goPage.bind(this, 'Nodevoting')} style={{marginHorizontal: ScreenUtil.autowidth(5)}}>      
                   <ImageBackground  style={styles.lockoutsource} source={UImage.votec_bj} resizeMode="stretch">              
-                    <Text style={styles.locktitle}>超级节点</Text>
+                    <Text style={[styles.locktitle,{color: UColor.btnColor}]}>超级节点</Text>
                     <View style={styles.locktext}>
                         <Image source={UImage.votec} style={styles.lockimg}/>
                     </View>     
@@ -120,15 +112,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection:'column',
-    backgroundColor: UColor.secdColor,
-    padding: ScreenUtil.autowidth(6),
   },
 
   outsource: {
+    marginTop: ScreenUtil.autoheight(5),
+    marginHorizontal: ScreenUtil.autowidth(5),
     padding: ScreenUtil.autowidth(20),
     height: ScreenUtil.autoheight(78),
-    borderRadius: 5, 
-    backgroundColor: UColor.mainColor,
+    borderRadius: 5,
   },
 
   headoutsource: {
@@ -140,19 +131,16 @@ const styles = StyleSheet.create({
 
   headSizeone: {
     fontSize: ScreenUtil.setSpText(12), 
-    color: UColor.fontColor,
     marginRight: ScreenUtil.autowidth(10),
   },
 
   headSizetwo: {
     marginLeft: ScreenUtil.autowidth(10),
     fontSize: ScreenUtil.setSpText(12), 
-    color: UColor.fontColor
   },
 
   Underschedule: {
-    height: ScreenUtil.autoheight(2), 
-    backgroundColor: UColor.secdColor, 
+    height: ScreenUtil.autoheight(2),
     position:'relative', 
     top: ScreenUtil.autoheight(3),
   },
@@ -166,13 +154,11 @@ const styles = StyleSheet.create({
   Abovestrip: {
     width: '24.2218%',
     height: ScreenUtil.autoheight(2),
-    backgroundColor: UColor.tintColor,
   },
 
   Abovecircular: {
     width: ScreenUtil.autowidth(8), 
     height: ScreenUtil.autowidth(8),  
-    backgroundColor: UColor.tintColor, 
     borderRadius: 5,
   },
 
@@ -188,7 +174,6 @@ const styles = StyleSheet.create({
 
   locktitle: {
     fontSize:ScreenUtil.setSpText(16), 
-    color: UColor.fontColor
   },
 
   locktext: {

@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: 'center',
       height: ScreenUtil.autoheight(30),
-      backgroundColor: UColor.fontColor,
+      backgroundColor: UColor.riceWhite,
       marginHorizontal: ScreenUtil.autowidth(10),
     },
     inpt: {

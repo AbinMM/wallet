@@ -1,4 +1,13 @@
 export default {
+  
+  signln_bg: require('../img/day/signln_bg.png'),
+  difficult: require('../img/difficult.png'),
+  mustread: require('../img/mustread.png'),
+  feedback: require('../img/feedback.png'),
+  commonwt: require('../img/commonwt.png'),
+  line_bg_h: require('../img/line_bg_h.png'),
+
+
   a:require('../img/a.png'),
   aab1: require('../img/aab1.png'),
   aab2: require('../img/aab2.png'),
@@ -93,7 +102,8 @@ export default {
   share:require('../img/share.png'),
   sharebg:require('../img/sharebg.png'),
   shift_to:require('../img/shift_to.png'),
-  signed:require('../img/signed.png'),  
+  signed:require('../img/signed.png'), 
+  signln_mr: require('../img/signln_mr.png'),  
   small_bell_h:require('../img/small_bell_h.png'),  
   small_bell:require('../img/small_bell.png'),  
   strip_bg:require('../img/strip_bg.png'),

@@ -5,6 +5,7 @@ import { DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, Platform, 
 import moment from 'moment';
 import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import Button from '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast"
@@ -14,13 +15,9 @@ var dismissKeyboard = require('dismissKeyboard');
 class WithdrawMoney extends React.Component {
   static navigationOptions = {
     title: "领取记录",
-    headerStyle: {
-      paddingTop: ScreenUtil.autoheight(20),
-      backgroundColor: UColor.mainColor,
-      borderBottomWidth:0,
-    },
+    header:null, 
   };
-
+  
   constructor(props) {
     super(props);
   }
@@ -32,25 +29,26 @@ class WithdrawMoney extends React.Component {
 
   render() {
     const carry = this.props.navigation.state.params.carry.data;
-    return (<View style={styles.container}>
-      <View style={styles.package}>
+    return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+      <Header {...this.props} onPressLeft={true} title="领取记录" />
+      <View style={[styles.package,{backgroundColor: UColor.mainColor}]}>
         <View style={styles.leftout}>
-          <Text style={styles.payertext}>领取数量：<Text style={{color: UColor.fontColor}}>{carry.eost} EOS</Text></Text>
-          <Text style={styles.payertext}>接受账号：<Text style={{color: UColor.fontColor}}>{carry.eos_account}</Text></Text>
-          <Text style={styles.payertext}>时间：<Text style={{color: UColor.fontColor}}>{moment(carry.createdate).format("YYYY-MM-DD HH:mm")}</Text></Text>
-          {/* <Text style={styles.timetext}>时间{moment(rowData.record_date).add(8,'hours').format('MM-DD HH:mm:ss')}</Text> */}
+          <Text style={[styles.payertext,{color: UColor.arrow}]}>领取数量：<Text style={{color: UColor.fontColor}}>{carry.eost} EOS</Text></Text>
+          <Text style={[styles.payertext,{color: UColor.arrow}]}>接受账号：<Text style={{color: UColor.fontColor}}>{carry.eos_account}</Text></Text>
+          <Text style={[styles.payertext,{color: UColor.arrow}]}>时间：<Text style={{color: UColor.fontColor}}>{moment(carry.createdate).format("YYYY-MM-DD HH:mm")}</Text></Text>
+          {/* <Text style={[styles.timetext,{color: UColor.arrow}]}>时间{moment(rowData.record_date).add(8,'hours').format('MM-DD HH:mm:ss')}</Text> */}
         </View>
         <View style={styles.rightout}>
-          {carry.type == 'audit' && <Text style={styles.selltext}>审核中</Text>}
-          {carry.type == 'receive' && <Text style={styles.buytext}>已提取</Text>}
-          {carry.type == 'notpass' && <Text style={styles.buytext}>未通过</Text>}
-          <Text style={styles.presentprice}>状态</Text>
+          {carry.type == 'audit' && <Text style={[styles.selltext,{color: UColor.riseColor}]}>审核中</Text>}
+          {carry.type == 'receive' && <Text style={[styles.buytext,{color: UColor.tintColor}]}>已提取</Text>}
+          {carry.type == 'notpass' && <Text style={[styles.buytext,{color: UColor.tintColor}]}>未通过</Text>}
+          <Text style={[styles.presentprice,{color: UColor.arrow}]}>状态</Text>
         </View>
       </View>
       <View style={{flex: 1, justifyContent: "flex-end",}}>
-          <View style={styles.significantout}>
-              <Text style={styles.significanttext} >审核中说明</Text>
-              <Text style={styles.significanttext} >您的领取奖励已提交成功！奖励将在3个工作日内到账，请注意查收！</Text>
+          <View style={[styles.significantout,{borderColor: UColor.arrow}]}>
+              <Text style={[styles.significanttext,{color: UColor.arrow}]} >审核中说明</Text>
+              <Text style={[styles.significanttext,{color: UColor.arrow}]} >您的领取奖励已提交成功！奖励将在3个工作日内到账，请注意查收！</Text>
           </View>
       </View>
     </View>
@@ -61,12 +59,9 @@ class WithdrawMoney extends React.Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      paddingTop: 1,
       flexDirection: "column",
-      backgroundColor: UColor.secdColor,
     },
     package: {
-      backgroundColor: UColor.mainColor,
       flexDirection: "row",
       paddingHorizontal: ScreenUtil.autowidth(10),
       paddingVertical: ScreenUtil.autoheight(5),
@@ -80,12 +75,10 @@ const styles = StyleSheet.create({
       justifyContent: "center",
     },
     payertext: {
-      color: UColor.arrow,
       fontSize: ScreenUtil.setSpText(15),
       lineHeight: ScreenUtil.autoheight(30),
     },
     timetext: {
-      color: UColor.arrow,
       fontSize: ScreenUtil.setSpText(15),
     },
     rightout: {
@@ -95,29 +88,24 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     selltext: {
-      color: UColor.riseColor,
       fontSize: ScreenUtil.setSpText(15),
       lineHeight: ScreenUtil.autoheight(30),
     },
     buytext: {
-      color: UColor.tintColor,
       fontSize: ScreenUtil.setSpText(15),
       lineHeight: ScreenUtil.autoheight(30),
     },
     presentprice: {
       fontSize: ScreenUtil.setSpText(14),
-      color: UColor.arrow,
     },
 
     significantout: {
       margin: ScreenUtil.autowidth(20),
       padding: ScreenUtil.autowidth(10),
-      borderColor: UColor.arrow,
       borderWidth: 1,
       borderRadius: 10,
     },
     significanttext: {
-      color: UColor.arrow,
       fontSize: ScreenUtil.setSpText(14), 
       lineHeight: ScreenUtil.autoheight(25),
     },

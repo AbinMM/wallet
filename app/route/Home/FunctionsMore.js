@@ -4,6 +4,7 @@ import { Dimensions, ListView, StyleSheet, Image, View, Text, Linking, Modal, An
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { EasyShowLD } from '../../components/EasyShow'
@@ -16,13 +17,9 @@ class FunctionsMore extends React.Component {
 
   static navigationOptions = {
     title: '全部',  
-    headerStyle:{
-        paddingTop: ScreenUtil.autoheight(20),
-        backgroundColor: UColor.mainColor,
-        borderBottomWidth:0,
-    }    
+    header:null, 
   };
-
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -73,84 +70,85 @@ class FunctionsMore extends React.Component {
     }
   
   render() {
-    return (<View style={styles.container}>
-        <View style={styles.head}>
+    return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+        <Header {...this.props} onPressLeft={true} title="全部" />
+        <View style={[styles.head,{backgroundColor: UColor.mainColor,marginTop:ScreenUtil.autoheight(10)}]}>
             <Button onPress={this.onPress.bind(this, 'Receivables')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.qr} style={styles.imgBtn} />
-                    <Text style={styles.headbtntext}>收币</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>收币</Text>
                 </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'transfer')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.transfer} style={styles.imgBtn} />
-                    <Text style={styles.headbtntext}>转账</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>转账</Text>
                 </View>
             </Button>
             <Button  onPress={this.onPress.bind(this, 'Resources')}  style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.resources} style={styles.imgBtn} />
-                    <Text style={styles.headbtntext}>资源管理</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>资源管理</Text>
                 </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'Tokenissue')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.tokenissue} style={styles.imgBtn} />
-                    <Text style={styles.headbtntext}>发行代币</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>发行代币</Text>
                 </View>                      
             </Button>
         </View>
-        <View style={styles.head}>
+        <View style={[styles.head,{backgroundColor: UColor.mainColor}]}>
             <Button onPress={this.onPress.bind(this, 'Bvote')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.vote_node} style={styles.imgBtn} />
-                    <Text style={styles.headbtntext}>节点投票</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>节点投票</Text>
                 </View>                      
             </Button>
             <Button onPress={this.onPress.bind(this, 'candy')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.candy} style={styles.imgBtn} />
-                    <Text style={styles.headbtntext}>糖果信息</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>糖果信息</Text>
                 </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'FreeMortgage')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.free_mortgage} style={styles.imgBtn} />
-                    <Text style={styles.headbtntext}>免费抵押</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>免费抵押</Text>
                 </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'navigation')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.navigation} style={styles.imgBtn} />
-                    <Text style={styles.headbtntext}>EOS导航</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>EOS导航</Text>
                 </View>
             </Button>
         </View>
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.Tokenissue} onRequestClose={()=>{}}>
-            <TouchableOpacity style={styles.pupuoBackup} activeOpacity={1.0}>
-              <View style={{ width: ScreenWidth-30, backgroundColor: UColor.fontColor, borderRadius: 5, position: 'absolute', }}>
+            <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+              <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
                 <View style={styles.subViewBackup}> 
                   <Button onPress={this._setModalVisible.bind(this) } style={styles.buttonView2}>
                       <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={30} />
                   </Button>
                 </View>
                 <Text style={styles.contentText}>使用说明</Text>
-                <View style={styles.warningout}>
+                <View style={[styles.warningout,{borderColor: UColor.showy}]}>
                     <Image source={UImage.warning_h} style={styles.imgBtnBackup} />
-                    <Text style={styles.headtitle}>免责声明：本功能由第三方平台提供，不属于EosToken官方出品，《用户协议》和《应用风险》由该平台单独向您承担责任！</Text>
+                    <Text style={[styles.headtitle,{color: UColor.showy}]}>免责声明：本功能由第三方平台提供，不属于EosToken官方出品，《用户协议》和《应用风险》由该平台单独向您承担责任！</Text>
                 </View>
                 <View style={{ width: ScreenWidth-70,marginHorizontal: ScreenUtil.autowidth(20), marginVertical: ScreenUtil.autoheight(10),}}>
-                    <Text style={styles.centertext}>3分钟，3EOS！最方便，最便宜的EOS自助发币DAPP。</Text>
-                    <Text style={styles.centertext}>开发：清华大学计算机专业博士生莫与独立编写。</Text>
-                    <Text style={styles.centertext}>功能：帮助大家自助地发行基于EOS代币。价格比大家自己发币便宜了13倍！</Text>
-                    <Text style={styles.centertext}>流程：</Text>
-                    <Text style={styles.centertext}>1.根据指导生成自己代币的MEMO。</Text>
-                    <Text style={styles.centertext}>2.给指定合约账号转账3EOS，并备注之前生成的MEMO。</Text>
-                    <Text style={styles.centertext}>3.在eostoken钱包中添加代币（添加公众号“深入浅出EOS”回复“eostoken”获取教程）</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>3分钟，3EOS！最方便，最便宜的EOS自助发币DAPP。</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>开发：清华大学计算机专业博士生莫与独立编写。</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>功能：帮助大家自助地发行基于EOS代币。价格比大家自己发币便宜了13倍！</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>流程：</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>1.根据指导生成自己代币的MEMO。</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>2.给指定合约账号转账3EOS，并备注之前生成的MEMO。</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>3.在eostoken钱包中添加代币（添加公众号“深入浅出EOS”回复“eostoken”获取教程）</Text>
                 </View>
                 <Button onPress={this.openTokenissue.bind(this)} style={{}}>
-                    <View style={styles.deleteout}>
-                        <Text style={styles.deletetext}>知道了</Text>
+                    <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
+                        <Text style={[styles.deletetext,{color: UColor.btnColor}]}>知道了</Text>
                     </View>
                 </Button>  
                 </View> 
@@ -166,14 +164,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
-        backgroundColor: UColor.secdColor,
-        paddingTop: ScreenUtil.autoheight(10),
     },
     head: {
         height: ScreenUtil.autoheight(70), 
         paddingBottom: ScreenUtil.autoheight(10),
         flexDirection: "row",
-        backgroundColor: UColor.inash, 
     },
     headbtn: {
         width: ScreenWidth/4,
@@ -191,7 +186,6 @@ const styles = StyleSheet.create({
         margin: ScreenUtil.autowidth(5),
     },
     headbtntext: {
-        color: UColor.lightgray,
         fontSize: ScreenUtil.setSpText(14),
     },
 
@@ -204,7 +198,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: UColor.mask,
     },
 
     subViewBackup: {
@@ -231,7 +224,6 @@ const styles = StyleSheet.create({
     },
     headtitle: {
         flex: 1,
-        color: UColor.showy,
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(20),
         paddingLeft: ScreenUtil.autowidth(10),
@@ -245,27 +237,23 @@ const styles = StyleSheet.create({
         marginHorizontal: ScreenUtil.autowidth(15),
         flexDirection: "row",
         alignItems: 'center',
-        borderColor: UColor.showy,
         borderWidth: 1,
         borderRadius: 5,
     },
     centertext: {
         fontSize: ScreenUtil.setSpText(12),
         lineHeight: ScreenUtil.autoheight(20),
-        color: UColor.secdColor,
     },
     deleteout: {
         height: ScreenUtil.autoheight(40),
         marginHorizontal: ScreenUtil.autowidth(100),
         marginVertical: ScreenUtil.autoheight(15),
         borderRadius: 3,
-        backgroundColor: UColor.tintColor,
         justifyContent: 'center',
         alignItems: 'center'
     },
     deletetext: {
         fontSize: ScreenUtil.setSpText(16),
-        color: UColor.fontColor
     },
       
 });

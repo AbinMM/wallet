@@ -10,6 +10,7 @@ import UColor from '../../utils/Colors'
 import Button from  '../../components/Button'
 import Echarts from 'native-echarts'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -20,14 +21,12 @@ import Assets from '../../models/Assets';
 var dismissKeyboard = require('dismissKeyboard');
 @connect(({addressBook}) => ({...addressBook}))
 class addressManage extends BaseComponent {
+
     static navigationOptions = {
         title: 'EOS地址薄',  
-        headerStyle:{
-            paddingTop: ScreenUtil.autoheight(20),
-            backgroundColor: UColor.mainColor,
-            borderBottomWidth:0,
-        }    
-      };
+        header:null, 
+    };
+
  // 构造函数  
   constructor(props) {
         super(props);
@@ -182,13 +181,13 @@ class addressManage extends BaseComponent {
         return (
             <View style={styles.selectout}>
                {this.state.isEdit ? 
-               <TouchableOpacity style={styles.touchSelect} onPress={() => this.selectItem(parseInt(rowID), rowData.labelName, isChecked)}>
+               <TouchableOpacity style={[styles.touchSelect,{backgroundColor: UColor.secdColor}]} onPress={() => this.selectItem(parseInt(rowID), rowData.labelName, isChecked)}>
                     <Image source={isChecked ? UImage.aab1:UImage.aab2} style={styles.selectoutimg}/>
                 </TouchableOpacity> : null}
                 <Button  onPress={this.state.isEdit ?null:this.selectAddress.bind(this,rowData.address)}>
-                    <View style={styles.selout}>
-                        <Text style={styles.outlabelname}>{"标签:"+rowData.labelName}</Text>
-                        <Text style={styles.outaddress}>{"账号:"+rowData.address}</Text>
+                    <View style={[styles.selout,{backgroundColor: UColor.mainColor,borderColor: UColor.mainColor}]}>
+                        <Text style={[styles.outlabelname,{color: UColor.fontColor}]}>{"标签:"+rowData.labelName}</Text>
+                        <Text style={[styles.outaddress,{color: UColor.arrow}]}>{"账号:"+rowData.address}</Text>
                     </View>
                 </Button>    
            </View>
@@ -268,50 +267,50 @@ class addressManage extends BaseComponent {
 
         console.log(temp, '......')
         return (
-            <View style={styles.container}>
-                
+            <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+                <Header {...this.props} onPressLeft={true} title="EOS地址薄" />
                 <ListView renderRow={this.renderRow}  
                 enableEmptySections = {true}  
                 dataSource={this.state.dataSource.cloneWithRows((this.props.addressBook == null ? [] : this.props.addressBook))}> 
                 </ListView> 
 
                 { this.state.isShowBottom == false ? 
-                <View style={styles.replace}>
-                    <TouchableOpacity onPress={this.newlyAddedClick.bind(this)} style={styles.added}>
-                        <Text style={styles.address}>新增地址</Text>
+                <View style={[styles.replace,{backgroundColor: UColor.secdColor}]}>
+                    <TouchableOpacity onPress={this.newlyAddedClick.bind(this)} style={[styles.added,{backgroundColor: UColor.tintColor}]}>
+                        <Text style={[styles.address,{color:UColor.btnColor}]}>新增地址</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.editClick(this)} style={styles.editClickout}>
-                        <Text style={styles.address}>管理地址</Text>
+                    <TouchableOpacity onPress={() => this.editClick(this)} style={[styles.editClickout,{backgroundColor: UColor.tintColor}]}>
+                        <Text style={[styles.address,{color:UColor.btnColor}]}>管理地址</Text>
                     </TouchableOpacity>                 
                 </View> : null
                 }             
                 { this.state.isShowBottom == true ? 
-                <View style={styles.alternate}>                         
-                    <TouchableOpacity onPress={() => this.deleteItem(this)} style={styles.deleteItemout}>
-                        <Text style={styles.address}>删除地址</Text>
+                <View style={[styles.alternate,{backgroundColor: UColor.secdColor}]}>                         
+                    <TouchableOpacity onPress={() => this.deleteItem(this)} style={[styles.deleteItemout,{backgroundColor: UColor.riseColor}]}>
+                        <Text style={[styles.address,{color:UColor.btnColor}]}>删除地址</Text>
                     </TouchableOpacity>
-                    {/* <TouchableOpacity onPress={() => this.editClick(this)} style={styles.completeout}>                              
-                        <Text style={styles.address}>完成</Text>
+                    {/* <TouchableOpacity onPress={() => this.editClick(this)} style={[styles.completeout,{backgroundColor: UColor.tintColor}]}>                              
+                        <Text style={[styles.address,{color:UColor.btnColor}]}>完成</Text>
                     </TouchableOpacity> */}
                 </View> : null
                 }
-                <View style={styles.pupuo}>  
+                <View style={{backgroundColor: UColor.riceWhite}}>  
                     <Modal  animationType='slide'  transparent={true}  visible={this.state.show}  onShow={() => {}}  onRequestClose={() => {}} >  
-                        <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={styles.modalStyle}>   
-                                <View style={styles.subView} >  
+                        <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={[styles.modalStyle,{backgroundColor: UColor.mask}]}>   
+                                <View style={[styles.subView,{backgroundColor: UColor.btnColor}]} >  
                                     <Button style={styles.buttonView} onPress={this._setModalVisible.bind(this)}>  
-                                        <Text style={styles.buttoncols}>×</Text>                                          
+                                        <Text style={[styles.buttoncols,{color: UColor.baseline}]}>×</Text>                                          
                                     </Button>  
                                     <Text style={styles.titleText}>添加地址</Text> 
-                                    <View style={styles.inptout} >
+                                    <View style={[styles.inptout,{backgroundColor: UColor.riceWhite}]} >
                                         <TextInput onChangeText={(labelName) => this.setState({ labelName })} returnKeyType="next" maxLength = {20}
-                                        selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow}  
+                                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}  
                                         placeholder="输入标签名称" underlineColorAndroid="transparent" value={this.state.labelName} />
                                     </View>    
-                                    <View style={styles.inptoutsource}>
+                                    <View style={[styles.inptoutsource,{backgroundColor: UColor.riceWhite}]}>
                                         <View style={styles.accountoue} >
                                             <TextInput onChangeText={(address) => this.setState({ address: this.chkAccount(address) })} returnKeyType="next" maxLength = {12}
-                                            selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow}
+                                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}
                                             placeholder="输入账户名称" underlineColorAndroid="transparent"  value={this.state.address}/>
                                         </View>    
                                         <View style={styles.scanning}>
@@ -322,8 +321,8 @@ class addressManage extends BaseComponent {
                                     </View>  
 
                                     <Button onPress={() => this.confirm(this) }>
-                                        <View style={styles.conout}>
-                                            <Text style={styles.context}>确认</Text>
+                                        <View style={[styles.conout,{backgroundColor: UColor.tintColor}]}>
+                                            <Text style={[styles.context,{color: UColor.btnColor}]}>确认</Text>
                                         </View>
                                     </Button>
                                 </View>  
@@ -345,14 +344,13 @@ const styles = StyleSheet.create({
         left: ScreenUtil.autowidth(3),
     },
     selectoutimg: {
+        marginTop: ScreenUtil.autoheight(10),
         width: ScreenUtil.autowidth(30),
         height: ScreenUtil.autowidth(30),
     },
     touchSelect:{ 
         width: ScreenUtil.autowidth(60), 
         height: ScreenUtil.autowidth(60), 
-        backgroundColor: UColor.secdColor, 
-        //marginVertical: ScreenUtil.autoheight(5),
         alignItems: "center", 
         justifyContent: 'center', 
    },
@@ -360,41 +358,33 @@ const styles = StyleSheet.create({
     selout: {
         width: ScreenWidth-20,
         height: ScreenUtil.autoheight(60),
-        backgroundColor: UColor.mainColor,
-        marginBottom: ScreenUtil.autoheight(10),
+        marginTop: ScreenUtil.autoheight(10),
         marginHorizontal: ScreenUtil.autowidth(10),
         paddingHorizontal: ScreenUtil.autowidth(10),
         alignItems: "flex-start",
         justifyContent: 'center',
-        borderColor: UColor.mainColor,
         borderWidth: 1,
         borderRadius: 5,
     },
     outlabelname:{
-        color: UColor.fontColor,
         fontSize: ScreenUtil.setSpText(15),
     },
     outaddress: {
-        color: UColor.arrow,
         fontSize: ScreenUtil.setSpText(15),
     },
 
 
     container: {
         flex: 1,
-        backgroundColor: UColor.secdColor,
-        paddingTop: ScreenUtil.autoheight(10),
     },
     replace: {
         width: ScreenWidth,
-        backgroundColor: UColor.secdColor,
         justifyContent: "space-between",
         flexDirection: 'column',
         alignItems: "center"
     },
     alternate: {
         width: ScreenWidth,
-        backgroundColor: UColor.secdColor,
         justifyContent: "space-between",
         flexDirection: 'column',
         alignItems: "center"
@@ -402,7 +392,6 @@ const styles = StyleSheet.create({
     added: {
         width: ScreenWidth - 20,
         height: ScreenUtil.autoheight(45),
-        backgroundColor: UColor.tintColor,
         justifyContent: 'center',
         alignItems: 'center',
         margin: ScreenUtil.autowidth(10),
@@ -410,12 +399,10 @@ const styles = StyleSheet.create({
     },
     address: {
         fontSize: ScreenUtil.setSpText(17),
-        color:UColor.fontColor
     },
     editClickout: {
         width: ScreenWidth - 20,
         height: ScreenUtil.autoheight(45),
-        backgroundColor: UColor.tintColor,
         justifyContent: 'center',
         alignItems: 'center',
         margin: ScreenUtil.autowidth(10),
@@ -425,7 +412,6 @@ const styles = StyleSheet.create({
     deleteItemout: {
         width: ScreenWidth - 20,
         height: ScreenUtil.autoheight(45),
-        backgroundColor: UColor.riseColor,
         justifyContent: 'center',
         alignItems: 'center',
         margin: ScreenUtil.autowidth(10),
@@ -435,19 +421,15 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         width: ScreenWidth - 20,
         height: ScreenUtil.autoheight(45),
-        backgroundColor: UColor.tintColor,
         justifyContent: 'center',
         alignItems: 'center',
         margin: ScreenUtil.autowidth(10),
         borderRadius: 5
     },
 
-    pupuo:{  
-        backgroundColor: UColor.riceWhite,  
-      },  
+   
       // modal的样式  
       modalStyle: {  
-        backgroundColor: UColor.mask,  
         alignItems: 'center',  
         justifyContent:'center',  
         flex:1,  
@@ -460,7 +442,6 @@ const styles = StyleSheet.create({
         width: ScreenUtil.autowidth(30),
         height: ScreenUtil.autowidth(30),
         marginBottom: 0,
-        color: UColor.baseline,
         fontSize: ScreenUtil.setSpText(28),
       },
       
@@ -468,12 +449,9 @@ const styles = StyleSheet.create({
       subView:{  
         width:ScreenWidth-20,
         marginHorizontal: ScreenUtil.autowidth(10),  
-        backgroundColor: UColor.fontColor,  
         alignSelf: 'stretch',  
         justifyContent:'center',  
         borderRadius: 10,  
-        borderWidth: 0.5,  
-        borderColor: UColor.baseline,  
       },  
       // 标题  
       titleText:{   
@@ -486,13 +464,11 @@ const styles = StyleSheet.create({
           width:ScreenWidth-40,
           height: ScreenUtil.autoheight(40),
           paddingHorizontal: ScreenUtil.autowidth(10),
-          backgroundColor: UColor.riceWhite,
           marginBottom: ScreenUtil.autoheight(10),
           marginHorizontal: ScreenUtil.autowidth(10),
           justifyContent: 'center',
       },
       inpt: {
-          color: UColor.arrow,
           fontSize: ScreenUtil.setSpText(14),
           height: ScreenUtil.autoheight(40),
           paddingLeft: ScreenUtil.autowidth(2),
@@ -501,20 +477,16 @@ const styles = StyleSheet.create({
           margin: ScreenUtil.autowidth(10),
           height: ScreenUtil.autoheight(40),
           borderRadius: 6,
-          backgroundColor: UColor.tintColor,
           justifyContent: 'center',
           alignItems: 'center'
       },
       context: {
         fontSize: ScreenUtil.setSpText(16), 
-        color: UColor.fontColor
       },
 
       inptoutsource: {
         width:ScreenWidth-40,
         height: ScreenUtil.autoheight(40),
-       
-        backgroundColor: UColor.riceWhite,
         marginBottom: ScreenUtil.autoheight(10),
         marginHorizontal: ScreenUtil.autowidth(10),
         flexDirection: 'row',

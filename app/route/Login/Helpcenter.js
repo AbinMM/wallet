@@ -3,8 +3,8 @@ import { StyleSheet, View, Text, Image, TouchableHighlight } from 'react-native'
 import UImage from "../../utils/Img";
 import UColor from '../../utils/Colors'
 import Item from '../../components/Item'
-import ScreenUtil from '../../utils/ScreenUtil'
 import Header from '../../components/Header'
+import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from "../../components/EasyShow"
 import BaseComponent from "../../components/BaseComponent";
 

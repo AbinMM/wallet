@@ -4,6 +4,7 @@ import { Dimensions, DeviceEventEmitter,NativeModules, InteractionManager,Modal,
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
 import Item from '../../components/Item'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import UImage from '../../utils/Img'
@@ -19,11 +20,7 @@ class Setting extends React.Component {
 
   static navigationOptions = {
     title: "我的",
-    headerStyle: {
-        paddingTop: ScreenUtil.autoheight(20),
-        backgroundColor: UColor.mainColor,
-        borderBottomWidth:0,
-    },      
+    header:null,   
     tabBarLabel: '我的',
     tabBarIcon: ({ focused}) => (
       <Image resizeMode='stretch'
@@ -31,7 +28,6 @@ class Setting extends React.Component {
       />
     ),
   };
-  
   constructor(props) {
     super(props);
     this.config = [
@@ -238,21 +234,23 @@ class Setting extends React.Component {
   }  
 
   render() {
-    return <View style={styles.container}>
+    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+   {!UColor.theme && <Header {...this.props}  backgroundColor={UColor.secdColor} onPressLeft={false} title="我的" />}
+
     {Constants.isNetWorkOffline &&
         <Button onPress={this.openSystemSetting.bind(this)}>
-          <View style={styles.systemSettingTip}>
-              <Text style={styles.systemSettingText}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
-              <Ionicons style={styles.systemSettingArrow} name="ios-arrow-forward-outline" size={20} />
+          <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
+              <Text style={[styles.systemSettingText,{color: UColor.fontColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
+              <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
           </View>
         </Button>}
       <ScrollView style={styles.scrollView}>
-        <View>
-            <Button onPress={this.goProfile.bind(this)}>
-              <View style={styles.userHead} >
+          <ImageBackground source={UColor.theme ? UImage.signln_bg : UImage.signln_mr} resizeMode="cover" style={UColor.theme ? styles.daylinebgout : styles.linebgout}>
+            <Button style={{ flex:1,justifyContent: "center",alignItems: "center",}} onPress={this.goProfile.bind(this)}>
+              <View style={[styles.userHead, UColor.theme ? '' : {backgroundColor: UColor.mainColor}]} >
                 <View style={styles.headout}>
                   <Image source={UImage.logo} style={styles.headimg} />
-                  <Text style={styles.headtext}>{(this.props.loginUser) ? this.props.loginUser.nickname : "登陆"}</Text>
+                  <Text style={[styles.headtext,{color: UColor.fontColor}]}>{(this.props.loginUser) ? this.props.loginUser.nickname : "登陆"}</Text>
                 </View>
                 <View style={styles.signedout}>
                   {
@@ -263,34 +261,34 @@ class Setting extends React.Component {
                 </View>
               </View>
             </Button>
-            <Button style={styles.eosbtn}>
-              <View style={styles.eosbtnout}>
+            <Button style={UColor.theme ? styles.dayeosbtn : styles.eosbtn}>
+              <View style={[UColor.theme ? styles.dayeosbtnout : styles.eosbtnout,{backgroundColor: UColor.mainColor}]}>
                 <View style={styles.eosout}>
-                  <Text style={styles.eosbtntext}>活动奖励</Text>
-                  <Text style={styles.eostext}>{(this.props.loginUser) ? this.props.loginUser.eost : "0"} EOS</Text>
+                  <Text style={[styles.eosbtntext,{color: UColor.arrow}]}>活动奖励</Text>
+                  <Text style={[styles.eostext,{color: UColor.fontColor}]}>{(this.props.loginUser) ? this.props.loginUser.eost : "0"} EOS</Text>
                 </View>
                 <View style={styles.Withdrawout}>
                   {
-                    this.props.loginUser && <Button onPress={this.selectpoint.bind(this)} style={styles.Withdrawbtn}>
-                      <Text style={styles.Withdrawtext}>{this.state.isquery ? '领取记录' : '领取'}</Text>
+                    this.props.loginUser && <Button onPress={this.selectpoint.bind(this)} style={[styles.Withdrawbtn,{backgroundColor: UColor.tintColor}]}>
+                      <Text style={[styles.Withdrawtext,{color: UColor.btnColor}]}>{this.state.isquery ? '领取记录' : '领取'}</Text>
                     </Button>
                   }
                 </View>
               </View>
             </Button>
+            </ImageBackground>
             <View>
               {this._renderListItem()}
             </View>
             
             <View style={styles.footer}>
-              <Text style={styles.foottext}>© 2018 eostoken all rights reserved </Text>
-              {/* <Text style={styles.foottext}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text> */}
-              <Text style={styles.foottext}>EOS专业版钱包 V2.3.2</Text>
+              <Text style={[styles.foottext,{color: UColor.arrow}]}>© 2018 eostoken all rights reserved </Text>
+              {/* <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text> */}
+              <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V2.3.2</Text>
             </View>
-          </View>
       </ScrollView>
       <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
-            <TouchableOpacity style={styles.pupuoBackup} activeOpacity={1.0}>
+            <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
               <View style={{ width: ScreenWidth-20, backgroundColor: UColor.fontColor, borderRadius: 5, }}>
               {/* <ImageBackground source={UImage.congratulate} resizeMode="cover" style={styles.linebgout}> */}
                 <View style={styles.subViewBackup}> 
@@ -300,12 +298,12 @@ class Setting extends React.Component {
                 </View>
                 <View style={styles.warningout}>
                     <Text style={styles.contentText}>领取奖励</Text>
-                    <Text style={styles.headtitle}>恭喜您！已符合领取条件。</Text>
+                    <Text style={[styles.headtitle,{color: UColor.showy}]}>恭喜您！已符合领取条件。</Text>
                     <View style={styles.accountoue} >
-                        <Text style={styles.inptitle}>您的主网账号：</Text>
-                        <Text style={styles.inpt}>{this.state.walletName}</Text>
+                        <Text style={[styles.inptitle,{color: UColor.blackColor}]}>您的主网账号：</Text>
+                        <Text style={[styles.inpt,{color: UColor.arrow}]}>{this.state.walletName}</Text>
                         {/* <TextInput ref={(ref) => this._raccount = ref}  value={this.state.walletName} keyboardType="default"   
-                            selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow}      
+                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}      
                             placeholder="请输入EOS主网账号" underlineColorAndroid="transparent" keyboardType="default"  
                             onChangeText={(walletName) => this.setState({ walletName })} maxLength = {12}
                         /> */}
@@ -313,8 +311,8 @@ class Setting extends React.Component {
                 </View>
                 {/* </ImageBackground> */}
                 <Button onPress={this.eostreceive.bind(this)} style={styles.butout}>
-                    <View style={styles.deleteout}>
-                        <Text style={styles.deletetext}>提交</Text>
+                    <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
+                        <Text style={[styles.deletetext,{color: UColor.btnColor}]}>提交</Text>
                     </View>
                 </Button> 
                
@@ -336,17 +334,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: UColor.secdColor,
   },
   scrollView: {
     flex: 1,
+  },
+  daylinebgout: {
+    width: ScreenWidth,
+    height: ScreenWidth * 0.524,
+  },
+  linebgout: {
+    width: ScreenWidth,
   },
   userHead: {
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
     paddingHorizontal: ScreenUtil.autowidth(20),
-    backgroundColor: UColor.mainColor
   },
   headout: {
     flex: 1,
@@ -359,7 +362,6 @@ const styles = StyleSheet.create({
     height: ScreenUtil.autoheight(52),
   },
   headtext: {
-    color: UColor.fontColor,
     fontSize: ScreenUtil.setSpText(17),
     marginLeft: ScreenUtil.autowidth(15),
   },
@@ -380,15 +382,25 @@ const styles = StyleSheet.create({
     height: ScreenUtil.autoheight(49)
   },
 
+  dayeosbtn: {
+    marginHorizontal: ScreenUtil.autowidth(8),
+  },
   eosbtn: {
     marginTop: ScreenUtil.autoheight(15),
+  },
+
+  dayeosbtnout: {
+    borderRadius: 5,
+    flexDirection: "row",
+    justifyContent: 'space-between',
+    paddingHorizontal: ScreenUtil.autowidth(20),
+    width: ScreenWidth - ScreenUtil.autowidth(16),
   },
   eosbtnout: {
     flex: 1,
     flexDirection: "row",
+    justifyContent: 'space-between',
     paddingHorizontal: ScreenUtil.autowidth(20),
-    backgroundColor: UColor.mainColor,
-    justifyContent: 'space-between'
   },
   eosout: {
     flex: 1,
@@ -396,11 +408,9 @@ const styles = StyleSheet.create({
     paddingVertical: ScreenUtil.autoheight(12)
   },
   eosbtntext: {
-    color: UColor.arrow,
     fontSize: ScreenUtil.setSpText(11),
   },
   eostext: {
-    color: UColor.fontColor,
     fontSize: ScreenUtil.setSpText(15),
     marginTop: ScreenUtil.autoheight(10),
   },
@@ -412,14 +422,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end"
   },
   Withdrawbtn: {
-    backgroundColor: UColor.tintColor,
     borderRadius: 5,
     paddingVertical: ScreenUtil.autoheight(5),
     paddingHorizontal: ScreenUtil.autowidth(15),
   },
   Withdrawtext: {
     fontSize: ScreenUtil.setSpText(15),
-    color: UColor.fontColor,
   },
 
   footer: {
@@ -429,7 +437,6 @@ const styles = StyleSheet.create({
   },
   foottext: {
     fontSize: ScreenUtil.setSpText(10),
-    color: UColor.arrow,
     width: '100%',
     textAlign: 'center',
     marginTop: ScreenUtil.autoheight(5),
@@ -440,16 +447,13 @@ const styles = StyleSheet.create({
     height: ScreenUtil.autoheight(40),
     flexDirection: "row",
     alignItems: 'center', 
-    backgroundColor: UColor.showy,
   },
   systemSettingText: {
     flex: 1,
-    color: UColor.fontColor,
     textAlign: 'center',
     fontSize: ScreenUtil.setSpText(14)
   },
   systemSettingArrow: {
-    color: UColor.fontColor,
     marginRight: ScreenUtil.autowidth(5)
   },
 
@@ -463,12 +467,6 @@ const styles = StyleSheet.create({
     flex: 1, 
     justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: UColor.mask,
-  },
-
-  linebgout: {
-    width: ScreenWidth - 30,
-    height: (ScreenWidth - 30) * 0.407,
   },
 
   subViewBackup: {
@@ -498,17 +496,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   headtitle: {
-    color: UColor.showy,
     fontSize: ScreenUtil.setSpText(14),
     lineHeight: ScreenUtil.autoheight(25),
   },
   inptitle: {
-    color: UColor.blackColor,
     fontSize: ScreenUtil.setSpText(14),
   },
   inpt: {
     flex: 1,
-    color: UColor.arrow,
     fontSize: ScreenUtil.setSpText(14),
   },
 
@@ -525,13 +520,11 @@ const styles = StyleSheet.create({
     width: ScreenUtil.autowidth(100),
     marginVertical: ScreenUtil.autoheight(15),
     borderRadius: 3,
-    backgroundColor: UColor.tintColor,
     justifyContent: 'center',
     alignItems: 'center'
   },
   deletetext: {
     fontSize: ScreenUtil.setSpText(16),
-    color: UColor.fontColor
   },
 
 });

@@ -5,6 +5,7 @@ import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
 import UColor from '../../utils/Colors'
 import Button from  '../../components/Button'
 import Item from '../../components/Item'
+import Header from '../../components/Header'
 import Icon from 'react-native-vector-icons/Ionicons'
 import UImage from '../../utils/Img'
 import ScreenUtil from '../../utils/ScreenUtil'
@@ -28,24 +29,10 @@ const ACTIVE_MODE=1;
 @connect(({wallet, vote}) => ({...wallet, ...vote}))
 class AuthTransfer extends BaseComponent {
 
-    static navigationOptions = ({ navigation }) => {
-        const params = navigation.state.params || {};
-        return {
-            // headerTitle: params.wallet.name,
-            headerTitle: "Owner权限管理",
-            headerStyle: {
-                paddingTop: ScreenUtil.autoheight(10),
-                backgroundColor: UColor.mainColor,
-                borderBottomWidth:0,
-            },
-            headerRight: (<Button name="search" onPress={navigation.state.params.onPress}>
-            <View style={{ paddingHorizontal: ScreenUtil.autowidth(10), alignItems: 'center' }}>
-                <Image source={UImage.scan} style={{ width: ScreenUtil.autowidth(28), height: ScreenUtil.autowidth(28) }}></Image>
-            </View>
-          </Button>),
-        };
+    static navigationOptions = {
+        headerTitle: "Owner权限管理",
+        header:null, 
     }
-
 
     verifyAccount(obj){
         var ret = true;
@@ -123,8 +110,6 @@ class AuthTransfer extends BaseComponent {
     constructor(props) {
         super(props);
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        // this.props.navigation.setParams({ onPress: this.submission});
-        this.props.navigation.setParams({ onPress: this._rightTopClick });
         this.state = {
             dataSource: ds.cloneWithRows([]),
             index: OWNER_MODE,//默认为OWNER
@@ -291,7 +276,8 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
     const view =
         <View style={styles.passoutsource}>
             <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" style={styles.inptpass}  maxLength={Constants.PWD_MAX_LENGTH} 
+                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
+                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.fontColor,borderBottomColor: UColor.baseline}]}  
                 placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
         </View>
         EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
@@ -420,26 +406,26 @@ _handleIndexChange = index => {
 
     return (
 
-        <View style={styles.addUserTitle}>
-            
+        <View style={[styles.addUserTitle,{backgroundColor: UColor.mainColor}]}>
+             
             <View style={styles.titleStyle}>
                 <View style={styles.userAddView}>
                     {/* <Image source={UImage.adminAddA} style={styles.imgBtn} /> */}
                     {((this.state.index==OWNER_MODE?this.state.authOwnerKeys[0].key:this.state.authActiveKeys[0].key) == rowData.item.key) &&
-                        <Text style={styles.authText}>{this.state.index==OWNER_MODE?"管理者用户(Owner)":"管理者用户(Active)"}</Text>
+                        <Text style={[styles.authText,{color: UColor.fontColor}]}>{this.state.index==OWNER_MODE?"管理者用户(Owner)":"管理者用户(Active)"}</Text>
                     }
                 </View>
 
                 <View style={styles.buttonView}>
-                    <Text style={styles.weightText}>权重  </Text>
-                    <Text style={styles.buttonText}>{rowData.item.weight}</Text>
+                    <Text style={[styles.weightText,{color: UColor.arrow}]}>权重  </Text>
+                    <Text style={[styles.buttonText,{color: UColor.fontColor}]}>{rowData.item.weight}</Text>
                 </View>
             </View>
             
 
             <View style={{flex:1,flexDirection: "row",}}>
-                <View style={styles.showPkStyle}>
-                    <Text style={styles.pktext}>{rowData.item.key}</Text>
+                <View style={[styles.showPkStyle,{borderColor: UColor.arrow}]}>
+                    <Text style={[styles.pktext,{color: UColor.arrow}]}>{rowData.item.key}</Text>
                 </View>
                 {/* {(this.state.activeAuth.data.auth.keys.length>1 || rowData.item.key.length<50) && */}
                 <TouchableHighlight onPress={() => { this.deleteUser(rowData.item.key) }}  >
@@ -470,18 +456,18 @@ _handleIndexChange = index => {
                 renderItem={this._renderRow.bind(this)} >
             </FlatList>
 
-            <View style={styles.addUserTitle}>
+            <View style={[styles.addUserTitle,{backgroundColor: UColor.mainColor}]}>
                 <View style={styles.titleStyle}>
                     <View style={styles.buttonView}>
-                        <Text style={styles.weightText}>权重  </Text>
-                        <Text style={styles.buttonText}>1</Text>
+                        <Text style={[styles.weightText,{color: UColor.arrow}]}>权重  </Text>
+                        <Text style={[styles.buttonText,{color: UColor.fontColor}]}>1</Text>
                     </View>
                 </View>
 
                 <View style={{flex:1,flexDirection: "row",}}>
-                    <TextInput ref={(ref) => this._lphone = ref} value={this.state.inputText} returnKeyType="next" editable={true}
-                        selectionColor={UColor.tintColor} style={styles.inptgo} placeholderTextColor={UColor.arrow} autoFocus={false} 
-                        onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default" 
+                    <TextInput ref={(ref) => this._lphone = ref} value={this.state.inputText} returnKeyType="next" editable={true} autoFocus={false}
+                        selectionColor={UColor.tintColor} style={[styles.inptgo,{color: UColor.arrow,backgroundColor: UColor.secdColor,borderColor: UColor.arrow}]}  
+                        onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default" placeholderTextColor={UColor.arrow} 
                         placeholder={this.state.index==OWNER_MODE?"请您输入Owner公钥":"请您输入Active公钥 "} underlineColorAndroid="transparent"  multiline={true}  />
 
                     <View style={styles.addButton}>
@@ -491,8 +477,8 @@ _handleIndexChange = index => {
             </View>
 
             <Button onPress={ this.submission.bind(this) }>
-                <View style={styles.btnoutsource}>
-                    <Text style={styles.btntext}>授权</Text>
+                <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
+                    <Text style={[styles.btntext,{color: UColor.btnColor}]}>授权</Text>
                 </View>
             </Button>
             </ScrollView>
@@ -500,27 +486,22 @@ _handleIndexChange = index => {
         </View>
     );
   }
-
-
-
-
   
   render() {
-
     return (
-    <View style={styles.container}>
-    
-        <View style={styles.significantout}>
+    <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+        <Header {...this.props} onPressLeft={true} title="Owner权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scan}/>
+        <View style={[styles.significantout,{backgroundColor: UColor.secdColor,borderColor: UColor.riseColor}]}>
             <Image source={UImage.warning} style={styles.imgBtnWarning} />
             <View style={{flex: 1,padding: 5,}}>
-                <Text style={styles.significanttext} >安全警告</Text>
-                <Text style={styles.significanttext} >请确保您清楚了解owner授权,并确保添加的授权用户是您信任的用户，添加的授权用户将获得账号的全部权限（包括变更权限和转账投票）。</Text>
+                <Text style={[styles.significanttext,{color: UColor.warningRed}]} >安全警告</Text>
+                <Text style={[styles.significanttext,{color: UColor.warningRed}]} >请确保您清楚了解owner授权,并确保添加的授权用户是您信任的用户，添加的授权用户将获得账号的全部权限（包括变更权限和转账投票）。</Text>
             </View>
         </View>
 
         <TabViewAnimated
         lazy={true}
-        style={styles.containertab}
+        style={[styles.containertab,{backgroundColor: UColor.secdColor}]}
         navigationState={this.state}
         renderScene={this.renderScene.bind(this)}
         renderHeader={(props)=><TabBar onTabPress={this._handleTabItemPress} 
@@ -541,43 +522,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection:'column',
-        backgroundColor: UColor.secdColor,
     },
 
     containertab: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: UColor.secdColor,
-      },
-
-    header: {
-        marginTop: 50,
-        backgroundColor: UColor.secdColor,
     },
-    inptoutbg: {
-        backgroundColor: UColor.mainColor,
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingBottom: 30,
 
 
-    },
-    inptoutgo: {
-        marginTop: 10,
-        marginBottom: 10,
-        paddingBottom: 5,
-        backgroundColor: UColor.mainColor,
-        marginLeft:5,
-        marginRight:5,
-        borderRadius: 5,
-        
-    },
     //添加用户
     addUserTitle: {
         flex: 1,
         marginTop: 1,
         paddingBottom: 10,
-        backgroundColor: UColor.mainColor,
     },
 
     titleStyle:{
@@ -597,17 +554,8 @@ const styles = StyleSheet.create({
         // textAlignVertical: 'top',
         marginLeft:15,
         marginRight:5,
-        borderColor: UColor.arrow,
         borderWidth: 1,
         borderRadius: 5,
-    },
-
-
-    inptitle: {
-        // flex: 1,
-        fontSize: 15,
-        lineHeight: 30,
-        color: UColor.fontColor,
     },
 
      //用户添加样式  
@@ -629,64 +577,24 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 12,
         // lineHeight: 30,
-        color:  UColor.fontColor,
     },
     authText: {
         fontSize: 12,
         lineHeight: 30,
-        color:  UColor.fontColor,
     },
 
-
-    inptext: {
-        fontSize: 14,
-        lineHeight: 25,
-        color: UColor.arrow,
-    },
-    textout: {
-            paddingHorizontal: 16,
-            paddingVertical: 10,
-    },
-    titletext: {
-        fontSize: 15,
-        color: UColor.fontColor,
-        paddingVertical: 8,
-    },
-    explaintext: {
-        fontSize: 13,
-        color: UColor.fontColor,
-        paddingLeft: 20,
-        paddingVertical: 5,
-        marginBottom: 10,
-        lineHeight: 25,
-    },
     imgBtn: {
         width: 23,
         height: 24,
-        // lineHeight:30,
-        // marginTop: 0,
-        // marginBottom: 5,
-        // marginHorizontal:5,
-      },
+    },
 
     pktext: {
         fontSize: 14,
-        // lineHeight: 25,
-        color: UColor.arrow,
     },
     weightText: {
         fontSize: 12,
-        // lineHeight: 30,
-        color:  UColor.arrow,
     },
 
-    //删除样式
-    delText: {
-        fontSize: 15,
-        // lineHeight: 30,
-        marginRight:10,
-        color:  UColor.tintColor,
-    },
     //删除按键样式
     delButton: {
         flex: 1,
@@ -697,7 +605,6 @@ const styles = StyleSheet.create({
     },
     //删除按键样式
     addButton: {
-        // flex: 1,
         flexDirection: "row",
         paddingHorizontal: 5,
         justifyContent: 'flex-end',
@@ -710,8 +617,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 15,
         marginVertical: 10,
         padding: 5,
-        backgroundColor: UColor.secdColor,
-        borderColor: UColor.riseColor,
         borderWidth: 1,
         borderRadius: 5,
       },
@@ -721,19 +626,10 @@ const styles = StyleSheet.create({
         margin:5,
       },
       significanttext: {
-        color: UColor.warningRed,
         fontSize: 13, 
         lineHeight:17,
-        // letterSpacing:1, //字符间距
-        // fontWeight: 'bold',//加粗
       },
     
-      //添加用户框
-    addUser: {
-        paddingBottom: 15,
-        backgroundColor: UColor.mainColor,
-    },
-
     ionicout: {
         flexDirection: "row",
         alignItems: 'center',
@@ -742,19 +638,14 @@ const styles = StyleSheet.create({
 
 
     inptgo: {
-        flex: 1,
-        
+        flex: 1,  
         height: 57,
         fontSize: 15,
-        // lineHeight: 25,
-        color: UColor.arrow,
         paddingHorizontal: 10,
         paddingVertical: 10,
         textAlignVertical: 'top',
-        backgroundColor: UColor.secdColor,
         marginLeft:15,
-        marginRight:5,
-        borderColor: UColor.arrow,
+        marginRight:5, 
         borderWidth: 1,
         borderRadius: 5,
     },
@@ -764,31 +655,24 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     inptpass: {
-        color: UColor.tintColor,
         height: 45,
         width: ScreenWidth-100,
         paddingBottom: 5,
         fontSize: 16,
-        backgroundColor: UColor.fontColor,
-        borderBottomColor: UColor.baseline,
         borderBottomWidth: 1,
     },
     // 按钮  
     btnoutsource: {
         marginTop:15,
         marginHorizontal: ScreenUtil.autowidth(137),
-        // width:ScreenUtil.autowidth(101),
-        // height:ScreenUtil.autoheight(41),
         width:101,
         height:41,
         borderRadius: 5,
-        backgroundColor: UColor.tintColor,
         justifyContent: 'center',
         alignItems: 'center'
     },
     btntext: {
         fontSize: ScreenUtil.setSpText(17),
-        color: UColor.fontColor
     },
 
     tab: {

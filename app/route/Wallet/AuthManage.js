@@ -7,6 +7,7 @@ import Button from  '../../components/Button'
 import Item from '../../components/Item'
 import Icon from 'react-native-vector-icons/Ionicons'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import BaseComponent from "../../components/BaseComponent";
@@ -19,13 +20,9 @@ class AuthManage extends BaseComponent {
 
   static navigationOptions = {
     headerTitle: '权限管理',
-    headerStyle: {
-        paddingTop: ScreenUtil.autoheight(20),
-      backgroundColor: UColor.mainColor,
-      borderBottomWidth:0,
-    },
+    header:null, 
   };
-
+ 
   constructor(props) {
     super(props);
     this.state = {
@@ -101,26 +98,25 @@ class AuthManage extends BaseComponent {
   }
 
   render() {
-    return <View style={styles.container}>
-        
-
+    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+      <Header {...this.props} onPressLeft={true} title="权限管理" />
       <ScrollView keyboardShouldPersistTaps="always">
-        <View style={styles.header}>
-            <View style={styles.inptoutbg}>
-                {this.state.ownerPk != '' && <View style={styles.addUserTitle} >
+        <View style={[styles.header,{backgroundColor: UColor.secdColor}]}>
+            <View style={[styles.inptoutbg,{backgroundColor: UColor.secdColor}]}>
+                {this.state.ownerPk != '' && <View style={[styles.addUserTitle,{backgroundColor: UColor.mainColor}]} >
                     <View style={{flex:1,flexDirection: "row",}}>
                         <View style={{flex:1,flexDirection: "column",}}>
                             <View style={styles.titleStyle}>
                                 <View style={styles.userAddView}>
-                                    <Text style={styles.inptitle}> Owner关联公钥（拥有者）</Text>
+                                    <Text style={[styles.inptitle,{color: UColor.fontColor}]}> Owner关联公钥（拥有者）</Text>
                                 </View>
                                 <View style={styles.buttonView}>
-                                    <Text style={styles.weightText}>权重阀值  </Text>
-                                    <Text style={styles.buttonText}>{this.state.activeThreshold}</Text>
+                                    <Text style={[styles.weightText,{color: UColor.arrow}]}>权重阀值  </Text>
+                                    <Text style={[styles.buttonText,{color: UColor.fontColor}]}>{this.state.activeThreshold}</Text>
                                 </View>
                             </View>
                             <View style={styles.showPkStyle}>
-                                <Text style={styles.inptext}>{this.state.ownerPk}</Text>
+                                <Text style={[styles.inptext,{color: UColor.arrow}]}>{this.state.ownerPk}</Text>
                             </View>
                         </View>
 
@@ -132,20 +128,20 @@ class AuthManage extends BaseComponent {
                     </View>
                 </View>}
 
-               {this.state.activePk != '' && <View style={styles.addUserTitle} >
+               {this.state.activePk != '' && <View style={[styles.addUserTitle,{backgroundColor: UColor.mainColor}]} >
                     <View style={{flex:1,flexDirection: "row",}}>
                         <View style={{flex:1,flexDirection: "column",}}>
                             <View style={styles.titleStyle}>
                                 <View style={styles.userAddView}>
-                                    <Text style={styles.inptitle}> Active关联公钥（管理者）</Text>
+                                    <Text style={[styles.inptitle,{color: UColor.fontColor}]}> Active关联公钥（管理者）</Text>
                                 </View>
                                 <View style={styles.buttonView}>
-                                    <Text style={styles.weightText}>权重阀值 </Text>
-                                    <Text style={styles.buttonText}>{this.state.activeThreshold}</Text>
+                                    <Text style={[styles.weightText,{color: UColor.arrow}]}>权重阀值 </Text>
+                                    <Text style={[styles.buttonText,{color: UColor.fontColor}]}>{this.state.activeThreshold}</Text>
                                 </View>
                             </View>
                             <View style={styles.showPkStyle}>
-                                <Text style={styles.inptext}>{this.state.activePk}</Text>
+                                <Text style={[styles.inptext,{color: UColor.arrow}]}>{this.state.activePk}</Text>
                             </View>
                         </View>
 
@@ -161,12 +157,12 @@ class AuthManage extends BaseComponent {
 
             </View>
             <View style={styles.textout}>
-                <Text style={styles.titletext}>什么是拥有者权限（Owner）？</Text>
-                <Text style={styles.explaintext}>Owner 代表了对账户的所有权，可以对权限进行设置，管理Active和其他角色。</Text>
-                <Text style={styles.titletext}>什么是管理者权限（Active）？</Text>
-                <Text style={styles.explaintext}>Active 用于日常使用，比如转账，投票等。</Text>
-                <Text style={styles.titletext}>什么是权重阈值？</Text>
-                <Text style={styles.explaintext}>权重阈值是使用该权限的最低权重要求。</Text>
+                <Text style={[styles.titletext,{color: UColor.fontColor}]}>什么是拥有者权限（Owner）？</Text>
+                <Text style={[styles.explaintext,{color: UColor.arrow}]}>Owner 代表了对账户的所有权，可以对权限进行设置，管理Active和其他角色。</Text>
+                <Text style={[styles.titletext,{color: UColor.fontColor}]}>什么是管理者权限（Active）？</Text>
+                <Text style={[styles.explaintext,{color: UColor.arrow}]}>Active 用于日常使用，比如转账，投票等。</Text>
+                <Text style={[styles.titletext,{color: UColor.fontColor}]}>什么是权重阈值？</Text>
+                <Text style={[styles.explaintext,{color: UColor.arrow}]}>权重阈值是使用该权限的最低权重要求。</Text>
             </View>
         </View>
       </ScrollView>
@@ -178,34 +174,22 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection:'column',
-        backgroundColor: UColor.secdColor,
     },
     scrollView: {
 
     },
     header: {
         marginTop: 10,
-        backgroundColor: UColor.secdColor,
     },
     inptoutbg: {
         flex: 1,
         flexDirection:'column',
-        backgroundColor: UColor.secdColor,
-
-        // backgroundColor: UColor.mainColor,
-    //     paddingHorizontal: 20,
-    //     paddingTop: 20,
-    //     paddingBottom: 30,
     },
 
-
-        //添加用户
     addUserTitle: {
         flex: 1,
-        // marginTop: 1,
         margin: 5,
         paddingBottom: 10,
-        backgroundColor: UColor.mainColor,
         borderRadius: 5,
     },
     titleStyle:{
@@ -217,7 +201,6 @@ const styles = StyleSheet.create({
         flexDirection:'row',
     },
 
-
      //用户添加样式  
      userAddView: {
         flex: 1,
@@ -226,24 +209,13 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
 
-    inptoutgo: {
-        paddingBottom: 20,
-        backgroundColor: UColor.mainColor,
-    },
-    inptoutgoOwner: {
-        paddingBottom: 20,
-        backgroundColor: UColor.mainColor,
-    },
     inptitle: {
-        // flex: 1,
         fontSize: 15,
         lineHeight: 30,
-        color: UColor.fontColor,
     },
      // 按钮  
     buttonView: {
         flexDirection: "row",
-        // paddingHorizontal: 5,
         paddingRight: 10,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
@@ -251,32 +223,23 @@ const styles = StyleSheet.create({
     weightText: {
         fontSize: 12,
         lineHeight: 30,
-        color:  UColor.arrow,
     },
     buttonText: {
         fontSize: 12,
         lineHeight: 30,
-        color:  UColor.fontColor,
     },
 
     inptgo: {
         flex: 1,
         height: 50,
         paddingHorizontal: 15,
-        // backgroundColor: UColor.secdColor,
     },
 
     showPkStyle: {
         flex: 1,
-        // fontSize: 15,
         paddingRight: 10,
-        // paddingHorizontal: 10,
-        // paddingVertical: 10,
-        // textAlignVertical: 'top',
         marginLeft:15,
         marginRight:5,
-        // borderColor: UColor.arrow,
-        // borderWidth: 1,
         borderRadius: 5,
     },
 
@@ -285,26 +248,21 @@ const styles = StyleSheet.create({
     inptext: {
         fontSize: 14,
         lineHeight: 25,
-        color: UColor.arrow,
     },
     textout: {
-            marginTop: 100,
-            paddingLeft: 20,
-            paddingRight: 30,
-            paddingVertical: 20,
+        marginTop: 100,
+        paddingLeft: 20,
+        paddingRight: 30,
+        paddingVertical: 20,
     },
     titletext: {
         fontSize: 15,
-        color: UColor.fontColor,
         paddingVertical: 8,
     },
     explaintext: {
         fontSize: 13,
-        color: UColor.arrow,
-        // paddingLeft: 20,
         paddingVertical: 5,
         marginBottom: 10,
-        // lineHeight: 25,
     },
     imgBtn: {
         width: 30,

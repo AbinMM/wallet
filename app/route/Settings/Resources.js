@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import store from 'react-native-simple-store';
 import LinearGradient from 'react-native-linear-gradient';
 import UColor from '../../utils/Colors'
+import Header from '../../components/Header'
 import Button from  '../../components/Button'
 import Item from '../../components/Item'
 import CountDownReact from '../../components/CountDownReact'
@@ -31,21 +32,12 @@ var CryptoJS = require("crypto-js");
 
 @connect(({wallet, vote}) => ({...wallet, ...vote}))
 class Resources extends BaseComponent {
-    static navigationOptions = ({ navigation }) => {
-        const params = navigation.state.params || {};
-        return {    
-          title: "资源管理",
-          headerStyle: {
-            paddingTop: ScreenUtil.autoheight(20),
-            backgroundColor: UColor.mainColor,
-            borderBottomWidth:0,
-          }, 
-          headerRight: (<Button onPress={navigation.state.params.onPress}>
-            <Text style={{color: UColor.arrow, fontSize: 18,justifyContent: 'flex-end',paddingRight:15}}>抵押记录</Text>
-          </Button>),       
-        };
-    };
 
+    static navigationOptions = { 
+        title: "资源管理",
+        header:null, 
+    };
+     
     recordMortgage = () =>{  
         const { navigate } = this.props.navigation;
         navigate('MortgageRecord', {account_name: this.props.navigation.state.params.account_name});
@@ -54,7 +46,6 @@ class Resources extends BaseComponent {
   // 构造函数  
   constructor(props) { 
     super(props);
-    this.props.navigation.setParams({ onPress: this.recordMortgage});
     this.state = {
         isMemory: true,
         isCalculation: false,
@@ -318,7 +309,7 @@ class Resources extends BaseComponent {
         let BTN_SELECTED_STATE_ARRAY = ['isMemory', 'isCalculation','isNetwork', ];  
         return(  
             <TouchableOpacity style={[style, selectedSate ? {backgroundColor: UColor.tintColor} : {backgroundColor: UColor.mainColor,}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
-                <Text style={[styles.tabText, selectedSate ? {color: UColor.fontColor} : {color: UColor.tintColor}]}>{buttonTitle}</Text>  
+                <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.tintColor}]}>{buttonTitle}</Text>  
             </TouchableOpacity>  
         );  
     }  
@@ -347,7 +338,7 @@ class Resources extends BaseComponent {
         return(  
           <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'center',alignItems: 'center', flex: 1,}} onPress={ () => {this._updateSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
               <Text style={{fontSize: 16,color: UColor.fontColor}}>{buttonTitle}</Text>  
-              <View style={{width: 10, height: 10, marginHorizontal: 8, borderRadius: 3, backgroundColor: UColor.fontColor, alignItems: 'center', justifyContent: 'center',}}>
+              <View style={{width: 10, height: 10, marginHorizontal: 8, borderRadius: 3, backgroundColor: UColor.riceWhite, alignItems: 'center', justifyContent: 'center',}}>
                   {selectedSate ?<View style={{width: 8, height: 8, borderRadius: 10, backgroundColor: UColor.tintColor }}/>:null}
               </View>
           </TouchableOpacity>  
@@ -359,7 +350,7 @@ class Resources extends BaseComponent {
         return(  
           <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'center',alignItems: 'center', flex: 1,}} onPress={ () => {this._updateSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
               <Text style={{fontSize: 16,color: UColor.fontColor}}>{buttonTitle}</Text>  
-              <View style={{width: 10, height: 10, marginHorizontal: 8, borderRadius: 3, backgroundColor: UColor.fontColor, alignItems: 'center', justifyContent: 'center',}}>
+              <View style={{width: 10, height: 10, marginHorizontal: 8, borderRadius: 3, backgroundColor: UColor.riceWhite, alignItems: 'center', justifyContent: 'center',}}>
                   {selectedSate ?<View style={{width: 8, height: 8, borderRadius: 10, backgroundColor: UColor.tintColor }}/>:null}
               </View>
           </TouchableOpacity>  
@@ -464,7 +455,8 @@ class Resources extends BaseComponent {
             const view =
             <View style={styles.passoutsource}>
                 <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                    selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" style={styles.inptpass} maxLength={Constants.PWD_MAX_LENGTH}
+                    selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
+                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
                     placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
                 <Text style={styles.inptpasstext}></Text>  
             </View>
@@ -501,8 +493,8 @@ class Resources extends BaseComponent {
                                             //弹出提示框,可申请免费抵押功能
                                             const view =
                                             <View style={styles.passoutsource2}>
-                                            <Text style={styles.Explaintext2}>该账号资源(NET/CPU)不足！</Text>
-                                            <Text style={styles.Explaintext2}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                             </View>
                                             EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                                 
@@ -553,7 +545,8 @@ class Resources extends BaseComponent {
             const view =
             <View style={styles.passoutsource}>
                 <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                    selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable" style={styles.inptpass} maxLength={Constants.PWD_MAX_LENGTH}
+                    selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
+                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
                     placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
                 <Text style={styles.inptpasstext}></Text>  
             </View>
@@ -587,8 +580,8 @@ class Resources extends BaseComponent {
                                             //弹出提示框,可申请免费抵押功能
                                             const view =
                                             <View style={styles.passoutsource2}>
-                                            <Text style={styles.Explaintext2}>该账号资源(NET/CPU)不足！</Text>
-                                            <Text style={styles.Explaintext2}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                             </View>
                                             EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                                 
@@ -641,7 +634,8 @@ class Resources extends BaseComponent {
         const view =
         <View style={styles.passoutsource}>
             <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" style={styles.inptpass} maxLength={Constants.PWD_MAX_LENGTH}
+                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
+                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
                 placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
                 <Text style={styles.inptpasstext}>提示：抵押 {this.state.delegateb} EOS</Text>
         </View>
@@ -683,8 +677,8 @@ class Resources extends BaseComponent {
                                                 //弹出提示框,可申请免费抵押功能
                                                 const view =
                                                 <View style={styles.passoutsource2}>
-                                                <Text style={styles.Explaintext2}>该账号资源(NET/CPU)不足！</Text>
-                                                <Text style={styles.Explaintext2}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                                 </View>
                                                 EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                                     
@@ -726,8 +720,8 @@ class Resources extends BaseComponent {
                                                 //弹出提示框,可申请免费抵押功能
                                                 const view =
                                                 <View style={styles.passoutsource2}>
-                                                <Text style={styles.Explaintext2}>该账号资源(NET/CPU)不足！</Text>
-                                                <Text style={styles.Explaintext2}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                                 </View>
                                                 EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                                     
@@ -779,7 +773,8 @@ class Resources extends BaseComponent {
             const view =
             <View style={styles.passoutsource}>
                 <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go"  
-                    selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" style={styles.inptpass} maxLength={Constants.PWD_MAX_LENGTH}
+                    selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
+                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
                     placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
                 <Text style={styles.inptpasstext}>提示：赎回 {this.state.undelegateb} EOS</Text>
             </View>
@@ -819,8 +814,8 @@ class Resources extends BaseComponent {
                                                 //弹出提示框,可申请免费抵押功能
                                                 const view =
                                                 <View style={styles.passoutsource2}>
-                                                <Text style={styles.Explaintext2}>该账号资源(NET/CPU)不足！</Text>
-                                                <Text style={styles.Explaintext2}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                                 </View>
                                                 EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                                     
@@ -861,8 +856,8 @@ class Resources extends BaseComponent {
                                                 //弹出提示框,可申请免费抵押功能
                                                 const view =
                                                 <View style={styles.passoutsource2}>
-                                                <Text style={styles.Explaintext2}>该账号资源(NET/CPU)不足！</Text>
-                                                <Text style={styles.Explaintext2}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                                 </View>
                                                 EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                                     
@@ -912,21 +907,22 @@ class Resources extends BaseComponent {
     render() {
         const c = this.props.navigation.state.params.coinType;
         return (
-            <View style={styles.container}>
+            <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+                <Header {...this.props} onPressLeft={true} title="资源管理" subName="抵押记录" onPressRight={this.recordMortgage.bind()}/> 
                 <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
                     <ScrollView keyboardShouldPersistTaps="always">
                         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-                            <View style={styles.tetleout}>
-                                <Text style={styles.tetletext}>{this.state.tetletext}</Text>
-                                <ImageBackground source={UImage.line_bg} resizeMode="cover" style={styles.linebgout}>
+                            <View style={[styles.tetleout,{backgroundColor: UColor.mainColor}]}>
+                                <Text style={[styles.tetletext,{color: UColor.arrow}]}>{this.state.tetletext}</Text>
+                                <ImageBackground source={UColor.theme ? UImage.line_bg_h : UImage.line_bg} resizeMode="cover" style={styles.linebgout}>
                                     <ImageBackground source={UImage.strip_bg} resizeMode="cover"  style={styles.stripbgout}>
-                                        <View style={styles.stripbg} height={this.state.column_One}/>
+                                        <View style={{backgroundColor: UColor.secdColor}} height={this.state.column_One}/>
                                     </ImageBackground>
                                     <ImageBackground source={UImage.strip_bg} resizeMode="cover"  style={styles.stripbgout}>
-                                        <View style={styles.stripbg} height={this.state.column_Two}/>
+                                        <View style={{backgroundColor: UColor.secdColor}} height={this.state.column_Two}/>
                                     </ImageBackground>
                                     <ImageBackground source={UImage.strip_bg} resizeMode="cover"  style={styles.stripbgout}>
-                                        <View style={styles.stripbg} height={this.state.column_Three}/>
+                                        <View style={{backgroundColor: UColor.secdColor}} height={this.state.column_Three}/>
                                     </ImageBackground>
                                     {/* <View style={{width: ((ScreenWidth - 30) * 0.307 - 5) * 0.236,height: (ScreenWidth - 30) * 0.307 - 5, backgroundColor: UColor.secdColor,marginBottom: Platform.OS == 'ios' ? 0.3 : 0.2,justifyContent: 'flex-end'}}>
                                         <LinearGradient colors={['#FE3BE1', '#8585EF', '#06D4FE']} style={{width: ((ScreenWidth - 30) * 0.307 - 5) * 0.236,}} height={this.state.column_One}/>
@@ -940,34 +936,34 @@ class Resources extends BaseComponent {
                                 </ImageBackground>
                                 <View style={styles.record}>
                                     <View style={styles.recordout}>
-                                        <Text style={styles.ratiotext}>{this.state.ContrastOne}</Text>
-                                        <Text style={styles.recordtext}>{this.state.percentageOne}</Text>
+                                        <Text style={[styles.ratiotext,{color: UColor.fontColor}]}>{this.state.ContrastOne}</Text>
+                                        <Text style={[styles.recordtext,{color: UColor.arrow}]}>{this.state.percentageOne}</Text>
                                     </View>
                                     <View style={styles.recordout}>
-                                        <Text  style={styles.ratiotext}>{this.state.ContrastTwo}</Text>
-                                        <Text style={styles.recordtext}>{this.state.percentageTwo}</Text>
+                                        <Text style={[styles.ratiotext,{color: UColor.fontColor}]}>{this.state.ContrastTwo}</Text>
+                                        <Text style={[styles.recordtext,{color: UColor.arrow}]}>{this.state.percentageTwo}</Text>
                                     </View>
                                     <View style={styles.recordout}>
                                     {this.state.isCalculation||this.state.isNetwork?<CountDownReact
                                         date= {this.state.ContrastThree}
                                         hours=':'
                                         mins=':'
-                                        hoursStyle={styles.ratiotext}
-                                        minsStyle={styles.ratiotext}
-                                        secsStyle={styles.ratiotext}
-                                        firstColonStyle={styles.ratiotext}
-                                        secondColonStyle={styles.ratiotext}
-                                    />:<Text  style={styles.ratiotext}>{this.state.ContrastThree}</Text>}
-                                        <Text style={styles.recordtext}>{this.state.percentageThree}</Text>
+                                        hoursStyle={[styles.ratiotext,{color: UColor.fontColor}]}
+                                        minsStyle={[styles.ratiotext,{color: UColor.fontColor}]}
+                                        secsStyle={[styles.ratiotext,{color: UColor.fontColor}]}
+                                        firstColonStyle={[styles.ratiotext,{color: UColor.fontColor}]}
+                                        secondColonStyle={[styles.ratiotext,{color: UColor.fontColor}]}
+                                    />:<Text  style={[styles.ratiotext,{color: UColor.fontColor}]}>{this.state.ContrastThree}</Text>}
+                                        <Text style={[styles.recordtext,{color: UColor.arrow}]}>{this.state.percentageThree}</Text>
                                     </View>
                                 </View>
                             </View>
-                            <View style={styles.tablayout}>  
-                                {this.resourceButton(styles.memorytab, this.state.isMemory, 'isMemory', '内存资源')}  
-                                {this.resourceButton(styles.calculationtab, this.state.isCalculation, 'isCalculation', '计算资源')}  
-                                {this.resourceButton(styles.networktab, this.state.isNetwork, 'isNetwork', '网络资源')}  
+                            <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>  
+                                {this.resourceButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isMemory, 'isMemory', '内存资源')}  
+                                {this.resourceButton([styles.calculationtab,{borderTopColor: UColor.tintColor,borderBottomColor: UColor.tintColor}], this.state.isCalculation, 'isCalculation', '计算资源')}  
+                                {this.resourceButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isNetwork, 'isNetwork', '网络资源')}  
                             </View> 
-                            <View style={styles.nhaaout}>
+                            <View style={{backgroundColor: UColor.mainColor,}}>
                                 {this.state.isMemory?<View style={styles.wterout}>
                                 <View style={styles.OwnOthers}>  
                                         {this.ownOthersButton(styles.tabbutton, this.state.isOwn, 'isOwn', '自己')}  
@@ -986,10 +982,10 @@ class Resources extends BaseComponent {
                                 </View> }
                                 {this.state.isOwn ? null:
                                 <View style={styles.inptoutsource}>
-                                    {this.state.isMemory?<Text style={styles.inptTitlered}>注：帮他人购买，一旦送出将无法收回！</Text>:<Text style={styles.inptTitle}>设置接收者</Text>}
-                                    <View style={styles.outsource}>
+                                    {this.state.isMemory?<Text style={[styles.inptTitlered,{color: UColor.showy}]}>注：帮他人购买，一旦送出将无法收回！</Text>:<Text style={styles.inptTitle}>设置接收者</Text>}
+                                    <View style={[styles.outsource,{borderBottomColor: UColor.secdColor}]}>
                                         <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"
-                                            selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow} maxLength={12}
+                                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={12}
                                             placeholder="输入接收账号" underlineColorAndroid="transparent" keyboardType="default" 
                                             onChangeText={(receiver) => this.setState({ receiver: this.chkAccount(receiver)})}
                                         />
@@ -1003,36 +999,36 @@ class Resources extends BaseComponent {
                                 {this.state.isMemory?<View>
                                     <View style={styles.inptoutsource}>
                                         <View style={{flexDirection: 'row', alignItems: 'center',}}>
-                                            <Text style={styles.inptTitle}>购买内存（{this.state.currency_surplus}EOS）</Text>
+                                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>购买内存（{this.state.currency_surplus}EOS）</Text>
                                             <Text style={{fontSize:12, color: UColor.arrow,}}>≈{(this.state.currency_surplus == null || this.state.Currentprice == null || this.state.currency_surplus == '' || this.state.currency_surplus == '' || this.state.Currentprice == '0') ? '0.000' : (this.state.currency_surplus/this.state.Currentprice).toFixed(3)}kb</Text>
                                         </View>
-                                        <View style={styles.outsource}>
+                                        <View style={[styles.outsource,{borderBottomColor: UColor.secdColor}]}>
                                             <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount} returnKeyType="go" 
-                                            selectionColor={UColor.tintColor} style={styles.inpt}  placeholderTextColor={UColor.arrow} 
+                                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow} 
                                             placeholder="输入购买的额度(EOS)" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
                                             onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkPrice(buyRamAmount)})}
                                             />
                                             <Button onPress={this.buyram.bind(this)}>
-                                                <View style={styles.botn}>
-                                                    <Text style={styles.botText}>购买</Text>
+                                                <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
+                                                    <Text style={[styles.botText,{color: UColor.btnColor}]}>购买</Text>
                                                 </View>
                                             </Button> 
                                         </View>
                                     </View>
                                     {this.state.isOthers ? null:<View style={styles.inptoutsource}>
                                         <View style={{flexDirection: 'row', alignItems: 'center',}}>
-                                            <Text style={styles.inptTitle}>出售内存（{this.state.ram_available}KB）</Text>
+                                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>出售内存（{this.state.ram_available}KB）</Text>
                                             <Text style={{fontSize:12, color: UColor.arrow,}}>≈{(this.state.ram_available*this.state.Currentprice).toFixed(3)}EOS</Text>
                                         </View>
-                                        <View style={styles.outsource}>
+                                        <View style={[styles.outsource,{borderBottomColor: UColor.secdColor}]}>
                                             <TextInput ref={(ref) => this._rrpass = ref} value={this.state.sellRamBytes} returnKeyType="go" 
-                                            selectionColor={UColor.tintColor} style={styles.inpt}  placeholderTextColor={UColor.arrow}
+                                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow}
                                             placeholder="输入出售的数量(KB)" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
                                             onChangeText={(sellRamBytes) => this.setState({ sellRamBytes: this.chkPrice(sellRamBytes)})}
                                             />
                                             <Button onPress={this.sellram.bind(this)}>
-                                                <View style={styles.botn}>
-                                                    <Text style={styles.botText1}>出售</Text>
+                                                <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
+                                                    <Text style={[styles.botText,{color: UColor.btnColor}]}>出售</Text>
                                                 </View>
                                             </Button> 
                                         </View>
@@ -1040,31 +1036,31 @@ class Resources extends BaseComponent {
                                 </View>:
                                 <View>
                                     <View style={styles.inptoutsource}>
-                                        <Text style={styles.inptTitle}>抵押（EOS）</Text>
-                                        <View style={styles.outsource}>
+                                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>抵押（EOS）</Text>
+                                        <View style={[styles.outsource,{borderBottomColor: UColor.secdColor}]}>
                                             <TextInput ref={(ref) => this._rrpass = ref} value={this.state.delegateb} returnKeyType="go" 
-                                            selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow} 
+                                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
                                             placeholder="输入抵押数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
                                             onChangeText={(delegateb) => this.setState({ delegateb: this.chkPrice(delegateb)})}
                                             />
                                             <Button onPress={this.delegateb.bind()}>
-                                                <View style={styles.botn}>
-                                                    <Text style={styles.botText}>抵押</Text>
+                                                <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
+                                                    <Text style={[styles.botText,{color: UColor.btnColor}]}>抵押</Text>
                                                 </View>
                                             </Button> 
                                         </View>
                                     </View>
                                     {!this.state.isTransfer&&<View style={styles.inptoutsource}>
-                                        <Text style={styles.inptTitle}>赎回（EOS）</Text>
-                                        <View style={styles.outsource}>
+                                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>赎回（EOS）</Text>
+                                        <View style={[styles.outsource,{borderBottomColor: UColor.secdColor}]}>
                                             <TextInput ref={(ref) => this._rrpass = ref} value={this.state.undelegateb} returnKeyType="go" 
-                                            selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow}
+                                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}
                                             placeholder="输入赎回数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
                                             onChangeText={(undelegateb) => this.setState({ undelegateb: this.chkPrice(undelegateb)})}   
                                             />
                                             <Button onPress={this.undelegateb.bind()}>
-                                                <View style={styles.botn}>
-                                                    <Text style={styles.botText}>赎回</Text>
+                                                <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
+                                                    <Text style={[styles.botText,{color: UColor.btnColor}]}>赎回</Text>
                                                 </View>
                                             </Button> 
                                         </View>
@@ -1072,21 +1068,21 @@ class Resources extends BaseComponent {
                                 </View>}
                             </View>
                             {this.state.isMemory?
-                            <View style={styles.basc}>
-                                <Text style={styles.basctext}>· 当前内存价格：{this.state.Currentprice}/KB</Text>
-                                <Text style={styles.basctext}>· 内存资源，可以使用EOS买入，也可以出售得EOS</Text>
+                            <View style={[styles.basc,{backgroundColor: UColor.secdColor}]}>
+                                <Text style={[styles.basctext,{color: UColor.arrow}]}>· 当前内存价格：{this.state.Currentprice}/KB</Text>
+                                <Text style={[styles.basctext,{color: UColor.arrow}]}>· 内存资源，可以使用EOS买入，也可以出售得EOS</Text>
                             </View>
                             :
-                            <View style={styles.basc}>
+                            <View style={[styles.basc,{backgroundColor: UColor.secdColor}]}>
                                 <Button onPress={this.redemption.bind()}>
                                  <View style={{ height: ScreenUtil.autoheight(30),justifyContent: 'flex-end', 
                                                 alignItems: 'flex-end'  }}>
-                                    <Text style={styles.basctextright}>赎回遇到问题？</Text>
+                                    <Text style={[styles.basctextright,{color: UColor.tintColor,borderBottomColor: UColor.tintColor}]}>赎回遇到问题？</Text>
                                  </View>
                                  </Button>
-                                <Text style={styles.basctext}>· 获取资源需要抵押EOS。 </Text>
-                                <Text style={styles.basctext}>· 抵押的EOS可撤销抵押，并于3天后退回。</Text>
-                                <Text style={styles.basctext}>· 租赁抵押的EOS可自行赎回，过户抵押的EOS，将无法赎回。</Text>
+                                <Text style={[styles.basctext,{color: UColor.arrow}]}>· 获取资源需要抵押EOS。 </Text>
+                                <Text style={[styles.basctext,{color: UColor.arrow}]}>· 抵押的EOS可撤销抵押，并于3天后退回。</Text>
+                                <Text style={[styles.basctext,{color: UColor.arrow}]}>· 租赁抵押的EOS可自行赎回，过户抵押的EOS，将无法赎回。</Text>
                             </View>}
                         </TouchableOpacity>
                     </ScrollView>  
@@ -1096,33 +1092,18 @@ class Resources extends BaseComponent {
     }
 }
 const styles = StyleSheet.create({
-    nothave: {
-        height: ScreenUtil.autoheight(80),
-        backgroundColor: UColor.mainColor,
-        flexDirection: "row",
-        alignItems: 'center',
-        justifyContent: "center",
-        paddingHorizontal: ScreenUtil.autoheight(20),
-        borderRadius: 5,
-        margin: ScreenUtil.autowidth(5),
-    },
-    copytext: {
-        fontSize: ScreenUtil.setSpText(16), 
-        color: UColor.fontColor
-    },
+ 
     // 密码输入框
     passoutsource: {
         flexDirection: 'column', 
         alignItems: 'center'
     },
     inptpass: {
-        color: UColor.tintColor,
+        textAlign: "center",
         height: ScreenUtil.autoheight(45),
         width: ScreenWidth-100,
         paddingBottom: ScreenUtil.autoheight(5),
         fontSize: ScreenUtil.setSpText(16),
-        backgroundColor: UColor.fontColor,
-        borderBottomColor: UColor.baseline,
         borderBottomWidth: 1,
     },
     inptpasstext: {
@@ -1130,63 +1111,6 @@ const styles = StyleSheet.create({
         color: UColor.lightgray,
         lineHeight: ScreenUtil.autoheight(25),
         marginTop: ScreenUtil.autoheight(5),
-    },
-
-    inptoutsource1: {
-        paddingHorizontal: ScreenUtil.autowidth(20),
-        paddingBottom: ScreenUtil.autoheight(20),
-        justifyContent: 'center',
-    },
-    outsource1: {
-        flexDirection: 'row',  
-        alignItems: 'center',
-    },
-    inpt1: {
-        flex: 1, 
-        color: UColor.arrow, 
-        fontSize: ScreenUtil.setSpText(15), 
-        height: ScreenUtil.autoheight(40), 
-        paddingLeft: ScreenUtil.autowidth(10), 
-        backgroundColor: UColor.fontColor, 
-        borderRadius: 5,
-    },
-    inptTitlered1: {
-        fontSize: ScreenUtil.setSpText(12), 
-        color: UColor.showy, 
-        lineHeight: ScreenUtil.autoheight(35),
-    },
-    inptTitle1: {
-        fontSize: ScreenUtil.setSpText(14), 
-        color: UColor.arrow,
-        lineHeight: ScreenUtil.autoheight(35),
-    },
-    botnimg1: {
-        marginLeft: ScreenUtil.autowidth(10), 
-        width: ScreenUtil.autowidth(86), 
-        height: ScreenUtil.autoheight(38), 
-        justifyContent: 'center', 
-        alignItems: 'flex-start'
-    },
-    botn1: {
-        marginLeft: ScreenUtil.autowidth(10), 
-        width: ScreenUtil.autowidth(86), 
-        height: ScreenUtil.autoheight(38),  
-        borderRadius: 3, 
-        backgroundColor: UColor.tintColor, 
-        justifyContent: 'center', 
-        alignItems: 'center' 
-    },
-    botText1: {
-        fontSize: ScreenUtil.setSpText(17), 
-        color: UColor.fontColor,
-    },
-    basc1: {
-        padding: ScreenUtil.autowidth(20),
-    },
-    basctext1 :{
-        fontSize: ScreenUtil.setSpText(12), 
-        color: UColor.arrow, 
-        lineHeight: ScreenUtil.autoheight(25),
     },
 
     tabbutton: {  
@@ -1199,14 +1123,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',  
         paddingVertical: ScreenUtil.autoheight(5),
         paddingHorizontal: ScreenUtil.autowidth(15),
-        backgroundColor: UColor.mainColor,
     },  
     memorytab: {
         flex: 1,
         height: ScreenUtil.autoheight(33),
         borderTopLeftRadius: 5,
         borderBottomLeftRadius: 5,
-        borderColor: UColor.tintColor,
         borderWidth: 1,
         alignItems: 'center',   
         justifyContent: 'center', 
@@ -1214,8 +1136,6 @@ const styles = StyleSheet.create({
     calculationtab: {
         flex: 1,
         height: ScreenUtil.autoheight(33),
-        borderTopColor: UColor.tintColor,
-        borderBottomColor: UColor.tintColor,
         borderTopWidth: 1,
         borderBottomWidth: 1,
         alignItems: 'center',   
@@ -1226,7 +1146,6 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(33),
         borderTopRightRadius: 5,
         borderBottomRightRadius: 5,
-        borderColor: UColor.tintColor,
         borderWidth: 1,
         alignItems: 'center',   
         justifyContent: 'center', 
@@ -1238,56 +1157,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection:'column',
-        backgroundColor: UColor.secdColor,
-    },
-    nov: {
-        alignItems: 'center', 
-        flexDirection:'row', 
-        marginHorizontal: ScreenUtil.autowidth(6),
-        height: ScreenUtil.autoheight(80),  
-        backgroundColor:  UColor.mainColor, 
-        borderRadius: 5, 
-        marginTop: ScreenUtil.autoheight(6),
-    },
-    imgsize: {
-        width: ScreenUtil.autowidth(40), 
-        height: ScreenUtil.autowidth(40), 
-        marginHorizontal: ScreenUtil.autowidth(20),
-    },
-    novoutsource: {
-        flex: 1, 
-        justifyContent: "center", 
-        alignItems: 'flex-start', 
-        flexDirection:'column',
-    },
-    headtextSize: {
-        fontSize: ScreenUtil.setSpText(16), 
-        color: UColor.fontColor,  
-        paddingBottom: ScreenUtil.autoheight(8),
-    },
-    textoutsource: {
-        flexDirection:'row', 
-        alignItems: "center",
-    },
-    textSizeone: {
-        fontSize: ScreenUtil.setSpText(12), 
-        color: UColor.arrow,
-    },
-    textSizetwo: {
-        marginLeft: ScreenUtil.autowidth(10),
-        fontSize: ScreenUtil.setSpText(12), 
-        color: UColor.arrow,
-    },
-    arrow: {
-        width: ScreenUtil.autowidth(40), 
-        lineHeight: ScreenUtil.autoheight(80), 
-        color: UColor.fontColor, 
-        textAlign: 'center'
     },
 
-    nhaaout: {
-          backgroundColor: UColor.mainColor,
-      },
       wterout: {
           flexDirection: 'row',
           paddingVertical: ScreenUtil.autoheight(10),
@@ -1311,25 +1182,21 @@ const styles = StyleSheet.create({
     outsource: {
         flexDirection: 'row',  
         alignItems: 'center',
-        borderBottomColor: UColor.secdColor, 
         borderBottomWidth: 0.5,
     },
     inpt: {
         flex: 1, 
-        color: UColor.arrow, 
         fontSize: ScreenUtil.setSpText(15), 
         height: ScreenUtil.autoheight(40), 
         paddingLeft: ScreenUtil.autowidth(10), 
     },
 
     inptTitle: {
-        fontSize: ScreenUtil.setSpText(14), 
-        color: UColor.fontColor, 
+        fontSize: ScreenUtil.setSpText(14),  
         lineHeight: ScreenUtil.autoheight(25),
     },
     inptTitlered: {
         fontSize: ScreenUtil.setSpText(14), 
-        color: UColor.showy, 
         lineHeight: ScreenUtil.autoheight(35),
     },
     botnimg: {
@@ -1344,42 +1211,34 @@ const styles = StyleSheet.create({
         width: ScreenUtil.autowidth(70), 
         height: ScreenUtil.autoheight(30),  
         borderRadius: 3, 
-        backgroundColor: UColor.tintColor, 
         justifyContent: 'center', 
         alignItems: 'center' 
     },
     botText: {
         fontSize: ScreenUtil.setSpText(17), 
-        color: UColor.fontColor,
     },
     basc: {
         flex: 1,
         padding: ScreenUtil.autoheight(10),
-        backgroundColor: UColor.secdColor,
     },
     basctextright :{
         flexDirection: 'row',  
         fontSize: ScreenUtil.setSpText(14), 
-        color: UColor.tintColor, 
         lineHeight: ScreenUtil.autoheight(20),
         textAlign: 'right',
-        borderBottomColor: UColor.tintColor, 
         borderBottomWidth: 1,
     },
     basctext :{
         fontSize: ScreenUtil.setSpText(12), 
-        color: UColor.arrow, 
         lineHeight: ScreenUtil.autoheight(25),
     },
 
     tetleout: {
         paddingHorizontal: ScreenUtil.autowidth(15),
         paddingBottom: ScreenUtil.autoheight(10),
-        backgroundColor: UColor.mainColor,
     },
     tetletext: {
         fontSize: ScreenUtil.setSpText(15),
-        color: UColor.arrow,
         paddingVertical: ScreenUtil.autoheight(5),
     },
 
@@ -1395,17 +1254,13 @@ const styles = StyleSheet.create({
         height: (ScreenWidth - 30) * 0.307 - 5,
         marginBottom: Platform.OS == 'ios' ? 0.3 : 0.2,
     },
-    stripbg: {
-        backgroundColor: UColor.secdColor,
-    },
+  
     ratiotext: {
         fontSize: ScreenUtil.setSpText(12),
-        color: UColor.fontColor,
         textAlign: 'center',
     },
     recordtext: {
         fontSize: ScreenUtil.setSpText(12),
-        color: UColor.arrow,
     },
     record: {
         flexDirection: 'row',
@@ -1416,97 +1271,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: 'center',
     },
-
-    animatedout: {
-        width: ScreenWidth,
-        backgroundColor: UColor.fontColor,
-    },
-    labelout: {
-        fontSize: ScreenUtil.setSpText(12),
-        color: UColor.fontColor,
-    },
-    tabout: {
-        width: ScreenWidth / 4,
-        padding: 0,
-        margin: 0
-    },
-    indicator: {
-        borderRadius: 10,
-        backgroundColor: UColor.tintColor,
-        width: (ScreenWidth - 40) / 4,
-        height: ScreenUtil.autoheight(30),
-        marginVertical: ScreenUtil.autoheight(8),
-        marginHorizontal: ScreenUtil.autowidth(5),
-    },
-    tabbarout: {
-        height: ScreenUtil.autoheight(46),
-        paddingVertical: ScreenUtil.autoheight(8),
-        backgroundColor: UColor.secdColor
-    },
-
-    //弹框
-    pupuo: {
-        backgroundColor: UColor.riceWhite,
-    },
-    // modal的样式  
-    modalStyle: {
-        backgroundColor: UColor.mask,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-    },
-    // modal上子View的样式  
-    subView: {
-        marginHorizontal: ScreenUtil.autowidth(10),
-        backgroundColor:  UColor.fontColor,
-        alignSelf: 'stretch',
-        justifyContent: 'center',
-        borderRadius: 10,
-        borderWidth: 0.5,
-        borderColor: UColor.baseline,
-    },
-    closeText: {
-        width: ScreenUtil.autowidth(30),
-        height: ScreenUtil.autowidth(30),
-        marginBottom: 0,
-        color: UColor.baseline,
-        fontSize: ScreenUtil.setSpText(28),
-    },
-    // 标题  
-    titleText: {
-        color: UColor.blackColor,
-        marginBottom: ScreenUtil.autoheight(5),
-        fontSize: ScreenUtil.setSpText(18),
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    // 内容  
-    contentText: {
-        margin: ScreenUtil.autowidth(20),
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: "row",
-    },
-    textContent: {
-        color: UColor.arrow,
-        fontSize: ScreenUtil.setSpText(14),
-        textAlign: 'left',
-        lineHeight: ScreenUtil.autoheight(25),
-    },
-    // 按钮  
-    buttonView: {
-        margin: ScreenUtil.autowidth(10),
-        height: ScreenUtil.autoheight(46),
-        borderRadius: 6,
-        backgroundColor:  UColor.showy,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    buttonText: {
-        fontSize: ScreenUtil.setSpText(16),
-        color:  UColor.fontColor,
-    },
     tab: {
         flex: 1,
     },
@@ -1516,7 +1280,6 @@ const styles = StyleSheet.create({
     },
     Explaintext2: {
         fontSize: ScreenUtil.setSpText(15),
-        color: UColor.arrow, 
         lineHeight: ScreenUtil.autoheight(30), 
     },
 })
