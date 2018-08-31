@@ -43,7 +43,7 @@ import PropTypes from 'prop-types'
 react-native run-android
 
 ### run ios:<br>
-npm run ios/react-native run-ios
+在xcode里面点击run
 
 <br>
 npm version:3.10.10 <br>
