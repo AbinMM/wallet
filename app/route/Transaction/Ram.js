@@ -586,7 +586,7 @@ class Ram extends BaseComponent {
                                     { 
                                         //弹出提示框,可申请免费抵押功能
                                         const view =
-                                        <View style={styles.passoutsource}>
+                                        <View style={styles.Explainout}>
                                             <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
                                             <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                         </View>
@@ -682,7 +682,7 @@ class Ram extends BaseComponent {
                                     { 
                                         //弹出提示框,可申请免费抵押功能
                                         const view =
-                                        <View style={styles.passoutsource}>
+                                        <View style={styles.Explainout}>
                                             <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
                                             <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                         </View>
@@ -1099,11 +1099,11 @@ class Ram extends BaseComponent {
                                     onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkBuyEosQuantity(buyRamAmount), 
                                         eosToKB: this.eosToKB(buyRamAmount, this.props.ramInfo?this.props.ramInfo.price:'')})}
                                     />
-                                    <Text style={[styles.unittext,{color: UColor.fontColor}]}>EOS</Text>
+                                    <Text style={[styles.unittext,{color: UColor.btnColor}]}>EOS</Text>
                                 </View>
                                 <View style={[styles.inputout,{backgroundColor: UColor.mainColor}]}>
                                     <Text style={[styles.conversion,{color: UColor.arrow}]}>≈{this.state.eosToKB}</Text>
-                                    <Text style={[styles.unittext,{color: UColor.fontColor}]}>KB</Text>
+                                    <Text style={[styles.unittext,{color: UColor.btnColor}]}>KB</Text>
                                 </View>
                                 <View style={styles.inptoutsource}>
                                     <View style={styles.outsource}>
@@ -1139,11 +1139,11 @@ class Ram extends BaseComponent {
                                 placeholder="输入出售数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
                                 onChangeText={(sellRamBytes) => this.setState({ sellRamBytes: this.chkInputSellRamBytes(sellRamBytes), kbToEos: this.kbToEos(sellRamBytes, this.props.ramInfo?this.props.ramInfo.price:'')})}
                                 />
-                                <Text style={[styles.unittext,{color: UColor.fontColor}]}>KB</Text>
+                                <Text style={[styles.unittext,{color: UColor.btnColor}]}>KB</Text>
                             </View>
                             <View style={[styles.inputout,{backgroundColor: UColor.mainColor}]}>
                                 <Text style={[styles.conversion,{color: UColor.arrow}]}>≈{(this.state.kbToEos == null || this.state.kbToEos == '') ? '0' : this.state.kbToEos}</Text>
-                                <Text style={[styles.unittext,{color: UColor.fontColor}]}>EOS</Text>
+                                <Text style={[styles.unittext,{color: UColor.btnColor}]}>EOS</Text>
                             </View>
                             <View style={styles.inptoutsource}>
                                     <View style={styles.outsource}>
@@ -1568,7 +1568,7 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(14)
     },
     
-    passoutsource: {
+    Explainout: {
         flexDirection: 'column', 
         alignItems: 'flex-start'
     },

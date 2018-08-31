@@ -1,33 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { NativeModules, StatusBar, BackHandler, DeviceEventEmitter, InteractionManager, Clipboard, ListView, StyleSheet, Image, ScrollView, View, RefreshControl, Text, TextInput, Platform, Dimensions, Modal, TouchableHighlight,TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
-import store from 'react-native-simple-store';
+import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
-import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
-import AnalyticsUtil from '../../utils/AnalyticsUtil';
+import { EasyShowLD } from '../../components/EasyShow'
+import BaseComponent from "../../components/BaseComponent";
+var dismissKeyboard = require('dismissKeyboard');
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
-import { EasyShowLD } from '../../components/EasyShow'
-import { EasyToast } from '../../components/Toast';
-import BaseComponent from "../../components/BaseComponent";
-import Constants from '../../utils/Constants'
-var dismissKeyboard = require('dismissKeyboard');
 
 class Warning extends BaseComponent {
-    static navigationOptions = ({ navigation }) => {
-        const params = navigation.state.params || {};
-        return {
-            // headerTitle: '转出' + params.coins.name,
-            headerTitle: '价格预警',
-            headerStyle: {
-                paddingTop: ScreenUtil.autoheight(20),
-                backgroundColor: UColor.mainColor,
-                borderBottomWidth:0,
-            },
-        };
+
+    static navigationOptions = {
+        headerTitle: '价格预警',
+        header:null,   
     };
 
     //组件加载完成
@@ -132,40 +121,38 @@ class Warning extends BaseComponent {
 
     render() {
         return (
-        <View style={styles.container}>
-                
-
+        <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+            <Header {...this.props} onPressLeft={true} title="价格预警" />   
             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                 <ScrollView  keyboardShouldPersistTaps="always">
                     <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-                        <View style={styles.basc}>
-                            <Text style={styles.basctext}>当前价格约 1EOS/120KB</Text>
+                        <View style={[styles.basc,{backgroundColor: UColor.secdColor}]}>
+                            <Text style={[styles.basctext,{color: UColor.arrow}]}>当前价格约 1EOS/120KB</Text>
                         </View>
-
                         <View style={styles.taboutsource}>
-                            <View style={styles.outsource}>
-                                <View style={styles.textinptoue} >
+                            <View style={[styles.outsource,{backgroundColor: UColor.secdColor}]}>
+                                <View style={[styles.textinptoue,{borderBottomColor: UColor.mainColor}]}  >
                                     <TextInput  ref={(ref) => this._ramount = ref} value={this.state.amount} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={styles.textinpt}  placeholderTextColor={UColor.arrow} 
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow} 
                                         placeholder="上涨0.25%"  underlineColorAndroid="transparent"   keyboardType="numeric"   maxLength = {15}
                                         onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })}
                                         />
                                 </View>
-                                <View style={styles.separate}></View>
-                                <View style={styles.textinptoue} >
+                                <View style={[styles.separate,{backgroundColor: UColor.secdColor}]}></View>
+                                <View style={[styles.textinptoue,{borderBottomColor: UColor.mainColor}]} >
                                     <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={styles.textinpt}  placeholderTextColor={UColor.arrow}
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow}
                                         placeholder="下跌2%" underlineColorAndroid="transparent" keyboardType="default" maxLength={20} 
                                         onChangeText={(memo) => this.setState({ memo })}
                                         />
                                 </View>
-                                <View style={styles.separate}></View>
-                                <View style={styles.basc}>
-                                        <Text style={styles.basctext}>注：由于不同的手机设置与地区网络环境的不同，本服务可能存在一定的偏差,不适用于实施挂单!交易建议实时操作为准。</Text>
+                                <View style={[styles.separate,{backgroundColor: UColor.secdColor}]}></View>
+                                <View style={[styles.basc,{backgroundColor: UColor.secdColor}]}>
+                                    <Text style={[styles.basctext,{color: UColor.arrow}]}>注：由于不同的手机设置与地区网络环境的不同，本服务可能存在一定的偏差,不适用于实施挂单!交易建议实时操作为准。</Text>
                                 </View>
                                 <Button onPress={this._rightButtonClick.bind(this)} style={styles.btnnextstep}>
-                                    <View style={styles.nextstep}>
-                                        <Text style={styles.nextsteptext}>确认</Text>
+                                    <View style={[styles.nextstep,{backgroundColor: UColor.tintColor}]}>
+                                        <Text style={[styles.nextsteptext,{color: UColor.btnColor}]}>确认</Text>
                                     </View>
                                 </Button>
                             </View>
@@ -180,131 +167,58 @@ class Warning extends BaseComponent {
 }
 const styles = StyleSheet.create({
     passoutsource: {
+        alignItems: 'center',
         flexDirection: 'column', 
-        alignItems: 'center'
     },
-    inptpass: {
-        color: UColor.tintColor,
-        height: 45,
-        width: ScreenWidth-100,
-        paddingBottom: 5,
-        fontSize: 16,
-        backgroundColor: UColor.fontColor,
-        borderBottomColor: UColor.baseline,
-        borderBottomWidth: 1,
-    },
-
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: UColor.secdColor,
-        paddingTop: 5,
     },
-    header: {
-        height: 110,
-        justifyContent: "center",
-        alignItems: "center",
-        margin: 5,
-        borderRadius: 5,
-        backgroundColor: UColor.mainColor,
-    },
-    headertext: {
-        fontSize: 20,
-        color: UColor.fontColor
-    },
-    row: {
-        height: 90,
-        backgroundColor: UColor.mainColor,
-        flexDirection: "column",
-        padding: 10,
-        justifyContent: "space-between",
-        borderRadius: 5,
-        margin: 5,
-    },
-    top: {
-        flex: 1,
-        flexDirection: "row",
-        alignItems: 'center',
-    },
-    footer: {
-        height: 50,
-        flexDirection: 'row',
-        position: 'absolute',
-        backgroundColor: UColor.secdColor,
-        bottom: 0,
-        left: 0,
-        right: 0,
-    },
-   
     taboutsource: {
         flex: 1,
         flexDirection: 'column',
     },
     outsource: {
-        backgroundColor: UColor.secdColor,
+        flex: 1,
         flexDirection: 'column',
-        padding: 20,
-        flex: 1,
-    },
-    inptoutsource: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: UColor.mainColor,
-        marginBottom: 10,
-        paddingLeft: 10,
-    },
-
-    inpt: {
-        flex: 1,
-        color: UColor.arrow,
-        fontSize: 15,
-        height: 40,
-        paddingLeft: 2
+        padding: ScreenUtil.autowidth(20),
+       
     },
     textinptoue: {
-        paddingLeft: 10,
-        height: 40,
-        marginBottom: 10,
         borderBottomWidth: 1,
-        borderBottomColor: UColor.mainColor,
         justifyContent: 'center',
+        height: ScreenUtil.autoheight(40),
+        paddingLeft: ScreenUtil.autowidth(10),
+        marginBottom: ScreenUtil.autoheight(10),
     },
-
     separate: {
         height: 0.5,
-        backgroundColor: UColor.secdColor
     },
-
     textinpt: {
-        color: UColor.arrow,
-        fontSize: 15,
-        height: 40,
-        paddingLeft: 2
+        height: ScreenUtil.autoheight(40),
+        fontSize: ScreenUtil.setSpText(15),
+        paddingLeft: ScreenUtil.autowidth(2),
     },
     btnnextstep: {
-        height: 85,
-        marginTop: 60,
+        height: ScreenUtil.autoheight(85),
+        marginTop: ScreenUtil.autoheight(60),
     },
     nextstep: {
-        height: 45,
-        backgroundColor: UColor.tintColor,
-        justifyContent: 'center',
+        borderRadius: 5,
         alignItems: 'center',
-        margin: 20,
-        borderRadius: 5
+        justifyContent: 'center',
+        margin: ScreenUtil.autowidth(20),
+        height: ScreenUtil.autoheight(45),
     },
     nextsteptext: {
-        fontSize: 15,
-        color: UColor.fontColor
+        fontSize: ScreenUtil.setSpText(15),
     },
     basc: {
-        padding: 20,
-        backgroundColor: UColor.secdColor,
+        padding: ScreenUtil.autowidth(20),
     },
     basctext :{
-        fontSize: 15, 
-        color: UColor.arrow, 
-        lineHeight: 25,
+        fontSize: ScreenUtil.setSpText(15),
+        lineHeight: ScreenUtil.autoheight(25),
     },
 
 

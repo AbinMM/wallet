@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, TouchableOpacity, TextInput, RefreshControl } from 'react-native';
 import moment from 'moment';
+import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
-import UImage from '../../utils/Img'
 import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast"
@@ -292,8 +292,8 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      paddingVertical: ScreenUtil.autoheight(7),
       marginBottom: ScreenUtil.autoheight(5),
+      paddingVertical: ScreenUtil.autoheight(7),
     },
     headleftimg: {
       width: ScreenUtil.autowidth(18),
@@ -340,10 +340,10 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       flexDirection: "row",
       height: ScreenUtil.autoheight(52),
-      paddingHorizontal: ScreenUtil.autowidth(10),
+      marginVertical: ScreenUtil.autoheight(5),
       paddingVertical: ScreenUtil.autoheight(5),
       marginHorizontal: ScreenUtil.autowidth(10),
-      marginVertical: ScreenUtil.autoheight(1),
+      paddingHorizontal: ScreenUtil.autowidth(10),
     },
     leftout: {
       flex: 1,
@@ -377,9 +377,9 @@ const styles = StyleSheet.create({
       fontSize: ScreenUtil.setSpText(14),
     },
     Ionicout: {
-      width: ScreenUtil.autowidth(30),
+      alignItems: 'flex-end',
       justifyContent: 'center',
-      alignItems: 'flex-end'
-  },
+      width: ScreenUtil.autowidth(30),
+    },
 });
 export default RecordQueryRam;

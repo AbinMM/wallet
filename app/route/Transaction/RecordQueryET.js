@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, Platform,  TouchableOpacity, TextInput, RefreshControl } from 'react-native';
 import moment from 'moment';
-import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
 import Button from '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
@@ -284,8 +284,8 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      paddingVertical: ScreenUtil.autoheight(7),
       marginBottom: ScreenUtil.autoheight(5),
+      paddingVertical: ScreenUtil.autoheight(7),
     },
     headleftimg: {
       width: ScreenUtil.autowidth(18),
@@ -316,26 +316,26 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     nothave: {
-      height: ScreenUtil.autoheight(80),
+      borderRadius: 5,
       flexDirection: "row",
       alignItems: 'center',
       justifyContent: "center",
-      paddingHorizontal: ScreenUtil.autowidth(20),
-      borderRadius: 5,
       margin: ScreenUtil.autowidth(5),
+      height: ScreenUtil.autoheight(80),
+      paddingHorizontal: ScreenUtil.autowidth(20),
     },
     copytext: {
       fontSize: ScreenUtil.setSpText(16), 
     },
 
     package: {
-      height: ScreenUtil.autoheight(52),
-      flexDirection: "row",
-      paddingHorizontal: ScreenUtil.autowidth(10),
-      paddingVertical: ScreenUtil.autoheight(5),
       borderRadius: 5,
-      marginHorizontal: ScreenUtil.autowidth(10),
+      flexDirection: "row",
+      height: ScreenUtil.autoheight(52),
       marginVertical: ScreenUtil.autoheight(5),
+      paddingVertical: ScreenUtil.autoheight(5),
+      marginHorizontal: ScreenUtil.autowidth(10),
+      paddingHorizontal: ScreenUtil.autowidth(10),
     },
     leftout: {
       flex: 1,
@@ -356,22 +356,22 @@ const styles = StyleSheet.create({
     },
     selltext: {
       flex: 5,
-      fontSize: ScreenUtil.setSpText(15),
       textAlign: 'left',
+      fontSize: ScreenUtil.setSpText(15),
     },
     buytext: {
       flex: 5,
-      fontSize: ScreenUtil.setSpText(15),
       textAlign: 'left',
+      fontSize: ScreenUtil.setSpText(15),
     },
     presentprice: {
-      fontSize: ScreenUtil.setSpText(14),
       textAlign: 'left',
+      fontSize: ScreenUtil.setSpText(14),
     },
     Ionicout: {
-      width: ScreenUtil.autowidth(30),
+      alignItems: 'flex-end',
       justifyContent: 'center',
-      alignItems: 'flex-end'
+      width: ScreenUtil.autowidth(30),
     },
 });
 export default RecordQueryET;

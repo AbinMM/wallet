@@ -292,7 +292,7 @@ class News extends React.Component {
                   <Button onPress={this.onDown.bind(this, rowData)}>
                     <View style={styles.spotout}>
                       <Image style={styles.updownimg} source={rowData.isDown ? UImage.down_h : UImage.down} />
-                      <Text style={[styles.updowntext,{color: rowData.isUp ? UColor.tintColor : UColor.lightgray}]}>{rowData.down}</Text>
+                      <Text style={[styles.updowntext,{color: rowData.isDown ? UColor.tintColor : UColor.lightgray}]}>{rowData.down}</Text>
                     </View>
                   </Button>
                   <Button onPress={this.onShare.bind(this, rowData)}>
