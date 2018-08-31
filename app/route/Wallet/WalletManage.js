@@ -136,6 +136,8 @@ class WalletManage extends BaseComponent {
                         </View>
                       </Button>
                       {(!rowData.isactived|| !rowData.hasOwnProperty('isactived')) ? <View style={styles.notactivedout}><Text style={styles.notactived}>未激活</Text></View>:(rowData.isBackups ? null : <View style={styles.stopoutBackupsout}><Text style={styles.stopoutBackups}>未备份</Text></View>) }   
+                      {(rowData.ownerPublic==null || rowData.ownerPublic=="" )&&(rowData.activePublic !=null && rowData.activePublic.length==53 ) ? <View style={styles.stopoutBackupsout}><Text style={styles.stopoutBackups}>Active</Text></View>:null}
+                      {(rowData.ownerPublic!=null && rowData.ownerPublic.length==53 )&&(rowData.activePublic==null || rowData.activePublic=="" )? <View style={styles.stopoutBackupsout}><Text style={styles.stopoutBackups}>Owner</Text></View>:null  }
                   </View>
                   <View style={styles.topout}>               
                     <Text style={styles.outaccount} numberOfLines={1} ellipsizeMode='middle'>{this.getAssertDisp(rowData)}<Text style={styles.topouttext}> EOS</Text></Text>
@@ -229,6 +231,7 @@ const styles = StyleSheet.create({
     marginHorizontal: ScreenUtil.autowidth(5),
   },
   stopoutBackupsout: {
+    marginHorizontal: ScreenUtil.autowidth(2),
     borderRadius: 10,
     borderWidth: 1,
     borderColor: UColor.tintColor,
