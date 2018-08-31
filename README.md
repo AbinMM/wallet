@@ -40,7 +40,7 @@ import PropTypes from 'prop-types'
 ```
 
 ### run android:<br>
-npm run android/react-native run-android
+react-native run-android
 
 ### run ios:<br>
 npm run ios/react-native run-ios
