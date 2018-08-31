@@ -56,18 +56,7 @@ class Splash extends React.Component {
           UColor.blackColor= '#000000'; //纯黑色 UColor.blackColor
           UColor.riseColor= '#F25C49'; //涨卖收色 UColor.riseColor
           UColor.fallColor= '#25B36B'; //跌买出色 UColor.fallColor
-          UColor.navigation= '#2279C5', //顶部标题背景色 UColor.navigation
-          // UImage.add=require('../img/day/add.png');
-          // UImage.more=require('../img/day/more.png');
-          // UImage.qr=require('../img/day/qr.png');
-          // UImage.resources=require('../img/day/resources.png');
-          // UImage.transfer=require('../img/day/transfer.png');
-         
-
-
-
-
-
+          UColor.navigation= '#2279C5', //顶部标题背景色 UColor.navigatio
           UImage.guide=require('../img/day/guide.png');
           UImage.my_community=require('../img/day/my_community.png');
           UImage.account_manage=require('../img/day/account_manage.png');
@@ -97,10 +86,7 @@ class Splash extends React.Component {
           UImage.resources_f=require('../img/day/resources_f.png');
           UImage.details=require('../img/day/details.png');
           UImage.adminA=require('../img/day/adminA.png');
-        
-
       }else{
-        
           UColor.transport= 'rgba(0, 0, 0, 0.0)';
           UColor.mask= 'rgba(0, 0, 0, 0.4)'; //遮罩色 UColor.mask
           UColor.mainColor=  '#4e5e7d'; //主色调 UColor.mainColor

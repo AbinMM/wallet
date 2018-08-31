@@ -5,6 +5,7 @@ import { DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, Platform, 
 import moment from 'moment';
 import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import Button from '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast"
@@ -14,11 +15,7 @@ var dismissKeyboard = require('dismissKeyboard');
 class RecordQueryET extends React.Component {
   static navigationOptions = {
     title: "搜索交易记录",
-    headerStyle: {
-      paddingTop: ScreenUtil.autoheight(20),
-      backgroundColor: UColor.mainColor,
-      borderBottomWidth:0,
-    },
+    header: null, 
   };
 
   constructor(props) {
@@ -217,12 +214,13 @@ class RecordQueryET extends React.Component {
   }
 
   render() {
-    return (<View style={styles.container}>
-      <View style={styles.header}>  
-          <View style={styles.inptout} >
+    return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+    <Header {...this.props}  onPressLeft={true} title="搜索交易记录" />
+      <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
+          <View style={[styles.inptout,{backgroundColor: UColor.riceWhite}]} >
               <Image source={UImage.Magnifier_ash} style={styles.headleftimg}></Image>
               <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
-                  selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow} maxLength={12} 
+                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={12} 
                   placeholder="输入账号" underlineColorAndroid="transparent" keyboardType="default"
                   onChangeText={(labelname) => this.setState({ labelname })}   
                   />  
@@ -231,13 +229,13 @@ class RecordQueryET extends React.Component {
               </TouchableOpacity>     
           </View>    
           <TouchableOpacity onPress={this.query.bind(this,this.state.labelname)}>  
-              <Text style={styles.canceltext}>查询</Text>
+              <Text style={[styles.canceltext,{color: UColor.fontColor}]}>查询</Text>
           </TouchableOpacity>   
           <TouchableOpacity   onPress={this._empty.bind(this)}>  
-              <Text style={styles.canceltext}>清空</Text>
+              <Text style={[styles.canceltext,{color: UColor.fontColor}]}>清空</Text>
           </TouchableOpacity> 
       </View>   
-      {this.state.show && <View style={styles.nothave}><Text style={styles.copytext}>还没有交易记录哟~</Text></View>}       
+      {this.state.show && <View style={[styles.nothave,{backgroundColor: UColor.mainColor}]}><Text style={[styles.copytext,{color: UColor.fontColor}]}>还没有交易记录哟~</Text></View>}       
       <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true} 
         refreshControl={
           <RefreshControl
@@ -251,18 +249,18 @@ class RecordQueryET extends React.Component {
         dataSource={this.state.dataSource.cloneWithRows(this.state.newetTradeLog == null ? [] : this.state.newetTradeLog)} 
         renderRow={(rowData, sectionID, rowID) => (  
           <Button onPress={this._openDetails.bind(this,rowData)}>   
-            <View style={styles.package}>
+            <View style={[styles.package,{backgroundColor: UColor.mainColor}]}>
               <View style={styles.leftout}>
-                <Text style={styles.payertext}>{rowData.account}</Text>
-                <Text style={styles.timetext}>{moment(rowData.record_date).add(8,'hours').format('MM-DD HH:mm:ss')}</Text>
+                <Text style={[styles.payertext,{color: UColor.fontColor}]}>{rowData.account}</Text>
+                <Text style={[styles.timetext,{color: UColor.arrow}]}>{moment(rowData.record_date).add(8,'hours').format('MM-DD HH:mm:ss')}</Text>
               </View>
               <View style={styles.rightout}>
                 {rowData.action_name == 'selltoken' ? 
-                <Text style={styles.selltext}>卖 {(rowData.price == null || rowData.price == '0') ? this.precisionTransfer(rowData.token_qty,8) : rowData.eos_qty}</Text>
+                <Text style={[styles.selltext,{color: UColor.riseColor}]}>卖 {(rowData.price == null || rowData.price == '0') ? this.precisionTransfer(rowData.token_qty,8) : rowData.eos_qty}</Text>
                 :
-                <Text style={styles.buytext}>买 {rowData.eos_qty}</Text>
+                <Text style={[styles.buytext,{color: UColor.fallColor,}]}>买 {rowData.eos_qty}</Text>
                 }
-                <Text style={styles.presentprice}>{(rowData.price == null || rowData.price == '0') ? '' : this.precisionTransfer(rowData.price,8)}{(rowData.price == null || rowData.price == '0') ? '' :  ' ' + this.state.tradename}</Text>
+                <Text style={[styles.presentprice,{color: UColor.arrow}]}>{(rowData.price == null || rowData.price == '0') ? '' : this.precisionTransfer(rowData.price,8)}{(rowData.price == null || rowData.price == '0') ? '' :  ' ' + this.state.tradename}</Text>
               </View>
               <View style={styles.Ionicout}>
                 <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
@@ -281,13 +279,11 @@ const styles = StyleSheet.create({
       flex: 1,
       paddingTop: 1,
       flexDirection: "column",
-      backgroundColor: UColor.secdColor,
     },
     header: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: UColor.mainColor,
       paddingVertical: ScreenUtil.autoheight(7),
       marginBottom: ScreenUtil.autoheight(5),
     },
@@ -303,18 +299,15 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: 'center',
       height: ScreenUtil.autoheight(30),
-      backgroundColor: UColor.riceWhite,
       marginHorizontal: ScreenUtil.autowidth(10),
     },
     inpt: {
       flex: 1,
-      color: UColor.arrow,
       height: ScreenUtil.autoheight(45),
       fontSize: ScreenUtil.setSpText(14),
     },
     canceltext: {
       textAlign: 'center',
-      color: UColor.fontColor,
       fontSize: ScreenUtil.setSpText(15),
       paddingRight: ScreenUtil.autowidth(15),
     },
@@ -324,7 +317,6 @@ const styles = StyleSheet.create({
     },
     nothave: {
       height: ScreenUtil.autoheight(80),
-      backgroundColor: UColor.mainColor,
       flexDirection: "row",
       alignItems: 'center',
       justifyContent: "center",
@@ -334,12 +326,10 @@ const styles = StyleSheet.create({
     },
     copytext: {
       fontSize: ScreenUtil.setSpText(16), 
-      color: UColor.fontColor
     },
 
     package: {
       height: ScreenUtil.autoheight(52),
-      backgroundColor: UColor.mainColor,
       flexDirection: "row",
       paddingHorizontal: ScreenUtil.autowidth(10),
       paddingVertical: ScreenUtil.autoheight(5),
@@ -354,11 +344,9 @@ const styles = StyleSheet.create({
     },
     payertext: {
       fontSize: ScreenUtil.setSpText(15),
-      color: UColor.fontColor,
     },
     timetext: {
       fontSize: ScreenUtil.setSpText(15),
-      color: UColor.arrow,
     },
    
     rightout: {
@@ -369,18 +357,15 @@ const styles = StyleSheet.create({
     selltext: {
       flex: 5,
       fontSize: ScreenUtil.setSpText(15),
-      color: UColor.riseColor,
       textAlign: 'left',
     },
     buytext: {
       flex: 5,
       fontSize: ScreenUtil.setSpText(15),
-      color: UColor.fallColor,
       textAlign: 'left',
     },
     presentprice: {
       fontSize: ScreenUtil.setSpText(14),
-      color: UColor.arrow,
       textAlign: 'left',
     },
     Ionicout: {
