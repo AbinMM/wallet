@@ -24,7 +24,7 @@ export class EasyShowLD {
       delete this.map["LoadingDialog"];
     }
 
-    static dialogShow(title, content, okLable, disLabel, okHandler) {
+    static dialogShow(title, content, okLable, disLabel, okHandler,cancelHandler) {
       clearTimeout(this.handle);
       this.map["LoadingDialog"].setState({
         "modalVisible": true,
@@ -33,7 +33,8 @@ export class EasyShowLD {
         content,
         okLable,
         disLabel,
-        okHandler
+        okHandler,
+        cancelHandler
       });
     }
 
@@ -189,7 +190,7 @@ export class LoadingDialog extends React.Component {
                               testID="dialog-cancel-button"
                               style={[styles.disactionContainer,{backgroundColor: UColor.showy}]}
                               underlayColor={UColor.arrow}
-                              onPress={()=>{this.setState({modalVisible:false})}}>
+                              onPress={this.state.cancelHandler}>
                               <Text style={[material.button, { color: UColor.btnColor }]}>{this.state.disLabel}</Text>
                             </TouchableHighlight>
                           ):null
