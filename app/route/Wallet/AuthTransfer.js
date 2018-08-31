@@ -2,29 +2,23 @@ import React from 'react';
 import { connect } from 'react-redux'
 import {Dimensions,DeviceEventEmitter,InteractionManager,ListView,StyleSheet,View,RefreshControl,Text,ScrollView,Image,Platform,Clipboard,TextInput,KeyboardAvoidingView,TouchableOpacity,TouchableHighlight,FlatList} from 'react-native';
 import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
-import UColor from '../../utils/Colors'
-import Button from  '../../components/Button'
-import Item from '../../components/Item'
-import Header from '../../components/Header'
-import Icon from 'react-native-vector-icons/Ionicons'
 import UImage from '../../utils/Img'
-import ScreenUtil from '../../utils/ScreenUtil'
-import { EasyShowLD } from "../../components/EasyShow"
+import UColor from '../../utils/Colors'
 import { Eos } from "react-native-eosjs";
-import { EasyToast } from '../../components/Toast';
-import BaseComponent from "../../components/BaseComponent";
-import Assets from '../../models/Assets';
-import EosUpdateAuth from '../../utils/EosUtil'
+import Header from '../../components/Header'
+import Button from  '../../components/Button'
 import Constants from '../../utils/Constants'
+import ScreenUtil from '../../utils/ScreenUtil'
+import { EasyToast } from '../../components/Toast';
+import { EasyShowLD } from "../../components/EasyShow"
+import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
-
 const OWNER_MODE=0;
 const ACTIVE_MODE=1;
-
 
 @connect(({wallet, vote}) => ({...wallet, ...vote}))
 class AuthTransfer extends BaseComponent {
@@ -56,7 +50,7 @@ class AuthTransfer extends BaseComponent {
             }
         }
         return ret;
-      }
+    }
 
     //提交
     submission = () =>{  
@@ -533,143 +527,130 @@ const styles = StyleSheet.create({
     //添加用户
     addUserTitle: {
         flex: 1,
-        marginTop: 1,
-        paddingBottom: 10,
+        paddingBottom: ScreenUtil.autoheight(10),
     },
 
     titleStyle:{
         flex:1,
-        marginTop: 5,
-        marginBottom: 1,
-        marginLeft:11,
-        marginRight:42,
         flexDirection:'row',
+        marginTop: ScreenUtil.autoheight(5),
+        marginLeft: ScreenUtil.autowidth(11),
+        marginRight: ScreenUtil.autowidth(42),
     },
-
     showPkStyle: {
         flex: 1,
-        // fontSize: 15,
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-        // textAlignVertical: 'top',
-        marginLeft:15,
-        marginRight:5,
         borderWidth: 1,
         borderRadius: 5,
+        marginRight:ScreenUtil.autoheight(5),
+        marginLeft: ScreenUtil.autoheight(15),
+        paddingHorizontal: ScreenUtil.autowidth(10),
+        paddingVertical: ScreenUtil.autoheight(10),   
     },
 
-     //用户添加样式  
+    //用户添加样式  
     userAddView: {
         flex: 1,
         flexDirection: "row",
-        justifyContent: 'flex-start',
         alignItems: 'flex-start',
+        justifyContent: 'flex-start',
     },
 
      // 按钮  
     buttonView: {
         flex: 1,
         flexDirection: "row",
-        // paddingHorizontal: 5,
-        justifyContent: 'flex-end',
         alignItems: 'flex-end',
+        justifyContent: 'flex-end',
+        
     },
     buttonText: {
-        fontSize: 12,
-        // lineHeight: 30,
+        fontSize: ScreenUtil.setSpText(12),
     },
     authText: {
-        fontSize: 12,
-        lineHeight: 30,
+        fontSize: ScreenUtil.setSpText(12),
+        lineHeight: ScreenUtil.autoheight(30),
     },
 
     imgBtn: {
-        width: 23,
-        height: 24,
+        width: ScreenUtil.autowidth(23),
+        height: ScreenUtil.autoheight(24),
     },
 
     pktext: {
-        fontSize: 14,
+        fontSize: ScreenUtil.setSpText(14),
     },
     weightText: {
-        fontSize: 12,
+        fontSize: ScreenUtil.setSpText(12),
     },
 
-    //删除按键样式
-    delButton: {
+     //删除按键样式
+     delButton: {
         flex: 1,
         flexDirection: "row",
-        paddingHorizontal: 5,
-        justifyContent: 'flex-end',
         alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingHorizontal: ScreenUtil.autowidth(5),
     },
     //删除按键样式
     addButton: {
         flexDirection: "row",
-        paddingHorizontal: 5,
-        justifyContent: 'flex-end',
         alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingHorizontal: ScreenUtil.autowidth(5),
     },
     //警告样式
     significantout: {
+        borderWidth: 1,
+        borderRadius: 5,
         flexDirection: "row",
         alignItems: 'center', 
-        marginHorizontal: 15,
-        marginVertical: 10,
-        padding: 5,
-        borderWidth: 1,
-        borderRadius: 5,
-      },
-      imgBtnWarning: {
-        width: 23,
-        height: 20,
-        margin:5,
-      },
-      significanttext: {
-        fontSize: 13, 
-        lineHeight:17,
-      },
-    
-    ionicout: {
-        flexDirection: "row",
-        alignItems: 'center',
-        justifyContent: 'flex-start',
+        padding: ScreenUtil.autowidth(5),
+        marginVertical: ScreenUtil.autoheight(10),
+        marginHorizontal: ScreenUtil.autowidth(15),
+    },
+    imgBtnWarning: {
+        margin: ScreenUtil.autowidth(5),
+        width: ScreenUtil.autowidth(23),
+        height: ScreenUtil.autoheight(20),
+    },
+    significanttext: {
+        fontSize: ScreenUtil.setSpText(13), 
+        lineHeight: ScreenUtil.autoheight(17),
     },
 
-
     inptgo: {
-        flex: 1,  
-        height: 57,
-        fontSize: 15,
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-        textAlignVertical: 'top',
-        marginLeft:15,
-        marginRight:5, 
+        flex: 1,
         borderWidth: 1,
         borderRadius: 5,
+        textAlignVertical: 'top',
+        height: ScreenUtil.autoheight(57),
+        fontSize: ScreenUtil.setSpText(15),
+        marginLeft: ScreenUtil.autoheight(15),
+        marginRight: ScreenUtil.autoheight(5),
+        paddingHorizontal: ScreenUtil.autowidth(10),
+        paddingVertical: ScreenUtil.autoheight(10),
     },
 
     passoutsource: {
+        alignItems: 'center',
         flexDirection: 'column', 
-        alignItems: 'center'
     },
     inptpass: {
-        height: 45,
-        width: ScreenWidth-100,
-        paddingBottom: 5,
-        fontSize: 16,
         borderBottomWidth: 1,
+        width: ScreenWidth-100,
+        height: ScreenUtil.autoheight(45),
+        fontSize: ScreenUtil.setSpText(16),
+        paddingBottom: ScreenUtil.autoheight(5),
     },
     // 按钮  
     btnoutsource: {
-        marginTop:15,
-        marginHorizontal: ScreenUtil.autowidth(137),
-        width:101,
-        height:41,
         borderRadius: 5,
+        alignItems: 'center',
         justifyContent: 'center',
-        alignItems: 'center'
+        width: ScreenUtil.autowidth(101),
+        height: ScreenUtil.autoheight(41),
+        marginTop: ScreenUtil.autoheight(15),
+        marginHorizontal: ScreenUtil.autowidth(137),
     },
     btntext: {
         fontSize: ScreenUtil.setSpText(17),

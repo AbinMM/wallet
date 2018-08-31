@@ -5,6 +5,7 @@ import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
 import store from 'react-native-simple-store';
 import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import Button from  '../../components/Button'
@@ -24,18 +25,14 @@ class Coins extends React.Component {
 
   static navigationOptions = {
     title: '行情',
-    headerStyle: {
-        paddingTop: ScreenUtil.autoheight(20),
-        backgroundColor: UColor.mainColor,
-        borderBottomWidth:0,
-    },    
+    header: null, 
     tabBarLabel: '行情',
     tabBarIcon: ({ focused}) => (
       <Image resizeMode='stretch'
           source={focused ? UImage.tab_2_h : UImage.tab_2} style={{width: ScreenUtil.autoheight(20), height: ScreenUtil.autoheight(20),}}
       />
     ),
-  };
+  }; 
   
   constructor(props) {
     super(props);
@@ -167,24 +164,20 @@ class Coins extends React.Component {
         dataSource={this.state.dataSource.cloneWithRows(this.props.coinList[route.key]==null?[]:this.props.coinList[route.key])}
         renderRow={(rowData) => (
           <Button onPress={this.onPress.bind(this,rowData)}>
-            <View style={styles.row}>
-              <View style={{width:'35%'}}>
-                 <View style={{ flex:1,flexDirection:"row",alignItems: 'center',paddingTop: ScreenUtil.autoheight(15)}}>
-                    <Image source={{uri:rowData.img}} style={{width: ScreenUtil.autowidth(25),height: ScreenUtil.autowidth(25)}} />
-                    <Text style={{marginLeft: ScreenUtil.autowidth(20),fontSize:ScreenUtil.setSpText(18),color:UColor.fontColor}}>{rowData.name}</Text>
-                  </View>
-                  <View>
-                    <Text style={{marginTop: ScreenUtil.autoheight(10),fontSize:ScreenUtil.setSpText(10),color:UColor.arrow}}>市值${formatterUnit(rowData.value)}</Text>
-                  </View>
+            <View style={[styles.row,{backgroundColor:UColor.mainColor}]}>
+              <View style={[styles.eoslogout,{backgroundColor: UColor.secdColor}]}>
+                <Image source={{uri:rowData.img}} style={{width: ScreenUtil.autowidth(25),height: ScreenUtil.autowidth(25)}} />
               </View>
-              <View style={{width:'65%'}}>
-                <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-end"}}>
-                  <View style={{flex:1,flexDirection:"column",alignItems:'flex-end',paddingTop: ScreenUtil.autoheight(25)}}>
-                    <Text style={{fontSize:ScreenUtil.setSpText(18),color:UColor.fontColor}}>￥{rowData.price}</Text>
-                    <Text style={{marginTop: ScreenUtil.autoheight(15),fontSize:ScreenUtil.setSpText(10),color:UColor.arrow}}>量 {formatterNumber(rowData.txs)}</Text>
-                  </View>
-                  <Text style={rowData.increase>0?styles.incdo:styles.incup}>{rowData.increase>0?'+'+rowData.increase:rowData.increase}%</Text>
-                </View>
+              <View style={{flex:1,flexDirection:"column",alignItems:'flex-start',}}>
+                <Text style={{fontSize:ScreenUtil.setSpText(18),color:UColor.fontColor}}>{rowData.name}</Text>
+                <Text style={{fontSize:ScreenUtil.setSpText(10),color:UColor.arrow}}>市值${formatterUnit(rowData.value)}</Text>
+              </View>
+              <View style={{flex:1,flexDirection:"column",alignItems:'flex-end',}}>
+                <Text style={{fontSize:ScreenUtil.setSpText(18),color:UColor.fontColor}}>￥{rowData.price}</Text>
+                <Text style={{fontSize:ScreenUtil.setSpText(10),color:UColor.arrow}}>量 {formatterNumber(rowData.txs)}</Text>
+              </View>
+              <View style={[styles.cupcdo,{backgroundColor:rowData.increase>0?UColor.riseColor:UColor.fallColor}]}>
+                <Text style={[styles.cupcdotext,{color:UColor.btnColor}]}>{rowData.increase>0?'+'+rowData.increase:rowData.increase}%</Text>
               </View>
             </View>
           </Button>
@@ -195,7 +188,8 @@ class Coins extends React.Component {
   }
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+        <Header {...this.props} backgroundColor={UColor.theme ? UColor.navigation: UColor.secdColor} onPressLeft={false} title="行情" />
         {Constants.isNetWorkOffline &&
         <Button onPress={this.openSystemSetting.bind(this)}>
           <View style={styles.systemSettingTip}>
@@ -205,13 +199,12 @@ class Coins extends React.Component {
           </Button>}
         <TabViewAnimated
         lazy={true}
-        style={styles.containertab}
         navigationState={this.state}
         renderScene={this.renderScene.bind(this)}
         renderHeader={(props)=><TabBar onTabPress={this._handleTabItemPress} 
-        labelStyle={{fontSize:ScreenUtil.setSpText(15),margin:0,marginBottom:10,paddingTop:10,color:UColor.lightgray}} 
-        indicatorStyle={{backgroundColor:UColor.tintColor,width:ScreenWidth / 4 - 40,marginLeft:20}} 
-        style={{backgroundColor:UColor.secdColor,}} 
+        labelStyle={[UColor.theme ? styles.labelStyleB : styles.labelStyleY,{color: UColor.theme ? UColor.mainColor : UColor.arrow,}]} 
+        indicatorStyle={[UColor.theme ? styles.indicatorStyleB : styles.indicatorStyleY,{backgroundColor: UColor.tintColor}]} 
+        style={{backgroundColor: UColor.theme ? UColor.navigation: UColor.secdColor}} 
         tabStyle={{width: ScreenWidth / 4,padding:0,margin:0,}} 
         scrollEnabled={true} {...props}/>}
         onIndexChange={this._handleIndexChange}
@@ -223,58 +216,60 @@ class Coins extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  labelStyleB: {
+    fontSize: ScreenUtil.setSpText(15), 
+    margin: 0, 
+    marginBottom: ScreenUtil.autoheight(12), 
+    paddingTop: ScreenUtil.autoheight(12), 
+  },
+  labelStyleY: {
+    fontSize:ScreenUtil.setSpText(15),
+    margin:0,
+    marginBottom:10,
+    paddingTop:10,
+  },
+  indicatorStyleB: {
+    width: ScreenWidth / 4 - ScreenUtil.autowidth(20),
+    height: ScreenUtil.autoheight(21), 
+    marginLeft: ScreenUtil.autowidth(10),
+    borderRadius:25, 
+    marginBottom: ScreenUtil.autoheight(10), 
+  },
+  indicatorStyleY: {
+    width: ScreenWidth / 4 - 40, 
+    marginLeft: 20
+  },
+
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: UColor.secdColor,
-  },
-  containertab: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: UColor.tintColor,
   },
   row:{
     flex:1,
-    backgroundColor:UColor.mainColor,
     flexDirection:"row",
-    padding: ScreenUtil.autowidth(20),
-    paddingTop: ScreenUtil.autoheight(10),
-    justifyContent:"space-between",
+    height: ScreenUtil.autoheight(62),
+    padding: ScreenUtil.autowidth(10),
+    justifyContent:"center",
+    alignItems: 'center',
   },
-  left:{
-    flex:1,
-    flexDirection:"column",
-    backgroundColor:'red'
+  eoslogout: {
+    borderRadius: 25,
+    flexDirection:"row",
+    alignItems: 'center',
+    marginHorizontal:ScreenUtil.autowidth(15),
   },
-  right:{
-    flex:1,
-    flexDirection:"column",
-    backgroundColor:'black'
-  },
-  incup:{
-    fontSize: ScreenUtil.setSpText(12),
-    color:UColor.fontColor,
-    backgroundColor: UColor.riseColor,
+  cupcdo:{
+    borderRadius: 3,
+    alignItems: 'center',
     padding: ScreenUtil.autowidth(5),
-    textAlign:'center',
-    marginLeft: ScreenUtil.autowidth(10),
-    borderRadius: 5,
+    marginLeft: ScreenUtil.autowidth(20),
     minWidth: ScreenUtil.autowidth(60),
     maxHeight: ScreenUtil.autoheight(25),
   },
-  incdo:{
+  cupcdotext: {
     fontSize: ScreenUtil.setSpText(12),
-    color:UColor.fontColor,
-    backgroundColor: UColor.fallColor,
-    padding: ScreenUtil.autowidth(5),
-    textAlign:'center',
-    marginLeft: ScreenUtil.autowidth(10),
-    borderRadius: 5,
-    minWidth: ScreenUtil.autowidth(60),
-    maxHeight: ScreenUtil.autoheight(25)
   },
 
-    
   systemSettingTip: {
     width: ScreenWidth,
     height: ScreenUtil.autoheight(40),
