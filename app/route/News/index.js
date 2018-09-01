@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { BackHandler, NavigationActions, Dimensions,NativeModules, Image, ScrollView, DeviceEventEmitter, InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, WebView, FlatList, Platform, Clipboard, TouchableHighlight,Linking, } from 'react-native';
+import { BackHandler, ImageBackground, Dimensions,NativeModules, Image, ScrollView, DeviceEventEmitter, InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, WebView, FlatList, Platform, Clipboard, TouchableHighlight,Linking, } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import moment from 'moment';
 import UImage from '../../utils/Img'
@@ -236,7 +236,6 @@ class News extends React.Component {
         renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 1, backgroundColor: UColor.secdColor }} />}
         onEndReached={() => this.onEndReached(route.key)}
         renderHeader = {()=><View style={{ height: this.state.h }}>
-
         {Constants.isNetWorkOffline &&
           <Button onPress={this.openSystemSetting.bind(this)}>
             <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
@@ -244,7 +243,6 @@ class News extends React.Component {
                 <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
             </View>
           </Button>}
-
           <Swiper height={this.state.h} loop={true} autoplay={true} horizontal={true} autoplayTimeout={5} 
             paginationStyle={{ bottom: ScreenUtil.autoheight(10) }}
             dotStyle={{ backgroundColor: 'rgba(255,255,255,.2)', width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}
@@ -322,12 +320,14 @@ class News extends React.Component {
             lazy={true} 
             navigationState={this.state}
             renderScene={this.renderScene.bind(this)}
-            renderHeader={(props) => <TabBar onTabPress={this._handleTabItemPress} 
-            labelStyle={[UColor.theme ? styles.labelStyleB : styles.labelStyleY,{color: UColor.theme ? UColor.mainColor : UColor.arrow,}]} 
+            renderHeader={(props) => <ImageBackground source={UImage.coinsbg1} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1546,}}>
+            <TabBar onTabPress={this._handleTabItemPress} 
+            labelStyle={[styles.labelStyle,{color: UColor.theme ? UColor.mainColor : UColor.arrow,}]} 
             indicatorStyle={[UColor.theme ? styles.indicatorStyleB : styles.indicatorStyleY,{backgroundColor: UColor.tintColor}]} 
-            style={[{paddingTop: ScreenUtil.autoheight(20),backgroundColor: UColor.theme ? UColor.navigation: UColor.secdColor}]} 
+            style={[{paddingTop: ScreenUtil.autoheight(20),backgroundColor: UColor.theme ? UColor.transport: UColor.secdColor}]} 
             tabStyle={{ width: ScreenWidth / 3, padding: 0, margin: 0 }} 
-            scrollEnabled={true} {...props} />}
+            scrollEnabled={true} {...props} />
+            </ImageBackground>}
             onIndexChange={this._handleIndexChange}
             initialLayout={{ height: 0, width: ScreenWidth }}
           />
@@ -338,29 +338,22 @@ class News extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  labelStyleB: {
+  labelStyle: {
     margin: 0, 
     fontSize: ScreenUtil.setSpText(15), 
     paddingTop: ScreenUtil.autoheight(12), 
     marginBottom: ScreenUtil.autoheight(12), 
   },
-  labelStyleY: {
-    margin: 0, 
-    fontSize: ScreenUtil.setSpText(15), 
-    paddingTop: ScreenUtil.autoheight(18),
-    marginBottom: ScreenUtil.autoheight(12), 
-    
-  },
   indicatorStyleB: {
     borderRadius:25, 
     height: ScreenUtil.autoheight(21), 
     marginLeft: ScreenUtil.autowidth(10),
-    marginBottom: ScreenUtil.autoheight(11), 
+    marginBottom: ScreenUtil.autoheight(7), 
     width: ScreenWidth / 3 - ScreenUtil.autowidth(20),
   },
   indicatorStyleY: {
-    marginLeft: 20,
-    width: ScreenWidth / 3 - 40,
+    marginLeft: ScreenUtil.autowidth(20),
+    width: ScreenWidth / 3 - ScreenUtil.autowidth(40),
   },
   txt: {
     color: 'white',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import {Dimensions,DeviceEventEmitter,NativeModules, InteractionManager,ListView,StyleSheet,Image,View,RefreshControl,Text,Platform,Linking,} from 'react-native';
+import {Dimensions,DeviceEventEmitter,NativeModules,ImageBackground, InteractionManager,ListView,StyleSheet,Image,View,RefreshControl,Text,Platform,Linking,} from 'react-native';
 import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
 import store from 'react-native-simple-store';
 import UColor from '../../utils/Colors'
@@ -150,8 +150,15 @@ class Coins extends React.Component {
         style={{backgroundColor:UColor.secdColor}}
         enableEmptySections={true}
         renderHeader = {()=><View>  
-            </View>
-        }
+          {Constants.isNetWorkOffline &&
+            <Button onPress={this.openSystemSetting.bind(this)}>
+              <View style={styles.systemSettingTip}>
+                <Text style={styles.systemSettingText}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
+                  <Ionicons style={styles.systemSettingArrow} name="ios-arrow-forward-outline" size={20} />
+              </View>
+            </Button>
+          }
+        </View>}
         refreshControl={
           <RefreshControl
             refreshing={this.props.loading}
@@ -189,24 +196,21 @@ class Coins extends React.Component {
   render() {
     return (
       <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-        <Header {...this.props} backgroundColor={UColor.theme ? UColor.navigation: UColor.secdColor} onPressLeft={false} title="行情" />
-        {Constants.isNetWorkOffline &&
-        <Button onPress={this.openSystemSetting.bind(this)}>
-          <View style={styles.systemSettingTip}>
-            <Text style={styles.systemSettingText}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
-              <Ionicons style={styles.systemSettingArrow} name="ios-arrow-forward-outline" size={20} />
-          </View>
-          </Button>}
+      <ImageBackground source={UImage.coinsbg1} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1546,}}>
+        <Header {...this.props} backgroundColor={UColor.theme ? UColor.transport: UColor.secdColor} onPressLeft={false} title="行情" />
+      </ImageBackground>
         <TabViewAnimated
         lazy={true}
         navigationState={this.state}
         renderScene={this.renderScene.bind(this)}
-        renderHeader={(props)=><TabBar onTabPress={this._handleTabItemPress} 
-        labelStyle={[UColor.theme ? styles.labelStyleB : styles.labelStyleY,{color: UColor.theme ? UColor.mainColor : UColor.arrow,}]} 
+        renderHeader={(props)=> <ImageBackground source={UImage.coinsbg2} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1013,}}>
+        <TabBar onTabPress={this._handleTabItemPress} 
+        labelStyle={[styles.labelStyle,{color: UColor.theme ? UColor.mainColor : UColor.arrow,}]} 
         indicatorStyle={[UColor.theme ? styles.indicatorStyleB : styles.indicatorStyleY,{backgroundColor: UColor.tintColor}]} 
-        style={{backgroundColor: UColor.theme ? UColor.navigation: UColor.secdColor}} 
+        style={{backgroundColor: UColor.theme ? UColor.transport: UColor.secdColor}} 
         tabStyle={{width: ScreenWidth / 4,padding:0,margin:0,}} 
-        scrollEnabled={true} {...props}/>}
+        scrollEnabled={true} {...props}/>
+        </ImageBackground>}
         onIndexChange={this._handleIndexChange}
         initialLayout={{height:0,width:ScreenWidth}}
         />
@@ -216,28 +220,22 @@ class Coins extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  labelStyleB: {
+  labelStyle: {
     fontSize: ScreenUtil.setSpText(15), 
     margin: 0, 
     marginBottom: ScreenUtil.autoheight(12), 
     paddingTop: ScreenUtil.autoheight(12), 
-  },
-  labelStyleY: {
-    fontSize:ScreenUtil.setSpText(15),
-    margin:0,
-    marginBottom:10,
-    paddingTop:10,
   },
   indicatorStyleB: {
     width: ScreenWidth / 4 - ScreenUtil.autowidth(20),
     height: ScreenUtil.autoheight(21), 
     marginLeft: ScreenUtil.autowidth(10),
     borderRadius:25, 
-    marginBottom: ScreenUtil.autoheight(10), 
+    marginBottom: ScreenUtil.autoheight(8), 
   },
   indicatorStyleY: {
-    width: ScreenWidth / 4 - 40, 
-    marginLeft: 20
+    width: ScreenWidth / 4 - ScreenUtil.autowidth(40), 
+    marginLeft: ScreenUtil.autowidth(20),
   },
 
   container: {

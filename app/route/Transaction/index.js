@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import {Modal,Dimensions,DeviceEventEmitter,NativeModules,InteractionManager,ListView,StyleSheet,View,RefreshControl,Text,ScrollView,TouchableOpacity,Image,Platform,TextInput,Slider,KeyboardAvoidingView,Linking,} from 'react-native';
+import {Modal,Dimensions,ImageBackground,DeviceEventEmitter,NativeModules,InteractionManager,ListView,StyleSheet,View,RefreshControl,Text,ScrollView,TouchableOpacity,Image,Platform,TextInput,Slider,KeyboardAvoidingView,Linking,} from 'react-native';
 import moment from 'moment';
 import UImage from '../../utils/Img'
 import Echarts from 'native-echarts'
@@ -84,7 +84,7 @@ class Transaction extends BaseComponent {
 
   _rightTopClick = () =>{
     const { navigate } = this.props.navigation;
-    navigate('Ram', {});
+    navigate('Ram', {returnkey: true});
   }
 
   componentWillMount() {
@@ -283,6 +283,8 @@ class Transaction extends BaseComponent {
     }else if(opt == "1月"){
         this.setState({showMoreTitle:opt});
         this.fetchETKLine("1M",opt);
+    }else if(opt == "更多"){
+        this.onClickMore();
     }
   }
   
@@ -1038,13 +1040,15 @@ class Transaction extends BaseComponent {
             <Text style={[styles.paneltext,{color: UColor.btnColor}]}>交易面板</Text>
         </View>
     </TouchableOpacity>
-    <View style={[styles.headerTitle,{backgroundColor: UColor.theme ? UColor.blueDeep : UColor.mainColor}]}>  
-        <Button onPress={this._leftTopClick.bind()}>
-              <Image source={this.state.modal ? UImage.tx_slide0 : UImage.tx_slide1} style={styles.imgBtn} />
-        </Button>
-        <Text style={[styles.headerTitleText,{color: UColor.btnColor}]}>{this.state.tradename + "/EOS"}</Text>
-        <View style={styles.imgBtn}></View>
-      </View> 
+    <ImageBackground source={UImage.coinsbg1} resizeMode="cover"  style={{width:ScreenWidth,}}>
+        <View style={[styles.headerTitle,{backgroundColor: UColor.theme ? UColor.transport : UColor.mainColor}]}>  
+            <Button onPress={this._leftTopClick.bind()}>
+                <Image source={this.state.modal ? UImage.tx_slide0 : UImage.tx_slide1} style={styles.imgBtn} />
+            </Button>
+            <Text style={[styles.headerTitleText,{color: UColor.btnColor}]}>{this.state.tradename + "/EOS"}</Text>
+            <View style={styles.imgBtn}></View>
+        </View> 
+      </ImageBackground>
       {Constants.isNetWorkOffline &&
         <Button onPress={this.openSystemSetting.bind(this)}>
           <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
@@ -1057,71 +1061,74 @@ class Transaction extends BaseComponent {
             <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
             tintColor={UColor.fontColor} colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}
             >
-          <View style={styles.header}>
-            <View style={styles.leftout}>
-              <View style={styles.nameout}>
-                <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
-                <Text style={[styles.nametext,{color: UColor.arrow}]}>交易量</Text>
-              </View>
-              <View style={styles.recordout}>
-                <Text style={[styles.recordtext,{color: UColor.fontColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.open,8) : '0'} EOS</Text>
-                <Text style={[styles.recordtext,{color: UColor.fontColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.today_volum,8) : '0'} {this.state.tradename}</Text>
-              </View>
-            </View>
-            <View style={styles.rightout}>
-                <View style={styles.presentprice}>
-                    <Text style={[styles.present,{color: UColor.fontColor}]}> {this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price,8) : '0'}</Text>
-                    <Text style={[styles.toptext,{color: UColor.arrow}]}>价格</Text>
+            <ImageBackground source={UImage.coinsbg2} resizeMode="cover"  style={{width:ScreenWidth}}>
+                <View style={[styles.header,{backgroundColor:UColor.theme ? UColor.mask: UColor.mainColor}]}>
+                    <View style={styles.leftout}>
+                    <View style={styles.nameout}>
+                        <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
+                        <Text style={[styles.nametext,{color: UColor.arrow}]}>交易量</Text>
+                    </View>
+                    <View style={styles.recordout}>
+                        <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.open,8) : '0'} EOS</Text>
+                        <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.today_volum,8) : '0'} {this.state.tradename}</Text>
+                    </View>
+                    </View>
+                    <View style={styles.rightout}>
+                        <View style={styles.presentprice}>
+                            <Text style={[styles.present,{color: UColor.btnColor}]}> {this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price,8) : '0'}</Text>
+                            <Text style={[styles.toptext,{color: UColor.arrow}]}>价格</Text>
+                        </View>
+                        <View style={styles.titleout}>
+                            <Text style={[styles.cupcdo,{color: (this.props.etinfo && this.props.etinfo.increase>=0)?UColor.riseColor:UColor.fallColor}]}> 
+                                {this.props.etinfo ? (this.props.etinfo.increase > 0 ? '+' + (this.props.etinfo.increase * 100).toFixed(2) : 
+                                (this.props.etinfo.increase * 100).toFixed(2)): '0.00'}%</Text>
+                            <Text style={[styles.Increasetext,{color:UColor.arrow}]}>涨幅</Text>
+                        </View>
+                    </View>
                 </View>
-                <View style={styles.titleout}>
-                    <Text style={[styles.cupcdo,{color: (this.props.etinfo && this.props.etinfo.increase>=0)?UColor.riseColor:UColor.fallColor}]}> 
-                        {this.props.etinfo ? (this.props.etinfo.increase > 0 ? '+' + (this.props.etinfo.increase * 100).toFixed(2) : 
-                        (this.props.etinfo.increase * 100).toFixed(2)): '0.00'}%</Text>
-                    <Text style={[styles.Increasetext,{color:UColor.arrow}]}>涨幅</Text>
-                </View>
-            </View>
-          </View>
-          <View style={[styles.timeout,{backgroundColor: UColor.mainColor}]}>
+            </ImageBackground>
+          <View style={[styles.timeout,{backgroundColor:UColor.theme ? UColor.secdColor : UColor.inash}]}>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"时分")}>
-                    <View style={styles.timeview} >
-                        <Text style={[styles.timeinitial,{color: this.state.selectedSegment == "时分" ? UColor.tintColor : UColor.fontColor}]}>时分</Text>
+                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.selectedSegment=="时分"?UColor.tintColor:"#DEDEDE"}:{}]} >
+                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "时分" ? UColor.tintColor : UColor.fontColor}]}>时分</Text>
                     </View>
                 </Button>   
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"5分")}>
-                    <View style={styles.timeview} >
-                        <Text style={[styles.timeinitial,{color: this.state.selectedSegment == "5分" ? UColor.tintColor : UColor.fontColor}]}>5分</Text> 
+                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.selectedSegment=="5分"?UColor.tintColor:"#DEDEDE"}:{}]} >
+                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "5分" ? UColor.tintColor : UColor.fontColor}]}>5分</Text> 
                     </View>
                 </Button> 
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"15分")}>
-                    <View style={styles.timeview} >
-                        <Text style={[styles.timeinitial,{color: this.state.selectedSegment == "15分" ? UColor.tintColor : UColor.fontColor}]}>15分</Text> 
+                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.selectedSegment=="15分"?UColor.tintColor:"#DEDEDE"}:{}]} >
+                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "15分" ? UColor.tintColor : UColor.fontColor}]}>15分</Text> 
                     </View>
                 </Button> 
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"30分")}>
-                    <View style={styles.timeview} >
-                        <Text style={[styles.timeinitial,{color: this.state.selectedSegment == "30分" ? UColor.tintColor : UColor.fontColor}]}>30分</Text> 
+                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.selectedSegment=="30分"?UColor.tintColor:"#DEDEDE"}:{}]} >
+                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "30分" ? UColor.tintColor : UColor.fontColor}]}>30分</Text> 
                     </View>
                 </Button> 
             </View>
             <View style={styles.timetabout}>
-                <Button onPress={this.onClickMore.bind(this)}>
-                    <View style={styles.timeview} >
-                         <Text style={[styles.timeinitial,{color: (this.state.selectedSegment == "更多" || this.state.selectedSegment == "1小时" || this.state.selectedSegment == "1天"
+                <Button onPress={this.onClickTimeType.bind(this,"更多")}>
+                    <View style={[styles.timeview,UColor.theme?{backgroundColor:(this.state.selectedSegment=="更多"||this.state.selectedSegment=="1小时"||this.state.selectedSegment=="1天"
+                         ||this.state.selectedSegment=="1周"||this.state.selectedSegment=="1月")?UColor.tintColor:"#DEDEDE"}:{}]}>
+                         <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: (this.state.selectedSegment == "更多" || this.state.selectedSegment == "1小时" || this.state.selectedSegment == "1天"
                          || this.state.selectedSegment == "1周" || this.state.selectedSegment == "1月") ? UColor.tintColor : UColor.fontColor}]}>{this.state.showMoreTitle}</Text>
-                         <Ionicons name={this.state.showMore ? "md-arrow-dropdown" : "md-arrow-dropright"} size={ScreenUtil.autowidth(20)} color={this.state.showMore ? UColor.tintColor : UColor.fontColor}/>
+                         <Ionicons name={this.state.showMore ? "md-arrow-dropdown" : "md-arrow-dropright"} size={ScreenUtil.autowidth(20)} style={[UColor.theme?{color:UColor.btnColor}:{color:this.state.showMore ? UColor.tintColor : UColor.fontColor}]}/>
                     </View>
                 </Button> 
             </View>
          </View> 
         {this.state.showMore &&       
-        <View style={[styles.timeout,{backgroundColor: UColor.mainColor}]}>
+        <View style={[styles.timeout,{backgroundColor:UColor.theme ? UColor.secdColor : UColor.inash}]}>
             <View style={styles.timetabout}>
                 <Button disabled={true}>
                     <View style={styles.timeview} >
@@ -1131,29 +1138,29 @@ class Transaction extends BaseComponent {
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"1小时")}>
-                    <View style={styles.timeview} >
-                        <Text style={[styles.timeinitial,{color: UColor.fontColor}]}>1小时</Text>
+                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.showMoreTitle == "1小时"?UColor.tintColor:"#DEDEDE"}:{}]} >
+                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1小时" ? UColor.tintColor : UColor.fontColor}]}>1小时</Text>
                     </View>
                 </Button> 
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"1天")}>
-                    <View style={styles.timeview} >
-                        <Text style={[styles.timeinitial,{color: UColor.fontColor}]}>1天</Text>
+                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.showMoreTitle == "1天"?UColor.tintColor:"#DEDEDE"}:{}]} >
+                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1天" ? UColor.tintColor : UColor.fontColor}]}>1天</Text>
                     </View>
                 </Button> 
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"1周")}>
-                    <View style={styles.timeview} >
-                        <Text style={[styles.timeinitial,{color: UColor.fontColor}]}>1周</Text>
+                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.showMoreTitle == "1周"?UColor.tintColor:"#DEDEDE"}:{}]} >
+                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1周" ? UColor.tintColor : UColor.fontColor}]}>1周</Text>
                     </View>
                 </Button> 
             </View>
             <View style={styles.timetabout}>
                <Button onPress={this.onClickTimeType.bind(this,"1月")}>
-                    <View style={styles.timeview} >
-                        <Text style={[styles.timeinitial,{color: UColor.fontColor}]}>1月</Text>
+                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.showMoreTitle == "1月"?UColor.tintColor:"#DEDEDE"}:{}]} >
+                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1月" ? UColor.tintColor : UColor.fontColor}]}>1月</Text>
                     </View>
                 </Button> 
             </View>
@@ -1162,15 +1169,15 @@ class Transaction extends BaseComponent {
         }  
         {
             this.state.isKLine ? 
-            <View style={styles.echartsout} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
+            <View style={{width: ScreenWidth, backgroundColor: UColor.theme ? UColor.mainColor : UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
             {
-                <Echarts option={this.getDataKLine()} width={ScreenWidth} height={300} />
+                <Echarts option={this.getDataKLine()} width={ScreenWidth} height={ScreenUtil.autoheight(300)} />
             }
             </View>
             : 
-            <View style={styles.echartsout} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
+            <View style={{width: ScreenWidth, backgroundColor: UColor.theme ? UColor.mainColor : UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
             {
-                <Echarts option={this.getDataLine()} width={ScreenWidth} height={160} />
+                <Echarts option={this.getDataLine()} width={ScreenWidth} height={ScreenUtil.autoheight(180)} />
             }
             </View>
         }
@@ -1622,7 +1629,8 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
         justifyContent: 'center',
-        height:ScreenUtil.autoheight(30),
+        height:ScreenUtil.autoheight(35),
+        paddingHorizontal: ScreenUtil.autowidth(5),
     },
     timetabout: {
         flex:1,
@@ -1633,12 +1641,11 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignItems: 'center', 
         justifyContent: 'center', 
-        width: ScreenUtil.autowidth(45), 
-        height: ScreenUtil.autoheight(30),
-        marginLeft: ScreenUtil.autowidth(2),
+        width: ScreenUtil.autowidth(50), 
+        height: ScreenUtil.autoheight(25),
     },
     timeinitial: {
-        fontSize: ScreenUtil.setSpText(15), 
+        fontSize: ScreenUtil.setSpText(14), 
     },
 
     toptabout: {
@@ -2025,7 +2032,7 @@ function calculateMA(data, dayCount) {
 
 function combineETKLine(data) {
     return {
-        backgroundColor: "#2f3b50",
+        //backgroundColor: "#2f3b50",
         animation: false,
         // legend: {
         //     bottom: 10,
@@ -2103,17 +2110,17 @@ function combineETKLine(data) {
         },
         grid: [
             {
-                top: '8%',
-                left: '0%',
-                right: '4%',
-                height: '60%'
+                top: ScreenUtil.autoheight(30),
+                left: ScreenUtil.autowidth(35),
+                right: ScreenUtil.autowidth(20),
+                height: ScreenUtil.autoheight(160),
             },
             {
-                left: '0%',
-                right: '4%',
-                top: '70%',
-                height: '30%',
-                // bottom: '0',
+                left: ScreenUtil.autowidth(35),
+                right: ScreenUtil.autowidth(20),
+                top: ScreenUtil.autoheight(210),
+                height: ScreenUtil.autoheight(85),
+                bottom: ScreenUtil.autoheight(5),
             }
         ],
         xAxis: [

@@ -324,7 +324,6 @@ class Home extends React.Component {
         this.WalletDetail(this.props.defaultWallet);
         EasyShowLD.dialogClose()
       }, () => { EasyShowLD.dialogClose() });
-
       return;
     }
     AnalyticsUtil.onEvent('Scavenging_transfer');
@@ -585,7 +584,7 @@ class Home extends React.Component {
                     {(this.props.defaultWallet != null && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) 
                        ? 
                        <View style={[styles.backoractivestyle,{borderColor: UColor.showy}]}>
-                          <Text style={styles.notactived} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未激活</Text>
+                          <Text style={[styles.notactived,{color:UColor.showy}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未激活</Text>
                        </View>
                        :
                        ((this.props.defaultWallet == null || this.props.defaultWallet.name == null || (this.props.defaultWallet != null &&this.props.defaultWallet.isBackups)) 
@@ -596,34 +595,34 @@ class Home extends React.Component {
                 </View>
           </View>
         </ImageBackground> 
-          <View style={[styles.head,{backgroundColor: UColor.secdColor, borderBottomColor: UColor.tintColor}]}>
+          <View style={[styles.head,{backgroundColor:UColor.theme ? UColor.mainColor : UColor.secdColor, borderBottomColor: UColor.tintColor}]}>
             <Button onPress={this.onPress.bind(this, 'addAssets')} style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UImage.add} style={styles.imgBtn} />
+                <Image source={UColor.theme ? UImage.add_b : UImage.add} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>添加资产</Text>
               </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'Receivables')} style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UImage.qr} style={styles.imgBtn} />
+                <Image source={UColor.theme ? UImage.qr_b : UImage.qr} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>收币</Text>
               </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'transfer')} style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UImage.transfer} style={styles.imgBtn} />
+                <Image source={UColor.theme ? UImage.transfer_b : UImage.transfer} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>转账</Text>
               </View>
             </Button>
             <Button  onPress={this.onPress.bind(this, 'Resources')}  style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UImage.resources} style={styles.imgBtn} />
+                <Image source={UColor.theme ? UImage.resources_b : UImage.resources} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>资源管理</Text>
               </View>
             </Button>
             <Button  onPress={this.onPress.bind(this, 'functionsMore')}  style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UImage.more} style={styles.imgBtn} />
+                <Image source={UColor.theme ? UImage.more_b : UImage.more} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>更多</Text>
               </View>
             </Button>
@@ -646,7 +645,9 @@ class Home extends React.Component {
               <Button onPress={this.assetInfo.bind(this, rowData)}>
                 <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
                   <View style={styles.lefts}>
-                    <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
+                    <View style={{borderRadius: 25,backgroundColor: UColor.secdColor,marginRight: ScreenUtil.autowidth(10),}}> 
+                      <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
+                    </View>
                     <Text style={[styles.lefttext,{color: UColor.fontColor}]}>{rowData.asset.name}</Text>
                   </View>
                   <View style={styles.rights}>
@@ -949,7 +950,6 @@ const styles = StyleSheet.create({
   notactived: {
     textAlign: 'center', 
     fontSize: ScreenUtil.setSpText(10),
-    paddingVertical: ScreenUtil.autoheight(3),
     paddingHorizontal: ScreenUtil.autowidth(5),
   },
 

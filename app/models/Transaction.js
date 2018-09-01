@@ -486,7 +486,7 @@ export default {
   function combine(data) {
     return  {
         // color: ['#556E95','#65CAFF'],
-        backgroundColor: "#2f3b50",
+        //backgroundColor: "#2f3b50",
         grid: {
             top: '15%',
             left: '0%',
