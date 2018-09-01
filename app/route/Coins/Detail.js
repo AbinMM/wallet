@@ -1,50 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import {Dimensions,DeviceEventEmitter,InteractionManager,ListView,StyleSheet,View,RefreshControl,Text,ScrollView,Image,Platform,StatusBar} from 'react-native';
-import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
-import store from 'react-native-simple-store';
+import {Dimensions,DeviceEventEmitter,InteractionManager,StyleSheet,View,Text,ScrollView,Image,} from 'react-native';
+import UImage from '../../utils/Img'
+import Echarts from 'native-echarts'
 import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
 import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
-import Icon from 'react-native-vector-icons/Ionicons'
-import UImage from '../../utils/Img'
-import { SegmentedControls } from 'react-native-radio-buttons'
-import Echarts from 'native-echarts'
-const ScreenWidth = Dimensions.get('window').width;
-const ScreenHeight = Dimensions.get('window').height;
-import {formatterNumber,formatterUnit} from '../../utils/FormatUtil'
 import { EasyToast } from '../../components/Toast';
 import BaseComponent from "../../components/BaseComponent";
-
+import { SegmentedControls } from 'react-native-radio-buttons'
+import {formatterNumber,formatterUnit} from '../../utils/FormatUtil'
+const ScreenWidth = Dimensions.get('window').width;
+const ScreenHeight = Dimensions.get('window').height;
 const type = 1;
 
 @connect(({coinLine,sticker}) => ({...coinLine,...sticker}))
 class CoinDetail extends BaseComponent {
 
-  static navigationOptions = ({ navigation }) => {
-    
-    const params = navigation.state.params || {};
-    return {
+  static navigationOptions = {
       headerTitle:"币详情",
       header: null, 
-      headerRight: (
-        <Button onPress={params.onPress}>
-          <View style={{padding: ScreenUtil.autowidth(15)}}>
-            <Image source={params.img} style={{width: ScreenUtil.autowidth(22),height: ScreenUtil.autowidth(22)}}></Image>
-          </View>
-        </Button>
-      ),
-    };
   };
  
   componentWillMount() {
-
     super.componentWillMount();
-
     const c = this.props.navigation.state.params.coins;
     this.props.dispatch({type: 'coinLine/clear',payload:{id:c.id}});
-
     if(this.props.coinSelf && this.props.coinSelf[c.name.toLowerCase()]==1){
       this.props.navigation.setParams({img:UImage.fav_h,onPress:this.onPress});
     }else{
@@ -86,8 +68,8 @@ class CoinDetail extends BaseComponent {
   componentWillUnmount(){
     //结束页面前，资源释放操作
     super.componentWillUnmount();
-    
   }
+
   fetchLine(type,opt){
     this.setState({selectedSegment:opt});
     const {dispatch} =  this.props;
@@ -223,17 +205,17 @@ const styles = StyleSheet.create({
   row:{
     flex:1,
     flexDirection:"row",
-    paddingHorizontal: ScreenUtil.autowidth(20),
-    paddingVertical: ScreenUtil.autowidth(10),
     borderBottomWidth: 0.6,
+    paddingVertical: ScreenUtil.autowidth(10),
+    paddingHorizontal: ScreenUtil.autowidth(20),
   },
   cupcdo:{
     borderRadius: 3,
     alignItems: 'center',
     padding: ScreenUtil.autowidth(5),
-    marginLeft: ScreenUtil.autowidth(20),
     minWidth: ScreenUtil.autowidth(60),
     maxHeight: ScreenUtil.autoheight(25),
+    marginLeft: ScreenUtil.autowidth(20),
   },
   cupcdotext: {
     fontSize: ScreenUtil.setSpText(12),

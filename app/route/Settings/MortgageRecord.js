@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, TouchableOpacity, TextInput, } from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
+import { Eos } from "react-native-eosjs"
 import Header from '../../components/Header'
 import Button from '../../components/Button'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast"
-import { EasyShowLD } from '../../components/EasyShow'
-import { Eos } from "react-native-eosjs"
 import {formatEosQua} from '../../utils/FormatUtil'
+import { EasyShowLD } from '../../components/EasyShow'
 var AES = require("crypto-js/aes")
 var CryptoJS = require("crypto-js")
 var dismissKeyboard = require('dismissKeyboard')
@@ -193,7 +193,7 @@ class MortgageRecord extends React.Component {
     return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
      <Header {...this.props} onPressLeft={true} title="抵押记录" />
       <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
-          <View style={[styles.inptout,{backgroundColor: UColor.riceWhite}]} >
+          <View style={[styles.inptout,{shadowColor:UColor.arrow,backgroundColor:UColor.btnColor}]} >
               <Image source={UImage.Magnifier_ash} style={styles.headleftimg}></Image>
               <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
                   selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={12} 
@@ -251,8 +251,8 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      paddingVertical: ScreenUtil.autoheight(7), 
       marginBottom: ScreenUtil.autoheight(5),
+      paddingVertical: ScreenUtil.autoheight(7), 
     },
     headleftout: {
       paddingLeft: ScreenUtil.autowidth(15),
@@ -265,6 +265,7 @@ const styles = StyleSheet.create({
     inptout: {
       flex: 1,
       borderRadius: 5,
+      shadowOpacity: 1,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: 'center',
@@ -281,7 +282,6 @@ const styles = StyleSheet.create({
       fontSize: ScreenUtil.setSpText(15),
       paddingRight: ScreenUtil.autowidth(15),
     },
-
     btn: {
       flex: 1,
     },
@@ -302,8 +302,8 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       margin: ScreenUtil.autowidth(5),
       height: ScreenUtil.autoheight(90),
-      paddingHorizontal: ScreenUtil.autowidth(20),
       paddingVertical: ScreenUtil.autoheight(10),
+      paddingHorizontal: ScreenUtil.autowidth(20),
     },
     leftout:{
       flex: 1, 
@@ -323,18 +323,17 @@ const styles = StyleSheet.create({
     Receivercpu: {
       fontSize: ScreenUtil.setSpText(12),
     },
-
     warningout: {
       borderWidth: 1,
       borderRadius: 5,
-      width: ScreenWidth-80,
       flexDirection: "row",
       alignItems: 'center', 
+      width: ScreenWidth-ScreenUtil.autowidth(80),
     },
     imgBtn: {
+      margin: ScreenUtil.autowidth(5),
       width: ScreenUtil.autowidth(30),
       height: ScreenUtil.autowidth(30),
-      margin: ScreenUtil.autowidth(5),
     },
     headtitle: {
       flex: 1,
@@ -342,33 +341,29 @@ const styles = StyleSheet.create({
       lineHeight: ScreenUtil.autoheight(25),
       paddingLeft: ScreenUtil.autowidth(10),
     },
-   
-   
-      // 密码输入框
     passoutsource: {
+      alignItems: 'center',
       flexDirection: 'column', 
-      alignItems: 'center'
     },
     inptpass: {
       textAlign: "center",
-      width: ScreenWidth-100,
       borderBottomWidth: 1,
       height: ScreenUtil.autoheight(45),
-      paddingBottom: ScreenUtil.autoheight(5),
       fontSize: ScreenUtil.setSpText(16),
+      paddingBottom: ScreenUtil.autoheight(5),
+      width: ScreenWidth-ScreenUtil.autowidth(100),
     },
     inptpasstext: {
-      marginTop: ScreenUtil.autoheight(5),
       fontSize: ScreenUtil.setSpText(14),
+      marginTop: ScreenUtil.autoheight(5),
       lineHeight: ScreenUtil.autoheight(25),
     },
-
     subViewBackup: {
-      width: ScreenWidth-20,
       alignItems: 'flex-end',
       justifyContent: 'center',
       height: ScreenUtil.autoheight(20),
       paddingHorizontal: ScreenUtil.autowidth(5),
+      width: ScreenWidth-ScreenUtil.autowidth(20),
     },
     buttonView2: {
       alignItems: 'center',
@@ -376,7 +371,6 @@ const styles = StyleSheet.create({
       width: ScreenUtil.autowidth(30),
       height: ScreenUtil.autoheight(20),
     },
-   
     contentText: {
       fontWeight: 'bold',
       textAlign: 'center',
@@ -386,15 +380,13 @@ const styles = StyleSheet.create({
     buttonView: {
       alignItems: 'flex-end',
     },
-
-  
     Explainout: {
       flexDirection: 'column', 
       alignItems: 'flex-start'
     },
     Explaintext: {
-        fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autoheight(30), 
+      fontSize: ScreenUtil.setSpText(15),
+      lineHeight: ScreenUtil.autoheight(30), 
     },
 
 });

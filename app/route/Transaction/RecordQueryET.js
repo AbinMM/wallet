@@ -217,7 +217,7 @@ class RecordQueryET extends React.Component {
     return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
     <Header {...this.props}  onPressLeft={true} title="搜索交易记录" />
       <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
-          <View style={[styles.inptout,{backgroundColor: UColor.riceWhite}]} >
+          <View style={[styles.inptout,{shadowColor:UColor.arrow,backgroundColor:UColor.btnColor}]} >
               <Image source={UImage.Magnifier_ash} style={styles.headleftimg}></Image>
               <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
                   selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={12} 
@@ -295,6 +295,7 @@ const styles = StyleSheet.create({
     inptout: {
       flex: 1,
       borderRadius: 5,
+      shadowOpacity: 1,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: 'center',

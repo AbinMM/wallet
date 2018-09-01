@@ -1,30 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import {DeviceEventEmitter,StyleSheet,Image,ScrollView,View,Text, TextInput,Platform,Dimensions,ImageBackground,TouchableOpacity,KeyboardAvoidingView,BVLinearGradient} from 'react-native';
-import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import Icon from 'react-native-vector-icons/Ionicons'
-import store from 'react-native-simple-store';
-import LinearGradient from 'react-native-linear-gradient';
-import UColor from '../../utils/Colors'
-import Header from '../../components/Header'
-import Button from  '../../components/Button'
-import Item from '../../components/Item'
-import CountDownReact from '../../components/CountDownReact'
+import moment from 'moment';
 import Echarts from 'native-echarts'
 import UImage from '../../utils/Img'
-import QRCode from 'react-native-qrcode-svg';
+import UColor from '../../utils/Colors'
+import { Eos } from "react-native-eosjs";
+import Header from '../../components/Header'
+import Button from  '../../components/Button'
+import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
+import { EasyToast } from '../../components/Toast';
+import {formatEosQua} from '../../utils/FormatUtil';
+import { EasyShowLD } from '../../components/EasyShow'
+import LinearGradient from 'react-native-linear-gradient';
+import BaseComponent from "../../components/BaseComponent";
+import CountDownReact from '../../components/CountDownReact'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
-import { EasyShowLD } from '../../components/EasyShow'
-import { EasyToast } from '../../components/Toast';
-import BaseComponent from "../../components/BaseComponent";
-import Constants from '../../utils/Constants'
-import ViewShot from "react-native-view-shot";
-import { Eos } from "react-native-eosjs";
-import {formatEosQua} from '../../utils/FormatUtil';
-import moment from 'moment';
 var dismissKeyboard = require('dismissKeyboard');
 const _index = 0;
 var AES = require("crypto-js/aes");
@@ -79,12 +72,9 @@ class Resources extends BaseComponent {
   }
 
   componentDidMount() {
-     
     try {
-
         // EasyShowLD.loadingShow();
         this.props.dispatch({ type: 'vote/getGlobalInfo', payload: {},});
-
         this.props.dispatch({
             type: 'vote/getqueryRamPrice',
             payload: {},
@@ -95,14 +85,12 @@ class Resources extends BaseComponent {
                 this.setState({Currentprice: data});
             }
         });
-
         this.props.dispatch({
             type: 'wallet/getDefaultWallet',
             callback: (data) => {
                 this.getAccountInfo();
             }
         });
-       
         this.props.dispatch({
             type: 'wallet/info',
             payload: {
@@ -112,7 +100,6 @@ class Resources extends BaseComponent {
         DeviceEventEmitter.addListener('wallet_info', (data) => {
             this.getBalance();
         });
-
         DeviceEventEmitter.addListener('updateDefaultWallet', (data) => {
             this.props.dispatch({
                 type: 'wallet/info',
@@ -122,11 +109,9 @@ class Resources extends BaseComponent {
             });
             this.getBalance();
         });
-
         DeviceEventEmitter.addListener('eos_balance', (data) => {
             this.setEosBalance(data);
         });
-
         DeviceEventEmitter.addListener('scan_result', (data) => {
             try {
                 if (data.toaccount) {
@@ -149,7 +134,6 @@ class Resources extends BaseComponent {
   }
 
   getAccountInfo(){
-
     if(this.state.init){
         this.setState({init: false});
             EasyShowLD.loadingShow();
@@ -161,11 +145,9 @@ class Resources extends BaseComponent {
         this.setState({ 
             ram_available:((data.total_resources.ram_bytes - data.ram_usage) / 1024).toFixed(2)});
             this.getInitialization(); 
-
       } catch (error) {
           
       }
-
     } });
     this.props.dispatch({
         type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.navigation.state.params.account_name , symbol: 'EOS' }, callback: (data) => {
@@ -256,7 +238,6 @@ class Resources extends BaseComponent {
         } catch (error) {
             
         }
-        
         // else if (current == 'isBuyForOther'){
         //     this.setState({ 
         //         tetletext: '内存交易',
@@ -458,7 +439,6 @@ class Resources extends BaseComponent {
                     selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
                     style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
                     placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
-                <Text style={styles.inptpasstext}></Text>  
             </View>
             EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
             if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -548,7 +528,6 @@ class Resources extends BaseComponent {
                     selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
                     style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
                     placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
-                <Text style={styles.inptpasstext}></Text>  
             </View>
             EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
             if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -637,7 +616,7 @@ class Resources extends BaseComponent {
                 selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
                 style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
                 placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
-                <Text style={styles.inptpasstext}>提示：抵押 {this.state.delegateb} EOS</Text>
+                <Text style={[styles.inptpasstext,{color: UColor.lightgray}]}>提示：抵押 {this.state.delegateb} EOS</Text>
         </View>
         EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
             if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -776,7 +755,7 @@ class Resources extends BaseComponent {
                     selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
                     style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
                     placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
-                <Text style={styles.inptpasstext}>提示：赎回 {this.state.undelegateb} EOS</Text>
+                <Text style={[styles.inptpasstext,{color: UColor.lightgray}]}>提示：赎回 {this.state.undelegateb} EOS</Text>
             </View>
     
             EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
@@ -1092,92 +1071,85 @@ class Resources extends BaseComponent {
     }
 }
 const styles = StyleSheet.create({
- 
-    // 密码输入框
     passoutsource: {
         flexDirection: 'column', 
         alignItems: 'center'
     },
     inptpass: {
         textAlign: "center",
-        height: ScreenUtil.autoheight(45),
-        width: ScreenWidth-100,
-        paddingBottom: ScreenUtil.autoheight(5),
-        fontSize: ScreenUtil.setSpText(16),
         borderBottomWidth: 1,
+        height: ScreenUtil.autoheight(45),
+        fontSize: ScreenUtil.setSpText(16),
+        paddingBottom: ScreenUtil.autoheight(5),
+        width: ScreenWidth-ScreenUtil.autowidth(100),
     },
     inptpasstext: {
         fontSize: ScreenUtil.setSpText(14),
-        color: UColor.lightgray,
-        lineHeight: ScreenUtil.autoheight(25),
         marginTop: ScreenUtil.autoheight(5),
+        lineHeight: ScreenUtil.autoheight(25),
     },
-
     tabbutton: {  
         alignItems: 'center',   
         justifyContent: 'center', 
     },  
     tablayout: {   
-        justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',  
+        justifyContent: 'center',
         paddingVertical: ScreenUtil.autoheight(5),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },  
     memorytab: {
         flex: 1,
-        height: ScreenUtil.autoheight(33),
-        borderTopLeftRadius: 5,
-        borderBottomLeftRadius: 5,
         borderWidth: 1,
         alignItems: 'center',   
         justifyContent: 'center', 
+        borderTopLeftRadius: 5,
+        borderBottomLeftRadius: 5,
+        height: ScreenUtil.autoheight(33),
     },
     calculationtab: {
         flex: 1,
-        height: ScreenUtil.autoheight(33),
         borderTopWidth: 1,
         borderBottomWidth: 1,
         alignItems: 'center',   
         justifyContent: 'center', 
+        height: ScreenUtil.autoheight(33),
     },
     networktab: {
         flex: 1,
-        height: ScreenUtil.autoheight(33),
-        borderTopRightRadius: 5,
-        borderBottomRightRadius: 5,
         borderWidth: 1,
         alignItems: 'center',   
         justifyContent: 'center', 
+        borderTopRightRadius: 5,
+        borderBottomRightRadius: 5,
+        height: ScreenUtil.autoheight(33),
     },
     tabText: {  
         fontSize: ScreenUtil.setSpText(14),
     }, 
-
     container: {
         flex: 1,
         flexDirection:'column',
     },
-
-      wterout: {
-          flexDirection: 'row',
-          paddingVertical: ScreenUtil.autoheight(10),
-      },
-      OwnOthers: {
-          flexDirection: 'row',
-          paddingHorizontal: ScreenUtil.autowidth(18),
-          width: (ScreenWidth - 20) / 2,
-      },
-      LeaseTransfer: {
-          flexDirection: 'row',
-          paddingHorizontal: ScreenUtil.autowidth(18),
-          width: (ScreenWidth - 20) / 2,
-      },
-
+    wterout: {
+        flexDirection: 'row',
+        paddingVertical: ScreenUtil.autoheight(10),
+    },
+    OwnOthers: {
+        flexDirection: 'row',
+        width: (ScreenWidth - 20) / 2,
+        paddingHorizontal: ScreenUtil.autowidth(18),
+    },
+    LeaseTransfer: {
+        flexDirection: 'row',
+        width: (ScreenWidth - 20) / 2,
+        paddingHorizontal: ScreenUtil.autowidth(18),
+    },
     inptoutsource: {
-        paddingHorizontal: ScreenUtil.autowidth(20),
-        paddingBottom: ScreenUtil.autoheight(10),
         justifyContent: 'center',
+        paddingBottom: ScreenUtil.autoheight(10),
+        paddingHorizontal: ScreenUtil.autowidth(20),
     },
     outsource: {
         flexDirection: 'row',  
@@ -1186,11 +1158,10 @@ const styles = StyleSheet.create({
     },
     inpt: {
         flex: 1, 
-        fontSize: ScreenUtil.setSpText(15), 
         height: ScreenUtil.autoheight(40), 
+        fontSize: ScreenUtil.setSpText(15), 
         paddingLeft: ScreenUtil.autowidth(10), 
     },
-
     inptTitle: {
         fontSize: ScreenUtil.setSpText(14),  
         lineHeight: ScreenUtil.autoheight(25),
@@ -1200,19 +1171,19 @@ const styles = StyleSheet.create({
         lineHeight: ScreenUtil.autoheight(35),
     },
     botnimg: {
+        alignItems: 'flex-end',
+        justifyContent: 'center', 
         width: ScreenUtil.autowidth(86), 
         height: ScreenUtil.autoheight(38), 
         paddingHorizontal: ScreenUtil.autowidth(10),
-        justifyContent: 'center', 
-        alignItems: 'flex-end'
     },
     botn: {
-        marginLeft: ScreenUtil.autowidth(10), 
+        borderRadius: 3, 
+        alignItems: 'center',
+        justifyContent: 'center', 
         width: ScreenUtil.autowidth(70), 
         height: ScreenUtil.autoheight(30),  
-        borderRadius: 3, 
-        justifyContent: 'center', 
-        alignItems: 'center' 
+        marginLeft: ScreenUtil.autowidth(10), 
     },
     botText: {
         fontSize: ScreenUtil.setSpText(17), 
@@ -1222,42 +1193,39 @@ const styles = StyleSheet.create({
         padding: ScreenUtil.autoheight(10),
     },
     basctextright :{
+        textAlign: 'right',
+        borderBottomWidth: 1,
         flexDirection: 'row',  
         fontSize: ScreenUtil.setSpText(14), 
         lineHeight: ScreenUtil.autoheight(20),
-        textAlign: 'right',
-        borderBottomWidth: 1,
     },
     basctext :{
         fontSize: ScreenUtil.setSpText(12), 
         lineHeight: ScreenUtil.autoheight(25),
     },
-
     tetleout: {
-        paddingHorizontal: ScreenUtil.autowidth(15),
         paddingBottom: ScreenUtil.autoheight(10),
+        paddingHorizontal: ScreenUtil.autowidth(15),
     },
     tetletext: {
         fontSize: ScreenUtil.setSpText(15),
         paddingVertical: ScreenUtil.autoheight(5),
     },
-
     linebgout: {
-        width: ScreenWidth - 30,
-        height: (ScreenWidth - 30) * 0.307,
-        justifyContent: 'space-around',
-        alignItems: 'flex-end',
         flexDirection: 'row',
+        alignItems: 'flex-end',
+        width: ScreenWidth - 30,
+        justifyContent: 'space-around',
+        height: (ScreenWidth - 30) * 0.307,
     },
     stripbgout: {
-        width: ((ScreenWidth - 30) * 0.307 - 5) * 0.236,
         height: (ScreenWidth - 30) * 0.307 - 5,
+        width: ((ScreenWidth - 30) * 0.307 - 5) * 0.236,
         marginBottom: Platform.OS == 'ios' ? 0.3 : 0.2,
     },
-  
     ratiotext: {
-        fontSize: ScreenUtil.setSpText(12),
         textAlign: 'center',
+        fontSize: ScreenUtil.setSpText(12),
     },
     recordtext: {
         fontSize: ScreenUtil.setSpText(12),
@@ -1267,16 +1235,16 @@ const styles = StyleSheet.create({
     },
     recordout: {
         flex: 1,
+        alignItems: 'center',
         flexDirection: 'column',
         justifyContent: "center",
-        alignItems: 'center',
     },
     tab: {
         flex: 1,
     },
     passoutsource2: {
         flexDirection: 'column', 
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
     },
     Explaintext2: {
         fontSize: ScreenUtil.setSpText(15),

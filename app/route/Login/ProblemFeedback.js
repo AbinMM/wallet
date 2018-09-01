@@ -6,8 +6,8 @@ import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
 import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
-import { EasyShowLD } from "../../components/EasyShow"
 import { EasyToast } from '../../components/Toast';
+import { EasyShowLD } from "../../components/EasyShow"
 import BaseComponent from "../../components/BaseComponent";
 var dismissKeyboard = require('dismissKeyboard');
 
@@ -85,18 +85,18 @@ const styles = StyleSheet.create({
     flexDirection:'column',
   },
   textinptoue: {
-    paddingHorizontal: ScreenUtil.autowidth(20),
     paddingTop: ScreenUtil.autoheight(20),
+    paddingHorizontal: ScreenUtil.autowidth(20),
   },
   inptout: {
     height: ScreenUtil.autoheight(300),
-    paddingHorizontal: ScreenUtil.autowidth(10),
     paddingVertical: ScreenUtil.autoheight(20),
+    paddingHorizontal: ScreenUtil.autowidth(10),
   },
   inpt: {
     flex: 1, 
-    fontSize: ScreenUtil.setSpText(14),
     textAlignVertical: 'top', 
+    fontSize: ScreenUtil.setSpText(14),
     height: ScreenUtil.autoheight(266), 
     lineHeight: ScreenUtil.autoheight(25),
     paddingLeft: ScreenUtil.autowidth(10), 
@@ -106,11 +106,11 @@ const styles = StyleSheet.create({
     lineHeight: ScreenUtil.autoheight(25),
   },
   Submissionout: {
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
     height: ScreenUtil.autoheight(47),
     marginTop: ScreenUtil.autoheight(30),
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5
   },
   Submission: {
     fontSize: ScreenUtil.setSpText(15),

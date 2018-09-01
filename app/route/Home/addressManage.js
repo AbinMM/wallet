@@ -3,22 +3,19 @@
  */
 import React from 'react';
 import { connect } from 'react-redux'
-import {NativeModules,StatusBar,BackHandler,DeviceEventEmitter,InteractionManager,ListView,StyleSheet,Image,ScrollView,View,RefreshControl,Text, TextInput,Platform,Dimensions,Modal,TouchableHighlight,TouchableOpacity,} from 'react-native';
-import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
-import store from 'react-native-simple-store';
-import UColor from '../../utils/Colors'
-import Button from  '../../components/Button'
-import Echarts from 'native-echarts'
+import {DeviceEventEmitter,ListView,StyleSheet,Image,View,Text, TextInput,Dimensions,Modal,TouchableOpacity,} from 'react-native';
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
+import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
+import { EasyToast } from '../../components/Toast';
+import { EasyShowLD } from '../../components/EasyShow'
+import BaseComponent from "../../components/BaseComponent";
+var dismissKeyboard = require('dismissKeyboard');
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
-import { EasyShowLD } from '../../components/EasyShow'
-import { EasyToast } from '../../components/Toast';
-import BaseComponent from "../../components/BaseComponent";
-import Assets from '../../models/Assets';
-var dismissKeyboard = require('dismissKeyboard');
+
 @connect(({addressBook}) => ({...addressBook}))
 class addressManage extends BaseComponent {
 
@@ -27,8 +24,8 @@ class addressManage extends BaseComponent {
         header:null, 
     };
 
- // 构造函数  
-  constructor(props) {
+    // 构造函数  
+    constructor(props) {
         super(props);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
@@ -50,7 +47,7 @@ class addressManage extends BaseComponent {
     newlyAddedClick() {  
         //   console.log('右侧按钮点击了');  
         this._setModalVisible();  
-      }  
+    }  
     
        // 显示/隐藏 modal  
     _setModalVisible() { 
@@ -60,9 +57,9 @@ class addressManage extends BaseComponent {
         this.setState({  
           show:!isShow,  
         });  
-      }  
+    }  
 
-      verifyAccount(obj){
+    verifyAccount(obj){
         var ret = true;
         var charmap = '.12345abcdefghijklmnopqrstuvwxyz';
         if(obj == "" || obj.length > 12){
@@ -84,8 +81,9 @@ class addressManage extends BaseComponent {
             }
         }
         return ret;
-      }
-      chkAccount(obj) {
+    }
+
+    chkAccount(obj) {
         var charmap = '.12345abcdefghijklmnopqrstuvwxyz';
         for(var i = 0 ; i < obj.length;i++){
             var tmp = obj.charAt(i);
@@ -129,8 +127,8 @@ class addressManage extends BaseComponent {
     componentWillUnmount(){
         //结束页面前，资源释放操作
         super.componentWillUnmount();
-        
-      }
+    }
+
     confirm() {
         if (this.state.labelName == "") {
             EasyToast.show('请输入标签名称');
@@ -140,24 +138,21 @@ class addressManage extends BaseComponent {
             EasyToast.show('请输入收款人地址');
             return;
         }
-
         try {
             EasyShowLD.loadingShow();
             this.props.dispatch({ type: 'addressBook/saveAddress', payload: { address: this.state.address, labelName: this.state.labelName }, callback: (data) => {
                 EasyShowLD.loadingClose();
                 this._setModalVisible();
             } });
-          } catch (error) {
+        } catch (error) {
             EasyShowLD.loadingClose();
-          }
+        }
     }
-
 
     selectAddress(selectAccount){
         var jsoncode = '{"toaccount":"' + selectAccount + '","symbol":"' + this.state.coinType + '"}';
         var coins = JSON.parse(jsoncode);
         this.props.navigation.goBack();  //正常返回上一个页面
-
         if(this.state.isTurnOut){
             DeviceEventEmitter.emit('transfer_scan_result',coins);
         }else{
@@ -172,12 +167,10 @@ class addressManage extends BaseComponent {
     }
 
     renderRow = (rowData, sectionID, rowID) => { // cell样式
-
         let map = this.state.selectMap;
         let isChecked = map.has(parseInt(rowID))
         // 选中的时候, 判断上一个索引不等于rowID的时候,不让他选中   **** 单选逻辑 ****
         // let isChecked = parseInt(rowID) == this.state.preIndex ?  map.has(parseInt(rowID)) : false; // 将rowID转成Int,然后将Int类型的ID当做Key传给Map
-
         return (
             <View style={styles.selectout}>
                {this.state.isEdit ? 
@@ -264,7 +257,6 @@ class addressManage extends BaseComponent {
     render() {
         let temp = [...this.state.selectMap.values()];
         let isChecked = temp.length === this.state.dataSource._cachedRowCount;
-
         console.log(temp, '......')
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
@@ -344,27 +336,26 @@ const styles = StyleSheet.create({
         left: ScreenUtil.autowidth(3),
     },
     selectoutimg: {
-        marginTop: ScreenUtil.autoheight(10),
         width: ScreenUtil.autowidth(30),
         height: ScreenUtil.autowidth(30),
+        marginTop: ScreenUtil.autoheight(10),
     },
     touchSelect:{ 
-        width: ScreenUtil.autowidth(60), 
-        height: ScreenUtil.autowidth(60), 
         alignItems: "center", 
         justifyContent: 'center', 
-   },
-
+        width: ScreenUtil.autowidth(60), 
+        height: ScreenUtil.autowidth(60), 
+    },
     selout: {
+        borderWidth: 1,
+        borderRadius: 5,
         width: ScreenWidth-20,
+        alignItems: "flex-start",
+        justifyContent: 'center',
         height: ScreenUtil.autoheight(60),
         marginTop: ScreenUtil.autoheight(10),
         marginHorizontal: ScreenUtil.autowidth(10),
         paddingHorizontal: ScreenUtil.autowidth(10),
-        alignItems: "flex-start",
-        justifyContent: 'center',
-        borderWidth: 1,
-        borderRadius: 5,
     },
     outlabelname:{
         fontSize: ScreenUtil.setSpText(15),
@@ -372,144 +363,129 @@ const styles = StyleSheet.create({
     outaddress: {
         fontSize: ScreenUtil.setSpText(15),
     },
-
-
     container: {
         flex: 1,
     },
     replace: {
         width: ScreenWidth,
-        justifyContent: "space-between",
+        alignItems: "center",
         flexDirection: 'column',
-        alignItems: "center"
+        justifyContent: "space-between",
     },
     alternate: {
         width: ScreenWidth,
-        justifyContent: "space-between",
+        alignItems: "center",
         flexDirection: 'column',
-        alignItems: "center"
+        justifyContent: "space-between",
     },
     added: {
-        width: ScreenWidth - 20,
-        height: ScreenUtil.autoheight(45),
-        justifyContent: 'center',
+        borderRadius: 5,
         alignItems: 'center',
+        width: ScreenWidth - 20,
+        justifyContent: 'center',
         margin: ScreenUtil.autowidth(10),
-        borderRadius: 5
+        height: ScreenUtil.autoheight(45),
     },
     address: {
         fontSize: ScreenUtil.setSpText(17),
     },
     editClickout: {
-        width: ScreenWidth - 20,
-        height: ScreenUtil.autoheight(45),
-        justifyContent: 'center',
+        borderRadius: 5,
         alignItems: 'center',
+        width: ScreenWidth - 20,
+        justifyContent: 'center',
         margin: ScreenUtil.autowidth(10),
-        borderRadius: 5
+        height: ScreenUtil.autoheight(45),
     },
-
     deleteItemout: {
-        width: ScreenWidth - 20,
-        height: ScreenUtil.autoheight(45),
-        justifyContent: 'center',
+        borderRadius: 5,
         alignItems: 'center',
+        width: ScreenWidth - 20,
+        justifyContent: 'center',
+        height: ScreenUtil.autoheight(45),
         margin: ScreenUtil.autowidth(10),
-        borderRadius: 5
     },
     completeout: {
+        borderRadius: 5,
         flexDirection:'row',
-        width: ScreenWidth - 20,
-        height: ScreenUtil.autoheight(45),
-        justifyContent: 'center',
         alignItems: 'center',
+        width: ScreenWidth - 20,
+        justifyContent: 'center',
+        height: ScreenUtil.autoheight(45),
         margin: ScreenUtil.autowidth(10),
-        borderRadius: 5
     },
-
-   
-      // modal的样式  
-      modalStyle: {  
+    modalStyle: {  
+        flex:1,  
         alignItems: 'center',  
         justifyContent:'center',  
-        flex:1,  
-      }, 
-       // 按钮  
-       buttonView:{  
+    }, 
+    buttonView:{  
         alignItems: 'flex-end', 
-      },  
-      buttoncols: {
+    },  
+    buttoncols: {
         width: ScreenUtil.autowidth(30),
         height: ScreenUtil.autowidth(30),
-        marginBottom: 0,
         fontSize: ScreenUtil.setSpText(28),
-      },
-      
-      // modal上子View的样式  
-      subView:{  
-        width:ScreenWidth-20,
-        marginHorizontal: ScreenUtil.autowidth(10),  
-        alignSelf: 'stretch',  
-        justifyContent:'center',  
+    },
+    subView:{  
         borderRadius: 10,  
-      },  
-      // 标题  
-      titleText:{   
-        marginBottom: ScreenUtil.autoheight(10),  
-        fontSize: ScreenUtil.setSpText(18),  
+        width:ScreenWidth-20,
+        alignSelf: 'stretch',  
+        justifyContent:'center',
+        marginHorizontal: ScreenUtil.autowidth(10),  
+    },  
+    titleText:{   
         fontWeight:'bold',  
         textAlign:'center',  
-      }, 
-      inptout: {
-          width:ScreenWidth-40,
-          height: ScreenUtil.autoheight(40),
-          paddingHorizontal: ScreenUtil.autowidth(10),
-          marginBottom: ScreenUtil.autoheight(10),
-          marginHorizontal: ScreenUtil.autowidth(10),
-          justifyContent: 'center',
-      },
-      inpt: {
-          fontSize: ScreenUtil.setSpText(14),
-          height: ScreenUtil.autoheight(40),
-          paddingLeft: ScreenUtil.autowidth(2),
-      },
-      conout: {
-          margin: ScreenUtil.autowidth(10),
-          height: ScreenUtil.autoheight(40),
-          borderRadius: 6,
-          justifyContent: 'center',
-          alignItems: 'center'
-      },
-      context: {
-        fontSize: ScreenUtil.setSpText(16), 
-      },
-
-      inptoutsource: {
+        fontSize: ScreenUtil.setSpText(18),  
+        marginBottom: ScreenUtil.autoheight(10),  
+    }, 
+    inptout: {
         width:ScreenWidth-40,
+        justifyContent: 'center',
         height: ScreenUtil.autoheight(40),
         marginBottom: ScreenUtil.autoheight(10),
         marginHorizontal: ScreenUtil.autowidth(10),
+        paddingHorizontal: ScreenUtil.autowidth(10),
+    },
+    inpt: {
+        height: ScreenUtil.autoheight(40),
+        fontSize: ScreenUtil.setSpText(14),
+        paddingLeft: ScreenUtil.autowidth(2),
+    },
+    conout: {
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: ScreenUtil.autowidth(10),
+        height: ScreenUtil.autoheight(40),
+    },
+    context: {
+        fontSize: ScreenUtil.setSpText(16), 
+    },
+    inptoutsource: {
+        width:ScreenWidth-40,
         flexDirection: 'row',
+        height: ScreenUtil.autoheight(40),
+        marginBottom: ScreenUtil.autoheight(10),
+        marginHorizontal: ScreenUtil.autowidth(10),
     },
     accountoue: {
         flex: 1,
-        paddingHorizontal: ScreenUtil.autowidth(10),
-        justifyContent: 'center',
         flexDirection: "column",
+        justifyContent: 'center',
+        paddingHorizontal: ScreenUtil.autowidth(10),
     },
-
     scanning: {
-        width: ScreenUtil.autowidth(50),
-        flexDirection: "row",
         alignSelf: 'center',
+        flexDirection: "row",
         justifyContent: "center",
+        width: ScreenUtil.autowidth(50),
     },
     scanningimg: {
         width: ScreenUtil.autowidth(25),
         height: ScreenUtil.autowidth(25),
     },
-
-  
 })
 
 export default addressManage;

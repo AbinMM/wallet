@@ -7,12 +7,10 @@ import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Swiper from 'react-native-swiper';
 import Button from '../../components/Button'
-import Header from '../../components/Header'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
-import NavigationUtil from '../../utils/NavigationUtil'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 require('moment/locale/zh-cn');
 var WeChat = require('react-native-wechat');

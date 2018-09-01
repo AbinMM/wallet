@@ -33,6 +33,7 @@ class Boot extends React.Component {
                     <Text style={{color:UColor.fontColor,fontSize:24,textAlign:'center'}}>专属EOS的资产钱包</Text>
                     <Text style={{color:UColor.mainColor,fontSize:18,marginTop:30,textAlign:'center'}}>资产自己作主，更能随心所欲</Text>
                     <Text style={{color:UColor.mainColor,fontSize:18,textAlign:'center',marginTop:10}}>去中心化钱包，无第三方留存</Text>
+                    <Text style={{color:UColor.mainColor,fontSize:18,textAlign:'center',marginTop:10}}>{UColor.theme}</Text>
                 </View>
                 <View style={{height:'50%',alignItems:'center'}}>
                     <Image source={UImage.a} style={{width:210,height:253,marginTop:50}} />

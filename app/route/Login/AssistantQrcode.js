@@ -5,11 +5,12 @@ import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
 import Button from  '../../components/Button'
 import QRCode from "react-native-qrcode-svg";
+import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import BaseComponent from "../../components/BaseComponent";
-import ScreenUtil from '../../utils/ScreenUtil'
 
 class AssistantQrcode extends BaseComponent {
+
   static navigationOptions = {
     headerTitle: '小助手二维码',
     header:null, 
@@ -65,47 +66,42 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection:'column',
   },
-
   outsource: {
+    justifyContent: "center",
     height:  ScreenUtil.autoheight(50), 
     marginVertical:  ScreenUtil.autoheight(20), 
     paddingHorizontal: ScreenUtil.autowidth(25),
-    justifyContent: "center",
-    
   },  
   accountText: {
+    textAlign: "left",
     fontSize: ScreenUtil.setSpText(15),
     paddingLeft: ScreenUtil.autowidth(2),
-    textAlign: "left",
   },
-
   codeout: {
-    marginTop: ScreenUtil.autoheight(25),
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row"
+    marginTop: ScreenUtil.autoheight(25),
   },
   qrcode: {
     padding: ScreenUtil.autowidth(5),
   },
-
   prompttext: {
-    marginVertical: ScreenUtil.autoheight(15),
+    textAlign: "center",
     fontSize: ScreenUtil.setSpText(15),
-    textAlign: "center"
+    marginVertical: ScreenUtil.autoheight(15),
   },
 
   btnloginUser: {
-    height: ScreenUtil.autoheight(45),
-    justifyContent: 'center',
+    borderRadius: 5,
     alignItems: 'center',
+    justifyContent: 'center',
+    height: ScreenUtil.autoheight(45),
     margin: ScreenUtil.autowidth(20),
-    borderRadius: 5
   },
   btntext: {
     fontSize:ScreenUtil.setSpText(17),
   },
-
   logout:{
     flex: 1,
     alignItems: 'center',
@@ -120,7 +116,6 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(14),
     lineHeight: ScreenUtil.autoheight(30),
   }
-  
 });
 
 export default AssistantQrcode;

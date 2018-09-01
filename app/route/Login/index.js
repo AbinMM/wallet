@@ -2,18 +2,18 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, Image, ScrollView, StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
-import ScreenUtil from '../../utils/ScreenUtil'
-import UColor from '../../utils/Colors'
-import Button from '../../components/Button'
 import UImage from '../../utils/Img';
-import Header from '../../components/Header'
-import AnalyticsUtil from '../../utils/AnalyticsUtil';
-import { EasyToast } from '../../components/Toast';
+import UColor from '../../utils/Colors'
 import { kapimg } from '../../utils/Api'
-import { EasyShowLD } from "../../components/EasyShow"
+import Button from '../../components/Button'
+import Header from '../../components/Header'
 import Constants from '../../utils/Constants'
-import BaseComponent from "../../components/BaseComponent";
+import ScreenUtil from '../../utils/ScreenUtil'
 import {encryptedMsg} from '../../utils/AlgoUtil';
+import { EasyToast } from '../../components/Toast';
+import AnalyticsUtil from '../../utils/AnalyticsUtil';
+import { EasyShowLD } from "../../components/EasyShow"
+import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var tick = 60;
@@ -54,7 +54,6 @@ class Login extends BaseComponent {
   componentWillUnmount(){
     //结束页面前，资源释放操作
     super.componentWillUnmount();
-    
   }
   
   //切换tab
@@ -65,7 +64,6 @@ class Login extends BaseComponent {
   focusNextField = (nextField) => {
     this.refs[nextField].focus();
   };
-
 
   refreshLcode = () => {
     EasyShowLD.dialogClose();
@@ -82,7 +80,6 @@ class Login extends BaseComponent {
       return;
     }
     let img = Constants.rootaddr+kapimg + this.state.loginPhone + "?v=" + Math.ceil(Math.random() * 100000);
-
     const view = <View style={{ flexDirection: 'row' }}>
       <Button onPress={() => { this.refreshLcode() }}>
         <Image onError={(e) => { this.loaderror() }} style={{ width: ScreenUtil.autowidth(100), height: ScreenUtil.autoheight(45) }} source={{ uri: img }} />
@@ -91,7 +88,6 @@ class Login extends BaseComponent {
         selectionColor={UColor.tintColor} style={[styles.inp,{ color: UColor.tintColor,backgroundColor: UColor.riceWhite,}]}   
         keyboardType="phone-pad" placeholder="请输入计算结果" underlineColorAndroid="transparent" maxLength={8} />
     </View>
-
     EasyShowLD.dialogShow("计算结果", view, "登陆", "取消", () => {
 
       if (this.state.lcode == "") {
@@ -99,11 +95,8 @@ class Login extends BaseComponent {
         return;
       }
       EasyShowLD.dialogClose();
-
       this.loginSubmit();
-
       AnalyticsUtil.onEvent('Sign_inok');
-
     }, () => { EasyShowLD.dialogClose() });
   }
 
@@ -125,9 +118,7 @@ class Login extends BaseComponent {
       EasyToast.show('密码长度至少4位,请重输');
       return;
     }
-
     EasyShowLD.loadingShow('登陆中...');
-
     this.props.dispatch({
       type: 'login/login', payload: { phone: encryptedMsg(this.state.loginPhone), password: encryptedMsg(this.state.loginPwd), code: this.state.lcode }, callback: (data) => {
         if (data.code == 0) {
@@ -158,7 +149,6 @@ class Login extends BaseComponent {
       EasyToast.show('请输入11位手机号');
       return;
     }
-
     EasyShowLD.loadingShow('注册中...');
     this.props.dispatch({
       type: 'login/register', payload: { phone: encryptedMsg(this.state.phone), password: encryptedMsg(this.state.password), code: this.state.code, invite: this.state.invite }, callback: (data) => {
@@ -197,7 +187,6 @@ class Login extends BaseComponent {
       return;
     }
     let img =Constants.rootaddr+ kapimg + this.state.phone + "?v=" + Math.ceil(Math.random() * 100000);
-
     const view = <View style={{ flexDirection: 'row' }}>
     <Button onPress={() => { this.refresh() }}>
       <Image onError={(e) => { this.loaderror() }} style={styles.butimg} source={{ uri: img }} />
@@ -206,7 +195,6 @@ class Login extends BaseComponent {
       selectionColor={UColor.tintColor} style={[styles.inp,{ color: UColor.tintColor,backgroundColor: UColor.riceWhite,}]}   
       keyboardType="phone-pad" placeholder="请输入计算结果" underlineColorAndroid="transparent" maxLength={8} />
     </View>
-
     EasyShowLD.dialogShow("计算结果", view, "获取", "取消", () => {
       if (this.state.kcode == "") {
         EasyToast.show('请输入计算结果');
@@ -232,9 +220,7 @@ class Login extends BaseComponent {
     if (this.state.captureState) {
       return;
     }
-    
     var th = this;
-
     EasyShowLD.loadingShow('查询中...');
     this.props.dispatch({
       type: 'login/existRegisteredUser', payload: { phone: this.state.phone, code: this.state.kcode }, callback: (data) => {
@@ -427,21 +413,18 @@ const styles = StyleSheet.create({
   },
   inp: {
     textAlign: "center",
-    marginLeft: ScreenUtil.autowidth(10),
     width: ScreenUtil.autowidth(120),
     height: ScreenUtil.autoheight(45),
     fontSize: ScreenUtil.setSpText(15),
+    marginLeft: ScreenUtil.autowidth(10),
   },
-
   container: {
     flex: 1,
     flexDirection: 'column',
   },
-  
   outsource: {
     flexDirection: 'column',
   },
-
   inptout: {
     padding: ScreenUtil.autowidth(20), 
     height: ScreenUtil.autoheight(80), 
@@ -457,7 +440,6 @@ const styles = StyleSheet.create({
   separate: {
     height: 0.5,
   },
-
   forgetpass: {
     flexDirection: "row",
     justifyContent: 'flex-end',
@@ -466,16 +448,14 @@ const styles = StyleSheet.create({
   forgettext: {
     fontSize: ScreenUtil.setSpText(15),
   },
- 
-
   vfanout: {
-      flexDirection: 'row',
-    },
-    vfantext: {
-      padding: ScreenUtil.autowidth(20),
-      height: ScreenUtil.autoheight(80),
-      width: ScreenUtil.autowidth(200),
-    },
+    flexDirection: 'row',
+  },
+  vfantext: {
+    width: ScreenUtil.autowidth(200),
+    height: ScreenUtil.autoheight(80),
+    padding: ScreenUtil.autowidth(20),
+  },
   verificationout: {
     flex: 1,
     flexDirection: "row",
@@ -485,32 +465,30 @@ const styles = StyleSheet.create({
   },
   verification: {
     borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
     width: ScreenUtil.autowidth(100),
     height: ScreenUtil.autoheight(40),
-    justifyContent: 'center',
-    alignItems: 'center',
     marginTop: ScreenUtil.autoheight(15),
   },
   verificationtext: {
     fontSize: ScreenUtil.setSpText(15),
   },
-
   butout: {
-    height: ScreenUtil.autoheight(45),
-    justifyContent: 'center',
+    borderRadius: 5,
     alignItems: 'center',
+    justifyContent: 'center',
+    height: ScreenUtil.autoheight(45),
     marginVertical: ScreenUtil.autoheight(20),
     marginHorizontal: ScreenUtil.autowidth(20),
-    borderRadius: 5
   },
   buttext: {
     fontSize: ScreenUtil.setSpText(15),
   },
-
   readout: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: ScreenUtil.autoheight(20),
   },
   readtext: {
@@ -522,9 +500,9 @@ const styles = StyleSheet.create({
   },
 
   logoutone:{
-    height: ScreenUtil.autoheight(320),
     alignItems: 'center',
     justifyContent: 'flex-end',
+    height: ScreenUtil.autoheight(320),
     paddingBottom: ScreenUtil.autoheight(100),
   },
   logouttow:{
@@ -532,7 +510,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingBottom: ScreenUtil.autoheight(100),
   },
-
   logimg: {
     width: ScreenUtil.autowidth(50), 
     height: ScreenUtil.autowidth(50)

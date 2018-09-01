@@ -2,16 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { StyleSheet, View, Text, ScrollView, Image, TextInput, TouchableOpacity, } from 'react-native';
 import UImage from '../../utils/Img';
+import {kapimg} from '../../utils/Api'
 import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
-import ScreenUtil from '../../utils/ScreenUtil'
 import Button from  '../../components/Button'
+import Constants from '../../utils/Constants'
+import ScreenUtil from '../../utils/ScreenUtil'
+import {encryptedMsg} from '../../utils/AlgoUtil';
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
-import {kapimg} from '../../utils/Api'
-import Constants from '../../utils/Constants'
 import BaseComponent from "../../components/BaseComponent";
-import {encryptedMsg} from '../../utils/AlgoUtil';
 var tick=60;
 var dismissKeyboard = require('dismissKeyboard');
 
@@ -40,8 +40,8 @@ class Forget extends BaseComponent {
   componentWillUnmount(){
     //结束页面前，资源释放操作
     super.componentWillUnmount();
-    
   }
+
   regSubmit = () =>{
     if(this.state.phone==""){
       EasyToast.show('请输入手机号');
@@ -59,7 +59,6 @@ class Forget extends BaseComponent {
       EasyToast.show('请输入11位手机号');
       return;
     }
-
     EasyShowLD.loadingShow('修改中...');
     this.props.dispatch({type:'login/changePwd',payload:{phone:encryptedMsg(this.state.phone),password:encryptedMsg(this.state.password),code:this.state.code},callback:(data)=>{
       EasyShowLD.loadingClose();
@@ -94,7 +93,6 @@ class Forget extends BaseComponent {
       return;
     }
     let img = Constants.rootaddr+kapimg+this.state.phone+"?v="+Math.ceil(Math.random()*100000);
-
     const view = 
       <View style={styles.countout}>
           <Button onPress={()=>{this.refresh()}}>
@@ -106,16 +104,12 @@ class Forget extends BaseComponent {
               placeholderTextColor={UColor.arrow} placeholder="请输入计算结果" underlineColorAndroid="transparent" 
           />
       </View>
-  
       EasyShowLD.dialogShow("计算结果",view,"获取","取消",()=>{
-      
       if(this.state.kcode==""){
         EasyToast.show('请输入计算结果');
         return;
       }
-
       this.getCapture();
-
     },()=>{EasyShowLD.dialogClose()});
   }
 
@@ -244,17 +238,15 @@ const styles = StyleSheet.create({
   },   
   countinpt: {
     textAlign: "center",
-    marginLeft: ScreenUtil.autowidth(10),
     width: ScreenUtil.autowidth(120),
     height: ScreenUtil.autoheight(45),
     fontSize: ScreenUtil.setSpText(15),
+    marginLeft: ScreenUtil.autowidth(10),
   },
-
   container: {
     flex: 1,
     flexDirection:'column',
   },
-  
   outsource: {
     flexDirection: 'column',
     paddingBottom: ScreenUtil.autoheight(80),
@@ -271,14 +263,13 @@ const styles = StyleSheet.create({
     flexDirection:'row',
   },
   codeout: {
-    padding: ScreenUtil.autowidth(20),
+    width: ScreenUtil.autowidth(200),
     height: ScreenUtil.autoheight(80),
-    width: ScreenUtil.autowidth(200)
+    padding: ScreenUtil.autowidth(20),
   },
-
   textinpt: {
-    fontSize: ScreenUtil.setSpText(15),
     height: ScreenUtil.autoheight(40),
+    fontSize: ScreenUtil.setSpText(15),
     paddingLeft: ScreenUtil.autowidth(2),
   },
   btnoutsource: {
@@ -290,10 +281,10 @@ const styles = StyleSheet.create({
   },
   btnout: {
     borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
     width: ScreenUtil.autowidth(100),
     height: ScreenUtil.autoheight(40),
-    justifyContent: 'center',
-    alignItems: 'center',
     marginTop: ScreenUtil.autoheight(15),
   },
   btntext: {
@@ -302,21 +293,20 @@ const styles = StyleSheet.create({
   separate: {
     height: 0.5,
   },
-
   referbtn: {
-    height: ScreenUtil.autoheight(45),
-    justifyContent: 'center',
+    borderRadius: 5,
     alignItems: 'center',
+    justifyContent: 'center',
+    height: ScreenUtil.autoheight(45),
     marginHorizontal: ScreenUtil.autowidth(10),
-    borderRadius: 5
   },
   refertext: {
     fontSize: ScreenUtil.setSpText(15),
   },
   logout:{
-    height: ScreenUtil.autoheight(300),
     alignItems: 'center',
     justifyContent: 'flex-end',
+    height: ScreenUtil.autoheight(300),
     paddingBottom: ScreenUtil.autoheight(100),
   },
   logimg: {
@@ -327,7 +317,6 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(14),
     lineHeight: ScreenUtil.autoheight(30),
   }
-
 });
 
 export default Forget;

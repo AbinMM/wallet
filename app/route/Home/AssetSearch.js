@@ -189,7 +189,7 @@ class AssetSearch extends BaseComponent {
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
             <Header {...this.props} onPressLeft={true} title="资产搜索" />
                 <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
-                    <View style={[styles.inptout,{backgroundColor: UColor.riceWhite}]} >
+                    <View style={[styles.inptout,{shadowColor:UColor.arrow,backgroundColor:UColor.btnColor}]} >
                         <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
                         <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
                             selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} autoCorrect={true}
@@ -285,8 +285,8 @@ const styles = StyleSheet.create({
     },
     header: {
       flexDirection: "row",
-      justifyContent: "center",
       alignItems: "center",
+      justifyContent: "center",
       paddingVertical: ScreenUtil.autoheight(7),
     },
     leftout: {
@@ -299,35 +299,33 @@ const styles = StyleSheet.create({
     },
     inptout: {
       flex: 1,
-      height: ScreenUtil.autoheight(30),
       borderRadius: 5,
-      marginHorizontal: ScreenUtil.autowidth(10),
+      shadowOpacity: 1,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: 'center',
+      height: ScreenUtil.autoheight(30),
+      marginHorizontal: ScreenUtil.autowidth(10),
     },
-
     inpt: {
       flex: 1,
       height: ScreenUtil.autoheight(45),
       fontSize: ScreenUtil.setSpText(14),
     },
-
     listItem: {
       flex: 1,
       flexDirection: "row",
-      justifyContent: "center",
       alignItems: "center",
+      justifyContent: "center",
     },
-   
     listInfo: {
       flex: 1,
-      height: ScreenUtil.autoheight(65),
-      paddingHorizontal: ScreenUtil.autowidth(16),
+      borderTopWidth:1,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      borderTopWidth:1,
+      height: ScreenUtil.autoheight(65),
+      paddingHorizontal: ScreenUtil.autowidth(16),
     },
     scrollView: {
       flex: 1,
@@ -337,25 +335,21 @@ const styles = StyleSheet.create({
     },
     listInfoRight: {
       flexDirection: "row",
-      alignItems: "center"
+      alignItems: "center",
     },
-
-    // modal的样式  
     modalStyle: {
+      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      flex: 1,
     },
-    // modal上子View的样式  
     subView: {
-      marginHorizontal: ScreenUtil.autowidth(10),
-      alignSelf: 'stretch',
-      justifyContent: 'center',
       borderRadius: 5,
       borderWidth: 0.5,
+      alignSelf: 'stretch',
+      justifyContent: 'center',
+      marginHorizontal: ScreenUtil.autowidth(10),
     },
-     // 关闭按钮  
-     buttonView: {
+    buttonView: {
       alignItems: 'flex-end',
     },
     butclose: {
@@ -363,37 +357,34 @@ const styles = StyleSheet.create({
       height: ScreenUtil.autowidth(30),
       fontSize: ScreenUtil.setSpText(28),
     },
-    // 标题  
     titleText: {
-      marginBottom: ScreenUtil.autoheight(5),
-      fontSize: ScreenUtil.setSpText(18),
       fontWeight: 'bold',
       textAlign: 'center',
+      fontSize: ScreenUtil.setSpText(18),
+      marginBottom: ScreenUtil.autoheight(5),
     },
     passoutsource: {
-      flexDirection: 'column', 
       alignItems: 'center',
-      padding: 10,
-      
+      flexDirection: 'column', 
+      padding:  ScreenUtil.autowidth(10),
     },
     inptpass: {
-        height: ScreenUtil.autoheight(45),
-        width: '100%',
-        paddingHorizontal: ScreenUtil.autowidth(15),
-        marginVertical: ScreenUtil.autoheight(10),
-        fontSize: ScreenUtil.setSpText(16),
+      width: '100%',
+      height: ScreenUtil.autoheight(45),
+      fontSize: ScreenUtil.setSpText(16),
+      marginVertical: ScreenUtil.autoheight(10),
+      paddingHorizontal: ScreenUtil.autowidth(15),
     },
     copyout: {
+      borderRadius: 3,  
+      alignItems: 'center',
+      justifyContent: 'center', 
       margin: ScreenUtil.autowidth(10), 
       height: ScreenUtil.autoheight(45), 
-      borderRadius: 3,  
-      justifyContent: 'center', 
-      alignItems: 'center' 
     },
     copytext: {
       fontSize: ScreenUtil.setSpText(16),
     },
-  
     tab1:{
       flex:1,
     },
@@ -401,34 +392,33 @@ const styles = StyleSheet.create({
       flex:1,
       flexDirection: 'column',
     }, 
-    
     canceltext: {
-      fontSize: ScreenUtil.setSpText(18),
       justifyContent: 'flex-end',
+      fontSize: ScreenUtil.setSpText(18),
       paddingRight: ScreenUtil.autowidth(10),
     },
     prompttext: {
+      padding: ScreenUtil.autowidth(30),
       fontSize: ScreenUtil.setSpText(15),
       lineHeight: ScreenUtil.autoheight(30),
-      padding: ScreenUtil.autowidth(30),
     },
     btnout: {
         width: ScreenWidth,
-        height: ScreenHeight - 100,
-        justifyContent: 'center',
         alignItems: 'center',
+        justifyContent: 'center',
+        height: ScreenHeight - 100,
     },
     manualout: {
       flex: 1,
-      justifyContent: 'center',
       alignItems: 'center',
+      justifyContent: 'center',
     },
     btnloginUser: {
+      borderRadius: 5,
+      alignItems: 'center',
+      justifyContent: 'center',
       width: ScreenUtil.autowidth(150),
       height: ScreenUtil.autoheight(45),
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 5
     },
     btntext: {
       fontSize: ScreenUtil.setSpText(17),

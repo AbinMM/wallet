@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Animated,DeviceEventEmitter,StyleSheet,Image,View,Text,Platform,Dimensions,TouchableHighlight,ImageBackground,} from 'react-native';
-import UColor from '../../utils/Colors'
-import Button from  '../../components/Button'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
@@ -113,80 +112,67 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection:'column',
   },
-
   outsource: {
-    marginTop: ScreenUtil.autoheight(5),
-    marginHorizontal: ScreenUtil.autowidth(5),
+    borderRadius: 5,
     padding: ScreenUtil.autowidth(20),
     height: ScreenUtil.autoheight(78),
-    borderRadius: 5,
+    marginTop: ScreenUtil.autoheight(5),
+    marginHorizontal: ScreenUtil.autowidth(5),
   },
-
   headoutsource: {
-    marginBottom: ScreenUtil.autoheight(15),
     flexDirection:'row', 
     alignItems: "center",
     justifyContent: "center", 
+    marginBottom: ScreenUtil.autoheight(15),
   },
-
   headSizeone: {
     fontSize: ScreenUtil.setSpText(12), 
     marginRight: ScreenUtil.autowidth(10),
   },
-
   headSizetwo: {
-    marginLeft: ScreenUtil.autowidth(10),
     fontSize: ScreenUtil.setSpText(12), 
+    marginLeft: ScreenUtil.autowidth(10),
   },
-
   Underschedule: {
-    height: ScreenUtil.autoheight(2),
     position:'relative', 
     top: ScreenUtil.autoheight(3),
+    height: ScreenUtil.autoheight(2),
   },
-
   Aboveschedule: {
-    flexDirection:'row', 
-    alignItems: 'center', 
-    position:'absolute', 
     width: '100%',
+    flexDirection:'row', 
+    position:'absolute', 
+    alignItems: 'center', 
   },
   Abovestrip: {
     width: '24.2218%',
     height: ScreenUtil.autoheight(2),
   },
-
   Abovecircular: {
+    borderRadius: 5,
     width: ScreenUtil.autowidth(8), 
     height: ScreenUtil.autowidth(8),  
-    borderRadius: 5,
   },
-
   lockoutsource: {
-    justifyContent: "flex-end", 
     alignItems: 'center', 
     flexDirection:'row', 
-    width: ScreenWidth-10, 
+    justifyContent: "flex-end", 
     height: ScreenUtil.autoheight(115), 
     marginTop: ScreenUtil.autoheight(6), 
     paddingRight: ScreenUtil.autowidth(10),
+    width: ScreenWidth-ScreenUtil.autowidth(10),
   },
-
   locktitle: {
     fontSize:ScreenUtil.setSpText(16), 
   },
-
   locktext: {
-    justifyContent: 'center', 
     alignItems: 'center',
+    justifyContent: 'center', 
   },
-
   lockimg: {
     width: ScreenUtil.autowidth(30), 
     height: ScreenUtil.autowidth(30), 
     margin: ScreenUtil.autowidth(10),
   },
-
-
 })
 export default Bvote;

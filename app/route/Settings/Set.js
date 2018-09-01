@@ -1,21 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import {DeviceEventEmitter,StyleSheet,View,Text,Dimensions,Image,Platform,Linking,Switch} from 'react-native';
-import Upgrade from 'react-native-upgrade-android';
-import UColor from '../../utils/Colors'
-import Button from  '../../components/Button'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import UImage from '../../utils/Img'
-import ScreenUtil from '../../utils/ScreenUtil'
+import JPush from 'jpush-react-native'
+import UColor from '../../utils/Colors'
+import JPushModule from 'jpush-react-native'
 import Header from '../../components/Header'
+import codePush from 'react-native-code-push'
+import Button from  '../../components/Button'
+import ScreenUtil from '../../utils/ScreenUtil'
+import Upgrade from 'react-native-upgrade-android';
+import { EasyToast } from '../../components/Toast';
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import { EasyShowLD } from '../../components/EasyShow'
-import { EasyToast } from '../../components/Toast';
-import JPush from 'jpush-react-native';
-import codePush from 'react-native-code-push'
-import JPushModule from 'jpush-react-native';
-import Constants from '../../utils/Constants'
-import NavigationUtil from '../../utils/NavigationUtil';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 var DeviceInfo = require('react-native-device-info');
 const ScreenWidth = Dimensions.get('window').width;
@@ -208,14 +206,14 @@ class Set extends BaseComponent {
       <View style={{flex: 1,}}>
         <View style={styles.btnout}>
           <Button onPress={() => this.logout()}>
-            <View style={styles.btnloginUser}>
+            <View style={[styles.btnloginUser,{backgroundColor: UColor.tintColor}]}>
               <Text style={[styles.btntext,{color: UColor.btnColor}]}>{this.props.loginUser?"退出登陆":"登陆"}</Text>
             </View>
           </Button>
         </View>
         <View style={styles.logout}>
           <Image source={UImage.bottom_log} style={styles.logimg}/>
-          <Text style={styles.logtext}>EosToken 专注柚子生态</Text>
+          <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
         </View>
       </View>
   </View>
@@ -232,42 +230,40 @@ const styles = StyleSheet.create({
   },
   listItem: {
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
   },
- 
   listInfo: {
+    borderTopWidth:1,
     width: ScreenWidth,
-    height:  ScreenUtil.autoheight(55),
-    paddingHorizontal: ScreenUtil.autowidth(16),
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    borderTopWidth:1,
+    height:  ScreenUtil.autoheight(55),
+    paddingHorizontal: ScreenUtil.autowidth(16),
+   
   },
   listInfoTitle: {
     fontSize: ScreenUtil.setSpText(16),
   },
   listInfoRight: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   btnout: {
     height:  ScreenUtil.autoheight(80), 
     marginBottom:  ScreenUtil.autoheight(30),
   },
   btnloginUser: {
-    height:  ScreenUtil.autoheight(45),
-    backgroundColor: UColor.tintColor,
-    justifyContent: 'center',
+    borderRadius: 5,
     alignItems: 'center',
+    justifyContent: 'center',
     margin: ScreenUtil.autowidth(20),
-    borderRadius: 5
+    height:  ScreenUtil.autoheight(45),
   },
   btntext: {
     fontSize: ScreenUtil.setSpText(15),
   },
-
   logout:{
     flex: 1,
     alignItems: 'center',
@@ -280,7 +276,6 @@ const styles = StyleSheet.create({
   },
   logtext: {
     fontSize: ScreenUtil.setSpText(14),
-    color: UColor.arrow,
     lineHeight: ScreenUtil.autoheight(30),
   }
   

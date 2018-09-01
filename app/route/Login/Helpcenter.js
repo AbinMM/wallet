@@ -131,18 +131,18 @@ const styles = StyleSheet.create({
       height: ScreenUtil.autowidth(30)
     },
     fontColortext: {
-      paddingTop: ScreenUtil.autoheight(5),
       fontSize: ScreenUtil.setSpText(12),
+      paddingTop: ScreenUtil.autoheight(5),
     },
     tintColortext: {
-      paddingTop: ScreenUtil.autoheight(5),
       fontSize: ScreenUtil.setSpText(12),
+      paddingTop: ScreenUtil.autoheight(5),
     },
     listItem: {
-      height: ScreenUtil.autoheight(70),
+      alignItems: "center",
       flexDirection: "column",
       justifyContent: "center",
-      alignItems: "center",
+      height: ScreenUtil.autoheight(70),
     },
     logout:{
       flex: 1,

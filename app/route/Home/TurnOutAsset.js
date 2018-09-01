@@ -1,22 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { NativeModules, StatusBar, BackHandler, DeviceEventEmitter, InteractionManager, Clipboard, ListView, StyleSheet, Image, ScrollView, View, RefreshControl, Text, TextInput, Platform, Dimensions, Modal, TouchableHighlight,TouchableOpacity,KeyboardAvoidingView } from 'react-native';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
-import store from 'react-native-simple-store';
-import UColor from '../../utils/Colors'
-import Button from '../../components/Button'
+import { DeviceEventEmitter, StyleSheet, Image, ScrollView, View, Text, TextInput, Platform, Dimensions, Modal, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
+import { Eos } from "react-native-eosjs";
+import Button from '../../components/Button'
 import Header from '../../components/Header'
+import Constants from '../../utils/Constants';
 import ScreenUtil from '../../utils/ScreenUtil'
+import { EasyToast } from '../../components/Toast';
+import {formatEosQua} from '../../utils/FormatUtil';
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
+import { EasyShowLD } from '../../components/EasyShow'
+import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
-import { EasyShowLD } from '../../components/EasyShow'
-import { EasyToast } from '../../components/Toast';
-import { Eos } from "react-native-eosjs";
-import {formatEosQua} from '../../utils/FormatUtil';
-import BaseComponent from "../../components/BaseComponent";
-import Constants from '../../utils/Constants';
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 var dismissKeyboard = require('dismissKeyboard');
@@ -26,7 +24,6 @@ class TurnOutAsset extends BaseComponent {
     static navigationOptions = {
         headerTitle: '转出' ,
         header:null, 
-            
     };
 
      // 构造函数  
@@ -46,7 +43,7 @@ class TurnOutAsset extends BaseComponent {
     _rightTopClick = () =>{
         const { navigate } = this.props.navigation;
         navigate('BarCode', {isTurnOut:true,coinType:this.state.name});
-      }
+    }
 
     //组件加载完成
     componentDidMount() {
@@ -75,19 +72,20 @@ class TurnOutAsset extends BaseComponent {
                     this.setState({amount:data.amount})
                 }
             } catch (error) {
-                
             }
         });
     }
+
     openAddressBook() {
         const { navigate } = this.props.navigation;
         navigate('addressManage', {isTurnOut:true,coinType:this.state.name});
     }
+
     componentWillUnmount(){
         //结束页面前，资源释放操作
         super.componentWillUnmount();
         DeviceEventEmitter.removeListener('transfer_scan_result');
-      }
+    }
 
     onPress(action) {
         EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
@@ -99,7 +97,6 @@ class TurnOutAsset extends BaseComponent {
             EasyToast.show('请输入收款账号');
             return;  
         }
-        
         if (this.state.amount == null || this.state.amount == "") {
             EasyToast.show('请输入转账金额');
             return;
@@ -138,10 +135,9 @@ class TurnOutAsset extends BaseComponent {
         const { navigate } = this.props.navigation;
         navigate('addressManage', { coinType });
     }
+
     inputPwd = () => {
-
         this._setModalVisible();
-
         const view =
             <View style={styles.passout}>
                 <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
@@ -150,17 +146,14 @@ class TurnOutAsset extends BaseComponent {
                     placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
             </View>
             EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
-
             if (!this.state.password || this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
                 EasyToast.show('密码长度至少4位,请重输');
                 return;
             }
-            
             var privateKey = this.props.defaultWallet.activePrivate;
             try {
                 var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
                 var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
                     EasyShowLD.loadingShow();
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
@@ -276,10 +269,8 @@ class TurnOutAsset extends BaseComponent {
             EasyToast.show('账户余额不足,请重输');
             obj = "";
         }
-
         return obj;
-      }
-
+    }
 
     clearFoucs = () => {
         this._raccount.blur();
@@ -406,11 +397,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     inptpass: {
-        height:  ScreenUtil.autoheight(45),
-        width: ScreenWidth-100,
-        paddingBottom:  ScreenUtil.autoheight(5),
-        fontSize: ScreenUtil.setSpText(16),
         borderBottomWidth: 1,
+        width: ScreenWidth-100,
+        height: ScreenUtil.autoheight(45),
+        fontSize: ScreenUtil.setSpText(16),
+        paddingBottom: ScreenUtil.autoheight(5),
     },
     Explainout: {
         flexDirection: 'column', 
@@ -420,18 +411,16 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(15),
         lineHeight: ScreenUtil.autoheight(30), 
     },
-   
-
     container: {
         flex: 1,
         flexDirection: 'column',
     },
     header: {
-        height:  ScreenUtil.autoheight(110),
-        justifyContent: "center",
-        alignItems: "center",
-        margin: ScreenUtil.autowidth(5),
         borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        margin: ScreenUtil.autowidth(5),
+        height: ScreenUtil.autoheight(110),
     },
     headertext: {
         fontSize: ScreenUtil.setSpText(20),
@@ -440,172 +429,155 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(14), 
         marginTop: ScreenUtil.autoheight(5),
     },
-   
-    // modal的样式  
     modalStyle: {
         flex: 1, 
-        justifyContent: 'flex-end', 
         alignItems: 'center',
+        justifyContent: 'flex-end', 
     },
-    // modal上子View的样式  
     subView: {
         flexDirection: "row", 
+        alignItems: 'center',
         height: ScreenUtil.autoheight(50), 
-        alignItems: 'center'
     },
     buttonView: {
-        justifyContent: 'center', 
         alignItems: 'center',
+        justifyContent: 'center', 
     },
     buttontext: {
+        textAlign: 'center',
         width: ScreenUtil.autowidth(50),
         fontSize: ScreenUtil.setSpText(28),
-        textAlign: 'center',
     },
-    // 标题  
     titleText: {
         flex: 1,
-        fontSize: ScreenUtil.setSpText(18),
         fontWeight: 'bold',
-        textAlign:'center'
-    },
-    // 内容  
-    explainText: {
+        textAlign:'center',
         fontSize: ScreenUtil.setSpText(18),
+    },
+    explainText: {
         textAlign: 'left',
+        fontSize: ScreenUtil.setSpText(18),
     },
     contentText: {
         flex: 1,
-        fontSize: ScreenUtil.setSpText(18),
         textAlign: 'right',
+        fontSize: ScreenUtil.setSpText(18),
     },
-
-    //转帐信息提示分隔线
     separationline: {
-        height: ScreenUtil.autoheight(40),
-        paddingHorizontal: ScreenUtil.autowidth(20),
+        alignItems: 'center',
         flexDirection: "row",
         borderBottomWidth: 0.5,
         justifyContent: 'center',
-        alignItems: 'center'
+        height: ScreenUtil.autoheight(40),
+        paddingHorizontal: ScreenUtil.autowidth(20),
     },
-
     amounttext: {
-        fontSize: ScreenUtil.setSpText(25),
-        paddingVertical: ScreenUtil.autoheight(15), 
-        lineHeight: ScreenUtil.autoheight(10),
         textAlign: 'center',
+        fontSize: ScreenUtil.setSpText(25),
+        lineHeight: ScreenUtil.autoheight(10),
+        paddingVertical: ScreenUtil.autoheight(15), 
     },
     unittext: {
-        fontSize: ScreenUtil.setSpText(13),
-        paddingVertical: ScreenUtil.autoheight(10), 
-        lineHeight: ScreenUtil.autoheight(10),
         textAlign: 'center',
+        fontSize: ScreenUtil.setSpText(13),
+        lineHeight: ScreenUtil.autoheight(10),
+        paddingVertical: ScreenUtil.autoheight(10), 
     },
-
-    // 按钮  
     btnoutsource: {
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: ScreenUtil.autoheight(45),
         marginTop: ScreenUtil.autoheight(20),
         marginHorizontal: ScreenUtil.autowidth(15),
-        height: ScreenUtil.autoheight(45),
-        borderRadius: 6,
-        justifyContent: 'center',
-        alignItems: 'center'
     },
     btntext: {
         fontSize: ScreenUtil.setSpText(16),
     },
-   
     taboutsource: {
         flex: 1,
         flexDirection: 'column',
     },
     outsource: {
+        flex: 1,
         flexDirection: 'column',
         padding: ScreenUtil.autowidth(20),
-        flex: 1,
     },
     inptoutsource: {
         flexDirection: 'row',
         borderBottomWidth: 1,
-        marginBottom: ScreenUtil.autoheight(10),
         paddingLeft: ScreenUtil.autowidth(5),
+        marginBottom: ScreenUtil.autoheight(10),
     },
     accountoue: {
         flex: 1,
         justifyContent: 'center',
         flexDirection: "column",
     },
-
     inpt: {
         flex: 1,
-        fontSize: ScreenUtil.setSpText(14),
         height: ScreenUtil.autoheight(40),
+        fontSize: ScreenUtil.setSpText(14),
     },
     scanning: {
-        width: ScreenUtil.autowidth(40),
         alignSelf: 'center',
         justifyContent: "center",
+        width: ScreenUtil.autowidth(40),
     },
     scanningimg: {
         width: ScreenUtil.autowidth(30),
         height: ScreenUtil.autowidth(30),
     },
     textinptoue: {
-        paddingHorizontal: ScreenUtil.autowidth(5),
-        marginBottom: ScreenUtil.autoheight(10),
         borderBottomWidth: 1,
         justifyContent: 'center',
+        marginBottom: ScreenUtil.autoheight(10),
+        paddingHorizontal: ScreenUtil.autowidth(5),
     },
-
     inptitle: {
         flex: 1,
         fontSize: ScreenUtil.setSpText(14),
     },
-
     textinpt: {
-        fontSize: ScreenUtil.setSpText(14),
         height: ScreenUtil.autoheight(40),
+        fontSize: ScreenUtil.setSpText(14),
     },
     btnnextstep: {
         height: ScreenUtil.autoheight(85),
         marginTop: ScreenUtil.autoheight(30),
     },
     nextstep: {
-        height: ScreenUtil.autoheight(45),
-        justifyContent: 'center',
+        borderRadius: 5,
         alignItems: 'center',
+        justifyContent: 'center',
         margin: ScreenUtil.autowidth(20),
-        borderRadius: 5
+        height: ScreenUtil.autoheight(45),
     },
     nextsteptext: {
         fontSize: ScreenUtil.setSpText(15),
     },
-
     warningout: {
-        marginVertical: ScreenUtil.autoheight(10),
-        marginHorizontal: ScreenUtil.autowidth(20),
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: 'center', 
         flexDirection: "row",
         justifyContent: 'center',
-        alignItems: 'center', 
+        paddingVertical: ScreenUtil.autoheight(5),
+        marginVertical: ScreenUtil.autoheight(10),
+        marginHorizontal: ScreenUtil.autowidth(20),
         paddingHorizontal: ScreenUtil.autowidth(10),
-        paddingVertical: 5,
+    },
+    warningoutShow: {
         borderWidth: 1,
         borderRadius: 5,
-    },
-
-    warningoutShow: {
-        marginHorizontal: ScreenUtil.autowidth(20),
+        flexDirection: "row",
+        alignItems: 'center',
         width: ScreenWidth-40,
         marginTop: ScreenUtil.autoheight(10),
-        flexDirection: "row",
-        alignItems: 'center', 
-        paddingHorizontal: ScreenUtil.autowidth(10),
+        marginHorizontal: ScreenUtil.autowidth(20),
         paddingVertical: ScreenUtil.autoheight(5),
-        borderWidth: 1,
-        borderRadius: 5,
+        paddingHorizontal: ScreenUtil.autowidth(10),
     },
-
     imgBtn: {
         width: ScreenUtil.autowidth(20),
         height: ScreenUtil.autowidth(20),
@@ -613,8 +585,8 @@ const styles = StyleSheet.create({
     headtitle: {
         flex: 1,
         fontSize: ScreenUtil.setSpText(12),
-        lineHeight:  ScreenUtil.autoheight(20),
         paddingLeft: ScreenUtil.autowidth(10),
+        lineHeight:  ScreenUtil.autoheight(20),
     },
 })
 export default TurnOutAsset;

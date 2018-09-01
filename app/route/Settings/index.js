@@ -1,16 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter,NativeModules, InteractionManager,Modal, ListView, StyleSheet, View, TouchableOpacity, Text, ScrollView, Image, Platform, ImageBackground, TextInput,Linking, } from 'react-native';
-import UColor from '../../utils/Colors'
-import Button from '../../components/Button'
-import Item from '../../components/Item'
-import Header from '../../components/Header'
-import ScreenUtil from '../../utils/ScreenUtil'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
+import Item from '../../components/Item'
+import Button from '../../components/Button'
+import Header from '../../components/Header'
 import Constants from '../../utils/Constants'
+import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from '../../components/EasyShow'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var DeviceInfo = require('react-native-device-info');
@@ -28,6 +28,7 @@ class Setting extends React.Component {
       />
     ),
   };
+
   constructor(props) {
     super(props);
     this.config = [
@@ -166,13 +167,13 @@ class Setting extends React.Component {
             this.props.dispatch({type:'login/getselectPoint',payload:{},callback:(integral)=>{
               // EasyShowLD.loadingClose();
               if(integral.code == 605){
-                const view = <Text style={styles.inptpasstext}>您当前的积分还不符合领取条件,请继续努力！</Text>
+                const view = <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>您当前的积分还不符合领取条件,请继续努力！</Text>
                 EasyShowLD.dialogShow("温馨提示", view, "查看", "关闭", () => {
                   navigate('Web', { title: "活动奖励领取条件", url: "http://static.eostoken.im/html/20180827/1535368470588.html" });
                   EasyShowLD.dialogClose()
                 }, () => { EasyShowLD.dialogClose() });
               }else if(integral.code == 607){
-                const view = <Text style={styles.inptpasstext}>您没有活动奖励可领取！</Text>
+                const view = <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>您没有活动奖励可领取！</Text>
                 EasyShowLD.dialogShow("温馨提示",view,"知道了",null,()=>{EasyShowLD.dialogClose()}); 
               }else if(integral.code == 0){         
                 EasyShowLD.loadingClose();
@@ -235,8 +236,7 @@ class Setting extends React.Component {
 
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-   {!UColor.theme && <Header {...this.props}  backgroundColor={UColor.secdColor} onPressLeft={false} title="我的" />}
-
+    {!UColor.theme && <Header {...this.props}  backgroundColor={UColor.secdColor} onPressLeft={false} title="我的" />}
     {Constants.isNetWorkOffline &&
         <Button onPress={this.openSystemSetting.bind(this)}>
           <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
@@ -248,16 +248,17 @@ class Setting extends React.Component {
           <ImageBackground source={UColor.theme ? UImage.signln_bg : UImage.signln_mr} resizeMode="cover" style={UColor.theme ? styles.daylinebgout : styles.linebgout}>
             <Button style={{ flex:1,justifyContent: "center",alignItems: "center",}} onPress={this.goProfile.bind(this)}>
               <View style={[styles.userHead, UColor.theme ? '' : {backgroundColor: UColor.mainColor}]} >
-                <View style={styles.headout}>
-                  <Image source={UImage.logo} style={styles.headimg} />
-                  <Text style={[styles.headtext,{color: UColor.fontColor}]}>{(this.props.loginUser) ? this.props.loginUser.nickname : "登陆"}</Text>
+                {UColor.theme && <View style={styles.signedout}></View>}
+                <View style={[styles.headout,{flexDirection:UColor.theme?"column":"row"}]}>
+                  <View style={[styles.headimgout,{backgroundColor:UColor.mask}]}> 
+                    <Image source={UImage.logo} style={styles.headimg} />
+                  </View>
+                  <Text style={[styles.headtext,{color: UColor.btnColor}]}>{(this.props.loginUser) ? this.props.loginUser.nickname : "登陆"}</Text>
                 </View>
                 <View style={styles.signedout}>
-                  {
                     <Button onPress={this.signIn.bind(this)} style={styles.signedbtn}>
                       <Image source={UImage.signed} style={styles.signedimg} />
                     </Button>
-                  }
                 </View>
               </View>
             </Button>
@@ -280,7 +281,6 @@ class Setting extends React.Component {
             <View>
               {this._renderListItem()}
             </View>
-            
             <View style={styles.footer}>
               <Text style={[styles.foottext,{color: UColor.arrow}]}>© 2018 eostoken all rights reserved </Text>
               {/* <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text> */}
@@ -324,12 +324,10 @@ class Setting extends React.Component {
 }
 
 const styles = StyleSheet.create({
- 
   inptpasstext: {
-    fontSize: ScreenUtil.setSpText(15),
-    color: UColor.arrow,
-    lineHeight: ScreenUtil.autoheight(30),
     textAlign: "left",
+    fontSize: ScreenUtil.setSpText(15),
+    lineHeight: ScreenUtil.autoheight(30),
   },
   container: {
     flex: 1,
@@ -346,31 +344,36 @@ const styles = StyleSheet.create({
     width: ScreenWidth,
   },
   userHead: {
-    justifyContent: "center",
-    alignItems: "center",
+    flex: 1,
     flexDirection: "row",
+    alignItems: "flex-end",
     paddingHorizontal: ScreenUtil.autowidth(20),
   },
   headout: {
     flex: 1,
-    flexDirection: "row",
     alignItems: "center",
-    paddingVertical: ScreenUtil.autoheight(15),
+    paddingVertical: ScreenUtil.autoheight(10),
+  },
+  headimgout: {
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    width: ScreenUtil.autowidth(70),
+    height: ScreenUtil.autoheight(70),
   },
   headimg: {
     width: ScreenUtil.autowidth(42),
     height: ScreenUtil.autoheight(52),
   },
   headtext: {
-    fontSize: ScreenUtil.setSpText(17),
+    fontSize: ScreenUtil.setSpText(15),
+    paddingTop: ScreenUtil.autoheight(5),
     marginLeft: ScreenUtil.autowidth(15),
   },
-
   signedout: {
-    flex: 1,
-    flexDirection: "row",
     alignSelf: 'center',
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    width: ScreenUtil.autowidth(70),
   },
   signedbtn: {
     borderRadius: 5,
@@ -381,14 +384,12 @@ const styles = StyleSheet.create({
     width: ScreenUtil.autowidth(40),
     height: ScreenUtil.autoheight(49)
   },
-
   dayeosbtn: {
     marginHorizontal: ScreenUtil.autowidth(8),
   },
   eosbtn: {
     marginTop: ScreenUtil.autoheight(15),
   },
-
   dayeosbtnout: {
     borderRadius: 5,
     flexDirection: "row",
@@ -414,7 +415,6 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(15),
     marginTop: ScreenUtil.autoheight(10),
   },
-
   Withdrawout: {
     flex: 1,
     flexDirection: "row",
@@ -429,24 +429,23 @@ const styles = StyleSheet.create({
   Withdrawtext: {
     fontSize: ScreenUtil.setSpText(15),
   },
-
   footer: {
     flex: 1,
+    flexDirection: 'column',
     marginVertical: ScreenUtil.autoheight(20),
-    flexDirection: 'column'
   },
   foottext: {
-    fontSize: ScreenUtil.setSpText(10),
     width: '100%',
     textAlign: 'center',
+    fontSize: ScreenUtil.setSpText(10),
     marginTop: ScreenUtil.autoheight(5),
   },
 
   systemSettingTip: {
     width: ScreenWidth,
-    height: ScreenUtil.autoheight(40),
     flexDirection: "row",
     alignItems: 'center', 
+    height: ScreenUtil.autoheight(40),
   },
   systemSettingText: {
     flex: 1,
@@ -456,44 +455,39 @@ const styles = StyleSheet.create({
   systemSettingArrow: {
     marginRight: ScreenUtil.autowidth(5)
   },
-
-
-
   touchableouts: {
     flex: 1,
     flexDirection: "column",
   },
   pupuoBackup: {
     flex: 1, 
-    justifyContent: 'center', 
     alignItems: 'center',
+    justifyContent: 'center', 
   },
-
   subViewBackup: {
     alignItems: 'flex-end',
     justifyContent: 'center',
-    width: ScreenWidth-20,
     height: ScreenUtil.autoheight(30),
+    width: ScreenWidth-ScreenUtil.autowidth(20),
   },
   buttonView: {
-    width: ScreenUtil.autowidth(30),
     alignItems: 'center',
     justifyContent: 'center',
+    width: ScreenUtil.autowidth(30),
   },
   contentText: {
-    fontSize: ScreenUtil.setSpText(18),
     fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: ScreenUtil.setSpText(18),
     paddingBottom: ScreenUtil.autoheight(20),
   },
-
   warningout: {
     paddingHorizontal: ScreenUtil.autowidth(30),
   }, 
   accountoue: {
-    height: ScreenUtil.autoheight(45),
     alignItems: 'center',
     flexDirection: "row",
+    height: ScreenUtil.autoheight(45),
   },
   headtitle: {
     fontSize: ScreenUtil.setSpText(14),
@@ -512,21 +506,20 @@ const styles = StyleSheet.create({
     height: ScreenUtil.autowidth(30),
   },
   butout: {
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center'
   },
   deleteout: {
+    borderRadius: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
     height: ScreenUtil.autoheight(42),
     width: ScreenUtil.autowidth(100),
     marginVertical: ScreenUtil.autoheight(15),
-    borderRadius: 3,
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   deletetext: {
     fontSize: ScreenUtil.setSpText(16),
   },
-
 });
 
 export default Setting;
