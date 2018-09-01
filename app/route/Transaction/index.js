@@ -144,7 +144,7 @@ class Transaction extends BaseComponent {
     selectETtx(rowData){
         this.setState({
             modal: false,
-            contractAccount: rowData.quote_contract,
+            contractAccount: rowData.base_contract,
             tradename:rowData.base_balance_uom,
             selectcode:rowData.code,
             });
@@ -426,7 +426,7 @@ class Transaction extends BaseComponent {
     }
     this.props.dispatch({
         type: 'transaction/getETBalance', payload: { contract: this.state.contractAccount, account: this.props.defaultWallet.account, symbol: this.state.tradename }, callback: (data) => {
-          if (data.code == '0') {
+          if (data && data.code == '0') {
             this.setETBalance(data.data);
           }
         }
@@ -819,7 +819,7 @@ class Transaction extends BaseComponent {
                         }], 
                         data: {
                             receiver: this.props.defaultWallet.account,
-                            token_contract: this.props.base_contract, //"issuemytoken",
+                            token_contract: this.props.etinfo.base_contract, //"issuemytoken",
                             quant: formatEosQua(this.state.sellET + " " + this.props.etinfo.base_balance_uom),
                             fee_account: this.props.defaultWallet.account,
                             fee_rate: "1", 
