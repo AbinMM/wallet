@@ -2,16 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux'
 import {Dimensions,DeviceEventEmitter,NativeModules,ImageBackground, InteractionManager,ListView,StyleSheet,Image,View,RefreshControl,Text,Platform,Linking,} from 'react-native';
 import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
-import store from 'react-native-simple-store';
-import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
+import Constants from '../../utils/Constants'
+import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
-import Button from  '../../components/Button'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import {formatterNumber,formatterUnit} from '../../utils/FormatUtil'
-import Constants from '../../utils/Constants'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 const pages = [];
@@ -47,6 +46,7 @@ class Coins extends React.Component {
       ]
     };
   }
+
   //组件加载完成
   componentDidMount() {
     const {dispatch}=this.props;
@@ -135,7 +135,6 @@ class Coins extends React.Component {
         console.log('call back data', data)
       })
     }
-
   }
 
   //渲染页面
@@ -152,9 +151,9 @@ class Coins extends React.Component {
         renderHeader = {()=><View>  
           {Constants.isNetWorkOffline &&
             <Button onPress={this.openSystemSetting.bind(this)}>
-              <View style={styles.systemSettingTip}>
-                <Text style={styles.systemSettingText}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
-                  <Ionicons style={styles.systemSettingArrow} name="ios-arrow-forward-outline" size={20} />
+              <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
+                <Text style={[styles.systemSettingText,{color: UColor.fontColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
+                  <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
               </View>
             </Button>
           }
@@ -221,23 +220,22 @@ class Coins extends React.Component {
 
 const styles = StyleSheet.create({
   labelStyle: {
-    fontSize: ScreenUtil.setSpText(15), 
     margin: 0, 
-    marginBottom: ScreenUtil.autoheight(12), 
+    fontSize: ScreenUtil.setSpText(15), 
     paddingTop: ScreenUtil.autoheight(12), 
+    marginBottom: ScreenUtil.autoheight(12), 
   },
   indicatorStyleB: {
-    width: ScreenWidth / 4 - ScreenUtil.autowidth(20),
+    borderRadius:25, 
     height: ScreenUtil.autoheight(21), 
     marginLeft: ScreenUtil.autowidth(10),
-    borderRadius:25, 
     marginBottom: ScreenUtil.autoheight(8), 
+    width: ScreenWidth / 4 - ScreenUtil.autowidth(20),
   },
   indicatorStyleY: {
-    width: ScreenWidth / 4 - ScreenUtil.autowidth(40), 
     marginLeft: ScreenUtil.autowidth(20),
+    width: ScreenWidth / 4 - ScreenUtil.autowidth(40), 
   },
-
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -245,10 +243,10 @@ const styles = StyleSheet.create({
   row:{
     flex:1,
     flexDirection:"row",
+    alignItems: 'center',
+    justifyContent:"center",
     height: ScreenUtil.autoheight(62),
     padding: ScreenUtil.autowidth(10),
-    justifyContent:"center",
-    alignItems: 'center',
   },
   eoslogout: {
     borderRadius: 25,
@@ -260,29 +258,25 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     alignItems: 'center',
     padding: ScreenUtil.autowidth(5),
-    marginLeft: ScreenUtil.autowidth(20),
     minWidth: ScreenUtil.autowidth(60),
     maxHeight: ScreenUtil.autoheight(25),
+    marginLeft: ScreenUtil.autowidth(20),
   },
   cupcdotext: {
     fontSize: ScreenUtil.setSpText(12),
   },
-
   systemSettingTip: {
     width: ScreenWidth,
-    height: ScreenUtil.autoheight(40),
     flexDirection: "row",
     alignItems: 'center', 
-    backgroundColor: UColor.showy,
+    height: ScreenUtil.autoheight(40),
   },
   systemSettingText: {
     flex: 1,
-    color: UColor.fontColor,
     textAlign: 'center',
     fontSize: ScreenUtil.setSpText(14)
   },
   systemSettingArrow: {
-    color: UColor.fontColor,
     marginRight: ScreenUtil.autowidth(5)
   },
 });

@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, ListView, StyleSheet, Image, View, Text, Linking, Modal, Animated, TouchableOpacity, Easing, Clipboard, ImageBackground, ScrollView } from 'react-native';
+import { Dimensions, StyleSheet, Image, View, Text, Linking, Modal, TouchableOpacity,} from 'react-native';
+import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
-import UImage from '../../utils/Img'
 import Header from '../../components/Header'
+import ScreenUtil from '../../utils/ScreenUtil'
+import { EasyShowLD } from '../../components/EasyShow'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { EasyShowLD } from '../../components/EasyShow'
-import ScreenUtil from '../../utils/ScreenUtil'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
@@ -166,14 +166,14 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
     head: {
+        flexDirection: "row",
         height: ScreenUtil.autoheight(70), 
         paddingBottom: ScreenUtil.autoheight(10),
-        flexDirection: "row",
     },
     headbtn: {
         width: ScreenWidth/4,
-        justifyContent: "center", 
         alignItems: 'center',
+        justifyContent: "center", 
     },
     headbtnout: {
         flex:1, 
@@ -181,46 +181,44 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     imgBtn: {
+        margin: ScreenUtil.autowidth(5),
         width: ScreenUtil.autowidth(30),
         height: ScreenUtil.autoheight(30),
-        margin: ScreenUtil.autowidth(5),
     },
     headbtntext: {
         fontSize: ScreenUtil.setSpText(14),
     },
-
     touchableouts: {
         flex: 1,
         flexDirection: "column",
     },
-
     pupuoBackup: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
+        justifyContent: 'center',
     },
 
     subViewBackup: {
         alignItems: 'flex-end',
         justifyContent: 'center',
-        width: ScreenWidth - 30,
         height: ScreenUtil.autoheight(30),
+        width: ScreenWidth - ScreenUtil.autowidth(30),
     },
     buttonView2: {
-        width: ScreenUtil.autowidth(30),
         alignItems: 'center',
         justifyContent: 'center',
+        width: ScreenUtil.autowidth(30),
     },
     contentText: {
-        fontSize: ScreenUtil.setSpText(18),
         fontWeight: 'bold',
         textAlign: 'center',
+        fontSize: ScreenUtil.setSpText(18),
         paddingBottom: ScreenUtil.autoheight(5),
     },
     imgBtnBackup: {
+        margin: ScreenUtil.autowidth(5),
         width: ScreenUtil.autowidth(30),
         height: ScreenUtil.autoheight(30),
-        margin: ScreenUtil.autowidth(5),
     },
     headtitle: {
         flex: 1,
@@ -233,28 +231,27 @@ const styles = StyleSheet.create({
         paddingBottom: ScreenUtil.autoheight(15),
     },
     warningout: {
-        width: ScreenWidth - 60,
-        marginHorizontal: ScreenUtil.autowidth(15),
-        flexDirection: "row",
-        alignItems: 'center',
         borderWidth: 1,
         borderRadius: 5,
+        flexDirection: "row",
+        alignItems: 'center',
+        width: ScreenWidth - 60,
+        marginHorizontal: ScreenUtil.autowidth(15),
     },
     centertext: {
         fontSize: ScreenUtil.setSpText(12),
         lineHeight: ScreenUtil.autoheight(20),
     },
     deleteout: {
+        borderRadius: 3,
+        alignItems: 'center',
+        justifyContent: 'center',
         height: ScreenUtil.autoheight(40),
         marginHorizontal: ScreenUtil.autowidth(100),
         marginVertical: ScreenUtil.autoheight(15),
-        borderRadius: 3,
-        justifyContent: 'center',
-        alignItems: 'center'
     },
     deletetext: {
         fontSize: ScreenUtil.setSpText(16),
     },
-      
 });
 export default FunctionsMore;

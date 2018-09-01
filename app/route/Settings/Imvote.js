@@ -1,18 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import {Dimensions,ListView,StyleSheet,View,Text,Image,Platform,TextInput,TouchableOpacity} from 'react-native';
-import UColor from '../../utils/Colors'
-import Button from  '../../components/Button'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
+import { Eos } from "react-native-eosjs";
 import Header from '../../components/Header'
+import Button from  '../../components/Button'
+import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
+import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
-import { Eos } from "react-native-eosjs";
-import BaseComponent from "../../components/BaseComponent";
-import Constants from '../../utils/Constants'
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 
@@ -61,12 +61,10 @@ class Imvote extends BaseComponent {
             EasyToast.show('请先创建钱包');
             return;
         }
-
         if(!this.props.producers || this.props.producers.length <=0){
             EasyToast.show('您还未投票');
             return;
         }
-
         var selectArr= [];
         for(var i = 0; i < this.props.producers.length; i++){
             selectArr.push(this.props.producers[i].account);
@@ -85,7 +83,6 @@ class Imvote extends BaseComponent {
                     style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
                     placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
             </View>
-    
             EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
             if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
                 EasyToast.show('密码长度至少4位,请重输');
@@ -228,8 +225,8 @@ class Imvote extends BaseComponent {
 
 const styles = StyleSheet.create({
     passoutsource: {
+        alignItems: 'center',
         flexDirection: 'column', 
-        alignItems: 'center'
     },
     passoutsource2: {
         flexDirection: 'column', 
@@ -240,18 +237,17 @@ const styles = StyleSheet.create({
         lineHeight: ScreenUtil.autoheight(30), 
     },
     inptpass: {
+        borderBottomWidth: 1,
         textAlign: "center",
         height: ScreenUtil.autoheight(45),
-        width: ScreenWidth-100,
         fontSize: ScreenUtil.setSpText(16),
-        borderBottomWidth: 1,
+        width: ScreenWidth-ScreenUtil.autowidth(100),
     },
     inptpasstext: {
         fontSize: ScreenUtil.setSpText(14),
-        lineHeight: ScreenUtil.autoheight(20),
         marginTop: ScreenUtil.autowidth(10),
+        lineHeight: ScreenUtil.autoheight(20),
     },
-
     container: {
       flex: 1,
       flexDirection:'column',
@@ -261,32 +257,31 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(25),
     },
     nodename:{
+        textAlign:'center', 
         width: ScreenUtil.autowidth(140),  
         fontSize: ScreenUtil.setSpText(16),  
-        textAlign:'center', 
         lineHeight: ScreenUtil.autoheight(25),
     },
     rankingticket: {
         flex: 1,
-        fontSize: ScreenUtil.setSpText(16),
         textAlign: 'center',
+        fontSize: ScreenUtil.setSpText(16),
         lineHeight: ScreenUtil.autoheight(25),
     },
     choice: {
+        textAlign: 'center',
         width: ScreenUtil.autowidth(50),
         fontSize: ScreenUtil.setSpText(16),
-        textAlign: 'center',
         lineHeight: ScreenUtil.autoheight(25),
     },
-
     outsource: {
         flexDirection: 'row', 
         height: ScreenUtil.autoheight(60),
         paddingVertical: ScreenUtil.autoheight(10),
     },
     logview: {
-        justifyContent: 'center', 
         alignItems: 'center', 
+        justifyContent: 'center', 
     },
     logimg: {
         width: ScreenUtil.autowidth(30), 
@@ -294,14 +289,14 @@ const styles = StyleSheet.create({
         margin: ScreenUtil.autowidth(10),
     },
     nameregion: {
-        width: ScreenUtil.autowidth(100),
-        justifyContent: 'space-between',
         alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        width: ScreenUtil.autowidth(100),
     },
     rankvote: {
         flex: 1,
-        justifyContent: 'space-between',
         alignItems: 'center',
+        justifyContent: 'space-between',
     },
     nameranking: {
         fontSize: ScreenUtil.setSpText(14),
@@ -311,33 +306,32 @@ const styles = StyleSheet.create({
     },
 
     taboue: {
-        justifyContent: 'center', 
         alignItems: 'center',
+        justifyContent: 'center', 
     },
     tabview: {
+        borderWidth: 1,
+        margin: ScreenUtil.autowidth(5),
         width: ScreenUtil.autowidth(27),
         height: ScreenUtil.autowidth(27),
-        margin: ScreenUtil.autowidth(5),
-        borderWidth: 1,
     },
     tabimg: {
         width: ScreenUtil.autowidth(25), 
         height: ScreenUtil.autowidth(25),
     },
-
     footer: {
-      height: ScreenUtil.autoheight(50),
-      flexDirection: 'row',
+        flexDirection: 'row',
+        height: ScreenUtil.autoheight(50),
     },
     btn: {
         flex: 1
     },
     btnnode: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
         marginRight: 0.5,
+        alignItems: 'center',
+        flexDirection: 'column',
+        justifyContent: 'center',
     },
     nodenumber: {
         fontSize: ScreenUtil.setSpText(18), 
@@ -347,20 +341,19 @@ const styles = StyleSheet.create({
     },
     btnvote: {
         flex: 1,
+        marginLeft: 0.5,
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        flexDirection: 'row',
-        marginLeft: 0.5,
     },
     voteimg: {
         width: ScreenUtil.autowidth(30), 
         height: ScreenUtil.autowidth(30),
     },
     votetext: {
-        marginLeft: ScreenUtil.autowidth(20),
         fontSize: ScreenUtil.setSpText(18),
+        marginLeft: ScreenUtil.autowidth(20),
     },
-
 });
 
 export default Imvote;

@@ -1,13 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, StyleSheet, Image, View, Text, Platform, Modal, Animated, TouchableOpacity, TextInput, Clipboard, ImageBackground, ScrollView, KeyboardAvoidingView } from 'react-native';
-import UColor from '../../utils/Colors'
-import Button from '../../components/Button'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
+import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast"
 import { EasyShowLD } from '../../components/EasyShow'
-import ScreenUtil from '../../utils/ScreenUtil'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
@@ -31,13 +30,13 @@ class FreeMortgage extends React.Component {
   //加载地址数据
   componentDidMount() {
     this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" } });
-
     DeviceEventEmitter.addListener('scan_result', (data) => {
         if(data.toaccount){
             this.setState({labelname:data.toaccount})
         }
       });   
   }
+
   Scan() {
     const { navigate } = this.props.navigation;
     navigate('BarCode', {isTurnOut:true,coinType:"EOS"});
@@ -63,7 +62,6 @@ class FreeMortgage extends React.Component {
         //     EasyToast.show("未检测有效的EOS账号, 请检查您当前账号是否有效!");
         //     return;
         // }
-
         this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.state.labelname},callback:(resp)=>{ 
             if(resp.code == 601){
                EasyToast.show("您已经免费抵押过，把机会留给别人吧");
@@ -92,27 +90,27 @@ class FreeMortgage extends React.Component {
 
   }
 
-  chkAccount(obj) {
-    var charmap = '.12345abcdefghijklmnopqrstuvwxyz';
-    for(var i = 0 ; i < obj.length;i++){
-        var tmp = obj.charAt(i);
-        for(var j = 0;j < charmap.length; j++){
-            if(tmp == charmap.charAt(j)){
-                break;
+    chkAccount(obj) {
+        var charmap = '.12345abcdefghijklmnopqrstuvwxyz';
+        for(var i = 0 ; i < obj.length;i++){
+            var tmp = obj.charAt(i);
+            for(var j = 0;j < charmap.length; j++){
+                if(tmp == charmap.charAt(j)){
+                    break;
+                }
+            }
+            if(j >= charmap.length){
+                //非法字符
+                obj = obj.replace(tmp, ""); 
+                EasyToast.show('请输入正确的账号');
             }
         }
-        if(j >= charmap.length){
-            //非法字符
-            obj = obj.replace(tmp, ""); 
-            EasyToast.show('请输入正确的账号');
-        }
+        return obj;
     }
-    return obj;
-}
 
-  dismissKeyboardClick() {
-    dismissKeyboard();
-}
+    dismissKeyboardClick() {
+        dismissKeyboard();
+    }
 
    
   render() {
@@ -166,22 +164,21 @@ const styles = StyleSheet.create({
         paddingVertical: ScreenUtil.autoheight(30),
         paddingHorizontal: ScreenUtil.autowidth(10)
     },
-
     bgout: {
-        width: ScreenWidth - ScreenUtil.autowidth(20),
-        height: (ScreenWidth - ScreenUtil.autowidth(20))*0.8437,
         paddingTop: ScreenUtil.autoheight(70),
         paddingHorizontal: ScreenUtil.autowidth(20),
+        width: ScreenWidth - ScreenUtil.autowidth(20),
+        height: (ScreenWidth - ScreenUtil.autowidth(20))*0.8437,
     },
     Explaintext: {
         fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autoheight(30), 
         marginTop: ScreenUtil.autoheight(25),
+        lineHeight: ScreenUtil.autoheight(30), 
     },
     Explaintextmiddle: {
         fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autoheight(30), 
         marginTop: ScreenUtil.autoheight(5),
+        lineHeight: ScreenUtil.autoheight(30), 
     },
     Tipstext: {
         fontSize: ScreenUtil.setSpText(12),
@@ -193,37 +190,35 @@ const styles = StyleSheet.create({
     },
     btnout: {
         flexDirection: "row",
-        justifyContent: 'flex-start',
         alignItems: 'flex-start',
+        justifyContent: 'flex-start',
         height: ScreenUtil.autoheight(20),
         marginHorizontal: ScreenUtil.autowidth(20),
     },
-
     Applyout: {
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        height: ScreenUtil.autoheight(45),
         width: ScreenUtil.autowidth(90),
+        height: ScreenUtil.autoheight(45),
         marginHorizontal: ScreenUtil.autowidth(20),
     },
     Applytext: {
         fontSize: ScreenUtil.setSpText(15),
     },
-
     header: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
         paddingVertical: ScreenUtil.autoheight(7),
-      },
+    },
       
-      headleftimg: {
+    headleftimg: {
         width: ScreenUtil.autowidth(20),
         height: ScreenUtil.autowidth(20),
         marginHorizontal: ScreenUtil.autowidth(10),
-      },
-      inptout: {
+    },
+    inptout: {
         flex: 1,
         borderRadius: 5,
         flexDirection: "row",
@@ -232,18 +227,18 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(45),
         marginLeft: ScreenUtil.autowidth(15),
         paddingLeft: ScreenUtil.autowidth(10),
-      },
-      inpt: {
+    },
+    inpt: {
         flex: 1,
         height: ScreenUtil.autoheight(45),
         fontSize: ScreenUtil.setSpText(15),
-      },
-      canceltext: {
+    },
+    canceltext: {
         textAlign: 'center',
         fontSize: ScreenUtil.setSpText(15),
         paddingHorizontal:ScreenUtil.autowidth(8),
-      },
-      tab: {
+    },
+    tab: {
         flex: 1,
     }
 });

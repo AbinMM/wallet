@@ -1551,7 +1551,6 @@ const styles = StyleSheet.create({
     nametext: {
         fontSize: ScreenUtil.setSpText(13),
     },
-
     headerTitle: {
         width: ScreenWidth,
         flexDirection: "row",
@@ -1581,14 +1580,12 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autowidth(15),
         marginHorizontal: ScreenUtil.autowidth(5),
     },
-
     HeadTitle: {
         flex: 1,
         justifyContent: 'center', 
         paddingLeft: ScreenUtil.autowidth(60),
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
-  
     recordout: {
         flex: 1,
         flexDirection: "column",
@@ -1598,7 +1595,6 @@ const styles = StyleSheet.create({
     recordtext: {
         fontSize: ScreenUtil.setSpText(13),
     },
-    
     rightout: {
         flex:7,
         flexDirection:'column',
@@ -1625,7 +1621,6 @@ const styles = StyleSheet.create({
         textAlign:'center',
         fontSize: ScreenUtil.setSpText(20),
     },
-
     cupcdo:{
         textAlign:'center',
         fontSize: ScreenUtil.setSpText(20),
@@ -1636,7 +1631,6 @@ const styles = StyleSheet.create({
         marginTop: ScreenUtil.autoheight(2),
         marginLeft: ScreenUtil.autowidth(5),
     },
-
     timeout: {
         width:ScreenWidth,
         flexDirection:'row',
@@ -1660,7 +1654,6 @@ const styles = StyleSheet.create({
     timeinitial: {
         fontSize: ScreenUtil.setSpText(14), 
     },
-
     toptabout: {
         paddingTop: ScreenUtil.autoheight(10),
         paddingBottom: ScreenUtil.autoheight(5),
@@ -1677,7 +1670,6 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         paddingLeft: ScreenUtil.autowidth(8), 
     },
-   
     inptoutsource: {
         flexDirection: 'row',  
         alignItems: 'center',
@@ -1726,7 +1718,6 @@ const styles = StyleSheet.create({
         textAlign: "left",
         fontSize: ScreenUtil.setSpText(14), 
     },
-
     inptTitle: {
         flex: 1,
         textAlign: "right",
@@ -1737,7 +1728,6 @@ const styles = StyleSheet.create({
         textAlign: 'left', 
         fontSize: ScreenUtil.setSpText(12), 
     },
-
     inputout: {
         borderRadius: 5,
         flexDirection: 'row',
@@ -1756,7 +1746,6 @@ const styles = StyleSheet.create({
     unittext: {
         fontSize: ScreenUtil.setSpText(15),
     },
-
     botn: {
         borderRadius: 3, 
         alignItems: 'center' ,
@@ -1765,11 +1754,9 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(30), 
         marginLeft: ScreenUtil.autowidth(10), 
     },
-
     botText: {
         fontSize: ScreenUtil.setSpText(17), 
     },
-
     businessout: {
         borderRadius: 5,
         flexDirection: "row",
@@ -1994,14 +1981,12 @@ const styles = StyleSheet.create({
         color: UColor.fontColor,
         marginRight: ScreenUtil.autowidth(5)
     },
-
     Explainout: {
         flexDirection: 'column', 
         alignItems: 'flex-start'
     },
     Explaintext: {
         fontSize: ScreenUtil.setSpText(15),
-        color: UColor.arrow, 
         lineHeight: ScreenUtil.autoheight(30), 
     },
 });

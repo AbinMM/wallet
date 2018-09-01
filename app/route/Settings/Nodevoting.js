@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 import { Dimensions, ListView, StyleSheet, View, Text, Image, TextInput, TouchableOpacity} from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
+import { Eos } from "react-native-eosjs";
 import Header from '../../components/Header'
 import Button from  '../../components/Button'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
-import { Eos } from "react-native-eosjs";
 import { EasyToast } from '../../components/Toast';
-import { EasyShowLD } from "../../components/EasyShow"
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
+import { EasyShowLD } from "../../components/EasyShow"
 import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -23,7 +23,7 @@ class Nodevoting extends BaseComponent {
     static navigationOptions =  {
         title: "投票",
         header:null, 
-      };
+    };
       
     constructor(props) {
         super(props);
@@ -269,17 +269,16 @@ const styles = StyleSheet.create({
     },
     inptpass: {
         textAlign: "center",
-        height: ScreenUtil.autoheight(45),
-        width: ScreenWidth-100,
-        fontSize: ScreenUtil.setSpText(16),
         borderBottomWidth: 1,
+        height: ScreenUtil.autoheight(45),
+        fontSize: ScreenUtil.setSpText(16),
+        width: ScreenWidth-ScreenUtil.autowidth(100),
     },
     inptpasstext: {
         fontSize: ScreenUtil.setSpText(14),
-        lineHeight: ScreenUtil.autoheight(20),
         marginTop: ScreenUtil.autowidth(10),
+        lineHeight: ScreenUtil.autoheight(20),
     },
-
     container: {
       flex: 1,
       flexDirection:'column',
@@ -289,32 +288,31 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(25),
     },
     nodename:{
+        textAlign:'center', 
         width: ScreenUtil.autowidth(140), 
         fontSize: ScreenUtil.setSpText(16),  
-        textAlign:'center', 
         lineHeight: ScreenUtil.autoheight(25),
     },
     rankingticket: {
         flex: 1,
-        fontSize: ScreenUtil.setSpText(16),
         textAlign: 'center',
+        fontSize: ScreenUtil.setSpText(16),
         lineHeight: ScreenUtil.autoheight(25),
     },
     choice: {
+        textAlign: 'center',
         width: ScreenUtil.autowidth(50),
         fontSize: ScreenUtil.setSpText(16),
-        textAlign: 'center',
         lineHeight: ScreenUtil.autoheight(25),
     },
-
     outsource: {
         flexDirection: 'row', 
         height: ScreenUtil.autoheight(60),
         paddingVertical: ScreenUtil.autoheight(10),
     },
     logview: {
-        justifyContent: 'center', 
         alignItems: 'center', 
+        justifyContent: 'center', 
     },
     logimg: {
         width: ScreenUtil.autowidth(30), 
@@ -322,14 +320,14 @@ const styles = StyleSheet.create({
         margin: ScreenUtil.autowidth(10),
     },
     nameregion: {
-        width: ScreenUtil.autowidth(100),
-        justifyContent: 'space-between',
         alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        width: ScreenUtil.autowidth(100),
     },
     rankvote: {
         flex: 1,
-        justifyContent: 'space-between',
         alignItems: 'center',
+        justifyContent: 'space-between',
     },
     nameranking: { 
         fontSize: ScreenUtil.setSpText(14),
@@ -337,35 +335,33 @@ const styles = StyleSheet.create({
     regiontotalvotes: {
         fontSize: ScreenUtil.setSpText(14),
     },
-
     taboue: {
-        justifyContent: 'center', 
         alignItems: 'center',
+        justifyContent: 'center', 
     },
     tabview: {
+        borderWidth: 1,
+        margin: ScreenUtil.autowidth(5),
         width: ScreenUtil.autowidth(27),
         height: ScreenUtil.autowidth(27),
-        margin: ScreenUtil.autowidth(5),
-        borderWidth: 1,
     },
     tabimg: {
         width: ScreenUtil.autowidth(25), 
         height: ScreenUtil.autowidth(25),
     },
-
     footer: {
-      height: ScreenUtil.autoheight(50),
-      flexDirection: 'row', 
+        flexDirection: 'row', 
+        height: ScreenUtil.autoheight(50),
     },
     btn: {
         flex: 1
     },
     btnnode: {
         flex: 1,
+        marginRight: 0.5,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        marginRight: 0.5,
     },
     nodenumber: {
         fontSize: ScreenUtil.setSpText(18), 
@@ -375,28 +371,27 @@ const styles = StyleSheet.create({
     },
     btnvote: {
         flex: 1,
+        marginLeft: 0.5,
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        flexDirection: 'row',
-        marginLeft: 0.5,
     },
     voteimg: {
         width: ScreenUtil.autowidth(30), 
         height: ScreenUtil.autowidth(30),
     },
     votetext: {
-        marginLeft: ScreenUtil.autowidth(20),
         fontSize: ScreenUtil.setSpText(18),
+        marginLeft: ScreenUtil.autowidth(20),
     },
     passoutsource2: {
         flexDirection: 'column', 
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
     },
     Explaintext2: {
         fontSize: ScreenUtil.setSpText(15),
         lineHeight: ScreenUtil.autoheight(30), 
     },
-
 });
 
 export default Nodevoting;

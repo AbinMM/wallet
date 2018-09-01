@@ -4,7 +4,6 @@ import {DeviceEventEmitter,ListView,StyleSheet,Image,View,Text,Switch} from 'rea
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
-import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
 import BaseComponent from "../../components/BaseComponent";
@@ -12,10 +11,10 @@ import BaseComponent from "../../components/BaseComponent";
 @connect(({wallet, assets}) => ({...wallet, ...assets}))
 class AddAssets extends BaseComponent {
 
-      static navigationOptions = {
-        headerTitle: "添加资产",
-        header:null, 
-    };
+  static navigationOptions = {
+      headerTitle: "添加资产",
+      header:null, 
+  };
 
   // 构造函数  
   constructor(props) { 
@@ -28,7 +27,6 @@ class AddAssets extends BaseComponent {
       isAdding: false,
     };
   }
-
 
   componentDidMount() {
     try {
@@ -50,7 +48,6 @@ class AddAssets extends BaseComponent {
     } catch (error) {
       EasyShowLD.loadingClose();
     }
-
   }
 
   _rightTopClick = () =>{
@@ -91,7 +88,6 @@ class AddAssets extends BaseComponent {
       }, () => { EasyShowLD.dialogClose() });
       return;
     }
-
     try {
       EasyShowLD.loadingShow();
       this.props.dispatch({ type: 'assets/addMyAsset', payload: {accountName: this.props.defaultWallet.account, asset: asset, value: value}, callback: (data) => {
@@ -108,7 +104,6 @@ class AddAssets extends BaseComponent {
     if(this.props.myAssets == null){
         return false;
     }
-    
     if(this.state.selectasset != null && this.state.selectasset.name == rowData.name){
       if(this.state.value){
         return true;
@@ -116,7 +111,6 @@ class AddAssets extends BaseComponent {
         return false;
       }
     }
-
     for(var i = 0; i < this.props.myAssets.length; i++){
         if(this.props.myAssets[i].asset.name == rowData.name ){
             return true;
@@ -144,9 +138,7 @@ class AddAssets extends BaseComponent {
                   <View style={styles.listInfoRight}>
                     <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.secdColor}
                         value={this.isMyAsset(rowData)} onValueChange={(value)=>{
-                          if(this.state.isAdding){
-                            return;
-                          }
+                          if(this.state.isAdding){ return }
                           this.setState({isAdding: true});
                           this.setState({selectasset: rowData, value: value});
                           this.addAsset(rowData, value);
@@ -169,28 +161,28 @@ const styles = StyleSheet.create({
 
     listItem: {
       flexDirection: "column",
-      justifyContent: "flex-start",
       alignItems: "flex-start",
+      justifyContent: "flex-start",
     },
-   
     listInfo: {
-      height: ScreenUtil.autoheight(60),
-      paddingHorizontal: ScreenUtil.autowidth(16),
+      borderTopWidth:1,
       flexDirection: "row",
       alignItems: "center",
-      borderTopWidth:1,
+      height: ScreenUtil.autoheight(60),
+      paddingHorizontal: ScreenUtil.autowidth(16),
     },
     logimg: {
+      borderRadius: 10, 
+      overflow:"hidden", 
+      resizeMode: "cover", 
       width: ScreenUtil.autowidth(28), 
       height: ScreenUtil.autowidth(28), 
-      resizeMode: "cover", 
-      overflow:"hidden", 
-      borderRadius: 10, 
     },
     scrollView: {
       flex: 1,
-      paddingLeft: ScreenUtil.autowidth(10),
       justifyContent: "center",
+      paddingLeft: ScreenUtil.autowidth(10),
+     
     },
     listInfoTitle: {
       fontSize: ScreenUtil.setSpText(16)
@@ -199,7 +191,6 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center"
     },
-
     quantity: {
       fontSize: ScreenUtil.setSpText(14),
     },

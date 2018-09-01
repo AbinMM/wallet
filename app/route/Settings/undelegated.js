@@ -1,24 +1,25 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Dimensions,  StyleSheet, Image, View, Text, TextInput} from "react-native";
-import UColor from "../../utils/Colors";
-import Button from "../../components/Button";
 import UImage from "../../utils/Img";
+import UColor from "../../utils/Colors";
+import { Eos } from "react-native-eosjs";
 import Header from '../../components/Header'
+import Button from "../../components/Button";
+import Constants from '../../utils/Constants';
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast";
 import { EasyShowLD } from '../../components/EasyShow'
 import BaseComponent from "../../components/BaseComponent";
-import { Eos } from "react-native-eosjs";
-import {formatEosQua} from '../../utils/FormatUtil';
-import Constants from '../../utils/Constants';
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 var dismissKeyboard = require('dismissKeyboard');
+
 @connect(({ wallet }) => ({ ...wallet }))
 class undelegated extends BaseComponent {
+
   static navigationOptions = {
       headerTitle: "赎回问题",
       header:null,
@@ -40,7 +41,6 @@ class undelegated extends BaseComponent {
     //结束页面前，资源释放操作
     super.componentWillUnmount();
   }
-
 
   // 构造函数
   constructor(props) {
@@ -84,7 +84,6 @@ class undelegated extends BaseComponent {
         if (plaintext_privateKey.indexOf('eostoken') != -1) {
             plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
             EasyShowLD.loadingShow();
-
             Eos.transaction({
                 actions: [
                     {
@@ -178,17 +177,17 @@ class undelegated extends BaseComponent {
 
 const styles = StyleSheet.create({
   passoutsource: {
-    flexDirection: 'column', 
+   flexDirection: 'column', 
     alignItems: 'center'
-},
-inptpass: {
+  },
+  inptpass: {
     textAlign: "center",
-    height: ScreenUtil.autoheight(45),
-    width: ScreenWidth-100,
-    paddingBottom: ScreenUtil.autoheight(5),
-    fontSize: ScreenUtil.setSpText(16),
     borderBottomWidth: 1,
-},
+    height: ScreenUtil.autoheight(45),
+    fontSize: ScreenUtil.setSpText(16),
+    paddingBottom: ScreenUtil.autoheight(5),
+    width: ScreenWidth-ScreenUtil.autowidth(100),
+  },
   container: {
     flex: 1,
     flexDirection: "column",
@@ -198,33 +197,30 @@ inptpass: {
     padding: ScreenUtil.autowidth(10),
     marginTop: ScreenUtil.autoheight(20),
   },
-
   accountTitle: {
-    fontSize: ScreenUtil.setSpText(15),
-    height: ScreenUtil.autoheight(40),
-    paddingLeft: ScreenUtil.autowidth(2),
     textAlign: "left",
+    height: ScreenUtil.autoheight(40),
+    fontSize: ScreenUtil.setSpText(15),
+    paddingLeft: ScreenUtil.autowidth(2),
     lineHeight: ScreenUtil.autoheight(20),
   },
   accountText: {
-    fontSize: ScreenUtil.setSpText(15),
-    height: ScreenUtil.autoheight(30),
-    paddingLeft: ScreenUtil.autowidth(2),
     textAlign: "left",
+    height: ScreenUtil.autoheight(30),
+    fontSize: ScreenUtil.setSpText(15),
+    paddingLeft: ScreenUtil.autowidth(2),
     lineHeight: ScreenUtil.autoheight(20),
   },
-  
-  
   btnnextstep: {
     height: ScreenUtil.autoheight(85),
   },
   nextstep: {
-    height: ScreenUtil.autoheight(45),
-    justifyContent: "center",
+    borderRadius: 5,
     alignItems: "center",
-    marginHorizontal: ScreenUtil.autowidth(120),
+    justifyContent: "center",
+    height: ScreenUtil.autoheight(45),
     marginVertical: ScreenUtil.autowidth(20),
-    borderRadius: 5
+    marginHorizontal: ScreenUtil.autowidth(120),
   },
   nextsteptext: {
     fontSize: ScreenUtil.setSpText(15),

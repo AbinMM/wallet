@@ -7,9 +7,9 @@ import { Eos } from "react-native-eosjs";
 import Button from '../../components/Button'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
-import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import { EasyToast } from "../../components/Toast"
 import { EasyShowLD } from '../../components/EasyShow'
+import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter' 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 const ScreenWidth = Dimensions.get('window').width;

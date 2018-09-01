@@ -1,18 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import { DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, Platform,  TouchableOpacity, TextInput, RefreshControl } from 'react-native';
 import moment from 'moment';
 import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
 import Header from '../../components/Header'
-import Button from '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
-import { EasyToast } from "../../components/Toast"
-var dismissKeyboard = require('dismissKeyboard');
 
-@connect(({transaction,sticker,wallet}) => ({...transaction, ...sticker, ...wallet}))
 class WithdrawMoney extends React.Component {
+
   static navigationOptions = {
     title: "领取记录",
     header:null, 
@@ -62,12 +58,12 @@ const styles = StyleSheet.create({
       flexDirection: "column",
     },
     package: {
-      flexDirection: "row",
-      paddingHorizontal: ScreenUtil.autowidth(10),
-      paddingVertical: ScreenUtil.autoheight(5),
       borderRadius: 5,
-      marginHorizontal: ScreenUtil.autowidth(10),
+      flexDirection: "row",
       marginVertical: ScreenUtil.autoheight(5),
+      paddingVertical: ScreenUtil.autoheight(5),
+      marginHorizontal: ScreenUtil.autowidth(10),
+      paddingHorizontal: ScreenUtil.autowidth(10),
     },
     leftout: {
       flex: 3,
@@ -83,9 +79,9 @@ const styles = StyleSheet.create({
     },
     rightout: {
       flex: 1,
+      alignItems: 'center',
       flexDirection: "column",
       justifyContent: "center",
-      alignItems: 'center',
     },
     selltext: {
       fontSize: ScreenUtil.setSpText(15),
@@ -98,12 +94,11 @@ const styles = StyleSheet.create({
     presentprice: {
       fontSize: ScreenUtil.setSpText(14),
     },
-
     significantout: {
-      margin: ScreenUtil.autowidth(20),
-      padding: ScreenUtil.autowidth(10),
       borderWidth: 1,
       borderRadius: 10,
+      margin: ScreenUtil.autowidth(20),
+      padding: ScreenUtil.autowidth(10),
     },
     significanttext: {
       fontSize: ScreenUtil.setSpText(14), 

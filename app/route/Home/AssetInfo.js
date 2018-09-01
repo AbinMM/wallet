@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { DeviceEventEmitter, ListView, StyleSheet, Image, View, RefreshControl, Text, } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import moment from 'moment';
+import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
-import UImage from '../../utils/Img'
 import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
-import moment from 'moment';
 
 @connect(({ wallet, assets}) => ({ ...wallet, ...assets }))
 class AssetInfo extends BaseComponent {
@@ -43,9 +43,7 @@ class AssetInfo extends BaseComponent {
     }
 
     componentWillMount() {
-
         super.componentWillMount();
-    
         this.props.dispatch({type: 'assets/clearTradeDetails',payload:{}});
     }
 
@@ -55,7 +53,6 @@ class AssetInfo extends BaseComponent {
             //加载地址数据
             // EasyShowLD.loadingShow();
             this.props.dispatch({ type: 'wallet/getDefaultWallet' });
-
             this.props.dispatch({ type: 'assets/getTradeDetails', payload: { account_name : this.props.defaultWallet.name, contract_account : this.state.asset.asset.contractAccount,  code : this.state.asset.asset.name, last_id: "-1", countPerPage: 10}, callback: (resp) => {
                 this.setState({logRefreshing: false});
                 this.processResult();
@@ -63,13 +60,11 @@ class AssetInfo extends BaseComponent {
         } catch (error) {
             this.setState({logRefreshing: false});
         }
-   
     }
 
     componentWillUnmount(){
         //结束页面前，资源释放操作
         super.componentWillUnmount();
-        
     }
 
     processResult(){
@@ -94,6 +89,7 @@ class AssetInfo extends BaseComponent {
         const { navigate } = this.props.navigation;
         navigate('TurnInAsset', {coins, balance: this.state.balance });
     }
+
     turnOutAsset(coins) {
         const { navigate } = this.props.navigation;
         navigate('TurnOutAsset', { coins, balance: this.state.balance });
@@ -115,13 +111,14 @@ class AssetInfo extends BaseComponent {
               }
               EasyShowLD.loadingClose();
             }
-          })
+        })
     }
 
     _openDetails(trade) {  
         const { navigate } = this.props.navigation;
         navigate('TradeDetails', {trade});
     }
+
     transferTimeZone(blockTime){
         var timezone;
         try {
@@ -136,7 +133,6 @@ class AssetInfo extends BaseComponent {
         if(this.props.defaultWallet == null || this.props.defaultWallet.name == null || this.props.myAssets == null){
           return;
         }
-    
         if(this.state.logRefreshing || this.state.logId == "-1"){
             return;
         }
@@ -151,9 +147,7 @@ class AssetInfo extends BaseComponent {
         if(this.props.defaultWallet == null || this.props.defaultWallet.name == null || this.props.myAssets == null){
           return;
         }
-    
         this.getBalance();
-        
         if(this.state.logRefreshing){
             return;
         }
@@ -217,11 +211,9 @@ class AssetInfo extends BaseComponent {
                                 </View>
                             </View>
                         </Button>  
-                    </View>         
-                     )}                
+                    </View>)}                
                  /> 
                 </View>
-
                 <View style={[styles.footer,{backgroundColor: UColor.secdColor}]}>
                     <Button onPress={this.turnInAsset.bind(this, c)} style={{ flex: 1 }}>
                         <View style={[styles.shiftshiftturnout,{backgroundColor: UColor.mainColor,marginRight: 0.5,}]}>
@@ -246,20 +238,19 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     header: {
-        height: ScreenUtil.autoheight(110),
-        justifyContent: "center",
-        alignItems: "center",
-        margin: ScreenUtil.autowidth(5),
         borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        margin: ScreenUtil.autowidth(5),
+        height: ScreenUtil.autoheight(110),
     },
     headbalance: {
         fontSize: ScreenUtil.setSpText(20), 
     },
     headmarket: {
+        marginTop: ScreenUtil.autowidth(5),
         fontSize: ScreenUtil.setSpText(14),
-        marginTop: ScreenUtil.autowidth(5)
     },
-
     tab: {
         flex: 1,
     },
@@ -267,27 +258,26 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingBottom: ScreenUtil.autoheight(60),
     },
-
     latelytext: {
         fontSize: ScreenUtil.setSpText(14),
         margin: ScreenUtil.autowidth(5),
     },
     nothave: {
-        height: ScreenUtil.autoheight(80),
+        borderRadius: 5,
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: "center",
-        paddingHorizontal: ScreenUtil.autowidth(20),
-        borderRadius: 5,
         margin: ScreenUtil.autowidth(5),
+        height: ScreenUtil.autoheight(80),
+        paddingHorizontal: ScreenUtil.autowidth(20),
     },
     row: {
         borderRadius: 5,
         flexDirection: "row",
-        paddingHorizontal: ScreenUtil.autowidth(20),
         paddingVertical: ScreenUtil.autoheight(5),
         marginHorizontal: ScreenUtil.autowidth(5),
         marginVertical: ScreenUtil.autowidth(2.5),
+        paddingHorizontal: ScreenUtil.autowidth(20),
     },
     top: {
         flex: 1,
@@ -297,59 +287,57 @@ const styles = StyleSheet.create({
     },
     timequantity: {
         flex: 1,
-        height: ScreenUtil.autoheight(60),
         flexDirection: "column",
-        justifyContent: "space-around",
         alignItems: 'flex-start',
+        justifyContent: "space-around",
+        height: ScreenUtil.autoheight(60),
     },
     timetext: {
+        textAlign: 'left',
         fontSize: ScreenUtil.setSpText(14),
-        textAlign: 'left'
     },
     quantity: {
-        fontSize: ScreenUtil.setSpText(14),
         textAlign: 'left',
+        fontSize: ScreenUtil.setSpText(14),
     },
     description: {
-        fontSize: ScreenUtil.setSpText(14),
         textAlign: 'center',
+        fontSize: ScreenUtil.setSpText(14),
         marginTop: ScreenUtil.autoheight(3),
     },
     unconfirmedout: { 
+        alignItems: 'center',
         flexDirection: "column",
         justifyContent: "space-between",
-        alignItems: 'center'
     },
     unconfirmed: {
-        fontSize: ScreenUtil.setSpText(14),
         textAlign: 'center',
-        marginTop: 3
+        fontSize: ScreenUtil.setSpText(14),
+        marginTop:  ScreenUtil.autoheight(3),
     },
     typedescription: {
-        height: ScreenUtil.autoheight(60),
+        alignItems: 'center',
         flexDirection: "column",
         justifyContent: "space-around",
-        alignItems: 'center'
+        height: ScreenUtil.autoheight(60),
     },
     typeto: {
+        textAlign: 'center',
         fontSize: ScreenUtil.setSpText(14),
-        textAlign: 'center'
     },
-
     Ionicout: {
-        width: ScreenUtil.autowidth(30),
+        alignItems: 'flex-end',
         justifyContent: 'center',
-        alignItems: 'flex-end'
+        width: ScreenUtil.autowidth(30),
     },
-
     footer: {
-        paddingTop: ScreenUtil.autoheight(1),
-        height: ScreenUtil.autoheight(60),
-        flexDirection: 'row',
-        position: 'absolute',
-        bottom: 0,
         left: 0,
         right: 0,
+        bottom: 0,
+        position: 'absolute',
+        flexDirection: 'row',
+        height: ScreenUtil.autoheight(60),
+        paddingTop: ScreenUtil.autoheight(1),
     },
     shiftshiftturnout: {
         flex: 1,
@@ -362,8 +350,8 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autowidth(30),
     },
     shifttoturnout: {
-        marginLeft: ScreenUtil.autowidth(20),
         fontSize: ScreenUtil.setSpText(18),
+        marginLeft: ScreenUtil.autowidth(20),
     },
     copytext: {
         fontSize: ScreenUtil.setSpText(16), 

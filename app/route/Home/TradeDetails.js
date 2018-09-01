@@ -1,33 +1,31 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { StyleSheet, View, Text, Image, Clipboard, Linking} from 'react-native';
-import QRCode from 'react-native-qrcode-svg';
+import moment from 'moment';
+import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from  '../../components/Button'
-import UImage from '../../utils/Img'
 import Header from '../../components/Header'
+import QRCode from 'react-native-qrcode-svg';
 import ViewShot from "react-native-view-shot";
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from '../../components/EasyShow'
 import BaseComponent from "../../components/BaseComponent";
-import moment from 'moment';
 var WeChat = require('react-native-wechat');
 const UrlHead = "https://eoseco.com/search?q=";
 
 @connect(({login}) => ({...login}))
 class TradeDetails extends BaseComponent {
 
-    static navigationOptions = {
+  static navigationOptions = {
       headerTitle: '交易详情' ,
       header:null, 
-          
   };
 
   constructor(props) {
     super(props);
     var paramtrade = new Object();
-
     if(this.props.navigation.state.params.trade){
       paramtrade = this.props.navigation.state.params.trade;
       paramtrade.disptype = 0;
@@ -44,7 +42,6 @@ class TradeDetails extends BaseComponent {
       paramtrade.from = this.props.navigation.state.params.transaction.account;
       paramtrade.to = "";
       paramtrade.blockNum = this.props.navigation.state.params.transaction.block_num;
-
     }else if(this.props.navigation.state.params.ramtransaction){
       paramtrade.disptype = 2;
       paramtrade.type = this.props.navigation.state.params.ramtransaction.action_name;
@@ -74,7 +71,6 @@ class TradeDetails extends BaseComponent {
       paramtrade.to = "";
       paramtrade.blockNum = 0;  
     }
-
     WeChat.registerApp('wxc5eefa670a40cc46');
     this.props.navigation.setParams({ onPress: this._rightTopClick });
     this.state = {
@@ -219,12 +215,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection:'column',
   },
- 
   header: {
-    height: ScreenUtil.autoheight(100),
     alignItems: 'center',
-    justifyContent: 'center',
     borderBottomWidth: 0.5,
+    justifyContent: 'center',
+    height: ScreenUtil.autoheight(100),
   },
   headout: {
     flex: 1,
@@ -249,32 +244,31 @@ const styles = StyleSheet.create({
   },
   conouttext: {
     flexDirection: "row",
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingBottom: ScreenUtil.autoheight(10),
   },
   context: {
     flex: 2,
-    paddingRight: ScreenUtil.autowidth(5),
     textAlign: 'right',
+    paddingRight: ScreenUtil.autowidth(5),
     fontSize: ScreenUtil.setSpText(14),
   },
   contwotext: {
     flex: 1,
-    paddingRight: ScreenUtil.autowidth(5),
     textAlign: 'right',
+    paddingRight: ScreenUtil.autowidth(5),
     fontSize: ScreenUtil.setSpText(14),
   },
-
   tradehint: {
     flex: 1,
-    paddingHorizontal: ScreenUtil.autowidth(10),
     marginTop: ScreenUtil.autoheight(40),
+    paddingHorizontal: ScreenUtil.autowidth(10),
   },
   blocktext: {
     flex: 4,
-    paddingLeft: ScreenUtil.autowidth(5),
     fontSize: ScreenUtil.setSpText(14),
+    paddingLeft: ScreenUtil.autowidth(5),
   },
   showytext: {
     flex: 4,
@@ -282,19 +276,19 @@ const styles = StyleSheet.create({
   },
   tintext: {
     flex: 4,
-    paddingLeft: ScreenUtil.autowidth(5),
     fontSize: ScreenUtil.setSpText(14),
+    paddingLeft: ScreenUtil.autowidth(5),
   },
   codeout: {
     flex:1,
     alignItems: 'center',
-    justifyContent: 'center',
     flexDirection: "column",
+    justifyContent: 'center',
   },
   qrcode: {
-    paddingHorizontal:ScreenUtil.autowidth(5),
-    paddingVertical: ScreenUtil.autowidth(5),
     marginBottom: ScreenUtil.autoheight(10),
+    paddingVertical: ScreenUtil.autowidth(5),
+    paddingHorizontal:ScreenUtil.autowidth(5),
   },
   logout:{
     flex: 1,

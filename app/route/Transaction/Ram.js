@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import {Modal,Dimensions,ImageBackground,DeviceEventEmitter,NativeModules,InteractionManager,ListView,StyleSheet,View,RefreshControl,Text,ScrollView,TouchableOpacity,Image,Platform,TextInput,Slider,KeyboardAvoidingView,Linking,} from 'react-native';
-import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
 import moment from 'moment';
 import Echarts from 'native-echarts'
 import UImage from '../../utils/Img'
@@ -9,17 +8,14 @@ import UColor from '../../utils/Colors'
 import { Eos } from "react-native-eosjs";
 import Button from  '../../components/Button'
 import Header from '../../components/Header'
-import store from 'react-native-simple-store';
 import Constants from '../../utils/Constants';
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import {formatEosQua} from '../../utils/FormatUtil';
 import { EasyShowLD } from '../../components/EasyShow'
-import ProgressBar from '../../components/ProgressBar';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 import { SegmentedControls } from 'react-native-radio-buttons'
-import {formatterNumber,formatterUnit} from '../../utils/FormatUtil'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var AES = require("crypto-js/aes");
@@ -1274,13 +1270,11 @@ const styles = StyleSheet.create({
     timeinitial: {
         fontSize: ScreenUtil.setSpText(15), 
     },
-   
     toptabout: {
         paddingTop:ScreenUtil.autoheight(10),
         paddingBottom: ScreenUtil.autoheight(5),
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
-
     formout: { 
         flexDirection: "row", 
         marginVertical: ScreenUtil.autoheight(2),
@@ -1291,7 +1285,6 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         paddingLeft: ScreenUtil.autowidth(8), 
     },
-
     businessout: { 
         borderRadius: 5,
         flexDirection: "row",
@@ -1305,18 +1298,15 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: 'center',
     },
-
     payertext: {
         textAlign: 'left',
         fontSize: ScreenUtil.setSpText(14), 
     },
-
     selltext: {
         textAlign: 'left',
         fontSize: ScreenUtil.setSpText(14),
         paddingLeft: ScreenUtil.autowidth(8),
     },
-
     businessRan: {
         borderRadius: 5,
         flexDirection: "row",
@@ -1347,7 +1337,6 @@ const styles = StyleSheet.create({
     profittext: {
         fontSize: ScreenUtil.setSpText(14), 
     },
-   
     costout: {
         fontSize: ScreenUtil.setSpText(14),
     },
@@ -1367,7 +1356,6 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         fontSize: ScreenUtil.setSpText(14),
     },
-
     presentprice: {
         flex: 1,
         flexDirection: 'row',
@@ -1462,7 +1450,6 @@ const styles = StyleSheet.create({
     unittext: {
         fontSize: ScreenUtil.setSpText(15),
     },
-
     botn: {
         borderRadius: 3, 
         alignItems: 'center',
@@ -1471,7 +1458,6 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(30),  
         marginLeft: ScreenUtil.autowidth(10), 
     },
-
     botText: {
         fontSize: ScreenUtil.setSpText(17), 
     },
@@ -1542,7 +1528,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         height: ScreenUtil.autoheight(40),
     },
-
     transactiontou: { 
         right: 0, 
         zIndex: 999, 
@@ -1560,7 +1545,6 @@ const styles = StyleSheet.create({
     paneltext: {
         fontSize: ScreenUtil.setSpText(14), 
     },
-
     systemSettingTip: {
         width: ScreenWidth,
         flexDirection: "row",
@@ -1572,7 +1556,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: ScreenUtil.setSpText(14)
     },
-    
     Explainout: {
         flexDirection: 'column', 
         alignItems: 'flex-start'

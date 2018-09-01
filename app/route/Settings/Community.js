@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Clipboard, Dimensions, StyleSheet, View, Text, Image, ImageBackground, TouchableHighlight,Linking} from 'react-native';
-import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
-import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import { EasyToast } from '../../components/Toast';
+import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -127,30 +127,30 @@ const styles = StyleSheet.create({
     marginTop: ScreenUtil.autoheight(5),
   },
   texts: {
-    height: ScreenUtil.autoheight(35),
-    paddingLeft:ScreenUtil.autowidth(20), 
-    justifyContent:'center',
     alignItems:'center',  
     flexDirection:'row',
+    justifyContent:'center',
+    height: ScreenUtil.autoheight(35),
+    paddingLeft:ScreenUtil.autowidth(20), 
   },
   wechatqq: {
     width: (ScreenWidth - 15) / 2,
+    paddingTop: ScreenUtil.autoheight(10),
     height: (ScreenWidth - 15) / 2 * 0.6572,
     paddingHorizontal: ScreenUtil.autowidth(10),
-    paddingTop: ScreenUtil.autoheight(10),
   },
   publicout: {
     justifyContent:'center',
     width: ScreenWidth - 10,
     height: (ScreenWidth - 10) * 0.3664,
     marginTop: ScreenUtil.autoheight(5),
-    paddingHorizontal: ScreenUtil.autowidth(10),
     paddingTop: ScreenUtil.autoheight(10),
+    paddingHorizontal: ScreenUtil.autowidth(10),
   },
   sourceout: {
-    justifyContent: "space-between",
-    alignItems: 'flex-start',
     width: ScreenWidth - 10,
+    alignItems: 'flex-start',
+    justifyContent: "space-between",
     height: (ScreenWidth - 10) * 0.1444,
     marginTop: ScreenUtil.autoheight(5),
     paddingVertical: ScreenUtil.autoheight(5),
@@ -160,15 +160,14 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(16),
   },
   textlinktwo: {
-    paddingTop: ScreenUtil.autoheight(5),
-    fontSize: ScreenUtil.setSpText(16),
     textAlign: 'left',
+    fontSize: ScreenUtil.setSpText(16),
+    paddingTop: ScreenUtil.autoheight(5),
   },
   textlink: {
-    fontSize: ScreenUtil.setSpText(16),
     textAlign: 'left',
+    fontSize: ScreenUtil.setSpText(16),
   }
-
 });
 
 export default Community;

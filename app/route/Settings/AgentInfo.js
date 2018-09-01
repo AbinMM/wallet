@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { StyleSheet, View, Text, ScrollView, Image, ImageBackground } from 'react-native';
-import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import BaseComponent from "../../components/BaseComponent";
@@ -91,127 +91,106 @@ const styles = StyleSheet.create({
       flex: 1,
       flexDirection:'column',
     },
-
     outsource: { 
-        paddingHorizontal: ScreenUtil.autowidth(5),
         paddingBottom: ScreenUtil.autoheight(10), 
+        paddingHorizontal: ScreenUtil.autowidth(5),
     },
-
     AgentInfo: {
-        justifyContent: "center", 
         alignItems: 'center', 
-        height: ScreenUtil.autoheight(118), 
         flexDirection:'column', 
+        justifyContent: "center", 
+        height: ScreenUtil.autoheight(118), 
         marginVertical: ScreenUtil.autoheight(5),
     },
-
     bjoutsource: {
+        borderRadius: 25, 
+        alignItems: 'center', 
+        justifyContent: "center", 
+        margin: ScreenUtil.autowidth(5),
         width: ScreenUtil.autowidth(50), 
         height: ScreenUtil.autowidth(50), 
-        justifyContent: "center", 
-        alignItems: 'center', 
-        borderRadius: 25, 
-        margin: ScreenUtil.autowidth(5),
     },
-
     imgtext: {
         width: ScreenUtil.autowidth(40), 
         height: ScreenUtil.autowidth(40),
     },
-
     nametext: {
+        borderRadius: 5,
+        textAlign: 'center', 
         width: ScreenUtil.autowidth(117), 
         height: ScreenUtil.autoheight(24), 
         lineHeight: ScreenUtil.autoheight(24), 
-        textAlign: 'center', 
-        borderRadius: 5,
     },
-
     dasoutsource: {
-        padding: ScreenUtil.autowidth(5),  
         borderRadius: 5,
+        padding: ScreenUtil.autowidth(5),  
     },
-
     dasimg: {
+        top: 0, 
+        zIndex: 999,
+        position: 'absolute', 
+        left: ScreenUtil.autowidth(15), 
         width: ScreenUtil.autowidth(35), 
         height: ScreenUtil.autoheight(26), 
-        position: 'absolute', 
-        top: 0, 
-        left: ScreenUtil.autowidth(15), 
-        zIndex: 999
     },
-
     minbag: {
         flexDirection: "row",
     },
-
     frame: {
         flex: 1,
-        height: ScreenUtil.autoheight(60),
-        margin: ScreenUtil.autowidth(2), 
-        paddingVertical: ScreenUtil.autowidth(10),
-        flexDirection: 'column', 
         alignItems: 'center', 
+        flexDirection: 'column', 
         justifyContent: 'space-between', 
+        margin: ScreenUtil.autowidth(2), 
+        height: ScreenUtil.autoheight(60),
+        paddingVertical: ScreenUtil.autowidth(10),
     },
     numbers: {
         fontSize: ScreenUtil.setSpText(12), 
     },
-
     number: {
         fontSize: ScreenUtil.setSpText(18), 
     },
-
     state: {  
         fontSize: ScreenUtil.setSpText(12), 
     },
-
     tablayout: {   
         flexDirection: 'row',  
     },  
-
     buttontab: {  
-        margin: ScreenUtil.autowidth(5),
-        width: ScreenUtil.autowidth(100),
-        height: ScreenUtil.autoheight(33),
         borderRadius: 15,
         alignItems: 'center',   
         justifyContent: 'center', 
+        margin: ScreenUtil.autowidth(5),
+        width: ScreenUtil.autowidth(100),
+        height: ScreenUtil.autoheight(33),
     },
-
     Official: {
-        height: ScreenUtil.autoheight(35), 
         flexDirection: "row", 
+        alignItems: 'center',
         justifyContent: 'flex-start', 
-        alignItems: 'center'
+        height: ScreenUtil.autoheight(35), 
     },
-
     Officialtitle: {
         fontSize: ScreenUtil.setSpText(12), 
         marginTop: ScreenUtil.autoheight(5),
     },
-
     Officialtext: {
         fontSize: ScreenUtil.setSpText(13), 
         marginTop: ScreenUtil.autoheight(5),
     },
-
     synopsis: {
         flex: 1,  
         paddingTop: ScreenUtil.autoheight(5), 
         paddingHorizontal: ScreenUtil.autowidth(35),
     },
-
     spsoutsource: {
         paddingVertical: ScreenUtil.autoheight(25),
     },
-
     spstext: {  
        fontSize: ScreenUtil.setSpText(14),
        lineHeight: ScreenUtil.autoheight(25),
     },  
-
-    
 });
 
 export default AgentInfo;

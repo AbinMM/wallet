@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, StyleSheet, View, Text, Image, ImageBackground } from 'react-native';
-import UColor from '../../utils/Colors'
-import Button from '../../components/Button'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
+import { kapimg } from '../../utils/Api'
+import Button from '../../components/Button'
 import Header from '../../components/Header'
+import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
-import { kapimg } from '../../utils/Api'
-import Constants from '../../utils/Constants'
 import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -21,7 +21,6 @@ class SignIn extends BaseComponent {
     title: '用户积分',
     header:null, 
   };
-
   
   constructor(props) {
     super(props);
@@ -56,7 +55,6 @@ class SignIn extends BaseComponent {
           this.setState({
               accumulative: this.props.pointInfo.signin + this.props.pointInfo.share + this.props.pointInfo.interact + this.props.pointInfo.store + this.props.pointInfo.turnin + this.props.pointInfo.turnout,
           })
-
           this.setState({interval: (((this.state.accumulative / 50).toFixed(0) == 0) ? 1: (this.state.accumulative / 50).toFixed(0))});
           this.dynamic(this.state.last, this.state.accumulative);
         }
@@ -185,11 +183,11 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(14),
   },
   imgbg: {
-    justifyContent: "center",
     alignItems: 'center',
-    marginHorizontal: (ScreenWidth-ScreenUtil.autowidth(169)) /2,
+    justifyContent: "center",
     width: ScreenUtil.autowidth(169),
     height: ScreenUtil.autoheight(169),
+    marginHorizontal: (ScreenWidth-ScreenUtil.autowidth(169)) /2,
   },
   accumulativeout: {
     alignItems: 'center',
@@ -253,26 +251,26 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(14), 
   },
   SignInbtnout: {
-    height: ScreenUtil.autoheight(45),
-    justifyContent: 'center',
+    borderRadius: 5,
     alignItems: 'center',
+    justifyContent: 'center',
     margin: ScreenUtil.autowidth(10),
+    height: ScreenUtil.autoheight(45),
     marginTop: ScreenUtil.autoheight(25),
-    borderRadius: 5
   },
   SignInbtntext: {
     fontSize: ScreenUtil.setSpText(15),
   },
   foottop: {
     fontSize: ScreenUtil.setSpText(14),
-    lineHeight: ScreenUtil.autoheight(40), 
     marginLeft: ScreenUtil.autowidth(15),
     marginTop: ScreenUtil.autoheight(10),
+    lineHeight: ScreenUtil.autoheight(40), 
   },
   foottext: {
     fontSize: ScreenUtil.setSpText(14),
-    lineHeight: ScreenUtil.autoheight(25),
     marginLeft: ScreenUtil.autowidth(15),
+    lineHeight: ScreenUtil.autoheight(25),
   },
   footbom: {
     fontSize: ScreenUtil.setSpText(14),

@@ -1,18 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
 import { DeviceEventEmitter, Clipboard, StyleSheet, Image, View, Text, TextInput, TouchableOpacity } from "react-native";
-import UColor from "../../utils/Colors";
-import Button from "../../components/Button";
 import UImage from "../../utils/Img";
+import UColor from "../../utils/Colors";
 import Header from '../../components/Header'
-import ScreenUtil from '../../utils/ScreenUtil'
 import QRCode from "react-native-qrcode-svg";
+import Button from "../../components/Button";
+import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast";
 import BaseComponent from "../../components/BaseComponent";
 let dismissKeyboard = require("dismissKeyboard");
 
 @connect(({ wallet }) => ({ ...wallet }))
 class TurnIn extends BaseComponent {
+
   static navigationOptions = {
       headerTitle: "收款信息",
       header:null, 
@@ -146,66 +147,65 @@ const styles = StyleSheet.create({
     flexDirection: "column"
   },
   outsource: {
+    flex: 1,
     flexDirection: "column",
     padding: ScreenUtil.autowidth(20),
-    flex: 1
   },
   accountText: {
+    textAlign: "left",
     fontSize: ScreenUtil.setSpText(15),
     height: ScreenUtil.autoheight(40),
     paddingLeft: ScreenUtil.autowidth(2),
-    textAlign: "left",
     lineHeight: ScreenUtil.autoheight(40),
   },
   codeout: {
-    margin: ScreenUtil.autowidth(10),
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row"
+    margin: ScreenUtil.autowidth(10),
   },
   qrcode: {
     padding: ScreenUtil.autowidth(5),
   },
   prompttext: {
-    marginTop: ScreenUtil.autoheight(5),
-    fontSize: ScreenUtil.setSpText(15),
+    textAlign: "center",
     height: ScreenUtil.autoheight(30),
+    fontSize: ScreenUtil.setSpText(15),
+    marginTop: ScreenUtil.autoheight(5),
     paddingLeft: ScreenUtil.autowidth(2),
-    textAlign: "center"
   },
   inptoutsource: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    marginBottom: ScreenUtil.autoheight(10),
-    paddingLeft: ScreenUtil.autowidth(10),
+    alignItems: "center",
     justifyContent: "center",
-    alignItems: "center"
+    paddingLeft: ScreenUtil.autowidth(10),
+    marginBottom: ScreenUtil.autoheight(10),
   },
   tokenText: {
-    fontSize: ScreenUtil.setSpText(15),
+    textAlign: "left",
     width: ScreenUtil.autowidth(60),
     height: ScreenUtil.autoheight(40),
+    fontSize: ScreenUtil.setSpText(15),
     paddingLeft: ScreenUtil.autowidth(2),
-    textAlign: "left",
     lineHeight: ScreenUtil.autoheight(40),
   },
   inpt: {
     flex: 1,
-    fontSize: ScreenUtil.setSpText(15),
+    textAlign: "center",
     height: ScreenUtil.autoheight(40),
+    fontSize: ScreenUtil.setSpText(15),
     paddingLeft: ScreenUtil.autowidth(2),
-    textAlign: "center"
   },
   btnnextstep: {
     height: ScreenUtil.autoheight(85),
   },
   nextstep: {
-    height: ScreenUtil.autoheight(45),
-    justifyContent: "center",
+    borderRadius: 5,
     alignItems: "center",
+    justifyContent: "center",
+    height: ScreenUtil.autoheight(45),
     margin: ScreenUtil.autowidth(20),
-    borderRadius: 5
   },
   nextsteptext: {
     fontSize: ScreenUtil.setSpText(15),
