@@ -2,15 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, StyleSheet, View,  Text, ScrollView, Platform, TextInput, TouchableOpacity, KeyboardAvoidingView, Modal } from 'react-native';
 import UColor from '../../utils/Colors'
+import { Eos } from "react-native-eosjs";
 import Button from '../../components/Button'
 import Header from '../../components/Header'
-import ScreenUtil from '../../utils/ScreenUtil'
-import { EasyShowLD } from "../../components/EasyShow"
-import { EasyToast } from '../../components/Toast';
-import { Eos } from "react-native-eosjs";
-import {formatEosQua} from '../../utils/FormatUtil';
-import BaseComponent from "../../components/BaseComponent";
 import Constants from '../../utils/Constants'
+import ScreenUtil from '../../utils/ScreenUtil'
+import { EasyToast } from '../../components/Toast';
+import {formatEosQua} from '../../utils/FormatUtil';
+import { EasyShowLD } from "../../components/EasyShow"
+import BaseComponent from "../../components/BaseComponent";
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 var dismissKeyboard = require('dismissKeyboard');
@@ -68,7 +68,6 @@ class APactivation extends BaseComponent {
 
   createAccount() {
     this._setModalVisible();
-
     const view =
         <View style={styles.passoutsource}>
             <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
@@ -77,17 +76,14 @@ class APactivation extends BaseComponent {
                 placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
         </View>
         EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
-
         if (!this.state.password || this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
             EasyToast.show('密码长度至少4位,请重输');
             return;
         }
-        
         var privateKey = this.props.defaultWallet.activePrivate;
         try {
             var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
             var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-
             if (plaintext_privateKey.indexOf('eostoken') != -1) {
                 // EasyShowLD.dialogClose();
                 EasyShowLD.loadingShow();
@@ -142,7 +138,7 @@ class APactivation extends BaseComponent {
 
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.mainColor}]}>
-     <Header {...this.props} onPressLeft={true} title="账号支付激活" />
+    <Header {...this.props} onPressLeft={true} title="账号支付激活" />
     <ScrollView  keyboardShouldPersistTaps="always">
       <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
@@ -150,8 +146,8 @@ class APactivation extends BaseComponent {
             <Text style={[styles.significanttext,{color: UColor.fontColor}]} >{this.state.accountName}</Text>
             <Text style={[styles.nametext,{color: UColor.arrow}]} >EOS 账号</Text>
           </View>
-          {!this.state.show?<View style={[styles.outsource,{backgroundColor: UColor.secdColor}]}>
-            <Text style={{fontSize: 14, color: UColor.arrow, textAlign: 'right', marginHorizontal: 20, marginTop: 5,}}>账号资源配置</Text>
+          {!this.state.show?<View style={{backgroundColor: UColor.secdColor}}>
+            <Text style={[styles.acctitleText,{color: UColor.arrow,}]}>账号资源配置</Text>
             <View style={[styles.inptout,{borderBottomColor: UColor.mainColor}]} >
                 <View style={styles.rankout}>
                     <Text style={[styles.inptitle,{color: UColor.fontColor}]}>CPU抵押(EOS)</Text>
@@ -197,26 +193,24 @@ class APactivation extends BaseComponent {
           </View>
           :
           <View style={{backgroundColor: UColor.secdColor}}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 5,}}>
-                    <View style={{flex: 1, height: 2, backgroundColor: UColor.mainColor,}}/>
-                    <Text style={{ color: UColor.arrow, fontSize: 16,}} > (账号资源概况) </Text>
-                    <View style={{flex: 1, height: 2, backgroundColor: UColor.mainColor,}}/>
+                <View style={{flexDirection:'row',alignItems:'center',marginVertical:ScreenUtil.autoheight(5),}}>
+                    <View style={{flex:1,height:ScreenUtil.autoheight(2),backgroundColor:UColor.mainColor,}}/>
+                    <Text style={{color:UColor.arrow,fontSize:ScreenUtil.setSpText(16),}} > (账号资源概况) </Text>
+                    <View style={{flex:1,height:ScreenUtil.autoheight(2),backgroundColor:UColor.mainColor,}}/>
                 </View>
-                <View style={{ flexDirection: 'row',}}>
-                    <View  style={{ flex: 1,  alignItems: 'center',}}>
-                        <Text style={{fontSize: 14, color: UColor.tintColor, lineHeight: 30, }}>{this.state.ram}</Text>
-                        <Text style={{fontSize: 15, color: UColor.fontColor, paddingBottom: 10,}}>分配内存( EOS )</Text>
-                        <Text style={{fontSize: 14, color: UColor.tintColor, lineHeight: 30,}}>{this.state.net}</Text>
-                        <Text style={{fontSize: 15, color: UColor.fontColor, paddingBottom: 10,}}>网络抵押( EOS )</Text>
+                <View style={{flexDirection:'row'}}>
+                    <View  style={{flex:1,alignItems:'center',}}>
+                        <Text style={[styles.ramnetcputext,{color:UColor.tintColor}]}>{this.state.ram}</Text>
+                        <Text style={[styles.companytext,{color:UColor.fontColor}]}>分配内存( EOS )</Text>
+                        <Text style={[styles.ramnetcputext,{color: UColor.tintColor}]}>{this.state.net}</Text>
+                        <Text style={[styles.companytext,{color:UColor.fontColor}]}>网络抵押( EOS )</Text>
                     </View>
-                    <View style={{ flex: 1,  alignItems: 'center',}}>
-                        <Text style={{fontSize: 14, color: UColor.tintColor, lineHeight: 30,}}>{this.state.cpu}</Text>
-                        <Text style={{fontSize: 15, color: UColor.fontColor, paddingBottom: 10,}}>CPU抵押( EOS )</Text>
+                    <View style={{flex:1,alignItems:'center',}}>
+                        <Text style={[styles.ramnetcputext,{color:UColor.tintColor}]}>{this.state.cpu}</Text>
+                        <Text style={[styles.companytext,{color:UColor.fontColor}]}>CPU抵押( EOS )</Text>
                     </View>
-                    
                 </View>
           </View>}
-
           <View style={{backgroundColor: UColor.mainColor,}}>
             <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
                 <Text style={[styles.inptitle,{color: UColor.fontColor}]}>owner公钥</Text>
@@ -234,24 +228,23 @@ class APactivation extends BaseComponent {
                 </View>
             </Button>
           </View>
-
           <View style={{backgroundColor: UColor.riceWhite}}>
             <Modal animationType={'slide'} transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
-                <TouchableOpacity style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center', }} activeOpacity={1.0}>
-                <View style={{ width: ScreenWidth,  height: ScreenHeight*1/2,  backgroundColor: UColor.btnColor,}}>
-                        <View style={{flexDirection: "row",padding: 15,justifyContent: "center",}}>
-                            <Text style={{flex: 1,paddingVertical: 5,marginLeft: 135,fontSize: 18,fontWeight: 'bold',color: UColor.mainColor}}>订单详情</Text>
+                <TouchableOpacity style={[styles.modalStyle,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+                    <View style={[styles.subView,{backgroundColor: UColor.btnColor}]}>
+                        <View style={styles.buttonView}>
+                            <Text style={[styles.titleText,{color: UColor.mainColor}]}>订单详情</Text>
                             <Button  onPress={this._setModalVisible.bind(this)}>
                                 <Text style={[styles.buttontext,{color: UColor.baseline}]}>×</Text>
                             </Button>
                         </View>
                         <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]} >
-                            <View style={{flexDirection: "row",padding: 15,justifyContent: "center",}}>
-                                <Text style={{fontSize: 26,paddingVertical: 15, lineHeight: 10,color: UColor.blackColor,textAlign: 'center',}}>{parseFloat(this.state.cpu)+parseFloat(this.state.ram)+parseFloat(this.state.net)} </Text>
-                                <Text style={{fontSize: 13,paddingVertical: 10, lineHeight: 10,color: UColor.blackColor,textAlign: 'center',}}> EOS</Text>
+                            <View style={styles.buttonView}>
+                                <Text style={[styles.cpuramnet,{color: UColor.blackColor}]}>{parseFloat(this.state.cpu)+parseFloat(this.state.ram)+parseFloat(this.state.net)} </Text>
+                                <Text style={[styles.modalcompany,{color: UColor.blackColor}]}> EOS</Text>
                             </View>
                         </View>
-                        <View style={{flex: 1, paddingLeft: 10, paddingRight:10,paddingHorizontal: 20}}>
+                        <View style={styles.accountout}>
                             <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]} >
                                 <View style={styles.rowInfo}>
                                     <Text style={[styles.contentText,{color: UColor.mainColor}]}>购买账号：</Text>
@@ -271,7 +264,7 @@ class APactivation extends BaseComponent {
                                 </View>
                             </Button>
                         </View>
-                </View>
+                    </View>
                 </TouchableOpacity>
             </Modal>
           </View>
@@ -284,194 +277,192 @@ class APactivation extends BaseComponent {
 
 const styles = StyleSheet.create({
     inptpasstext: {
-        fontSize: 12,
-        marginBottom: 15,
-        lineHeight: 20,
-      },
-      Becarefultext: {
-         fontSize: 12,
-      },
-      linkout: {
+        fontSize: ScreenUtil.setSpText(12),
+        marginBottom: ScreenUtil.autoheight(15),
+        lineHeight: ScreenUtil.autoheight(20),
+    },
+    Becarefultext: {
+        fontSize: ScreenUtil.setSpText(12),
+    },
+    linkout: {
         flexDirection: 'row',
-        paddingTop: 20,
-        justifyContent: 'flex-end'
-      },
-      linktext: {
-        paddingLeft: 15,
-        fontSize: 14,
-      },
-
+        justifyContent: 'flex-end',
+        paddingTop: ScreenUtil.autoheight(20),
+    },
+    linktext: {
+        fontSize: ScreenUtil.setSpText(14),
+        paddingLeft: ScreenUtil.autowidth(15),
+    },
     inptoutgo: {
-        paddingVertical: 10,
-        paddingHorizontal: 18,
+        paddingVertical: ScreenUtil.autoheight(10),
+        paddingHorizontal: ScreenUtil.autowidth(18),
     },
     inptgo: {
         flex: 1,
-        paddingHorizontal: 10,
+        paddingHorizontal: ScreenUtil.autowidth(10),
     },
     inptext: {
-        fontSize: 14,
-        lineHeight: 25,
+        fontSize: ScreenUtil.setSpText(14),
+        lineHeight: ScreenUtil.autoheight(25),
     },
-
     readtext: {
         textAlign: 'right',
-        fontSize: 13,
-        marginHorizontal: 20,
-        marginBottom: 10,
+        fontSize: ScreenUtil.setSpText(13),
+        marginHorizontal: ScreenUtil.autowidth(20),
+        marginBottom: ScreenUtil.autoheight(10),
+    },
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+    },
+    significantout: {
+        paddingHorizontal: ScreenUtil.autowidth(20),
+        paddingVertical: ScreenUtil.autoheight(10),
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderTopWidth: 10,
+    },
+    significanttext: {
+        fontSize: ScreenUtil.setSpText(24),
+    },
+    nametext: {
+        fontSize: ScreenUtil.setSpText(16),
     },
 
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-  significantout: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderTopWidth: 10,
-  },
-  significanttext: {
-    fontSize: 24,
-  },
-  nametext: {
-    fontSize: 16,
-  },
-
-  inptout: {
-    paddingHorizontal: 15,
-    borderBottomWidth: 1,
-  },
-  rankout: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  inptitle: {
-    flex: 1,
-    fontSize: 15,
-    paddingLeft: 5,
-  },
-  falsehints: {
-    fontSize: 12,
-    textAlign: 'right',
-  },
-  inpt: {
-    flex: 4,
-    fontSize: 15,
-    height: 40,
-    paddingLeft: 2
-  },
-
-  company: {
-      textAlign: 'center',
-      flex: 1,
-     fontSize: 14,
-  },
-
-  clauseout: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  clauseimg: { 
-    width: 20, 
-    height: 20,
-    marginHorizontal: 10, 
-  },
-
-  createWalletout: {
-    height: 45,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginBottom: 50,
-    borderRadius: 5,
-  },
-  createWallet: {
-    fontSize: 15,
-  },
-
-
-  pupuo: {
-    
-},
-// modal的样式  
-modalStyle: {
-    backgroundColor: UColor.mask,  
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-},
-// modal上子View的样式  
-subView: {
-    marginLeft: 10,
-    marginRight: 10,
-    backgroundColor: UColor.fontColor,
-    alignSelf: 'stretch',
-    justifyContent: 'center',
-    borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: UColor.baseline,
-},
-buttonView: {
-    alignItems: 'flex-end',
-},
-buttontext: {
-    // width: 30,
-    // height: 30,
-    // marginTop:1,
-    // marginRight: 1,
-    // paddingVertical: 12, 
-    lineHeight: 25,
-    marginBottom: 0,
-    fontSize: 28,
-},
-// 标题  
-titleText: {
-    marginBottom: 10,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-},
-// 内容  
-contentText: {
-    marginLeft: 10,
-    marginRight: 10,
-    lineHeight: 10,
-    paddingVertical: 15,
-    fontSize: 18,
-    textAlign: 'left',
-},
-
-rowInfo: {
-    flexDirection: "row",
-    padding: 15,
-    justifyContent: "space-between",
-  },
-
-//转帐信息提示分隔线
-separationline: {
-    paddingLeft: 10,
-    height: 50,
-    marginBottom: 10,
-    borderBottomWidth: 0.5,
-    justifyContent: 'center',
-},
-
-// 按钮  
-btnoutsource: {
-    margin: 15,
-    height: 45,
-    borderRadius: 6,
-    justifyContent: 'center',
-    alignItems: 'center'
-},
-btntext: {
-    fontSize: 16,
-},
-
+    acctitleText: {
+        fontSize: ScreenUtil.setSpText(14),  
+        textAlign: 'right', 
+        marginHorizontal: ScreenUtil.autowidth(20), 
+        marginTop: ScreenUtil.autoheight(5),
+    },
+    inptout: {
+        paddingHorizontal: ScreenUtil.autowidth(15),
+        borderBottomWidth: 1,
+    },
+    rankout: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    inptitle: {
+        flex: 1,
+        fontSize: ScreenUtil.setSpText(15),
+        paddingLeft: ScreenUtil.autowidth(5),
+    },
+    falsehints: {
+        fontSize: ScreenUtil.setSpText(12),
+        textAlign: 'right',
+    },
+    inpt: {
+        flex: 4,
+        fontSize: ScreenUtil.setSpText(15),
+        height: ScreenUtil.autoheight(40),
+        paddingLeft: ScreenUtil.autowidth(2),
+    },
+    company: {
+        textAlign: 'center',
+        flex: 1,
+        fontSize: ScreenUtil.setSpText(14),
+    },
+    ramnetcputext: {
+        fontSize: ScreenUtil.setSpText(14), 
+        lineHeight: ScreenUtil.autoheight(30),
+    },
+    companytext: {
+        fontSize: ScreenUtil.setSpText(15), 
+        paddingBottom: ScreenUtil.autoheight(10),
+    },
+    clauseout: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: ScreenUtil.autoheight(20),
+    },
+    clauseimg: { 
+        width: ScreenUtil.autowidth(20), 
+        height: ScreenUtil.autowidth(20),
+        marginHorizontal: ScreenUtil.autowidth(10), 
+    },
+    createWalletout: {
+        height: ScreenUtil.autoheight(45),
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: ScreenUtil.autowidth(20),
+        marginBottom: ScreenUtil.autoheight(50),
+        borderRadius: 5,
+    },
+    createWallet: {
+        fontSize: ScreenUtil.setSpText(15),
+    },
+    modalStyle: {
+        flex: 1, 
+        alignItems: 'center',
+        justifyContent: 'flex-end', 
+    },
+    subView: {
+        width: ScreenWidth,  
+        height: ScreenHeight*1/2,  
+    },
+    buttonView: {
+        flexDirection: "row",
+        justifyContent: "center",
+        padding: ScreenUtil.autowidth(15),
+    },
+    cpuramnet: {
+        textAlign: 'center',
+        fontSize: ScreenUtil.setSpText(26),
+        lineHeight: ScreenUtil.autoheight(10),
+        paddingVertical: ScreenUtil.autoheight(15), 
+    },
+    modalcompany: {
+        textAlign: 'center',
+        fontSize: ScreenUtil.setSpText(13),
+        lineHeight: ScreenUtil.autoheight(10),
+        paddingVertical: ScreenUtil.autoheight(10), 
+    },
+    buttontext: { 
+        fontSize: ScreenUtil.setSpText(28),
+        lineHeight: ScreenUtil.autoheight(25),
+    },
+    titleText: {
+        flex: 1,
+        paddingVertical: ScreenUtil.autoheight(5),
+        marginLeft: ScreenUtil.autowidth(135),
+        fontSize: ScreenUtil.setSpText(18),
+        fontWeight: 'bold',
+    },
+    contentText: {
+        textAlign: 'left',
+        fontSize: ScreenUtil.setSpText(18),
+        lineHeight: ScreenUtil.autoheight(10),
+        marginHorizontal: ScreenUtil.autowidth(10),
+        paddingVertical: ScreenUtil.autoheight(15),
+    },
+    rowInfo: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: ScreenUtil.autowidth(15),
+    },
+    separationline: {
+        borderBottomWidth: 0.5,
+        justifyContent: 'center',
+        height: ScreenUtil.autoheight(50),
+        paddingLeft: ScreenUtil.autowidth(10),
+        marginBottom: ScreenUtil.autoheight(10),
+    },
+    accountout: {
+        flex: 1, 
+        paddingHorizontal: ScreenUtil.autowidth(20),
+    },
+    btnoutsource: {
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: ScreenUtil.autowidth(15),
+        height: ScreenUtil.autoheight(45),
+    },
+    btntext: {
+        fontSize: ScreenUtil.setSpText(16),
+    },
 });
 
 export default APactivation;

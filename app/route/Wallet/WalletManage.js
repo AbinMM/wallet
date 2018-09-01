@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, TouchableOpacity, Image, Platform, StatusBar, TextInput, Clipboard } from 'react-native';
-import ScreenUtil from '../../utils/ScreenUtil'
+import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import UImage from '../../utils/Img'
 import Header from '../../components/Header'
+import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from '../../components/EasyShow'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 
 @connect(({ wallet }) => ({ ...wallet }))
@@ -106,21 +106,6 @@ class WalletManage extends BaseComponent {
   render() {
     return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>  
       <Header {...this.props} onPressLeft={true} title="钱包管理" onPressRight={this._rightTopClick.bind()} avatar={this.state.isEye ? UImage.reveal_wallet : UImage.reveal_h_wallet}/>
-      {/* <View style={styles.header}>  
-        <View style={styles.leftout} >
-        {Platform.OS === 'ios' && <Ionicons style={{ color: UColor.fontColor,   }} name="ios-arrow-back" size={ScreenUtil.setSpText(38)} onPress={this._leftTopClick.bind()}/>}
-        {Platform.OS === 'android' && <Ionicons style={{ color: UColor.fontColor,   }} name="md-arrow-back" size={ScreenUtil.setSpText(30)} onPress={this._leftTopClick.bind()}/> }
-        </View>
-          <View style={styles.inptout} >
-              <Text style={{ fontSize: ScreenUtil.setSpText(18),color: UColor.fontColor, justifyContent: 'center',alignItems: 'center',}} numberOfLines={1} ellipsizeMode='middle'>钱包管理</Text>
-          </View>     
-          <TouchableOpacity onPress={this._rightTopClick.bind()}>
-            <View style={styles.Rightout} >
-              <Image source={this.state.isEye ? UImage.reveal_wallet : UImage.reveal_h_wallet} style={styles.imgTeOy}/>
-            </View>
-          </TouchableOpacity>
-      </View>  */}
-
       <View style={{paddingBottom: 60}}>
         <ListView initialListSize={10} style={{ backgroundColor: UColor.secdColor, }} enableEmptySections={true}
           renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 0.5, backgroundColor: UColor.secdColor }} />}
@@ -156,13 +141,13 @@ class WalletManage extends BaseComponent {
       </View> 
       <View style={[styles.footer,{backgroundColor:UColor.secdColor}]}>
           <Button  onPress={() => this.createWallet()} style={{flex:1}}>
-              <View  style={[styles.footoutsource,{backgroundColor:UColor.mainColor}]}>
+              <View style={[styles.footoutsource,{marginRight:0.5,backgroundColor:UColor.mainColor}]}>
                   <Image source={UImage.xin1} style={styles.footimg}/>
                   <Text style={[styles.footText,{color:UColor.fontColor}]}>创建账户</Text>
               </View>
           </Button>
           <Button  onPress={this.importWallet.bind(this)} style={{flex:1}}>
-              <View style={[styles.footoutsource,{backgroundColor:UColor.mainColor}]}>
+              <View style={[styles.footoutsource,{marginLeft: 0.5, backgroundColor:UColor.mainColor}]}>
                   <Image source={UImage.xin0} style={styles.footimg}/>
                   <Text style={[styles.footText,{color:UColor.fontColor}]}>导入钱包</Text>
               </View>
@@ -179,8 +164,8 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
     paddingTop: ScreenUtil.autoheight(20),
     paddingBottom: ScreenUtil.autoheight(5),
   },
@@ -193,9 +178,9 @@ const styles = StyleSheet.create({
 
   inptout: {
     flex: 1,
+    justifyContent: 'center', 
     paddingLeft: ScreenUtil.autowidth(30),
     paddingHorizontal: ScreenUtil.autowidth(20),
-    justifyContent: 'center', 
   },
 
   imgTeOy: {
@@ -205,14 +190,14 @@ const styles = StyleSheet.create({
   },
 
   row:{
-    height: ScreenUtil.autoheight(80),
-    flexDirection:"row",
-    paddingVertical: ScreenUtil.autoheight(10),
-    paddingHorizontal: ScreenUtil.autowidth(15),
-    justifyContent:"center",
     borderRadius: 5,
+    flexDirection:"row",
+    justifyContent:"center",
+    height: ScreenUtil.autoheight(80),
     marginTop: ScreenUtil.autoheight(10),
     marginHorizontal: ScreenUtil.autowidth(10),
+    paddingVertical: ScreenUtil.autoheight(10),
+    paddingHorizontal: ScreenUtil.autowidth(15),
   },
   topout: {
       flex: 1,
@@ -220,8 +205,8 @@ const styles = StyleSheet.create({
       alignItems: 'center',
   },
   outname: {
-    fontSize: ScreenUtil.setSpText(14),
     textAlign: 'left',
+    fontSize: ScreenUtil.setSpText(14),
   },
   imgBtn: {
     width: ScreenUtil.autowidth(20),
@@ -229,72 +214,71 @@ const styles = StyleSheet.create({
     marginHorizontal: ScreenUtil.autowidth(5),
   },
   stopoutBackupsout: {
-    marginHorizontal: ScreenUtil.autowidth(2),
-    borderRadius: 10,
     borderWidth: 1,
-    justifyContent: 'center',
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: ScreenUtil.autowidth(2),
   },
   stopoutBackups: {
-    fontSize: ScreenUtil.setSpText(10),
     textAlign: 'center',
-    paddingHorizontal: ScreenUtil.autowidth(8),
+    fontSize: ScreenUtil.setSpText(10),
     paddingVertical: ScreenUtil.autoheight(1),
+    paddingHorizontal: ScreenUtil.autowidth(8),
   },
 
   notactivedout: {
-    borderRadius: 10,
     borderWidth: 1,
-    justifyContent: 'center',
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
   },
 
   notactived: {
-    fontSize: ScreenUtil.setSpText(10),
-    textAlign: 'center', 
-    paddingHorizontal: ScreenUtil.autowidth(8),
     paddingVertical: 1,
+    textAlign: 'center', 
+    fontSize: ScreenUtil.setSpText(10),
+    paddingHorizontal: ScreenUtil.autowidth(8),
   },
  
   outaccount: {
     flex: 1,
-    fontSize: ScreenUtil.setSpText(18),
     textAlign: 'left',
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: ScreenUtil.setSpText(18),
   },
   topouttext: {
     fontSize: ScreenUtil.setSpText(18),
   },
   bomout: {
-    width: ScreenUtil.autowidth(40),
-    justifyContent: 'center',
     alignItems: 'flex-end',
+    justifyContent: 'center',
+    width: ScreenUtil.autowidth(40),
   },
 
   footer:{
-      paddingTop: ScreenUtil.autoheight(5),
-      height: ScreenUtil.autoheight(60),    
-      flexDirection:'row',  
-      position:'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection:'row',  
+    position:'absolute',
+    height: ScreenUtil.autoheight(60),   
+    paddingTop: ScreenUtil.autoheight(1),
   },
   footoutsource:{
-      flex:1, 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      flexDirection:'row',
-      marginRight:1,
+    flex:1, 
+    flexDirection:'row',
+    alignItems: 'center', 
+    justifyContent: 'center', 
   },
   footimg: {
-      width: ScreenUtil.autowidth(30),
-      height: ScreenUtil.autowidth(30),
+    width: ScreenUtil.autowidth(30),
+    height: ScreenUtil.autowidth(30),
   },
   footText:{
-      marginLeft: ScreenUtil.autowidth(20),
-      fontSize: ScreenUtil.setSpText(18),
+    fontSize: ScreenUtil.setSpText(18),
+    marginLeft: ScreenUtil.autowidth(20),
   },
 });
 

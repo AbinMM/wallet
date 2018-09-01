@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { StyleSheet, View, Text, Image, Dimensions, Clipboard, TouchableHighlight} from 'react-native';
-import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
@@ -117,9 +117,9 @@ const styles = StyleSheet.create({
         marginTop: ScreenUtil.autoheight(10),
     },
     inptoutbg: {
-        paddingHorizontal: ScreenUtil.autowidth(20),
         paddingTop: ScreenUtil.autoheight(20),
         paddingBottom: ScreenUtil.autoheight(10),
+        paddingHorizontal: ScreenUtil.autowidth(20),
     },
     inptoutgo: {
         paddingBottom: ScreenUtil.autoheight(20),
@@ -129,21 +129,19 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(15),
         lineHeight: ScreenUtil.autoheight(35),
     },
-     // 按钮  
     buttonView: {
-        paddingHorizontal: ScreenUtil.autowidth(5),
-        justifyContent: 'center',
         alignItems: 'flex-end',
+        justifyContent: 'center',
+        paddingHorizontal: ScreenUtil.autowidth(5),
     },
     buttonText: {
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(35),
     },
-
     inptgo: {
         height: ScreenUtil.autoheight(60),
-        width: ScreenWidth - ScreenUtil.autowidth(40),
         paddingHorizontal: ScreenUtil.autowidth(10),
+        width: ScreenWidth - ScreenUtil.autowidth(40),
     },
     inptext: {
         flexWrap: 'wrap',
@@ -151,8 +149,8 @@ const styles = StyleSheet.create({
         lineHeight: ScreenUtil.autoheight(25),
     },
     textout: {
-        paddingHorizontal: ScreenUtil.autowidth(16),
         paddingVertical: ScreenUtil.autoheight(10),
+        paddingHorizontal: ScreenUtil.autowidth(16),
     },
     titletext: {
         fontSize: ScreenUtil.setSpText(15),
@@ -160,11 +158,10 @@ const styles = StyleSheet.create({
     },
     explaintext: {
         fontSize: ScreenUtil.setSpText(13),
+        lineHeight: ScreenUtil.autoheight(25),
         paddingLeft: ScreenUtil.autowidth(20),
         paddingVertical: ScreenUtil.autoheight(5),
-        lineHeight: ScreenUtil.autoheight(25),
     },
-
     logout:{
         flex: 1,
         alignItems: 'center',

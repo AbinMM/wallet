@@ -1,18 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, } from 'react-native';
-import ScreenUtil from '../../utils/ScreenUtil'
 import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
 import Button from '../../components/Button'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import QRCode from 'react-native-qrcode-svg';
-import { EasyToast } from '../../components/Toast';
-import { EasyShowLD } from "../../components/EasyShow"
-import BaseComponent from "../../components/BaseComponent";
-import Constants from '../../utils/Constants';
-import {NavigationActions} from 'react-navigation';
 import JPushModule from 'jpush-react-native';
+import Constants from '../../utils/Constants';
+import ScreenUtil from '../../utils/ScreenUtil'
+import { EasyToast } from '../../components/Toast';
+import {NavigationActions} from 'react-navigation';
+import { EasyShowLD } from "../../components/EasyShow"
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var AES = require("crypto-js/aes");
@@ -25,8 +25,7 @@ class ActivationAt extends BaseComponent {
         headerTitle:'激活账户',
         header:null,                
     };
-     
-    // 构造函数  
+  
     constructor(props) { 
         super(props);
         this.state = {
@@ -44,8 +43,7 @@ class ActivationAt extends BaseComponent {
         };
     }
 
-     //组件加载完成
-   componentDidMount() {
+    componentDidMount() {
         var params = this.props.navigation.state.params.parameter;
         this.setState({
         name:  params.name,
@@ -180,7 +178,6 @@ class ActivationAt extends BaseComponent {
                 this.pop(2, true);
 
             } });
-
             // DeviceEventEmitter.addListener('delete_wallet', (tab) => {
             //     this.props.navigation.goBack();
             // });
@@ -222,7 +219,6 @@ class ActivationAt extends BaseComponent {
         var name = wallet.name;
         var owner = wallet.ownerPublic;
         var active = wallet.activePublic
-    
         try {
             //检测账号是否已经激活
             // EasyShowLD.dialogClose();
@@ -325,12 +321,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     inptpass: {
-        textAlign: "center",
-        height: ScreenUtil.autoheight(45),
-        width: ScreenWidth-100,
-        paddingBottom: ScreenUtil.autoheight(5),
-        fontSize: ScreenUtil.setSpText(16),
         borderBottomWidth: 1,
+        textAlign: "center",
+        width: ScreenWidth-100,
+        height: ScreenUtil.autoheight(45),
+        fontSize: ScreenUtil.setSpText(16),
+        paddingBottom: ScreenUtil.autoheight(5),
     },
     container: {
         flex: 1,
@@ -345,8 +341,6 @@ const styles = StyleSheet.create({
     headout: {
         paddingTop: ScreenUtil.autoheight(10),
     },
-    inptoutgo: {
-    },
     ionicout: {
         flexDirection: "row",
         alignItems: 'center',
@@ -354,8 +348,8 @@ const styles = StyleSheet.create({
     },
     prompttext: {
         fontSize: ScreenUtil.setSpText(15),
-        marginVertical: ScreenUtil.autoheight(5),
         marginRight: ScreenUtil.autowidth(10),
+        marginVertical: ScreenUtil.autoheight(5),
     },
     inptitle: {
         flex: 1,
@@ -363,37 +357,34 @@ const styles = StyleSheet.create({
         lineHeight: ScreenUtil.autoheight(30),
     },
     inptgo: {
-        paddingHorizontal: ScreenUtil.autowidth(20),
         paddingTop: ScreenUtil.autoheight(15),
+        paddingHorizontal: ScreenUtil.autowidth(20),
     },
     headtitle: {
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(25),
         marginBottom: ScreenUtil.autoheight(10),
     },
-
     codeout: {
         flex: 1,
-        marginBottom: ScreenUtil.autoheight(20),
         alignItems: "center",
         justifyContent: "center",
-        alignItems: "center",
+        marginBottom: ScreenUtil.autoheight(20),
     },
     qrcode: {
         padding: ScreenUtil.autowidth(5),
     },
-
     importPriout: {
-        height: ScreenUtil.autoheight(45),
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: ScreenUtil.autowidth(20),
-        marginBottom: ScreenUtil.autoheight(15),
         borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: ScreenUtil.autoheight(45),
+        marginBottom: ScreenUtil.autoheight(15),
+        marginHorizontal: ScreenUtil.autowidth(20),
     },
     importPritext: {
         fontSize: ScreenUtil.setSpText(15),
     },
-
 });
+
 export default ActivationAt;

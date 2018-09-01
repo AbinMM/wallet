@@ -1,16 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Clipboard, Dimensions, StyleSheet, View, Text, Image, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
+import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
-import UImage from '../../utils/Img'
 import Header from '../../components/Header'
+import Constants from '../../utils/Constants';
 import ScreenUtil from '../../utils/ScreenUtil'
+import {NavigationActions} from 'react-navigation';
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
 import BaseComponent from "../../components/BaseComponent";
-import Constants from '../../utils/Constants';
-import {NavigationActions} from 'react-navigation';
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var AES = require("crypto-js/aes");
@@ -66,7 +66,6 @@ class BackupsPkey extends BaseComponent {
             immediate: immediate,
         });
         this.props.navigation.dispatch(action);
-    
     }
 
     toBackup = (data) => {
@@ -83,9 +82,7 @@ class BackupsPkey extends BaseComponent {
                     style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}    
                     placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent"/>
             </View>
-
         EasyShowLD.dialogShow("密码", view, "备份", "取消", () => {
-
             if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
                 EasyToast.show('密码长度至少4位,请重输');
                 return;
@@ -94,21 +91,16 @@ class BackupsPkey extends BaseComponent {
             var _words = this.props.navigation.state.params.words;
             var bytes_words = CryptoJS.AES.decrypt(_words.toString(), this.state.password + this.props.navigation.state.params.salt);
             var plaintext_words = bytes_words.toString(CryptoJS.enc.Utf8);
-
             var words_active = this.props.navigation.state.params.words_active;
             var bytes_words = CryptoJS.AES.decrypt(words_active.toString(), this.state.password + this.props.navigation.state.params.salt);
             var plaintext_words_active = bytes_words.toString(CryptoJS.enc.Utf8);
-
             if (plaintext_words.indexOf('eostoken') != -1) {
                 plaintext_words = plaintext_words.substr(9, plaintext_words.length);
                 var wordsArr = plaintext_words.split(',');
-
                 plaintext_words_active = plaintext_words_active.substr(9, plaintext_words_active.length);
                 var wordsArr_active = plaintext_words_active.split(',');
-
                 this.toBackup({ words_owner: wordsArr, words_active: wordsArr_active });
             } else {
-                // alert('密码错误');
                 EasyToast.show('密码错误');
             }
         }catch(e){
@@ -165,10 +157,6 @@ class BackupsPkey extends BaseComponent {
                     {this.state.activePk != ''&& 
                     <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
                         <Text style={[styles.inptitle,{color: UColor.fontColor}]}>Active私钥</Text>
-                        {/* <View style={styles.inptgo}  underlayColor={UColor.secdColor}>
-                            <Text style={styles.inptext}>{this.state.activePk.substr(0, 25)}</Text>
-                            <Text style={styles.inptext}>{this.state.activePk.substr(25, 26)}</Text>
-                        </View> */}
                         <TouchableHighlight style={[styles.inptgo,{backgroundColor: UColor.secdColor}]} underlayColor={UColor.secdColor} onPress={this.prot.bind(this, 'activePk')}>
                             <Text style={[styles.inptext,{color: UColor.arrow}]}>{this.state.activePk}</Text>
                         </TouchableHighlight>
@@ -176,10 +164,6 @@ class BackupsPkey extends BaseComponent {
                     {this.state.ownerPk != ''&&
                     <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
                         <Text style={[styles.inptitle,{color: UColor.fontColor}]}>Owner私钥</Text>
-                        {/* <View style={styles.inptgo}  underlayColor={UColor.secdColor}>
-                            <Text style={styles.inptext}>{this.state.ownerPk.substr(0, 25)}</Text>
-                            <Text style={styles.inptext}>{this.state.ownerPk.substr(25, 26)}</Text>
-                        </View> */}
                         <TouchableHighlight style={[styles.inptgo,{backgroundColor: UColor.secdColor}]} underlayColor={UColor.secdColor} onPress={this.prot.bind(this, 'ownerPk')}>
                             <Text style={[styles.inptext,{color: UColor.arrow}]}>{this.state.ownerPk}</Text>
                         </TouchableHighlight>
@@ -210,14 +194,14 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     inptpass: {
-        textAlign: "center",
-        height: ScreenUtil.autoheight(45),
-        width: ScreenWidth-100,
-        paddingBottom: ScreenUtil.autoheight(5),
-        fontSize: ScreenUtil.setSpText(16),
         borderBottomWidth: 1,
+        textAlign: "center",
+        width: ScreenWidth-100,
+        borderBottomWidth: 1,
+        height: ScreenUtil.autoheight(45),
+        fontSize: ScreenUtil.setSpText(16),
+        paddingBottom: ScreenUtil.autoheight(5),
     },
-
     container: {
         flex: 1,
         flexDirection: 'column',
@@ -230,8 +214,8 @@ const styles = StyleSheet.create({
         marginTop: ScreenUtil.autoheight(10),
     },
     inptoutbg: {
-        paddingHorizontal: ScreenUtil.autowidth(20),
         marginBottom: ScreenUtil.autoheight(10),
+        paddingHorizontal: ScreenUtil.autowidth(20),
     },
     headout: {
         paddingTop: ScreenUtil.autoheight(20),
@@ -242,13 +226,13 @@ const styles = StyleSheet.create({
         lineHeight: ScreenUtil.autoheight(30),
     },
     warningout: {
+        borderWidth: 1,
+        borderRadius: 5,
         width: ScreenWidth-40,
         flexDirection: "row",
         alignItems: 'center', 
-        paddingHorizontal: ScreenUtil.autowidth(10),
         paddingVertical: ScreenUtil.autoheight(5),
-        borderWidth: 1,
-        borderRadius: 5,
+        paddingHorizontal: ScreenUtil.autowidth(10),
     },
     imgBtn: {
         width: ScreenUtil.autowidth(20),
@@ -265,8 +249,8 @@ const styles = StyleSheet.create({
     },
     inptgo: {
         height: ScreenUtil.autoheight(60),
-        width: ScreenWidth - ScreenUtil.autowidth(40),
         paddingHorizontal: ScreenUtil.autowidth(10),
+        width: ScreenWidth - ScreenUtil.autowidth(40),
     },
     inptext: {
         flexWrap: 'wrap',
@@ -278,12 +262,12 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(15),
     },
     importPriout: {
-        height: ScreenUtil.autoheight(45),
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: ScreenUtil.autowidth(20),
-        marginTop: ScreenUtil.autoheight(30),
         borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: ScreenUtil.autoheight(45),
+        marginTop: ScreenUtil.autoheight(30),
+        marginHorizontal: ScreenUtil.autowidth(20),
     },
     importPritext: {
         fontSize: ScreenUtil.setSpText(15),
@@ -296,13 +280,12 @@ const styles = StyleSheet.create({
     },
     logimg: {
         width: ScreenUtil.autowidth(50), 
-        height: ScreenUtil.autowidth(50)
+        height: ScreenUtil.autowidth(50),
     },
     logtext: {
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(30),
     },
-    
 });
 
 export default BackupsPkey;

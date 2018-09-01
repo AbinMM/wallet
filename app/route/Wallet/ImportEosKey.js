@@ -728,7 +728,6 @@ class ImportEosKey extends BaseComponent {
                     <Text style={[styles.titleout,{color: UColor.baseline}]}>×</Text>
                   </Button>
                 </View>
-
                 <ListView style={{}} renderRow={this.renderRow} enableEmptySections={true} 
                     dataSource={this.state.dataSource.cloneWithRows(this.state.walletList == null ? [] : this.state.walletList)} 
                     renderRow={(rowData, sectionID, rowID) => (                 
@@ -741,10 +740,8 @@ class ImportEosKey extends BaseComponent {
                                       <Image source={rowData.isChecked ? UImage.Tick:null} style={styles.tabimg} />
                                   </View>  
                                 </TouchableOpacity>  
-                     
                             </View>
                         </View>
-
                     )}                
                 /> 
                 <Button onPress={this._onPressEnter.bind(this)}>
@@ -755,8 +752,8 @@ class ImportEosKey extends BaseComponent {
               </View>
             </TouchableOpacity>
         </Modal>  
-        </ScrollView>
-</KeyboardAvoidingView>
+      </ScrollView>
+      </KeyboardAvoidingView>
       </View>
     );
   }

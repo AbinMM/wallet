@@ -1,16 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, StyleSheet, View, Clipboard, Text, ScrollView, Image, Linking, TextInput, Modal } from 'react-native';
-import ScreenUtil from '../../utils/ScreenUtil'
-import UColor from '../../utils/Colors'
-import Button from '../../components/Button'
-import Item from '../../components/Item'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
+import Item from '../../components/Item'
+import Button from '../../components/Button'
 import Header from '../../components/Header'
-import Constants from '../../utils/Constants'
-import { EasyToast } from '../../components/Toast';
-import { EasyShowLD } from '../../components/EasyShow'//CGP TEST
 import JPushModule from 'jpush-react-native';
+import Constants from '../../utils/Constants'
+import ScreenUtil from '../../utils/ScreenUtil'
+import { EasyToast } from '../../components/Toast';
+import { EasyShowLD } from '../../components/EasyShow'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
@@ -51,18 +51,17 @@ class WalletDetail extends BaseComponent {
     });
   }
 
-    //组件加载完成
-    componentDidMount() {
-      this.props.dispatch({ type: 'wallet/getintegral', payload:{},callback: (data) => { 
-        this.setState({integral: data.data});
-      } });
-    }
-    componentWillUnmount(){
-      //结束页面前，资源释放操作
-      super.componentWillUnmount();
-      
-    }
- 
+  //组件加载完成
+  componentDidMount() {
+    this.props.dispatch({ type: 'wallet/getintegral', payload:{},callback: (data) => { 
+      this.setState({integral: data.data});
+    } });
+  }
+
+  componentWillUnmount(){
+    //结束页面前，资源释放操作
+    super.componentWillUnmount();
+  }
 
   // 显示/隐藏 modal  
   _setModalVisible() {
@@ -461,7 +460,6 @@ class WalletDetail extends BaseComponent {
     const c = this.props.navigation.state.params.data
     const balance = this.props.navigation.state.params.balance
     const isEye = this.props.navigation.state.params.isEye
-
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>    
       <Header {...this.props} onPressLeft={true} title={c.name} />
       <ScrollView style={styles.scrollView}>
@@ -489,7 +487,7 @@ class WalletDetail extends BaseComponent {
           <View>{this._renderListItem()}</View>
           {(!c.isactived || !c.hasOwnProperty('isactived')) ? 
           <Button onPress={this.activeWallet.bind(this, c)} style={{ flex: 1 }}>
-            <View style={styles.acttiveout}>
+            <View style={[styles.acttiveout,{backgroundColor: UColor.tintColor}]}>
               <Text style={[styles.delete,{color: UColor.btnColor}]}>激活账户</Text>
             </View>
           </Button>
@@ -538,37 +536,35 @@ class WalletDetail extends BaseComponent {
 const styles = StyleSheet.create({
   inptpasstext: {
     fontSize: ScreenUtil.setSpText(12),
-    marginBottom: ScreenUtil.autoheight(15),
     lineHeight: ScreenUtil.autoheight(20),
+    marginBottom: ScreenUtil.autoheight(15),
   },
-
   passoutsource: {
+    alignItems: 'center',
     flexDirection: 'column', 
-    alignItems: 'center'
   },
   inptpass: {
     textAlign: "center",
+    borderBottomWidth: 1,
     width: ScreenWidth-100,
     height: ScreenUtil.autoheight(45),
-    paddingBottom: ScreenUtil.autoheight(5),
     fontSize: ScreenUtil.setSpText(16),
-    borderBottomWidth: 1,
+    paddingBottom: ScreenUtil.autoheight(5),
   },
-
   container: {
     flex: 1,
     flexDirection: 'column',
   },
   walletout: { 
+    borderRadius: 5, 
+    margin: ScreenUtil.autowidth(10), 
     padding: ScreenUtil.autowidth(20), 
     height: ScreenUtil.autoheight(100), 
-    margin: ScreenUtil.autowidth(10), 
-    borderRadius: 5, 
   },
   accountout: { 
     flexDirection: "row",
-    justifyContent: 'center', 
     alignItems: 'center', 
+    justifyContent: 'center', 
   },
   accounttext: { 
     fontSize: ScreenUtil.setSpText(24), 
@@ -578,7 +574,6 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(15),
     marginBottom: ScreenUtil.autoheight(5),
   },
-
   topout: {
     flexDirection: "row",
     alignItems: 'center',
@@ -595,114 +590,106 @@ const styles = StyleSheet.create({
     marginHorizontal: ScreenUtil.autowidth(5),
   },
   stopoutBackupsout: {
-    borderRadius: 10,
     borderWidth: 1,
-    justifyContent: 'center',
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
+    
   },
   stopoutBackups: {
-    fontSize: ScreenUtil.setSpText(10),
+    paddingVertical: 1,
     textAlign: 'center',
-    paddingHorizontal: ScreenUtil.autowidth(8),
-    paddingVertical: 1,
-  },
-
-  notactivedout: {
-    borderRadius: 10,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  notactived: {
     fontSize: ScreenUtil.setSpText(10),
-    textAlign: 'center', 
     paddingHorizontal: ScreenUtil.autowidth(8),
-    paddingVertical: 1,
   },
- 
+  notactivedout: {
+    borderWidth: 1,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  notactived: {
+    paddingVertical: 1,
+    textAlign: 'center', 
+    fontSize: ScreenUtil.setSpText(10),
+    paddingHorizontal: ScreenUtil.autowidth(8),
+  },
   acttiveout: {
-    height: ScreenUtil.autoheight(45), 
-    backgroundColor:  UColor.tintColor, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginHorizontal: ScreenUtil.autowidth(20), 
     borderRadius: 5,
+    alignItems: 'center', 
+    justifyContent: 'center',
+    height: ScreenUtil.autoheight(45), 
     marginTop: ScreenUtil.autoheight(20),
+    marginHorizontal: ScreenUtil.autowidth(20), 
   },
   deleteout: {
-    height: ScreenUtil.autoheight(45), 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginHorizontal: ScreenUtil.autowidth(20),  
     borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center', 
+    height: ScreenUtil.autoheight(45), 
     marginTop: ScreenUtil.autoheight(20),
+    marginHorizontal: ScreenUtil.autowidth(20),  
   },
   delete: { 
     fontSize: ScreenUtil.setSpText(15), 
   },
-
-  // modal的样式  
   modalStyle: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
   },
-  // modal上子View的样式  
   subView: {
-    marginHorizontal: ScreenUtil.setSpText(15),
-    alignSelf: 'stretch',
-    justifyContent: 'center',
     borderRadius: 10,
     borderWidth: 0.5,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    marginHorizontal: ScreenUtil.setSpText(15),
   },
   closeText: {
-    width: ScreenUtil.setSpText(50),
-    height: ScreenUtil.setSpText(50),
     alignItems: 'center',
     justifyContent: 'center',
+    width: ScreenUtil.setSpText(50),
+    height: ScreenUtil.setSpText(50),
   },
   buttonText: {
     fontSize: ScreenUtil.setSpText(16),
   },
-
   eosparkout: {
-    paddingHorizontal: ScreenUtil.autowidth(11), 
-    paddingVertical: ScreenUtil.autoheight(15),  
-    marginBottom: ScreenUtil.autoheight(18), 
-    marginHorizontal: ScreenUtil.autowidth(20), 
-    flexDirection: "row", 
     borderWidth: 1,
     borderRadius: 5,
+    flexDirection: "row", 
+    marginBottom: ScreenUtil.autoheight(18), 
+    marginHorizontal: ScreenUtil.autowidth(20), 
+    paddingVertical: ScreenUtil.autoheight(15),  
+    paddingHorizontal: ScreenUtil.autowidth(11), 
   },
   eosecoout: {
-    paddingHorizontal: ScreenUtil.autowidth(11), 
-    paddingVertical: ScreenUtil.autoheight(15), 
+    borderWidth: 1,
+    borderRadius: 5,
+    flexDirection: "row",
     marginBottom: ScreenUtil.autoheight(34), 
     marginHorizontal: ScreenUtil.autowidth(20), 
-    flexDirection: "row",
-    borderWidth: 1,
-    borderRadius: 5, 
+    paddingVertical: ScreenUtil.autoheight(15), 
+    paddingHorizontal: ScreenUtil.autowidth(11), 
   },
   titletext: {
     flex: 1, 
     fontSize: ScreenUtil.setSpText(20), 
   },
   eosparktext: { 
+    borderRadius: 5, 
+    alignItems: 'center',
+    justifyContent: 'center', 
     width: ScreenUtil.autowidth(64), 
     height: ScreenUtil.autoheight(30), 
-    borderRadius: 5, 
-    justifyContent: 'center', 
-    alignItems: 'center'
   },
   eosecotext: { 
+    borderRadius: 5, 
+    alignItems: 'center',
+    justifyContent: 'center', 
     width: ScreenUtil.autowidth(64), 
     height: ScreenUtil.autoheight(30), 
-    borderRadius: 5, 
-    justifyContent: 'center', 
-    alignItems: 'center'
   },
-
 });
 
 export default WalletDetail;

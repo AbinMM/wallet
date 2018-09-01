@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { StyleSheet, Image, View, Text, TextInput, Dimensions, TouchableOpacity, } from 'react-native';
-import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
 import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
+import {NavigationActions} from 'react-navigation';
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
 import BaseComponent from "../../components/BaseComponent";
-import {NavigationActions} from 'react-navigation';
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
@@ -18,12 +18,12 @@ var CryptoJS = require("crypto-js");
 
 @connect(({wallet, login}) => ({...wallet, ...login}))
 class BackupsAOkey extends BaseComponent {
-      static navigationOptions = {
-          headerTitle:'备份私钥',
-          header:null,             
-      };
-      
-      _rightTopClick = () =>{
+    static navigationOptions = {
+        headerTitle:'备份私钥',
+        header:null,             
+    };
+    
+    _rightTopClick = () =>{
         var entry = this.props.navigation.state.params.entry;
         if(entry == "createWallet"){
             this.pop(2, true);
@@ -32,23 +32,23 @@ class BackupsAOkey extends BaseComponent {
         this.pop(3, true);
         // const { navigate } = this.props.navigation;
         // navigate('WalletManage', {});
-      }
+    }
 
-  // 构造函数  
-  constructor(props) { 
-    super(props);
-    this.props.navigation.setParams({ onPress: this._rightTopClick });
-    this.state = {
-        password: "",
-        ownerPk: '',
-        activePk: '',
-        txt_owner: '',
-        txt_active: '',
-        PromptOwner: '',
-        PromptActtve: '',
-        show: false,
-    };
-  }
+    // 构造函数  
+    constructor(props) { 
+        super(props);
+        this.props.navigation.setParams({ onPress: this._rightTopClick });
+        this.state = {
+            password: "",
+            ownerPk: '',
+            activePk: '',
+            txt_owner: '',
+            txt_active: '',
+            PromptOwner: '',
+            PromptActtve: '',
+            show: false,
+        };
+    }
 
   //组件加载完成
   componentDidMount() {
@@ -83,7 +83,6 @@ class BackupsAOkey extends BaseComponent {
     let name = wallet.account;
     let owner = wallet.ownerPublic;
     let active = wallet.activePublic;
-
     try {
     EasyShowLD.loadingShow('正在请求');
     //检测账号是否已经激活
@@ -95,7 +94,7 @@ class BackupsAOkey extends BaseComponent {
                 this.props.dispatch({type: 'wallet/activeWallet', wallet: wallet});
                 //msg:success,data:true, code:0 账号已存在
                 EasyShowLD.dialogShow("恭喜激活成功", (<View>
-                    <Text style={styles.passoutsource}>{name}</Text>
+                    <Text style={[styles.passoutsource,{color: UColor.showy}]}>{name}</Text>
                     {/* <Text style={styles.inptpasstext}>您申请的账号已经被***激活成功</Text> */}
                 </View>), "知道了", null,  () => {EasyShowLD.dialogClose(), this.pop(3, true) });
             }else {
@@ -159,7 +158,6 @@ class BackupsAOkey extends BaseComponent {
         immediate: immediate,
     });
     this.props.navigation.dispatch(action);
-
   }
 
   backupOK(){
@@ -190,7 +188,6 @@ class BackupsAOkey extends BaseComponent {
             this.setState({PromptActtve: '该私钥内容有误'})
             return;
         }
-
         if(this.state.activePk == this.state.txt_active ){
             this.backupOK();
             return;
@@ -212,13 +209,11 @@ class BackupsAOkey extends BaseComponent {
             this.setState({PromptOwner: '该私钥内容有误'})
             return;
         }
-
         if(this.state.activePk == this.state.txt_active && this.state.ownerPk == this.state.txt_owner){
             this.backupOK();
             return;
         }
     }
-
     // const { navigate } = this.props.navigation;
     // navigate('ActivationAt', {});
   }
@@ -288,19 +283,8 @@ class BackupsAOkey extends BaseComponent {
 }
 const styles = StyleSheet.create({
     passoutsource: {
-        fontSize: 20, 
-        color: UColor.showy, 
         textAlign: 'center',
-    },
-    inptpass: {
-        color: UColor.tintColor,
-        height: ScreenUtil.autoheight(45),
-        width: ScreenWidth -100,
-        paddingBottom: ScreenUtil.autoheight(5),
-        fontSize: ScreenUtil.setSpText(16),
-        backgroundColor: UColor.fontColor,
-        borderBottomColor: UColor.baseline,
-        borderBottomWidth: 1,
+        fontSize: ScreenUtil.setSpText(20), 
     },
     container: {
         flex: 1,
@@ -325,8 +309,8 @@ const styles = StyleSheet.create({
         lineHeight: ScreenUtil.autoheight(25),
     },
     inptoutgo: {
-        width: ScreenWidth - ScreenUtil.autowidth(40),
         paddingBottom: ScreenUtil.autoheight(15),
+        width: ScreenWidth - ScreenUtil.autowidth(40),
     },
     ionicout: {
         flexDirection: "row",
@@ -338,36 +322,34 @@ const styles = StyleSheet.create({
         lineHeight: ScreenUtil.autoheight(30),
     },
     prompttext: {
+        textAlign: 'right',
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(30),
-        textAlign: 'right',
     },
     inptgo: {
         flexWrap: 'wrap',
         textAlignVertical: 'top',
+        height: ScreenUtil.autoheight(60),
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(25),
-        height: ScreenUtil.autoheight(60),
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
-
     importPriout: {
-        height: ScreenUtil.autoheight(45),
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: ScreenUtil.autowidth(20),
-        marginTop: ScreenUtil.autoheight(50),
         borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: ScreenUtil.autoheight(45),
+        marginTop: ScreenUtil.autoheight(50),
+        marginHorizontal: ScreenUtil.autowidth(20),
     },
     importPritext: {
         fontSize: ScreenUtil.setSpText(15),
     },
-
     logout:{
         flex: 1,
-        minHeight: ScreenUtil.autoheight(160),
         alignItems: 'center',
         justifyContent: 'flex-end',
+        minHeight: ScreenUtil.autoheight(160),
         paddingBottom: ScreenUtil.autoheight(20),
     },
     logimg: {
