@@ -82,16 +82,11 @@ var ScreenHeight = Dimensions.get('window').height;
 // import Eosjs from '../components/eosjs/Eosjs'
 var WeChat = require('react-native-wechat');
 
-var isRam = true;
-export const setIsRamSelect = (isRam) =>{
-  isRam = isRam;
-}
-
-const TabContainer = TabNavigator(
+var TabContainer = TabNavigator(
   {
     Home: { screen: Home },
     Coins: { screen: Coins },
-    Transaction: { screen: (isRam ?  Ram : Transaction) },
+    Transaction: { screen: (Constants.isRam ?  Ram : Transaction) },
     News: { screen: News },
     Settings: { screen: Settings }
   },
