@@ -254,6 +254,13 @@ export default {
                 if (callback) callback({ code: 500, msg: "网络异常" });                
             }
           },
+        *getCurrentET({payload,callback},{call,put}){
+            var et = yield call(store.get, "et_current");
+            if(callback) callback(et);
+        },
+        *setCurrentET({payload,callback},{call,put}){
+            yield call(store.save, "et_current", payload.et);
+        },
         //获取币信息
         *getETInfo({payload,callback},{call,put}) {
             var etInfoInCache = yield call(store.get, "etInfo_"+payload.code);
