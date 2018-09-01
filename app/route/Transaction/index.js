@@ -149,7 +149,8 @@ class Transaction extends BaseComponent {
             selectcode:rowData.code,
             });
         InteractionManager.runAfterInteractions(() => {
-            this.getETInfo();
+            // this.getETInfo();
+            this.onRefreshing();
         });
     }
 
@@ -308,15 +309,15 @@ class Transaction extends BaseComponent {
     }else if(opt== transactionOption[1]){
       this.selectionTransaction(0,opt,onRefreshing);
     }else if(opt== transactionOption[2]){
-       this.fetchTrackLine(0,opt,onRefreshing);
+       this.fetchETBigTradeLog(0,opt,onRefreshing);
     }else if(opt== transactionOption[3]){
-       this.fetchTrackLine(1,opt,onRefreshing);
+       this.fetchETBigTradeLog(1,opt,onRefreshing);
     }else{
 
     }
   }
 
-  fetchTrackLine(type,opt, onRefreshing = false){
+  fetchETBigTradeLog(type,opt, onRefreshing = false){
     this.setState({selectedTransactionRecord:opt});
     if(type == 0){
         if(!onRefreshing){
@@ -650,8 +651,8 @@ class Transaction extends BaseComponent {
                             data: {
                                 payer: this.props.defaultWallet.account,
                                 eos_quant: formatEosQua(this.state.buyETAmount + " EOS"),
-                                token_contract: "issuemytoken",
-                                token_symbol: "4,TEST",
+                                token_contract: this.props.etinfo.base_contract,//"issuemytoken",
+                                token_symbol: "4," + this.props.etinfo.base_balance_uom, //"4,TEST",
                                 fee_account: this.props.defaultWallet.account,
                                 fee_rate: "1", 
                             }
@@ -818,8 +819,8 @@ class Transaction extends BaseComponent {
                         }], 
                         data: {
                             receiver: this.props.defaultWallet.account,
-                            token_contract: "issuemytoken",
-                            quant: formatEosQua(this.state.sellET + " TEST"),
+                            token_contract: this.props.base_contract, //"issuemytoken",
+                            quant: formatEosQua(this.state.sellET + " " + this.props.etinfo.base_balance_uom),
                             fee_account: this.props.defaultWallet.account,
                             fee_rate: "1", 
                         }
@@ -981,10 +982,20 @@ class Transaction extends BaseComponent {
     return timezone;
   }
 
-  openbusiness() { 
+  openbusiness() {
+    if(this.props.etinfo.base_balance_uom != "TEST" && this.props.etinfo.base_balance_uom != "ABC"){
+        let business = this.state.business;  
+        this.setState({  
+            business:!business,
+            buyETAmount: '0',
+            sellET: '0',  
+        });
+        return;
+    } 
+
     const view = 
-    <View style={styles.passout}>
-      <Text　style={{height: 45,width: ScreenWidth-100,paddingBottom: 5,fontSize: 16,}}>TEST币仅用于测试,没有投资价值,请不要大量购买!</Text>  
+    <View style={styles.passoutsource}>
+      <Text　style={{height: 45,width: ScreenWidth-100,paddingBottom: 5,fontSize: 16,}}>TEST/ABC币仅用于测试,没有投资价值,请不要大量购买!</Text>  
     </View>
     EasyShowLD.dialogShow("警示", view, "确认", "取消", () => {
         EasyShowLD.dialogClose();
