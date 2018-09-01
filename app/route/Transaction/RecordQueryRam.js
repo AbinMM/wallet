@@ -3,9 +3,10 @@ import { connect } from 'react-redux'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, TouchableOpacity, TextInput, RefreshControl } from 'react-native';
 import moment from 'moment';
+import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
-import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast"
 var dismissKeyboard = require('dismissKeyboard');
@@ -14,11 +15,7 @@ var dismissKeyboard = require('dismissKeyboard');
 class RecordQueryRam extends React.Component {
   static navigationOptions = {
     title: "搜索交易记录",
-    headerStyle: {
-      paddingTop: ScreenUtil.autoheight(20),
-      backgroundColor: UColor.mainColor,
-      borderBottomWidth:0,
-    },
+    header: null, 
   };
 
   constructor(props) {
@@ -224,12 +221,13 @@ class RecordQueryRam extends React.Component {
   }
 
   render() {
-    return (<View style={styles.container}>
-      <View style={styles.header}>  
-          <View style={styles.inptout} >
+    return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+    <Header {...this.props}  onPressLeft={true} title="搜索交易记录" />
+      <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
+          <View style={[styles.inptout,{backgroundColor: UColor.riceWhite}]} >
               <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
               <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
-                  selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow} maxLength={12} 
+                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={12} 
                   placeholder="输入EOS账号" underlineColorAndroid="transparent" keyboardType="default"
                   onChangeText={(labelname) => this.setState({ labelname })}   
                   />  
@@ -238,13 +236,13 @@ class RecordQueryRam extends React.Component {
               </TouchableOpacity>    
           </View>    
           <TouchableOpacity onPress={this.query.bind(this,this.state.labelname)}>  
-              <Text style={styles.canceltext}>查询</Text>
+              <Text style={[styles.canceltext,{color: UColor.fontColor}]}>查询</Text>
           </TouchableOpacity>   
           <TouchableOpacity   onPress={this._empty.bind(this)}>  
-              <Text style={styles.canceltext}>清空</Text>
+              <Text style={[styles.canceltext,{color: UColor.fontColor}]}>清空</Text>
           </TouchableOpacity> 
       </View>   
-      {this.state.show && <View style={styles.nothave}><Text style={styles.copytext}>还没有交易记录哟~</Text></View>}       
+      {this.state.show && <View style={[styles.nothave,{backgroundColor: UColor.mainColor}]}><Text style={[styles.copytext,{color: UColor.fontColor}]}>还没有交易记录哟~</Text></View>}       
       <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true}  onEndReachedThreshold = {50}
         onEndReached={() => this.onEndReached.bind(this)}
         refreshControl={
@@ -259,18 +257,18 @@ class RecordQueryRam extends React.Component {
         dataSource={this.state.dataSource.cloneWithRows(this.state.newramTradeLog == null ? [] : this.state.newramTradeLog)} 
         renderRow={(rowData, sectionID, rowID) => ( 
           <Button onPress={this._openDetails.bind(this,rowData)}>  
-            <View style={styles.package}>
+            <View style={[styles.package,{backgroundColor: UColor.mainColor}]}>
               <View style={styles.leftout}>
-                <Text style={styles.payertext}>{rowData.payer}</Text>
-                <Text style={styles.timetext}>{moment(rowData.record_date).add(8,'hours').format('MM-DD HH:mm:ss')}</Text>
+                <Text style={[styles.payertext,{color: UColor.fontColor}]}>{rowData.payer}</Text>
+                <Text style={[styles.timetext,{color: UColor.arrow}]}>{moment(rowData.record_date).add(8,'hours').format('MM-DD HH:mm:ss')}</Text>
               </View>
               <View style={styles.rightout}>
                 {rowData.action_name == 'sellram' ? 
-                <Text style={styles.selltext}>卖 {(rowData.price == null || rowData.price == '0') ? rowData.ram_qty : rowData.eos_qty}</Text>
+                <Text style={[styles.selltext,{color: UColor.riseColor}]}>卖 {(rowData.price == null || rowData.price == '0') ? rowData.ram_qty : rowData.eos_qty}</Text>
                 :
-                <Text style={styles.buytext}>买 {rowData.eos_qty}</Text>
+                <Text style={[styles.buytext,{color: UColor.fallColor}]}>买 {rowData.eos_qty}</Text>
                 }
-                <Text style={styles.presentprice}>{(rowData.price == null || rowData.price == '0') ? '' : (rowData.price * 1).toFixed(4)}{(rowData.price == null || rowData.price == '0') ? '' :  ' EOS/KB'}</Text>
+                <Text style={[styles.presentprice,{color: UColor.arrow}]}>{(rowData.price == null || rowData.price == '0') ? '' : (rowData.price * 1).toFixed(4)}{(rowData.price == null || rowData.price == '0') ? '' :  ' EOS/KB'}</Text>
               </View>
               <View style={styles.Ionicout}>
                 <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
@@ -289,15 +287,13 @@ const styles = StyleSheet.create({
       flex: 1,
       paddingTop: 1,
       flexDirection: "column",
-      backgroundColor: UColor.secdColor,
     },
     header: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: UColor.mainColor,
-      paddingVertical: ScreenUtil.autoheight(7),
       marginBottom: ScreenUtil.autoheight(5),
+      paddingVertical: ScreenUtil.autoheight(7),
     },
     headleftimg: {
       width: ScreenUtil.autowidth(18),
@@ -311,18 +307,15 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: 'center',
       height: ScreenUtil.autoheight(30),
-      backgroundColor: UColor.fontColor,
       marginHorizontal: ScreenUtil.autowidth(10),
     },
     inpt: {
       flex: 1,
-      color: UColor.arrow,
       height: ScreenUtil.autoheight(45),
       fontSize: ScreenUtil.setSpText(14),
     },
     canceltext: {
       textAlign: 'center',
-      color: UColor.fontColor,
       fontSize: ScreenUtil.setSpText(15),
       paddingRight: ScreenUtil.autowidth(15),
     },
@@ -337,11 +330,9 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       margin: ScreenUtil.autowidth(5),
       height: ScreenUtil.autowidth(84),
-      backgroundColor: UColor.mainColor,
       paddingHorizontal: ScreenUtil.autowidth(20),
     },
     copytext: {
-      color: UColor.fontColor,
       fontSize: ScreenUtil.setSpText(16), 
     },
 
@@ -349,11 +340,10 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       flexDirection: "row",
       height: ScreenUtil.autoheight(52),
-      backgroundColor: UColor.mainColor,
-      paddingHorizontal: ScreenUtil.autowidth(10),
+      marginVertical: ScreenUtil.autoheight(5),
       paddingVertical: ScreenUtil.autoheight(5),
       marginHorizontal: ScreenUtil.autowidth(10),
-      marginVertical: ScreenUtil.autoheight(1),
+      paddingHorizontal: ScreenUtil.autowidth(10),
     },
     leftout: {
       flex: 1,
@@ -361,11 +351,9 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
     },
     payertext: {
-      color: UColor.fontColor,
       fontSize: ScreenUtil.setSpText(15),
     },
     timetext: {
-      color: UColor.arrow,
       fontSize: ScreenUtil.setSpText(15),
     },
    
@@ -376,25 +364,22 @@ const styles = StyleSheet.create({
     },
     selltext: {
       flex: 5,
-      color: UColor.riseColor,
       textAlign: 'left',
       fontSize: ScreenUtil.setSpText(15),
     },
     buytext: {
       flex: 5,
-      color: UColor.fallColor,
       textAlign: 'left',
       fontSize: ScreenUtil.setSpText(15),
     },
     presentprice: {
       textAlign: 'left',
-      color: UColor.arrow,
       fontSize: ScreenUtil.setSpText(14),
     },
     Ionicout: {
-      width: ScreenUtil.autowidth(30),
+      alignItems: 'flex-end',
       justifyContent: 'center',
-      alignItems: 'flex-end'
-  },
+      width: ScreenUtil.autowidth(30),
+    },
 });
 export default RecordQueryRam;

@@ -20,6 +20,7 @@ var CryptoJS = require("crypto-js");
 var RSAKey = require('react-native-rsa');
 
 export const encryptedMsg = (msg, puk) =>{
+  return msg;
   var md5Val = CryptoJS.MD5(msg).toString();
   var rsa = new RSAKey();
   // var r = rsa.generate(1024, '10001');

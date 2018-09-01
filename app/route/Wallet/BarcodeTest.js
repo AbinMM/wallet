@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, DeviceEventEmitter, View,} from 'react-native';
 import UColor from '../../utils/Colors'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import Barcode from 'react-native-smart-barcode'
 import { EasyToast } from '../../components/Toast';
@@ -10,13 +11,9 @@ export default class App extends BaseComponent {
 
     static navigationOptions = {
         title: '扫码',
-        headerStyle:{
-            paddingTop: ScreenUtil.autoheight(20),
-            backgroundColor: UColor.mainColor,
-            borderBottomWidth:0,
-        }    
+        header:null,  
       };
-
+     
     //构造方法
     constructor(props) {
         super(props);
@@ -171,6 +168,7 @@ export default class App extends BaseComponent {
     render() {
         return (
             <View style={{ flex: 1 }}>
+             <Header {...this.props} onPressLeft={true} title="扫码" />
                 {this.state.viewAppear ?
                     <Barcode style={{ flex: 1, }} ref={component => this._barCode = component}
                         onBarCodeRead={this._onBarCodeRead} />

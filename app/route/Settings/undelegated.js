@@ -1,9 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { DeviceEventEmitter,  StyleSheet, Image, View, Text, TextInput} from "react-native";
+import { Dimensions,  StyleSheet, Image, View, Text, TextInput} from "react-native";
 import UColor from "../../utils/Colors";
 import Button from "../../components/Button";
 import UImage from "../../utils/Img";
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast";
 import { EasyShowLD } from '../../components/EasyShow'
@@ -11,23 +12,18 @@ import BaseComponent from "../../components/BaseComponent";
 import { Eos } from "react-native-eosjs";
 import {formatEosQua} from '../../utils/FormatUtil';
 import Constants from '../../utils/Constants';
+const ScreenWidth = Dimensions.get('window').width;
+const ScreenHeight = Dimensions.get('window').height;
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 var dismissKeyboard = require('dismissKeyboard');
 @connect(({ wallet }) => ({ ...wallet }))
 class undelegated extends BaseComponent {
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {};
-    return {
+  static navigationOptions = {
       headerTitle: "赎回问题",
-      headerStyle: {
-        paddingTop: ScreenUtil.autoheight(20),
-        backgroundColor: UColor.mainColor,
-        borderBottomWidth:0,
-      },
-    };
+      header:null,
   };
-
+ 
   //组件加载完成
   componentDidMount() {
     const c = this.props.navigation;
@@ -71,9 +67,10 @@ class undelegated extends BaseComponent {
     const view =
     <View style={styles.passoutsource}>
         <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-            selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable" style={styles.inptpass} maxLength={Constants.PWD_MAX_LENGTH}
+            selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
+            style={[styles.inptpass,{ color: UColor.tintColor, backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
             placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
-        <Text style={styles.inptpasstext}></Text>  
+
     </View>
     EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
     if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -118,9 +115,9 @@ class undelegated extends BaseComponent {
                             { 
                                 //弹出提示框,可申请免费抵押功能
                                 const view =
-                                <View style={styles.passoutsource2}>
-                                <Text style={styles.Explaintext2}>该账号资源(NET/CPU)不足！</Text>
-                                <Text style={styles.Explaintext2}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                <View style={styles.Explainout}>
+                                  <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                  <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                 </View>
                                 EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                     
@@ -157,21 +154,22 @@ class undelegated extends BaseComponent {
 
   render() {
     return (
-      <View style={styles.container}>     
-          <View style={styles.taboutsource}>
-              <Text style={styles.accountTitle}>温馨提示：</Text>
-              <Text style={styles.accountText}>主网赎回EOS存在少量网络冲突问题，可能导致</Text>
-              <Text style={styles.accountText}>您的EOS赎回中途卡顿，如遇此情况请点击下面</Text>
-              <Text style={styles.accountText}>按钮再次激活赎回指令!</Text>
+      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>   
+          <Header {...this.props} onPressLeft={true} title="赎回问题" />  
+          <View style={[styles.taboutsource,{backgroundColor: UColor.mainColor}]}>
+              <Text style={[styles.accountTitle,{color: UColor.fontColor}]}>温馨提示：</Text>
+              <Text style={[styles.accountText,{color: UColor.arrow}]}>主网赎回EOS存在少量网络冲突问题，可能导致</Text>
+              <Text style={[styles.accountText,{color: UColor.arrow}]}>您的EOS赎回中途卡顿，如遇此情况请点击下面</Text>
+              <Text style={[styles.accountText,{color: UColor.arrow}]}>按钮再次激活赎回指令!</Text>
               <Button onPress={this.undelegatedRefund.bind()} style={styles.btnnextstep}>
-                <View style={styles.nextstep}>
-                  <Text style={styles.nextsteptext}>确认赎回</Text>
+                <View style={[styles.nextstep,{backgroundColor: UColor.tintColor}]}>
+                  <Text style={[styles.nextsteptext,{color: UColor.btnColor}]}>确认赎回</Text>
                 </View>
               </Button>
           </View>
             <View style={styles.logout}>
                 <Image source={UImage.bottom_log} style={styles.logimg}/>
-                <Text style={styles.logtext}>EosToken 专注柚子生态</Text>
+                <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
             </View>
       </View>
     );
@@ -179,20 +177,29 @@ class undelegated extends BaseComponent {
 }
 
 const styles = StyleSheet.create({
+  passoutsource: {
+    flexDirection: 'column', 
+    alignItems: 'center'
+},
+inptpass: {
+    textAlign: "center",
+    height: ScreenUtil.autoheight(45),
+    width: ScreenWidth-100,
+    paddingBottom: ScreenUtil.autoheight(5),
+    fontSize: ScreenUtil.setSpText(16),
+    borderBottomWidth: 1,
+},
   container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: UColor.secdColor,
   },
   taboutsource: {
     flexDirection: "column",
-    backgroundColor: UColor.mainColor,
     padding: ScreenUtil.autowidth(10),
     marginTop: ScreenUtil.autoheight(20),
   },
 
   accountTitle: {
-    color: UColor.fontColor,
     fontSize: ScreenUtil.setSpText(15),
     height: ScreenUtil.autoheight(40),
     paddingLeft: ScreenUtil.autowidth(2),
@@ -200,7 +207,6 @@ const styles = StyleSheet.create({
     lineHeight: ScreenUtil.autoheight(20),
   },
   accountText: {
-    color: UColor.arrow,
     fontSize: ScreenUtil.setSpText(15),
     height: ScreenUtil.autoheight(30),
     paddingLeft: ScreenUtil.autowidth(2),
@@ -214,7 +220,6 @@ const styles = StyleSheet.create({
   },
   nextstep: {
     height: ScreenUtil.autoheight(45),
-    backgroundColor: UColor.tintColor,
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: ScreenUtil.autowidth(120),
@@ -223,7 +228,6 @@ const styles = StyleSheet.create({
   },
   nextsteptext: {
     fontSize: ScreenUtil.setSpText(15),
-    color: UColor.fontColor
   },
   logout:{
     flex: 1,
@@ -237,19 +241,17 @@ const styles = StyleSheet.create({
   },
   logtext: {
     fontSize: ScreenUtil.setSpText(14),
-    color: UColor.arrow,
     lineHeight: ScreenUtil.autoheight(30),
   },
   tab: {
     flex: 1
   },
-  passoutsource2: {
+  Explainout: {
     flexDirection: 'column', 
     alignItems: 'flex-start'
   },
-  Explaintext2: {
+  Explaintext: {
       fontSize: ScreenUtil.setSpText(15),
-      color: UColor.arrow, 
       lineHeight: ScreenUtil.autoheight(30), 
   },
 });

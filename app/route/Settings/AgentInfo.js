@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { StyleSheet, View, Text, ScrollView, Image, ImageBackground } from 'react-native';
 import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import BaseComponent from "../../components/BaseComponent";
 
@@ -11,11 +12,7 @@ class AgentInfo extends BaseComponent {
 
     static navigationOptions =  {
         title: "代理人信息",
-        headerStyle: {
-            paddingTop: ScreenUtil.autoheight(20),
-            backgroundColor: UColor.mainColor,
-            borderBottomWidth:0,
-        },
+        header:null, 
     };
 
     constructor(props) {
@@ -39,46 +36,47 @@ class AgentInfo extends BaseComponent {
     render() {
         const agent = this.props.navigation.state.params.coins;
         return (
-            <View style={styles.container}> 
+            <View style={[styles.container,{backgroundColor: UColor.btnColor}]}> 
+            <Header {...this.props} onPressLeft={true} title="代理人信息" />
                 <ScrollView>
-                    <View style={styles.outsource}>
+                    <View style={[styles.outsource,{backgroundColor: UColor.secdColor}]}>
                         <ImageBackground style={styles.AgentInfo} source={UImage.AgentInfo_bg} resizeMode="stretch">                  
-                            <View style={styles.bjoutsource}>
+                            <View style={[styles.bjoutsource,{backgroundColor: UColor.mainColor}]}>
                                 <Image style={styles.imgtext} source={{uri: agent.icon}}/>
                             </View>
-                            <Text style={styles.nametext}>{agent.name}</Text>           
+                            <Text style={[styles.nametext,{color: UColor.fontColor,backgroundColor: UColor.tintColor}]}>{agent.name}</Text>           
                         </ImageBackground> 
-                        <View style={styles.dasoutsource}>
+                        <View style={[styles.dasoutsource,{backgroundColor: UColor.mainColor}]}>
                             {/* <Image style={styles.dasimg} source={UImage.AgentInfo_bg}/> */}
                             <View style={styles.minbag}>
-                                <View style={styles.frame}>
-                                    <Text style={styles.number}>{agent.region}</Text>
-                                    <Text style={styles.state}>地区</Text>
+                                <View style={[styles.frame,{backgroundColor: UColor.secdColor}]}>
+                                    <Text style={[styles.number,{color: UColor.fontColor}]}>{agent.region}</Text>
+                                    <Text style={[styles.state,{color: UColor.lightgray}]}>地区</Text>
                                 </View>
-                                <View style={styles.frame}>
-                                    <Text style={styles.numbers}>{parseInt(agent.total_votes)}</Text>
-                                    <Text style={styles.state}>得票总数</Text>
+                                <View style={[styles.frame,{backgroundColor: UColor.secdColor}]}>
+                                    <Text style={[styles.numbers,{color: UColor.fontColor}]}>{parseInt(agent.total_votes)}</Text>
+                                    <Text style={[styles.state,{color: UColor.lightgray}]}>得票总数</Text>
                                 </View>
                             </View>   
                             <View style={styles.minbag}>
-                                <View style={styles.frame}>
-                                    <Text style={styles.number}>{agent.ranking}</Text>
-                                    <Text style={styles.state}>排名</Text>
+                                <View style={[styles.frame,{backgroundColor: UColor.secdColor}]}>
+                                    <Text style={[styles.number,{color: UColor.fontColor}]}>{agent.ranking}</Text>
+                                    <Text style={[styles.state,{color: UColor.lightgray}]}>排名</Text>
                                 </View>
-                                <View style={styles.frame}>
-                                    <Text style={styles.number}> </Text>
-                                    <Text style={styles.state}>出块状态</Text>
+                                <View style={[styles.frame,{backgroundColor: UColor.secdColor}]}>
+                                    <Text style={[styles.number,{color: UColor.fontColor}]}> </Text>
+                                    <Text style={[styles.state,{color: UColor.lightgray}]}>出块状态</Text>
                                 </View>
                             </View> 
                             <View style={styles.Official}>
-                                <Text style={styles.Officialtitle}>官网：</Text>
-                                <Text onPress={() => this.prot()} style={styles.Officialtext}>{agent.url}</Text>
+                                <Text style={[styles.Officialtitle,{color: UColor.arrow}]}>官网：</Text>
+                                <Text onPress={() => this.prot()} style={[styles.Officialtext,{color: UColor.tintColor}]}>{agent.url}</Text>
                             </View>
                         </View>
                     </View> 
-                    <View style={styles.synopsis}>  
+                    <View style={[styles.synopsis,{backgroundColor: UColor.btnColor}]}>  
                         <View style={styles.spsoutsource}>
-                            <Text style={styles.spstext}>{agent.introduce}</Text>
+                            <Text style={[styles.spstext,{color: UColor.blackColor}]}>{agent.introduce}</Text>
                         </View>
                     </View>
                 </ScrollView>        
@@ -92,13 +90,11 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       flexDirection:'column',
-      backgroundColor: UColor.fontColor,
     },
 
     outsource: { 
         paddingHorizontal: ScreenUtil.autowidth(5),
         paddingBottom: ScreenUtil.autoheight(10), 
-        backgroundColor: UColor.secdColor,
     },
 
     AgentInfo: {
@@ -112,7 +108,6 @@ const styles = StyleSheet.create({
     bjoutsource: {
         width: ScreenUtil.autowidth(50), 
         height: ScreenUtil.autowidth(50), 
-        backgroundColor: UColor.mainColor,
         justifyContent: "center", 
         alignItems: 'center', 
         borderRadius: 25, 
@@ -128,15 +123,12 @@ const styles = StyleSheet.create({
         width: ScreenUtil.autowidth(117), 
         height: ScreenUtil.autoheight(24), 
         lineHeight: ScreenUtil.autoheight(24), 
-        backgroundColor: UColor.tintColor, 
         textAlign: 'center', 
-        color:  UColor.fontColor,
         borderRadius: 5,
     },
 
     dasoutsource: {
-        padding: ScreenUtil.autowidth(5), 
-        backgroundColor: UColor.mainColor, 
+        padding: ScreenUtil.autowidth(5),  
         borderRadius: 5,
     },
 
@@ -161,21 +153,17 @@ const styles = StyleSheet.create({
         flexDirection: 'column', 
         alignItems: 'center', 
         justifyContent: 'space-between', 
-        backgroundColor: UColor.secdColor,
     },
     numbers: {
         fontSize: ScreenUtil.setSpText(12), 
-        color: UColor.fontColor,   
     },
 
     number: {
         fontSize: ScreenUtil.setSpText(18), 
-        color: UColor.fontColor,   
     },
 
     state: {  
         fontSize: ScreenUtil.setSpText(12), 
-        color: UColor.lightgray, 
     },
 
     tablayout: {   
@@ -200,19 +188,16 @@ const styles = StyleSheet.create({
 
     Officialtitle: {
         fontSize: ScreenUtil.setSpText(12), 
-        color: UColor.arrow, 
         marginTop: ScreenUtil.autoheight(5),
     },
 
     Officialtext: {
         fontSize: ScreenUtil.setSpText(13), 
-        color: UColor.tintColor, 
         marginTop: ScreenUtil.autoheight(5),
     },
 
     synopsis: {
         flex: 1,  
-        backgroundColor: UColor.fontColor, 
         paddingTop: ScreenUtil.autoheight(5), 
         paddingHorizontal: ScreenUtil.autowidth(35),
     },
@@ -223,7 +208,6 @@ const styles = StyleSheet.create({
 
     spstext: {  
        fontSize: ScreenUtil.setSpText(14),
-       color: UColor.blackColor,
        lineHeight: ScreenUtil.autoheight(25),
     },  
 

@@ -4,6 +4,7 @@ import {Dimensions,DeviceEventEmitter,InteractionManager,ListView,StyleSheet,Vie
 import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
 import store from 'react-native-simple-store';
 import UColor from '../../utils/Colors'
+import Header from '../../components/Header'
 import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -24,9 +25,9 @@ class CoinDetail extends BaseComponent {
   static navigationOptions = ({ navigation }) => {
     
     const params = navigation.state.params || {};
-
     return {
       headerTitle:"币详情",
+      header: null, 
       headerRight: (
         <Button onPress={params.onPress}>
           <View style={{padding: ScreenUtil.autowidth(15)}}>
@@ -36,7 +37,7 @@ class CoinDetail extends BaseComponent {
       ),
     };
   };
-
+ 
   componentWillMount() {
 
     super.componentWillMount();
@@ -114,12 +115,13 @@ class CoinDetail extends BaseComponent {
 
   render() {
     const c = this.props.navigation.state.params.coins;
-    return <View style={styles.container}>
+    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+     <Header {...this.props} onPressLeft={true} title="币详情" onPressRight={this.onPress.bind()} avatar={this.props.navigation.state.params.img}/>
      <ScrollView style={styles.scrollView}>
       <View>
         {
           (<View>
-            <View style={styles.row}>
+            <View style={[styles.row,{borderBottomColor: UColor.secdColor,backgroundColor:UColor.mainColor}]}>
               <View style={{width:'30%'}}>
                  <View style={{ flex:1,flexDirection:"row",alignItems: 'center',paddingTop:0}}>
                     <Image source={{uri:c.img}} style={{width: ScreenUtil.autowidth(25),height: ScreenUtil.autowidth(25)}} />
@@ -138,7 +140,9 @@ class CoinDetail extends BaseComponent {
                     <Text style={{fontSize: ScreenUtil.setSpText(12),color:UColor.fontColor}}>$ {c.usd}</Text>
                     <Text style={{marginTop: ScreenUtil.autoheight(5),fontSize: ScreenUtil.setSpText(16),color:UColor.arrow}}>≈  ￥{c.price}</Text>
                   </View>
-                  <Text style={c.increase>0?styles.incdo:styles.incup}>{c.increase>0?'+'+c.increase:c.increase}%</Text>
+                  <View style={[styles.cupcdo,{backgroundColor:c.increase>0?UColor.riseColor:UColor.fallColor}]}>
+                    <Text style={[styles.cupcdotext,{color:UColor.btnColor}]}>{c.increase>0?'+'+c.increase:c.increase}%</Text>
+                  </View>
                 </View>
               </View>
           </View>
@@ -212,51 +216,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection:'column',
-    backgroundColor: UColor.bgEchar,
   },
   scrollView: {
    
   },
   row:{
     flex:1,
-    backgroundColor:UColor.mainColor,
     flexDirection:"row",
     paddingHorizontal: ScreenUtil.autowidth(20),
     paddingVertical: ScreenUtil.autowidth(10),
-    borderBottomColor: UColor.secdColor,
     borderBottomWidth: 0.6,
-  
   },
-  left:{
-    width:'25%',
-    flex:1,
-    flexDirection:"column"
-  },
-  right:{
-    width:'85%',
-    flex:1,
-    flexDirection:"column"
-  },
-  incup:{
-    fontSize: ScreenUtil.setSpText(12),
-    color:UColor.fontColor,
-    backgroundColor: UColor.riseColor,
+  cupcdo:{
+    borderRadius: 3,
+    alignItems: 'center',
     padding: ScreenUtil.autowidth(5),
-    textAlign:'center',
-    marginLeft: ScreenUtil.autowidth(10),
-    borderRadius:5,
+    marginLeft: ScreenUtil.autowidth(20),
     minWidth: ScreenUtil.autowidth(60),
+    maxHeight: ScreenUtil.autoheight(25),
   },
-  incdo:{
+  cupcdotext: {
     fontSize: ScreenUtil.setSpText(12),
-    color:UColor.fontColor,
-    backgroundColor: UColor.fallColor,
-    padding: ScreenUtil.autowidth(5),
-    textAlign:'center',
-    marginLeft: ScreenUtil.autowidth(10),
-    borderRadius:5,
-    minWidth: ScreenUtil.autowidth(60)
-  }
+  },
 });
 
 export default CoinDetail;

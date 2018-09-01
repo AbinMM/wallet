@@ -6,6 +6,7 @@ import store from 'react-native-simple-store';
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 const ScreenWidth = Dimensions.get('window').width;
@@ -22,22 +23,12 @@ var CryptoJS = require("crypto-js");
 var dismissKeyboard = require('dismissKeyboard');
 @connect(({ wallet }) => ({ ...wallet }))
 class TurnOut extends BaseComponent {
-    static navigationOptions = ({ navigation }) => {
-        return {
-            headerTitle: '转出EOS',
-            headerStyle: {
-                paddingTop: ScreenUtil.autoheight(20),
-                backgroundColor: UColor.mainColor,
-                borderBottomWidth:0,
-            },
-            headerRight: (<Button name="search" onPress={navigation.state.params.onPress}>
-            <View style={{ paddingHorizontal: ScreenUtil.autowidth(10), alignItems: 'center' }}>
-                <Image source={UImage.scan} style={{ width: ScreenUtil.autowidth(28), height: ScreenUtil.autowidth(28) }}></Image>
-            </View>
-          </Button>),
-        };
-    };
 
+    static navigationOptions = {
+        headerTitle: "转出EOS",
+        header:null, 
+    };
+    
     //组件加载完成
     componentDidMount() {
         this.props.dispatch({
@@ -166,9 +157,10 @@ class TurnOut extends BaseComponent {
         this._setModalVisible();
 
         const view =
-            <View style={styles.passoutsource}>
+            <View style={styles.passout}>
                 <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                    selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" style={styles.inptpass}  maxLength={Constants.PWD_MAX_LENGTH} 
+                    selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
+                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.fontColor,borderBottomColor: UColor.baseline}]}  
                     placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
             </View>
             EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
@@ -206,9 +198,9 @@ class TurnOut extends BaseComponent {
                                         { 
                                             //弹出提示框,可申请免费抵押功能
                                             const view =
-                                            <View style={styles.passoutsource2}>
-                                            <Text style={styles.Explaintext2}>该账号资源(NET/CPU)不足！</Text>
-                                            <Text style={styles.Explaintext2}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                            <View style={styles.Explainout}>
+                                                <Text style={[styles.Explain,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                <Text style={[styles.Explain,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                             </View>
                                             EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                                 
@@ -319,20 +311,21 @@ class TurnOut extends BaseComponent {
 
     render() {
         return (
-        <View style={styles.container}>
+        <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+            <Header {...this.props} onPressLeft={true} title="转出EOS" avatar={UImage.scan} onPressRight={this._rightTopClick.bind()}/>
             <ScrollView  keyboardShouldPersistTaps="always">
                 <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                     <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-                        <View style={styles.header}>
-                            <Text style={styles.headertext}>{this.state.balance.replace("EOS", "")} EOS</Text>
+                        <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
+                            <Text style={[styles.headertext,{color: UColor.fontColor}]}>{this.state.balance.replace("EOS", "")} EOS</Text>
                         </View>
                         <View style={styles.taboutsource}>
-                            <View style={styles.outsource}>
-                                <View style={styles.inptoutsource}>
+                            <View style={[styles.outsource,{backgroundColor: UColor.secdColor}]}>
+                                <View style={[styles.inptoutsource,{borderBottomColor: UColor.mainColor}]}>
                                     <View style={styles.accountoue} >
-                                        <Text style={styles.inptitle}>账户名称</Text>
+                                        <Text style={[styles.inptitle,{color: UColor.fontColor}]}>账户名称</Text>
                                         <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"   
-                                            selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow}      
+                                            selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}      
                                             placeholder="收款人账号" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
                                             onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})} 
                                         />
@@ -343,18 +336,18 @@ class TurnOut extends BaseComponent {
                                         </Button>
                                     </View>
                                 </View>
-                                <View style={styles.textinptoue} >
-                                    <Text style={styles.inptitle}>转账数量</Text>
+                                <View style={[styles.textinptoue,{borderBottomColor: UColor.mainColor}]} >
+                                    <Text style={[styles.inptitle,{color: UColor.fontColor}]}>转账数量</Text>
                                     <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={styles.textinpt}  placeholderTextColor={UColor.arrow} 
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow} 
                                         placeholder="输入转账数量"  underlineColorAndroid="transparent"   keyboardType="numeric"   maxLength = {15}
                                         onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })}
                                         />
                                 </View>
-                                <View style={styles.textinptoue} >
-                                    <Text style={styles.inptitle}>备注</Text>
+                                <View style={[styles.textinptoue,{borderBottomColor: UColor.mainColor}]} >
+                                    <Text style={[styles.inptitle,{color: UColor.fontColor}]}>备注</Text>
                                     <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={styles.textinpt}  placeholderTextColor={UColor.arrow}
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow}
                                         placeholder="Memo" underlineColorAndroid="transparent" keyboardType="default" 
                                         onChangeText={(memo) => this.setState({ memo })}
                                         />
@@ -363,53 +356,53 @@ class TurnOut extends BaseComponent {
                         </View>
                     </TouchableOpacity>
                 </KeyboardAvoidingView>
-                <View style={styles.warningout}>
+                <View style={[styles.warningout,{borderColor: UColor.showy}]}>
                     <Image source={UImage.warning} style={styles.imgBtn} />
-                    <Text style={styles.headtitle}>温馨提示:如果您是向交易所转账,请务必填写相应的备注(MEMO)信息,否则可能无法到账。</Text>
+                    <Text style={[styles.headtitle,{color: UColor.showy}]}>温馨提示:如果您是向交易所转账,请务必填写相应的备注(MEMO)信息,否则可能无法到账。</Text>
                 </View>
                 <Button onPress={this._rightButtonClick.bind(this)} style={styles.btnnextstep}>
-                    <View style={styles.nextstep}>
-                        <Text style={styles.nextsteptext}>下一步</Text>
+                    <View style={[styles.nextstep,{backgroundColor: UColor.tintColor}]}>
+                        <Text style={[styles.nextsteptext,{color: UColor.btnColor}]}>下一步</Text>
                     </View>
                 </Button>
             </ScrollView>
-            <View style={styles.pupuo}>
+            <View style={{backgroundColor: UColor.riceWhite,}}>
                 <Modal animationType={'slide'} transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
                     <TouchableOpacity style={styles.modalStyle} activeOpacity={1.0}>  
-                        <View style={{ width: ScreenWidth,  height: ScreenHeight*4/6,  backgroundColor: UColor.fontColor,}}>
+                        <View style={{ width: ScreenWidth,  height: ScreenHeight*4/6,  backgroundColor: UColor.btnColor,}}>
                             <View style={styles.subView}>
                                 <Text style={styles.buttontext}/>
-                                <Text style={styles.titleText}>订单详情</Text>
+                                <Text style={[styles.titleText,{color: UColor.blackColor}]}>订单详情</Text>
                                 <Button  onPress={this._setModalVisible.bind(this)} style={styles.buttonView}>
-                                    <Text style={styles.buttontext}>×</Text>
+                                    <Text style={[styles.buttontext,{color: UColor.baseline}]}>×</Text>
                                 </Button>
                             </View>
-                                <View style={styles.separationline} >
-                                <Text style={styles.amounttext}>{this.state.amount} </Text>
-                                <Text style={styles.unittext}> EOS</Text>
+                            <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]} >
+                                <Text style={[styles.amounttext,{color:UColor.blackColor}]}>{this.state.amount} </Text>
+                                <Text style={[styles.unittext,{color:UColor.blackColor}]}> EOS</Text>
                             </View>
                             <View style={{flex: 1,}}>
-                                <View style={styles.separationline} >
-                                    <Text style={styles.explainText}>收款账户：</Text>
-                                    <Text style={styles.contentText}>{this.state.toAccount}</Text>
+                                <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]} >
+                                    <Text style={[styles.explainText,{color: UColor.startup}]}>收款账户：</Text>
+                                    <Text style={[styles.contentText,{color: UColor.startup}]}>{this.state.toAccount}</Text>
                                 </View>
-                                <View style={styles.separationline} >
-                                    <Text style={styles.explainText}>转出账户：</Text>
-                                    <Text style={styles.contentText}>{this.props.defaultWallet.account}</Text>
+                                <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]}>
+                                    <Text style={[styles.explainText,{color: UColor.startup}]}>转出账户：</Text>
+                                    <Text style={[styles.contentText,{color: UColor.startup}]}>{this.props.defaultWallet.account}</Text>
                                 </View>
-                                <View style={styles.separationline} >
-                                    <Text style={styles.explainText}>备注：</Text> 
-                                    <Text style={styles.contentText} numberOfLines={1}>{this.state.memo}</Text> 
+                                <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]} >
+                                    <Text style={[styles.explainText,{color: UColor.startup}]}>备注：</Text> 
+                                    <Text style={[styles.contentText,{color: UColor.startup}]} numberOfLines={1}>{this.state.memo}</Text> 
                                 </View>
                                 {this.state.memo== ""&&
-                                <View style={styles.warningoutShow}>
+                                <View style={[styles.warningoutShow,{borderColor: UColor.showy}]}>
                                     <Image source={UImage.warning} style={styles.imgBtn} />
-                                    <Text style={styles.headtitle}>温馨提示：如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
+                                    <Text style={[styles.headtitle,{color: UColor.showy}]}>温馨提示：如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
                                 </View>}
                                 
                                 <Button onPress={() => { this.inputPwd() }}>
-                                    <View style={styles.btnoutsource}>
-                                        <Text style={styles.btntext}>确认</Text>
+                                    <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
+                                        <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
                                     </View>
                                 </Button>
                             </View>
@@ -422,35 +415,30 @@ class TurnOut extends BaseComponent {
     }
 }
 const styles = StyleSheet.create({
-    passoutsource: {
+    passout: {
         flexDirection: 'column', 
         alignItems: 'center'
     },
-    passoutsource2: {
-        flexDirection: 'column', 
-        alignItems: 'flex-start'
-    },
-    Explaintext2: {
-        fontSize: ScreenUtil.setSpText(15),
-        color: UColor.arrow, 
-        lineHeight: ScreenUtil.autoheight(30), 
-    },
     inptpass: {
-        color: UColor.tintColor,
+        textAlign: "center",
         height:  ScreenUtil.autoheight(45),
         width: ScreenWidth-100,
         paddingBottom:  ScreenUtil.autoheight(5),
         fontSize: ScreenUtil.setSpText(16),
-        backgroundColor: UColor.fontColor,
-        borderBottomColor: UColor.baseline,
         borderBottomWidth: 1,
+    },
+    Explainout: {
+        flexDirection: 'column', 
+        alignItems: 'flex-start'
+    },
+    Explain: {
+        fontSize: ScreenUtil.setSpText(15),
+        lineHeight: ScreenUtil.autoheight(30), 
     },
 
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: UColor.secdColor,
-        paddingTop:  ScreenUtil.autoheight(5),
     },
     header: {
         height:  ScreenUtil.autoheight(110),
@@ -458,39 +446,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         margin: ScreenUtil.autowidth(5),
         borderRadius: 5,
-        backgroundColor: UColor.mainColor,
     },
     headertext: {
         fontSize: ScreenUtil.setSpText(20),
-        color: UColor.fontColor
-    },
-    row: {
-        height:  ScreenUtil.autoheight(90),
-        backgroundColor: UColor.mainColor,
-        flexDirection: "column",
-        padding: ScreenUtil.autowidth(10),
-        justifyContent: "space-between",
-        borderRadius: 5,
-        margin: ScreenUtil.autowidth(5),
-    },
-    top: {
-        flex: 1,
-        flexDirection: "row",
-        alignItems: 'center',
-    },
-    footer: {
-        height:  ScreenUtil.autoheight(50),
-        flexDirection: 'row',
-        position: 'absolute',
-        backgroundColor: UColor.secdColor,
-        bottom: 0,
-        left: 0,
-        right: 0,
     },
 
-    pupuo: {
-        backgroundColor: UColor.riceWhite,
-    },
     // modal的样式  
     modalStyle: {
         flex: 1, 
@@ -509,7 +469,6 @@ const styles = StyleSheet.create({
     },
     buttontext: {
         width:  ScreenUtil.autoheight(50),
-        color: UColor.baseline,
         fontSize: ScreenUtil.setSpText(28),
         textAlign: 'center',
     },
@@ -517,21 +476,18 @@ const styles = StyleSheet.create({
     titleText: {
         flex: 1,
         fontSize: ScreenUtil.setSpText(18),
-        fontWeight: 'bold',
-        color: UColor.blackColor, 
+        fontWeight: 'bold', 
         textAlign:'center'
     },
     // 内容  
     explainText: {
         fontSize: ScreenUtil.setSpText(18),
         textAlign: 'left',
-        color: UColor.secdColor,
     },
     contentText: {
         flex: 1,
         fontSize: ScreenUtil.setSpText(18),
         textAlign: 'right',
-        color: UColor.secdColor,
     },
 
     //转帐信息提示分隔线
@@ -540,7 +496,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: ScreenUtil.autowidth(20),
         flexDirection: "row",
         borderBottomWidth: 0.5,
-        borderBottomColor: UColor.lightgray,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -549,14 +504,12 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(25),
         paddingVertical: ScreenUtil.autoheight(15), 
         lineHeight: ScreenUtil.autoheight(10),
-        color:UColor.blackColor,
         textAlign: 'center',
     },
     unittext: {
         fontSize: ScreenUtil.setSpText(13),
         paddingVertical: ScreenUtil.autoheight(10), 
         lineHeight: ScreenUtil.autoheight(10),
-        color:UColor.blackColor,
         textAlign: 'center',
     },
 
@@ -565,13 +518,11 @@ const styles = StyleSheet.create({
         margin: ScreenUtil.autowidth(15),
         height:  ScreenUtil.autoheight(45),
         borderRadius: 6,
-        backgroundColor: UColor.tintColor,
         justifyContent: 'center',
         alignItems: 'center'
     },
     btntext: {
         fontSize: ScreenUtil.setSpText(16),
-        color: UColor.fontColor
     },
    
     taboutsource: {
@@ -579,7 +530,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     outsource: {
-        backgroundColor: UColor.secdColor,
         flexDirection: 'column',
         padding: ScreenUtil.autowidth(20),
         flex: 1,
@@ -587,7 +537,6 @@ const styles = StyleSheet.create({
     inptoutsource: {
         flexDirection: 'row',
         borderBottomWidth: 1,
-        borderBottomColor: UColor.mainColor,
         marginBottom:  ScreenUtil.autoheight(10),
         paddingLeft: ScreenUtil.autowidth(5),
     },
@@ -597,12 +546,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
 
-    inpt: {
-        flex: 1,
-        color: UColor.arrow,
-        fontSize: ScreenUtil.setSpText(14),
-        height: ScreenUtil.autoheight(40),
-    },
+  
     scanning: {
         width:  ScreenUtil.autoheight(40),
         flexDirection: "row",
@@ -617,17 +561,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: ScreenUtil.autowidth(5),
         marginBottom:  ScreenUtil.autoheight(10),
         borderBottomWidth: 1,
-        borderBottomColor: UColor.mainColor,
         justifyContent: 'center',
     },
     inptitle: {
         flex: 1,
         fontSize: ScreenUtil.setSpText(14),
-        color: UColor.fontColor,
     },
 
     textinpt: {
-        color: UColor.arrow,
         fontSize: ScreenUtil.setSpText(14),
         height: ScreenUtil.autoheight(40),
     },
@@ -637,7 +578,6 @@ const styles = StyleSheet.create({
     },
     nextstep: {
         height:  ScreenUtil.autoheight(45),
-        backgroundColor: UColor.tintColor,
         justifyContent: 'center',
         alignItems: 'center',
         margin: ScreenUtil.autowidth(20),
@@ -645,7 +585,6 @@ const styles = StyleSheet.create({
     },
     nextsteptext: {
         fontSize: ScreenUtil.setSpText(15),
-        color: UColor.fontColor
     },
 
     warningout: {
@@ -655,7 +594,6 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         paddingHorizontal: ScreenUtil.autowidth(10),
         paddingVertical:  ScreenUtil.autoheight(5),
-        borderColor: UColor.showy,
         borderWidth: 1,
         borderRadius: 5,
     },
@@ -668,7 +606,6 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         paddingHorizontal: ScreenUtil.autowidth(10),
         paddingVertical:  ScreenUtil.autoheight(5),
-        borderColor: UColor.showy,
         borderWidth: 1,
         borderRadius: 5,
     },
@@ -679,7 +616,6 @@ const styles = StyleSheet.create({
     },
     headtitle: {
         flex: 1,
-        color: UColor.showy,
         fontSize: ScreenUtil.setSpText(12),
         lineHeight:  ScreenUtil.autoheight(20),
         paddingLeft: ScreenUtil.autowidth(10),

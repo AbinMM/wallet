@@ -4,6 +4,7 @@ import { Dimensions, StyleSheet, View, Text, Image, ImageBackground } from 'reac
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
@@ -18,11 +19,7 @@ class SignIn extends BaseComponent {
 
   static navigationOptions = {
     title: '用户积分',
-    headerStyle: {
-      paddingTop: ScreenUtil.autoheight(20),
-      backgroundColor: UColor.secdColor,
-      borderBottomWidth:0,
-    },
+    header:null, 
   };
 
   
@@ -126,49 +123,50 @@ class SignIn extends BaseComponent {
   }
 
   render() {
-    return <View style={styles.container}>
-      <View style={styles.outsource}>
+    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+     <Header {...this.props} onPressLeft={true} title="用户积分" />
+      <View style={[styles.outsource,{backgroundColor: UColor.secdColor}]}>
         <Text style={styles.promptText}> 温馨提示：连续签到将获得额外积分哦~</Text>
         <ImageBackground style={styles.imgbg} source={UImage.integral_bg} resizeMode="cover">
           <View style={styles.accumulativeout}>
-            <Text style={styles.accumulativetext}>累计积分</Text>
-            <Text style={styles.accumulative}>{this.state.newaccumulative}</Text>
+            <Text style={[styles.accumulativetext,{color: UColor.btnColor}]}>累计积分</Text>
+            <Text style={[styles.accumulative,{color: UColor.btnColor}]}>{this.state.newaccumulative}</Text>
           </View>
         </ImageBackground>
         <Image source={UImage.point_full} style={styles.imgsty} />           
         <View style={styles.sigshaint}>
-          <Text style={styles.sigsto}>{this.props.pointInfo.signin}</Text>
-          <Text style={styles.shatur}>{this.props.pointInfo.share}</Text>
-          <Text style={styles.sigsto}>{this.props.pointInfo.interact}</Text>
+          <Text style={[styles.sigsto,{color:UColor.theme ? UColor.tintColor : UColor.fontColor}]}>{this.props.pointInfo.signin}</Text>
+          <Text style={[styles.shatur,{color:UColor.theme ? UColor.tintColor : UColor.fontColor}]}>{this.props.pointInfo.share}</Text>
+          <Text style={[styles.sigsto,{color:UColor.theme ? UColor.tintColor : UColor.fontColor}]}>{this.props.pointInfo.interact}</Text>
         </View>
         <View style={styles.sigshainttext}>
-          <Text style={styles.sigstotext}>签到累计</Text>
-          <Text style={styles.shaturtext}>分享资讯</Text>
-          <Text style={styles.sigstotext}>资讯互动</Text>
+          <Text style={[styles.sigstotext,{color: UColor.arrow}]}>签到累计</Text>
+          <Text style={[styles.shaturtext,{color: UColor.arrow}]}>分享资讯</Text>
+          <Text style={[styles.sigstotext,{color: UColor.arrow}]}>资讯互动</Text>
         </View>
         {/* <View style={styles.stotur}>
-          <Text style={styles.sigsto}>{this.props.pointInfo.store}</Text>
-          <Text style={styles.shatur}>{this.props.pointInfo.turnin}</Text>
-          <Text style={styles.sigsto}>{this.props.pointInfo.turnout}</Text>
+          <Text style={[styles.sigsto,{color:UColor.theme ? UColor.tintColor : UColor.fontColor}]}>{this.props.pointInfo.store}</Text>
+          <Text style={[styles.shatur,{color:UColor.theme ? UColor.tintColor : UColor.fontColor}]}>{this.props.pointInfo.turnin}</Text>
+          <Text style={[styles.sigsto,{color:UColor.theme ? UColor.tintColor : UColor.fontColor}]}>{this.props.pointInfo.turnout}</Text>
         </View> */}
         {/* <View style={styles.stoturtext}>
-          <Text  style={styles.sigstotext}>资产存储</Text>
-          <Text style={styles.shaturtext}>转入累计</Text>
-          <Text style={styles.sigstotext}>转出累计</Text>
+          <Text style={[styles.sigstotext,{color: UColor.arrow}]}>资产存储</Text>
+          <Text style={[styles.shaturtext,{color: UColor.arrow}]}>转入累计</Text>
+          <Text style={[styles.sigstotext,{color: UColor.arrow}]}>转出累计</Text>
         </View> */}
       </View>
       <Button onPress={() => this.signIn()}>
-        <View style={styles.SignInbtnout} backgroundColor={this.state.Sign_in ? UColor.mainColor:UColor.tintColor}>
-          <Text style={styles.SignInbtntext}>{this.state.Sign_in ? "已签到": "立即签到"}</Text>
+        <View style={styles.SignInbtnout} backgroundColor={this.state.Sign_in ? (UColor.theme ? "#BFBFBF" : UColor.mainColor):UColor.tintColor}>
+          <Text style={[styles.SignInbtntext,{color: UColor.btnColor}]}>{this.state.Sign_in ? "已签到": "立即签到"}</Text>
         </View>
       </Button>
-      <Text style={styles.foottop}>积分细则</Text>
-      <Text style={styles.foottext}>1. 签到每日可获得积分+1，连续签到可额外增加积分；</Text>
-      <Text style={styles.foottext}>2. 分享资讯到朋友圈或微信好友每日可获得积分+1；</Text>
-      <Text style={styles.foottext}>3. 资讯浏览点评每日可获得积分+1；</Text>
-      <View flexDirection="row">
-        <Text style={styles.foottext}>4. </Text>
-        <Text style={styles.footbom}>积分可兑换官方礼品和提高用户权益，官方后续将会开发积分价值体系，让有更多积分的用户享受VIP服务，敬请期待。</Text>
+      <Text style={[styles.foottop,{color: UColor.arrow}]}>积分细则</Text>
+      <Text style={[styles.foottext,{color: UColor.arrow}]}>1. 签到每日可获得积分+1，连续签到可额外增加积分；</Text>
+      <Text style={[styles.foottext,{color: UColor.arrow}]}>2. 分享资讯到朋友圈或微信好友每日可获得积分+1；</Text>
+      <Text style={[styles.foottext,{color: UColor.arrow}]}>3. 资讯浏览点评每日可获得积分+1；</Text>
+      <View style={{width:ScreenWidth-ScreenUtil.autowidth(30),paddingHorizontal: ScreenUtil.autowidth(15), flexDirection: "row"}}>
+        <Text style={[styles.footbom,{color: UColor.arrow}]}>4. </Text>
+        <Text style={[styles.footbom,{color: UColor.arrow}]}>积分可兑换官方礼品和提高用户权益，官方后续将会开发积分价值体系，让有更多积分的用户享受VIP服务，敬请期待。</Text>
       </View>  
     </View>
   }
@@ -178,14 +176,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: UColor.secdColor,
   },
   outsource: {
     flexDirection: 'column',
-    backgroundColor: UColor.secdColor,
   },
   promptText: {
-    color: UColor.arrow,
     margin: ScreenUtil.autowidth(10),
     fontSize: ScreenUtil.setSpText(14),
   },
@@ -203,12 +198,10 @@ const styles = StyleSheet.create({
     margin: ScreenUtil.autowidth(10),
   },
   accumulativetext: {
-    color: UColor.fontColor,
     fontSize: ScreenUtil.setSpText(14),
     marginBottom: ScreenUtil.autoheight(10),
   },
   accumulative: {
-    color: UColor.fontColor,
     fontSize: ScreenUtil.setSpText(28),
     marginLeft: ScreenUtil.autowidth(2),
     paddingBottom: ScreenUtil.autoheight(2),
@@ -244,27 +237,22 @@ const styles = StyleSheet.create({
   sigsto: { 
     textAlign: "center", 
     alignSelf: 'center', 
-    color: UColor.fontColor, 
     fontSize: ScreenUtil.setSpText(16), 
   },
   sigstotext: { 
     textAlign: "center", 
-    color: UColor.arrow, 
     fontSize: ScreenUtil.setSpText(14), 
   },
   shatur: { 
     textAlign: "center", 
     alignSelf: 'center', 
-    color: UColor.fontColor, 
     fontSize: ScreenUtil.setSpText(16), 
   },
   shaturtext: { 
-    color: UColor.arrow,
     textAlign: "center", 
     fontSize: ScreenUtil.setSpText(14), 
   },
   SignInbtnout: {
-
     height: ScreenUtil.autoheight(45),
     justifyContent: 'center',
     alignItems: 'center',
@@ -274,23 +262,19 @@ const styles = StyleSheet.create({
   },
   SignInbtntext: {
     fontSize: ScreenUtil.setSpText(15),
-    color: UColor.fontColor
   },
   foottop: {
-    color: UColor.arrow,
     fontSize: ScreenUtil.setSpText(14),
     lineHeight: ScreenUtil.autoheight(40), 
     marginLeft: ScreenUtil.autowidth(15),
     marginTop: ScreenUtil.autoheight(10),
   },
   foottext: {
-    color: UColor.arrow,
     fontSize: ScreenUtil.setSpText(14),
     lineHeight: ScreenUtil.autoheight(25),
     marginLeft: ScreenUtil.autowidth(15),
   },
   footbom: {
-    color: UColor.arrow,
     fontSize: ScreenUtil.setSpText(14),
     lineHeight: ScreenUtil.autoheight(25),
   },

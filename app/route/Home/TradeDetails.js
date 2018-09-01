@@ -5,6 +5,7 @@ import QRCode from 'react-native-qrcode-svg';
 import UColor from '../../utils/Colors'
 import Button from  '../../components/Button'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import ViewShot from "react-native-view-shot";
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
@@ -12,26 +13,16 @@ import { EasyShowLD } from '../../components/EasyShow'
 import BaseComponent from "../../components/BaseComponent";
 import moment from 'moment';
 var WeChat = require('react-native-wechat');
-
 const UrlHead = "https://eoseco.com/search?q=";
+
 @connect(({login}) => ({...login}))
 class TradeDetails extends BaseComponent {
-    static navigationOptions = ({ navigation }) => {
-        const params = navigation.state.params || {};
-        return {
-            headerTitle: '交易详情',
-            headerStyle: {
-                paddingTop: ScreenUtil.autoheight(20),
-                backgroundColor: UColor.mainColor,
-                borderBottomWidth:0,
-            },
-            headerRight: (<Button name="search" onPress={navigation.state.params.onPress}>
-            <View style={{ padding: ScreenUtil.autowidth(15) }}>
-            <Image source={UImage.share_i} style={{ width: ScreenUtil.autowidth(22), height: ScreenUtil.autowidth(22) }}></Image>
-            </View>
-          </Button>),   
-        };
-    };
+
+    static navigationOptions = {
+      headerTitle: '交易详情' ,
+      header:null, 
+          
+  };
 
   constructor(props) {
     super(props);
@@ -107,15 +98,15 @@ class TradeDetails extends BaseComponent {
     });
   }
 
-
   componentDidMount() {
         //alert('trade: '+JSON.stringify(this.props.navigation.state.params.trade));
   }
+
   componentWillUnmount(){
     //结束页面前，资源释放操作
-    super.componentWillUnmount();
-    
+    super.componentWillUnmount(); 
   }
+
   prot(key, data = {}) {
     if (key == 'transactionId') {
       // Linking.openURL(UrlHead + 'tx/' + this.state.trade.transactionId);
@@ -135,70 +126,62 @@ class TradeDetails extends BaseComponent {
     }
   }
 
-
-
-
   copy = (trade) => {
-    // Clipboard.setString( UrlHead + 'tx/' + trade.transactionId);
     Clipboard.setString( UrlHead + trade.transactionId);
     EasyToast.show("复制成功");
   }
   
   render() {
-    // const c = this.props.navigation.state.params.trade;
-    return <View style={styles.container}>
+    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+       <Header {...this.props} onPressLeft={true} title="交易详情" avatar={UImage.share_i} onPressRight={this._rightTopClick.bind()}/>
       <ViewShot ref="viewShot" style={{flex: 1,backgroundColor:UColor.secdColor}}> 
-        {this.state.trade.disptype == 0 && <View style={styles.header}>
+        {this.state.trade.disptype == 0 && <View style={[styles.header,{borderBottomColor: UColor.mainColor}]}>
             <View style={styles.headout}>
-                <Text style={styles.quantitytext}>{this.state.trade.type=='转出'?'-':'+'} </Text>
-                <Text style={styles.quantitytext}>{this.state.trade.quantity.replace(this.state.trade.code, "")} </Text>
-                <Text style={styles.headtext}> {this.state.trade.code}</Text>
+                <Text style={[styles.quantitytext,{color: UColor.fontColor}]}>{this.state.trade.type=='转出'?'-':'+'} </Text>
+                <Text style={[styles.quantitytext,{color: UColor.fontColor}]}>{this.state.trade.quantity.replace(this.state.trade.code, "")} </Text>
+                <Text style={[styles.headtext,{color: UColor.arrow}]}> {this.state.trade.code}</Text>
             </View>
-            <Text style={styles.description}>({this.state.trade.description}{this.state.trade.bytes? this.state.trade.bytes + " bytes":""})</Text>
+            <Text style={[styles.description,{color: UColor.tintColor}]}>({this.state.trade.description}{this.state.trade.bytes? this.state.trade.bytes + " bytes":""})</Text>
           </View>
         }
-        {this.state.trade.disptype == 1 && <View style={styles.header}>
+        {this.state.trade.disptype == 1 && <View style={[styles.header,{borderBottomColor: UColor.mainColor}]}>
             <View style={styles.headout}>
-                {/* <Text style={styles.quantitytext}>{transaction.action_name == 'selltoken'?'+':'-'} </Text> */}
-                <Text style={styles.quantitytext}>{this.state.trade.quantity}</Text>
-                {/* <Text style={styles.headtext}> {transaction.eos_qty}</Text> */}
+                <Text style={[styles.quantitytext,{color: UColor.fontColor}]}>{this.state.trade.quantity}</Text>
             </View>
-            <Text style={styles.description}>{this.state.trade.type == 'selltoken'?'(卖)':'(买)'}</Text>
+            <Text style={[styles.description,{color: UColor.tintColor}]}>{this.state.trade.type == 'selltoken'?'(卖)':'(买)'}</Text>
           </View>
         }
-        {this.state.trade.disptype == 2 && <View style={styles.header}>
+        {this.state.trade.disptype == 2 && <View style={[styles.header,{borderBottomColor: UColor.mainColor}]}>
             <View style={styles.headout}>
-                {/* <Text style={styles.quantitytext}>{c.type=='转出'?'-':'+'} </Text> */}
-                <Text style={styles.quantitytext}>{this.state.trade.quantity} </Text>
-                {/* <Text style={styles.headtext}> {c.code}</Text> */}
+                <Text style={[styles.quantitytext,{color: UColor.fontColor}]}>{this.state.trade.quantity} </Text>
             </View>
-            <Text style={styles.description}>{this.state.trade.type == 'buyram'?'(买)':'(卖)'}</Text>
+            <Text style={[styles.description,{color: UColor.tintColor}]}>{this.state.trade.type == 'buyram'?'(买)':'(卖)'}</Text>
           </View>
         }
         <View style={{flexDirection: "row", borderBottomColor: UColor.mainColor, borderBottomWidth: 0.5,paddingHorizontal: ScreenUtil.autowidth(10),paddingVertical: ScreenUtil.autoheight(20),}}>
           <View style={styles.conout}>
             <View style={styles.conouttext}>
-              <Text style={styles.context}>发  送  方: </Text> 
-              <Text style={styles.tintext} onPress={this.prot.bind(this, 'from')}>{this.state.trade.from}</Text>
+              <Text style={[styles.context,{color: UColor.arrow}]}>发  送  方: </Text> 
+              <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'from')}>{this.state.trade.from}</Text>
             </View>
             <View style={styles.conouttext}>
-              <Text style={styles.context}>接  受  方: </Text>
-              <Text style={styles.tintext} onPress={this.prot.bind(this, 'to')}>{this.state.trade.to}</Text>
+              <Text style={[styles.context,{color: UColor.arrow}]}>接  受  方: </Text>
+              <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'to')}>{this.state.trade.to}</Text>
             </View>
             <View style={styles.conouttext}> 
-              <Text style={styles.context}>区块高度: </Text>
+              <Text style={[styles.context,{color: UColor.arrow}]}>区块高度: </Text>
               {(this.state.trade.blockNum == null || this.state.trade.blockNum == "") ? 
-              <Text style={styles.showytext}>未确认</Text>:
-              <Text style={styles.tintext} onPress={this.prot.bind(this, 'blockNum')}>{this.state.trade.blockNum}</Text>
+              <Text style={[styles.showytext,{color: UColor.showy}]}>未确认</Text>:
+              <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'blockNum')}>{this.state.trade.blockNum}</Text>
               }
             </View>
             <View style={styles.conouttext}>
-              <Text style={styles.context}> 备     注  : </Text>
-              <Text style={styles.blocktext} numberOfLines={8} ellipsizeMode='tail'>{this.state.trade.memo}</Text>
+              <Text style={[styles.context,{color: UColor.arrow}]}> 备     注  : </Text>
+              <Text style={[styles.blocktext,{color: UColor.arrow}]} numberOfLines={8} ellipsizeMode='tail'>{this.state.trade.memo}</Text>
             </View>
           </View>
           <View style={styles.codeout}>
-            <View style={styles.qrcode}>
+            <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
                <QRCode size={ScreenUtil.setSpText(90)} value={UrlHead + this.state.trade.transactionId } />
             </View>
             <Button onPress={this.copy.bind(this,this.state.trade)}>
@@ -210,21 +193,21 @@ class TradeDetails extends BaseComponent {
         </View>
         <View style={styles.tradehint}>
           <View style={styles.conouttext}>
-            <Text style={styles.contwotext}>交  易  号: </Text>
-            <Text style={styles.tintext} onPress={this.prot.bind(this, 'transactionId')}>{this.state.trade.transactionId.substring(0, 10) +"..."+ this.state.trade.transactionId.substr(this.state.trade.transactionId.length-10) }</Text>
+            <Text style={[styles.contwotext,{color: UColor.arrow}]}>交  易  号: </Text>
+            <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'transactionId')}>{this.state.trade.transactionId.substring(0, 10) +"..."+ this.state.trade.transactionId.substr(this.state.trade.transactionId.length-10) }</Text>
           </View>
           <View style={styles.conouttext}>
-            <Text style={styles.contwotext}> 提     示  : </Text>
-            <Text style={styles.blocktext}>扫码可获取区块交易状态</Text>
+            <Text style={[styles.contwotext,{color: UColor.arrow}]}> 提     示  : </Text>
+            <Text style={[styles.blocktext,{color: UColor.arrow}]}>扫码可获取区块交易状态</Text>
           </View>
           <View style={styles.conouttext}>
-            <Text style={styles.contwotext}>交易时间: </Text>
-            <Text style={styles.blocktext}>{moment(this.state.trade.blockTime).add(8,'hours').format('YYYY/MM/DD HH:mm')}</Text>
+            <Text style={[styles.contwotext,{color: UColor.arrow}]}>交易时间: </Text>
+            <Text style={[styles.blocktext,{color: UColor.arrow}]}>{moment(this.state.trade.blockTime).add(8,'hours').format('YYYY/MM/DD HH:mm')}</Text>
           </View>
         </View>
         <View style={styles.logout}>
             <Image source={UImage.bottom_log} style={styles.logimg}/>
-            <Text style={styles.logtext}>EosToken 专注柚子生态</Text>
+            <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
         </View>
       </ViewShot>
     </View>
@@ -235,14 +218,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection:'column',
-    backgroundColor: UColor.secdColor,
   },
  
   header: {
     height: ScreenUtil.autoheight(100),
     alignItems: 'center',
     justifyContent: 'center',
-    borderBottomColor: UColor.mainColor,
     borderBottomWidth: 0.5,
   },
   headout: {
@@ -253,17 +234,14 @@ const styles = StyleSheet.create({
   },
   quantitytext: {
     fontSize: ScreenUtil.setSpText(30),
-    color: UColor.fontColor
   },
   headtext: {
     fontSize: ScreenUtil.setSpText(15),
-    color: UColor.arrow,
     paddingTop: ScreenUtil.autoheight(10),
   },
   description: {
     height: ScreenUtil.autoheight(35),
     fontSize: ScreenUtil.setSpText(14),
-    color: UColor.tintColor,
   },
   conout: {
     flex: 2,
@@ -280,14 +258,12 @@ const styles = StyleSheet.create({
     paddingRight: ScreenUtil.autowidth(5),
     textAlign: 'right',
     fontSize: ScreenUtil.setSpText(14),
-    color: UColor.arrow,
   },
   contwotext: {
     flex: 1,
     paddingRight: ScreenUtil.autowidth(5),
     textAlign: 'right',
     fontSize: ScreenUtil.setSpText(14),
-    color: UColor.arrow,
   },
 
   tradehint: {
@@ -296,18 +272,15 @@ const styles = StyleSheet.create({
     marginTop: ScreenUtil.autoheight(40),
   },
   blocktext: {
-    color: UColor.arrow, 
     flex: 4,
     paddingLeft: ScreenUtil.autowidth(5),
     fontSize: ScreenUtil.setSpText(14),
   },
   showytext: {
-    color: UColor.showy, 
     flex: 4,
     fontSize: ScreenUtil.setSpText(14),
   },
   tintext: {
-    color: UColor.tintColor, 
     flex: 4,
     paddingLeft: ScreenUtil.autowidth(5),
     fontSize: ScreenUtil.setSpText(14),
@@ -319,7 +292,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   qrcode: {
-    backgroundColor: UColor.fontColor,
     paddingHorizontal:ScreenUtil.autowidth(5),
     paddingVertical: ScreenUtil.autowidth(5),
     marginBottom: ScreenUtil.autoheight(10),
@@ -336,7 +308,6 @@ const styles = StyleSheet.create({
   },
   logtext: {
     fontSize: ScreenUtil.setSpText(14),
-    color: UColor.arrow,
     lineHeight: ScreenUtil.autoheight(30),
   }
 });

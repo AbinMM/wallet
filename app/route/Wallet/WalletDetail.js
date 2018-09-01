@@ -1,15 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, StyleSheet, View, Clipboard, Text, ScrollView, Image, Linking, TextInput, Modal } from 'react-native';
-import ScreenUtil from '../../utils/ScreenUtil'
-import UColor from '../../utils/Colors'
-import Button from '../../components/Button'
-import Item from '../../components/Item'
 import UImage from '../../utils/Img'
-import Constants from '../../utils/Constants'
-import { EasyToast } from '../../components/Toast';
-import { EasyShowLD } from '../../components/EasyShow'//CGP TEST
+import UColor from '../../utils/Colors'
+import Item from '../../components/Item'
+import Button from '../../components/Button'
+import Header from '../../components/Header'
 import JPushModule from 'jpush-react-native';
+import Constants from '../../utils/Constants'
+import ScreenUtil from '../../utils/ScreenUtil'
+import { EasyToast } from '../../components/Toast';
+import { EasyShowLD } from '../../components/EasyShow'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
@@ -23,15 +24,9 @@ class WalletDetail extends BaseComponent {
     const params = navigation.state.params || {};
     return {
       headerTitle: params.data.name,
-      headerStyle: {
-        paddingTop: ScreenUtil.autoheight(20),
-        backgroundColor: UColor.mainColor,
-        borderBottomWidth:0,
-      },
-
+      header:null,  
     };
   };
-
 
   constructor(props) {
     super(props);
@@ -56,18 +51,17 @@ class WalletDetail extends BaseComponent {
     });
   }
 
-    //组件加载完成
-    componentDidMount() {
-      this.props.dispatch({ type: 'wallet/getintegral', payload:{},callback: (data) => { 
-        this.setState({integral: data.data});
-      } });
-    }
-    componentWillUnmount(){
-      //结束页面前，资源释放操作
-      super.componentWillUnmount();
-      
-    }
- 
+  //组件加载完成
+  componentDidMount() {
+    this.props.dispatch({ type: 'wallet/getintegral', payload:{},callback: (data) => { 
+      this.setState({integral: data.data});
+    } });
+  }
+
+  componentWillUnmount(){
+    //结束页面前，资源释放操作
+    super.componentWillUnmount();
+  }
 
   // 显示/隐藏 modal  
   _setModalVisible() {
@@ -83,7 +77,8 @@ class WalletDetail extends BaseComponent {
       const view =
         <View style={styles.passoutsource}>
           <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-            selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  style={styles.inptpass} maxLength={Constants.PWD_MAX_LENGTH}
+            selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
+            style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
             placeholderTextColor={UColor.arrow}  placeholder="请输入密码"  underlineColorAndroid="transparent" />
         </View>
       EasyShowLD.dialogShow("密码", view, "确定", "取消", () => {
@@ -258,7 +253,8 @@ class WalletDetail extends BaseComponent {
     const view =
       <View style={styles.passoutsource}>
         <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-          selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  style={styles.inptpass} maxLength={Constants.PWD_MAX_LENGTH}
+          selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
+          style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
           placeholderTextColor={UColor.arrow}  placeholder="请输入密码"  underlineColorAndroid="transparent" />
       </View>
     EasyShowLD.dialogShow("密码", view, "确定", "取消", () => {
@@ -315,7 +311,7 @@ class WalletDetail extends BaseComponent {
                 //msg:success,data:true, code:0 账号已存在
                 EasyShowLD.dialogShow("恭喜激活成功", (<View>
                     <Text style={{fontSize: ScreenUtil.setSpText(20), color: UColor.showy, textAlign: 'center',}}>{name}</Text>
-                    {/* <Text style={styles.inptpasstext}>您申请的账号已经被***激活成功</Text> */}
+                    {/* <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>您申请的账号已经被***激活成功</Text> */}
                 </View>), "知道了", null,  () => { EasyShowLD.dialogClose() });
             }else if(result.code == 500){ // 网络异常
               EasyToast.show(result.msg);
@@ -404,7 +400,8 @@ class WalletDetail extends BaseComponent {
     const view =
       <View style={styles.passoutsource}>
         <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-          selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  style={styles.inptpass} maxLength={Constants.PWD_MAX_LENGTH}
+          selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
+          style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
           placeholderTextColor={UColor.arrow}  placeholder="请输入密码"  underlineColorAndroid="transparent"/>
       </View>
 
@@ -463,64 +460,68 @@ class WalletDetail extends BaseComponent {
     const c = this.props.navigation.state.params.data
     const balance = this.props.navigation.state.params.balance
     const isEye = this.props.navigation.state.params.isEye
-
-    return <View style={styles.container}>    
+    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>    
+      <Header {...this.props} onPressLeft={true} title={c.name} />
       <ScrollView style={styles.scrollView}>
         <View>
-          <View style={styles.walletout}>
+          <View style={[styles.walletout,{backgroundColor: UColor.mainColor}]}>
             <View style={styles.accountout} >
-              <Text style={styles.accounttext}>{isEye ? (c.isactived && c.balance != null && c.balance != ""? c.balance : balance) : "******"}</Text>
-               <Text style={styles.company}> EOS</Text>
+              <Text style={[styles.accounttext,{color: UColor.fontColor}]}>{isEye ? (c.isactived && c.balance != null && c.balance != ""? c.balance : balance) : "******"}</Text>
+               <Text style={[styles.company,{color: UColor.fontColor}]}> EOS</Text>
             </View>
             <View style={styles.topout}>
-              <Text style={styles.category}>账户名称：</Text>
+              <Text style={[styles.category,{color:  UColor.fontColor}]}>账户名称：</Text>
                 <Button onPress={this.copyname.bind(this,c)} underlayColor={UColor.mainColor}>
                   <View style={{flexDirection: "row",}}>
-                    <Text style={styles.outname}>{c.name}</Text>
+                    <Text style={[styles.outname,{color: UColor.arrow}]}>{c.name}</Text>
                     <Image source={UImage.copy} style={styles.imgBtn} />
                   </View>
                 </Button>
-              {(!c.isactived || !c.hasOwnProperty('isactived')) ? <View style={styles.notactivedout}><Text style={styles.notactived}>未激活</Text></View>:(c.isBackups ? null : <View style={styles.stopoutBackupsout}><Text style={styles.stopoutBackups}>未备份</Text></View>) }   
+              {(!c.isactived || !c.hasOwnProperty('isactived')) ? <View style={[styles.notactivedout,{borderColor: UColor.showy}]}>
+              <Text style={[styles.notactived,{color: UColor.showy}]}>未激活</Text>
+              </View>:(c.isBackups ? null : <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
+              <Text style={[styles.stopoutBackups,{borderColor: UColor.tintColor}]}>未备份</Text>
+              </View>) }   
             </View>
           </View>
           <View>{this._renderListItem()}</View>
           {(!c.isactived || !c.hasOwnProperty('isactived')) ? 
           <Button onPress={this.activeWallet.bind(this, c)} style={{ flex: 1 }}>
-            <View style={styles.acttiveout}>
-              <Text style={styles.delete}>激活账户</Text>
+            <View style={[styles.acttiveout,{backgroundColor: UColor.tintColor}]}>
+              <Text style={[styles.delete,{color: UColor.btnColor}]}>激活账户</Text>
             </View>
           </Button>
           :null
           }
           <Button onPress={this.deleteAccount.bind(this, c)} style={{ flex: 1 }}>
-            <View style={styles.deleteout}>
-              <Text style={styles.delete}>删除账户</Text>
+            <View style={[styles.deleteout,{backgroundColor: UColor.showy}]}>
+              <Text style={[styles.delete,{color: UColor.btnColor}]}>删除账户</Text>
             </View>
           </Button>
         </View>
       </ScrollView>
-      <View style={styles.pupuo}>
+      <View style={{backgroundColor: UColor.riceWhite}}>
         <Modal animationType='slide' transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
-          <View style={styles.modalStyle}>
-            <View style={styles.subView} >
+          <View style={[styles.modalStyle,{backgroundColor: UColor.mask}]}>
+            <View style={[styles.subView,{borderColor: UColor.baseline,backgroundColor: UColor.btnColor}]} >
               <Button style={{ alignItems: 'flex-end',}} onPress={this._setModalVisible.bind(this)}>
                 <View style={styles.closeText}>
                     <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={28} />
                 </View>
               </Button>
-              <View style={styles.eosparkout}>
-                <Text style={styles.titletext}>eosmonitor.io</Text>
+              <View style={[styles.eosparkout,{borderColor: UColor.tintColor}]}>
+                <Text style={[styles.titletext,{color: UColor.arrow}]}>eosmonitor.io</Text>
                 <Button onPress={() => { this.eospark() }}>
-                  <View style={styles.eosparktext}>
-                  <Text style={styles.buttonText}>查看</Text>
+                  <View style={[styles.eosparktext,{backgroundColor: UColor.tintColor}]}>
+                  <Text style={[styles.buttonText,{color: UColor.btnColor}]}>查看</Text>
                   </View>
                 </Button>
               </View>
-              <View style={styles.eosecoout}>
-                <Text style={styles.titletext}>eoseco.com</Text>
+              <View style={[styles.eosecoout,{borderColor: UColor.tintColor}]}>
+                <Text style={[styles.titletext,{color: UColor.arrow}]}>eoseco.com</Text>
                 <Button onPress={() => { this.eoseco() }}>
-                  <View style={styles.eosecotext}>
-                    <Text style={styles.buttonText}>查看</Text>
+                  <View style={[styles.eosecotext,{backgroundColor: UColor.tintColor}]}>
+                    <Text style={[styles.buttonText,{color: UColor.btnColor}]}>查看</Text>
                   </View>
                 </Button>
               </View>
@@ -535,65 +536,53 @@ class WalletDetail extends BaseComponent {
 const styles = StyleSheet.create({
   inptpasstext: {
     fontSize: ScreenUtil.setSpText(12),
-    color: UColor.arrow,
-    marginBottom: ScreenUtil.autoheight(15),
     lineHeight: ScreenUtil.autoheight(20),
+    marginBottom: ScreenUtil.autoheight(15),
   },
-
   passoutsource: {
+    alignItems: 'center',
     flexDirection: 'column', 
-    alignItems: 'center'
   },
   inptpass: {
-    color: UColor.tintColor,
+    textAlign: "center",
+    borderBottomWidth: 1,
     width: ScreenWidth-100,
     height: ScreenUtil.autoheight(45),
-    paddingBottom: ScreenUtil.autoheight(5),
     fontSize: ScreenUtil.setSpText(16),
-    backgroundColor: UColor.fontColor,
-    borderBottomColor: UColor.baseline,
-    borderBottomWidth: 1,
+    paddingBottom: ScreenUtil.autoheight(5),
   },
-
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: UColor.secdColor,
   },
   walletout: { 
+    borderRadius: 5, 
+    margin: ScreenUtil.autowidth(10), 
     padding: ScreenUtil.autowidth(20), 
     height: ScreenUtil.autoheight(100), 
-    backgroundColor:  UColor.mainColor, 
-    margin: ScreenUtil.autowidth(10), 
-    borderRadius: 5, 
   },
   accountout: { 
     flexDirection: "row",
-    justifyContent: 'center', 
     alignItems: 'center', 
+    justifyContent: 'center', 
   },
   accounttext: { 
     fontSize: ScreenUtil.setSpText(24), 
-    color: UColor.fontColor, 
     marginBottom: ScreenUtil.autoheight(10), 
   },
   company: {
     fontSize: ScreenUtil.setSpText(15),
-    color: UColor.fontColor,
     marginBottom: ScreenUtil.autoheight(5),
   },
-
   topout: {
     flexDirection: "row",
     alignItems: 'center',
   },
   category: {
     fontSize: ScreenUtil.setSpText(16),
-    color:  UColor.fontColor,
   },
   outname: {
     fontSize: ScreenUtil.setSpText(14),
-    color: UColor.arrow,
   },
   imgBtn: {
     width: ScreenUtil.autowidth(20),
@@ -601,137 +590,106 @@ const styles = StyleSheet.create({
     marginHorizontal: ScreenUtil.autowidth(5),
   },
   stopoutBackupsout: {
-    borderRadius: 10,
     borderWidth: 1,
-    borderColor: UColor.tintColor,
-    justifyContent: 'center',
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
+    
   },
   stopoutBackups: {
-    fontSize: ScreenUtil.setSpText(10),
-    color: UColor.tintColor,
+    paddingVertical: 1,
     textAlign: 'center',
-    paddingHorizontal: ScreenUtil.autowidth(8),
-    paddingVertical: 1,
-  },
-
-  notactivedout: {
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: UColor.showy,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  notactived: {
     fontSize: ScreenUtil.setSpText(10),
-    color: UColor.showy,
-    textAlign: 'center', 
     paddingHorizontal: ScreenUtil.autowidth(8),
-    paddingVertical: 1,
   },
- 
-
-  walletname: { 
-    fontSize: ScreenUtil.setSpText(15), 
-    color:  UColor.arrow, 
+  notactivedout: {
+    borderWidth: 1,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  notactived: {
+    paddingVertical: 1,
+    textAlign: 'center', 
+    fontSize: ScreenUtil.setSpText(10),
+    paddingHorizontal: ScreenUtil.autowidth(8),
   },
   acttiveout: {
-    height: ScreenUtil.autoheight(45), 
-    backgroundColor:  UColor.tintColor, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginHorizontal: ScreenUtil.autowidth(20), 
     borderRadius: 5,
+    alignItems: 'center', 
+    justifyContent: 'center',
+    height: ScreenUtil.autoheight(45), 
     marginTop: ScreenUtil.autoheight(20),
+    marginHorizontal: ScreenUtil.autowidth(20), 
   },
   deleteout: {
-    height: ScreenUtil.autoheight(45), 
-    backgroundColor: UColor.showy, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginHorizontal: ScreenUtil.autowidth(20),  
     borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center', 
+    height: ScreenUtil.autoheight(45), 
     marginTop: ScreenUtil.autoheight(20),
+    marginHorizontal: ScreenUtil.autowidth(20),  
   },
   delete: { 
     fontSize: ScreenUtil.setSpText(15), 
-    color:  UColor.fontColor,
   },
-
-  pupuo: {
-    backgroundColor: UColor.riceWhite,
-  },
-  // modal的样式  
   modalStyle: {
-    backgroundColor: UColor.mask,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
   },
-  // modal上子View的样式  
   subView: {
-    marginHorizontal: ScreenUtil.setSpText(15),
-    backgroundColor:  UColor.fontColor,
-    alignSelf: 'stretch',
-    justifyContent: 'center',
     borderRadius: 10,
     borderWidth: 0.5,
-    borderColor: UColor.baseline,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    marginHorizontal: ScreenUtil.setSpText(15),
   },
   closeText: {
-    width: ScreenUtil.setSpText(50),
-    height: ScreenUtil.setSpText(50),
     alignItems: 'center',
     justifyContent: 'center',
+    width: ScreenUtil.setSpText(50),
+    height: ScreenUtil.setSpText(50),
   },
   buttonText: {
     fontSize: ScreenUtil.setSpText(16),
-    color:  UColor.fontColor,
   },
-
   eosparkout: {
-    paddingHorizontal: ScreenUtil.autowidth(11), 
-    paddingVertical: ScreenUtil.autoheight(15),  
-    marginBottom: ScreenUtil.autoheight(18), 
-    marginHorizontal: ScreenUtil.autowidth(20), 
-    flexDirection: "row",
-    borderColor: UColor.tintColor, 
     borderWidth: 1,
     borderRadius: 5,
+    flexDirection: "row", 
+    marginBottom: ScreenUtil.autoheight(18), 
+    marginHorizontal: ScreenUtil.autowidth(20), 
+    paddingVertical: ScreenUtil.autoheight(15),  
+    paddingHorizontal: ScreenUtil.autowidth(11), 
   },
   eosecoout: {
-    paddingHorizontal: ScreenUtil.autowidth(11), 
-    paddingVertical: ScreenUtil.autoheight(15), 
+    borderWidth: 1,
+    borderRadius: 5,
+    flexDirection: "row",
     marginBottom: ScreenUtil.autoheight(34), 
     marginHorizontal: ScreenUtil.autowidth(20), 
-    flexDirection: "row",
-    borderColor: UColor.tintColor,
-    borderWidth: 1,
-    borderRadius: 5, 
+    paddingVertical: ScreenUtil.autoheight(15), 
+    paddingHorizontal: ScreenUtil.autowidth(11), 
   },
   titletext: {
     flex: 1, 
     fontSize: ScreenUtil.setSpText(20), 
-    color: UColor.mainColor
   },
   eosparktext: { 
+    borderRadius: 5, 
+    alignItems: 'center',
+    justifyContent: 'center', 
     width: ScreenUtil.autowidth(64), 
     height: ScreenUtil.autoheight(30), 
-    borderRadius: 5, 
-    backgroundColor:  UColor.tintColor, 
-    justifyContent: 'center', 
-    alignItems: 'center'
   },
   eosecotext: { 
+    borderRadius: 5, 
+    alignItems: 'center',
+    justifyContent: 'center', 
     width: ScreenUtil.autowidth(64), 
     height: ScreenUtil.autoheight(30), 
-    borderRadius: 5, 
-    backgroundColor:  UColor.tintColor, 
-    justifyContent: 'center', 
-    alignItems: 'center'
   },
-
 });
 
 export default WalletDetail;

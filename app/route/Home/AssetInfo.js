@@ -5,6 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
 import UImage from '../../utils/Img'
+import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
 import BaseComponent from "../../components/BaseComponent";
@@ -16,14 +17,10 @@ class AssetInfo extends BaseComponent {
         const params = navigation.state.params || {};
         return {
             headerTitle: params.asset.asset.name,
-            headerStyle: {
-                paddingTop: ScreenUtil.autoheight(20),
-                backgroundColor: UColor.mainColor,
-                borderBottomWidth:0,
-            },
+            header:null,
         };
     };
-
+   
      // 构造函数  
      constructor(props) {
         super(props);
@@ -170,14 +167,18 @@ class AssetInfo extends BaseComponent {
     render() {
         const c = this.props.navigation.state.params.asset;
         return (
-            <View style={styles.container}>
-                <View style={styles.header}>
-                    <Text style={styles.headbalance}>{this.state.balance==""? "0.0000" :this.state.balance.replace(c.asset.name, "")} {c.asset.name}</Text>
-                    <Text style={styles.headmarket}>≈ {(this.state.balance == null || c.asset.value == null) ? "0.00" : (this.state.balance.replace(c.asset.name, "") * c.asset.value).toFixed(2)} ￥</Text>
+            <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+                <Header {...this.props} onPressLeft={true} title={c.asset.name} />  
+                <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
+                    <Text style={[styles.headbalance,{color: UColor.fontColor}]}>{this.state.balance==""? "0.0000" :this.state.balance.replace(c.asset.name, "")} {c.asset.name}</Text>
+                    <Text style={[styles.headmarket,{ color: UColor.lightgray}]}>≈ {(this.state.balance == null || c.asset.value == null) ? "0.00" : (this.state.balance.replace(c.asset.name, "") * c.asset.value).toFixed(2)} ￥</Text>
                 </View>
                 <View style={styles.btn}>
-                    <Text style={styles.latelytext}>最近交易记录</Text>
-                    {/* {(this.props.tradeLog == null || this.props.tradeLog.length == 0) && <View style={styles.nothave}><Text style={styles.copytext}>{this.state.detailInfo}</Text></View>} */}
+                    <Text style={[styles.latelytext,{color: UColor.arrow}]}>最近交易记录</Text>
+                    {/* {(this.props.tradeLog == null || this.props.tradeLog.length == 0) && 
+                    <View style={[styles.nothave,{backgroundColor: UColor.mainColor}]}>
+                      <Text style={[styles.copytext,{color: UColor.fontColor}]}>{this.state.detailInfo}</Text>
+                    </View>} */}
                     <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} onEndReachedThreshold = {50}
                     onEndReached={() => this.onEndReached()}
                     refreshControl={
@@ -193,25 +194,21 @@ class AssetInfo extends BaseComponent {
                     renderRow={(rowData, sectionID, rowID) => (                 
                     <View>
                         <Button onPress={this._openDetails.bind(this,rowData)}> 
-                            <View style={styles.row}>
+                            <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
                                 <View style={styles.top}>
                                     <View style={styles.timequantity}>
-                                        <Text style={styles.timetext}>时间 : <Text style={{color: UColor.lightgray}}>{this.transferTimeZone(rowData.blockTime)}</Text></Text>
-                                        <Text style={styles.quantity}>数量 : <Text style={{color: UColor.lightgray}}>{rowData.quantity.replace(c.asset.name, "")}</Text></Text>
+                                        <Text style={[styles.timetext,{color: UColor.arrow}]}>时间 : <Text style={{color: UColor.lightgray}}>{this.transferTimeZone(rowData.blockTime)}</Text></Text>
+                                        <Text style={[styles.quantity,{color: UColor.arrow}]}>数量 : <Text style={{color: UColor.lightgray}}>{rowData.quantity.replace(c.asset.name, "")}</Text></Text>
                                     </View>
                                     {(rowData.blockNum == null || rowData.blockNum == '') ? 
                                         <View style={styles.unconfirmedout}>
                                             {/* <Image source={UImage.unconfirm} style={styles.shiftturn} /> */}
-                                            <Text style={styles.unconfirmed}>未确认...</Text>
+                                            <Text style={[styles.unconfirmed,{color: UColor.showy}]}>未确认...</Text>
                                         </View>
                                             :
                                         <View style={styles.typedescription}>
-                                            {rowData.type == '转出' ? 
-                                            <Text style={styles.typeto}>类型 : {rowData.type}</Text>
-                                            :
-                                            <Text style={styles.typeout}>类型 : {rowData.type}</Text>
-                                            }
-                                            <Text style={styles.description}>（{rowData.description}）</Text>
+                                            <Text style={[styles.typeto,{color: rowData.type == '转出' ? UColor.tintColor: UColor.fallColor}]}>类型 : {rowData.type}</Text>
+                                            <Text style={[styles.description,{color: UColor.arrow}]}>（{rowData.description}）</Text>
                                         </View>
                                     }
                                 </View>
@@ -225,17 +222,17 @@ class AssetInfo extends BaseComponent {
                  /> 
                 </View>
 
-                <View style={styles.footer}>
+                <View style={[styles.footer,{backgroundColor: UColor.secdColor}]}>
                     <Button onPress={this.turnInAsset.bind(this, c)} style={{ flex: 1 }}>
-                        <View style={styles.shiftshiftturnout}>
+                        <View style={[styles.shiftshiftturnout,{backgroundColor: UColor.mainColor,marginRight: 0.5,}]}>
                             <Image source={UImage.shift_to} style={styles.shiftturn} />
-                            <Text style={styles.shifttoturnout}>转入</Text>
+                            <Text style={[styles.shifttoturnout,{color: UColor.fontColor}]}>转入</Text>
                         </View>
                     </Button>
                     <Button onPress={this.turnOutAsset.bind(this, c)} style={{ flex: 1 }}>
-                        <View style={styles.shiftshiftturnout}>
+                        <View style={[styles.shiftshiftturnout,{backgroundColor: UColor.mainColor,marginLeft: 0.5}]}>
                             <Image source={UImage.turn_out} style={styles.shiftturn} />
-                            <Text style={styles.shifttoturnout}>转出</Text>
+                            <Text style={[styles.shifttoturnout,{color: UColor.fontColor}]}>转出</Text>
                         </View>
                     </Button>
                 </View>
@@ -247,8 +244,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: UColor.secdColor,
-        paddingTop: ScreenUtil.autoheight(5),
     },
     header: {
         height: ScreenUtil.autoheight(110),
@@ -256,15 +251,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         margin: ScreenUtil.autowidth(5),
         borderRadius: 5,
-        backgroundColor: UColor.mainColor,
     },
     headbalance: {
         fontSize: ScreenUtil.setSpText(20), 
-        color: UColor.fontColor
     },
     headmarket: {
         fontSize: ScreenUtil.setSpText(14),
-        color: UColor.lightgray,
         marginTop: ScreenUtil.autowidth(5)
     },
 
@@ -278,12 +270,10 @@ const styles = StyleSheet.create({
 
     latelytext: {
         fontSize: ScreenUtil.setSpText(14),
-        color: UColor.arrow,
         margin: ScreenUtil.autowidth(5),
     },
     nothave: {
         height: ScreenUtil.autoheight(80),
-        backgroundColor: UColor.mainColor,
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: "center",
@@ -294,7 +284,6 @@ const styles = StyleSheet.create({
     row: {
         borderRadius: 5,
         flexDirection: "row",
-        backgroundColor: UColor.mainColor,
         paddingHorizontal: ScreenUtil.autowidth(20),
         paddingVertical: ScreenUtil.autoheight(5),
         marginHorizontal: ScreenUtil.autowidth(5),
@@ -315,17 +304,14 @@ const styles = StyleSheet.create({
     },
     timetext: {
         fontSize: ScreenUtil.setSpText(14),
-        color: UColor.arrow,
         textAlign: 'left'
     },
     quantity: {
         fontSize: ScreenUtil.setSpText(14),
-        color: UColor.arrow,
         textAlign: 'left',
     },
     description: {
         fontSize: ScreenUtil.setSpText(14),
-        color: UColor.arrow,
         textAlign: 'center',
         marginTop: ScreenUtil.autoheight(3),
     },
@@ -336,7 +322,6 @@ const styles = StyleSheet.create({
     },
     unconfirmed: {
         fontSize: ScreenUtil.setSpText(14),
-        color: UColor.showy,
         textAlign: 'center',
         marginTop: 3
     },
@@ -348,12 +333,6 @@ const styles = StyleSheet.create({
     },
     typeto: {
         fontSize: ScreenUtil.setSpText(14),
-        color: UColor.tintColor,
-        textAlign: 'center'
-    },
-    typeout: {
-        fontSize: ScreenUtil.setSpText(14),
-        color: UColor.fallColor,
         textAlign: 'center'
     },
 
@@ -368,7 +347,6 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(60),
         flexDirection: 'row',
         position: 'absolute',
-        backgroundColor: UColor.secdColor,
         bottom: 0,
         left: 0,
         right: 0,
@@ -378,8 +356,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
-        marginRight: 1,
-        backgroundColor: UColor.mainColor,
     },
     shiftturn: {
         width: ScreenUtil.autowidth(30), 
@@ -388,11 +364,9 @@ const styles = StyleSheet.create({
     shifttoturnout: {
         marginLeft: ScreenUtil.autowidth(20),
         fontSize: ScreenUtil.setSpText(18),
-        color: UColor.fontColor
     },
     copytext: {
         fontSize: ScreenUtil.setSpText(16), 
-        color: UColor.fontColor
     },
 
 })

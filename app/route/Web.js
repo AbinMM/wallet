@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { WebView, StyleSheet, CameraRoll, Image, View, BackHandler, Text, Platform, DeviceEventEmitter, BackAndroid, AppState, Linking, Dimensions, ScrollView, Animated, Easing} from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment';
+import Header from '../components/Header'
 import Button from '../components/Button'
 import ViewShot from "react-native-view-shot";
 require('moment/locale/zh-cn');
@@ -16,7 +17,6 @@ import { redirect } from '../utils/Api'
 import Constants from '../utils/Constants'
 import AnalyticsUtil from '../utils/AnalyticsUtil';
 import BaseComponent from "../components/BaseComponent";
-
 var WeChat = require('react-native-wechat');
 
 @connect(({ news }) => ({ ...news }))
@@ -25,6 +25,8 @@ export default class Web extends BaseComponent {
   static navigationOptions = ({ navigation, navigationOptions }) => {
     return {
       title: navigation.state.params.title,
+      header:null, 
+  
       headerRight: (navigation.state.params.news && <Button onPress={navigation.state.params.onPress}>
         <View style={{ padding: 15 }}>
           <Image source={UImage.share_i} style={{ width: 22, height: 22 }}></Image>
@@ -33,7 +35,7 @@ export default class Web extends BaseComponent {
       ),
     }
   }
-
+  
   share = () => {
     this.props.dispatch({ type: 'news/share', payload: { news: this.state.news } });
     DeviceEventEmitter.emit('share', this.state.news);
@@ -86,8 +88,7 @@ export default class Web extends BaseComponent {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: UColor.mainColor }}>
-          
-
+        <Header {...this.props} onPressLeft={true} title={this.props.navigation.state.params.title} avatar={this.state.news && UImage.share_i} onPressRight={this.state.news && this.share.bind()}/>
         <WebView
           source={{ uri: this.props.navigation.state.params.url }}
           domStorageEnabled={true}
@@ -102,7 +103,6 @@ export default class Web extends BaseComponent {
           <Text style={{ color: UColor.mainColor }}>{"加载失败"}</Text>
         </View>
         <Animated.View style={[styles.progress, { width: this.state.progress }]}></Animated.View>
-        
       </View>
     )
   }

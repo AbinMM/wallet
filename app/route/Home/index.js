@@ -1,19 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, ListView,NativeModules, StyleSheet, Image, View, Text, Platform, Modal, Animated, TouchableOpacity, Easing, Clipboard, ImageBackground, ScrollView, RefreshControl,Linking, } from 'react-native';
-import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter' 
-import UColor from '../../utils/Colors'
-import Button from '../../components/Button'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
+import { Eos } from "react-native-eosjs";
+import Button from '../../components/Button'
+import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
-const ScreenWidth = Dimensions.get('window').width;
-const ScreenHeight = Dimensions.get('window').height;
 import { EasyToast } from "../../components/Toast"
 import { EasyShowLD } from '../../components/EasyShow'
+import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter' 
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import Constants from '../../utils/Constants'
-import { Eos } from "react-native-eosjs";
+const ScreenWidth = Dimensions.get('window').width;
+const ScreenHeight = Dimensions.get('window').height;
+
 @connect(({ wallet, assets }) => ({ ...wallet, ...assets }))
 class Home extends React.Component {
 
@@ -136,12 +137,13 @@ class Home extends React.Component {
     this.listener.remove();  
   }
 
-  getMyAssetsInfo(){
+  getMyAssetsInfo(getAssetsInfoCallback){
     if (this.props.defaultWallet == null || this.props.defaultWallet.name == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
       return;
     }
-    this.props.dispatch({ type: 'assets/myAssetInfo', payload: { page: 1, isInit: true}, callback: (myAssets) => {
+    this.props.dispatch({ type: 'assets/myAssetInfo', payload: { page: 1, isInit: true, accountName: this.props.defaultWallet.name}, callback: (myAssets) => {
       this.props.dispatch({ type: 'assets/fetchMyAssetsFromNet', payload: { accountName: this.props.defaultWallet.name}, callback: () => {
+        if(getAssetsInfoCallback) getAssetsInfoCallback();
         this.getAssetBalance();    
       }});
     }});
@@ -385,11 +387,14 @@ class Home extends React.Component {
       try {
         this.setState({assetRefreshing: true});
         this.props.dispatch({ type: 'wallet/changeWallet', payload: { data }, callback: () => {
-          this.props.dispatch({ type: 'assets/clearBalance', payload: {}, callback: () => {
-            this.props.dispatch({ type: 'assets/getBalance', payload: { accountName: this.props.defaultWallet.name, myAssets: this.props.myAssets}, callback: () => {
-              this.setState({assetRefreshing: false});
-            }});
-          }});
+          // this.props.dispatch({ type: 'assets/clearBalance', payload: {accountName: this.props.defaultWallet.name}, callback: () => {
+          //   this.props.dispatch({ type: 'assets/getBalance', payload: { accountName: this.props.defaultWallet.name, myAssets: this.props.myAssets}, callback: () => {
+          //     this.setState({assetRefreshing: false});
+          //   }});
+          // }});
+          this.getMyAssetsInfo(() => {
+            this.setState({assetRefreshing: false});
+          });
         }});
         this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" } });
       } catch (error) {
@@ -521,33 +526,31 @@ class Home extends React.Component {
 
   if(this.props.guide){
     return (
-      <View style={styles.container}>
-        
-        <ScrollView>
-            <Image source={UImage.guide} style={styles.imgTop} resizeMode="contain"/>
+      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+          <Image source={UImage.guide} style={styles.imgTop} resizeMode="cover"/>
+          <View style={styles.btnestablish}>
             <Button onPress={() => this.Establish()}>
-              <View style={styles.btnestablish}>
-                  <Text style={styles.btntext}>创建账号</Text>
+              <View style={[styles.btnimport,{backgroundColor: UColor.tintColor}]}>
+                  <Text style={[styles.btntext,{color: UColor.btnColor}]}>创建账号</Text>
               </View>
             </Button>
             <Button onPress={this.Import.bind(this)}>
-              <View style={styles.btnimport}>
-                  <Text style={styles.btntext}>导入账号</Text>
+              <View style={[styles.btnimport,{backgroundColor: UColor.tintColor}]}>
+                  <Text style={[styles.btntext,{color: UColor.btnColor}]}>导入账号</Text>
               </View>
             </Button>
-        </ScrollView>
+          </View>
       </View>
     )
   }else{
     return (
-      <View style={styles.container}>
-        
-        <View>
-          <View style={styles.topbtn}>
+      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+        <ImageBackground style={styles.bgout} source={UImage.home_bg} resizeMode="cover">
+          <View style={[styles.topbtn,{backgroundColor:UColor.theme ? UColor.transport : UColor.mainColor}]}>
             <Button onPress={() => this.scan()}>
               <Image source={UImage.scan} style={styles.imgBtn} />
             </Button>
-            <Text style={styles.toptext}>EOS资产</Text>
+            <Text style={[styles.toptext,{color: UColor.btnColor}]}>EOS资产</Text>
             <Button onPress={() => this.setState({ modal: !this.state.modal })}>
               <Image source={UImage.wallet_h} style={styles.imgBtn} />
             </Button>
@@ -555,78 +558,78 @@ class Home extends React.Component {
 
         {Constants.isNetWorkOffline &&
           <Button onPress={this.openSystemSetting.bind(this)}>
-            <View style={styles.systemSettingTip}>
-                <Text style={styles.systemSettingText}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
-                <Ionicons style={styles.systemSettingArrow} name="ios-arrow-forward-outline" size={20} />
+            <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
+                <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
+                <Ionicons style={[styles.systemSettingArrow,{color: UColor.btnColor}]} name="ios-arrow-forward-outline" size={20} />
             </View>
           </Button>}
-        <ImageBackground style={styles.bgout} source={UImage.home_bg} resizeMode="cover">
+       
           <View style={styles.addto}>
                 <View style={styles.addtoouttop}>
-                 <Text style={{fontSize: ScreenUtil.setSpText(32), color: UColor.fontColor}}>≈ {this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : this.adjustTotalBalance(this.state.totalBalance)) : '****'}</Text>
-                 <View style={(this.state.increase>=0 || this.state.totalBalance == "0.00")?styles.incdoout:styles.incupout}>
-                   <Text style={styles.cupcdo}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
+                 <Text style={{fontSize: ScreenUtil.setSpText(32), color: UColor.btnColor}}>≈ {this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : this.adjustTotalBalance(this.state.totalBalance)) : '****'}</Text>
+                 <View style={[styles.incdocupout,(this.state.increase>=0 || this.state.totalBalance == "0.00")?{borderColor: UColor.fallColor,backgroundColor: UColor.fallColor}:{borderColor: UColor.riseColor,backgroundColor: UColor.riseColor}]}>
+                   <Text style={[styles.cupcdo,{color: UColor.btnColor}]}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
                  </View>
                 </View>
                 <View style={styles.addtoout} >
-                    <Text style={styles.addtotext}> 总资产</Text>
-                    <Text style={styles.addtoouttext}>(￥)</Text>
+                    <Text style={[styles.addtotext,{color: UColor.btnColor}]}> 总资产</Text>
+                    <Text style={[styles.addtoouttext,{color: UColor.btnColor}]}>(￥)</Text>
                     <TouchableOpacity onPress={this.onPressReveal.bind(this,this.state.isEye)}>
                         <Image source={this.state.isEye ? UImage.reveal_wallet : UImage.reveal_h_wallet} style={styles.imgTeOy}/>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.addout} >
                     <TouchableOpacity onPress={this.copyname.bind(this,this.props.defaultWallet)}>
-                       <Text style={styles.addtotext}>{(this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name}</Text>
+                       <Text style={[styles.addtotext,{color: UColor.btnColor}]}>{(this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name}</Text>
                     </TouchableOpacity>
                     {(this.props.defaultWallet != null && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) 
                        ? 
-                       <View style={styles.backoractivestyle}>
+                       <View style={[styles.backoractivestyle,{borderColor: UColor.showy}]}>
                           <Text style={styles.notactived} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未激活</Text>
                        </View>
                        :
                        ((this.props.defaultWallet == null || this.props.defaultWallet.name == null || (this.props.defaultWallet != null &&this.props.defaultWallet.isBackups)) 
                           ? null :  
-                            <View style={styles.backoractivestyle11}>
-                                <Text style={styles.stopoutBackups} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未备份</Text>
+                            <View style={[styles.backoractivestyle11,{borderColor: UColor.tintColor}]}>
+                                <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未备份</Text>
                             </View>) }   
                 </View>
           </View>
-        </ImageBackground>
-          <View style={styles.head}>
+        </ImageBackground> 
+          <View style={[styles.head,{backgroundColor: UColor.secdColor, borderBottomColor: UColor.tintColor}]}>
             <Button onPress={this.onPress.bind(this, 'addAssets')} style={styles.headbtn}>
               <View style={styles.headbtnout}>
                 <Image source={UImage.add} style={styles.imgBtn} />
-                <Text style={styles.headbtntext}>添加资产</Text>
+                <Text style={[styles.headbtntext,{color: UColor.arrow}]}>添加资产</Text>
               </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'Receivables')} style={styles.headbtn}>
               <View style={styles.headbtnout}>
                 <Image source={UImage.qr} style={styles.imgBtn} />
-                <Text style={styles.headbtntext}>收币</Text>
+                <Text style={[styles.headbtntext,{color: UColor.arrow}]}>收币</Text>
               </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'transfer')} style={styles.headbtn}>
               <View style={styles.headbtnout}>
                 <Image source={UImage.transfer} style={styles.imgBtn} />
-                <Text style={styles.headbtntext}>转账</Text>
+                <Text style={[styles.headbtntext,{color: UColor.arrow}]}>转账</Text>
               </View>
             </Button>
             <Button  onPress={this.onPress.bind(this, 'Resources')}  style={styles.headbtn}>
               <View style={styles.headbtnout}>
                 <Image source={UImage.resources} style={styles.imgBtn} />
-                <Text style={styles.headbtntext}>资源管理</Text>
+                <Text style={[styles.headbtntext,{color: UColor.arrow}]}>资源管理</Text>
               </View>
             </Button>
             <Button  onPress={this.onPress.bind(this, 'functionsMore')}  style={styles.headbtn}>
               <View style={styles.headbtnout}>
                 <Image source={UImage.more} style={styles.imgBtn} />
-                <Text style={styles.headbtntext}>更多</Text>
+                <Text style={[styles.headbtntext,{color: UColor.arrow}]}>更多</Text>
               </View>
             </Button>
           </View>
           
-        </View>   
+         
         <ListView initialListSize={1} enableEmptySections={true} 
           refreshControl={
             <RefreshControl
@@ -639,17 +642,17 @@ class Home extends React.Component {
           }
           dataSource={this.state.dataSource.cloneWithRows(this.props.myAssets == null ? [] : this.props.myAssets)} 
           renderRow={(rowData, sectionID, rowID) => (      
-            <View style={styles.listItem}>
+            <View style={[styles.listItem,{borderBottomColor: UColor.secdColor}]}>
               <Button onPress={this.assetInfo.bind(this, rowData)}>
-                <View style={styles.row}>
+                <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
                   <View style={styles.lefts}>
                     <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
-                    <Text style={styles.lefttext}>{rowData.asset.name}</Text>
+                    <Text style={[styles.lefttext,{color: UColor.fontColor}]}>{rowData.asset.name}</Text>
                   </View>
                   <View style={styles.rights}>
                     <View style={styles.rightout}>
-                        <Text style={styles.rightbalance}>{this.state.isEye ? (rowData.balance==null || rowData.balance=="" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.0000" : rowData.balance.replace(rowData.asset.name, "") : '****'}</Text>
-                        <Text style={styles.rightmarket}>≈（￥）{this.state.isEye ? (rowData.balance==null || rowData.balance=="" || rowData.asset.value == null || rowData.asset.value == "" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.00" : (rowData.balance.replace(rowData.asset.name, "")*rowData.asset.value).toFixed(2) : '****'}</Text>
+                        <Text style={[styles.rightbalance,{color: UColor.fontColor}]}>{this.state.isEye ? (rowData.balance==null || rowData.balance=="" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.0000" : rowData.balance.replace(rowData.asset.name, "") : '****'}</Text>
+                        <Text style={[styles.rightmarket,{color:  UColor.arrow}]}>≈（￥）{this.state.isEye ? (rowData.balance==null || rowData.balance=="" || rowData.asset.value == null || rowData.asset.value == "" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.00" : (rowData.balance.replace(rowData.asset.name, "")*rowData.asset.value).toFixed(2) : '****'}</Text>
                     </View>
                   </View>
                 </View>
@@ -659,21 +662,21 @@ class Home extends React.Component {
          />  
 
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.isTipShow()} onRequestClose={()=>{}}>
-            <TouchableOpacity style={styles.pupuoBackup} activeOpacity={1.0}>
-              <View style={{ width: ScreenWidth-20, backgroundColor: UColor.fontColor, borderRadius: 5, position: 'absolute', }}>
+            <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+              <View style={{ width: ScreenWidth-20, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
                 <View style={styles.subViewBackup}> 
                   <Button onPress={this._disableTipVisible.bind(this) } style={styles.buttonView2}>
                       <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={30} />
                   </Button>
                 </View>
                 <Text style={styles.contentText}>IOS用户重要提示</Text>
-                <View style={styles.warningout}>
+                <View style={[styles.warningout,{borderColor: UColor.showy}]}>
                     <Image source={UImage.warning_h} style={styles.imgBtn} />
-                    <Text style={styles.headtitle}>亲爱的eostoken用户：由于App Store平台自身存在证书授权过期问题导致app无法打开的情况发生，造成数据丢失。当前系统检测到您尚未备份钱包，为了避免资产损失，请您及时备份。</Text>
+                    <Text style={[styles.headtitle,{color: UColor.showy}]}>亲爱的eostoken用户：由于App Store平台自身存在证书授权过期问题导致app无法打开的情况发生，造成数据丢失。当前系统检测到您尚未备份钱包，为了避免资产损失，请您及时备份。</Text>
                 </View>
                 <Button onPress={this.WalletDetailBackup.bind(this,this.props.defaultWallet)}>
-                    <View style={styles.deleteout}>
-                        <Text style={styles.deletetext}>立即备份</Text>
+                    <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
+                        <Text style={[styles.deletetext,{color: UColor.btnColor}]}>立即备份</Text>
                     </View>
                 </Button> 
               </View> 
@@ -681,35 +684,35 @@ class Home extends React.Component {
         </Modal>
 
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true} onRequestClose={() => { this.onRequestClose() }} visible={this.state.modal}>
-          <TouchableOpacity onPress={() => this.setState({ modal: false })} style={styles.touchable} activeOpacity={1.0}>
-            <TouchableOpacity style={styles.touchable} activeOpacity={1.0}>
-              <View style={styles.touchableout}>
-                <ListView initialListSize={5} style={styles.touchablelist}
+          <TouchableOpacity onPress={() => this.setState({ modal: false })} style={[styles.touchable,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+            <TouchableOpacity style={[styles.touchable,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+              <View style={[styles.touchableout,{backgroundColor: UColor.secdColor}]}>
+                <ListView initialListSize={5} style={[styles.touchablelist,{borderBottomColor: UColor.mainColor}]}
                   renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 0.5, backgroundColor: UColor.secdColor }} />}
                   enableEmptySections={true} dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
                   renderRow={(rowData) => (
                     <Button onPress={this.changeWallet.bind(this, rowData)}>
-                      <View style={styles.walletlist} backgroundColor={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account) && UColor.inash}>
+                      <View style={[styles.walletlist,{borderBottomColor: UColor.mainColor}]} backgroundColor={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account) && UColor.inash}>
                         <View style={styles.topout}>
-                          <Text style={styles.outname}>{rowData.name}</Text>
-                          {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ? <View style={styles.notactivedout}><Text style={styles.notactived} onPress={this.WalletDetail.bind(this, rowData)}>未激活</Text></View>:(rowData.isBackups ? null :  <View style={styles.stopoutBackupsout}><Text style={styles.stopoutBackups} onPress={this.WalletDetail.bind(this, rowData)}>未备份</Text></View>)}  
+                          <Text style={[styles.outname,{color: UColor.fontColor}]}>{rowData.name}</Text>
+                          {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ? <View style={[styles.notactivedout,{borderColor: UColor.showy}]}><Text style={[styles.notactived,{color: UColor.showy}]} onPress={this.WalletDetail.bind(this, rowData)}>未激活</Text></View>:(rowData.isBackups ? null :  <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}><Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this, rowData)}>未备份</Text></View>)}  
                         </View>
-                        <Text style={styles.walletaccount} numberOfLines={1} ellipsizeMode='middle'>{this.state.isEye ? (rowData.isactived && rowData.balance != null && rowData.balance != ""? rowData.balance : '0.0000') : '****'} EOS</Text>
+                        <Text style={[styles.walletaccount,{color: UColor.lightgray}]} numberOfLines={1} ellipsizeMode='middle'>{this.state.isEye ? (rowData.isactived && rowData.balance != null && rowData.balance != ""? rowData.balance : '0.0000') : '****'} EOS</Text>
                       </View>
                     </Button> 
                   )}
                 />
                 <View style={styles.ebhbtnout}>
-                  <Button onPress={() => this.createWallet()} style={styles.btnout}>
+                  <Button onPress={() => this.createWallet()} style={[styles.btnout,{borderColor: UColor.lightgray}]}>
                     <View style={styles.establishout}>
                       <Image source={UImage.wallet_1} style={styles.establishimg} />
-                      <Text style={styles.establishtext}>创建钱包</Text>
+                      <Text style={[styles.establishtext,{color: UColor.lightgray}]}>创建钱包</Text>
                     </View>
                   </Button>
-                  <Button onPress={() => this.importWallet()} style={styles.btnout}>
+                  <Button onPress={() => this.importWallet()} style={[styles.btnout,{borderColor: UColor.lightgray}]}>
                     <View style={styles.establishout}>
                       <Image source={UImage.xin_import} style={styles.establishimg} />
-                      <Text style={styles.establishtext}>导入钱包</Text>
+                      <Text style={[styles.establishtext,{color: UColor.lightgray}]}>导入钱包</Text>
                     </View>
                   </Button>
                 </View>
@@ -719,26 +722,26 @@ class Home extends React.Component {
         </Modal>
          <Modal style={styles.touchableouts} animationType={'slide'} transparent={true}  visible={this.props.Invalid} onRequestClose={()=>{}}>
             <TouchableOpacity style={styles.pupuo} activeOpacity={1.0}>
-              <View style={styles.modalStyle}>
+              <View style={[styles.modalStyle,{backgroundColor: UColor.fontColor}]}>
                 <View style={styles.subView}> 
                   <Text style={styles.titleText}/>
                   <Text style={styles.contentText}>无效账户删除提示</Text>
                   <Button onPress={this._setModalInvalid.bind(this)}>
-                    <Text style={styles.titleText}>×</Text>
+                    <Text style={[styles.titleText,{color: UColor.baseline}]}>×</Text>
                   </Button>
                 </View>
-                <Text style={styles.prompt}>警告：系统检测到您有无效账号残留，为了避免误转账至无效账户带来不必要的损失，请即时清理无效账户！</Text>
+                <Text style={[styles.prompt,{color: UColor.showy}]}>警告：系统检测到您有无效账号残留，为了避免误转账至无效账户带来不必要的损失，请即时清理无效账户！</Text>
                 <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true} 
                     dataSource={this.state.dataSource.cloneWithRows(this.props.invalidWalletList == null ? [] : this.props.invalidWalletList)} 
                     renderRow={(rowData, sectionID, rowID) => (                 
                       <View>
                           <Button > 
-                              <View style={styles.codeout} >
+                              <View style={[styles.codeout,{borderBottomColor: UColor.riceWhite}]} >
                                   <View style={styles.copyout}>
-                                      <Text style={styles.copytext}>{rowData.name}</Text>
+                                      <Text style={[styles.copytext,{color: UColor.secdColor}]}>{rowData.name}</Text>
                                   </View>
                                   <TouchableOpacity style={styles.taboue} >
-                                      <View style={styles.tabview} >
+                                      <View style={[styles.tabview,{borderColor: UColor.lightgray}]} >
                                           <Image source={rowData.isChecked ? UImage.Tick:null} style={styles.tabimg} />
                                       </View>  
                                   </TouchableOpacity>  
@@ -748,8 +751,8 @@ class Home extends React.Component {
                     )}                   
                   /> 
                   <Button onPress={this.delInvalidWallet.bind(this)}>
-                      <View style={styles.deleteout}>
-                          <Text style={styles.deletetext}>一键删除</Text>
+                      <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
+                          <Text style={[styles.deletetext,{color: UColor.fontColor}]}>一键删除</Text>
                       </View>
                   </Button>  
               </View>
@@ -764,7 +767,6 @@ class Home extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: UColor.secdColor,
   },
 
   listout: {
@@ -772,54 +774,44 @@ const styles = StyleSheet.create({
   },
 
   row: {
-    backgroundColor: UColor.mainColor,
     flexDirection: "row",
+    justifyContent: "space-between",
     paddingVertical: ScreenUtil.autowidth(5),
     paddingHorizontal: ScreenUtil.autowidth(20),
-    justifyContent: "space-between",
   },
   listItem: {
     borderBottomWidth: 1,
-    borderBottomColor: UColor.secdColor
   },
 
   topbtn: {
+    width: ScreenWidth,
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: "space-between",
-    width: ScreenWidth,
     paddingTop: ScreenUtil.autoheight(10),
     paddingHorizontal: ScreenUtil.autowidth(10),
-    backgroundColor: UColor.mainColor, 
   },
   toptext: {
-    height: ScreenUtil.autoheight(60),
-    lineHeight: ScreenUtil.autoheight(60),
     textAlign: "center",
+    height: ScreenUtil.autoheight(60),
     fontSize: ScreenUtil.setSpText(18),
-    color: UColor.fontColor,
+    lineHeight: ScreenUtil.autoheight(60),
   },
 
   bgout: {
-    justifyContent: "center" ,
     width:ScreenWidth,
-    height: ScreenWidth*0.38,
+    height: ScreenWidth*0.54,
+    justifyContent: "center",
   },
   head: {
-    height: ScreenUtil.autoheight(70), 
     flexDirection: "row",
-    backgroundColor: UColor.secdColor, 
-    // borderRadius: 5,  
-    // marginVertical: ScreenUtil.autoheight(20),
-    // marginHorizontal: ScreenUtil.autowidth(10),
-
-    borderBottomColor: UColor.tintColor, 
     borderBottomWidth: 2,
+    height: ScreenUtil.autoheight(70), 
   },
   headbtn: {
     flex: 1, 
-    justifyContent: "center", 
     alignItems: 'center',
+    justifyContent: "center", 
     padding: ScreenUtil.autowidth(5),
   },
   headbtnout: {
@@ -828,7 +820,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headbtntext: {
-    color: UColor.arrow,
     fontSize: ScreenUtil.setSpText(14),
   },
 
@@ -837,7 +828,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     paddingHorizontal: ScreenUtil.autowidth(20),
-    paddingVertical:  ScreenUtil.autoheight(15)
+    paddingVertical:  ScreenUtil.autoheight(15),
   },
   addout: {
     flexDirection: "row",
@@ -846,25 +837,22 @@ const styles = StyleSheet.create({
   },
 
   backoractivestyle: {
-    borderRadius: 10,
     borderWidth: 1,
-    borderColor: UColor.showy,
-    justifyContent: 'center',
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
     marginLeft:ScreenUtil.autowidth(5),
   },
   backoractivestyle11: {
-    borderRadius: 10,
     borderWidth: 1,
-    borderColor: UColor.tintColor,
-    justifyContent: 'center',
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
     marginLeft:ScreenUtil.autowidth(5),
   },
 
   addtotext: { 
     fontSize: ScreenUtil.setSpText(16), 
-    color: UColor.fontColor
   },
   imgTeOy: {
     width: ScreenUtil.autowidth(25),
@@ -883,22 +871,16 @@ const styles = StyleSheet.create({
   },
   addtoouttext: {
     fontSize: ScreenUtil.setSpText(20), 
-    color: UColor.fontColor 
   },
   addtobtn: {
-    width: ScreenUtil.autowidth(60), 
     alignItems: 'center', 
     justifyContent: "center",
+    width: ScreenUtil.autowidth(60), 
   },
   addbtnout: {
     flex:1,  
     alignItems: 'center', 
     justifyContent: "center",
-  },
-  addbtnimg: {
-    color:UColor.fontColor ,
-    fontSize: ScreenUtil.setSpText(14), 
-    textAlign:'center'
   },
 
   touchableouts: {
@@ -907,103 +889,90 @@ const styles = StyleSheet.create({
   },
   touchable: {
     flex: 1, 
-    justifyContent: 'center', 
     alignItems: 'flex-end', 
-    backgroundColor: UColor.mask,
+    justifyContent: 'center', 
   },
   touchableout: {
-    width: ScreenWidth / 2, 
-    height: ScreenHeight, 
-    backgroundColor: UColor.secdColor, 
+    width: ScreenWidth/2, 
+    height: ScreenHeight,
     alignItems: 'center', 
     paddingTop: ScreenUtil.autoheight(50),
   },
   touchablelist: {
     width: '100%', 
     borderBottomWidth: 1, 
-    borderBottomColor: UColor.mainColor, 
   },
 
   imgBtn: {
+    margin: ScreenUtil.autowidth(5),
     width: ScreenUtil.autowidth(30),
     height: ScreenUtil.autowidth(30),
-    margin: ScreenUtil.autowidth(5),
   },
 
   walletlist: {
     width: '100%',
-    paddingHorizontal: ScreenUtil.autowidth(10),
-    height: ScreenUtil.autoheight(68),
     borderBottomWidth: 1, 
-    borderBottomColor: UColor.mainColor, 
+    height: ScreenUtil.autoheight(68),
+    paddingHorizontal: ScreenUtil.autowidth(10),
   },
 
-
   topout: {
-    flexDirection: "row",
     flex: 1,
+    flexDirection: "row",
     alignItems: 'center',
   },
   outname: {
-    fontSize: ScreenUtil.setSpText(14),
-    color: UColor.fontColor,
     textAlign: 'left',
+    fontSize: ScreenUtil.setSpText(14),
     marginRight: ScreenUtil.autowidth(10),
   },
   stopoutBackupsout: {
-    borderRadius: 10,
     borderWidth: 1,
-    borderColor: UColor.tintColor,
-    justifyContent: 'center',
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   stopoutBackups: {
     textAlign: 'center',
-    color: UColor.tintColor,
     fontSize: ScreenUtil.setSpText(10),
-    paddingHorizontal: ScreenUtil.autowidth(5),
     paddingVertical: ScreenUtil.autoheight(3),
+    paddingHorizontal: ScreenUtil.autowidth(5),
   },
 
   notactivedout: {
-    borderRadius: 10,
     borderWidth: 1,
-    borderColor: UColor.showy,
-    justifyContent: 'center',
+    borderRadius: 10,
     alignItems: 'center',
-  },
+    justifyContent: 'center',
+  },  
 
   notactived: {
-    color: UColor.showy,
     textAlign: 'center', 
     fontSize: ScreenUtil.setSpText(10),
-    paddingHorizontal: ScreenUtil.autowidth(5),
     paddingVertical: ScreenUtil.autoheight(3),
+    paddingHorizontal: ScreenUtil.autowidth(5),
   },
 
   walletaccount: {
     flex:1,
     alignItems: 'center',
-    color: UColor.lightgray, 
   },
-
 
  ebhbtnout: {
   width: '100%', 
-  height: ScreenHeight / 2.5, 
-  flexDirection: "column", 
-  alignItems: 'center',  
+  alignItems: 'center', 
+  flexDirection: "column",  
+  height: ScreenHeight/2.5, 
   paddingVertical: ScreenUtil.autoheight(10),
  },
 
  btnout: {
+  borderRadius: 25, 
+  borderWidth: 0.5,
+  alignItems: 'center', 
   width: ScreenUtil.autowidth(140),
   height: ScreenUtil.autoheight(35),
   marginVertical: ScreenUtil.autoheight(10),
-  alignItems: 'center', 
-  borderRadius: 25, 
-  borderWidth: 0.5, 
-  borderColor: UColor.lightgray,
  },
 
   establishout: {
@@ -1016,20 +985,18 @@ const styles = StyleSheet.create({
     height: ScreenUtil.autowidth(25), 
   },
   establishtext: {
-    marginLeft: ScreenUtil.autowidth(10), 
     fontSize: ScreenUtil.setSpText(15), 
-    color: UColor.lightgray,
+    marginLeft: ScreenUtil.autowidth(10), 
   },
 
   pupuo: {
     flex: 1, 
-    justifyContent: 'flex-end', 
     alignItems: 'center',
+    justifyContent: 'flex-end', 
   },
   modalStyle: {
       width: ScreenWidth,
       height: ScreenHeight * 2 / 3,
-      backgroundColor: UColor.fontColor,
   },
   subView: {
     flexDirection: "row",
@@ -1037,37 +1004,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: ScreenUtil.autoheight(30),
     marginVertical: ScreenUtil.autoheight(15),
-    paddingHorizontal: 10,
+    paddingHorizontal: ScreenUtil.autowidth(10),
   },
   titleText: {
-    width: ScreenUtil.autowidth(40),
-    color: UColor.baseline,
-    fontSize: ScreenUtil.setSpText(28),
     textAlign: 'center',
+    width: ScreenUtil.autowidth(40),
+    fontSize: ScreenUtil.setSpText(28),
   },
   contentText: {
-    fontSize: ScreenUtil.setSpText(18),
     fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: ScreenUtil.setSpText(18),
     paddingBottom: ScreenUtil.autoheight(20),
   },
   buttonView: {
     alignItems: 'flex-end',
   },
   prompt: {
-    fontSize: ScreenUtil.setSpText(12),
-    color: UColor.showy,
     textAlign: 'left',
+    fontSize: ScreenUtil.setSpText(12),
     marginBottom: ScreenUtil.autoheight(20),
     paddingHorizontal: ScreenUtil.autowidth(20),
   },
   codeout: {
-    height: ScreenUtil.autoheight(50),
+    borderBottomWidth: 1,
     flexDirection: "row",
     alignItems: 'center',
+    height: ScreenUtil.autoheight(50),
     marginHorizontal: ScreenUtil.autowidth(15),
-    borderBottomColor: UColor.riceWhite,
-    borderBottomWidth: 1,
   },
   copyout: {
     flex: 1,
@@ -1075,7 +1039,6 @@ const styles = StyleSheet.create({
   },
   copytext: {
     fontSize: ScreenUtil.setSpText(15),
-    color: UColor.secdColor,
   },
 
   lefts: {
@@ -1088,9 +1051,8 @@ const styles = StyleSheet.create({
     height: ScreenUtil.autowidth(25),
   },
   lefttext: {
-    marginLeft: ScreenUtil.autowidth(20),
     fontSize: ScreenUtil.setSpText(18),
-    color: UColor.fontColor
+    marginLeft: ScreenUtil.autowidth(20),
   },
   rights: {
     flex: 1,
@@ -1100,82 +1062,62 @@ const styles = StyleSheet.create({
   },
   rightout: {
     flex: 1,
+    alignItems: 'flex-end',
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: 'flex-end',
   },
   rightbalance: {
+    textAlign: 'right',
     fontSize: ScreenUtil.setSpText(18), 
-    color: UColor.fontColor, 
-    textAlign: 'right'
   },
   rightmarket: {
-    fontSize: ScreenUtil.setSpText(12),
-    color:  UColor.arrow,
     textAlign: 'right',
+    fontSize: ScreenUtil.setSpText(12),
     marginTop: ScreenUtil.autoheight(3),
   },
-  incupout: {
-    borderRadius: 5,
+
+  incdocupout: {
     borderWidth: 1,
-    borderColor: UColor.riseColor,
-    justifyContent: 'center',
+    borderRadius: 5,
     alignItems: 'center',
+    justifyContent: 'center',
     marginLeft: ScreenUtil.autoheight(10),
     paddingHorizontal: ScreenUtil.autowidth(10),
-    backgroundColor: UColor.riseColor,
-  },
-  incdoout: {
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: UColor.fallColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: ScreenUtil.autoheight(10),
-    paddingHorizontal: ScreenUtil.autowidth(10),
-    backgroundColor: UColor.fallColor,
   },
   cupcdo:{
     fontSize: ScreenUtil.setSpText(12), 
-    color: UColor.fontColor,
   },
   imgTop: {
     width: ScreenWidth,
     height: ScreenWidth*0.72,
  },
  btnestablish: {
-   height: ScreenUtil.autoheight(50),
-   backgroundColor:  UColor.tintColor,
-   justifyContent: 'center',
+   flex: 1,
    alignItems: 'center',
-   marginTop: ScreenUtil.autoheight(90),
-   marginHorizontal: ScreenUtil.autowidth(20),
-   borderRadius: 5
+   justifyContent: 'center',
  },
  btnimport: {
-   height: ScreenUtil.autoheight(50),
-   backgroundColor:  UColor.mainColor,
-   justifyContent: 'center',
+   borderRadius: 5,
    alignItems: 'center',
-   marginTop: ScreenUtil.autoheight(25),
+   justifyContent: 'center',
+   height: ScreenUtil.autoheight(50),
+   marginVertical: ScreenUtil.autoheight(10),
    marginHorizontal: ScreenUtil.autowidth(20),
-   borderRadius: 5
+   width: ScreenWidth-ScreenUtil.autowidth(40),
  },
  btntext: {
    fontSize: ScreenUtil.setSpText(17),
-   color: UColor.fontColor,
  },
 
  taboue: {
-  justifyContent: 'center', 
   alignItems: 'center',
+  justifyContent: 'center', 
 },
 tabview: {
+  borderWidth: 1,
+  margin: ScreenUtil.autowidth(5),
   width: ScreenUtil.autowidth(24),
   height: ScreenUtil.autowidth(24),
-  margin: ScreenUtil.autowidth(5),
-  borderColor: UColor.lightgray,
-  borderWidth: 1,
 },
 tabimg: {
   width: ScreenUtil.autowidth(24), 
@@ -1183,24 +1125,21 @@ tabimg: {
 },
 
 deleteout: {
-  height: ScreenUtil.autoheight(50),
-  marginHorizontal: ScreenUtil.autowidth(60),
-  marginVertical: ScreenUtil.autoheight(15),
   borderRadius: 6,
-  backgroundColor: UColor.tintColor,
+  alignItems: 'center',
   justifyContent: 'center',
-  alignItems: 'center'
+  height: ScreenUtil.autoheight(50),
+  marginVertical: ScreenUtil.autoheight(15),
+  marginHorizontal: ScreenUtil.autowidth(60),
 },
 deletetext: {
   fontSize: ScreenUtil.setSpText(16),
-  color: UColor.fontColor
 },
 
 pupuoBackup: {
   flex: 1, 
-  justifyContent: 'center', 
   alignItems: 'center',
-  backgroundColor: UColor.mask,
+  justifyContent: 'center', 
 },
 
 headout: {
@@ -1208,69 +1147,54 @@ headout: {
   paddingBottom: ScreenUtil.autoheight(15),
 },
 warningout: {
-  width: ScreenWidth-50,
-  marginHorizontal: ScreenUtil.autowidth(15),
-  flexDirection: "row",
-  alignItems: 'center', 
-  borderColor: UColor.showy,
   borderWidth: 1,
   borderRadius: 5,
+  flexDirection: "row",
+  alignItems: 'center', 
+  marginHorizontal: ScreenUtil.autowidth(15),
+  width: ScreenWidth-ScreenUtil.autowidth(50),
 },
 imgBtnBackup: {
   width: ScreenUtil.autowidth(30),
   height: ScreenUtil.autowidth(30),
 },
 
-inptitle: {
-  flex: 1,
-  fontSize: ScreenUtil.setSpText(15),
-  lineHeight: ScreenUtil.autoheight(30),
-  color: UColor.fontColor,
-},
 headtitle: {
   flex: 1,
-  color: UColor.showy,
   fontSize: ScreenUtil.setSpText(14),
   lineHeight: ScreenUtil.autoheight(25),
   paddingLeft: ScreenUtil.autowidth(10),
 },
 
-
-  // modal上子View的样式  
   subViewBackup: {
     flexDirection: "row", 
-    alignItems: 'center'
+    alignItems: 'center',
   },
   subViewBackup: {
     alignItems: 'flex-end',
     justifyContent: 'center',
-    width: ScreenWidth-20,
     height: ScreenUtil.autoheight(30),
+    width: ScreenWidth-ScreenUtil.autowidth(20),
   },
   buttonView2: {
-    width: ScreenUtil.autowidth(30),
     alignItems: 'center',
     justifyContent: 'center',
+    width: ScreenUtil.autowidth(30),
   },
-
-
-
     
   systemSettingTip: {
     width: ScreenWidth,
-    height: ScreenUtil.autoheight(40),
     flexDirection: "row",
     alignItems: 'center', 
-    backgroundColor: UColor.showy,
+    height: ScreenUtil.autoheight(40),
+   
   },
   systemSettingText: {
     flex: 1,
-    color: UColor.fontColor,
     textAlign: 'center',
     fontSize: ScreenUtil.setSpText(14)
   },
   systemSettingArrow: {
-    color: UColor.fontColor,
     marginRight: ScreenUtil.autowidth(5)
   },
 });

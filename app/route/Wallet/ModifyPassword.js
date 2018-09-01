@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, ScrollView, Image, Platform, StatusBar, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import ScreenUtil from '../../utils/ScreenUtil'
+import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
-import UImage from '../../utils/Img'
+import Header from '../../components/Header'
+import Constants from '../../utils/Constants'
+import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import BaseComponent from "../../components/BaseComponent";
-import Constants from '../../utils/Constants'
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 var dismissKeyboard = require('dismissKeyboard');
@@ -17,13 +18,9 @@ class ModifyPassword extends BaseComponent {
 
     static navigationOptions = {
         title: '修改密码',
-        headerStyle: {
-            paddingTop: ScreenUtil.autoheight(20),
-            backgroundColor: UColor.mainColor,
-            borderBottomWidth:0,
-        },
+        header:null,  
     };
-
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -39,10 +36,9 @@ class ModifyPassword extends BaseComponent {
     componentWillUnmount(){
         //结束页面前，资源释放操作
         super.componentWillUnmount();
-        
-      }
-    updatePassword = () => {
+    }
 
+    updatePassword = () => {
         if (this.state.password == "") {
             EasyToast.show('请输入旧密码');
             return;
@@ -64,37 +60,30 @@ class ModifyPassword extends BaseComponent {
             var ownerPrivateKey = wallet.ownerPrivate;
             var bytes_ownerPrivate = CryptoJS.AES.decrypt(ownerPrivateKey.toString(), this.state.password + wallet.salt);
             var plaintext_ownerPrivate = bytes_ownerPrivate.toString(CryptoJS.enc.Utf8);
-
             if (plaintext_ownerPrivate.indexOf('eostoken') != - 1) {
                 // plaintext_ownerPrivate = plaintext_ownerPrivate.substr(8, plaintext_ownerPrivate.length);
-
                 //**************解密********* */
                 var activePrivate = "";
                 var plaintext_activePrivate = "";
                 var _activePrivate = "";
-
                 if (this.props.navigation.state.params.activePrivate != null) {
                     activePrivate = this.props.navigation.state.params.activePrivate;
                     var bytes_activePrivate = CryptoJS.AES.decrypt(activePrivate.toString(), this.state.password + this.props.navigation.state.params.salt);
                     plaintext_activePrivate = bytes_activePrivate.toString(CryptoJS.enc.Utf8);
                     _activePrivate = CryptoJS.AES.encrypt(plaintext_activePrivate, this.state.newPassword + this.props.navigation.state.params.salt);
                 }
-
                 var words = "";
                 var plaintext_words = "";
                 var _words = "";
-
                 if (wallet.words != null) {
                     words = this.props.navigation.state.params.words;
                     var bytes_words = CryptoJS.AES.decrypt(words.toString(), this.state.password + wallet.salt);
                     plaintext_words = bytes_words.toString(CryptoJS.enc.Utf8);
                     _words = CryptoJS.AES.encrypt(plaintext_words, this.state.newPassword + wallet.salt);
                 }
-
                 var words_active = "";
                 var plaintext_words_active = "";
                 var _words_active = "";
-
                 if (wallet.words_active != null) {
                     words_active = this.props.navigation.state.params.words_active;
                     var bytes_words_active = CryptoJS.AES.decrypt(words_active.toString(), this.state.password + wallet.salt);
@@ -103,7 +92,6 @@ class ModifyPassword extends BaseComponent {
                 }
                 //**************加密********* */
                 var _ownerPrivate = CryptoJS.AES.encrypt(plaintext_ownerPrivate, this.state.newPassword + wallet.salt);
-
                 var _wallet = {
                     name: wallet.name,
                     account: wallet.account,
@@ -178,60 +166,57 @@ class ModifyPassword extends BaseComponent {
         if(this.state.password != "" && this.state.newPassword != "" && this.state.newRePassword != ""){
           this.state.CreateButton = UColor.tintColor;
         }else{
-          this.state.CreateButton =  UColor.mainColor;
+          this.state.CreateButton = UColor.theme ? "#BFBFBF" : UColor.mainColor;
         }
-      }
+    }
 
     render() {
-        return <View style={styles.container}>
+        return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+          <Header {...this.props} onPressLeft={true} title="修改密码" />
           <ScrollView keyboardShouldPersistTaps="always">
             <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-                    <View style={styles.outsource}>
-                        <View  style={styles.inptoutsource} >
+                    <View style={[styles.outsource,{backgroundColor: UColor.mainColor}]}>
+                        <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
                             <TextInput ref={(ref) => this._lphone = ref} value={this.state.password} returnKeyType="next"
-                                selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow}
+                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}
                                 secureTextEntry={true} placeholder="当前密码"  underlineColorAndroid="transparent" autoFocus={false} maxLength = {20}
-                                editable={true} onChangeText={(password) => this.setState({ password })}   onChange={this.intensity()} 
-                            />
+                                editable={true} onChangeText={(password) => this.setState({ password })}   onChange={this.intensity()} />
                         </View>
-                        <View  style={styles.inptoutsource} >
-                            <TextInput ref={(ref) => this._lpass = ref} value={this.state.newPassword} returnKeyType="next"
-                                selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow} 
-                                secureTextEntry={true}  placeholder="新密码" underlineColorAndroid="transparent"  autoFocus={false}  maxLength= {Constants.PWD_MAX_LENGTH}
-                                editable={true} onChangeText={(newPassword) => this.setState({ newPassword })}  onChange={this.intensity()} 
-                            />
+                        <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
+                            <TextInput ref={(ref) => this._lpass = ref} value={this.state.newPassword} returnKeyType="next" onChange={this.intensity()}
+                                style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={Constants.PWD_MAX_LENGTH}
+                                secureTextEntry={true}  placeholder="新密码" underlineColorAndroid="transparent" selectionColor={UColor.tintColor}
+                                editable={true} onChangeText={(newPassword) => this.setState({ newPassword })} autoFocus={false} />
                             <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(50), alignItems: 'center', }}>
                                 <Text style={{color:this.state.weak, fontSize: ScreenUtil.setSpText(15), padding: ScreenUtil.autowidth(5),}}>弱</Text>
                                 <Text style={{color:this.state.medium, fontSize: ScreenUtil.setSpText(15), padding: ScreenUtil.autowidth(5),}}>中</Text>
                                 <Text style={{color:this.state.strong, fontSize: ScreenUtil.setSpText(15), padding: ScreenUtil.autowidth(5),}}>强</Text>
                             </View>
                         </View>
-                        <View  style={styles.inptoutsource} >
-                            <TextInput ref={(ref) => this._lpass = ref} autoFocus={false} editable={true} returnKeyType="next"
-                                value={this.state.newRePassword} onChangeText={(newRePassword) => this.setState({ newRePassword })}
-                                selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.arrow}  onChange={this.intensity()} 
-                                placeholder="重复密码" underlineColorAndroid="transparent" secureTextEntry={true}  maxLength = {Constants.PWD_MAX_LENGTH}
-                            />
+                        <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
+                            <TextInput ref={(ref) => this._lpass = ref} autoFocus={false} editable={true} underlineColorAndroid="transparent"
+                                value={this.state.newRePassword} onChangeText={(newRePassword) => this.setState({ newRePassword })} returnKeyType="next"
+                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                                placeholder="重复密码"  secureTextEntry={true}  onChange={this.intensity()}  maxLength={Constants.PWD_MAX_LENGTH}/>
                         </View>
-                        <View style={styles.inptoutsource} >
-                            <TextInput ref={(ref) => this._lpass = ref} autoFocus={false} editable={true} returnKeyType="next" 
-                                style={styles.inpt} placeholderTextColor={UColor.arrow}   onChange={this.intensity()} 
-                                placeholder="密码提示(可不填)" underlineColorAndroid="transparent" 
-                            />
+                        <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
+                            <TextInput ref={(ref) => this._lpass = ref} autoFocus={false} editable={true} underlineColorAndroid="transparent" 
+                                style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} onChange={this.intensity()} 
+                                placeholder="密码提示(可不填)" returnKeyType="next" />
                         </View>
                     </View>
                     <View style={{padding: ScreenUtil.autowidth(20),}}>
                         <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.arrow, textAlign: 'left',paddingBottom: ScreenUtil.autoheight(10),}} >忘记密码? 导入助记词或私钥可重置密码。</Text>
-                        <Text onPress={() => this.importEosKey()} style={styles.servicetext}>马上导入</Text>
+                        <Text onPress={() => this.importEosKey()} style={[styles.servicetext,{color: UColor.tintColor}]}>马上导入</Text>
                     </View>
                     <Button onPress={() => this.updatePassword()}>
                         <View style={styles.btnout} backgroundColor = {this.state.CreateButton}>
-                            <Text style={styles.buttext}>确认</Text>
+                            <Text style={[styles.buttext,{color: UColor.btnColor}]}>确认</Text>
                         </View>
                     </Button>
                     <View style={styles.logout}>
                         <Image source={UImage.bottom_log} style={styles.logimg}/>
-                        <Text style={styles.logtext}>EosToken 专注柚子生态</Text>
+                        <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
                     </View>
             </TouchableOpacity>
         </ScrollView>   
@@ -243,66 +228,50 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: UColor.secdColor,
     },
-
     outsource: {
-        backgroundColor: UColor.mainColor, 
         marginTop: ScreenUtil.autoheight(30), 
     },
     inptoutsource: {
         flexDirection: 'row',
-        paddingHorizontal: ScreenUtil.autowidth(20), 
-        borderBottomColor: UColor.secdColor, 
         borderBottomWidth: 1,
+        paddingHorizontal: ScreenUtil.autowidth(20), 
     },
     inpt: {
         flex: 1,
-        color: UColor.arrow, 
-        fontSize: ScreenUtil.setSpText(15), 
         height: ScreenUtil.autoheight(50),
+        fontSize: ScreenUtil.setSpText(15), 
     },
-
-    welcome: {
-        color: UColor.arrow, 
-        marginBottom: ScreenUtil.autoheight(10), 
-        marginLeft: ScreenUtil.autowidth(10),
-    },
-
     btnout: {
-        height: ScreenUtil.autoheight(45), 
-        justifyContent: 'center', 
+        borderRadius: 5,
         alignItems: 'center', 
+        justifyContent: 'center', 
+        height: ScreenUtil.autoheight(45), 
         marginVertical: ScreenUtil.autoheight(40), 
         marginHorizontal: ScreenUtil.autowidth(30),  
-        borderRadius: 5
     },
     buttext: {
-        fontSize: ScreenUtil.setSpText(15), 
-        color: UColor.fontColor
+        fontSize: ScreenUtil.setSpText(15),
     },
     servicetext: {
-        paddingBottom: ScreenUtil.autoheight(20), 
-        fontSize: ScreenUtil.setSpText(14), 
-        color: UColor.tintColor,  
         textAlign: 'right',
+        fontSize: ScreenUtil.setSpText(14),
+        paddingBottom: ScreenUtil.autoheight(20), 
     },
-
     logout:{
-        height: ScreenUtil.autoheight(130),
         alignItems: 'center',
         justifyContent: 'flex-end',
+        height: ScreenUtil.autoheight(130),
         paddingBottom: ScreenUtil.autoheight(20),
-      },
-      logimg: {
+    },
+    logimg: {
         width: ScreenUtil.autowidth(50), 
-        height: ScreenUtil.autowidth(50)
-      },
-      logtext: {
+        height: ScreenUtil.autowidth(50),
+    },
+    logtext: {
         fontSize: ScreenUtil.setSpText(14),
-        color: UColor.arrow,
         lineHeight: ScreenUtil.autoheight(30),
-      }
+    }
 });
 
 export default ModifyPassword;

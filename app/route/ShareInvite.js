@@ -5,6 +5,7 @@ import { StyleSheet, Dimensions, Modal, Animated, View, Image, ScrollView, Text,
 import ScreenUtil from '../utils/ScreenUtil'
 import UColor from '../utils/Colors'
 import UImage from '../utils/Img'
+import Header from '../components/Header'
 import Button from '../components/Button'
 import { EasyToast } from '../components/Toast';
 import { EasyShowLD } from "../components/EasyShow"
@@ -23,9 +24,10 @@ class ShareInvite extends React.Component {
   }
 
   static navigationOptions = {
-    title: "邀请注册"
+    title: "邀请注册",
+    header:null, 
   };
-
+  
   constructor(props) {
     super(props);
     WeChat.registerApp('wxc5eefa670a40cc46');
@@ -93,20 +95,21 @@ class ShareInvite extends React.Component {
           }
         });
     });
-     });
+     },() => { EasyShowLD.dialogClose() });
   }
 
   render() {
     return (
-      <View style={styles.container}>   
+      <View style={[styles.container,{ backgroundColor: UColor.secdColor}]}>   
+      <Header {...this.props} onPressLeft={true} title="邀请注册" />
           <ScrollView> 
             <ViewShot ref="viewShot"> 
                 <Image style={{width: ScreenWidth, height: ScreenWidth*1.775,}} source={UImage.sharebg} resizeMode="cover"/>  
             </ViewShot>
           </ScrollView>
           <Button onPress={() => { this.invitation() }} >
-            <View style={styles.btnout}>
-              <Text style={styles.btntext}>复制专属邀请链接</Text>
+            <View style={[styles.btnout,{backgroundColor: UColor.tintColor}]}>
+              <Text style={[styles.btntext,{color: UColor.btnColor}]}>复制专属邀请链接</Text>
             </View>
           </Button>
       </View>
@@ -118,17 +121,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: UColor.secdColor,
   },
   btnout: {
     height: ScreenUtil.autoheight(50), 
-    backgroundColor: UColor.tintColor, 
     justifyContent: 'center', 
     alignItems: 'center',
   },
   btntext: { 
-    fontSize: ScreenUtil.setSpText(16), 
-    color: UColor.fontColor, 
+    fontSize: ScreenUtil.setSpText(16),  
   },
 });
 

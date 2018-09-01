@@ -1,14 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { StyleSheet, Image, View, Text, TextInput, Dimensions, TouchableOpacity, } from 'react-native';
-import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
+import UColor from '../../utils/Colors'
+import Header from '../../components/Header'
 import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
+import {NavigationActions} from 'react-navigation';
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
 import BaseComponent from "../../components/BaseComponent";
-import {NavigationActions} from 'react-navigation';
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
@@ -17,22 +18,12 @@ var CryptoJS = require("crypto-js");
 
 @connect(({wallet, login}) => ({...wallet, ...login}))
 class BackupsAOkey extends BaseComponent {
-      static navigationOptions = ({ navigation }) => {
-       
-        return {                       
-          headerTitle:'备份私钥',
-          headerStyle:{
-                paddingTop: ScreenUtil.autoheight(20),
-                backgroundColor: UColor.mainColor,
-                borderBottomWidth:0,
-          },
-          headerRight: (<Button  onPress={navigation.state.params.onPress}>  
-                <Text style={{color: UColor.arrow, fontSize: 18,justifyContent: 'flex-end',paddingRight:15}}>跳过</Text>
-          </Button>),                  
-        };
-      };
-
-      _rightTopClick = () =>{
+    static navigationOptions = {
+        headerTitle:'备份私钥',
+        header:null,             
+    };
+    
+    _rightTopClick = () =>{
         var entry = this.props.navigation.state.params.entry;
         if(entry == "createWallet"){
             this.pop(2, true);
@@ -41,23 +32,23 @@ class BackupsAOkey extends BaseComponent {
         this.pop(3, true);
         // const { navigate } = this.props.navigation;
         // navigate('WalletManage', {});
-      }
+    }
 
-  // 构造函数  
-  constructor(props) { 
-    super(props);
-    this.props.navigation.setParams({ onPress: this._rightTopClick });
-    this.state = {
-        password: "",
-        ownerPk: '',
-        activePk: '',
-        txt_owner: '',
-        txt_active: '',
-        PromptOwner: '',
-        PromptActtve: '',
-        show: false,
-    };
-  }
+    // 构造函数  
+    constructor(props) { 
+        super(props);
+        this.props.navigation.setParams({ onPress: this._rightTopClick });
+        this.state = {
+            password: "",
+            ownerPk: '',
+            activePk: '',
+            txt_owner: '',
+            txt_active: '',
+            PromptOwner: '',
+            PromptActtve: '',
+            show: false,
+        };
+    }
 
   //组件加载完成
   componentDidMount() {
@@ -92,7 +83,6 @@ class BackupsAOkey extends BaseComponent {
     let name = wallet.account;
     let owner = wallet.ownerPublic;
     let active = wallet.activePublic;
-
     try {
     EasyShowLD.loadingShow('正在请求');
     //检测账号是否已经激活
@@ -104,7 +94,7 @@ class BackupsAOkey extends BaseComponent {
                 this.props.dispatch({type: 'wallet/activeWallet', wallet: wallet});
                 //msg:success,data:true, code:0 账号已存在
                 EasyShowLD.dialogShow("恭喜激活成功", (<View>
-                    <Text style={styles.passoutsource}>{name}</Text>
+                    <Text style={[styles.passoutsource,{color: UColor.showy}]}>{name}</Text>
                     {/* <Text style={styles.inptpasstext}>您申请的账号已经被***激活成功</Text> */}
                 </View>), "知道了", null,  () => {EasyShowLD.dialogClose(), this.pop(3, true) });
             }else {
@@ -168,7 +158,6 @@ class BackupsAOkey extends BaseComponent {
         immediate: immediate,
     });
     this.props.navigation.dispatch(action);
-
   }
 
   backupOK(){
@@ -199,7 +188,6 @@ class BackupsAOkey extends BaseComponent {
             this.setState({PromptActtve: '该私钥内容有误'})
             return;
         }
-
         if(this.state.activePk == this.state.txt_active ){
             this.backupOK();
             return;
@@ -221,13 +209,11 @@ class BackupsAOkey extends BaseComponent {
             this.setState({PromptOwner: '该私钥内容有误'})
             return;
         }
-
         if(this.state.activePk == this.state.txt_active && this.state.ownerPk == this.state.txt_owner){
             this.backupOK();
             return;
         }
     }
-
     // const { navigate } = this.props.navigation;
     // navigate('ActivationAt', {});
   }
@@ -246,46 +232,49 @@ class BackupsAOkey extends BaseComponent {
   }
 
     render() {
-        return (<View style={styles.container}>         
+        return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>      
+            <Header {...this.props} onPressLeft={true} title="备份私钥" onPressRight={this._rightTopClick.bind()} subName="跳过"/>   
             <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={styles.scrollView}>
-                <View style={styles.header}>
-                    <View style={styles.inptoutbg}>
+                <View style={[styles.header,{backgroundColor: UColor.secdColor}]}>
+                    <View style={[styles.inptoutbg,{backgroundColor: UColor.mainColor}]}>
                         <View style={styles.headout}>
-                            <Text style={styles.inptitle}>确认您的钱包私钥</Text>
-                            <Text style={styles.headtitle}>请填入您所抄写的私钥，确保您填入无误后，按下一步。</Text>
+                            <Text style={[styles.inptitle,{color: UColor.fontColor}]}>确认您的钱包私钥</Text>
+                            <Text style={[styles.headtitle,{color: UColor.arrow}]}>请填入您所抄写的私钥，确保您填入无误后，按下一步。</Text>
                         </View>  
                         {this.state.txt_active != ''&& 
-                        <View style={styles.inptoutgo} >
+                        <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
                             <View style={styles.ionicout}>
-                                <Text style={styles.inptitle}>Active私钥</Text>
-                                <Text style={styles.prompttext}>{this.state.PromptActtve}</Text>
+                                <Text style={[styles.inptitle,{color: UColor.fontColor}]}>Active私钥</Text>
+                                <Text  style={[styles.prompttext,{color: UColor.showy}]}>{this.state.PromptActtve}</Text>
                             </View>
                             <TextInput ref={(ref) => this._lphone = ref} value={this.state.activePk} returnKeyType="next" editable={true}
-                                selectionColor={UColor.tintColor} style={styles.inptgo} placeholderTextColor={UColor.arrow} autoFocus={false} 
-                                onChangeText={(activePk) => this.setState({ activePk })}   keyboardType="default" onChange={this.intensity()} 
-                                placeholder="输入active私钥" underlineColorAndroid="transparent"  multiline={true}  />
+                                selectionColor={UColor.tintColor} placeholderTextColor={UColor.arrow} autoFocus={false} multiline={true}
+                                style={[styles.inptgo,{color: UColor.arrow, backgroundColor: UColor.secdColor}]}
+                                onChangeText={(activePk) => this.setState({ activePk })} keyboardType="default" onChange={this.intensity()} 
+                                placeholder="输入active私钥" underlineColorAndroid="transparent"   />
                         </View>
                         }
                          {this.state.txt_owner  != ''&&
-                        <View style={styles.inptoutgo} >
+                        <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
                             <View style={styles.ionicout}>
-                                <Text style={styles.inptitle}>Owner私钥</Text>
-                                <Text style={styles.prompttext}>{this.state.PromptOwner}</Text>
+                                <Text style={[styles.inptitle,{color: UColor.fontColor}]}>Owner私钥</Text>
+                                <Text style={[styles.prompttext,{color: UColor.showy}]}>{this.state.PromptOwner}</Text>
                             </View>
                             <TextInput ref={(ref) => this._lphone = ref} value={this.state.ownerPk} returnKeyType="next" editable={true}
-                                selectionColor={UColor.tintColor} style={styles.inptgo} placeholderTextColor={UColor.arrow} autoFocus={false} 
-                                onChangeText={(ownerPk) => this.setState({ ownerPk })}   keyboardType="default" onChange={this.intensity()} 
-                                placeholder="输入owner私钥" underlineColorAndroid="transparent"  multiline={true}  />
+                                selectionColor={UColor.tintColor} placeholderTextColor={UColor.arrow} autoFocus={false}  multiline={true}
+                                style={[styles.inptgo,{color: UColor.arrow, backgroundColor: UColor.secdColor}]} 
+                                onChangeText={(ownerPk) => this.setState({ ownerPk })} keyboardType="default" onChange={this.intensity()} 
+                                placeholder="输入owner私钥" underlineColorAndroid="transparent"    />
                         </View>}
                     </View>
                     <Button onPress={() => this.backupConfirm()}>
-                        <View style={styles.importPriout}>
-                            <Text style={styles.importPritext}>下一步</Text>
+                        <View style={[styles.importPriout,{backgroundColor: UColor.tintColor}]}>
+                            <Text style={[styles.importPritext,{color: UColor.btnColor}]}>下一步</Text>
                         </View>
                     </Button>
                     <View style={styles.logout}>
                         <Image source={UImage.bottom_log} style={styles.logimg}/>
-                        <Text style={styles.logtext}>EosToken 专注柚子生态</Text>
+                        <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -294,24 +283,12 @@ class BackupsAOkey extends BaseComponent {
 }
 const styles = StyleSheet.create({
     passoutsource: {
-        fontSize: 20, 
-        color: UColor.showy, 
         textAlign: 'center',
-    },
-    inptpass: {
-        color: UColor.tintColor,
-        height: ScreenUtil.autoheight(45),
-        width: ScreenWidth -100,
-        paddingBottom: ScreenUtil.autoheight(5),
-        fontSize: ScreenUtil.setSpText(16),
-        backgroundColor: UColor.fontColor,
-        borderBottomColor: UColor.baseline,
-        borderBottomWidth: 1,
+        fontSize: ScreenUtil.setSpText(20), 
     },
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: UColor.secdColor,
     },
     scrollView: {
         flex: 1,
@@ -319,10 +296,8 @@ const styles = StyleSheet.create({
     header: {
         flex: 1,
         marginTop: ScreenUtil.autoheight(10),
-        backgroundColor: UColor.secdColor,
     },
     inptoutbg: {
-        backgroundColor: UColor.mainColor,
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
     headout: {
@@ -330,14 +305,12 @@ const styles = StyleSheet.create({
         paddingBottom: ScreenUtil.autoheight(15),
     },
     headtitle: {
-        color: UColor.arrow,
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(25),
     },
     inptoutgo: {
-        width: ScreenWidth - ScreenUtil.autowidth(40),
         paddingBottom: ScreenUtil.autoheight(15),
-        backgroundColor: UColor.mainColor,
+        width: ScreenWidth - ScreenUtil.autowidth(40),
     },
     ionicout: {
         flexDirection: "row",
@@ -347,44 +320,36 @@ const styles = StyleSheet.create({
     inptitle: {
         fontSize: ScreenUtil.setSpText(15),
         lineHeight: ScreenUtil.autoheight(30),
-        color: UColor.fontColor,
     },
     prompttext: {
+        textAlign: 'right',
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(30),
-        textAlign: 'right',
-        color: UColor.showy,
     },
     inptgo: {
         flexWrap: 'wrap',
-        color: UColor.arrow,
         textAlignVertical: 'top',
-        backgroundColor: UColor.secdColor,
+        height: ScreenUtil.autoheight(60),
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(25),
-        height: ScreenUtil.autoheight(60),
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
-
     importPriout: {
-        height: ScreenUtil.autoheight(45),
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: ScreenUtil.autowidth(20),
-        marginTop: ScreenUtil.autoheight(50),
         borderRadius: 5,
-        backgroundColor:  UColor.tintColor,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: ScreenUtil.autoheight(45),
+        marginTop: ScreenUtil.autoheight(50),
+        marginHorizontal: ScreenUtil.autowidth(20),
     },
     importPritext: {
         fontSize: ScreenUtil.setSpText(15),
-        color: UColor.fontColor,
     },
-
     logout:{
         flex: 1,
-        minHeight: ScreenUtil.autoheight(160),
         alignItems: 'center',
         justifyContent: 'flex-end',
+        minHeight: ScreenUtil.autoheight(160),
         paddingBottom: ScreenUtil.autoheight(20),
     },
     logimg: {
@@ -393,7 +358,6 @@ const styles = StyleSheet.create({
     },
     logtext: {
         fontSize: ScreenUtil.setSpText(14),
-        color: UColor.arrow,
         lineHeight: ScreenUtil.autoheight(30),
     }
 });

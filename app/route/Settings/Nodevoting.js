@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Dimensions, ListView, StyleSheet, View, Text, Image, TextInput, TouchableOpacity} from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
+import Header from '../../components/Header'
 import Button from  '../../components/Button'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
@@ -21,13 +22,9 @@ class Nodevoting extends BaseComponent {
 
     static navigationOptions =  {
         title: "投票",
-        headerStyle: {
-            paddingTop: ScreenUtil.autoheight(20),
-            backgroundColor: UColor.mainColor,
-            borderBottomWidth:0,
-          },
+        header:null, 
       };
-
+      
     constructor(props) {
         super(props);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -88,9 +85,10 @@ class Nodevoting extends BaseComponent {
         const view =
         <View style={styles.passoutsource}>
             <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  style={styles.inptpass} maxLength={Constants.PWD_MAX_LENGTH}
+                selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
+                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
                 placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
-            <Text style={styles.inptpasstext}>提示：为确保您的投票生效成功，EOS将进行锁仓三天，期间转账或撤票都可能导致投票失败。</Text>  
+            <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>提示：为确保您的投票生效成功，EOS将进行锁仓三天，期间转账或撤票都可能导致投票失败。</Text>  
         </View>
 
         EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
@@ -140,8 +138,8 @@ class Nodevoting extends BaseComponent {
                                         //弹出提示框,可申请免费抵押功能
                                         const view =
                                         <View style={styles.passoutsource2}>
-                                        <Text style={styles.Explaintext2}>该账号资源(NET/CPU)不足！</Text>
-                                        <Text style={styles.Explaintext2}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                            <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                            <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                         </View>
                                         EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                             
@@ -205,36 +203,37 @@ class Nodevoting extends BaseComponent {
     }
     render() {
         return (
-            <View style={styles.container}>
-                 <View style={styles.headout}>         
-                    <Text style={styles.nodename}>节点名称</Text>           
-                    <Text style={styles.rankingticket}>排名/票数</Text>           
-                    <Text style={styles.choice}>选择</Text>          
+            <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+                <Header {...this.props} onPressLeft={true} title="投票" />
+                 <View style={[styles.headout,{backgroundColor: UColor.mainColor}]}>         
+                    <Text style={[styles.nodename,{color: UColor.fontColor}]}>节点名称</Text>           
+                    <Text style={[styles.rankingticket,{color: UColor.fontColor}]}>排名/票数</Text>           
+                    <Text style={[styles.choice,{color: UColor.fontColor}]}>选择</Text>          
                 </View>
                 <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true} 
                     dataSource={this.state.dataSource.cloneWithRows(this.props.voteData == null ? [] : this.props.voteData)} 
                     renderRow={(rowData, sectionID, rowID) => (                  
                     <View>
                         <Button onPress={this._openAgentInfo.bind(this,rowData)}> 
-                            <View style={styles.outsource} backgroundColor={(parseInt(rowID)%2 == 0) ? UColor.secdColor : UColor.inash}>
+                            <View style={styles.outsource} backgroundColor={(parseInt(rowID)%2 == 0) ? UColor.secdColor : UColor.mainColor}>
                                 <View style={styles.logview}>
                                     <Image source={rowData.icon==null ? UImage.eos : {uri: rowData.icon}} style={styles.logimg}/>
                                 </View>
                                 <View style={styles.nameregion}>
-                                    <Text style={styles.nameranking} numberOfLines={1}>{rowData.name}</Text>
-                                    <Text style={styles.regiontotalvotes} numberOfLines={1}>地区：{rowData.region==null ? "未知" : rowData.region}</Text>                                    
+                                    <Text style={[styles.nameranking,{color: UColor.fontColor}]} numberOfLines={1}>{rowData.name}</Text>
+                                    <Text style={[styles.regiontotalvotes,{color: UColor.lightgray}]} numberOfLines={1}>地区：{rowData.region==null ? "未知" : rowData.region}</Text>                                    
                                 </View>
                                 <View style={styles.rankvote}>
-                                    <Text style={styles.nameranking}>{rowData.ranking}</Text>
-                                    <Text style={styles.regiontotalvotes}>{parseInt(rowData.total_votes)}</Text> 
+                                    <Text style={[styles.nameranking,{color: UColor.fontColor}]}>{rowData.ranking}</Text>
+                                    <Text style={[styles.regiontotalvotes,{color: UColor.lightgray}]}>{parseInt(rowData.total_votes)}</Text> 
                                 </View>
                                 {this.isvoted(rowData) ? 
                                 <TouchableOpacity style={styles.taboue}>
-                                    <View style={styles.tabview} >
+                                    <View style={[styles.tabview,{borderColor: UColor.lightgray}]} >
                                         <Image source={UImage.Tick_h} style={styles.tabimg} />
                                     </View>
                                 </TouchableOpacity> : <TouchableOpacity style={styles.taboue} onPress={ () => this.selectItem(rowData)}>
-                                    <View style={styles.tabview} >
+                                    <View style={[styles.tabview,{borderColor: UColor.lightgray}]} >
                                         <Image source={rowData.isChecked ? UImage.Tick:null} style={styles.tabimg} />
                                     </View>  
                                 </TouchableOpacity> 
@@ -244,17 +243,17 @@ class Nodevoting extends BaseComponent {
                     </View>             
                     )}                                   
                 /> 
-                <View style={styles.footer}>
+                <View style={[styles.footer,{backgroundColor: UColor.secdColor}]}>
                     <Button style={styles.btn}>
-                        <View style={styles.btnnode}>
-                            <Text style={styles.nodenumber}>{30 - this.state.arr1}</Text>
-                            <Text style={styles.nodetext}>剩余可投节点</Text>
+                        <View style={[styles.btnnode,{backgroundColor: UColor.mainColor}]}>
+                        <Text style={[styles.nodenumber,{color: UColor.fontColor}]}>{30 - this.state.arr1}</Text>
+                            <Text style={[styles.nodetext,{color: UColor.lightgray,}]}>剩余可投节点</Text>
                         </View>
                     </Button>
                     <Button onPress={this.addvote.bind()} style={styles.btn}>
-                        <View style={styles.btnvote}>
+                        <View style={[styles.btnvote,{backgroundColor: UColor.mainColor}]}>
                             <Image source={UImage.vote} style={styles.voteimg} />
-                            <Text style={styles.votetext}>投票</Text>
+                            <Text style={[styles.votetext,{color: UColor.fontColor}]}>投票</Text>
                         </View>
                     </Button>
                 </View>         
@@ -269,17 +268,14 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     inptpass: {
-        color: UColor.tintColor,
+        textAlign: "center",
         height: ScreenUtil.autoheight(45),
         width: ScreenWidth-100,
         fontSize: ScreenUtil.setSpText(16),
-        backgroundColor: UColor.fontColor,
-        borderBottomColor: UColor.baseline,
         borderBottomWidth: 1,
     },
     inptpasstext: {
         fontSize: ScreenUtil.setSpText(14),
-        color: UColor.arrow,
         lineHeight: ScreenUtil.autoheight(20),
         marginTop: ScreenUtil.autowidth(10),
     },
@@ -287,30 +283,25 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       flexDirection:'column',
-      backgroundColor: UColor.secdColor,
     },
     headout: {
         flexDirection: 'row', 
-        backgroundColor: UColor.mainColor,
         height: ScreenUtil.autoheight(25),
     },
     nodename:{
-        width: ScreenUtil.autowidth(140),  
-        color: UColor.fontColor, 
+        width: ScreenUtil.autowidth(140), 
         fontSize: ScreenUtil.setSpText(16),  
         textAlign:'center', 
         lineHeight: ScreenUtil.autoheight(25),
     },
     rankingticket: {
         flex: 1,
-        color: UColor.fontColor,
         fontSize: ScreenUtil.setSpText(16),
         textAlign: 'center',
         lineHeight: ScreenUtil.autoheight(25),
     },
     choice: {
         width: ScreenUtil.autowidth(50),
-        color: UColor.fontColor,
         fontSize: ScreenUtil.setSpText(16),
         textAlign: 'center',
         lineHeight: ScreenUtil.autoheight(25),
@@ -340,12 +331,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    nameranking: {
-        color: UColor.fontColor, 
+    nameranking: { 
         fontSize: ScreenUtil.setSpText(14),
     }, 
     regiontotalvotes: {
-        color: UColor.lightgray, 
         fontSize: ScreenUtil.setSpText(14),
     },
 
@@ -357,7 +346,6 @@ const styles = StyleSheet.create({
         width: ScreenUtil.autowidth(27),
         height: ScreenUtil.autowidth(27),
         margin: ScreenUtil.autowidth(5),
-        borderColor: UColor.lightgray,
         borderWidth: 1,
     },
     tabimg: {
@@ -367,8 +355,7 @@ const styles = StyleSheet.create({
 
     footer: {
       height: ScreenUtil.autoheight(50),
-      flexDirection: 'row',
-      backgroundColor: UColor.secdColor,  
+      flexDirection: 'row', 
     },
     btn: {
         flex: 1
@@ -379,15 +366,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'column',
         marginRight: 0.5,
-        backgroundColor: UColor.mainColor,
     },
     nodenumber: {
         fontSize: ScreenUtil.setSpText(18), 
-        color: UColor.fontColor,
     },
     nodetext: {
         fontSize: ScreenUtil.setSpText(14), 
-        color: UColor.lightgray,
     },
     btnvote: {
         flex: 1,
@@ -395,7 +379,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row',
         marginLeft: 0.5,
-        backgroundColor: UColor.mainColor,
     },
     voteimg: {
         width: ScreenUtil.autowidth(30), 
@@ -404,7 +387,6 @@ const styles = StyleSheet.create({
     votetext: {
         marginLeft: ScreenUtil.autowidth(20),
         fontSize: ScreenUtil.setSpText(18),
-        color: UColor.fontColor,
     },
     passoutsource2: {
         flexDirection: 'column', 
@@ -412,7 +394,6 @@ const styles = StyleSheet.create({
     },
     Explaintext2: {
         fontSize: ScreenUtil.setSpText(15),
-        color: UColor.arrow, 
         lineHeight: ScreenUtil.autoheight(30), 
     },
 
