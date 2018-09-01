@@ -107,6 +107,11 @@ class Splash extends React.Component {
           UColor.fallColor= '#25B36B'; //跌买出色 UColor.fallColor
       }
     }});
+
+    this.props.dispatch({type:'login/getETRamType',callback:(isRam)=>{
+      Constants.isRam = isRam;
+    } 
+    });
   }
 
   render() {

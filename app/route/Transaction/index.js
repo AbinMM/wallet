@@ -96,21 +96,33 @@ class Transaction extends BaseComponent {
       try {
         this.setState({logRefreshing: true});
         // 获取ETB行情相关信息
-        this.props.dispatch({type: 'transaction/getETInfo',payload: {code:this.state.selectcode}, callback: () => {
-            this.setState({logRefreshing: false});
-        }});
-        // 默认获取ETB的时分图
-        // this.fetchETLine(24,'24小时');
-        // 获取曲线
-        this.onClickTimeType(this.state.selectedSegment);
-        // 获取钱包信息和余额
-        this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
-            this.getAccountInfo();
-        }});
-        this.getETTradeLog();
-        DeviceEventEmitter.addListener('getRamInfoTimer', (data) => {
-            this.onRefreshing();
-        });
+        this.props.dispatch({type:'transaction/getCurrentET',payload:{}, callback: (et) => {
+            if(et!=undefined && et != null && et != ""){
+                this.setState({
+                    modal: false,
+                    contractAccount: et.base_contract ? et.base_contract : "issuemytoken",
+                    tradename:et.base_balance_uom ? et.base_balance_uom : "TEST",
+                    selectcode:et.code ?  et.code : "TEST_EOS_issuemytoken",
+                    });
+            }
+
+            this.props.dispatch({type: 'transaction/getETInfo',payload: {code:this.state.selectcode}, callback: () => {
+                this.setState({logRefreshing: false});
+            }});
+            // 默认获取ETB的时分图
+            // this.fetchETLine(24,'24小时');
+            // 获取曲线
+            this.onClickTimeType(this.state.selectedSegment);
+            // 获取钱包信息和余额
+            this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
+                this.getAccountInfo();
+            }});
+            this.getETTradeLog();
+            DeviceEventEmitter.addListener('getRamInfoTimer', (data) => {
+                this.onRefreshing();
+            });
+        }});    
+
       } catch (error) {
         this.setState({logRefreshing: false});
       }
@@ -144,10 +156,11 @@ class Transaction extends BaseComponent {
     selectETtx(rowData){
         this.setState({
             modal: false,
-            contractAccount: rowData.quote_contract,
+            contractAccount: rowData.base_contract,
             tradename:rowData.base_balance_uom,
             selectcode:rowData.code,
             });
+        this.props.dispatch({type:'transaction/setCurrentET',payload:{et: rowData}});    
         InteractionManager.runAfterInteractions(() => {
             // this.getETInfo();
             this.onRefreshing();
@@ -428,7 +441,7 @@ class Transaction extends BaseComponent {
     }
     this.props.dispatch({
         type: 'transaction/getETBalance', payload: { contract: this.state.contractAccount, account: this.props.defaultWallet.account, symbol: this.state.tradename }, callback: (data) => {
-          if (data.code == '0') {
+          if (data && data.code == '0') {
             this.setETBalance(data.data);
           }
         }
@@ -821,7 +834,7 @@ class Transaction extends BaseComponent {
                         }], 
                         data: {
                             receiver: this.props.defaultWallet.account,
-                            token_contract: this.props.base_contract, //"issuemytoken",
+                            token_contract: this.props.etinfo.base_contract, //"issuemytoken",
                             quant: formatEosQua(this.state.sellET + " " + this.props.etinfo.base_balance_uom),
                             fee_account: this.props.defaultWallet.account,
                             fee_rate: "1", 
