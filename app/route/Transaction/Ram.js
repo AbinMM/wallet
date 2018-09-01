@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import {Modal,Dimensions,DeviceEventEmitter,NativeModules,InteractionManager,ListView,StyleSheet,View,RefreshControl,Text,ScrollView,TouchableOpacity,Image,Platform,TextInput,Slider,KeyboardAvoidingView,Linking,} from 'react-native';
+import {Modal,Dimensions,ImageBackground,DeviceEventEmitter,NativeModules,InteractionManager,ListView,StyleSheet,View,RefreshControl,Text,ScrollView,TouchableOpacity,Image,Platform,TextInput,Slider,KeyboardAvoidingView,Linking,} from 'react-native';
 import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
 import moment from 'moment';
 import Echarts from 'native-echarts'
@@ -263,6 +263,8 @@ class Ram extends BaseComponent {
         }else if(opt == "1月"){
             this.setState({showMoreTitle:opt});
             this.fetchRAMKLine("1M",opt, onRefreshing);
+        }else if(opt == "更多"){
+            this.onClickMore();
         }
     }
   
@@ -819,7 +821,9 @@ class Ram extends BaseComponent {
 
     render() {
         return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-        <Header {...this.props} onPressLeft={false} title="内存交易" />
+        <ImageBackground source={UImage.coinsbg1} resizeMode="cover"  style={{width:ScreenWidth,}}>
+            <Header {...this.props} onPressLeft={this.props.navigation.state.params ? this.props.navigation.state.params.returnkey : false} title="内存交易"  backgroundColor={UColor.theme ? UColor.transport: UColor.secdColor} />
+        </ImageBackground>
         <TouchableOpacity style={styles.transactiontou}  onPress={this.openbusiness.bind(this)} activeOpacity={0.8}>
             <View style={[styles.transactionout,{backgroundColor: UColor.tintColor}]}>
                 <Text style={[styles.paneltext,{color: UColor.btnColor}]}>交易面板</Text>
@@ -836,8 +840,9 @@ class Ram extends BaseComponent {
         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
         <ScrollView scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"refreshControl={
                 <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} tintColor={UColor.fontColor} 
-                                colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}>
-                <View style={styles.header}>
+                    colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}>
+                <ImageBackground source={UImage.coinsbg2} resizeMode="cover"  style={{width:ScreenWidth}}>
+                <View style={[styles.header,{backgroundColor:UColor.theme ? UColor.mask: UColor.mainColor}]}>
                     <View style={styles.leftout}>
                     <View style={styles.nameout}>
                         <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
@@ -845,17 +850,17 @@ class Ram extends BaseComponent {
                         <Text style={[styles.nametext,{color: UColor.arrow}]}>总资金</Text>
                     </View>
                     <View style={styles.recordout}>
-                        <Text style={[styles.recordtext,{color: UColor.fontColor}]}>{this.props.ramInfo ? (this.props.ramInfo.open * 1).toFixed(4) : '0'} EOS/KB</Text>
+                        <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? (this.props.ramInfo.open * 1).toFixed(4) : '0'} EOS/KB</Text>
                         <View style={styles.rowout}>
-                            <Text style={[styles.recordtext,{color: UColor.fontColor}]}>{this.props.ramInfo ? this.props.ramInfo.usage_ram : 0} GB/{this.props.ramInfo ? this.props.ramInfo.total_ram : 0} GB</Text>
+                            <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? this.props.ramInfo.usage_ram : 0} GB/{this.props.ramInfo ? this.props.ramInfo.total_ram : 0} GB</Text>
                             <Text style={[styles.ashtext,{color: UColor.arrow}]}> ({((this.props.ramInfo ? this.props.ramInfo.usage_ram_percent : '0') * 100).toFixed(2)}%)</Text>
                         </View>
-                        <Text style={[styles.recordtext,{color: UColor.fontColor}]}>{this.props.ramInfo ? (this.props.ramInfo.total_eos * 1).toFixed(4) : '0'} EOS</Text>
+                        <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? (this.props.ramInfo.total_eos * 1).toFixed(4) : '0'} EOS</Text>
                     </View>
                     </View>
                     <View style={styles.rightout}>
                         <View style={styles.presentprice}>
-                            <Text style={[styles.present,{color: UColor.fontColor}]}> {this.props.ramInfo ? (this.props.ramInfo.price * 1).toFixed(4) : '0.0000'}</Text>
+                            <Text style={[styles.present,{color: UColor.btnColor}]}> {this.props.ramInfo ? (this.props.ramInfo.price * 1).toFixed(4) : '0.0000'}</Text>
                             <Text style={[styles.toptext,{color: UColor.arrow}]}>价格</Text>
                         </View>
                         <View style={styles.titleout}>
@@ -866,94 +871,93 @@ class Ram extends BaseComponent {
                         </View>
                     </View>
                 </View>
-            
-                <View style={[styles.timeout,{backgroundColor: UColor.mainColor}]}>
+                </ImageBackground>
+                <View style={[styles.timeout,{backgroundColor:UColor.theme ? UColor.secdColor : UColor.inash}]}>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"时分")}>
-                            <View style={styles.timeview}>
-                                <Text style={[styles.timeinitial,{color: this.state.selectedSegment == "时分" ? UColor.tintColor : UColor.fontColor}]}>时分</Text>
+                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.selectedSegment == "时分" ? UColor.tintColor : "#DEDEDE"}:{}]}>
+                                <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "时分" ? UColor.tintColor : UColor.fontColor}]}>时分</Text>
                             </View>
                         </Button>   
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"5分")}>
-                            <View style={styles.timeview}>
-                                <Text style={[styles.timeinitial,{color: this.state.selectedSegment == "5分" ? UColor.tintColor : UColor.fontColor}]}>5分</Text>
+                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.selectedSegment == "5分" ? UColor.tintColor : "#DEDEDE"}:{}]}>
+                                <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "5分" ? UColor.tintColor : UColor.fontColor}]}>5分</Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"15分")}>
-                            <View style={styles.timeview}>
-                                <Text style={[styles.timeinitial,{color: this.state.selectedSegment == "15分" ? UColor.tintColor : UColor.fontColor}]}>15分</Text>
+                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.selectedSegment == "15分" ? UColor.tintColor : "#DEDEDE"}:{}]}>
+                                <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "15分" ? UColor.tintColor : UColor.fontColor}]}>15分</Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"30分")}>
-                            <View style={styles.timeview}>
-                                <Text style={[styles.timeinitial,{color: this.state.selectedSegment == "30分" ? UColor.tintColor : UColor.fontColor}]}>30分</Text>
+                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.selectedSegment == "30分" ? UColor.tintColor : "#DEDEDE"}:{}]}>
+                                <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "30分" ? UColor.tintColor : UColor.fontColor}]}>30分</Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={styles.timetabout}>
-                        <Button onPress={this.onClickMore.bind(this)}>
-                            <View style={styles.timeview}>
-                                <Text style={[styles.timeinitial,{color: (this.state.selectedSegment == "更多" || this.state.selectedSegment == "1小时" || this.state.selectedSegment == "1天"
-                                || this.state.selectedSegment == "1周" || this.state.selectedSegment == "1月") ? UColor.tintColor : UColor.fontColor}]}>
-                                {this.state.showMoreTitle}
-                                </Text> 
-                                <Ionicons name={this.state.showMore ? "md-arrow-dropdown" : "md-arrow-dropright"} size={ScreenUtil.autowidth(20)} color={this.state.showMore ? UColor.tintColor : UColor.fontColor}/>
+                        <Button onPress={this.onClickTimeType.bind(this,"更多")}>
+                            <View style={[styles.timeview,UColor.theme?{backgroundColor:(this.state.selectedSegment=="更多"||this.state.selectedSegment=="1小时"||this.state.selectedSegment=="1天"
+                                ||this.state.selectedSegment=="1周"||this.state.selectedSegment=="1月")?UColor.tintColor:"#DEDEDE"}:{}]}>
+                                <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: (this.state.selectedSegment == "更多" || this.state.selectedSegment == "1小时" || this.state.selectedSegment == "1天"
+                                || this.state.selectedSegment == "1周" || this.state.selectedSegment == "1月") ? UColor.tintColor : UColor.fontColor}]}>{this.state.showMoreTitle}</Text>
+                                <Ionicons name={this.state.showMore ? "md-arrow-dropdown" : "md-arrow-dropright"} size={ScreenUtil.autowidth(20)} style={[UColor.theme?{color:UColor.btnColor}:{color:this.state.showMore ? UColor.tintColor : UColor.fontColor}]}/>
                             </View>
                         </Button> 
                     </View>
                 </View> 
 
                 {this.state.showMore &&       
-                <View style={[styles.timeout,{backgroundColor: UColor.mainColor}]}>
+                <View style={[styles.timeout,{backgroundColor:UColor.theme ? UColor.secdColor : UColor.inash}]}>
                     <View style={styles.timetabout}>
                         <Button disabled={true}>
                             <View style={styles.timeview} >
-                                <Text style={[styles.timeinitial,{color: UColor.fontColor}]}></Text>
+                                <Text style={[styles.timeinitial,{color: UColor.btnColor}]}></Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"1小时")}>
-                            <View style={styles.timeview} >
-                                <Text style={[styles.timeinitial,{color: UColor.fontColor}]}>1小时</Text>
+                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.showMoreTitle == "1小时" ? UColor.tintColor : "#DEDEDE"}:{}]} >
+                            <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1小时" ? UColor.tintColor : UColor.fontColor}]}>1小时</Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={{flexDirection:"column",flex:1}}>
                         <Button onPress={this.onClickTimeType.bind(this,"1天")}>
-                            <View style={styles.timeview} >
-                                <Text style={[styles.timeinitial,{color: UColor.fontColor}]}>1天</Text>
+                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.showMoreTitle == "1天" ? UColor.tintColor : "#DEDEDE"}:{}]} >
+                            <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1天" ? UColor.tintColor : UColor.fontColor}]}>1天</Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"1周")}>
-                            <View style={styles.timeview} >
-                                <Text style={[styles.timeinitial,{color: UColor.fontColor}]}>1周</Text>
+                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.showMoreTitle == "1周" ? UColor.tintColor : "#DEDEDE"}:{}]} >
+                            <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1周" ? UColor.tintColor : UColor.fontColor}]}>1周</Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"1月")}>
-                            <View style={styles.timeview} >
-                                <Text style={[styles.timeinitial,{color: UColor.fontColor}]}>1月</Text>
+                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.showMoreTitle == "1月" ? UColor.tintColor : "#DEDEDE"}:{}]} >
+                            <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1月" ? UColor.tintColor : UColor.fontColor}]}>1月</Text>
                             </View>
                         </Button> 
                     </View>
                 </View> 
                 }  
                 {this.state.isKLine ? 
-                    <View style={styles.echartsout} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
+                    <View style={{backgroundColor: UColor.theme ? UColor.mainColor : UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
                         {<Echarts option={this.getDataKLine()} width={ScreenWidth} height={ScreenUtil.autoheight(300)} />}
                     </View>
                 : 
-                    <View style={styles.echartsout}>
+                    <View style={{backgroundColor: UColor.theme ? UColor.mainColor : UColor.bgEchar}}>
                         {<Echarts option={this.getDataLine()} width={ScreenWidth} height={ScreenUtil.autoheight(180)} />}
                     </View>
                 }
@@ -1252,19 +1256,20 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
         justifyContent: 'center',
-        height:ScreenUtil.autoheight(30),
+        height:ScreenUtil.autoheight(35),
+        paddingHorizontal: ScreenUtil.autowidth(5),
     },
     timetabout: {
         flex:1,
         flexDirection:"column",
     },
     timeview: { 
+        borderRadius: 3, 
         flexDirection:'row',
-        alignItems: 'center' ,
-        justifyContent: 'center',
-        width: ScreenUtil.autowidth(45), 
-        height: ScreenUtil.autoheight(30),
-        marginLeft: ScreenUtil.autowidth(2),
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        width: ScreenUtil.autowidth(50), 
+        height: ScreenUtil.autoheight(25),
     },
     timeinitial: {
         fontSize: ScreenUtil.setSpText(15), 
@@ -1617,7 +1622,7 @@ function calculateMA(data, dayCount) {
 
 function combineRamKLine(data) {
     return {
-        backgroundColor: "#2f3b50",
+        //backgroundColor: "#2f3b50",
         animation: false,
         // legend: {
         //     bottom: 10,
