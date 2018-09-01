@@ -110,7 +110,7 @@ class ImportEosKey extends BaseComponent {
 
   importPriKey() {
     //只判断active有没有输入
-    if (this.state.activePk == '') {
+    if (this.state.activePk == ''&& this.state.ownerPk == '') {
       EasyToast.show('请输入私钥');
       return;
     }
@@ -136,37 +136,40 @@ class ImportEosKey extends BaseComponent {
     }
 
     //两次调用校验，用promise模式
-    this.checkPk(this.state.activePk)
-    .then((rdata)=>{
-        if (!rdata) {
+    if(this.state.activePk==''){
+      Eos.checkPrivateKey(this.state.ownerPk, (r) => {
+        if (!r.isSuccess) {
           EasyToast.show('无效的Active私钥，请检查输入是否正确');
-        }else{
-          if(this.state.ownerPk==""){
-            this.createWalletByPrivateKey(this.state.ownerPk, this.state.activePk);
+          return;
+        }
+        this.createWalletByPrivateKey(this.state.ownerPk, this.state.activePk);
+      });
+    }else{
+      this.checkPk(this.state.activePk)
+      .then((rdata)=>{
+          if (!rdata) {
+            EasyToast.show('无效的Active私钥，请检查输入是否正确');
           }else{
-            return this.checkPk(this.state.ownerPk);
+            if(this.state.ownerPk==""){
+              this.createWalletByPrivateKey(this.state.ownerPk, this.state.activePk);
+            }else{
+              return this.checkPk(this.state.ownerPk);
+            }
+          }
+        })
+      .then((rdata)=>{
+        if(rdata){
+          this.createWalletByPrivateKey(this.state.ownerPk, this.state.activePk);
+        }else{
+          if(this.state.ownerPk!=""){
+            EasyToast.show('无效的私钥，请检查输入是否正确');
           }
         }
-      })
-    .then((rdata)=>{
-      if(rdata){
-        this.createWalletByPrivateKey(this.state.ownerPk, this.state.activePk);
-      }else{
-        if(this.state.ownerPk!=""){
+      }).catch((error)=>{
           EasyToast.show('无效的私钥，请检查输入是否正确');
-        }
-      }
-    }).catch((error)=>{
-        EasyToast.show('无效的私钥，请检查输入是否正确');
-    });
-
-    // Eos.checkPrivateKey(this.state.activePk, (r) => {
-    //   if (!r.isSuccess) {
-    //     EasyToast.show('无效的Active私钥，请检查输入是否正确');
-    //     return;
-    //   }
-    //   this.createWalletByPrivateKey("", this.state.activePk);
-    // });
+      });
+    }
+    
   }
 
   opendelay(owner_publicKey ,data) {
@@ -182,88 +185,6 @@ class ImportEosKey extends BaseComponent {
     },500);
   }
 
-  // createWalletByPrivateKey(owner_privateKey, active_privatekey){
-  //   EasyShowLD.loadingShow('正在请求');
-  //   try {
-  //     Eos.privateToPublic(active_privatekey, (r) => {
-  //       var active_publicKey = r.data.publicKey;
-  //       var owner_publicKey = "";//r.data.publicKey;
-  //       var pthis=this;
-  //       this.props.dispatch({
-  //         type: 'wallet/getAccountsByPuk',
-  //         payload: {
-  //           public_key: active_publicKey
-  //         },
-  //         callback: (data) => {
-  //             EasyShowLD.loadingClose();
-  //             if(data && data.code == 500 && data.msg){
-  //               EasyToast.show(data.msg);
-  //               return;
-  //             }
-  //             if (data == undefined || data.code != '0') {
-  //               pthis.opendelay(active_publicKey, data);
-  //               return;
-  //             }
-  //           var walletList = [];
-  //           var salt;
-  //           Eos.randomPrivateKey((r) => {
-  //             salt = r.data.ownerPrivate.substr(0, 18);
-  //             for (var i = 0; i < data.data.account_names.length; i++) {
-  //               var result = {
-  //                 data: {
-  //                   ownerPublic: '',
-  //                   activePublic: '',
-  //                   ownerPrivate: '',
-  //                   activePrivate: '',
-  //                   words_active: '',
-  //                   words: '',
-  //                 }
-  //               };
-  //               result.data.ownerPublic = owner_publicKey;
-  //               result.data.activePublic = active_publicKey;
-  //               result.data.words = '';
-  //               result.data.words_active = '';
-  //               result.data.ownerPrivate = owner_privateKey;
-  //               result.data.activePrivate = active_privatekey;
-  //               result.password = this.state.walletpwd;
-  //               result.name = data.data.account_names[i];
-  //               result.account = data.data.account_names[i];
-  //               result.isactived = true;
-  //               result.salt = salt;
-  //               walletList[i] = result;
-  //             }
-  //             // 保存钱包信息
-  //             this.props.dispatch({
-  //               type: 'wallet/saveWalletList',
-  //               walletList: walletList,
-  //               callback: (data) => {
-  //                 EasyShowLD.loadingClose();
-  //                 if (data.error != null) {
-  //                   EasyToast.show('导入私钥失败：' + data.error);
-  //                 } else {
-  //                   EasyToast.show('导入私钥成功！');
-  //                   this.props.dispatch({
-  //                     type: 'wallet/updateGuideState',
-  //                     payload: {
-  //                       guide: false
-  //                     }
-  //                   });
-  //                   DeviceEventEmitter.emit('updateDefaultWallet');
-  //                   DeviceEventEmitter.emit('modify_password');
-  //                   this.props.navigation.goBack();
-
-  //                 }
-  //               }
-  //             });
-  //           });
-  //         }
-  //       });
-  //     });
-  //   } catch (e) {
-  //     EasyShowLD.loadingClose();
-  //     EasyToast.show('privateToPublic err: ' + JSON.stringify(e));
-  //   }
-  // }
   
 //获取公钥
   getPublicKey(privateKey){
@@ -305,6 +226,27 @@ class ImportEosKey extends BaseComponent {
     return p;            
   }
 
+  //选择账户
+  selectAccount(AccArray,nkey){
+    if(AccArray==null){
+      return ;
+    }
+    if(AccArray && AccArray.length == 1){ // 只有一个账号时直接导入，不弹选择框
+      this.state.walletList.push({name: AccArray[0].name, isChecked: true});
+      this.setState({keyObj:nkey});
+      this.specifiedAccountToWallet(this.state.walletList);   
+    }else if (Platform.OS == 'ios') {
+      this.setState({walletList : AccArray,keyObj:nkey});  
+      var th = this;
+        this.handle = setTimeout(() => {
+          th.setState({selectpromp: true}); 
+        }, 100);
+    }else{
+      this.setState({selectpromp: true,walletList : AccArray,keyObj:nkey});  
+    }
+
+  }
+  
 
   createWalletByPrivateKey(owner_privateKey, active_privatekey){    
     var array = [];
@@ -315,137 +257,74 @@ class ImportEosKey extends BaseComponent {
     keyObj.active_publicKey = "";
 
     EasyShowLD.loadingShow('正在请求');
- 
-    //用promise模式
-    this.getPublicKey(active_privatekey)
-    .then((rdata)=>{
-        keyObj.active_publicKey = rdata.data.publicKey;
-        return this.getAccountsByPublickey(rdata.data.publicKey);
-      })
-    .then((rdata)=>{
-        for(var i = 0;i < rdata.data.account_names.length;i++){
-          array.push({name:rdata.data.account_names[i],isChecked:false})
-        }
-        if(owner_privateKey!=""){
-          return this.getPublicKey(owner_privateKey);
-        }else{
-          EasyShowLD.loadingClose();
-          // this.setState({selectpromp: true,walletList : array,keyObj:keyObj});  
-          if(array && array.length == 1){ // 只有一个账号时直接导入，不弹选择框
-            this.state.walletList.push({name: array[0].name, isChecked: true});
-            this.setState({keyObj:keyObj});
-            this.specifiedAccountToWallet(this.state.walletList);   
-          }else if (Platform.OS == 'ios') {
-            this.setState({walletList : array,keyObj:keyObj});  
-            var th = this;
-              this.handle = setTimeout(() => {
-                th.setState({selectpromp: true}); 
-              }, 100);
-          }else{
-            this.setState({selectpromp: true,walletList : array,keyObj:keyObj});  
-          }
 
+//用promise模式
+    if(active_privatekey==""){
+
+      this.getPublicKey(owner_privateKey)
+      .then((rdata)=>{
+          keyObj.owner_publicKey = rdata.data.publicKey;
+          return this.getAccountsByPublickey(rdata.data.publicKey);
+        })
+      .then((rdata)=>{
+          for(var i = 0;i < rdata.data.account_names.length;i++){
+            array.push({name:rdata.data.account_names[i],isChecked:false})
+          }
+          EasyShowLD.loadingClose();
+          this.selectAccount(array,keyObj);
+        })
+        .catch((error)=>{
+          EasyShowLD.loadingClose();
+          EasyToast.show('err: ' + JSON.stringify(error));
+      });
+
+    }else{
+      this.getPublicKey(active_privatekey)
+      .then((rdata)=>{
+          keyObj.active_publicKey = rdata.data.publicKey;
+          return this.getAccountsByPublickey(rdata.data.publicKey);
+        })
+      .then((rdata)=>{
+          for(var i = 0;i < rdata.data.account_names.length;i++){
+            array.push({name:rdata.data.account_names[i],isChecked:false})
+          }
+          if(owner_privateKey!=""){
+            return this.getPublicKey(owner_privateKey);
+          }else{
+            EasyShowLD.loadingClose();
+            this.selectAccount(array,keyObj);
+          }
+        })
+      .then((rdata)=>{
+        if(owner_privateKey!=""){
+          keyObj.owner_publicKey = rdata.data.publicKey;
+          return this.getAccountsByPublickey(rdata.data.publicKey);
         }
       })
-    .then((rdata)=>{
-      if(owner_privateKey!=""){
-        keyObj.owner_publicKey = rdata.data.publicKey;
-        return this.getAccountsByPublickey(rdata.data.publicKey);
-      }
-    })
-    .then((rdata)=>{
-      EasyShowLD.loadingClose();
-      if(owner_privateKey!=""){
-        var arrayAll = [];
-        for(var i = 0;i < rdata.data.account_names.length;i++){
-          for(var j=0;j<array.length;j++){
-            if(rdata.data.account_names[i]==array[j].name){
-              arrayAll.push({name:rdata.data.account_names[i],isChecked:false})
+      .then((rdata)=>{
+        EasyShowLD.loadingClose();
+        if(owner_privateKey!=""){
+          var arrayAll = [];
+          for(var i = 0;i < rdata.data.account_names.length;i++){
+            for(var j=0;j<array.length;j++){
+              if(rdata.data.account_names[i]==array[j].name){
+                arrayAll.push({name:rdata.data.account_names[i],isChecked:false})
+              }
             }
           }
+          this.selectAccount(arrayAll,keyObj);
         }
-        // this.setState({selectpromp: true,walletList : arrayAll,keyObj:keyObj});
-        if(arrayAll && arrayAll.length == 1){ // 只有一个账号时直接导入，不弹选择框
-          this.state.walletList.push({name: arrayAll[0].name, isChecked: true});
-          this.setState({keyObj:keyObj});
-          this.specifiedAccountToWallet(this.state.walletList);   
-        }else if (Platform.OS == 'ios') {
-          this.setState({walletList : arrayAll,keyObj:keyObj});  
-          var th = this;
-            this.handle = setTimeout(() => {
-            th.setState({selectpromp: true}); 
-          }, 100);
-        }else{
-          this.setState({selectpromp: true,walletList : arrayAll,keyObj:keyObj});  
-        }
+      })
+      .catch((error)=>{
+          EasyShowLD.loadingClose();
+          EasyToast.show('err: ' + JSON.stringify(error));
+      });
 
-      }
-    })
-    .catch((error)=>{
-        EasyShowLD.loadingClose();
-        EasyToast.show('err: ' + JSON.stringify(error));
-    });
-
+    }
+ 
   }
 
 
-
-
-  // createWalletByPrivateKey(owner_privateKey, active_privatekey){
-  //   EasyShowLD.loadingShow('正在请求');
-  //   try {
-  //     Eos.privateToPublic(active_privatekey, (r) => {
-
-  //       var active_publicKey = r.data.publicKey;
-  //       var owner_publicKey = "";//r.data.publicKey;
-  //       var pthis=this;
-  //       this.props.dispatch({
-  //         type: 'wallet/getAccountsByPuk',
-  //         payload: {
-  //           public_key: active_publicKey
-  //         },
-  //         callback: (data) => {
-  //             EasyShowLD.loadingClose();
-  //             if(data && data.code == 500 && data.msg){
-  //               EasyToast.show(data.msg);
-  //               return;
-  //             }
-  //             if (data == undefined || data.code != '0') {
-  //               pthis.opendelay(active_publicKey, data);
-  //               return;
-  //             }
-  //             var array = new Array();
-  //             for(var i = 0;i < data.data.account_names.length;i++){
-  //               var obj = new Object();
-  //               obj.name = data.data.account_names[i];
-  //               obj.isChecked = false;
-
-  //               array[i] = obj;
-  //             }
-
-  //             var keyObj = new Object();
-  //             keyObj.owner_privateKey = owner_privateKey;
-  //             keyObj.owner_publicKey = owner_publicKey;
-  //             keyObj.active_privatekey = active_privatekey;
-  //             keyObj.active_publicKey = active_publicKey;
-              
-  //             if (Platform.OS == 'ios') {
-  //               this.setState({walletList : array,keyObj:keyObj});  
-  //               var th = this;
-  //               this.handle = setTimeout(() => {
-  //                 th.setState({selectpromp: true}); 
-  //               }, 100);
-  //             }else{
-  //               this.setState({selectpromp: true,walletList : array,keyObj:keyObj});  
-  //             }
-  //         }
-  //       });
-  //     });
-  //   } catch (e) {
-  //     EasyShowLD.loadingClose();
-  //     EasyToast.show('privateToPublic err: ' + JSON.stringify(e));
-  //   }
-  // }
   specifiedAccountToWallet(account_names){
     var walletList = [];
     var index = 0;
