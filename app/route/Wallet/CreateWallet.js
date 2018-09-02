@@ -261,6 +261,25 @@ class createWallet extends BaseComponent {
     }
   }
 
+  chkAccount(obj) {
+    var charmap = '.12345abcdefghijklmnopqrstuvwxyz';
+    for(var i = 0 ; i < obj.length;i++){
+        var tmp = obj.charAt(i);
+        for(var j = 0;j < charmap.length; j++){
+            if(tmp == charmap.charAt(j)){
+                break;
+            }
+        }
+        if(j >= charmap.length){
+            //非法字符
+            obj = obj.replace(tmp, ""); 
+            EasyToast.show('请输入正确的账号');
+        }
+    }
+
+    return obj;
+}
+
   random() {
     var data=['1','2','3','4','5','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']         
     for(var j=0;j<500;j++){
@@ -297,7 +316,7 @@ class createWallet extends BaseComponent {
                 <TextInput ref={(ref) => this._raccount = ref} value={this.state.walletName} returnKeyType="next" 
                   selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
                   placeholder="输入a-z小写字母和1-5数字组合字符" underlineColorAndroid="transparent" onChange={this.intensity()} 
-                  keyboardType="default" maxLength={12} onChangeText={(walletName) => this.setState({ walletName })} />
+                  keyboardType="default" maxLength={12} onChangeText={(walletName) => this.setState({ walletName:this.chkAccount(walletName) })} />
                 <Button onPress={() => this.random()}>
                   <View style={{width: ScreenUtil.autowidth(60), height: ScreenUtil.autoheight(35),justifyContent: 'center',alignItems: 'center',borderRadius: 3, backgroundColor: UColor.tintColor,}}>
                     <Text style={[styles.createWallet,{color: UColor.btnColor}]}>随机</Text>
