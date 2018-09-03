@@ -1027,17 +1027,17 @@ class Route extends React.Component {
                 <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                   <ViewShot ref="viewShot" style={{ left: 20, width: ScreenWidth - 40 }} options={{ format: "jpg", quality: 0.9 }}>
                     <View style={{ backgroundColor: UColor.fontColor, width: '100%', height: '100%' }}>
-                      <View style={{backgroundColor: UColor.secdColor }}>
+                      <View style={{backgroundColor:UColor.navigation}}>
                         <Image source={UImage.turninhead_h} resizeMode="stretch" style={{ width: ScreenWidth - 40, height:(ScreenWidth - 40)*0.3167 }} />
                         <View style={{ flexDirection: 'row', justifyContent: 'center',alignItems: 'center',}}>
-                          <Text style={{fontSize: 30, color: UColor.fontColor, padding: 10, textAlign: 'center',}}>{this.state.turninamount}</Text>
-                          <Text style={{fontSize: 22, color: UColor.lightgray}}>{this.state.turninsymbol}</Text>
+                          <Text style={{fontSize: 30, color: UColor.btnColor, padding: 10, textAlign: 'center',}}>{this.state.turninamount}</Text>
+                          <Text style={{fontSize: 22, color: UColor.lightgray,}}>{this.state.turninsymbol}</Text>
                         </View>
-                        <View style={{ justifyContent: 'center', alignSelf: 'center', paddingHorizontal: 30, paddingVertical:20, backgroundColor: UColor.btnColor }}>
+                        <View style={{ justifyContent: 'center', alignSelf: 'center', paddingHorizontal: 30, paddingVertical:20, backgroundColor:UColor.btnColor }}>
                           <QRCode size={150}  value={this.state.turninsymbol.toLowerCase() +':' + this.state.turnintoaccount + '?amount=' + ((this.state.turninamount == "")?'0':this.state.turninamount) + '&token=' + this.state.turninsymbol.toUpperCase()}/>
-                          <Text style={{ color: UColor.fontColor, fontSize: 19, textAlign: 'center', marginTop: 20 }}>扫码向他支付</Text>
+                          <Text style={{ color: UColor.startup, fontSize: 19, textAlign: 'center', marginTop: 20 }}>扫码向他支付</Text>
                         </View>
-                        <Text style={{ color: UColor.lightgray, fontSize: 16, textAlign: 'left', marginTop: 5, paddingHorizontal: 30, paddingTop: 10, paddingBottom: 30,}}>账户: <Text style={{color: UColor.fontColor, fontSize: 15, }}>{this.state.turnintoaccount}</Text></Text>
+                        <Text style={{ color:UColor.lightgray, fontSize: 16, textAlign: 'left', marginTop: 5, paddingHorizontal: 30, paddingTop: 10, paddingBottom: 30,}}>收款账号: <Text style={{color: UColor.btnColor, fontSize: 15, }}>{this.state.turnintoaccount}</Text></Text>
                       </View>
                     </View>
                   </ViewShot>

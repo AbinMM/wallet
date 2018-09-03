@@ -99,11 +99,11 @@ class TurnIn extends BaseComponent {
 
   render() {
     return (
-      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>   
+      <View style={[styles.container,{backgroundColor:UColor.secdColor}]}>   
         <Header {...this.props} onPressLeft={true} title="收款信息" avatar={UImage.share_i} onPressRight={this._rightTopClick.bind()}/>  
         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={styles.tab}>
           <View style={styles.taboutsource}>
-            <View style={[styles.outsource,{backgroundColor: UColor.secdColor}]}>
+            <View style={[styles.outsource,{backgroundColor:UColor.secdColor}]}>
               <Text style={[styles.accountText,{color: UColor.arrow}]}>账户：{this.props.defaultWallet == null ? "" : this.props.defaultWallet.account}</Text>
               <View style={styles.codeout}>
                 <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
@@ -111,7 +111,7 @@ class TurnIn extends BaseComponent {
                 </View>
               </View>
               <Text style={[styles.prompttext,{color: UColor.fontColor}]}>扫一扫，向我转账</Text>
-              <View style={[styles.inptoutsource,{borderBottomColor: UColor.mainColor}]}>
+              <View style={[styles.inptoutsource,{borderBottomColor:UColor.mainColor}]}>
                 <Text style={styles.tokenText} />
                 <TextInput autoFocus={false} secureTextEntry={false} keyboardType="numeric" maxLength = {15} 
                     onChangeText={amount =>this.setState({ amount: this.chkPrice(amount) })} returnKeyType="go"

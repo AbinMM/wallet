@@ -260,9 +260,9 @@ class News extends React.Component {
         }
         dataSource={this.state.dataSource.cloneWithRows(this.props.newsData[route.key] == null ? [] : this.props.newsData[route.key])}
         renderRow={(rowData) => (
-          <TouchableHighlight onPress={() => { this.onPress(rowData) }} onLongPress={this.onShare.bind(this, rowData)} activeOpacity={0.8} underlayColor={UColor.secdColor}>
+          <TouchableHighlight onPress={() => { this.onPress(rowData) }} onLongPress={this.onShare.bind(this, rowData)} activeOpacity={0.5} underlayColor={UColor.secdColor}>
             <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
-              <Text style={{ fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,}}>{rowData.title}</Text>
+              <Text style={{ fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,fontWeight: "bold"}}>{rowData.title}</Text>
               {
                 route.type == 2 && <Text numberOfLines={rowData.row} style={[styles.journalism,{color: UColor.lightgray}]} >{rowData.content}</Text>
               }
@@ -320,9 +320,9 @@ class News extends React.Component {
             renderScene={this.renderScene.bind(this)}
             renderHeader={(props) => <ImageBackground source={UImage.coinsbg1} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1546,}}>
             <TabBar onTabPress={this._handleTabItemPress} 
-            labelStyle={[styles.labelStyle,{color: UColor.theme ? UColor.mainColor : UColor.arrow,}]} 
-            indicatorStyle={[UColor.theme ? styles.indicatorStyleB : styles.indicatorStyleY,{backgroundColor: UColor.tintColor}]} 
-            style={[{paddingTop: ScreenUtil.autoheight(20),alignItems: 'center',justifyContent: 'center',backgroundColor: UColor.theme ? UColor.transport: UColor.secdColor}]} 
+            labelStyle={[styles.labelStyle,{color:UColor.btnColor}]} 
+            indicatorStyle={[styles.indicatorStyle,{backgroundColor: UColor.btnColor}]} 
+            style={[{paddingTop: ScreenUtil.autoheight(20),alignItems: 'center',justifyContent: 'center',backgroundColor:UColor.transport}]} 
             tabStyle={{ width: ScreenWidth / 3, padding: 0, margin: 0 }} 
             scrollEnabled={true} {...props} />
             </ImageBackground>}
@@ -340,14 +340,7 @@ const styles = StyleSheet.create({
     margin: 0, 
     fontSize: ScreenUtil.setSpText(15), 
   },
-  indicatorStyleB: {
-    borderRadius:25, 
-    height: ScreenUtil.autoheight(21), 
-    marginLeft: ScreenUtil.autowidth(10),
-    marginBottom: ScreenUtil.autoheight(8), 
-    width: ScreenWidth / 3 - ScreenUtil.autowidth(20),
-  },
-  indicatorStyleY: {
+  indicatorStyle: {
     marginLeft: ScreenUtil.autowidth(20),
     width: ScreenWidth / 3 - ScreenUtil.autowidth(40),
   },

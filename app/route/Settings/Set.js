@@ -182,7 +182,7 @@ class Set extends BaseComponent {
           <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
               <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
                 <View style={styles.scrollView}>
-                  <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>主题切换</Text>
+                  <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>夜间模式</Text>
                 </View>
                 <View style={styles.listInfoRight}>
                   <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.secdColor}

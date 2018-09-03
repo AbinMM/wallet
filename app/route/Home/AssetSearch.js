@@ -189,7 +189,7 @@ class AssetSearch extends BaseComponent {
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
             <Header {...this.props} onPressLeft={true} title="资产搜索" />
                 <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
-                    <View style={[styles.inptout,{shadowColor:UColor.arrow,backgroundColor:UColor.btnColor}]} >
+                    <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
                         <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
                         <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
                             selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} autoCorrect={true}
@@ -299,8 +299,8 @@ const styles = StyleSheet.create({
     },
     inptout: {
       flex: 1,
+      borderWidth: 1,
       borderRadius: 5,
-      shadowOpacity: 1,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: 'center',

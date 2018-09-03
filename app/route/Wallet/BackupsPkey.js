@@ -194,10 +194,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     inptpass: {
-        borderBottomWidth: 1,
         textAlign: "center",
-        width: ScreenWidth-100,
         borderBottomWidth: 1,
+        width: ScreenWidth-100,
         height: ScreenUtil.autoheight(45),
         fontSize: ScreenUtil.setSpText(16),
         paddingBottom: ScreenUtil.autoheight(5),

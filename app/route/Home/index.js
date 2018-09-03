@@ -545,7 +545,7 @@ class Home extends React.Component {
     return (
       <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
         <ImageBackground style={styles.bgout} source={UImage.home_bg} resizeMode="cover">
-          <View style={[styles.topbtn,{backgroundColor:UColor.theme ? UColor.transport : UColor.mainColor}]}>
+          <View style={styles.topbtn}>
             <Button onPress={() => this.scan()}>
               <Image source={UImage.scan} style={styles.imgBtn} />
             </Button>
@@ -595,34 +595,34 @@ class Home extends React.Component {
                 </View>
           </View>
         </ImageBackground> 
-          <View style={[styles.head,{backgroundColor:UColor.theme ? UColor.mainColor : UColor.secdColor, borderBottomColor: UColor.tintColor}]}>
+          <View style={[styles.head,{backgroundColor:UColor.mainColor, borderBottomColor: UColor.tintColor}]}>
             <Button onPress={this.onPress.bind(this, 'addAssets')} style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UColor.theme ? UImage.add_b : UImage.add} style={styles.imgBtn} />
+                <Image source={UImage.add} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>添加资产</Text>
               </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'Receivables')} style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UColor.theme ? UImage.qr_b : UImage.qr} style={styles.imgBtn} />
+                <Image source={UImage.qr} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>收币</Text>
               </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'transfer')} style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UColor.theme ? UImage.transfer_b : UImage.transfer} style={styles.imgBtn} />
+                <Image source={UImage.transfer} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>转账</Text>
               </View>
             </Button>
             <Button  onPress={this.onPress.bind(this, 'Resources')}  style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UColor.theme ? UImage.resources_b : UImage.resources} style={styles.imgBtn} />
+                <Image source={UImage.resources} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>资源管理</Text>
               </View>
             </Button>
             <Button  onPress={this.onPress.bind(this, 'functionsMore')}  style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UColor.theme ? UImage.more_b : UImage.more} style={styles.imgBtn} />
+                <Image source={UImage.more} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>更多</Text>
               </View>
             </Button>
@@ -687,13 +687,13 @@ class Home extends React.Component {
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true} onRequestClose={() => { this.onRequestClose() }} visible={this.state.modal}>
           <TouchableOpacity onPress={() => this.setState({ modal: false })} style={[styles.touchable,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
             <TouchableOpacity style={[styles.touchable,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
-              <View style={[styles.touchableout,{backgroundColor: UColor.secdColor}]}>
-                <ListView initialListSize={5} style={[styles.touchablelist,{borderBottomColor: UColor.mainColor}]}
+              <View style={[styles.touchableout,{backgroundColor:UColor.secdColor}]}>
+                <ListView initialListSize={5} style={[styles.touchablelist,{borderBottomColor:UColor.mainColor}]}
                   renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 0.5, backgroundColor: UColor.secdColor }} />}
                   enableEmptySections={true} dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
                   renderRow={(rowData) => (
                     <Button onPress={this.changeWallet.bind(this, rowData)}>
-                      <View style={[styles.walletlist,{borderBottomColor: UColor.mainColor}]} backgroundColor={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account) && UColor.inash}>
+                      <View style={[styles.walletlist,{borderBottomColor: UColor.mainColor}]} backgroundColor={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account) && UColor.mainColor}>
                         <View style={styles.topout}>
                           <Text style={[styles.outname,{color: UColor.fontColor}]}>{rowData.name}</Text>
                           {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ? <View style={[styles.notactivedout,{borderColor: UColor.showy}]}><Text style={[styles.notactived,{color: UColor.showy}]} onPress={this.WalletDetail.bind(this, rowData)}>未激活</Text></View>:(rowData.isBackups ? null :  <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}><Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this, rowData)}>未备份</Text></View>)}  

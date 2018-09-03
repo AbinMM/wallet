@@ -56,7 +56,7 @@ export default class Tab extends Component {
             tintColor:color
         };
         return (<View style={{width:ScreenWidth,}}>
-            <View style={[styles.tab,{backgroundColor: UColor.theme ? UColor.mainColor : UColor.secdColor,borderTopColor: UColor.theme ? UColor.secdColor : UColor.mainColor}]}>
+            <View style={[styles.tab,{backgroundColor: UColor.mainColor,borderTopColor: UColor.secdColor}]}>
                 {routes && routes.map((route,index) => this.renderItem(route, index))}
             </View>
             {/*设置中间按钮凸出样式  使用绝对定位*/}

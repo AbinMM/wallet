@@ -72,7 +72,7 @@ class APactivation extends BaseComponent {
         <View style={styles.passoutsource}>
             <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
                 selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
-                style={styles.inptpass} 
+                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}
                 placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
         </View>
         EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
@@ -276,6 +276,18 @@ class APactivation extends BaseComponent {
 }
 
 const styles = StyleSheet.create({
+    passoutsource: {
+        flexDirection: 'column', 
+        alignItems: 'center'
+    },
+    inptpass: {
+        textAlign: "center",
+        borderBottomWidth: 1,
+        width: ScreenWidth-100,
+        height: ScreenUtil.autoheight(45),
+        fontSize: ScreenUtil.setSpText(16),
+        paddingBottom: ScreenUtil.autoheight(5),
+    },
     inptpasstext: {
         fontSize: ScreenUtil.setSpText(12),
         marginBottom: ScreenUtil.autoheight(15),

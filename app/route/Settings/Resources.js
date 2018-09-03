@@ -893,7 +893,7 @@ class Resources extends BaseComponent {
                         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
                             <View style={[styles.tetleout,{backgroundColor: UColor.mainColor}]}>
                                 <Text style={[styles.tetletext,{color: UColor.arrow}]}>{this.state.tetletext}</Text>
-                                <ImageBackground source={UColor.theme ? UImage.line_bg_h : UImage.line_bg} resizeMode="cover" style={styles.linebgout}>
+                                <ImageBackground source={UImage.line_bg} resizeMode="cover" style={styles.linebgout}>
                                     <ImageBackground source={UImage.strip_bg} resizeMode="cover"  style={styles.stripbgout}>
                                         <View style={{backgroundColor: UColor.secdColor}} height={this.state.column_One}/>
                                     </ImageBackground>
