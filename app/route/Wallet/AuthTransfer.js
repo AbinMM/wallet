@@ -439,12 +439,16 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
     <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
         <Header {...this.props} onPressLeft={true} title="Owner权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scan}/>
         <View style={[styles.significantout,{backgroundColor: UColor.secdColor,borderColor: UColor.riseColor}]}>
-            <Image source={UImage.warning} style={styles.imgBtnWarning} />
-            <View style={{flex: 1,padding: 5,}}>
-                <Text style={[styles.significanttext,{color: UColor.warningRed}]} >安全警告</Text>
-                <Text style={[styles.significanttext,{color: UColor.warningRed}]} >请确保您清楚了解owner授权,并确保添加的授权用户是您信任的用户，添加的授权用户将获得账号的全部权限（包括变更权限和转账投票）。</Text>
+            <Text style={[styles.significanttextHead,{color: UColor.warningRed}]} >安全警告</Text>
+            <View style={styles.significantout2}>
+                <Image source={UImage.warning} style={styles.imgBtnWarning} />
+                <View style={{flex: 1,padding: 5,}}>
+                    <Text style={[styles.significanttext,{color: UColor.warningRed}]} >请确保您清楚了解owner授权,并确保添加的授权用户是您信任的用户,添加的授权用户将获得账号的全部权限(包括变更权限和转账投票)。</Text>
+                </View>
             </View>
         </View>
+
+
         <TabViewAnimated
         lazy={true}
         style={[styles.containertab,{backgroundColor: UColor.secdColor}]}
@@ -534,14 +538,25 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         paddingHorizontal: ScreenUtil.autowidth(5),
     },
+    //警告样式
     significantout: {
         borderWidth: 1,
         borderRadius: 5,
-        flexDirection: "row",
+        flexDirection: "column",
         alignItems: 'center', 
         padding: ScreenUtil.autowidth(5),
         marginVertical: ScreenUtil.autoheight(10),
         marginHorizontal: ScreenUtil.autowidth(15),
+    },
+    //警告样式
+    significantout2: {
+        // borderWidth: 1,
+        // borderRadius: 5,
+        flexDirection: "row",
+        alignItems: 'center', 
+        padding: ScreenUtil.autowidth(5),
+        // marginVertical: ScreenUtil.autoheight(10),
+        // marginHorizontal: ScreenUtil.autowidth(15),
     },
     imgBtnWarning: {
         margin: ScreenUtil.autowidth(5),
@@ -550,6 +565,11 @@ const styles = StyleSheet.create({
     },
     significanttext: {
         fontSize: ScreenUtil.setSpText(13), 
+        lineHeight: ScreenUtil.autoheight(17),
+    },
+    significanttextHead: {
+        fontSize: ScreenUtil.setSpText(16), 
+        fontWeight:"bold",
         lineHeight: ScreenUtil.autoheight(17),
     },
     inptgo: {

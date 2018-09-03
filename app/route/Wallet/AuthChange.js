@@ -311,13 +311,20 @@ class AuthChange extends BaseComponent {
             <Header {...this.props} onPressLeft={true} title="Active权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scan}/>
             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
                 <ScrollView keyboardShouldPersistTaps="always" >
+                
+                    
                     <View style={[styles.significantout,{backgroundColor: UColor.secdColor,borderColor: UColor.riseColor}]}>
-                        <Image source={UImage.warning} style={styles.imgBtnWarning} />
-                        <View style={{flex: 1,padding: 5,}}>
-                            <Text style={[styles.significanttext,{color: UColor.warningRed}]} >安全警告</Text>
-                            <Text style={[styles.significanttext,{color: UColor.warningRed}]} >请确保您清楚了解Active授权,并确保添加的授权用户是您信任的用户，添加的授权用户将可获得变更权限、转账和投票等操作的权限。</Text>
+                        <Text style={[styles.significanttextHead,{color: UColor.warningRed}]} >安全警告</Text>
+                        <View style={styles.significantout2}>
+                            <Image source={UImage.warning} style={styles.imgBtnWarning} />
+                            <View style={{flex: 1,padding: 5,}}>
+                                <Text style={[styles.significanttext,{color: UColor.warningRed}]} >请确保您清楚了解Active授权,并确保添加的授权用户是您信任的用户，添加的授权用户将可获得变更权限、转账和投票等操作的权限。</Text>
+                            </View>
                         </View>
                     </View>
+                
+
+
                     <FlatList
                         data={this.state.authKeys.length==null ?[]: this.state.authKeys} 
                         extraData={this.state}
@@ -430,11 +437,21 @@ const styles = StyleSheet.create({
     significantout: {
         borderWidth: 1,
         borderRadius: 5,
-        flexDirection: "row",
+        flexDirection: "column",
         alignItems: 'center', 
         padding: ScreenUtil.autowidth(5),
         marginVertical: ScreenUtil.autoheight(10),
         marginHorizontal: ScreenUtil.autowidth(15),
+    },
+    //警告样式
+    significantout2: {
+        // borderWidth: 1,
+        // borderRadius: 5,
+        flexDirection: "row",
+        alignItems: 'center', 
+        padding: ScreenUtil.autowidth(5),
+        // marginVertical: ScreenUtil.autoheight(10),
+        // marginHorizontal: ScreenUtil.autowidth(15),
     },
     imgBtnWarning: {
         margin: ScreenUtil.autowidth(5),
@@ -443,6 +460,12 @@ const styles = StyleSheet.create({
     },
     significanttext: {
         fontSize: ScreenUtil.setSpText(13), 
+        lineHeight: ScreenUtil.autoheight(17),
+    },
+
+    significanttextHead: {
+        fontSize: ScreenUtil.setSpText(16), 
+        fontWeight:"bold",
         lineHeight: ScreenUtil.autoheight(17),
     },
 
