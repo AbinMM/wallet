@@ -46,7 +46,6 @@ react-native run-android
 在xcode里面点击run
 
 ### 环境
-<br>
 npm version:3.10.10 <br>
 node version:v6.11.2 <br>
 gradle:2.2.3 <br>
