@@ -817,7 +817,7 @@ class Ram extends BaseComponent {
 
     render() {
         return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-        <ImageBackground source={UImage.coinsbg1} resizeMode="cover"  style={{width:ScreenWidth,}}>
+        <ImageBackground source={UImage.transactionA} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.164}}>
             <Header {...this.props} onPressLeft={this.props.navigation.state.params ? this.props.navigation.state.params.returnkey : false} title="内存交易"  backgroundColor={UColor.theme ? UColor.transport: UColor.secdColor} />
         </ImageBackground>
         <TouchableOpacity style={styles.transactiontou}  onPress={this.openbusiness.bind(this)} activeOpacity={0.8}>
@@ -837,8 +837,8 @@ class Ram extends BaseComponent {
         <ScrollView scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"refreshControl={
                 <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} tintColor={UColor.fontColor} 
                     colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}>
-                <ImageBackground source={UImage.coinsbg2} resizeMode="cover"  style={{width:ScreenWidth}}>
-                <View style={[styles.header,{backgroundColor:UColor.theme ? UColor.mask: UColor.mainColor}]}>
+                <ImageBackground source={UImage.transactionB} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
+                <View style={[styles.header,!UColor.theme && {backgroundColor:UColor.mainColor}]}>
                     <View style={styles.leftout}>
                     <View style={styles.nameout}>
                         <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
@@ -1196,6 +1196,7 @@ const styles = StyleSheet.create({
       width: ScreenWidth,
       flexDirection: 'row',
       alignItems: 'center',
+      height: ScreenWidth*0.1733,
       paddingHorizontal: ScreenUtil.autowidth(6),
     },
     leftout: {

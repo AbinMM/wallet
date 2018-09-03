@@ -86,6 +86,8 @@ class Splash extends React.Component {
           UImage.resources_f=require('../img/day/resources_f.png');
           UImage.details=require('../img/day/details.png');
           UImage.adminA=require('../img/day/adminA.png');
+          UImage.transactionA=require('../img/day/transactionA.png');
+          UImage.transactionB=require('../img/day/transactionB.png');
       }else{
           UColor.transport= 'rgba(0, 0, 0, 0.0)';
           UColor.mask= 'rgba(0, 0, 0, 0.4)'; //遮罩色 UColor.mask

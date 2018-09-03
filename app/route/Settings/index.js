@@ -250,7 +250,7 @@ class Setting extends React.Component {
               <View style={[styles.userHead, UColor.theme ? '' : {backgroundColor: UColor.mainColor}]} >
                 {UColor.theme && <View style={styles.signedout}></View>}
                 <View style={[styles.headout,{flexDirection:UColor.theme?"column":"row"}]}>
-                  <View style={[styles.headimgout,{backgroundColor:UColor.mask}]}> 
+                  <View style={[styles.headimgout, UColor.theme && {backgroundColor:"#6288BB"}]}> 
                     <Image source={UImage.logo} style={styles.headimg} />
                   </View>
                   <Text style={[styles.headtext,{color: UColor.btnColor}]}>{(this.props.loginUser) ? this.props.loginUser.nickname : "登陆"}</Text>

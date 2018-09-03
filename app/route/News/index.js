@@ -322,7 +322,7 @@ class News extends React.Component {
             <TabBar onTabPress={this._handleTabItemPress} 
             labelStyle={[styles.labelStyle,{color: UColor.theme ? UColor.mainColor : UColor.arrow,}]} 
             indicatorStyle={[UColor.theme ? styles.indicatorStyleB : styles.indicatorStyleY,{backgroundColor: UColor.tintColor}]} 
-            style={[{paddingTop: ScreenUtil.autoheight(20),backgroundColor: UColor.theme ? UColor.transport: UColor.secdColor}]} 
+            style={[{paddingTop: ScreenUtil.autoheight(20),alignItems: 'center',justifyContent: 'center',backgroundColor: UColor.theme ? UColor.transport: UColor.secdColor}]} 
             tabStyle={{ width: ScreenWidth / 3, padding: 0, margin: 0 }} 
             scrollEnabled={true} {...props} />
             </ImageBackground>}
@@ -339,25 +339,17 @@ const styles = StyleSheet.create({
   labelStyle: {
     margin: 0, 
     fontSize: ScreenUtil.setSpText(15), 
-    paddingTop: ScreenUtil.autoheight(12), 
-    marginBottom: ScreenUtil.autoheight(12), 
   },
   indicatorStyleB: {
     borderRadius:25, 
     height: ScreenUtil.autoheight(21), 
     marginLeft: ScreenUtil.autowidth(10),
-    marginBottom: ScreenUtil.autoheight(7), 
+    marginBottom: ScreenUtil.autoheight(8), 
     width: ScreenWidth / 3 - ScreenUtil.autowidth(20),
   },
   indicatorStyleY: {
     marginLeft: ScreenUtil.autowidth(20),
     width: ScreenWidth / 3 - ScreenUtil.autowidth(40),
-  },
-  txt: {
-    color: 'white',
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: ScreenUtil.setSpText(30),
   },
   container: {
     flex: 1,

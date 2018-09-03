@@ -1053,7 +1053,7 @@ class Transaction extends BaseComponent {
             <Text style={[styles.paneltext,{color: UColor.btnColor}]}>交易面板</Text>
         </View>
     </TouchableOpacity>
-    <ImageBackground source={UImage.coinsbg1} resizeMode="cover"  style={{width:ScreenWidth,}}>
+    <ImageBackground source={UImage.transactionA} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.164}}>
         <View style={[styles.headerTitle,{backgroundColor: UColor.theme ? UColor.transport : UColor.mainColor}]}>  
             <Button onPress={this._leftTopClick.bind()}>
                 <Image source={this.state.modal ? UImage.tx_slide0 : UImage.tx_slide1} style={styles.imgBtn} />
@@ -1061,7 +1061,7 @@ class Transaction extends BaseComponent {
             <Text style={[styles.headerTitleText,{color: UColor.btnColor}]}>{this.state.tradename + "/EOS"}</Text>
             <View style={styles.imgBtn}></View>
         </View> 
-      </ImageBackground>
+    </ImageBackground>
       {Constants.isNetWorkOffline &&
         <Button onPress={this.openSystemSetting.bind(this)}>
           <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
@@ -1074,17 +1074,17 @@ class Transaction extends BaseComponent {
             <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
             tintColor={UColor.fontColor} colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}
             >
-            <ImageBackground source={UImage.coinsbg2} resizeMode="cover"  style={{width:ScreenWidth}}>
-                <View style={[styles.header,{backgroundColor:UColor.theme ? UColor.mask: UColor.mainColor}]}>
+            <ImageBackground source={UImage.transactionB} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
+                <View style={[styles.header,!UColor.theme && {backgroundColor:UColor.mainColor}]}>
                     <View style={styles.leftout}>
-                    <View style={styles.nameout}>
-                        <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
-                        <Text style={[styles.nametext,{color: UColor.arrow}]}>交易量</Text>
-                    </View>
-                    <View style={styles.recordout}>
-                        <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.open,8) : '0'} EOS</Text>
-                        <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.today_volum,8) : '0'} {this.state.tradename}</Text>
-                    </View>
+                        <View style={styles.nameout}>
+                            <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
+                            <Text style={[styles.nametext,{color: UColor.arrow}]}>交易量</Text>
+                        </View>
+                        <View style={styles.recordout}>
+                            <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.open,8) : '0'} EOS</Text>
+                            <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.today_volum,8) : '0'} {this.state.tradename}</Text>
+                        </View>
                     </View>
                     <View style={styles.rightout}>
                         <View style={styles.presentprice}>
@@ -1527,7 +1527,7 @@ const styles = StyleSheet.create({
         width: ScreenWidth-100,
         height: ScreenUtil.autoheight(45),
         fontSize: ScreenUtil.setSpText(16),
-        paddingBottom:  ScreenUtil.autoheight(5),
+        paddingBottom: ScreenUtil.autoheight(5),
     },
     container: {
         flex: 1,
@@ -1537,16 +1537,19 @@ const styles = StyleSheet.create({
         width: ScreenWidth,
         flexDirection: 'row',
         alignItems: 'center',
+        height: ScreenWidth*0.1733,
         paddingHorizontal: ScreenUtil.autowidth(6),
+        paddingVertical: ScreenUtil.autoheight(10),
     },
     leftout: {
         flex: 9,
         flexDirection: "row",
-        height: ScreenUtil.autoheight(50),
+        justifyContent: "space-around",
     },
     nameout: {
         flexDirection: 'column',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+        height: ScreenWidth*0.1733-ScreenUtil.autoheight(20),
     },
     nametext: {
         fontSize: ScreenUtil.setSpText(13),
@@ -1561,9 +1564,7 @@ const styles = StyleSheet.create({
     },
     headerTitleText: {
         textAlign: "center",
-        height: ScreenUtil.autoheight(60),
         fontSize: ScreenUtil.setSpText(18),
-        lineHeight: ScreenUtil.autoheight(60),
     },
     leftoutTitle: {
         paddingLeft: ScreenUtil.autowidth(15),
@@ -1591,6 +1592,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: 'space-around',
         paddingLeft: ScreenUtil.autowidth(5),
+        height: ScreenWidth*0.1733-ScreenUtil.autoheight(20),
     },
     recordtext: {
         fontSize: ScreenUtil.setSpText(13),
@@ -1599,6 +1601,7 @@ const styles = StyleSheet.create({
         flex:7,
         flexDirection:'column',
         alignItems:"flex-end",
+        justifyContent: "space-between",
     },
     titleout: {
         flex: 1,

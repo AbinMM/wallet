@@ -19,5 +19,6 @@ export default {
   bgEchar: "#2f3b50", // Echar背景色
   warningRed:"#FF4F4F",//警告字体色彩
   navigation: '#2279C5', //顶部标题背景色
+  invalidbtn: "#BFBFBF", //按钮默认颜色 UColor.invalidbtn
   theme: false,
 };

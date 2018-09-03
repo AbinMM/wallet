@@ -257,7 +257,7 @@ class createWallet extends BaseComponent {
     if(this.state.walletName != "" && this.state.walletPassword != "" && this.state.reWalletPassword != ""){
       this.state.CreateButton = UColor.tintColor;
     }else{
-      this.state.CreateButton = UColor.theme ? "#BFBFBF" : UColor.mainColor;
+      this.state.CreateButton = UColor.theme ? UColor.invalidbtn : UColor.mainColor;
     }
   }
 
