@@ -45,9 +45,11 @@ react-native run-android
 ### run ios:<br>
 在xcode里面点击run
 
+### 环境
 <br>
 npm version:3.10.10 <br>
 node version:v6.11.2 <br>
+gradle:2.2.3 <br>
 
 ### android release版本无法发送请求的问题<br>
 将：node_modules\react-native-eosjs\src\eosjs.html文件复制到：android\app\src\main\assets文件夹下面
