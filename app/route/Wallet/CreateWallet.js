@@ -262,7 +262,7 @@ class createWallet extends BaseComponent {
   }
 
   chkAccount(obj) {
-    var charmap = '.12345abcdefghijklmnopqrstuvwxyz';
+    var charmap = '12345abcdefghijklmnopqrstuvwxyz';
     for(var i = 0 ; i < obj.length;i++){
         var tmp = obj.charAt(i);
         for(var j = 0;j < charmap.length; j++){
