@@ -37,6 +37,7 @@ class AuthChange extends BaseComponent {
             inputCount:0,
             inputText:'',
             activeAuth:'',//更改的数据组
+            isRefreshing: false
         }
     }
 
@@ -125,9 +126,10 @@ class AuthChange extends BaseComponent {
  
     //获取账户信息
     getAuthInfo(){
-        EasyShowLD.loadingShow();
+        this.setState({isRefreshing: true})//开始刷新
         this.props.dispatch({ type: 'vote/getAuthInfo', payload: { page:1,username: this.props.navigation.state.params.wallet.name},callback: (resp) => {
-            EasyShowLD.loadingClose();
+            // EasyShowLD.loadingClose();
+            console.log("resp.data.permissions[0].required_auth.keys=%s",JSON.stringify(resp.data.permissions[0].required_auth.keys))
             if(resp && resp.code == '0'){
                 var temp=[];
                 var authFlag=false;
@@ -178,6 +180,7 @@ class AuthChange extends BaseComponent {
                     activeAuth:authTempActive,
                     inputCount:0,
                     inputText:'',
+                    isRefreshing: false
                 });
             }else{
                 this.setState({isAuth: false});
@@ -190,7 +193,7 @@ class AuthChange extends BaseComponent {
             if(callback) callback("无效账号");
             return;
         };
-        console.log("authActiveArr=%s",JSON.stringify(authActiveArr))
+        // console.log("authActiveArr=%s",JSON.stringify(authActiveArr))
         Eos.transaction({
             actions: [
                 authActiveArr,
@@ -213,30 +216,29 @@ class AuthChange extends BaseComponent {
                 EasyToast.show('密码长度至少4位,请重输');
                 return;
             }
+            EasyShowLD.dialogClose();
             var privateKey = this.props.navigation.state.params.wallet.activePrivate;
             try {
-                EasyShowLD.loadingShow();
+                this.setState({isRefreshing: true})//开始刷新
                 var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.navigation.state.params.wallet.salt);
                 var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                     this.EosUpdateAuth(this.props.navigation.state.params.wallet.name, plaintext_privateKey,authTempActive,(r) => {
-                        EasyShowLD.loadingClose();
-                            // alert(JSON.stringify(r));
-                            // console.log("r=%s",JSON.stringify(r))
-                            if(r.isSuccess==true){
-                                EasyToast.show('授权变更成功！');
-                            }else{
-                                EasyToast.show('授权变更失败！');
-                            }
-                            this.getAuthInfo();//刷新一下
-                        });
+                        console.log("r=%s",JSON.stringify(r))
+                        if(r.isSuccess==true){
+                            EasyToast.show('授权变更成功！');
+                        }else{
+                            EasyToast.show('授权变更失败！');
+                        }
+                        this.getAuthInfo();//刷新一下
+                    });
                 } else {
-                    EasyShowLD.loadingClose();
+                    this.setState({isRefreshing: false})//停止刷新
                     EasyToast.show('密码错误');
                 }
             } catch (e) {
-                EasyShowLD.loadingClose();
+                this.setState({isRefreshing: false})//停止刷新
                 EasyToast.show('密码错误');
             }
         }, () => { EasyShowLD.dialogClose() });
@@ -274,12 +276,15 @@ class AuthChange extends BaseComponent {
         this.changeAuth(authTempActive);
     }  
 
+    _onRefresh(){
+        this.getAuthInfo();//刷新一下
+    }
+    
     _renderRow(rowData){ // cell样式
         return (
             <View style={[styles.addUserTitle,{ backgroundColor: UColor.mainColor}]}>
                 <View style={styles.titleStyle}>
                     <View style={styles.userAddView}>
-                        {/* <Image source={UImage.adminAddA} style={styles.imgBtn} /> */}
                         {(this.state.authKeys[0].key == rowData.item.key) &&
                             <Text style={[styles.authText,{color: UColor.fontColor}]}>授权的Active用户</Text>
                         }
@@ -309,22 +314,28 @@ class AuthChange extends BaseComponent {
         return (
         <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
             <Header {...this.props} onPressLeft={true} title="Active权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scan}/>
-            <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
-                <ScrollView keyboardShouldPersistTaps="always" >
-                
-                    
-                    <View style={[styles.significantout,{backgroundColor: UColor.secdColor,borderColor: UColor.riseColor}]}>
-                        <Text style={[styles.significanttextHead,{color: UColor.warningRed}]} >安全警告</Text>
-                        <View style={styles.significantout2}>
-                            <Image source={UImage.warning} style={styles.imgBtnWarning} />
-                            <View style={{flex: 1,padding: 5,}}>
-                                <Text style={[styles.significanttext,{color: UColor.warningRed}]} >请确保您清楚了解Active授权,并确保添加的授权用户是您信任的用户，添加的授权用户将可获得变更权限、转账和投票等操作的权限。</Text>
-                            </View>
-                        </View>
+            <View style={[styles.significantout,{backgroundColor: UColor.secdColor,borderColor: UColor.riseColor}]}>
+                <Text style={[styles.significanttextHead,{color: UColor.warningRed}]} >安全警告</Text>
+                <View style={styles.significantout2}>
+                    <Image source={UImage.warning} style={styles.imgBtnWarning} />
+                    <View style={{flex: 1,padding: 5,}}>
+                        <Text style={[styles.significanttext,{color: UColor.warningRed}]} >请确保您清楚了解Active授权,并确保添加的授权用户是您信任的用户，添加的授权用户将可获得变更权限、转账和投票等操作的权限。</Text>
                     </View>
-                
-
-
+                </View>
+            </View>
+            <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "padding" : null} style={styles.tab}>
+                <ScrollView keyboardShouldPersistTaps="handled" 
+                    refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.isRefreshing}
+                        onRefresh={() => this._onRefresh()}
+                        tintColor={UColor.fontColor}
+                        colors={[UColor.lightgray, UColor.tintColor]}
+                        progressBackgroundColor={UColor.fontColor}
+                    />
+                    }
+                    scrollEventThrottle={50}
+                    >
                     <FlatList
                         data={this.state.authKeys.length==null ?[]: this.state.authKeys} 
                         extraData={this.state}

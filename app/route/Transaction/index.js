@@ -625,37 +625,37 @@ class Transaction extends BaseComponent {
                 EasyShowLD.loadingShow();
                 Eos.transaction({
                     actions: [
-                        {
-                            account: "eosio",
-                            name: "updateauth", 
-                            authorization: [{
-                            actor: this.props.defaultWallet.account,
-                            permission: 'active'
-                            }], 
-                            data: {
-                                account: this.props.defaultWallet.account,
-                                permission: 'active',
-                                parent: "owner",
-                                auth: {
-                                    threshold: 1,
-                                    keys: [
-                                        {
-                                            key: this.props.defaultWallet.activePublic,
-                                            weight: 1,
-                                        }
-                                    ],
-                                    accounts: [
-                                        {
-                                            permission: {
-                                                actor: "etbexchanger",
-                                                permission: "eosio.code",
-                                            },
-                                            weight: 1,
-                                        }
-                                    ],
-                                },
-                            }
-                        },
+                        // {
+                        //     account: "eosio",
+                        //     name: "updateauth", 
+                        //     authorization: [{
+                        //     actor: this.props.defaultWallet.account,
+                        //     permission: 'active'
+                        //     }], 
+                        //     data: {
+                        //         account: this.props.defaultWallet.account,
+                        //         permission: 'active',
+                        //         parent: "owner",
+                        //         auth: {
+                        //             threshold: 1,
+                        //             keys: [
+                        //                 {
+                        //                     key: this.props.defaultWallet.activePublic,
+                        //                     weight: 1,
+                        //                 }
+                        //             ],
+                        //             accounts: [
+                        //                 {
+                        //                     permission: {
+                        //                         actor: "etbexchanger",
+                        //                         permission: "eosio.code",
+                        //                     },
+                        //                     weight: 1,
+                        //                 }
+                        //             ],
+                        //         },
+                        //     }
+                        // },
                         {
                             account: "etbexchanger",
                             name: "buytoken", 
@@ -672,31 +672,31 @@ class Transaction extends BaseComponent {
                                 fee_rate: "1", 
                             }
                         },
-                        {
-                            account: "eosio",
-                            name: "updateauth", 
-                            authorization: [{
-                            actor: this.props.defaultWallet.account,
-                            permission: 'active'
-                            }], 
-                            data: {
-                                account: this.props.defaultWallet.account,
-                                permission: 'active',
-                                parent: "owner",
-                                auth: {
-                                    threshold: 1,
-                                    keys: [
-                                        {
-                                            key: this.props.defaultWallet.activePublic,
-                                            weight: 1,
-                                        }
-                                    ],
-                                    accounts: [
+                        // {
+                        //     account: "eosio",
+                        //     name: "updateauth", 
+                        //     authorization: [{
+                        //     actor: this.props.defaultWallet.account,
+                        //     permission: 'active'
+                        //     }], 
+                        //     data: {
+                        //         account: this.props.defaultWallet.account,
+                        //         permission: 'active',
+                        //         parent: "owner",
+                        //         auth: {
+                        //             threshold: 1,
+                        //             keys: [
+                        //                 {
+                        //                     key: this.props.defaultWallet.activePublic,
+                        //                     weight: 1,
+                        //                 }
+                        //             ],
+                        //             accounts: [
 
-                                    ],
-                                },
-                            }
-                        },
+                        //             ],
+                        //         },
+                        //     }
+                        // },
                     ]
                 }, plaintext_privateKey, (r) => {
                     EasyShowLD.loadingClose();
@@ -711,21 +711,33 @@ class Transaction extends BaseComponent {
                                     || errcode == 3081001)
                                 {
                                     this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
-                                    if(resp.code == 608)
-                                    { 
-                                        //弹出提示框,可申请免费抵押功能
-                                        const view =
-                                        <View style={styles.Explainout}>
-                                            <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                            <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                        </View>
-                                        EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                        const { navigate } = this.props.navigation;
-                                        navigate('FreeMortgage', {});
-                                        // EasyShowLD.dialogClose();
-                                        }, () => { EasyShowLD.dialogClose() });
-                                    }
-                                }});
+                                        if(resp.code == 608)
+                                        { 
+                                            //弹出提示框,可申请免费抵押功能
+                                            const view =
+                                            <View style={styles.Explainout}>
+                                                <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                            </View>
+                                            EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                                            const { navigate } = this.props.navigation;
+                                            navigate('FreeMortgage', {});
+                                            // EasyShowLD.dialogClose();
+                                            }, () => { EasyShowLD.dialogClose() });
+                                        }
+                                    }});
+                                }else if(errcode == 3090003){
+                                    //弹出提示框
+                                    const view =
+                                    <View style={styles.Explainout}>
+                                        <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号未进行交易授权！</Text>
+                                        <Text style={[styles.Explaintext,{color: UColor.arrow}]}>进行交易前，需授权ET交易智能合约，否则无法进行交易!</Text>
+                                    </View>
+                                    EasyShowLD.dialogShow("提示", view, "去授权", "呆会说", () => {
+                                    const { navigate } = this.props.navigation;
+                                    navigate('FreeMortgage', {});
+                                    // EasyShowLD.dialogClose();
+                                    }, () => { EasyShowLD.dialogClose() });
                                 }
                             }
                             if(r.data.msg){
@@ -794,37 +806,37 @@ class Transaction extends BaseComponent {
 
             Eos.transaction({
                 actions: [
-                    {
-                        account: "eosio",
-                        name: "updateauth", 
-                        authorization: [{
-                        actor: this.props.defaultWallet.account,
-                        permission: 'active'
-                        }], 
-                        data: {
-                            account: this.props.defaultWallet.account,
-                            permission: 'active',
-                            parent: "owner",
-                            auth: {
-                                threshold: 1,
-                                keys: [
-                                    {
-                                        key: this.props.defaultWallet.activePublic,
-                                        weight: 1,
-                                    }
-                                ],
-                                accounts: [
-                                    {
-                                        permission: {
-                                            actor: "etbexchanger",
-                                            permission: "eosio.code",
-                                        },
-                                        weight: 1,
-                                    }
-                                ],
-                            },
-                        }
-                    },
+                    // {
+                    //     account: "eosio",
+                    //     name: "updateauth", 
+                    //     authorization: [{
+                    //     actor: this.props.defaultWallet.account,
+                    //     permission: 'active'
+                    //     }], 
+                    //     data: {
+                    //         account: this.props.defaultWallet.account,
+                    //         permission: 'active',
+                    //         parent: "owner",
+                    //         auth: {
+                    //             threshold: 1,
+                    //             keys: [
+                    //                 {
+                    //                     key: this.props.defaultWallet.activePublic,
+                    //                     weight: 1,
+                    //                 }
+                    //             ],
+                    //             accounts: [
+                    //                 {
+                    //                     permission: {
+                    //                         actor: "etbexchanger",
+                    //                         permission: "eosio.code",
+                    //                     },
+                    //                     weight: 1,
+                    //                 }
+                    //             ],
+                    //         },
+                    //     }
+                    // },
                     {
                         account: "etbexchanger",
                         name: "selltoken", 
@@ -840,31 +852,31 @@ class Transaction extends BaseComponent {
                             fee_rate: "1", 
                         }
                     },
-                    {
-                        account: "eosio",
-                        name: "updateauth", 
-                        authorization: [{
-                        actor: this.props.defaultWallet.account,
-                        permission: 'active'
-                        }], 
-                        data: {
-                            account: this.props.defaultWallet.account,
-                            permission: 'active',
-                            parent: "owner",
-                            auth: {
-                                threshold: 1,
-                                keys: [
-                                    {
-                                        key: this.props.defaultWallet.activePublic,
-                                        weight: 1,
-                                    }
-                                ],
-                                accounts: [
+                    // {
+                    //     account: "eosio",
+                    //     name: "updateauth", 
+                    //     authorization: [{
+                    //     actor: this.props.defaultWallet.account,
+                    //     permission: 'active'
+                    //     }], 
+                    //     data: {
+                    //         account: this.props.defaultWallet.account,
+                    //         permission: 'active',
+                    //         parent: "owner",
+                    //         auth: {
+                    //             threshold: 1,
+                    //             keys: [
+                    //                 {
+                    //                     key: this.props.defaultWallet.activePublic,
+                    //                     weight: 1,
+                    //                 }
+                    //             ],
+                    //             accounts: [
 
-                                ],
-                            },
-                        }
-                    },
+                    //             ],
+                    //         },
+                    //     }
+                    // },
                 ]
             }, plaintext_privateKey, (r) => {
                 EasyShowLD.loadingClose();
@@ -879,21 +891,33 @@ class Transaction extends BaseComponent {
                                 || errcode == 3081001)
                             {
                                 this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
-                                if(resp.code == 608)
-                                { 
-                                    //弹出提示框,可申请免费抵押功能
-                                    const view =
-                                    <View style={styles.Explainout}>
-                                        <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                        <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                    </View>
-                                    EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                    const { navigate } = this.props.navigation;
-                                    navigate('FreeMortgage', {});
-                                    // EasyShowLD.dialogClose();
-                                    }, () => { EasyShowLD.dialogClose() });
-                                }
-                            }});
+                                    if(resp.code == 608)
+                                    { 
+                                        //弹出提示框,可申请免费抵押功能
+                                        const view =
+                                        <View style={styles.Explainout}>
+                                            <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                            <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                        </View>
+                                        EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                                        const { navigate } = this.props.navigation;
+                                        navigate('FreeMortgage', {});
+                                        // EasyShowLD.dialogClose();
+                                        }, () => { EasyShowLD.dialogClose() });
+                                    }
+                                }});
+                            }else if(errcode == 3090003){
+                                //弹出交易授权提示框
+                                const view =
+                                <View style={styles.Explainout}>
+                                    <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号未进行交易授权！</Text>
+                                    <Text style={[styles.Explaintext,{color: UColor.arrow}]}>进行交易前，需授权ET交易智能合约，否则无法进行交易!</Text>
+                                </View>
+                                EasyShowLD.dialogShow("提示", view, "去授权", "呆会说", () => {
+                                const { navigate } = this.props.navigation;
+                                navigate('FreeMortgage', {});
+                                // EasyShowLD.dialogClose();
+                                }, () => { EasyShowLD.dialogClose() });
                             }
                         }
                         if(r.data.msg){
@@ -1198,7 +1222,7 @@ class Transaction extends BaseComponent {
                 selectedOption={ this.state.selectedTransactionRecord } backTint= {UColor.secdColor} options={transactionOption} />
         </View>
         {this.state.selectedTransactionRecord == transactionOption[0] || this.state.selectedTransactionRecord == transactionOption[1] ? 
-                    <View style={{flex: 1,}}>
+                    <View style={{flex: 1, marginBottom: 15}}>
                         {(this.props.etTradeLog  != null &&  this.props.etTradeLog .length == 0) ? <View style={{paddingTop: 50, justifyContent: 'center', alignItems: 'center'}}><Text style={{fontSize: 16, color: UColor.fontColor}}>还没有交易哟~</Text></View> :
                         <ListView style={{flex: 1,}} renderRow={this.renderRow} enableEmptySections={true} 
                                 renderHeader = {()=>
