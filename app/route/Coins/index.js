@@ -206,7 +206,7 @@ class Coins extends React.Component {
         <TabBar onTabPress={this._handleTabItemPress} 
         labelStyle={[styles.labelStyle,{color: UColor.theme ? UColor.mainColor : UColor.arrow,}]} 
         indicatorStyle={[UColor.theme ? styles.indicatorStyleB : styles.indicatorStyleY,{backgroundColor: UColor.tintColor}]} 
-        style={{backgroundColor: UColor.theme ? UColor.transport: UColor.secdColor}} 
+        style={{alignItems: 'center',justifyContent: 'center',backgroundColor: UColor.theme ? UColor.transport: UColor.secdColor}} 
         tabStyle={{width: ScreenWidth / 4,padding:0,margin:0,}} 
         scrollEnabled={true} {...props}/>
         </ImageBackground>}
@@ -222,8 +222,6 @@ const styles = StyleSheet.create({
   labelStyle: {
     margin: 0, 
     fontSize: ScreenUtil.setSpText(15), 
-    paddingTop: ScreenUtil.autoheight(12), 
-    marginBottom: ScreenUtil.autoheight(12), 
   },
   indicatorStyleB: {
     borderRadius:25, 

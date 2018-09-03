@@ -497,7 +497,7 @@ class ImportEosKey extends BaseComponent {
     if((this.state.activePk != ""||this.state.ownerPk != "" )&& this.state.walletpwd != "" && this.state.reWalletpwd != ""){
       this.state.CreateButton = UColor.tintColor;
     }else{
-      this.state.CreateButton = UColor.theme ? "#BFBFBF" : UColor.mainColor;
+      this.state.CreateButton = UColor.theme ? UColor.invalidbtn : UColor.mainColor;
     } 
   }
 

@@ -154,7 +154,7 @@ class SignIn extends BaseComponent {
         </View> */}
       </View>
       <Button onPress={() => this.signIn()}>
-        <View style={styles.SignInbtnout} backgroundColor={this.state.Sign_in ? (UColor.theme ? "#BFBFBF" : UColor.mainColor):UColor.tintColor}>
+        <View style={styles.SignInbtnout} backgroundColor={this.state.Sign_in ? (UColor.theme ? UColor.invalidbtn : UColor.mainColor):UColor.tintColor}>
           <Text style={[styles.SignInbtntext,{color: UColor.btnColor}]}>{this.state.Sign_in ? "已签到": "立即签到"}</Text>
         </View>
       </Button>

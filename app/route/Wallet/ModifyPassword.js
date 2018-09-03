@@ -166,7 +166,7 @@ class ModifyPassword extends BaseComponent {
         if(this.state.password != "" && this.state.newPassword != "" && this.state.newRePassword != ""){
           this.state.CreateButton = UColor.tintColor;
         }else{
-          this.state.CreateButton = UColor.theme ? "#BFBFBF" : UColor.mainColor;
+          this.state.CreateButton = UColor.theme ? UColor.invalidbtn : UColor.mainColor;
         }
     }
 
