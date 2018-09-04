@@ -51,6 +51,9 @@ class TurnOut extends BaseComponent {
                 this.setState({amount:data.amount})
             }
         });
+        DeviceEventEmitter.addListener('transfer_scan_result', (data) => {
+            this.setState({toAccount:data.toaccount})
+        });
         DeviceEventEmitter.addListener('eos_balance', (data) => {
             this.setEosBalance(data);
           });

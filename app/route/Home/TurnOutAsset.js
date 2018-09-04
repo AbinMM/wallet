@@ -74,6 +74,10 @@ class TurnOutAsset extends BaseComponent {
                 }
             } catch (error) {
             }
+        });        
+
+        DeviceEventEmitter.addListener('transfer_scan_result', (data) => {
+            this.setState({toAccount:data.toaccount});
         });
     }
 
