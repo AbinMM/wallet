@@ -166,4 +166,7 @@ export default {
   txbtn_more:require('../img/txbtn_more.png'),
   tx_ram:require('../img/tx_ram.png'),
   delicon:require('../img/delicon.png'),
+  authFrame:require('../img/authFrame.png'),
+  authExchangeBlue:require('../img/authExchangeBlue.png'),
+
 }
