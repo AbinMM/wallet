@@ -721,7 +721,7 @@ class Transaction extends BaseComponent {
                                             </View>
                                             EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                             const { navigate } = this.props.navigation;
-                                            navigate('FreeMortgage', {});
+                                            navigate('FreeMortgage', {wallet: this.props.defaultWallet});
                                             // EasyShowLD.dialogClose();
                                             }, () => { EasyShowLD.dialogClose() });
                                         }
@@ -735,7 +735,7 @@ class Transaction extends BaseComponent {
                                     </View>
                                     EasyShowLD.dialogShow("提示", view, "去授权", "呆会说", () => {
                                     const { navigate } = this.props.navigation;
-                                    navigate('FreeMortgage', {});
+                                    navigate('AuthExchange', {wallet: this.props.defaultWallet});
                                     // EasyShowLD.dialogClose();
                                     }, () => { EasyShowLD.dialogClose() });
                                 }
@@ -915,7 +915,7 @@ class Transaction extends BaseComponent {
                                 </View>
                                 EasyShowLD.dialogShow("提示", view, "去授权", "呆会说", () => {
                                 const { navigate } = this.props.navigation;
-                                navigate('FreeMortgage', {});
+                                navigate('AuthExchange', {wallet: this.props.defaultWallet});
                                 // EasyShowLD.dialogClose();
                                 }, () => { EasyShowLD.dialogClose() });
                             }
