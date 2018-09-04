@@ -818,7 +818,7 @@ class Ram extends BaseComponent {
     render() {
         return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
         <ImageBackground source={UImage.transactionA} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.164}}>
-            <Header {...this.props} onPressLeft={this.props.navigation.state.params ? this.props.navigation.state.params.returnkey : false} title="内存交易"  backgroundColor={UColor.theme ? UColor.transport: UColor.secdColor} />
+            <Header {...this.props} onPressLeft={this.props.navigation.state.params ? this.props.navigation.state.params.returnkey : false} title="内存交易"  backgroundColor={UColor.transport} />
         </ImageBackground>
         <TouchableOpacity style={styles.transactiontou}  onPress={this.openbusiness.bind(this)} activeOpacity={0.8}>
             <View style={[styles.transactionout,{backgroundColor: UColor.tintColor}]}>
@@ -838,7 +838,7 @@ class Ram extends BaseComponent {
                 <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} tintColor={UColor.fontColor} 
                     colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}>
                 <ImageBackground source={UImage.transactionB} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
-                <View style={[styles.header,!UColor.theme && {backgroundColor:UColor.mainColor}]}>
+                <View style={styles.header}>
                     <View style={styles.leftout}>
                     <View style={styles.nameout}>
                         <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
@@ -868,49 +868,48 @@ class Ram extends BaseComponent {
                     </View>
                 </View>
                 </ImageBackground>
-                <View style={[styles.timeout,{backgroundColor:UColor.theme ? UColor.secdColor : UColor.inash}]}>
+                <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"时分")}>
-                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.selectedSegment == "时分" ? UColor.tintColor : "#DEDEDE"}:{}]}>
-                                <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "时分" ? UColor.tintColor : UColor.fontColor}]}>时分</Text>
+                            <View style={[styles.timeview,{backgroundColor: this.state.selectedSegment == "时分"?UColor.tintColor:UColor.invalidbtn}]}>
+                                <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>时分</Text>
                             </View>
                         </Button>   
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"5分")}>
-                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.selectedSegment == "5分" ? UColor.tintColor : "#DEDEDE"}:{}]}>
-                                <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "5分" ? UColor.tintColor : UColor.fontColor}]}>5分</Text>
+                            <View style={[styles.timeview,{backgroundColor: this.state.selectedSegment == "5分"?UColor.tintColor:UColor.invalidbtn}]}>
+                                <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>5分</Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"15分")}>
-                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.selectedSegment == "15分" ? UColor.tintColor : "#DEDEDE"}:{}]}>
-                                <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "15分" ? UColor.tintColor : UColor.fontColor}]}>15分</Text>
+                            <View style={[styles.timeview,{backgroundColor: this.state.selectedSegment == "15分"?UColor.tintColor:UColor.invalidbtn}]}>
+                                <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>15分</Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"30分")}>
-                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.selectedSegment == "30分" ? UColor.tintColor : "#DEDEDE"}:{}]}>
-                                <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "30分" ? UColor.tintColor : UColor.fontColor}]}>30分</Text>
+                            <View style={[styles.timeview,{backgroundColor: this.state.selectedSegment == "30分"?UColor.tintColor:UColor.invalidbtn}]}>
+                                <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>30分</Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"更多")}>
-                            <View style={[styles.timeview,UColor.theme?{backgroundColor:(this.state.selectedSegment=="更多"||this.state.selectedSegment=="1小时"||this.state.selectedSegment=="1天"
-                                ||this.state.selectedSegment=="1周"||this.state.selectedSegment=="1月")?UColor.tintColor:"#DEDEDE"}:{}]}>
-                                <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: (this.state.selectedSegment == "更多" || this.state.selectedSegment == "1小时" || this.state.selectedSegment == "1天"
-                                || this.state.selectedSegment == "1周" || this.state.selectedSegment == "1月") ? UColor.tintColor : UColor.fontColor}]}>{this.state.showMoreTitle}</Text>
-                                <Ionicons name={this.state.showMore ? "md-arrow-dropdown" : "md-arrow-dropright"} size={ScreenUtil.autowidth(20)} style={[UColor.theme?{color:UColor.btnColor}:{color:this.state.showMore ? UColor.tintColor : UColor.fontColor}]}/>
+                            <View style={[styles.timeview,{backgroundColor:(this.state.selectedSegment=="更多"||this.state.selectedSegment=="1小时"||this.state.selectedSegment=="1天"
+                                ||this.state.selectedSegment=="1周"||this.state.selectedSegment=="1月")?UColor.tintColor:UColor.invalidbtn}]}>
+                                <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>{this.state.showMoreTitle}</Text>
+                                <Ionicons name={this.state.showMore ? "md-arrow-dropdown" : "md-arrow-dropright"} size={ScreenUtil.autowidth(20)} color={UColor.btnColor}/>
                             </View>
                         </Button> 
                     </View>
                 </View> 
 
                 {this.state.showMore &&       
-                <View style={[styles.timeout,{backgroundColor:UColor.theme ? UColor.secdColor : UColor.inash}]}>
+                <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
                     <View style={styles.timetabout}>
                         <Button disabled={true}>
                             <View style={styles.timeview} >
@@ -920,40 +919,40 @@ class Ram extends BaseComponent {
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"1小时")}>
-                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.showMoreTitle == "1小时" ? UColor.tintColor : "#DEDEDE"}:{}]} >
-                            <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1小时" ? UColor.tintColor : UColor.fontColor}]}>1小时</Text>
+                            <View style={[styles.timeview,{backgroundColor: this.state.showMoreTitle == "1小时"?UColor.tintColor:UColor.invalidbtn}]} >
+                            <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1小时</Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={{flexDirection:"column",flex:1}}>
                         <Button onPress={this.onClickTimeType.bind(this,"1天")}>
-                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.showMoreTitle == "1天" ? UColor.tintColor : "#DEDEDE"}:{}]} >
-                            <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1天" ? UColor.tintColor : UColor.fontColor}]}>1天</Text>
+                            <View style={[styles.timeview,{backgroundColor: this.state.showMoreTitle == "1天"?UColor.tintColor:UColor.invalidbtn}]} >
+                            <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1天</Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"1周")}>
-                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.showMoreTitle == "1周" ? UColor.tintColor : "#DEDEDE"}:{}]} >
-                            <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1周" ? UColor.tintColor : UColor.fontColor}]}>1周</Text>
+                            <View style={[styles.timeview,{backgroundColor: this.state.showMoreTitle == "1周"?UColor.tintColor:UColor.invalidbtn}]} >
+                            <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1周</Text>
                             </View>
                         </Button> 
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"1月")}>
-                            <View style={[styles.timeview,UColor.theme?{backgroundColor: this.state.showMoreTitle == "1月" ? UColor.tintColor : "#DEDEDE"}:{}]} >
-                            <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1月" ? UColor.tintColor : UColor.fontColor}]}>1月</Text>
+                            <View style={[styles.timeview,{backgroundColor: this.state.showMoreTitle == "1月"?UColor.tintColor:UColor.invalidbtn}]} >
+                            <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1月</Text>
                             </View>
                         </Button> 
                     </View>
                 </View> 
                 }  
                 {this.state.isKLine ? 
-                    <View style={{backgroundColor: UColor.theme ? UColor.mainColor : UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
+                    <View style={{backgroundColor: UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
                         {<Echarts option={this.getDataKLine()} width={ScreenWidth} height={ScreenUtil.autoheight(300)} />}
                     </View>
                 : 
-                    <View style={{backgroundColor: UColor.theme ? UColor.mainColor : UColor.bgEchar}}>
+                    <View style={{backgroundColor: UColor.bgEchar}}>
                         {<Echarts option={this.getDataLine()} width={ScreenWidth} height={ScreenUtil.autoheight(180)} />}
                     </View>
                 }

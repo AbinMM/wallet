@@ -625,37 +625,37 @@ class Transaction extends BaseComponent {
                 EasyShowLD.loadingShow();
                 Eos.transaction({
                     actions: [
-                        {
-                            account: "eosio",
-                            name: "updateauth", 
-                            authorization: [{
-                            actor: this.props.defaultWallet.account,
-                            permission: 'active'
-                            }], 
-                            data: {
-                                account: this.props.defaultWallet.account,
-                                permission: 'active',
-                                parent: "owner",
-                                auth: {
-                                    threshold: 1,
-                                    keys: [
-                                        {
-                                            key: this.props.defaultWallet.activePublic,
-                                            weight: 1,
-                                        }
-                                    ],
-                                    accounts: [
-                                        {
-                                            permission: {
-                                                actor: "etbexchanger",
-                                                permission: "eosio.code",
-                                            },
-                                            weight: 1,
-                                        }
-                                    ],
-                                },
-                            }
-                        },
+                        // {
+                        //     account: "eosio",
+                        //     name: "updateauth", 
+                        //     authorization: [{
+                        //     actor: this.props.defaultWallet.account,
+                        //     permission: 'active'
+                        //     }], 
+                        //     data: {
+                        //         account: this.props.defaultWallet.account,
+                        //         permission: 'active',
+                        //         parent: "owner",
+                        //         auth: {
+                        //             threshold: 1,
+                        //             keys: [
+                        //                 {
+                        //                     key: this.props.defaultWallet.activePublic,
+                        //                     weight: 1,
+                        //                 }
+                        //             ],
+                        //             accounts: [
+                        //                 {
+                        //                     permission: {
+                        //                         actor: "etbexchanger",
+                        //                         permission: "eosio.code",
+                        //                     },
+                        //                     weight: 1,
+                        //                 }
+                        //             ],
+                        //         },
+                        //     }
+                        // },
                         {
                             account: "etbexchanger",
                             name: "buytoken", 
@@ -672,31 +672,31 @@ class Transaction extends BaseComponent {
                                 fee_rate: "1", 
                             }
                         },
-                        {
-                            account: "eosio",
-                            name: "updateauth", 
-                            authorization: [{
-                            actor: this.props.defaultWallet.account,
-                            permission: 'active'
-                            }], 
-                            data: {
-                                account: this.props.defaultWallet.account,
-                                permission: 'active',
-                                parent: "owner",
-                                auth: {
-                                    threshold: 1,
-                                    keys: [
-                                        {
-                                            key: this.props.defaultWallet.activePublic,
-                                            weight: 1,
-                                        }
-                                    ],
-                                    accounts: [
+                        // {
+                        //     account: "eosio",
+                        //     name: "updateauth", 
+                        //     authorization: [{
+                        //     actor: this.props.defaultWallet.account,
+                        //     permission: 'active'
+                        //     }], 
+                        //     data: {
+                        //         account: this.props.defaultWallet.account,
+                        //         permission: 'active',
+                        //         parent: "owner",
+                        //         auth: {
+                        //             threshold: 1,
+                        //             keys: [
+                        //                 {
+                        //                     key: this.props.defaultWallet.activePublic,
+                        //                     weight: 1,
+                        //                 }
+                        //             ],
+                        //             accounts: [
 
-                                    ],
-                                },
-                            }
-                        },
+                        //             ],
+                        //         },
+                        //     }
+                        // },
                     ]
                 }, plaintext_privateKey, (r) => {
                     EasyShowLD.loadingClose();
@@ -711,21 +711,33 @@ class Transaction extends BaseComponent {
                                     || errcode == 3081001)
                                 {
                                     this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
-                                    if(resp.code == 608)
-                                    { 
-                                        //弹出提示框,可申请免费抵押功能
-                                        const view =
-                                        <View style={styles.Explainout}>
-                                            <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                            <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                        </View>
-                                        EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                        const { navigate } = this.props.navigation;
-                                        navigate('FreeMortgage', {});
-                                        // EasyShowLD.dialogClose();
-                                        }, () => { EasyShowLD.dialogClose() });
-                                    }
-                                }});
+                                        if(resp.code == 608)
+                                        { 
+                                            //弹出提示框,可申请免费抵押功能
+                                            const view =
+                                            <View style={styles.Explainout}>
+                                                <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                            </View>
+                                            EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                                            const { navigate } = this.props.navigation;
+                                            navigate('FreeMortgage', {});
+                                            // EasyShowLD.dialogClose();
+                                            }, () => { EasyShowLD.dialogClose() });
+                                        }
+                                    }});
+                                }else if(errcode == 3090003){
+                                    //弹出提示框
+                                    const view =
+                                    <View style={styles.Explainout}>
+                                        <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号未进行交易授权！</Text>
+                                        <Text style={[styles.Explaintext,{color: UColor.arrow}]}>进行交易前，需授权ET交易智能合约，否则无法进行交易!</Text>
+                                    </View>
+                                    EasyShowLD.dialogShow("提示", view, "去授权", "呆会说", () => {
+                                    const { navigate } = this.props.navigation;
+                                    navigate('FreeMortgage', {});
+                                    // EasyShowLD.dialogClose();
+                                    }, () => { EasyShowLD.dialogClose() });
                                 }
                             }
                             if(r.data.msg){
@@ -794,37 +806,37 @@ class Transaction extends BaseComponent {
 
             Eos.transaction({
                 actions: [
-                    {
-                        account: "eosio",
-                        name: "updateauth", 
-                        authorization: [{
-                        actor: this.props.defaultWallet.account,
-                        permission: 'active'
-                        }], 
-                        data: {
-                            account: this.props.defaultWallet.account,
-                            permission: 'active',
-                            parent: "owner",
-                            auth: {
-                                threshold: 1,
-                                keys: [
-                                    {
-                                        key: this.props.defaultWallet.activePublic,
-                                        weight: 1,
-                                    }
-                                ],
-                                accounts: [
-                                    {
-                                        permission: {
-                                            actor: "etbexchanger",
-                                            permission: "eosio.code",
-                                        },
-                                        weight: 1,
-                                    }
-                                ],
-                            },
-                        }
-                    },
+                    // {
+                    //     account: "eosio",
+                    //     name: "updateauth", 
+                    //     authorization: [{
+                    //     actor: this.props.defaultWallet.account,
+                    //     permission: 'active'
+                    //     }], 
+                    //     data: {
+                    //         account: this.props.defaultWallet.account,
+                    //         permission: 'active',
+                    //         parent: "owner",
+                    //         auth: {
+                    //             threshold: 1,
+                    //             keys: [
+                    //                 {
+                    //                     key: this.props.defaultWallet.activePublic,
+                    //                     weight: 1,
+                    //                 }
+                    //             ],
+                    //             accounts: [
+                    //                 {
+                    //                     permission: {
+                    //                         actor: "etbexchanger",
+                    //                         permission: "eosio.code",
+                    //                     },
+                    //                     weight: 1,
+                    //                 }
+                    //             ],
+                    //         },
+                    //     }
+                    // },
                     {
                         account: "etbexchanger",
                         name: "selltoken", 
@@ -840,31 +852,31 @@ class Transaction extends BaseComponent {
                             fee_rate: "1", 
                         }
                     },
-                    {
-                        account: "eosio",
-                        name: "updateauth", 
-                        authorization: [{
-                        actor: this.props.defaultWallet.account,
-                        permission: 'active'
-                        }], 
-                        data: {
-                            account: this.props.defaultWallet.account,
-                            permission: 'active',
-                            parent: "owner",
-                            auth: {
-                                threshold: 1,
-                                keys: [
-                                    {
-                                        key: this.props.defaultWallet.activePublic,
-                                        weight: 1,
-                                    }
-                                ],
-                                accounts: [
+                    // {
+                    //     account: "eosio",
+                    //     name: "updateauth", 
+                    //     authorization: [{
+                    //     actor: this.props.defaultWallet.account,
+                    //     permission: 'active'
+                    //     }], 
+                    //     data: {
+                    //         account: this.props.defaultWallet.account,
+                    //         permission: 'active',
+                    //         parent: "owner",
+                    //         auth: {
+                    //             threshold: 1,
+                    //             keys: [
+                    //                 {
+                    //                     key: this.props.defaultWallet.activePublic,
+                    //                     weight: 1,
+                    //                 }
+                    //             ],
+                    //             accounts: [
 
-                                ],
-                            },
-                        }
-                    },
+                    //             ],
+                    //         },
+                    //     }
+                    // },
                 ]
             }, plaintext_privateKey, (r) => {
                 EasyShowLD.loadingClose();
@@ -879,21 +891,33 @@ class Transaction extends BaseComponent {
                                 || errcode == 3081001)
                             {
                                 this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
-                                if(resp.code == 608)
-                                { 
-                                    //弹出提示框,可申请免费抵押功能
-                                    const view =
-                                    <View style={styles.Explainout}>
-                                        <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                        <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                    </View>
-                                    EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                    const { navigate } = this.props.navigation;
-                                    navigate('FreeMortgage', {});
-                                    // EasyShowLD.dialogClose();
-                                    }, () => { EasyShowLD.dialogClose() });
-                                }
-                            }});
+                                    if(resp.code == 608)
+                                    { 
+                                        //弹出提示框,可申请免费抵押功能
+                                        const view =
+                                        <View style={styles.Explainout}>
+                                            <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                            <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                        </View>
+                                        EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                                        const { navigate } = this.props.navigation;
+                                        navigate('FreeMortgage', {});
+                                        // EasyShowLD.dialogClose();
+                                        }, () => { EasyShowLD.dialogClose() });
+                                    }
+                                }});
+                            }else if(errcode == 3090003){
+                                //弹出交易授权提示框
+                                const view =
+                                <View style={styles.Explainout}>
+                                    <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号未进行交易授权！</Text>
+                                    <Text style={[styles.Explaintext,{color: UColor.arrow}]}>进行交易前，需授权ET交易智能合约，否则无法进行交易!</Text>
+                                </View>
+                                EasyShowLD.dialogShow("提示", view, "去授权", "呆会说", () => {
+                                const { navigate } = this.props.navigation;
+                                navigate('FreeMortgage', {});
+                                // EasyShowLD.dialogClose();
+                                }, () => { EasyShowLD.dialogClose() });
                             }
                         }
                         if(r.data.msg){
@@ -1054,7 +1078,7 @@ class Transaction extends BaseComponent {
         </View>
     </TouchableOpacity>
     <ImageBackground source={UImage.transactionA} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.164}}>
-        <View style={[styles.headerTitle,{backgroundColor: UColor.theme ? UColor.transport : UColor.mainColor}]}>  
+        <View style={[styles.headerTitle,]}>  
             <Button onPress={this._leftTopClick.bind()}>
                 <Image source={this.state.modal ? UImage.tx_slide0 : UImage.tx_slide1} style={styles.imgBtn} />
             </Button>
@@ -1075,7 +1099,7 @@ class Transaction extends BaseComponent {
             tintColor={UColor.fontColor} colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}
             >
             <ImageBackground source={UImage.transactionB} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
-                <View style={[styles.header,!UColor.theme && {backgroundColor:UColor.mainColor}]}>
+                <View style={styles.header}>
                     <View style={styles.leftout}>
                         <View style={styles.nameout}>
                             <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
@@ -1100,48 +1124,47 @@ class Transaction extends BaseComponent {
                     </View>
                 </View>
             </ImageBackground>
-          <View style={[styles.timeout,{backgroundColor:UColor.theme ? UColor.secdColor : UColor.inash}]}>
+          <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"时分")}>
-                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.selectedSegment=="时分"?UColor.tintColor:"#DEDEDE"}:{}]} >
-                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "时分" ? UColor.tintColor : UColor.fontColor}]}>时分</Text>
+                    <View style={[styles.timeview,{backgroundColor:this.state.selectedSegment=="时分"?UColor.tintColor:UColor.invalidbtn}]} >
+                        <Text style={[styles.timeinitial,{color:UColor.btnColor}]}>时分</Text>
                     </View>
                 </Button>   
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"5分")}>
-                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.selectedSegment=="5分"?UColor.tintColor:"#DEDEDE"}:{}]} >
-                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "5分" ? UColor.tintColor : UColor.fontColor}]}>5分</Text> 
+                    <View style={[styles.timeview,{backgroundColor:this.state.selectedSegment=="5分"?UColor.tintColor:UColor.invalidbtn}]} >
+                        <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>5分</Text> 
                     </View>
                 </Button> 
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"15分")}>
-                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.selectedSegment=="15分"?UColor.tintColor:"#DEDEDE"}:{}]} >
-                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "15分" ? UColor.tintColor : UColor.fontColor}]}>15分</Text> 
+                    <View style={[styles.timeview,{backgroundColor:this.state.selectedSegment=="15分"?UColor.tintColor:UColor.invalidbtn}]} >
+                        <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>15分</Text> 
                     </View>
                 </Button> 
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"30分")}>
-                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.selectedSegment=="30分"?UColor.tintColor:"#DEDEDE"}:{}]} >
-                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.selectedSegment == "30分" ? UColor.tintColor : UColor.fontColor}]}>30分</Text> 
+                    <View style={[styles.timeview,{backgroundColor:this.state.selectedSegment=="30分"?UColor.tintColor:UColor.invalidbtn}]} >
+                        <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>30分</Text> 
                     </View>
                 </Button> 
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"更多")}>
-                    <View style={[styles.timeview,UColor.theme?{backgroundColor:(this.state.selectedSegment=="更多"||this.state.selectedSegment=="1小时"||this.state.selectedSegment=="1天"
-                         ||this.state.selectedSegment=="1周"||this.state.selectedSegment=="1月")?UColor.tintColor:"#DEDEDE"}:{}]}>
-                         <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: (this.state.selectedSegment == "更多" || this.state.selectedSegment == "1小时" || this.state.selectedSegment == "1天"
-                         || this.state.selectedSegment == "1周" || this.state.selectedSegment == "1月") ? UColor.tintColor : UColor.fontColor}]}>{this.state.showMoreTitle}</Text>
-                         <Ionicons name={this.state.showMore ? "md-arrow-dropdown" : "md-arrow-dropright"} size={ScreenUtil.autowidth(20)} style={[UColor.theme?{color:UColor.btnColor}:{color:this.state.showMore ? UColor.tintColor : UColor.fontColor}]}/>
+                    <View style={[styles.timeview,{backgroundColor:(this.state.selectedSegment=="更多"||this.state.selectedSegment=="1小时"||this.state.selectedSegment=="1天"
+                         ||this.state.selectedSegment=="1周"||this.state.selectedSegment=="1月")?UColor.tintColor:UColor.invalidbtn}]}>
+                         <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>{this.state.showMoreTitle}</Text>
+                         <Ionicons name={this.state.showMore ? "md-arrow-dropdown" : "md-arrow-dropright"} size={ScreenUtil.autowidth(20)} color={UColor.btnColor}/>
                     </View>
                 </Button> 
             </View>
          </View> 
         {this.state.showMore &&       
-        <View style={[styles.timeout,{backgroundColor:UColor.theme ? UColor.secdColor : UColor.inash}]}>
+        <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
             <View style={styles.timetabout}>
                 <Button disabled={true}>
                     <View style={styles.timeview} >
@@ -1151,29 +1174,29 @@ class Transaction extends BaseComponent {
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"1小时")}>
-                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.showMoreTitle == "1小时"?UColor.tintColor:"#DEDEDE"}:{}]} >
-                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1小时" ? UColor.tintColor : UColor.fontColor}]}>1小时</Text>
+                    <View style={[styles.timeview,{backgroundColor:this.state.showMoreTitle == "1小时"?UColor.tintColor:UColor.invalidbtn}]} >
+                        <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1小时</Text>
                     </View>
                 </Button> 
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"1天")}>
-                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.showMoreTitle == "1天"?UColor.tintColor:"#DEDEDE"}:{}]} >
-                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1天" ? UColor.tintColor : UColor.fontColor}]}>1天</Text>
+                    <View style={[styles.timeview,{backgroundColor:this.state.showMoreTitle == "1天"?UColor.tintColor:UColor.invalidbtn}]} >
+                        <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1天</Text>
                     </View>
                 </Button> 
             </View>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"1周")}>
-                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.showMoreTitle == "1周"?UColor.tintColor:"#DEDEDE"}:{}]} >
-                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1周" ? UColor.tintColor : UColor.fontColor}]}>1周</Text>
+                    <View style={[styles.timeview,{backgroundColor:this.state.showMoreTitle == "1周"?UColor.tintColor:UColor.invalidbtn}]} >
+                        <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1周</Text>
                     </View>
                 </Button> 
             </View>
             <View style={styles.timetabout}>
                <Button onPress={this.onClickTimeType.bind(this,"1月")}>
-                    <View style={[styles.timeview,UColor.theme?{backgroundColor:this.state.showMoreTitle == "1月"?UColor.tintColor:"#DEDEDE"}:{}]} >
-                        <Text style={[styles.timeinitial,UColor.theme?{color: UColor.btnColor}:{color: this.state.showMoreTitle == "1月" ? UColor.tintColor : UColor.fontColor}]}>1月</Text>
+                    <View style={[styles.timeview,{backgroundColor:this.state.showMoreTitle == "1月"?UColor.tintColor:UColor.invalidbtn}]} >
+                        <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1月</Text>
                     </View>
                 </Button> 
             </View>
@@ -1182,13 +1205,13 @@ class Transaction extends BaseComponent {
         }  
         {
             this.state.isKLine ? 
-            <View style={{width: ScreenWidth, backgroundColor: UColor.theme ? UColor.mainColor : UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
+            <View style={{width: ScreenWidth, backgroundColor: UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
             {
                 <Echarts option={this.getDataKLine()} width={ScreenWidth} height={ScreenUtil.autoheight(300)} />
             }
             </View>
             : 
-            <View style={{width: ScreenWidth, backgroundColor: UColor.theme ? UColor.mainColor : UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
+            <View style={{width: ScreenWidth, backgroundColor: UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
             {
                 <Echarts option={this.getDataLine()} width={ScreenWidth} height={ScreenUtil.autoheight(180)} />
             }
@@ -1199,7 +1222,7 @@ class Transaction extends BaseComponent {
                 selectedOption={ this.state.selectedTransactionRecord } backTint= {UColor.secdColor} options={transactionOption} />
         </View>
         {this.state.selectedTransactionRecord == transactionOption[0] || this.state.selectedTransactionRecord == transactionOption[1] ? 
-                    <View style={{flex: 1,}}>
+                    <View style={{flex: 1, marginBottom: 15}}>
                         {(this.props.etTradeLog  != null &&  this.props.etTradeLog .length == 0) ? <View style={{paddingTop: 50, justifyContent: 'center', alignItems: 'center'}}><Text style={{fontSize: 16, color: UColor.fontColor}}>还没有交易哟~</Text></View> :
                         <ListView style={{flex: 1,}} renderRow={this.renderRow} enableEmptySections={true} 
                                 renderHeader = {()=>
@@ -1309,34 +1332,33 @@ class Transaction extends BaseComponent {
           <TouchableOpacity onPress={() => this.setState({ modal: false })} style={[styles.touchable,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
             <TouchableOpacity style={[styles.touchable,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
 
-              <View style={[styles.touchableout,{backgroundColor: UColor.secdColor}]}>
+              <View style={[styles.touchableout,{backgroundColor:UColor.mainColor}]}>
                {/* <TouchableOpacity onPress={this._leftTopClick.bind()}> 
                 <View style={{ paddingRight: 0,alignItems: 'flex-end', }} >
                     <Image source={UImage.tx_slide0} style={styles.HeadImg}/>
                 </View>
                 </TouchableOpacity> */}
-                <View style={[styles.ebhbtnout,{borderTopColor: UColor.mainColor, backgroundColor: UColor.secdColor}]}>
+                <View style={[styles.ebhbtnout,{backgroundColor:UColor.navigation}]}>
                     <View style={{width:'37%'}}>
                         <View style={{ flex:1,flexDirection:"row",alignItems: 'center', }}>
-                            <Text style={{marginLeft:10,fontSize:15,color:UColor.fontColor}}>内存</Text>
+                            <Text style={{marginLeft:10,fontSize:15,color:UColor.btnColor}}>内存</Text>
                         </View>
                     </View>
                     <View style={{width:'28%'}}>
                         <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-start", }}>
-                            <Text style={{fontSize:15,marginLeft:0,color:UColor.fontColor}}>涨幅</Text>
+                            <Text style={{fontSize:15,marginLeft:0,color:UColor.btnColor}}>涨幅</Text>
                         </View>
                     </View>
                     <View style={{width:'35%'}}>
                         <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-end", }}>
-                            <Text style={{ fontSize:15, color:UColor.fontColor, 
-                                textAlign:'center', marginRight:5}}>单价(EOS)</Text>
+                            <Text style={{ fontSize:15, color:UColor.btnColor,textAlign:'center', marginRight:5}}>单价(EOS)</Text>
                         </View>
                     </View>
                 </View>
 
-                <View style={[styles.ebhbtnout2,{borderTopColor: UColor.mainColor, backgroundColor: UColor.inash}]}>
+                <View style={styles.ebhbtnout2}>
                   <Button onPress={this.selectRamTx.bind(this)}>
-                      <View style={[styles.sliderow,{borderBottomColor: UColor.inash}]}>
+                      <View style={styles.sliderow}>
                         <View style={{width:'34%'}}>
                             <View style={{ flex:1,flexDirection:"row",alignItems: 'center'}}>
                                 <Text style={{marginLeft:10,fontSize:15,color:UColor.fontColor}}>RAM</Text>
@@ -1357,30 +1379,30 @@ class Transaction extends BaseComponent {
                   </Button>
                 </View>
 
-                <View style={[styles.ebhbtnout,{borderTopColor: UColor.mainColor, backgroundColor: UColor.secdColor}]}>
+                <View style={[styles.ebhbtnout,{backgroundColor:UColor.navigation}]}>
                     <View style={{width:'37%'}}>
                         <View style={{ flex:1,flexDirection:"row",alignItems: 'center', }}>
-                            <Text style={{marginLeft:10,fontSize:15,color:UColor.fontColor}}>币种</Text>
+                            <Text style={{marginLeft:10,fontSize:15,color:UColor.btnColor}}>币种</Text>
                         </View>
                     </View>
                     <View style={{width:'28%'}}>
                         <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-start", }}>
-                            <Text style={{fontSize:15,marginLeft:0,color:UColor.fontColor}}>涨幅</Text>
+                            <Text style={{fontSize:15,color:UColor.btnColor}}>涨幅</Text>
                         </View>
                     </View>
                     <View style={{width:'35%'}}>
                         <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-end", }}>
-                            <Text style={{ fontSize:15, color:UColor.fontColor,textAlign:'center', marginRight:5}}>单价(EOS)</Text>
+                            <Text style={{ fontSize:15, color:UColor.btnColor,textAlign:'center', marginRight:5}}>单价(EOS)</Text>
                         </View>
                     </View>
                 </View>
 
                 <ListView initialListSize={5} 
-                  renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 0.5, backgroundColor: UColor.secdColor ,}} />}
+                  renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 0.5, backgroundColor:UColor.secdColor}} />}
                   enableEmptySections={true} dataSource={this.state.dataSource.cloneWithRows(this.props.etlist==null?[]:this.props.etlist)}
                   renderRow={(rowData) => (
                     <Button onPress={this.selectETtx.bind(this, rowData)}>
-                      <View style={[styles.sliderow,{borderBottomColor: UColor.inash}]}>
+                      <View style={styles.sliderow}>
                         <View style={{width:'35%'}}>
                             <View style={{ flex:1,flexDirection:"row",alignItems: 'center'}}>
                                 <Text style={{marginLeft:10,fontSize:15,color:UColor.fontColor}}>{rowData.base_balance_uom == null ? "" : rowData.base_balance_uom}</Text>
@@ -1835,7 +1857,6 @@ const styles = StyleSheet.create({
     sliderow:{
         flex:1,
         flexDirection:"row",
-        borderBottomWidth: 0.6,
         height: ScreenUtil.autoheight(40), 
       },
     touchableouts: {
@@ -1860,14 +1881,12 @@ const styles = StyleSheet.create({
     },
     ebhbtnout: {
         width: '100%', 
-        borderTopWidth: 1, 
         flexDirection: "row", 
         alignItems: 'flex-start', 
         height: ScreenUtil.autoheight(30), 
     },
     ebhbtnout2: {
         width: '100%', 
-        borderTopWidth: 1, 
         flexDirection: "column", 
         alignItems: 'flex-start', 
         height: ScreenUtil.autoheight(40), 

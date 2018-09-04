@@ -121,10 +121,10 @@ class SignIn extends BaseComponent {
   }
 
   render() {
-    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+    return <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
      <Header {...this.props} onPressLeft={true} title="用户积分" />
-      <View style={[styles.outsource,{backgroundColor: UColor.secdColor}]}>
-        <Text style={styles.promptText}> 温馨提示：连续签到将获得额外积分哦~</Text>
+      <View style={[styles.outsource,{backgroundColor: UColor.secdfont}]}>
+        <Text style={[styles.promptText,{color: UColor.arrow}]}> 温馨提示：连续签到将获得额外积分哦~</Text>
         <ImageBackground style={styles.imgbg} source={UImage.integral_bg} resizeMode="cover">
           <View style={styles.accumulativeout}>
             <Text style={[styles.accumulativetext,{color: UColor.btnColor}]}>累计积分</Text>
@@ -133,9 +133,9 @@ class SignIn extends BaseComponent {
         </ImageBackground>
         <Image source={UImage.point_full} style={styles.imgsty} />           
         <View style={styles.sigshaint}>
-          <Text style={[styles.sigsto,{color:UColor.theme ? UColor.tintColor : UColor.fontColor}]}>{this.props.pointInfo.signin}</Text>
-          <Text style={[styles.shatur,{color:UColor.theme ? UColor.tintColor : UColor.fontColor}]}>{this.props.pointInfo.share}</Text>
-          <Text style={[styles.sigsto,{color:UColor.theme ? UColor.tintColor : UColor.fontColor}]}>{this.props.pointInfo.interact}</Text>
+          <Text style={[styles.sigsto,{color:UColor.tintfont}]}>{this.props.pointInfo.signin}</Text>
+          <Text style={[styles.shatur,{color:UColor.tintfont}]}>{this.props.pointInfo.share}</Text>
+          <Text style={[styles.sigsto,{color:UColor.tintfont}]}>{this.props.pointInfo.interact}</Text>
         </View>
         <View style={styles.sigshainttext}>
           <Text style={[styles.sigstotext,{color: UColor.arrow}]}>签到累计</Text>
@@ -143,9 +143,9 @@ class SignIn extends BaseComponent {
           <Text style={[styles.sigstotext,{color: UColor.arrow}]}>资讯互动</Text>
         </View>
         {/* <View style={styles.stotur}>
-          <Text style={[styles.sigsto,{color:UColor.theme ? UColor.tintColor : UColor.fontColor}]}>{this.props.pointInfo.store}</Text>
-          <Text style={[styles.shatur,{color:UColor.theme ? UColor.tintColor : UColor.fontColor}]}>{this.props.pointInfo.turnin}</Text>
-          <Text style={[styles.sigsto,{color:UColor.theme ? UColor.tintColor : UColor.fontColor}]}>{this.props.pointInfo.turnout}</Text>
+          <Text style={[styles.sigsto,{color:UColor.tintfont}]}>{this.props.pointInfo.store}</Text>
+          <Text style={[styles.shatur,{color:UColor.tintfont}]}>{this.props.pointInfo.turnin}</Text>
+          <Text style={[styles.sigsto,{color:UColor.tintfontr}]}>{this.props.pointInfo.turnout}</Text>
         </View> */}
         {/* <View style={styles.stoturtext}>
           <Text style={[styles.sigstotext,{color: UColor.arrow}]}>资产存储</Text>
@@ -154,7 +154,7 @@ class SignIn extends BaseComponent {
         </View> */}
       </View>
       <Button onPress={() => this.signIn()}>
-        <View style={styles.SignInbtnout} backgroundColor={this.state.Sign_in ? (UColor.theme ? UColor.invalidbtn : UColor.mainColor):UColor.tintColor}>
+        <View style={styles.SignInbtnout} backgroundColor={this.state.Sign_in ? UColor.invalidbtn:UColor.tintColor}>
           <Text style={[styles.SignInbtntext,{color: UColor.btnColor}]}>{this.state.Sign_in ? "已签到": "立即签到"}</Text>
         </View>
       </Button>

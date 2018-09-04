@@ -24,7 +24,7 @@ class RecordQueryRam extends React.Component {
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
       newramTradeLog: [],
       show: false,
-      labelname: '',
+      labelname: this.props.navigation.state.params.record,
       logId: "-1",
       logRefreshing: false,
     }
@@ -224,7 +224,7 @@ class RecordQueryRam extends React.Component {
     return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
     <Header {...this.props}  onPressLeft={true} title="搜索交易记录" />
       <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
-          <View style={[styles.inptout,{shadowColor:UColor.arrow,backgroundColor:UColor.btnColor}]} >
+          <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
               <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
               <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
                   selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={12} 
@@ -258,21 +258,14 @@ class RecordQueryRam extends React.Component {
         renderRow={(rowData, sectionID, rowID) => ( 
           <Button onPress={this._openDetails.bind(this,rowData)}>  
             <View style={[styles.package,{backgroundColor: UColor.mainColor}]}>
-              <View style={styles.leftout}>
-                <Text style={[styles.payertext,{color: UColor.fontColor}]}>{rowData.payer}</Text>
-                <Text style={[styles.timetext,{color: UColor.arrow}]}>{moment(rowData.record_date).add(8,'hours').format('MM-DD HH:mm:ss')}</Text>
-              </View>
-              <View style={styles.rightout}>
-                {rowData.action_name == 'sellram' ? 
-                <Text style={[styles.selltext,{color: UColor.riseColor}]}>卖 {(rowData.price == null || rowData.price == '0') ? rowData.ram_qty : rowData.eos_qty}</Text>
-                :
-                <Text style={[styles.buytext,{color: UColor.fallColor}]}>买 {rowData.eos_qty}</Text>
-                }
-                <Text style={[styles.presentprice,{color: UColor.arrow}]}>{(rowData.price == null || rowData.price == '0') ? '' : (rowData.price * 1).toFixed(4)}{(rowData.price == null || rowData.price == '0') ? '' :  ' EOS/KB'}</Text>
-              </View>
-              <View style={styles.Ionicout}>
-                <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
-              </View>
+              <Text style={[styles.timetext,{color: UColor.arrow}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').format('MM-DD HH:mm:ss')}</Text>
+              <Text style={[styles.presentprice,{color: UColor.fontColor}]} numberOfLines={1}>{(rowData.price == null || rowData.price == '0') ? '' : (rowData.price * 1).toFixed(4)}{(rowData.price == null || rowData.price == '0') ? '' :  ' EOS/KB'}</Text>
+              {rowData.action_name == 'sellram' ? 
+                <Text style={[styles.selltext,{color: UColor.riseColor}]} numberOfLines={1}>卖 {(rowData.price == null || rowData.price == '0') ? rowData.ram_qty : rowData.eos_qty}</Text>
+              :
+                <Text style={[styles.buytext,{color: UColor.fallColor}]} numberOfLines={1}>买 {rowData.eos_qty}</Text>
+              }
+              <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
             </View>
           </Button>
         )}                   
@@ -285,14 +278,12 @@ class RecordQueryRam extends React.Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      paddingTop: 1,
       flexDirection: "column",
     },
     header: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      marginBottom: ScreenUtil.autoheight(5),
       paddingVertical: ScreenUtil.autoheight(7),
     },
     headleftimg: {
@@ -302,6 +293,7 @@ const styles = StyleSheet.create({
     },
     inptout: {
       flex: 1,
+      borderWidth: 1,
       borderRadius: 5,
       shadowOpacity: 1,
       flexDirection: "row",
@@ -323,6 +315,7 @@ const styles = StyleSheet.create({
 
     btn: {
       flex: 1,
+      paddingTop: ScreenUtil.autoheight(8),
     },
     nothave: {
       borderRadius: 5,
@@ -336,51 +329,29 @@ const styles = StyleSheet.create({
     copytext: {
       fontSize: ScreenUtil.setSpText(16), 
     },
-
     package: {
-      borderRadius: 5,
       flexDirection: "row",
-      height: ScreenUtil.autoheight(52),
-      marginVertical: ScreenUtil.autoheight(5),
-      paddingVertical: ScreenUtil.autoheight(5),
-      marginHorizontal: ScreenUtil.autowidth(10),
-      paddingHorizontal: ScreenUtil.autowidth(10),
-    },
-    leftout: {
-      flex: 1,
-      flexDirection: "column",
-      justifyContent: "space-between",
-    },
-    payertext: {
-      fontSize: ScreenUtil.setSpText(15),
+      padding: ScreenUtil.autowidth(5),
+      marginBottom: ScreenUtil.autoheight(2),
     },
     timetext: {
-      fontSize: ScreenUtil.setSpText(15),
-    },
-   
-    rightout: {
-      flex: 1,
-      flexDirection: "column",
-      justifyContent: "space-between",
+      flex: 3,
+      fontSize: ScreenUtil.setSpText(13),
     },
     selltext: {
-      flex: 5,
+      flex: 3.3,
       textAlign: 'left',
-      fontSize: ScreenUtil.setSpText(15),
+      fontSize: ScreenUtil.setSpText(13),
     },
     buytext: {
-      flex: 5,
+      flex: 3.3,
       textAlign: 'left',
-      fontSize: ScreenUtil.setSpText(15),
+      fontSize: ScreenUtil.setSpText(13),
     },
     presentprice: {
+      flex: 3.7,
       textAlign: 'left',
-      fontSize: ScreenUtil.setSpText(14),
-    },
-    Ionicout: {
-      alignItems: 'flex-end',
-      justifyContent: 'center',
-      width: ScreenUtil.autowidth(30),
+      fontSize: ScreenUtil.setSpText(13),
     },
 });
 export default RecordQueryRam;

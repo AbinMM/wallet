@@ -128,7 +128,7 @@ class AddAssets extends BaseComponent {
             renderRow={(rowData, sectionID, rowID) => (      
             <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
                 <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
-                  <View style={{borderRadius: 25,backgroundColor: UColor.secdColor,marginRight: ScreenUtil.autowidth(10),}}>
+                  <View style={{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(10),}}>
                     <Image source={rowData.icon==null ? UImage.eos : { uri: rowData.icon }} style={styles.logimg}/>
                   </View>
                   <View style={styles.scrollView}>

@@ -1,11 +1,21 @@
 export default {
-  
   signln_bg: require('../img/day/signln_bg.png'),
   difficult: require('../img/difficult.png'),
   mustread: require('../img/mustread.png'),
   feedback: require('../img/feedback.png'),
   commonwt: require('../img/commonwt.png'),
-  line_bg_h: require('../img/line_bg_h.png'),
+  
+  coinsbg1: require('../img/coinsbg1.png'),
+  coinsbg2: require('../img/coinsbg2.png'),
+  transactionA: require('../img/transactionA.png'),
+  transactionB: require('../img/transactionB.png'),
+
+
+  add_h: require('../img/add_h.png'),
+  qr_h: require('../img/qr_h.png'),
+  transfer_h: require('../img/transfer_h.png'),
+  resources_h: require('../img/resources_h.png'),
+  more_h: require('../img/more_h.png'),
 
   add_b: require('../img/day/add.png'),
   qr_b: require('../img/day/qr.png'),
@@ -15,6 +25,8 @@ export default {
   coinsbg1: require('../img/day/coinsbg1.png'),
   coinsbg2: require('../img/day/coinsbg2.png'),
 
+
+  
   a:require('../img/a.png'),
   aab1: require('../img/aab1.png'),
   aab2: require('../img/aab2.png'),
@@ -29,6 +41,7 @@ export default {
   adminAddB:require('../img/adminAddB.png'),
   account_manage:require('../img/account_manage.png'),
   b:require('../img/b.png'),
+  boot_bg:require('../img/boot_bg.png'),
   bottom_log:require('../img/bottom_log.png'),
   c:require('../img/c.png'),
   Calculation:require('../img/Calculation.png'),
@@ -110,7 +123,7 @@ export default {
   sharebg:require('../img/sharebg.png'),
   shift_to:require('../img/shift_to.png'),
   signed:require('../img/signed.png'), 
-  signln_mr: require('../img/signln_mr.png'),  
+  signln_bg: require('../img/signln_bg.png'),  
   small_bell_h:require('../img/small_bell_h.png'),  
   small_bell:require('../img/small_bell.png'),  
   strip_bg:require('../img/strip_bg.png'),
@@ -124,8 +137,6 @@ export default {
   tab_4: require('../img/tab_4.png'),
   tab_5_h:require('../img/tab_5_h.png'),
   tab_5:require('../img/tab_5.png'),
-  tab_6_h:require('../img/tab_6_h.png'),
-  tab_6:require('../img/tab_6.png'),
   tag:require('../img/tag.png'),
   Tick_h:require('../img/Tick_h.png'),
   Tick:require('../img/Tick.png'),
@@ -162,4 +173,7 @@ export default {
   txbtn_more:require('../img/txbtn_more.png'),
   tx_ram:require('../img/tx_ram.png'),
   delicon:require('../img/delicon.png'),
+  authFrame:require('../img/authFrame.png'),
+  authExchangeBlue:require('../img/authExchangeBlue.png'),
+
 }

@@ -497,7 +497,7 @@ class ImportEosKey extends BaseComponent {
     if((this.state.activePk != ""||this.state.ownerPk != "" )&& this.state.walletpwd != "" && this.state.reWalletpwd != ""){
       this.state.CreateButton = UColor.tintColor;
     }else{
-      this.state.CreateButton = UColor.theme ? UColor.invalidbtn : UColor.mainColor;
+      this.state.CreateButton = UColor.invalidbtn;
     } 
   }
 
@@ -620,7 +620,7 @@ class ImportEosKey extends BaseComponent {
               {this.state.isSenior!=true &&
               <View style={styles.logout}>
                   <Image source={UImage.bottom_log} style={styles.logimg}/>
-                  <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
+                  <Text style={[styles.logtext,{color: UColor.arrow}]}>ET 交易所</Text>
               </View>}
             </View>
         </TouchableOpacity>

@@ -189,7 +189,7 @@ class AssetSearch extends BaseComponent {
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
             <Header {...this.props} onPressLeft={true} title="资产搜索" />
                 <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
-                    <View style={[styles.inptout,{shadowColor:UColor.arrow,backgroundColor:UColor.btnColor}]} >
+                    <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
                         <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
                         <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
                             selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} autoCorrect={true}
@@ -218,7 +218,7 @@ class AssetSearch extends BaseComponent {
                   </View>
                   <View style={styles.logout}>
                       <Image source={UImage.bottom_log} style={styles.logimg}/>
-                      <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
+                      <Text style={[styles.logtext,{color: UColor.arrow}]}>ET 交易所</Text>
                   </View>
                 </View>}
                 <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} 
@@ -226,7 +226,7 @@ class AssetSearch extends BaseComponent {
                   renderRow={(rowData, sectionID, rowID) => (      
                   <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
                       <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
-                        <View style={{borderRadius: 25,backgroundColor: UColor.secdColor,marginRight: ScreenUtil.autowidth(10),}}>
+                        <View style={{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(10),}}>
                           <Image source={rowData.icon==null ? UImage.eos : { uri: rowData.icon }} style={{width: ScreenUtil.autowidth(28), height: ScreenUtil.autowidth(28), resizeMode: "cover", overflow:"hidden", borderRadius: 10,}}/>
                         </View>
                         <View style={styles.scrollView}>
@@ -299,8 +299,8 @@ const styles = StyleSheet.create({
     },
     inptout: {
       flex: 1,
+      borderWidth: 1,
       borderRadius: 5,
-      shadowOpacity: 1,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: 'center',

@@ -117,11 +117,11 @@ class TurnInAsset extends BaseComponent {
 
   render() {
     return (
-      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+      <View style={[styles.container,{backgroundColor:UColor.secdfont}]}>
         <Header {...this.props} onPressLeft={true} title="收款信息" avatar={UImage.share_i} onPressRight={this._rightTopClick.bind()}/> 
         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={styles.tab}>
           <View style={styles.taboutsource}>
-            <View style={[styles.outsource,{backgroundColor: UColor.secdColor}]}>
+            <View style={[styles.outsource,{backgroundColor:UColor.secdfont}]}>
               <Text style={[styles.accountText,{color: UColor.arrow}]}> 账户：{this.props.defaultWallet == null ? "" : this.props.defaultWallet.account}</Text>
               <View style={styles.codeout}>
                 <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
@@ -129,7 +129,7 @@ class TurnInAsset extends BaseComponent {
                 </View>
               </View>
               <Text style={[styles.prompttext,{color: UColor.fontColor}]}>扫一扫，向我转账</Text>
-              <View style={[styles.inptoutsource,{borderBottomColor: UColor.mainColor}]}>
+              <View style={[styles.inptoutsource,{borderBottomColor:UColor.mainsecd}]}>
               <Text style={styles.tokenText} />
                 <TextInput autoFocus={false} onChangeText={amount => this.setState({ amount: this.chkPrice(amount) })}
                   value = {this.state.amount} maxLength = {15} returnKeyType="go" selectionColor={UColor.tintColor}
@@ -145,7 +145,7 @@ class TurnInAsset extends BaseComponent {
               </Button>
               <View style={styles.logout}>
                   <Image source={UImage.bottom_log} style={styles.logimg}/>
-                  <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
+                  <Text style={[styles.logtext,{color: UColor.arrow}]}>ET 交易所</Text>
               </View>
             </View>
           </View>

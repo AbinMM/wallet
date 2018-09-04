@@ -102,7 +102,7 @@ class CoinDetail extends BaseComponent {
      <ScrollView style={styles.scrollView}>
       <View>
         {
-          (<View>
+          (<View style={{backgroundColor:UColor.mainColor}}>
             <View style={[styles.row,{borderBottomColor: UColor.secdColor,backgroundColor:UColor.mainColor}]}>
               <View style={{width:'30%'}}>
                  <View style={{ flex:1,flexDirection:"row",alignItems: 'center',paddingTop:0}}>
@@ -127,47 +127,47 @@ class CoinDetail extends BaseComponent {
                   </View>
                 </View>
               </View>
-          </View>
-          <View style={{flex:1,flexDirection:'row',marginTop: ScreenUtil.autoheight(30)}}>
-            <View style={{flexDirection:"column",flexGrow:1}}>
-              <Text style={{color:UColor.arrow,fontSize: ScreenUtil.setSpText(11),textAlign:'center'}}>开盘</Text>
-              <Text style={{color:UColor.fontColor,fontSize: ScreenUtil.setSpText(15),marginTop: ScreenUtil.autoheight(10),textAlign:'center'}}>{c.start}</Text>
             </View>
-            <View style={{flexDirection:"column",flexGrow:1}}>
-              <Text style={{color:UColor.arrow,fontSize: ScreenUtil.setSpText(11),textAlign:'center'}}>最高</Text>
-              <Text style={{color:UColor.fontColor,fontSize: ScreenUtil.setSpText(15),marginTop: ScreenUtil.autoheight(10),textAlign:'center'}}>{c.max}</Text>
+            <View style={{flex:1,flexDirection:'row',marginTop: ScreenUtil.autoheight(30)}}>
+              <View style={{flexDirection:"column",flexGrow:1}}>
+                <Text style={{color:UColor.arrow,fontSize: ScreenUtil.setSpText(11),textAlign:'center'}}>开盘</Text>
+                <Text style={{color:UColor.fontColor,fontSize: ScreenUtil.setSpText(15),marginTop: ScreenUtil.autoheight(10),textAlign:'center'}}>{c.start}</Text>
+              </View>
+              <View style={{flexDirection:"column",flexGrow:1}}>
+                <Text style={{color:UColor.arrow,fontSize: ScreenUtil.setSpText(11),textAlign:'center'}}>最高</Text>
+                <Text style={{color:UColor.fontColor,fontSize: ScreenUtil.setSpText(15),marginTop: ScreenUtil.autoheight(10),textAlign:'center'}}>{c.max}</Text>
+              </View>
+              <View style={{flexDirection:"column",flexGrow:1}}>
+                <Text style={{color:UColor.arrow,fontSize: ScreenUtil.setSpText(11),textAlign:'center'}}>最低</Text>
+                <Text style={{color:UColor.fontColor,fontSize: ScreenUtil.setSpText(15),marginTop: ScreenUtil.autoheight(10),textAlign:'center'}}>{c.min}</Text>
+              </View>
+              <View style={{flexDirection:"column",flexGrow:1}}>
+                <Text style={{color: UColor.arrow,fontSize: ScreenUtil.setSpText(11),textAlign:'center'}}>成交量</Text>
+                <Text style={{color:UColor.fontColor,fontSize: ScreenUtil.setSpText(15),marginTop: ScreenUtil.autoheight(10),textAlign:'center'}}>{formatterNumber(c.txs)}</Text>
+              </View>
             </View>
-            <View style={{flexDirection:"column",flexGrow:1}}>
-              <Text style={{color:UColor.arrow,fontSize: ScreenUtil.setSpText(11),textAlign:'center'}}>最低</Text>
-              <Text style={{color:UColor.fontColor,fontSize: ScreenUtil.setSpText(15),marginTop: ScreenUtil.autoheight(10),textAlign:'center'}}>{c.min}</Text>
-            </View>
-            <View style={{flexDirection:"column",flexGrow:1}}>
-              <Text style={{color: UColor.arrow,fontSize: ScreenUtil.setSpText(11),textAlign:'center'}}>成交量</Text>
-              <Text style={{color:UColor.fontColor,fontSize: ScreenUtil.setSpText(15),marginTop: ScreenUtil.autoheight(10),textAlign:'center'}}>{formatterNumber(c.txs)}</Text>
-            </View>
-          </View>
           </View>
           )
         }
-        <View style={{padding: ScreenUtil.autowidth(20),paddingTop:ScreenUtil.autoheight(10), backgroundColor: UColor.bgEchar}}>
+        <View style={{padding: ScreenUtil.autowidth(20),paddingTop:ScreenUtil.autoheight(10), backgroundColor:UColor.bgEchar}}>
           <SegmentedControls 
-          tint= {UColor.mainColor} selectedTint= {UColor.fontColor}
+          tint= {UColor.invalidbtn} selectedTint={UColor.btnColor}
           onSelection={this.setSelectedOption.bind(this) }
           selectedOption={ this.state.selectedSegment }
           backTint= {UColor.bgEchar} options={['5分钟','1小时','6小时','24小时']} />
         </View>
-        <View style={{flex:1,paddingTop:ScreenUtil.autoheight(10), backgroundColor: UColor.bgEchar}}>
+        <View style={{flex:1,paddingTop:ScreenUtil.autoheight(10), backgroundColor:UColor.bgEchar}}>
           {
             <Echarts option={this.props.lineDatas?this.props.lineDatas:{}} width={ScreenWidth} height={ScreenUtil.autoheight(200)} />
           }
         </View>
-        <View style={{justifyContent:'center',alignItems:'center',flexDirection:'row', backgroundColor: UColor.bgEchar}}>
+        <View style={{justifyContent:'center',alignItems:'center',flexDirection:'row', backgroundColor:UColor.bgEchar}}>
             <View style={{width: ScreenUtil.autowidth(8),height: ScreenUtil.autowidth(8),borderRadius:4,backgroundColor:UColor.tintColor}}></View>
             <Text style={{color:UColor.arrow,fontSize: ScreenUtil.setSpText(11),marginLeft: 5}}>价格走势</Text>
             <View style={{width: ScreenUtil.autowidth(8),height: ScreenUtil.autowidth(8),borderRadius:4,backgroundColor:UColor.arrow,marginLeft: ScreenUtil.autowidth(10)}}></View>
             <Text style={{color:UColor.arrow,fontSize: ScreenUtil.setSpText(11),marginLeft:5}}>交易量</Text>
         </View>
-        <View>
+        <View style={{backgroundColor:UColor.mainColor}}>
            <Text style={{color:UColor.arrow,fontSize:ScreenUtil.setSpText(15),marginLeft: ScreenUtil.autowidth(15),margin: ScreenUtil.autowidth(10),marginTop: ScreenUtil.autoheight(20)}}>综合信息</Text>
            <View style={{paddingLeft: ScreenUtil.autowidth(15),paddingVertical: ScreenUtil.autoheight(15),paddingRight: ScreenUtil.autowidth(5),backgroundColor:UColor.mainColor}}>
               <Text style={{color:UColor.arrow,fontSize: ScreenUtil.setSpText(12)}}>{this.props.info.intr}</Text>

@@ -149,10 +149,23 @@ class BackupsPkey extends BaseComponent {
                 <View style={[styles.inptoutbg,{backgroundColor: UColor.mainColor}]}>
                     <View style={styles.headout}>
                         <Text style={[styles.inptitle,{color: UColor.fontColor}]}>请立即备份您的私钥</Text>
-                        <View style={[styles.warningout,{borderColor: UColor.showy}]}>
+                        {/* <View style={[styles.warningout,{borderColor: UColor.showy}]}>
                             <Image source={UImage.warning} style={styles.imgBtn} />
                             <Text style={[styles.headtitle,{color: UColor.showy}]}>安全警告：私钥相当于您的银行卡密码，请妥善保管！（切勿截图、存储到网络硬盘、微信等传输！）</Text>
+                        </View> */}
+
+
+                        <View style={[styles.warningout,{borderColor: UColor.showy}]}>
+                            <Text style={[styles.significanttextHead,{color: UColor.warningRed}]} >安全警告</Text>
+                            <View style={[styles.warningout2,{borderColor: UColor.showy}]}>
+                                <Image source={UImage.warning} style={styles.imgBtn} />
+                                <Text style={[styles.headtitle,{color: UColor.showy}]}>私钥相当于您的银行卡密码，请妥善保管！（切勿截图、存储到网络硬盘、微信等传输！）</Text>
+                            </View>
+
                         </View>
+
+
+
                     </View> 
                     {this.state.activePk != ''&& 
                     <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
@@ -179,7 +192,7 @@ class BackupsPkey extends BaseComponent {
                 </Button>
                 <View style={styles.logout}>
                     <Image source={UImage.bottom_log} style={styles.logimg}/>
-                    <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
+                    <Text style={[styles.logtext,{color: UColor.arrow}]}>ET 交易所</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -194,10 +207,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     inptpass: {
-        borderBottomWidth: 1,
         textAlign: "center",
-        width: ScreenWidth-100,
         borderBottomWidth: 1,
+        width: ScreenWidth-100,
         height: ScreenUtil.autoheight(45),
         fontSize: ScreenUtil.setSpText(16),
         paddingBottom: ScreenUtil.autoheight(5),
@@ -229,10 +241,25 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         width: ScreenWidth-40,
-        flexDirection: "row",
+        flexDirection: "column",
         alignItems: 'center', 
         paddingVertical: ScreenUtil.autoheight(5),
         paddingHorizontal: ScreenUtil.autowidth(10),
+    },
+
+    warningout2: {
+        // borderWidth: 1,
+        // borderRadius: 5,
+        // width: ScreenWidth-40,
+        flexDirection: "row",
+        alignItems: 'center', 
+        paddingVertical: ScreenUtil.autoheight(5),
+        // paddingHorizontal: ScreenUtil.autowidth(10),
+    },
+    significanttextHead: {
+        fontSize: ScreenUtil.setSpText(16), 
+        fontWeight:"bold",
+        lineHeight: ScreenUtil.autoheight(17),
     },
     imgBtn: {
         width: ScreenUtil.autowidth(20),

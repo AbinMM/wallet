@@ -893,7 +893,7 @@ class Resources extends BaseComponent {
                         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
                             <View style={[styles.tetleout,{backgroundColor: UColor.mainColor}]}>
                                 <Text style={[styles.tetletext,{color: UColor.arrow}]}>{this.state.tetletext}</Text>
-                                <ImageBackground source={UColor.theme ? UImage.line_bg_h : UImage.line_bg} resizeMode="cover" style={styles.linebgout}>
+                                <ImageBackground source={UImage.line_bg} resizeMode="cover" style={styles.linebgout}>
                                     <ImageBackground source={UImage.strip_bg} resizeMode="cover"  style={styles.stripbgout}>
                                         <View style={{backgroundColor: UColor.secdColor}} height={this.state.column_One}/>
                                     </ImageBackground>
@@ -961,7 +961,7 @@ class Resources extends BaseComponent {
                                 </View> }
                                 {this.state.isOwn ? null:
                                 <View style={styles.inptoutsource}>
-                                    {this.state.isMemory?<Text style={[styles.inptTitlered,{color: UColor.showy}]}>注：帮他人购买，一旦送出将无法收回！</Text>:<Text style={styles.inptTitle}>设置接收者</Text>}
+                                    {this.state.isMemory?<Text style={[styles.inptTitlered,{color: UColor.showy}]}>注：帮他人购买，一旦送出将无法收回！</Text>:<Text style={[styles.inptTitle,{color: UColor.fontColor}]}>设置接收者</Text>}
                                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor}]}>
                                         <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"
                                             selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={12}

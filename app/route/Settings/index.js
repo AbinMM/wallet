@@ -32,7 +32,7 @@ class Setting extends React.Component {
   constructor(props) {
     super(props);
     this.config = [
-      { avatar:UImage.my_wallet, first: true, name: "钱包管理", onPress: this.goPage.bind(this, "WalletManage") },
+      { avatar:UImage.my_wallet, name: "钱包管理", onPress: this.goPage.bind(this, "WalletManage") },
       { avatar:UImage.account_manage,  name: "通讯录", onPress: this.goPage.bind(this, "AccountManage") },
       { avatar:UImage.my_share,  name: "邀请注册", onPress: this.goPage.bind(this, "share") },
       // { avatar:UImage.my_recovery, name: "密钥恢复", onPress: this.goPage.bind(this, "Test1") },
@@ -236,7 +236,6 @@ class Setting extends React.Component {
 
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-    {!UColor.theme && <Header {...this.props}  backgroundColor={UColor.secdColor} onPressLeft={false} title="我的" />}
     {Constants.isNetWorkOffline &&
         <Button onPress={this.openSystemSetting.bind(this)}>
           <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
@@ -244,49 +243,46 @@ class Setting extends React.Component {
               <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
           </View>
         </Button>}
-      <ScrollView style={styles.scrollView}>
-          <ImageBackground source={UColor.theme ? UImage.signln_bg : UImage.signln_mr} resizeMode="cover" style={UColor.theme ? styles.daylinebgout : styles.linebgout}>
-            <Button style={{ flex:1,justifyContent: "center",alignItems: "center",}} onPress={this.goProfile.bind(this)}>
-              <View style={[styles.userHead, UColor.theme ? '' : {backgroundColor: UColor.mainColor}]} >
-                {UColor.theme && <View style={styles.signedout}></View>}
-                <View style={[styles.headout,{flexDirection:UColor.theme?"column":"row"}]}>
-                  <View style={[styles.headimgout, UColor.theme && {backgroundColor:"#6288BB"}]}> 
-                    <Image source={UImage.logo} style={styles.headimg} />
-                  </View>
-                  <Text style={[styles.headtext,{color: UColor.btnColor}]}>{(this.props.loginUser) ? this.props.loginUser.nickname : "登陆"}</Text>
+        <ImageBackground source={UImage.signln_bg} resizeMode="cover" style={styles.linebgout}>
+          <Button onPress={this.goProfile.bind(this)} style={{flex: 1,}}>
+            <View style={styles.userHead} >
+              <View style={styles.headout}>
+                <View style={[styles.headimgout, {backgroundColor:UColor.mainColor}]}> 
+                  <Image source={UImage.logo} style={styles.headimg}/>
                 </View>
-                <View style={styles.signedout}>
-                    <Button onPress={this.signIn.bind(this)} style={styles.signedbtn}>
-                      <Image source={UImage.signed} style={styles.signedimg} />
-                    </Button>
-                </View>
+                <Text style={[styles.headtext,{color: UColor.btnColor}]}>{(this.props.loginUser) ? this.props.loginUser.nickname : "登陆"}</Text>
               </View>
-            </Button>
-            <Button style={UColor.theme ? styles.dayeosbtn : styles.eosbtn}>
-              <View style={[UColor.theme ? styles.dayeosbtnout : styles.eosbtnout,{backgroundColor: UColor.mainColor}]}>
-                <View style={styles.eosout}>
-                  <Text style={[styles.eosbtntext,{color: UColor.arrow}]}>活动奖励</Text>
-                  <Text style={[styles.eostext,{color: UColor.fontColor}]}>{(this.props.loginUser) ? this.props.loginUser.eost : "0"} EOS</Text>
-                </View>
-                <View style={styles.Withdrawout}>
-                  {
-                    this.props.loginUser && <Button onPress={this.selectpoint.bind(this)} style={[styles.Withdrawbtn,{backgroundColor: UColor.tintColor}]}>
-                      <Text style={[styles.Withdrawtext,{color: UColor.btnColor}]}>{this.state.isquery ? '领取记录' : '领取'}</Text>
-                    </Button>
-                  }
-                </View>
+              <View style={styles.signedout}>
+                  <Button onPress={this.signIn.bind(this)} style={styles.signedbtn}>
+                    <Image source={UImage.signed} style={styles.signedimg}/>
+                  </Button>
               </View>
-            </Button>
-            </ImageBackground>
-            <View>
-              {this._renderListItem()}
             </View>
-            <View style={styles.footer}>
-              <Text style={[styles.foottext,{color: UColor.arrow}]}>© 2018 eostoken all rights reserved </Text>
-              {/* <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text> */}
-              <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V2.3.2</Text>
-            </View>
-      </ScrollView>
+          </Button>
+        </ImageBackground>
+        <View style={[styles.eosbtnout,{backgroundColor: UColor.mainColor}]}>
+          <View style={styles.eosout}>
+            <Text style={[styles.eosbtntext,{color: UColor.arrow}]}>活动奖励</Text>
+            <Text style={[styles.eostext,{color: UColor.fontColor}]}>{(this.props.loginUser) ? this.props.loginUser.eost : "0"} EOS</Text>
+          </View>
+          <View style={styles.Withdrawout}>
+            {
+              this.props.loginUser && <Button onPress={this.selectpoint.bind(this)} style={[styles.Withdrawbtn,{backgroundColor: UColor.tintColor}]}>
+                <Text style={[styles.Withdrawtext,{color: UColor.btnColor}]}>{this.state.isquery ? '领取记录' : '领取'}</Text>
+              </Button>
+            }
+          </View>
+        </View>
+        
+        <View>
+          {this._renderListItem()}
+        </View>
+        <View style={styles.footer}>
+          <Text style={[styles.foottext,{color: UColor.arrow}]}>© 2018 eostoken all rights reserved </Text>
+          {/* <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text> */}
+          <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V2.3.2</Text>
+        </View>
+      
       <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
               <View style={{ width: ScreenWidth-20, backgroundColor: UColor.fontColor, borderRadius: 5, }}>
@@ -333,26 +329,22 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
-  scrollView: {
-    flex: 1,
-  },
-  daylinebgout: {
-    width: ScreenWidth,
-    height: ScreenWidth * 0.524,
-  },
   linebgout: {
     width: ScreenWidth,
+    height: ScreenWidth * 0.354,
   },
   userHead: {
     flex: 1,
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: ScreenUtil.autoheight(20),
     paddingHorizontal: ScreenUtil.autowidth(20),
   },
   headout: {
     flex: 1,
+    flexDirection:"row",
     alignItems: "center",
-    paddingVertical: ScreenUtil.autoheight(10),
   },
   headimgout: {
     borderRadius: 50,
@@ -362,13 +354,13 @@ const styles = StyleSheet.create({
     height: ScreenUtil.autoheight(70),
   },
   headimg: {
-    width: ScreenUtil.autowidth(42),
-    height: ScreenUtil.autoheight(52),
+    width: ScreenUtil.autowidth(55),
+    height: ScreenUtil.autoheight(55),
   },
   headtext: {
     fontSize: ScreenUtil.setSpText(15),
     paddingTop: ScreenUtil.autoheight(5),
-    marginLeft: ScreenUtil.autowidth(15),
+    marginHorizontal: ScreenUtil.autowidth(15),
   },
   signedout: {
     alignSelf: 'center',
@@ -384,23 +376,11 @@ const styles = StyleSheet.create({
     width: ScreenUtil.autowidth(40),
     height: ScreenUtil.autoheight(49)
   },
-  dayeosbtn: {
-    marginHorizontal: ScreenUtil.autowidth(8),
-  },
-  eosbtn: {
-    marginTop: ScreenUtil.autoheight(15),
-  },
-  dayeosbtnout: {
-    borderRadius: 5,
-    flexDirection: "row",
-    justifyContent: 'space-between',
-    paddingHorizontal: ScreenUtil.autowidth(20),
-    width: ScreenWidth - ScreenUtil.autowidth(16),
-  },
   eosbtnout: {
-    flex: 1,
+    width: ScreenWidth,
     flexDirection: "row",
     justifyContent: 'space-between',
+    marginBottom: ScreenUtil.autoheight(8),
     paddingHorizontal: ScreenUtil.autowidth(20),
   },
   eosout: {

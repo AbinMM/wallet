@@ -36,7 +36,6 @@ class Splash extends React.Component {
       }
     }});
     this.props.dispatch({type:'login/getthemeSwitching',callback:(theme)=>{
-      UColor.theme = !theme.theme;
       if(!theme.theme){  
           UColor.transport= 'rgba(0, 0, 0, 0.0)';
           UColor.mask= 'rgba(0, 0, 0, 0.4)'; //遮罩色 UColor.mask
@@ -47,16 +46,25 @@ class Splash extends React.Component {
           UColor.fontColor= '#292F40'; //字体颜色 UColor.fontColor
           UColor.btnColor= '#ffffff'; //按钮字体颜色 UColor.btnColor
           UColor.riceWhite= '#ECECF0'; //米白色 UColor.riceWhite
-          UColor.arrow= '#8696B0'; //深字体色 UColor.arrow
+          UColor.arrow= '#75859f'; //深字体色 UColor.arrow
           UColor.startup= '#21232E'; //启动也背景色 UColor.startup
           UColor.inash= '#4D607E'; // 列表底色 UColor.inash
-          UColor.lightgray= '#abb9d7'; //浅字体色 UColor.lightgray
+          UColor.lightgray= '#4c515b'; //浅字体色 UColor.lightgray
           UColor.showy= '#ff6565'; //显眼色调 UColor.showy 
           UColor.baseline= '#cccccc'; //底色调 UColor.baseline
           UColor.blackColor= '#000000'; //纯黑色 UColor.blackColor
           UColor.riseColor= '#F25C49'; //涨卖收色 UColor.riseColor
           UColor.fallColor= '#25B36B'; //跌买出色 UColor.fallColor
-          UColor.navigation= '#2279C5', //顶部标题背景色 UColor.navigatio
+          UColor.navigation= '#2279C5'; //顶部标题背景色 UColor.navigation
+          UColor.bgEchar= "#ffffff"; // Echar背景色
+          UColor.invalidbtn= "#BFBFBF";
+          UColor.mainsecd= "#EDEDED";
+          UColor.tintfont= "#65CAFF";
+          UColor.titletop= '#2279C5'; //顶部标题背景色 UColor.navigation
+          UColor.secdfont= "#FFFFFF";
+          UColor.mainfont= "#FFFFFF";
+          UColor.tintstart= '#65CAFF';
+          UColor.fonttint= "#FFFFFF";
           UImage.guide=require('../img/day/guide.png');
           UImage.my_community=require('../img/day/my_community.png');
           UImage.account_manage=require('../img/day/account_manage.png');
@@ -88,6 +96,44 @@ class Splash extends React.Component {
           UImage.adminA=require('../img/day/adminA.png');
           UImage.transactionA=require('../img/day/transactionA.png');
           UImage.transactionB=require('../img/day/transactionB.png');
+          UImage.tx_slide0=require('../img/day/tx_slide0.png');
+          UImage.tx_slide1=require('../img/day/tx_slide1.png');
+          UImage.aab1=require('../img/day/aab1.png');
+          UImage.aab2=require('../img/day/aab2.png');
+          UImage.share_i=require('../img/day/share_i.png');
+          UImage.fav=require('../img/day/fav.png');
+          UImage.warning=require('../img/day/warning.png');
+          UImage.signln_bg=require('../img/day/signln_bg.png');
+          UImage.logo=require('../img/day/logo1.png');
+          UImage.coinsbg1=require('../img/day/coinsbg1.png');
+          UImage.coinsbg2=require('../img/day/coinsbg2.png');
+          UImage.add= require('../img/day/add.png');
+          UImage.qr= require('../img/day/qr.png');
+          UImage.transfer= require('../img/day/transfer.png');
+          UImage.resources= require('../img/day/resources.png');
+          UImage.line_bg= require('../img/day/line_bg.png');
+          UImage.more= require('../img/day/more.png');
+
+          UImage.tokenissue= require('../img/day/tokenissue.png');
+          UImage.vote_node= require('../img/day/vote_node.png');
+          UImage.candy= require('../img/day/candy.png');
+          UImage.free_mortgage= require('../img/day/free_mortgage.png');
+          UImage.navigation= require('../img/day/navigation.png');
+
+          UImage.tab_1= require('../img/day/tab_1.png');
+          UImage.tab_2= require('../img/day/tab_2.png');
+          UImage.tab_3= require('../img/day/tab_3.png');
+          UImage.tab_4= require('../img/day/tab_4.png');
+          UImage.tab_5= require('../img/day/tab_5.png');
+
+          UImage.add_h= require('../img//day/add_h.png');
+          UImage.qr_h= require('../img//day/qr_h.png');
+          UImage.transfer_h= require('../img/day/transfer_h.png');
+          UImage.resources_h= require('../img/day/resources_h.png');
+          UImage.more_h= require('../img//day/more_h.png');
+
+          UImage.votea_bj= require('../img/day/votea_bj.png');
+          UImage.votec_bj= require('../img/day/votec_bj.png');
       }else{
           UColor.transport= 'rgba(0, 0, 0, 0.0)';
           UColor.mask= 'rgba(0, 0, 0, 0.4)'; //遮罩色 UColor.mask
@@ -107,6 +153,17 @@ class Splash extends React.Component {
           UColor.blackColor= '#000000'; //纯黑色 UColor.blackColor
           UColor.riseColor= '#F25C49'; //涨卖收色 UColor.riseColor
           UColor.fallColor= '#25B36B'; //跌买出色 UColor.fallColor
+          UColor.navigation= '#43536D'; //顶部标题背景色 UColor.navigation
+          UColor.bgEchar= "#2f3b50"; // Echar背景色
+          UColor.warningRed= "#FF4F4F",//警告字体色彩
+          UColor.invalidbtn= '#4e5e7d', //按钮默认颜色 UColor.invalidbtn
+          UColor.mainsecd= "#4e5e7d",
+          UColor.tintfont= "#FFFFFF",
+          UColor.titletop= '#4e5e7d'; //顶部标题背景色 UColor.navigation
+          UColor.secdfont= "#43536D";
+          UColor.mainfont= '#4e5e7d';
+          UColor.tintstart= '#21232E';
+          UColor.fonttint= "#65CAFF";
       }
     }});
 

@@ -36,6 +36,7 @@ class WalletDetail extends BaseComponent {
       { avatar:UImage.publickey, name: "导出公钥", onPress: this.goPage.bind(this, "ExportPublicKey") },
       { avatar:UImage.resources_f, name: "资源管理", onPress: this.goPage.bind(this, "Resources") },
       { avatar:UImage.details, name: "账户详细信息", onPress: this.goPage.bind(this, "SeeBlockBrowser") },
+      { avatar:UImage.authExchangeBlue, name: "交易授权", onPress: this.goPage.bind(this, "AuthExchange") },
       { avatar:UImage.adminA, name: "权限管理", onPress: this.goPage.bind(this, "AuthManage") },
     ];
     this.state = {
@@ -131,7 +132,14 @@ class WalletDetail extends BaseComponent {
       }else{
         EasyToast.show("该账号还没激活，激活之后才能进入权限管理")
       }
-    }else{
+    }else if(key=="AuthExchange"){
+      if(this.props.navigation.state.params.data.isactived){     
+        navigate('AuthExchange', {wallet: this.props.navigation.state.params.data});
+      }else{
+        EasyToast.show("该账号还没激活，激活之后才能进入交易授权")
+      }
+    }
+    else{
 
     }
   }

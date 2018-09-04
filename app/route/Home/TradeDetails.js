@@ -128,10 +128,10 @@ class TradeDetails extends BaseComponent {
   }
   
   render() {
-    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+    return <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
        <Header {...this.props} onPressLeft={true} title="交易详情" avatar={UImage.share_i} onPressRight={this._rightTopClick.bind()}/>
-      <ViewShot ref="viewShot" style={{flex: 1,backgroundColor:UColor.secdColor}}> 
-        {this.state.trade.disptype == 0 && <View style={[styles.header,{borderBottomColor: UColor.mainColor}]}>
+      <ViewShot ref="viewShot" style={{flex: 1,backgroundColor:UColor.secdfont}}> 
+        {this.state.trade.disptype == 0 && <View style={[styles.header,{borderBottomColor: UColor.mainsecd}]}>
             <View style={styles.headout}>
                 <Text style={[styles.quantitytext,{color: UColor.fontColor}]}>{this.state.trade.type=='转出'?'-':'+'} </Text>
                 <Text style={[styles.quantitytext,{color: UColor.fontColor}]}>{this.state.trade.quantity.replace(this.state.trade.code, "")} </Text>
@@ -140,21 +140,21 @@ class TradeDetails extends BaseComponent {
             <Text style={[styles.description,{color: UColor.tintColor}]}>({this.state.trade.description}{this.state.trade.bytes? this.state.trade.bytes + " bytes":""})</Text>
           </View>
         }
-        {this.state.trade.disptype == 1 && <View style={[styles.header,{borderBottomColor: UColor.mainColor}]}>
+        {this.state.trade.disptype == 1 && <View style={[styles.header,{borderBottomColor: UColor.mainsecd}]}>
             <View style={styles.headout}>
                 <Text style={[styles.quantitytext,{color: UColor.fontColor}]}>{this.state.trade.quantity}</Text>
             </View>
             <Text style={[styles.description,{color: UColor.tintColor}]}>{this.state.trade.type == 'selltoken'?'(卖)':'(买)'}</Text>
           </View>
         }
-        {this.state.trade.disptype == 2 && <View style={[styles.header,{borderBottomColor: UColor.mainColor}]}>
+        {this.state.trade.disptype == 2 && <View style={[styles.header,{borderBottomColor: UColor.mainsecd}]}>
             <View style={styles.headout}>
                 <Text style={[styles.quantitytext,{color: UColor.fontColor}]}>{this.state.trade.quantity} </Text>
             </View>
             <Text style={[styles.description,{color: UColor.tintColor}]}>{this.state.trade.type == 'buyram'?'(买)':'(卖)'}</Text>
           </View>
         }
-        <View style={{flexDirection: "row", borderBottomColor: UColor.mainColor, borderBottomWidth: 0.5,paddingHorizontal: ScreenUtil.autowidth(10),paddingVertical: ScreenUtil.autoheight(20),}}>
+        <View style={{flexDirection: "row", borderBottomColor: UColor.mainsecd, borderBottomWidth: 0.5,paddingHorizontal: ScreenUtil.autowidth(10),paddingVertical: ScreenUtil.autoheight(20),}}>
           <View style={styles.conout}>
             <View style={styles.conouttext}>
               <Text style={[styles.context,{color: UColor.arrow}]}>发  送  方: </Text> 
@@ -203,7 +203,7 @@ class TradeDetails extends BaseComponent {
         </View>
         <View style={styles.logout}>
             <Image source={UImage.bottom_log} style={styles.logimg}/>
-            <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
+            <Text style={[styles.logtext,{color: UColor.arrow}]}>ET 交易所</Text>
         </View>
       </ViewShot>
     </View>

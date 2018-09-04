@@ -14,11 +14,6 @@ class Header extends BaseComponent {
     constructor(props) {
         super(props);
     }
-    
-    //组件加载完成
-    componentDidMount() {
-        //alert(JSON.stringify(UColor.theme))
-    }
 
     static propTypes = {
         onPressLeft: PropTypes.bool,
@@ -32,7 +27,7 @@ class Header extends BaseComponent {
     render(){
         let {backgroundColor, onPressLeft, title, onPressRight, avatar, subName,} = this.props
         return (
-        <View style={[styles.header,{backgroundColor: backgroundColor ? backgroundColor : UColor.theme ? UColor.navigation : UColor.mainColor}]}>
+        <View style={[styles.header,{backgroundColor: backgroundColor ? backgroundColor : UColor.titletop}]}>
           <TouchableOpacity style={styles.Leftout} onPress={() => {onPressLeft ? this.props.navigation.goBack() : undefined}}>
             {onPressLeft &&<Ionicons style={{color:UColor.btnColor}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
           </TouchableOpacity>

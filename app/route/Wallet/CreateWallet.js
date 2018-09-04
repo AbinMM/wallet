@@ -257,7 +257,7 @@ class createWallet extends BaseComponent {
     if(this.state.walletName != "" && this.state.walletPassword != "" && this.state.reWalletPassword != ""){
       this.state.CreateButton = UColor.tintColor;
     }else{
-      this.state.CreateButton = UColor.theme ? UColor.invalidbtn : UColor.mainColor;
+      this.state.CreateButton = UColor.invalidbtn;
     }
   }
 
@@ -354,7 +354,7 @@ class createWallet extends BaseComponent {
             </View>
           </View>
           <View style={styles.clauseout}>
-            <TouchableHighlight  onPress={() => this.checkClick()}>
+            <TouchableHighlight  onPress={() => this.checkClick()} activeOpacity={0.5} underlayColor={UColor.secdColor}>
               <Image source={this.state.isChecked ? UImage.aab1 : UImage.aab2} style={styles.clauseimg} />
             </TouchableHighlight>
             <Text style={[styles.welcome,{color: UColor.arrow}]} >我已经仔细阅读并同意 <Text onPress={() => this.prot()} style={[styles.clausetext,{color: UColor.tintColor}]}>服务及隐私条款</Text></Text>
