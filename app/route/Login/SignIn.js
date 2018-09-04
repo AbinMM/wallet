@@ -121,9 +121,9 @@ class SignIn extends BaseComponent {
   }
 
   render() {
-    return <View style={[styles.container,{backgroundColor: UColor.mainfont}]}>
+    return <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
      <Header {...this.props} onPressLeft={true} title="用户积分" />
-      <View style={[styles.outsource,{backgroundColor: UColor.mainfont}]}>
+      <View style={[styles.outsource,{backgroundColor: UColor.secdfont}]}>
         <Text style={[styles.promptText,{color: UColor.arrow}]}> 温馨提示：连续签到将获得额外积分哦~</Text>
         <ImageBackground style={styles.imgbg} source={UImage.integral_bg} resizeMode="cover">
           <View style={styles.accumulativeout}>
