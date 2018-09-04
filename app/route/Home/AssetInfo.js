@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     timequantity: {
-        flex: 1,
+        flex: 4,
         flexDirection: "column",
         alignItems: 'flex-start',
         justifyContent: "space-around",
@@ -306,6 +306,7 @@ const styles = StyleSheet.create({
         marginTop: ScreenUtil.autoheight(3),
     },
     unconfirmedout: { 
+        flex: 2,
         alignItems: 'center',
         flexDirection: "column",
         justifyContent: "space-between",
@@ -316,6 +317,7 @@ const styles = StyleSheet.create({
         marginTop:  ScreenUtil.autoheight(3),
     },
     typedescription: {
+        flex: 2,
         alignItems: 'center',
         flexDirection: "column",
         justifyContent: "space-around",
