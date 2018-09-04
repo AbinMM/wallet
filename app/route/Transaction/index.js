@@ -71,6 +71,7 @@ class Transaction extends BaseComponent {
       contractAccount:"issuemytoken", //ET合约账户名称
       tradename:"TEST",  //ET交易币种的名称
       selectcode:"TEST_EOS_issuemytoken",    //ET交易币种的唯一code
+      precisionNumber: 4,
       showMore:false,  
       showMoreTitle:"更多",
       isKLine:true,  //是否K线
@@ -159,6 +160,7 @@ class Transaction extends BaseComponent {
             contractAccount: rowData.base_contract,
             tradename:rowData.base_balance_uom,
             selectcode:rowData.code,
+            precisionNumber: rowData.precision_number,
             });
         this.props.dispatch({type:'transaction/setCurrentET',payload:{et: rowData}});    
         InteractionManager.runAfterInteractions(() => {
@@ -667,7 +669,7 @@ class Transaction extends BaseComponent {
                                 payer: this.props.defaultWallet.account,
                                 eos_quant: formatEosQua(this.state.buyETAmount + " EOS"),
                                 token_contract: this.props.etinfo.base_contract,//"issuemytoken",
-                                token_symbol: "4," + this.props.etinfo.base_balance_uom, //"4,TEST",
+                                token_symbol: this.state.precisionNumber + "," + this.props.etinfo.base_balance_uom, //"4,TEST",
                                 fee_account: this.props.defaultWallet.account,
                                 fee_rate: "1", 
                             }
@@ -847,7 +849,7 @@ class Transaction extends BaseComponent {
                         data: {
                             receiver: this.props.defaultWallet.account,
                             token_contract: this.props.etinfo.base_contract, //"issuemytoken",
-                            quant: formatEosQua(this.state.sellET + " " + this.props.etinfo.base_balance_uom),
+                            quant: formatEosQua(this.state.sellET + " " + this.props.etinfo.base_balance_uom, this.state.precisionNumber),
                             fee_account: this.props.defaultWallet.account,
                             fee_rate: "1", 
                         }
