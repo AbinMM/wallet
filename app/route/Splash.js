@@ -113,25 +113,21 @@ class Splash extends React.Component {
           UImage.resources= require('../img/day/resources.png');
           UImage.line_bg= require('../img/day/line_bg.png');
           UImage.more= require('../img/day/more.png');
-
           UImage.tokenissue= require('../img/day/tokenissue.png');
           UImage.vote_node= require('../img/day/vote_node.png');
           UImage.candy= require('../img/day/candy.png');
           UImage.free_mortgage= require('../img/day/free_mortgage.png');
           UImage.navigation= require('../img/day/navigation.png');
-
           UImage.tab_1= require('../img/day/tab_1.png');
           UImage.tab_2= require('../img/day/tab_2.png');
           UImage.tab_3= require('../img/day/tab_3.png');
           UImage.tab_4= require('../img/day/tab_4.png');
           UImage.tab_5= require('../img/day/tab_5.png');
-
           UImage.add_h= require('../img//day/add_h.png');
           UImage.qr_h= require('../img//day/qr_h.png');
           UImage.transfer_h= require('../img/day/transfer_h.png');
           UImage.resources_h= require('../img/day/resources_h.png');
           UImage.more_h= require('../img//day/more_h.png');
-
           UImage.votea_bj= require('../img/day/votea_bj.png');
           UImage.votec_bj= require('../img/day/votec_bj.png');
       }else{
