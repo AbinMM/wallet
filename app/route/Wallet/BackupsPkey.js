@@ -161,7 +161,6 @@ class BackupsPkey extends BaseComponent {
                                 <Image source={UImage.warning} style={styles.imgBtn} />
                                 <Text style={[styles.headtitle,{color: UColor.showy}]}>私钥相当于您的银行卡密码，请妥善保管！（切勿截图、存储到网络硬盘、微信等传输！）</Text>
                             </View>
-
                         </View>
 
 
@@ -248,18 +247,13 @@ const styles = StyleSheet.create({
     },
 
     warningout2: {
-        // borderWidth: 1,
-        // borderRadius: 5,
-        // width: ScreenWidth-40,
         flexDirection: "row",
         alignItems: 'center', 
         paddingVertical: ScreenUtil.autoheight(5),
-        // paddingHorizontal: ScreenUtil.autowidth(10),
     },
     significanttextHead: {
-        fontSize: ScreenUtil.setSpText(16), 
         fontWeight:"bold",
-        lineHeight: ScreenUtil.autoheight(17),
+        fontSize: ScreenUtil.setSpText(16), 
     },
     imgBtn: {
         width: ScreenUtil.autowidth(20),
