@@ -55,7 +55,8 @@ class Splash extends React.Component {
           UColor.blackColor= '#000000'; //纯黑色 UColor.blackColor
           UColor.riseColor= '#F25C49'; //涨卖收色 UColor.riseColor
           UColor.fallColor= '#25B36B'; //跌买出色 UColor.fallColor
-          UColor.navigation= '#65CAFF'; //顶部标题背景色 UColor.navigation
+          UColor.navigation= '#2279C5'; //顶部标题背景色 UColor.navigation
+          UColor.receivables= "#65CAFF";
           UColor.bgEchar= "#ffffff"; // Echar背景色
           UColor.invalidbtn= "#BFBFBF";
           UColor.mainsecd= "#EDEDED";
@@ -151,6 +152,7 @@ class Splash extends React.Component {
           UColor.riseColor= '#F25C49'; //涨卖收色 UColor.riseColor
           UColor.fallColor= '#25B36B'; //跌买出色 UColor.fallColor
           UColor.navigation= '#43536D'; //顶部标题背景色 UColor.navigation
+          UColor.receivables= '#43536D';
           UColor.bgEchar= "#2f3b50"; // Echar背景色
           UColor.warningRed= "#FF4F4F",//警告字体色彩
           UColor.invalidbtn= '#4e5e7d', //按钮默认颜色 UColor.invalidbtn

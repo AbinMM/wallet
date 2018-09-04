@@ -1338,7 +1338,7 @@ class Transaction extends BaseComponent {
                     <Image source={UImage.tx_slide0} style={styles.HeadImg}/>
                 </View>
                 </TouchableOpacity> */}
-                <View style={[styles.ebhbtnout,{backgroundColor:UColor.navigation}]}>
+                <View style={[styles.ebhbtnout,{backgroundColor:UColor.receivables}]}>
                     <View style={{width:'30%'}}>
                         <View style={{ flex:1,flexDirection:"row",alignItems: 'center', }}>
                             <Text style={{marginLeft:ScreenUtil.autowidth(10),fontSize:ScreenUtil.setSpText(15),color:UColor.btnColor}}>内存</Text>
@@ -1379,7 +1379,7 @@ class Transaction extends BaseComponent {
                   </Button>
                 </View>
 
-                <View style={[styles.ebhbtnout,{backgroundColor:UColor.navigation}]}>
+                <View style={[styles.ebhbtnout,{backgroundColor:UColor.receivables}]}>
                     <View style={{width:'30%'}}>
                         <View style={{ flex:1,flexDirection:"row",alignItems: 'center', }}>
                             <Text style={{marginLeft:ScreenUtil.autowidth(10),fontSize:ScreenUtil.setSpText(15),color:UColor.btnColor}}>币种</Text>
