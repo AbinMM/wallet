@@ -217,6 +217,7 @@ class AuthTransfer extends BaseComponent {
             }
             authFlag=true;//获取账户成功后可以
             this.setState({
+                password: '',
                 threshold:resp.data.permissions[0].required_auth.threshold,
                 isAuth:authFlag,
                 authActiveKeys:tempActive,//授权的公钥组

@@ -28,6 +28,7 @@ class APactivation extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
+      password: '',
       accountName: "",
       ownerPuk: "",
       activePuk: "",

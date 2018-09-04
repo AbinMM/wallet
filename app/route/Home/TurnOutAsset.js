@@ -54,6 +54,7 @@ class TurnOutAsset extends BaseComponent {
             amount: params.amount == null ? '' : params.amount,
             name: params.asset.name,
             balance: tmpbalance == null ? '0.0000' : tmpbalance,
+            password:''
         })
         DeviceEventEmitter.addListener('scan_result', (data) => {
             try {
