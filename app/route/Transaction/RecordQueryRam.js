@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
     },
     presentprice: {
       flex: 3.7,
-      textAlign: 'left',
+      textAlign: 'center',
       fontSize: ScreenUtil.setSpText(13),
     },
 });
