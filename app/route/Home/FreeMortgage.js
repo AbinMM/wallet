@@ -173,12 +173,12 @@ const styles = StyleSheet.create({
     Explaintext: {
         fontSize: ScreenUtil.setSpText(15),
         marginTop: ScreenUtil.autoheight(25),
-        lineHeight: ScreenUtil.autoheight(30), 
+        lineHeight: ScreenUtil.autoheight(25), 
     },
     Explaintextmiddle: {
         fontSize: ScreenUtil.setSpText(15),
         marginTop: ScreenUtil.autoheight(5),
-        lineHeight: ScreenUtil.autoheight(30), 
+        lineHeight: ScreenUtil.autoheight(25), 
     },
     Tipstext: {
         fontSize: ScreenUtil.setSpText(12),

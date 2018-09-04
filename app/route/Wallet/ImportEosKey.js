@@ -626,7 +626,7 @@ class ImportEosKey extends BaseComponent {
         </TouchableOpacity>
         <Modal style={styles.touchableout} animationType={'slide'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
             <TouchableOpacity style={styles.pupuo} activeOpacity={1.0}>
-              <View style={[styles.modalStyle,{backgroundColor: UColor.fontColor}]}>
+              <View style={[styles.modalStyle,{backgroundColor: UColor.btnColor}]}>
                 <View style={styles.subView}> 
                   <Text style={styles.titleout}/>
                   <Text style={styles.titleText}>导入失败</Text>
@@ -646,7 +646,7 @@ class ImportEosKey extends BaseComponent {
                 </View>
                   <Button onPress={this._onRequestClose.bind(this)}>
                       <View style={[styles.buttonView,{backgroundColor: UColor.showy}]}>
-                          <Text style={[styles.buttoncols,{color: UColor.fontColor}]}>知道了</Text>
+                          <Text style={[styles.buttoncols,{color: UColor.btnColor}]}>知道了</Text>
                       </View>
                   </Button>  
               </View>
@@ -654,7 +654,7 @@ class ImportEosKey extends BaseComponent {
         </Modal>  
         <Modal style={[styles.businesmodal,{backgroundColor: UColor.tintColor}]} animationType={'slide'} transparent={true}  visible={this.state.selectpromp} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.businestouchable,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
-              <View style={[styles.modalStyle1,{backgroundColor: UColor.fontColor,}]}>
+              <View style={[styles.modalStyle1,{backgroundColor: UColor.btnColor,}]}>
                 <View style={styles.subView}> 
                   <Text style={styles.titleout}/>
                   <Text style={styles.titleText}>请选择导入钱包</Text>
@@ -680,7 +680,7 @@ class ImportEosKey extends BaseComponent {
                 /> 
                 <Button onPress={this._onPressEnter.bind(this)}>
                     <View style={[styles.buttonViewEnter,{backgroundColor: UColor.tintColor}]}>
-                        <Text style={[styles.buttonEnter,{color: UColor.fontColor}]}>确认导入</Text>
+                        <Text style={[styles.buttonEnter,{color: UColor.btnColor}]}>确认导入</Text>
                     </View>
                 </Button>  
               </View>

@@ -40,6 +40,7 @@ class ActivationAt extends BaseComponent {
             activePublic: '',
             show: false,
             Invalid: false,
+            password: '',
         };
     }
 

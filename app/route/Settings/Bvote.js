@@ -86,15 +86,15 @@ class Bvote extends BaseComponent {
                     </View>             
                 </View>
                 
-                <TouchableHighlight onPress={this.goPage.bind(this, 'Imvote')} style={{marginHorizontal: ScreenUtil.autowidth(5)}}>
-                  <ImageBackground  style={styles.lockoutsource} source={UImage.votea_bj} resizeMode="stretch">              
+                <TouchableHighlight onPress={this.goPage.bind(this, 'Imvote')} activeOpacity={0.8} underlayColor={UColor.secdColor} style={{marginTop: ScreenUtil.autoheight(6), marginHorizontal: ScreenUtil.autowidth(5)}}>
+                  <ImageBackground  style={styles.lockoutsource} source={UImage.votea_bj} resizeMode="stretch" >              
                     <Text style={[styles.locktitle,{color: UColor.btnColor}]}>我的投票</Text>
                     <View style={styles.locktext}>
                         <Image source={UImage.voteb} style={styles.lockimg}/>
                     </View>     
                   </ImageBackground>     
                 </TouchableHighlight> 
-                <TouchableHighlight onPress={this.goPage.bind(this, 'Nodevoting')} style={{marginHorizontal: ScreenUtil.autowidth(5)}}>      
+                <TouchableHighlight onPress={this.goPage.bind(this, 'Nodevoting')} activeOpacity={0.8}  underlayColor={UColor.secdColor} style={{marginTop: ScreenUtil.autoheight(6), marginHorizontal: ScreenUtil.autowidth(5)}}>      
                   <ImageBackground  style={styles.lockoutsource} source={UImage.votec_bj} resizeMode="stretch">              
                     <Text style={[styles.locktitle,{color: UColor.btnColor}]}>超级节点</Text>
                     <View style={styles.locktext}>
@@ -158,7 +158,6 @@ const styles = StyleSheet.create({
     flexDirection:'row', 
     justifyContent: "flex-end", 
     height: ScreenUtil.autoheight(115), 
-    marginTop: ScreenUtil.autoheight(6), 
     paddingRight: ScreenUtil.autowidth(10),
     width: ScreenWidth-ScreenUtil.autowidth(10),
   },

@@ -43,12 +43,16 @@ class TurnOut extends BaseComponent {
             toAccount: params.toaccount,
             amount: params.amount == null ? '' : params.amount,
             name: params.name,
+            password:'',
         })
-        DeviceEventEmitter.addListener('transfer_scan_result', (data) => {
+        DeviceEventEmitter.addListener('scan_result', (data) => {
             this.setState({toAccount:data.toaccount})
             if(data.amount){
                 this.setState({amount:data.amount})
             }
+        });
+        DeviceEventEmitter.addListener('transfer_scan_result', (data) => {
+            this.setState({toAccount:data.toaccount})
         });
         DeviceEventEmitter.addListener('eos_balance', (data) => {
             this.setEosBalance(data);
@@ -58,7 +62,7 @@ class TurnOut extends BaseComponent {
     componentWillUnmount(){
         //结束页面前，资源释放操作
         super.componentWillUnmount();
-        DeviceEventEmitter.removeListener('transfer_scan_result');
+        DeviceEventEmitter.removeListener('scan_result');
     }
 
     setEosBalance(data){

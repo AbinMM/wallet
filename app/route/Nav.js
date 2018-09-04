@@ -961,7 +961,7 @@ class Route extends React.Component {
                       <View style={{ padding: 10 }}>
                         <Image source={UImage.Invitation_vote} resizeMode="cover" style={{ width: '100%', height:ScreenWidth-70 }} />
                         <View style={{ width: (ScreenWidth - 40) * 0.319, justifyContent: 'center', alignSelf: 'center',paddingBottom:20, }}>
-                          <QRCode size={100} style={{ width: 100, }} value={'http://eostoken.im/'} />
+                          <QRCode size={100} style={{ width: 100, }} value={'http://offw.etdac.io/pages/'} />
                         </View>
 
                       </View>
@@ -1035,13 +1035,13 @@ class Route extends React.Component {
                         <Image source={UImage.turninhead_h} resizeMode="stretch" style={{ width: ScreenWidth - 40, height:(ScreenWidth - 40)*0.3167 }} />
                         <View style={{ flexDirection: 'row', justifyContent: 'center',alignItems: 'center',}}>
                           <Text style={{fontSize: 30, color: UColor.btnColor, padding: 10, textAlign: 'center',}}>{this.state.turninamount}</Text>
-                          <Text style={{fontSize: 22, color: UColor.lightgray,}}>{this.state.turninsymbol}</Text>
+                          <Text style={{fontSize: 22, color: UColor.baseline,}}>{this.state.turninsymbol}</Text>
                         </View>
                         <View style={{ justifyContent: 'center', alignSelf: 'center', paddingHorizontal: 30, paddingVertical:20, backgroundColor:UColor.btnColor }}>
                           <QRCode size={150}  value={this.state.turninsymbol.toLowerCase() +':' + this.state.turnintoaccount + '?amount=' + ((this.state.turninamount == "")?'0':this.state.turninamount) + '&token=' + this.state.turninsymbol.toUpperCase()}/>
                           <Text style={{ color: UColor.startup, fontSize: 19, textAlign: 'center', marginTop: 20 }}>扫码向他支付</Text>
                         </View>
-                        <Text style={{ color:UColor.lightgray, fontSize: 16, textAlign: 'left', marginTop: 5, paddingHorizontal: 30, paddingTop: 10, paddingBottom: 30,}}>收款账号: <Text style={{color: UColor.btnColor, fontSize: 15, }}>{this.state.turnintoaccount}</Text></Text>
+                        <Text style={{ color:UColor.baseline, fontSize: 16, textAlign: 'left', marginTop: 5, paddingHorizontal: 30, paddingTop: 10, paddingBottom: 30,}}>收款账号: <Text style={{color: UColor.btnColor, fontSize: 15, }}>{this.state.turnintoaccount}</Text></Text>
                       </View>
                     </View>
                   </ViewShot>

@@ -71,6 +71,7 @@ class Transaction extends BaseComponent {
       contractAccount:"issuemytoken", //ET合约账户名称
       tradename:"TEST",  //ET交易币种的名称
       selectcode:"TEST_EOS_issuemytoken",    //ET交易币种的唯一code
+      precisionNumber: 4,
       showMore:false,  
       showMoreTitle:"更多",
       isKLine:true,  //是否K线
@@ -159,6 +160,7 @@ class Transaction extends BaseComponent {
             contractAccount: rowData.base_contract,
             tradename:rowData.base_balance_uom,
             selectcode:rowData.code,
+            precisionNumber: rowData.precision_number,
             });
         this.props.dispatch({type:'transaction/setCurrentET',payload:{et: rowData}});    
         InteractionManager.runAfterInteractions(() => {
@@ -667,7 +669,7 @@ class Transaction extends BaseComponent {
                                 payer: this.props.defaultWallet.account,
                                 eos_quant: formatEosQua(this.state.buyETAmount + " EOS"),
                                 token_contract: this.props.etinfo.base_contract,//"issuemytoken",
-                                token_symbol: "4," + this.props.etinfo.base_balance_uom, //"4,TEST",
+                                token_symbol: this.state.precisionNumber + "," + this.props.etinfo.base_balance_uom, //"4,TEST",
                                 fee_account: this.props.defaultWallet.account,
                                 fee_rate: "1", 
                             }
@@ -721,7 +723,7 @@ class Transaction extends BaseComponent {
                                             </View>
                                             EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                             const { navigate } = this.props.navigation;
-                                            navigate('FreeMortgage', {});
+                                            navigate('FreeMortgage', {wallet: this.props.defaultWallet});
                                             // EasyShowLD.dialogClose();
                                             }, () => { EasyShowLD.dialogClose() });
                                         }
@@ -735,7 +737,7 @@ class Transaction extends BaseComponent {
                                     </View>
                                     EasyShowLD.dialogShow("提示", view, "去授权", "呆会说", () => {
                                     const { navigate } = this.props.navigation;
-                                    navigate('FreeMortgage', {});
+                                    navigate('AuthExchange', {wallet: this.props.defaultWallet});
                                     // EasyShowLD.dialogClose();
                                     }, () => { EasyShowLD.dialogClose() });
                                 }
@@ -847,7 +849,7 @@ class Transaction extends BaseComponent {
                         data: {
                             receiver: this.props.defaultWallet.account,
                             token_contract: this.props.etinfo.base_contract, //"issuemytoken",
-                            quant: formatEosQua(this.state.sellET + " " + this.props.etinfo.base_balance_uom),
+                            quant: formatEosQua(this.state.sellET + " " + this.props.etinfo.base_balance_uom, this.state.precisionNumber),
                             fee_account: this.props.defaultWallet.account,
                             fee_rate: "1", 
                         }
@@ -915,7 +917,7 @@ class Transaction extends BaseComponent {
                                 </View>
                                 EasyShowLD.dialogShow("提示", view, "去授权", "呆会说", () => {
                                 const { navigate } = this.props.navigation;
-                                navigate('FreeMortgage', {});
+                                navigate('AuthExchange', {wallet: this.props.defaultWallet});
                                 // EasyShowLD.dialogClose();
                                 }, () => { EasyShowLD.dialogClose() });
                             }
@@ -1332,67 +1334,67 @@ class Transaction extends BaseComponent {
           <TouchableOpacity onPress={() => this.setState({ modal: false })} style={[styles.touchable,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
             <TouchableOpacity style={[styles.touchable,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
 
-              <View style={[styles.touchableout,{backgroundColor:UColor.mainColor}]}>
+              <View style={[styles.touchableout,{backgroundColor:UColor.secdColor}]}>
                {/* <TouchableOpacity onPress={this._leftTopClick.bind()}> 
                 <View style={{ paddingRight: 0,alignItems: 'flex-end', }} >
                     <Image source={UImage.tx_slide0} style={styles.HeadImg}/>
                 </View>
                 </TouchableOpacity> */}
-                <View style={[styles.ebhbtnout,{backgroundColor:UColor.navigation}]}>
-                    <View style={{width:'37%'}}>
+                <View style={[styles.ebhbtnout,{backgroundColor:UColor.receivables}]}>
+                    <View style={{width:'30%'}}>
                         <View style={{ flex:1,flexDirection:"row",alignItems: 'center', }}>
-                            <Text style={{marginLeft:10,fontSize:15,color:UColor.btnColor}}>内存</Text>
+                            <Text style={{marginLeft:ScreenUtil.autowidth(10),fontSize:ScreenUtil.setSpText(15),color:UColor.btnColor}}>内存</Text>
                         </View>
                     </View>
                     <View style={{width:'28%'}}>
-                        <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-start", }}>
-                            <Text style={{fontSize:15,marginLeft:0,color:UColor.btnColor}}>涨幅</Text>
+                        <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"center", }}>
+                            <Text style={{fontSize:ScreenUtil.setSpText(15),marginLeft:0,color:UColor.btnColor}}>涨幅</Text>
                         </View>
                     </View>
-                    <View style={{width:'35%'}}>
+                    <View style={{width:'42%'}}>
                         <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-end", }}>
-                            <Text style={{ fontSize:15, color:UColor.btnColor,textAlign:'center', marginRight:5}}>单价(EOS)</Text>
+                            <Text style={{ fontSize:ScreenUtil.setSpText(15), color:UColor.btnColor,textAlign:'center', marginRight:ScreenUtil.autowidth(5)}}>单价(EOS)</Text>
                         </View>
                     </View>
                 </View>
 
-                <View style={styles.ebhbtnout2}>
+                <View style={[styles.ebhbtnout2,{backgroundColor:UColor.mainColor}]}>
                   <Button onPress={this.selectRamTx.bind(this)}>
                       <View style={styles.sliderow}>
-                        <View style={{width:'34%'}}>
+                        <View style={{width:'30%'}}>
                             <View style={{ flex:1,flexDirection:"row",alignItems: 'center'}}>
-                                <Text style={{marginLeft:10,fontSize:15,color:UColor.fontColor}}>RAM</Text>
+                                <Text style={{marginLeft:ScreenUtil.autowidth(10),fontSize:ScreenUtil.setSpText(14),color:UColor.fontColor}}>RAM</Text>
                             </View>
                         </View>
-                        <View style={{width:'31%'}}>
-                            <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-start"}}>
+                        <View style={{width:'28%'}}>
+                            <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"center"}}>
                             <Text style={[styles.greenincup,{color:(this.props.ramInfo && this.props.ramInfo.increase>=0)? UColor.fallColor:UColor.riseColor}]}>
                              {this.props.ramInfo ? (this.props.ramInfo.increase > 0 ? '+' + (this.props.ramInfo.increase * 100).toFixed(2) : (this.props.ramInfo.increase * 100).toFixed(2)): '0.00'}%</Text>
                             </View>
                         </View>
-                        <View style={{width:'35%'}}>
+                        <View style={{width:'42%'}}>
                             <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-end"}}>
-                                <Text style={{ fontSize:15, color:UColor.fontColor, textAlign:'center', marginRight:5}}>{this.props.ramInfo ? (this.props.ramInfo.price * 1).toFixed(4) : '0.0000'}</Text>
+                                <Text style={{ fontSize:ScreenUtil.setSpText(14), color:UColor.fontColor, textAlign:'center', marginRight:ScreenUtil.autowidth(5)}}>{this.props.ramInfo ? (this.props.ramInfo.price * 1).toFixed(4) : '0.0000'}</Text>
                             </View>
                         </View>
                       </View>
                   </Button>
                 </View>
 
-                <View style={[styles.ebhbtnout,{backgroundColor:UColor.navigation}]}>
-                    <View style={{width:'37%'}}>
+                <View style={[styles.ebhbtnout,{backgroundColor:UColor.receivables}]}>
+                    <View style={{width:'30%'}}>
                         <View style={{ flex:1,flexDirection:"row",alignItems: 'center', }}>
-                            <Text style={{marginLeft:10,fontSize:15,color:UColor.btnColor}}>币种</Text>
+                            <Text style={{marginLeft:ScreenUtil.autowidth(10),fontSize:ScreenUtil.setSpText(15),color:UColor.btnColor}}>币种</Text>
                         </View>
                     </View>
                     <View style={{width:'28%'}}>
-                        <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-start", }}>
-                            <Text style={{fontSize:15,color:UColor.btnColor}}>涨幅</Text>
+                        <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"center", }}>
+                            <Text style={{fontSize:ScreenUtil.setSpText(15),color:UColor.btnColor}}>涨幅</Text>
                         </View>
                     </View>
-                    <View style={{width:'35%'}}>
+                    <View style={{width:'42%'}}>
                         <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-end", }}>
-                            <Text style={{ fontSize:15, color:UColor.btnColor,textAlign:'center', marginRight:5}}>单价(EOS)</Text>
+                            <Text style={{ fontSize:ScreenUtil.setSpText(15), color:UColor.btnColor,textAlign:'center', marginRight:ScreenUtil.autowidth(5)}}>单价(EOS)</Text>
                         </View>
                     </View>
                 </View>
@@ -1402,22 +1404,22 @@ class Transaction extends BaseComponent {
                   enableEmptySections={true} dataSource={this.state.dataSource.cloneWithRows(this.props.etlist==null?[]:this.props.etlist)}
                   renderRow={(rowData) => (
                     <Button onPress={this.selectETtx.bind(this, rowData)}>
-                      <View style={styles.sliderow}>
-                        <View style={{width:'35%'}}>
+                      <View style={[styles.sliderow,{backgroundColor:UColor.mainColor}]}>
+                        <View style={{width:'30%'}}>
                             <View style={{ flex:1,flexDirection:"row",alignItems: 'center'}}>
-                                <Text style={{marginLeft:10,fontSize:15,color:UColor.fontColor}}>{rowData.base_balance_uom == null ? "" : rowData.base_balance_uom}</Text>
+                                <Text style={{marginLeft:ScreenUtil.autowidth(10),fontSize:ScreenUtil.setSpText(14),color:UColor.fontColor}}>{rowData.base_balance_uom == null ? "" : rowData.base_balance_uom}</Text>
                             </View>
                         </View>
-                        <View style={{width:'30%'}}>
-                            <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-start"}}>
+                        <View style={{width:'28%'}}>
+                            <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"center"}}>
                                 <Text style={[styles.greenincup,{color: rowData.increase>0? UColor.fallColor:UColor.riseColor}]}>
                                 {rowData.increase>0?'+'+rowData.increase:rowData.increase}</Text>
                             </View>
                         </View>
-                        <View style={{width:'35%'}}>
+                        <View style={{width:'42%'}}>
                             <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-end"}}>
-                                <Text style={{ fontSize:15, color:UColor.fontColor, 
-                                    textAlign:'center', marginRight:5}}>{(rowData.price == null || rowData.price == "") ? "0" : this.precisionTransfer(rowData.price,8)}</Text>
+                                <Text style={{ fontSize:ScreenUtil.setSpText(14), color:UColor.fontColor, 
+                                    textAlign:'center', marginRight:ScreenUtil.autowidth(5)}}>{(rowData.price == null || rowData.price == "") ? "0" : this.precisionTransfer(rowData.price,8)}</Text>
                             </View>
                         </View>
                       </View>
@@ -1903,7 +1905,7 @@ const styles = StyleSheet.create({
     },
 
     greenincup:{
-        fontSize:ScreenUtil.setSpText(15),
+        fontSize:ScreenUtil.setSpText(14),
     },
     businesmodal: {
         flex: 1,

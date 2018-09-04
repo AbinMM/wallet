@@ -181,8 +181,8 @@ class Imvote extends BaseComponent {
                     renderRow={(rowData, sectionID, rowID) => (                 
                     <View>
                         <Button onPress={this._openAgentInfo.bind(this,rowData)}> 
-                            <View style={styles.outsource} backgroundColor={(parseInt(rowID)%2 == 0) ? UColor.secdColor : UColor.inash}>
-                                <View style={styles.logview}>
+                            <View style={styles.outsource} backgroundColor={(parseInt(rowID)%2 == 0) ? UColor.secdColor : UColor.mainColor}>
+                                <View style={[styles.logview,{backgroundColor: UColor.titletop}]}>
                                    <Image source={rowData.icon==null ? UImage.eos : {uri: rowData.icon}} style={styles.logimg}/>
                                 </View>
                                 <View style={styles.nameregion}>
@@ -280,13 +280,16 @@ const styles = StyleSheet.create({
         paddingVertical: ScreenUtil.autoheight(10),
     },
     logview: {
+        borderRadius: 25,
         alignItems: 'center', 
         justifyContent: 'center', 
+        width: ScreenUtil.autowidth(30),
+        height: ScreenUtil.autowidth(30), 
+        margin: ScreenUtil.autowidth(10),
     },
     logimg: {
         width: ScreenUtil.autowidth(30), 
         height: ScreenUtil.autowidth(30), 
-        margin: ScreenUtil.autowidth(10),
     },
     nameregion: {
         alignItems: 'flex-start',
