@@ -134,10 +134,11 @@ changeAuth(authTempActive){
             EasyShowLD.loadingShow();
             var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.navigation.state.params.wallet.salt);
             var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+            this.setState({password: ''});
             if (plaintext_privateKey.indexOf('eostoken') != -1) {
                 plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                 this.EosUpdateAuth(this.props.navigation.state.params.wallet.name, plaintext_privateKey,authTempActive,(r) => {
-                    EasyShowLD.loadingClose();
+                    // EasyShowLD.loadingClose();
                     console.log("r=%s",JSON.stringify(r))
                     if(r.isSuccess==true){
                         EasyToast.show('交易授权变更成功！');
@@ -152,7 +153,7 @@ changeAuth(authTempActive){
             }
         } catch (e) {
             EasyShowLD.loadingClose();
-            EasyToast.show('异常错误');
+            EasyToast.show('密码错误');
         }
     }, () => { EasyShowLD.dialogClose() });
 }
