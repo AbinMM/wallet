@@ -20,7 +20,7 @@ const ScreenHeight = Dimensions.get('window').height;
 class addressManage extends BaseComponent {
 
     static navigationOptions = {
-        title: 'EOS地址薄',  
+        title: '联系人',  
         header:null, 
     };
 
@@ -260,7 +260,7 @@ class addressManage extends BaseComponent {
         console.log(temp, '......')
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-                <Header {...this.props} onPressLeft={true} title="EOS地址薄" />
+                <Header {...this.props} onPressLeft={true} title="联系人" />
                 <ListView renderRow={this.renderRow}  
                 enableEmptySections = {true}  
                 dataSource={this.state.dataSource.cloneWithRows((this.props.addressBook == null ? [] : this.props.addressBook))}> 
