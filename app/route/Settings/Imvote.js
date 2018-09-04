@@ -181,7 +181,7 @@ class Imvote extends BaseComponent {
                     renderRow={(rowData, sectionID, rowID) => (                 
                     <View>
                         <Button onPress={this._openAgentInfo.bind(this,rowData)}> 
-                            <View style={styles.outsource} backgroundColor={(parseInt(rowID)%2 == 0) ? UColor.secdColor : UColor.inash}>
+                            <View style={styles.outsource} backgroundColor={(parseInt(rowID)%2 == 0) ? UColor.secdColor : UColor.mainColor}>
                                 <View style={[styles.logview,{backgroundColor: UColor.titletop}]}>
                                    <Image source={rowData.icon==null ? UImage.eos : {uri: rowData.icon}} style={styles.logimg}/>
                                 </View>
