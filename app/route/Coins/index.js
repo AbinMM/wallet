@@ -225,6 +225,7 @@ const styles = StyleSheet.create({
   },
   indicatorStyle: {
     marginLeft: ScreenUtil.autowidth(20),
+    marginBottom: ScreenUtil.autoheight(2),
     width: ScreenWidth / 4 - ScreenUtil.autowidth(40), 
   },
   container: {

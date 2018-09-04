@@ -36,7 +36,6 @@ class Splash extends React.Component {
       }
     }});
     this.props.dispatch({type:'login/getthemeSwitching',callback:(theme)=>{
-      UColor.theme = !theme.theme;
       if(!theme.theme){  
           UColor.transport= 'rgba(0, 0, 0, 0.0)';
           UColor.mask= 'rgba(0, 0, 0, 0.4)'; //遮罩色 UColor.mask
@@ -142,6 +141,10 @@ class Splash extends React.Component {
           UColor.fallColor= '#25B36B'; //跌买出色 UColor.fallColor
           UColor.navigation= '#43536D'; //顶部标题背景色 UColor.navigation
           UColor.bgEchar= "#2f3b50"; // Echar背景色
+          UColor.warningRed= "#FF4F4F",//警告字体色彩
+          UColor.invalidbtn= '#4e5e7d', //按钮默认颜色 UColor.invalidbtn
+          UColor.mainsecd= "#4e5e7d",
+          UColor.tintfont= "#FFFFFF",
           UColor.titletop= '#4e5e7d'; //顶部标题背景色 UColor.navigation
       }
     }});
