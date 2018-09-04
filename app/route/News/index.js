@@ -11,7 +11,8 @@ import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Carousel from 'react-native-banner-carousel';
 require('moment/locale/zh-cn');
 var WeChat = require('react-native-wechat');
 const pages = [];
@@ -241,12 +242,20 @@ class News extends React.Component {
                 <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
             </View>
           </Button>}
-          <Swiper height={this.state.h} loop={true} autoplay={true} horizontal={true} autoplayTimeout={5} 
+          {/* <Swiper height={this.state.h} loop={true} autoplay={true} horizontal={true} autoplayTimeout={5} 
             paginationStyle={{ bottom: ScreenUtil.autoheight(10) }}
             dotStyle={{ backgroundColor: 'rgba(255,255,255,.2)', width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}
             activeDotStyle={{ backgroundColor: UColor.tintColor, width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}>
             {this.renderSwipeView()}
-          </Swiper>
+          </Swiper> */}
+          <Carousel
+            autoplay
+            autoplayTimeout={5000}
+            loop
+            index={0}
+            pageSize={ScreenWidth}>
+            {this.renderSwipeView()}
+          </Carousel>
         </View>
         }
         refreshControl={
@@ -304,7 +313,12 @@ class News extends React.Component {
     if (this.props.banners != null) {
       return this.props.banners.map((item, i) => {
         return (<Button key={i} onPress={this.bannerPress.bind(this, item)}>
-          <Image source={{ uri: item.img }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+        <Image
+          style={styles.image}
+          key={item}
+          source={{ uri: item.img, width: ScreenWidth }}
+          resizeMode="cover"
+        />
         </Button>)
       })
     } else {
@@ -403,6 +417,11 @@ const styles = StyleSheet.create({
   updowntext: {
     fontSize: ScreenUtil.setSpText(13),
     marginLeft: ScreenUtil.autowidth(5), 
+  },
+  image: {
+    marginRight: 2,
+    height: "100%",
+    width: ScreenWidth,
   },
 });
 
