@@ -141,9 +141,9 @@ changeAuth(authTempActive){
                     EasyShowLD.loadingClose();
                     console.log("r=%s",JSON.stringify(r))
                     if(r.isSuccess==true){
-                        EasyToast.show('授权变更成功！');
+                        EasyToast.show('交易授权变更成功！');
                     }else{
-                        EasyToast.show('授权变更失败！');
+                        EasyToast.show('交易授权变更失败！');
                     }
                     this.getAuthInfo();//刷新一下
                 });
@@ -153,7 +153,7 @@ changeAuth(authTempActive){
             }
         } catch (e) {
             EasyShowLD.loadingClose();
-            EasyToast.show('密码错误');
+            EasyToast.show('异常错误');
         }
     }, () => { EasyShowLD.dialogClose() });
 }
@@ -193,16 +193,16 @@ authExchangeCtr= () =>{
 
         <View style={styles.head}>
             <ImageBackground style={styles.bgout} source={UImage.authFrame} resizeMode="cover">
-                <Text style={[styles.Explaintext,{color: UColor.arrow}]}>使用ET交易平台进行交易时,必须授权于智能合约,否则无法交易!交易结束后,可退出授权。</Text>
-                <Text style={styles.Tipstext2}> </Text>
+                <Text style={[styles.Explaintext,{color: UColor.arrow}]}>使用ET交易平台进行交易时,必须授权于智能合约,否则无法交易!交易结束后,可取消授权。</Text>
+                {/* <Text style={styles.Tipstext2}> </Text> */}
                 <Text style={[styles.Explaintextmiddle,{color: UColor.arrow}]}>注:智能合约并不会记录或保留您的任何信息,请放心交易。(ET交易APP代码已开源)</Text>
-                <Text style={styles.Tipstext2}> </Text>
+                {/* <Text style={styles.Tipstext2}> </Text> */}
                 <Text style={[styles.Tipstext2,{ color: UColor.tintColor}]}>开源地址：https://github.com/eostoken</Text>
             </ImageBackground>
         </View>
 
         <View style={styles.btnout}>
-            <Text style={[styles.Applytext,{color: UColor.fontColor}]}>{this.state.isAuth==false?"当前已授权":""}</Text>
+            <Text style={[styles.Applytext,{color: UColor.showy}]}>{this.state.isAuth==false?"":"当前已授权"}</Text>
         </View>
         
         <View style={styles.header}>  
@@ -223,91 +223,62 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
     head: {
-        flexDirection: "row",
-        paddingVertical: ScreenUtil.autoheight(30),
-        paddingHorizontal: ScreenUtil.autowidth(10)
+        // flexDirection: "column",
+        paddingVertical: ScreenUtil.autoheight(41),
+        paddingHorizontal: ScreenUtil.autowidth(30)
     },
     bgout: {
-        paddingTop: ScreenUtil.autoheight(70),
-        paddingHorizontal: ScreenUtil.autowidth(20),
-        width: ScreenWidth - ScreenUtil.autowidth(20),
-        height: (ScreenWidth - ScreenUtil.autowidth(20))*0.8437,
+        
+        paddingTop: ScreenUtil.autoheight(60),
+        paddingHorizontal: ScreenUtil.autowidth(10),
+        width: (ScreenWidth - ScreenUtil.autowidth(60)),
+        height: (ScreenWidth)*0.683,
+        // height: (ScreenWidth - ScreenUtil.autowidth(20))*0.8437,
     },
     Explaintext: {
-        fontSize: ScreenUtil.setSpText(15),
-        marginTop: ScreenUtil.autoheight(25),
-        lineHeight: ScreenUtil.autoheight(30), 
+        fontSize: ScreenUtil.setSpText(14),
+        marginTop: ScreenUtil.autoheight(40),
+        lineHeight: ScreenUtil.autoheight(20), 
     },
     Explaintextmiddle: {
-        fontSize: ScreenUtil.setSpText(15),
-        marginTop: ScreenUtil.autoheight(5),
-        lineHeight: ScreenUtil.autoheight(30), 
-    },
-    Tipstext: {
         fontSize: ScreenUtil.setSpText(14),
-        marginTop: ScreenUtil.autoheight(12),
+        marginTop: ScreenUtil.autoheight(20),
+        lineHeight: ScreenUtil.autoheight(20), 
     },
+
     Tipstext2: {
         fontSize: ScreenUtil.setSpText(14),
-        marginTop: ScreenUtil.autoheight(5),
+        marginTop: ScreenUtil.autoheight(20),
     },
     btnout: {
-        flexDirection: "row",
         alignItems: 'flex-end',
-        justifyContent: 'flex-end',
-        height: ScreenUtil.autoheight(20),
-        marginHorizontal: ScreenUtil.autowidth(20),
+        paddingTop: ScreenUtil.autoheight(60),
+        paddingRight: ScreenUtil.autowidth(15)
     },
+
     Applyout: {
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        // width: ScreenUtil.autowidth(90),
         width:ScreenWidth - ScreenUtil.autowidth(20),
         height: ScreenUtil.autoheight(45),
-        // marginHorizontal: ScreenUtil.autowidth(20),
-        marginBottom: ScreenUtil.autoheight(50),
-        // marginTop: ScreenUtil.autoheight(12),
     },
     Applytext: {
-        fontSize: ScreenUtil.setSpText(15),
+        fontSize: ScreenUtil.setSpText(12),
     },
     header: {
-        flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        paddingVertical: ScreenUtil.autoheight(50),
+        paddingTop: ScreenUtil.autoheight(10),
     },
-      
-    headleftimg: {
-        width: ScreenUtil.autowidth(20),
-        height: ScreenUtil.autowidth(20),
-        marginHorizontal: ScreenUtil.autowidth(10),
-    },
-    inptout: {
-        flex: 1,
-        borderRadius: 5,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: 'center',
-        height: ScreenUtil.autoheight(45),
-        marginLeft: ScreenUtil.autowidth(15),
-        paddingLeft: ScreenUtil.autowidth(10),
-    },
-    inpt: {
-        flex: 1,
-        height: ScreenUtil.autoheight(45),
-        fontSize: ScreenUtil.setSpText(15),
-    },
+
     canceltext: {
         textAlign: 'center',
-        fontSize: ScreenUtil.setSpText(15),
+        fontSize: ScreenUtil.setSpText(17),
         paddingHorizontal:ScreenUtil.autowidth(8),
     },
-    tab: {
-        flex: 1,
-    },
-        passoutsource: {
+
+    passoutsource: {
         alignItems: 'center',
         flexDirection: 'column', 
     },
