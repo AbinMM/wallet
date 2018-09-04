@@ -46,6 +46,7 @@ import AuthTransfer from './Wallet/AuthTransfer'
 import ModifyPassword from './Wallet/ModifyPassword'
 import ExportPublicKey from './Wallet/ExportPublicKey'
 import AuthManage from './Wallet/AuthManage'
+import AuthExchange from './Wallet/AuthExchange'
 import BarCode from './Wallet/BarcodeTest'
 import { EasyToast } from "../components/Toast"
 import { EasyShowLD } from "../components/EasyShow"
@@ -199,6 +200,9 @@ const Nav = StackNavigator(
     },
     AuthManage: {
       screen: AuthManage
+    },
+    AuthExchange: {
+      screen: AuthExchange
     },
     AuthChange: {
       screen: AuthChange
