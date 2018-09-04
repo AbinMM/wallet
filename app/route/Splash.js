@@ -64,6 +64,7 @@ class Splash extends React.Component {
           UColor.secdfont= "#FFFFFF";
           UColor.mainfont= "#FFFFFF";
           UColor.tintstart= '#65CAFF';
+          UColor.fonttint= "#FFFFFF";
           UImage.guide=require('../img/day/guide.png');
           UImage.my_community=require('../img/day/my_community.png');
           UImage.account_manage=require('../img/day/account_manage.png');
@@ -162,6 +163,7 @@ class Splash extends React.Component {
           UColor.secdfont= "#43536D";
           UColor.mainfont= '#4e5e7d';
           UColor.tintstart= '#21232E';
+          UColor.fonttint= "#65CAFF";
       }
     }});
 

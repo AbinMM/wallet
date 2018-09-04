@@ -205,7 +205,7 @@ class Coins extends React.Component {
         renderHeader={(props)=> <ImageBackground source={UImage.coinsbg2} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1013,}}>
         <TabBar onTabPress={this._handleTabItemPress} 
         labelStyle={[styles.labelStyle,{color:UColor.btnColor}]} 
-        indicatorStyle={[styles.indicatorStyle,{backgroundColor: UColor.btnColor}]} 
+        indicatorStyle={[styles.indicatorStyle,{backgroundColor: UColor.fonttint}]} 
         style={{alignItems: 'center',justifyContent: 'center',backgroundColor:UColor.transport}} 
         tabStyle={{width: ScreenWidth / 4,padding:0,margin:0,}} 
         scrollEnabled={true} {...props}/>
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   },
   indicatorStyle: {
     marginLeft: ScreenUtil.autowidth(20),
-    marginBottom: ScreenUtil.autoheight(2),
+    marginBottom: ScreenUtil.autoheight(1),
     width: ScreenWidth / 4 - ScreenUtil.autowidth(40), 
   },
   container: {

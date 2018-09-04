@@ -321,7 +321,7 @@ class News extends React.Component {
             renderHeader={(props) => <ImageBackground source={UImage.coinsbg1} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1546,}}>
             <TabBar onTabPress={this._handleTabItemPress} 
             labelStyle={[styles.labelStyle,{color:UColor.btnColor}]} 
-            indicatorStyle={[styles.indicatorStyle,{backgroundColor: UColor.btnColor}]} 
+            indicatorStyle={[styles.indicatorStyle,{backgroundColor: UColor.fonttint}]} 
             style={[{paddingTop: ScreenUtil.autoheight(20),alignItems: 'center',justifyContent: 'center',backgroundColor:UColor.transport}]} 
             tabStyle={{ width: ScreenWidth / 3, padding: 0, margin: 0 }} 
             scrollEnabled={true} {...props} />
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
   },
   indicatorStyle: {
     marginLeft: ScreenUtil.autowidth(20),
-    marginBottom: ScreenUtil.autoheight(2),
+    marginBottom: ScreenUtil.autoheight(1),
     width: ScreenWidth / 3 - ScreenUtil.autowidth(40),
   },
   container: {
