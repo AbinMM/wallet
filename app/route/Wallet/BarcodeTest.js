@@ -168,7 +168,7 @@ export default class App extends BaseComponent {
     render() {
         return (
             <View style={{ flex: 1 }}>
-             <Header {...this.props} onPressLeft={true} title="扫码" />
+                <Header {...this.props} onPressLeft={true} title="扫码" />
                 {this.state.viewAppear ?
                     <Barcode style={{ flex: 1, }} ref={component => this._barCode = component}
                         onBarCodeRead={this._onBarCodeRead} />
