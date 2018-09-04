@@ -46,7 +46,7 @@ class Splash extends React.Component {
           UColor.fontColor= '#292F40'; //字体颜色 UColor.fontColor
           UColor.btnColor= '#ffffff'; //按钮字体颜色 UColor.btnColor
           UColor.riceWhite= '#ECECF0'; //米白色 UColor.riceWhite
-          UColor.arrow= '#8696B0'; //深字体色 UColor.arrow
+          UColor.arrow= '#75859f'; //深字体色 UColor.arrow
           UColor.startup= '#21232E'; //启动也背景色 UColor.startup
           UColor.inash= '#4D607E'; // 列表底色 UColor.inash
           UColor.lightgray= '#4c515b'; //浅字体色 UColor.lightgray
@@ -61,6 +61,9 @@ class Splash extends React.Component {
           UColor.mainsecd= "#EDEDED";
           UColor.tintfont= "#65CAFF";
           UColor.titletop= '#2279C5'; //顶部标题背景色 UColor.navigation
+          UColor.secdfont= "#FFFFFF";
+          UColor.mainfont= "#FFFFFF";
+          UColor.tintstart= '#65CAFF';
           UImage.guide=require('../img/day/guide.png');
           UImage.my_community=require('../img/day/my_community.png');
           UImage.account_manage=require('../img/day/account_manage.png');
@@ -109,17 +112,27 @@ class Splash extends React.Component {
           UImage.resources= require('../img/day/resources.png');
           UImage.line_bg= require('../img/day/line_bg.png');
           UImage.more= require('../img/day/more.png');
-          //UImage.tokenissue= require('../img/day/tokenissue.png');
-          //UImage.vote_node= require('../img/day/vote_node.png');
-          //UImage.candy= require('../img/day/candy.png');
-          //UImage.free_mortgage= require('../img/day/free_mortgage.png');
-          //UImage.navigation= require('../img/day/navigation.png');
+
+          UImage.tokenissue= require('../img/day/tokenissue.png');
+          UImage.vote_node= require('../img/day/vote_node.png');
+          UImage.candy= require('../img/day/candy.png');
+          UImage.free_mortgage= require('../img/day/free_mortgage.png');
+          UImage.navigation= require('../img/day/navigation.png');
 
           UImage.tab_1= require('../img/day/tab_1.png');
           UImage.tab_2= require('../img/day/tab_2.png');
           UImage.tab_3= require('../img/day/tab_3.png');
           UImage.tab_4= require('../img/day/tab_4.png');
           UImage.tab_5= require('../img/day/tab_5.png');
+
+          UImage.add_h= require('../img//day/add_h.png');
+          UImage.qr_h= require('../img//day/qr_h.png');
+          UImage.transfer_h= require('../img/day/transfer_h.png');
+          UImage.resources_h= require('../img/day/resources_h.png');
+          UImage.more_h= require('../img//day/more_h.png');
+
+          UImage.votea_bj= require('../img/day/votea_bj.png');
+          UImage.votec_bj= require('../img/day/votec_bj.png');
       }else{
           UColor.transport= 'rgba(0, 0, 0, 0.0)';
           UColor.mask= 'rgba(0, 0, 0, 0.4)'; //遮罩色 UColor.mask
@@ -146,6 +159,9 @@ class Splash extends React.Component {
           UColor.mainsecd= "#4e5e7d",
           UColor.tintfont= "#FFFFFF",
           UColor.titletop= '#4e5e7d'; //顶部标题背景色 UColor.navigation
+          UColor.secdfont= "#43536D";
+          UColor.mainfont= '#4e5e7d';
+          UColor.tintstart= '#21232E';
       }
     }});
 

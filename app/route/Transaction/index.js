@@ -1341,18 +1341,17 @@ class Transaction extends BaseComponent {
                 <View style={[styles.ebhbtnout,{backgroundColor:UColor.navigation}]}>
                     <View style={{width:'37%'}}>
                         <View style={{ flex:1,flexDirection:"row",alignItems: 'center', }}>
-                            <Text style={{marginLeft:10,fontSize:15,color:UColor.fontColor}}>内存</Text>
+                            <Text style={{marginLeft:10,fontSize:15,color:UColor.btnColor}}>内存</Text>
                         </View>
                     </View>
                     <View style={{width:'28%'}}>
                         <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-start", }}>
-                            <Text style={{fontSize:15,marginLeft:0,color:UColor.fontColor}}>涨幅</Text>
+                            <Text style={{fontSize:15,marginLeft:0,color:UColor.btnColor}}>涨幅</Text>
                         </View>
                     </View>
                     <View style={{width:'35%'}}>
                         <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-end", }}>
-                            <Text style={{ fontSize:15, color:UColor.fontColor, 
-                                textAlign:'center', marginRight:5}}>单价(EOS)</Text>
+                            <Text style={{ fontSize:15, color:UColor.btnColor,textAlign:'center', marginRight:5}}>单价(EOS)</Text>
                         </View>
                     </View>
                 </View>
@@ -1383,23 +1382,23 @@ class Transaction extends BaseComponent {
                 <View style={[styles.ebhbtnout,{backgroundColor:UColor.navigation}]}>
                     <View style={{width:'37%'}}>
                         <View style={{ flex:1,flexDirection:"row",alignItems: 'center', }}>
-                            <Text style={{marginLeft:10,fontSize:15,color:UColor.fontColor}}>币种</Text>
+                            <Text style={{marginLeft:10,fontSize:15,color:UColor.btnColor}}>币种</Text>
                         </View>
                     </View>
                     <View style={{width:'28%'}}>
                         <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-start", }}>
-                            <Text style={{fontSize:15,color:UColor.fontColor}}>涨幅</Text>
+                            <Text style={{fontSize:15,color:UColor.btnColor}}>涨幅</Text>
                         </View>
                     </View>
                     <View style={{width:'35%'}}>
                         <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"flex-end", }}>
-                            <Text style={{ fontSize:15, color:UColor.fontColor,textAlign:'center', marginRight:5}}>单价(EOS)</Text>
+                            <Text style={{ fontSize:15, color:UColor.btnColor,textAlign:'center', marginRight:5}}>单价(EOS)</Text>
                         </View>
                     </View>
                 </View>
 
                 <ListView initialListSize={5} 
-                  renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 0.5, backgroundColor:UColor.navigation}} />}
+                  renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 0.5, backgroundColor:UColor.secdColor}} />}
                   enableEmptySections={true} dataSource={this.state.dataSource.cloneWithRows(this.props.etlist==null?[]:this.props.etlist)}
                   renderRow={(rowData) => (
                     <Button onPress={this.selectETtx.bind(this, rowData)}>

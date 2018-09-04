@@ -286,7 +286,7 @@ class TurnOutAsset extends BaseComponent {
     render() {
         const c = this.props.navigation.state.params.coins;
         return (
-        <View style={[styles.container,{backgroundColor:UColor.secdColor}]}>
+        <View style={[styles.container,{backgroundColor:UColor.secdfont}]}>
             <Header {...this.props} onPressLeft={true} title={this.props.navigation.state.params.coins.asset.name} avatar={UImage.scan} onPressRight={this._rightTopClick.bind()}/>
             <ScrollView  keyboardShouldPersistTaps="always">
                 <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
@@ -296,8 +296,8 @@ class TurnOutAsset extends BaseComponent {
                             {/* <Text style={styles.rowtext}>≈ {c.value} ￥</Text> */}
                         </View>
                         <View style={styles.taboutsource}>
-                            <View style={[styles.outsource,{backgroundColor:UColor.secdColor}]}>
-                                <View style={[styles.inptoutsource,{borderBottomColor:UColor.mainColor}]}>
+                            <View style={[styles.outsource,{backgroundColor:UColor.secdfont}]}>
+                                <View style={[styles.inptoutsource,{borderBottomColor:UColor.mainsecd}]}>
                                     <View style={styles.accountoue} >
                                         <Text style={[styles.inptitle,{color: UColor.fontColor}]}>账户名称</Text>
                                         <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"   
@@ -312,7 +312,7 @@ class TurnOutAsset extends BaseComponent {
                                         </Button>
                                     </View>
                                 </View>
-                                <View style={[styles.textinptoue,{borderBottomColor:UColor.mainColor}]} >
+                                <View style={[styles.textinptoue,{borderBottomColor:UColor.mainsecd}]} >
                                     <Text style={[styles.inptitle,{color: UColor.fontColor}]}>转账数量</Text>
                                     <TextInput  ref={(ref) => this._ramount = ref} value={this.state.amount} returnKeyType="next"
                                         selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
@@ -320,7 +320,7 @@ class TurnOutAsset extends BaseComponent {
                                         onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })}
                                         />
                                 </View>
-                                <View style={[styles.textinptoue,{borderBottomColor:UColor.mainColor}]} >
+                                <View style={[styles.textinptoue,{borderBottomColor:UColor.mainsecd}]} >
                                     <Text style={[styles.inptitle,{color: UColor.fontColor}]}>备注</Text>
                                     <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
                                         selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow}

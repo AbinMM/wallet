@@ -164,7 +164,7 @@ export class LoadingDialog extends React.Component {
             onShow={()=>{console.log('dailog modal show...')}}>
 
           {this.state.loadingDialogFlag==LoadingShow &&
-          <View style={[styles.load_box,{backgroundColor: UColor.startup}, this.props.loadingStyle]}>
+          <View style={[styles.load_box,{backgroundColor: UColor.tintstart}, this.props.loadingStyle]}>
               <ActivityIndicator animating={true} color={this.props.color || UColor.btnColor} size={'large'} style={styles.load_progress} />
               <Text style={[styles.load_text,{color: UColor.btnColor}, this.props.textStyle]}>{this.state.text}</Text>
           </View>}

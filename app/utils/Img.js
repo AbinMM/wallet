@@ -4,11 +4,21 @@ export default {
   mustread: require('../img/mustread.png'),
   feedback: require('../img/feedback.png'),
   commonwt: require('../img/commonwt.png'),
-  more_b: require('../img/day/more.png'),
+  
   coinsbg1: require('../img/coinsbg1.png'),
   coinsbg2: require('../img/coinsbg2.png'),
   transactionA: require('../img/transactionA.png'),
   transactionB: require('../img/transactionB.png'),
+
+
+  add_h: require('../img/add_h.png'),
+  qr_h: require('../img/qr_h.png'),
+  transfer_h: require('../img/transfer_h.png'),
+  resources_h: require('../img/resources_h.png'),
+  more_h: require('../img/more_h.png'),
+
+
+
   
   a:require('../img/a.png'),
   aab1: require('../img/aab1.png'),

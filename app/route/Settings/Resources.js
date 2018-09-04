@@ -961,7 +961,7 @@ class Resources extends BaseComponent {
                                 </View> }
                                 {this.state.isOwn ? null:
                                 <View style={styles.inptoutsource}>
-                                    {this.state.isMemory?<Text style={[styles.inptTitlered,{color: UColor.showy}]}>注：帮他人购买，一旦送出将无法收回！</Text>:<Text style={styles.inptTitle}>设置接收者</Text>}
+                                    {this.state.isMemory?<Text style={[styles.inptTitlered,{color: UColor.showy}]}>注：帮他人购买，一旦送出将无法收回！</Text>:<Text style={[styles.inptTitle,{color: UColor.fontColor}]}>设置接收者</Text>}
                                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor}]}>
                                         <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"
                                             selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={12}

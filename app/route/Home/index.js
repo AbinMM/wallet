@@ -598,31 +598,31 @@ class Home extends React.Component {
           <View style={[styles.head,{backgroundColor:UColor.mainColor, borderBottomColor: UColor.tintColor}]}>
             <Button onPress={this.onPress.bind(this, 'addAssets')} style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UImage.add} style={styles.imgBtn} />
+                <Image source={UImage.add_h} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>添加资产</Text>
               </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'Receivables')} style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UImage.qr} style={styles.imgBtn} />
+                <Image source={UImage.qr_h} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>收币</Text>
               </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'transfer')} style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UImage.transfer} style={styles.imgBtn} />
+                <Image source={UImage.transfer_h} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>转账</Text>
               </View>
             </Button>
             <Button  onPress={this.onPress.bind(this, 'Resources')}  style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UImage.resources} style={styles.imgBtn} />
+                <Image source={UImage.resources_h} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>资源管理</Text>
               </View>
             </Button>
             <Button  onPress={this.onPress.bind(this, 'functionsMore')}  style={styles.headbtn}>
               <View style={styles.headbtnout}>
-                <Image source={UImage.more} style={styles.imgBtn} />
+                <Image source={UImage.more_h} style={styles.imgBtn} />
                 <Text style={[styles.headbtntext,{color: UColor.arrow}]}>更多</Text>
               </View>
             </Button>
@@ -645,7 +645,7 @@ class Home extends React.Component {
               <Button onPress={this.assetInfo.bind(this, rowData)}>
                 <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
                   <View style={styles.lefts}>
-                    <View style={{borderRadius: 25,backgroundColor: UColor.secdColor,marginRight: ScreenUtil.autowidth(10),}}> 
+                    <View style={{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(10),}}> 
                       <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
                     </View>
                     <Text style={[styles.lefttext,{color: UColor.fontColor}]}>{rowData.asset.name}</Text>
