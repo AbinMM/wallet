@@ -37,7 +37,8 @@ class AuthChange extends BaseComponent {
             inputCount:0,
             inputText:'',
             activeAuth:'',//更改的数据组
-            isRefreshing: false
+            isRefreshing: false,
+            password: '',
         }
     }
 

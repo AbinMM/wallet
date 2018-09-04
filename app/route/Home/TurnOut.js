@@ -43,6 +43,7 @@ class TurnOut extends BaseComponent {
             toAccount: params.toaccount,
             amount: params.amount == null ? '' : params.amount,
             name: params.name,
+            password:'',
         })
         DeviceEventEmitter.addListener('scan_result', (data) => {
             this.setState({toAccount:data.toaccount})

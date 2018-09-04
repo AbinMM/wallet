@@ -31,6 +31,7 @@ class AuthExchange extends React.Component {
         isAuth:false,
         accName:'',
         activeAuth:'',//更改的数据组
+        password:''
       }
   }
 
@@ -89,7 +90,6 @@ getAuthInfo(){
                     authFlag=true;
                 }
             }
-
             
             this.setState({
                 isAuth: authFlag,
@@ -97,7 +97,6 @@ getAuthInfo(){
             });
         }else{
             this.setState({isAuth: false});
-            
         }
     } });
 
@@ -161,7 +160,7 @@ changeAuth(authTempActive){
 
 authExchangeCtr= () =>{ 
         //当前钱包账户，校验是否有激活
-    var authTemp=this.state.activeAuth;
+    var authTemp=JSON.parse(JSON.stringify(this.state.activeAuth));
     var isChange=false;
 
         if(this.state.isAuth==false){
@@ -194,9 +193,7 @@ authExchangeCtr= () =>{
         <View style={styles.head}>
             <ImageBackground style={styles.bgout} source={UImage.authFrame} resizeMode="cover">
                 <Text style={[styles.Explaintext,{color: UColor.arrow}]}>使用ET交易平台进行交易时,必须授权于智能合约,否则无法交易!交易结束后,可取消授权。</Text>
-                {/* <Text style={styles.Tipstext2}> </Text> */}
                 <Text style={[styles.Explaintextmiddle,{color: UColor.arrow}]}>注:智能合约并不会记录或保留您的任何信息,请放心交易。(ET交易APP代码已开源)</Text>
-                {/* <Text style={styles.Tipstext2}> </Text> */}
                 <Text style={[styles.Tipstext2,{ color: UColor.tintColor}]}>开源地址：https://github.com/eostoken</Text>
             </ImageBackground>
         </View>
