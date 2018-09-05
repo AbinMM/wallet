@@ -58,13 +58,14 @@ class Splash extends React.Component {
           UColor.navigation= '#2279C5'; //顶部标题背景色 UColor.navigation
           UColor.receivables= "#65CAFF";
           UColor.bgEchar= "#ffffff"; // Echar背景色
+          UColor.warningRed= "#FF4F4F",//警告字体色彩
           UColor.invalidbtn= "#BFBFBF";
           UColor.mainsecd= "#EDEDED";
           UColor.tintfont= "#65CAFF";
           UColor.titletop= '#2279C5'; //顶部标题背景色 UColor.navigation
           UColor.secdfont= "#FFFFFF";
           UColor.mainfont= "#FFFFFF";
-          UColor.tintstart= '#65CAFF';
+          UColor.tintstart= '#3baaff'; 
           UColor.fonttint= "#FFFFFF";
           UImage.guide=require('../img/day/guide.png');
           UImage.my_community=require('../img/day/my_community.png');
