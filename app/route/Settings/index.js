@@ -236,7 +236,7 @@ class Setting extends React.Component {
 
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-
+      <ScrollView  keyboardShouldPersistTaps="always">
         <ImageBackground source={UImage.signln_bg} resizeMode="cover" style={styles.linebgout}>
           <Button onPress={this.goProfile.bind(this)} style={{flex: 1,}}>
             <View style={styles.userHead} >
@@ -316,6 +316,7 @@ class Setting extends React.Component {
               </View> 
             </TouchableOpacity>
         </Modal>
+      </ScrollView>
     </View>
   }
 }
