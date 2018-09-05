@@ -476,13 +476,17 @@ class Home extends React.Component {
     }
 
     this.setState({assetRefreshing: true});
-    this.props.dispatch({ type: 'assets/fetchMyAssetsFromNet', payload: { accountName: this.props.defaultWallet.name}, callback: () => {
-      this.props.dispatch({ type: 'assets/getBalance', payload: { accountName: this.props.defaultWallet.name, myAssets: this.props.myAssets}, callback: () => {
-        this.setState({assetRefreshing: false});
-      }});
-    }});
+    // this.props.dispatch({ type: 'assets/fetchMyAssetsFromNet', payload: { accountName: this.props.defaultWallet.name}, callback: () => {
+    //   this.props.dispatch({ type: 'assets/getBalance', payload: { accountName: this.props.defaultWallet.name, myAssets: this.props.myAssets}, callback: () => {
+    //     this.setState({assetRefreshing: false});
+    //   }});
+    // }});
 
     this.getDefaultWalletEosBalance(); // 默认钱包余额
+
+    this.getMyAssetsInfo(() => {
+      this.setState({assetRefreshing: false});
+    });
   }
 
   isTipShow() {
