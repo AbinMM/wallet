@@ -316,13 +316,11 @@ class AuthChange extends BaseComponent {
         <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
             <Header {...this.props} onPressLeft={true} title="Active权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scan}/>
             <View style={[styles.significantout,{backgroundColor: UColor.secdColor,borderColor: UColor.riseColor}]}>
-                <Text style={[styles.significanttextHead,{color: UColor.warningRed}]} >安全警告</Text>
-                <View style={styles.significantout2}>
-                    <Image source={UImage.warning} style={styles.imgBtnWarning} />
-                    <View style={{flex: 1,padding: 5,}}>
-                        <Text style={[styles.significanttext,{color: UColor.warningRed}]} >请确保您清楚了解Active授权,并确保添加的授权用户是您信任的用户，添加的授权用户将可获得变更权限、转账和投票等操作的权限。</Text>
-                    </View>
+                <View style={{flexDirection: 'row',alignItems: 'center',}}>
+                    <Image source={UImage.warning_h} style={styles.imgBtnWarning} />
+                    <Text style={[styles.significanttextHead,{color: UColor.riseColor}]} >温馨提示</Text>
                 </View>
+                <Text style={[styles.significanttext,{color: UColor.riseColor}]} >请确保您清楚了解Active授权，并确保添加的授权用户是您信任的用户，添加的授权用户将可获得变更权限、转账和投票等操作的权限。</Text>
             </View>
             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "padding" : null} style={styles.tab}>
                 <ScrollView keyboardShouldPersistTaps="handled" 
@@ -451,36 +449,24 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         flexDirection: "column",
         alignItems: 'center', 
-        padding: ScreenUtil.autowidth(5),
+        paddingVertical: ScreenUtil.autoheight(5),
         marginVertical: ScreenUtil.autoheight(10),
         marginHorizontal: ScreenUtil.autowidth(15),
-    },
-    //警告样式
-    significantout2: {
-        // borderWidth: 1,
-        // borderRadius: 5,
-        flexDirection: "row",
-        alignItems: 'center', 
-        padding: ScreenUtil.autowidth(5),
-        // marginVertical: ScreenUtil.autoheight(10),
-        // marginHorizontal: ScreenUtil.autowidth(15),
+        paddingHorizontal: ScreenUtil.autowidth(10),
     },
     imgBtnWarning: {
-        margin: ScreenUtil.autowidth(5),
         width: ScreenUtil.autowidth(23),
         height: ScreenUtil.autoheight(20),
+        marginRight: ScreenUtil.autowidth(10),
+    },
+    significanttextHead: {
+        fontWeight:"bold",
+        fontSize: ScreenUtil.setSpText(16), 
     },
     significanttext: {
         fontSize: ScreenUtil.setSpText(13), 
-        lineHeight: ScreenUtil.autoheight(17),
+        lineHeight: ScreenUtil.autoheight(20),
     },
-
-    significanttextHead: {
-        fontSize: ScreenUtil.setSpText(16), 
-        fontWeight:"bold",
-        lineHeight: ScreenUtil.autoheight(17),
-    },
-
     inptgo: {
         flex: 1,
         borderWidth: 1,

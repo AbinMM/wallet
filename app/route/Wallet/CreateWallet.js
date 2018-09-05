@@ -387,8 +387,8 @@ const styles = StyleSheet.create({
   significantout: {
     borderWidth: 1,
     borderRadius: 5,
-    flexDirection: "column",
     alignItems: 'center', 
+    flexDirection: "column",
     padding: ScreenUtil.autowidth(5),
     marginVertical: ScreenUtil.autoheight(16),
     marginHorizontal: ScreenUtil.autowidth(20),

@@ -149,22 +149,13 @@ class BackupsPkey extends BaseComponent {
                 <View style={[styles.inptoutbg,{backgroundColor: UColor.mainColor}]}>
                     <View style={styles.headout}>
                         <Text style={[styles.inptitle,{color: UColor.fontColor}]}>请立即备份您的私钥</Text>
-                        {/* <View style={[styles.warningout,{borderColor: UColor.showy}]}>
-                            <Image source={UImage.warning} style={styles.imgBtn} />
-                            <Text style={[styles.headtitle,{color: UColor.showy}]}>安全警告：私钥相当于您的银行卡密码，请妥善保管！（切勿截图、存储到网络硬盘、微信等传输！）</Text>
-                        </View> */}
-
-
                         <View style={[styles.warningout,{borderColor: UColor.showy}]}>
-                            <Text style={[styles.significanttextHead,{color: UColor.warningRed}]} >安全警告</Text>
-                            <View style={[styles.warningout2,{borderColor: UColor.showy}]}>
-                                <Image source={UImage.warning} style={styles.imgBtn} />
-                                <Text style={[styles.headtitle,{color: UColor.showy}]}>私钥相当于您的银行卡密码，请妥善保管！（切勿截图、存储到网络硬盘、微信等传输！）</Text>
+                            <View style={{flexDirection: 'row',alignItems: 'center',}}>
+                                <Image source={UImage.warning_h} style={styles.imgBtn} />
+                                <Text style={[styles.significanttextHead,{color: UColor.showy}]} >安全警告</Text>
                             </View>
+                            <Text style={[styles.headtitle,{color: UColor.showy}]}>私钥相当于您的银行卡密码，请妥善保管！（切勿截图、存储到网络硬盘、微信等传输！）</Text>
                         </View>
-
-
-
                     </View> 
                     {this.state.activePk != ''&& 
                     <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
@@ -245,12 +236,6 @@ const styles = StyleSheet.create({
         paddingVertical: ScreenUtil.autoheight(5),
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
-
-    warningout2: {
-        flexDirection: "row",
-        alignItems: 'center', 
-        paddingVertical: ScreenUtil.autoheight(5),
-    },
     significanttextHead: {
         fontWeight:"bold",
         fontSize: ScreenUtil.setSpText(16), 
@@ -258,12 +243,11 @@ const styles = StyleSheet.create({
     imgBtn: {
         width: ScreenUtil.autowidth(20),
         height: ScreenUtil.autowidth(20),
+        marginRight: ScreenUtil.autowidth(10),
     },
     headtitle: {
-        flex: 1,
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(25),
-        paddingLeft: ScreenUtil.autowidth(10),
     },
     inptoutgo: {
         paddingBottom: ScreenUtil.autoheight(15),
