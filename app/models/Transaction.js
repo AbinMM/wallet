@@ -156,8 +156,15 @@ export default {
             try{
                 const resp = yield call(Request.request, getETList, 'get');
                 //  alert('getETList: '+JSON.stringify(resp));
-                if(resp.code=='0'){               
-                    yield put({ type: 'updateETList', payload: { etlist:resp.data } });
+                if(resp.code=='0'){
+                    var list = [];
+                    for(var i = 0; i < resp.data.length; i++){
+                        if(resp.data[i].base_balance_uom == "OCT"){
+                            continue;
+                        }
+                        list.push(resp.data[i]);               
+                    }
+                    yield put({ type: 'updateETList', payload: { etlist: list} });
                     
                 }else{
                     EasyToast.show(resp.msg);
