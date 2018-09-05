@@ -218,7 +218,7 @@ class AssetSearch extends BaseComponent {
                   </View>
                   <View style={styles.logout}>
                       <Image source={UImage.bottom_log} style={styles.logimg}/>
-                      <Text style={[styles.logtext,{color: UColor.arrow}]}>ET 交易所</Text>
+                      <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
                   </View>
                 </View>}
                 <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} 
