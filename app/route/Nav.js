@@ -961,7 +961,7 @@ class Route extends React.Component {
                       <View style={{ padding: 10 }}>
                         <Image source={UImage.Invitation_vote} resizeMode="cover" style={{ width: '100%', height:ScreenWidth-70 }} />
                         <View style={{ width: (ScreenWidth - 40) * 0.319, justifyContent: 'center', alignSelf: 'center',paddingBottom:20, }}>
-                          <QRCode size={100} style={{ width: 100, }} value={'http://offw.etdac.io/pages/'} />
+                          <QRCode size={100} style={{ width: 100, }} value={'http://eostoken.im/'} />
                         </View>
 
                       </View>
