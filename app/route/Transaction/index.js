@@ -1087,8 +1087,8 @@ class Transaction extends BaseComponent {
             <Text style={[styles.paneltext,{color: UColor.btnColor}]}>交易面板</Text>
         </View>
     </TouchableOpacity>
-    <ImageBackground source={UImage.transactionA} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.164}}>
-        <View style={[styles.headerTitle,]}>  
+    <ImageBackground source={UImage.transactionA} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.164,zIndex: 999,}}>
+        <View style={styles.headerTitle}>  
             <Button onPress={this._leftTopClick.bind()}>
                 <Image source={this.state.modal ? UImage.tx_slide0 : UImage.tx_slide1} style={styles.imgBtn} />
             </Button>
