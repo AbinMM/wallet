@@ -141,7 +141,9 @@ changeAuth(authTempActive){
                     // EasyShowLD.loadingClose();
                     console.log("r=%s",JSON.stringify(r))
                     if(r.isSuccess==true){
+                        EasyShowLD.loadingClose();
                         EasyToast.show('交易授权变更成功！');
+                        this.props.navigation.goBack();
                     }else{
                         EasyToast.show('交易授权变更失败！');
                     }

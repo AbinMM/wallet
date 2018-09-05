@@ -236,7 +236,7 @@ class Setting extends React.Component {
 
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-
+      <ScrollView  keyboardShouldPersistTaps="always">
         <ImageBackground source={UImage.signln_bg} resizeMode="cover" style={styles.linebgout}>
           <Button onPress={this.goProfile.bind(this)} style={{flex: 1,}}>
             <View style={styles.userHead} >
@@ -281,7 +281,7 @@ class Setting extends React.Component {
         <View style={styles.footer}>
           <Text style={[styles.foottext,{color: UColor.arrow}]}>© 2018 eostoken all rights reserved </Text>
           {/* <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text> */}
-          <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V2.3.2</Text>
+          <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V2.3.3</Text>
         </View>
       
       <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
@@ -316,6 +316,7 @@ class Setting extends React.Component {
               </View> 
             </TouchableOpacity>
         </Modal>
+      </ScrollView>
     </View>
   }
 }

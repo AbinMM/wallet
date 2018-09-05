@@ -600,10 +600,10 @@ class Transaction extends BaseComponent {
         return ;
     };
 
-    if(parseFloat(this.state.buyETAmount) > 1){
-        this.setState({ error: true,errortext: '测试版本每次购买上限为１EOS.' });
-        return;
-    }
+    // if(parseFloat(this.state.buyETAmount) > 1){
+    //     this.setState({ error: true,errortext: '测试版本每次购买上限为１EOS.' });
+    //     return;
+    // }
     this.setState({ business: false});
     this. dismissKeyboardClick();
         const view =
@@ -2144,13 +2144,13 @@ function combineETKLine(data) {
         grid: [
             {
                 top: ScreenUtil.autoheight(30),
-                left: ScreenUtil.autowidth(35),
-                right: ScreenUtil.autowidth(20),
+                left: ScreenUtil.autowidth(0),
+                right: ScreenUtil.autowidth(0),
                 height: ScreenUtil.autoheight(160),
             },
             {
-                left: ScreenUtil.autowidth(35),
-                right: ScreenUtil.autowidth(20),
+                left: ScreenUtil.autowidth(0),
+                right: ScreenUtil.autowidth(0),
                 top: ScreenUtil.autoheight(210),
                 height: ScreenUtil.autoheight(85),
                 bottom: ScreenUtil.autoheight(5),

@@ -235,7 +235,7 @@ class AssetSearch extends BaseComponent {
                           <Text style={[styles.quantity,{color: UColor.arrow}]}>合约账户 : {rowData.contractAccount == null ? "" : rowData.contractAccount}</Text>
                         </View>
                         <View style={styles.listInfoRight}>
-                          <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.secdColor}
+                          <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.btnColor}
                               value={this.isMyAsset(rowData)} onValueChange={(value)=>{
                               this.setState({selectasset: rowData, value: value});
                               this.addAsset(rowData, value);

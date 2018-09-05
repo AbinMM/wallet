@@ -162,7 +162,7 @@ class Set extends BaseComponent {
                   <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>手势密码</Text>
                 </View>
                 <View style={styles.listInfoRight}>
-                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.secdColor}
+                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.btnColor}
                   value={this.state.gesture} onValueChange={(gesture)=>{this.setState({gesture:gesture,});this.gesturepass(gesture);}}/>
                 </View>
               </View>
@@ -173,7 +173,7 @@ class Set extends BaseComponent {
                   <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>消息推送</Text>
                 </View>
                 <View style={styles.listInfoRight}>
-                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.secdColor}
+                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.btnColor}
                   value={this.state.value} onValueChange={(value)=>{ this.setState({ value:value, });this.changeJpush(value);}}/>
                 </View>
               </View>

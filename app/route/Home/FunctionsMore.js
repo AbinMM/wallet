@@ -134,8 +134,11 @@ class FunctionsMore extends React.Component {
                 </View>
                 <Text style={styles.contentText}>使用说明</Text>
                 <View style={[styles.warningout,{borderColor: UColor.showy}]}>
-                    <Image source={UImage.warning_h} style={styles.imgBtnBackup} />
-                    <Text style={[styles.headtitle,{color: UColor.showy}]}>免责声明：本功能由第三方平台提供，不属于EosToken官方出品，《用户协议》和《应用风险》由该平台单独向您承担责任！</Text>
+                    <View style={{flexDirection: 'row',alignItems: 'center',}}>
+                        <Image source={UImage.warning} style={styles.imgBtnBackup} />
+                        <Text style={[styles.headtext,{color: UColor.riseColor}]} >免责声明</Text>
+                    </View>
+                    <Text style={[styles.headtitle,{color: UColor.showy}]}>本功能由第三方平台提供，不属于EosToken官方出品，《用户协议》和《应用风险》由该平台单独向您承担责任！</Text>
                 </View>
                 <View style={{ width: ScreenWidth-70,marginHorizontal: ScreenUtil.autowidth(20), marginVertical: ScreenUtil.autoheight(10),}}>
                     <Text style={[styles.centertext,{color: UColor.arrow}]}>3分钟，3EOS！最方便，最便宜的EOS自助发币DAPP。</Text>
@@ -216,15 +219,17 @@ const styles = StyleSheet.create({
         paddingBottom: ScreenUtil.autoheight(5),
     },
     imgBtnBackup: {
-        margin: ScreenUtil.autowidth(5),
-        width: ScreenUtil.autowidth(30),
-        height: ScreenUtil.autoheight(30),
+        width: ScreenUtil.autowidth(25),
+        height: ScreenUtil.autoheight(25),
+        marginRight: ScreenUtil.autowidth(10),
+    },
+    headtext: {
+        fontWeight: "bold",
+        fontSize: ScreenUtil.setSpText(16), 
     },
     headtitle: {
-        flex: 1,
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(20),
-        paddingLeft: ScreenUtil.autowidth(10),
     },
     headout: {
         paddingTop: ScreenUtil.autoheight(20),
@@ -233,9 +238,9 @@ const styles = StyleSheet.create({
     warningout: {
         borderWidth: 1,
         borderRadius: 5,
-        flexDirection: "row",
+        flexDirection: "column",
         alignItems: 'center',
-        width: ScreenWidth - 60,
+        padding: ScreenUtil.autowidth(5),
         marginHorizontal: ScreenUtil.autowidth(15),
     },
     centertext: {
