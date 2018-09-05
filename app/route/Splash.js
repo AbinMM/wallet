@@ -58,13 +58,14 @@ class Splash extends React.Component {
           UColor.navigation= '#2279C5'; //顶部标题背景色 UColor.navigation
           UColor.receivables= "#65CAFF";
           UColor.bgEchar= "#ffffff"; // Echar背景色
+          UColor.warningRed= "#FF4F4F",//警告字体色彩
           UColor.invalidbtn= "#BFBFBF";
           UColor.mainsecd= "#EDEDED";
           UColor.tintfont= "#65CAFF";
           UColor.titletop= '#2279C5'; //顶部标题背景色 UColor.navigation
           UColor.secdfont= "#FFFFFF";
           UColor.mainfont= "#FFFFFF";
-          UColor.tintstart= '#65CAFF';
+          UColor.tintstart= '#3baaff'; //Loading背景色
           UColor.fonttint= "#FFFFFF";
           UImage.guide=require('../img/day/guide.png');
           UImage.my_community=require('../img/day/my_community.png');
@@ -132,6 +133,7 @@ class Splash extends React.Component {
           UImage.votea_bj= require('../img/day/votea_bj.png');
           UImage.votec_bj= require('../img/day/votec_bj.png');
           UImage.scan= require('../img/day/scan.png');
+          UImage.authExchangeBlue= require('../img/day/authExchangeBlue.png');
       }else{
           UColor.transport= 'rgba(0, 0, 0, 0.0)';
           UColor.mask= 'rgba(0, 0, 0, 0.4)'; //遮罩色 UColor.mask
@@ -161,15 +163,10 @@ class Splash extends React.Component {
           UColor.titletop= '#4e5e7d'; //顶部标题背景色 UColor.navigation
           UColor.secdfont= "#43536D";
           UColor.mainfont= '#4e5e7d';
-          UColor.tintstart= '#21232E';
+          UColor.tintstart= '#21232E'; //Loading背景色
           UColor.fonttint= "#65CAFF";
       }
     }});
-
-    this.props.dispatch({type:'login/getETRamType',callback:(isRam)=>{
-      Constants.isRam = isRam;
-    } 
-    });
   }
 
   render() {

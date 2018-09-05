@@ -315,7 +315,6 @@ const styles = StyleSheet.create({
 
     btn: {
       flex: 1,
-      paddingTop: ScreenUtil.autoheight(8),
     },
     nothave: {
       borderRadius: 5,
@@ -332,7 +331,7 @@ const styles = StyleSheet.create({
     package: {
       flexDirection: "row",
       padding: ScreenUtil.autowidth(5),
-      marginBottom: ScreenUtil.autoheight(2),
+      marginTop: ScreenUtil.autoheight(2),
     },
     timetext: {
       flex: 3,

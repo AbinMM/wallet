@@ -68,9 +68,9 @@ class Transaction extends BaseComponent {
       logId: "-1",
       password : "", //买卖交易时的密码
       modal: false,
-      contractAccount:"issuemytoken", //ET合约账户名称
-      tradename:"TEST",  //ET交易币种的名称
-      selectcode:"TEST_EOS_issuemytoken",    //ET交易币种的唯一code
+      contractAccount:"octtothemoon", //ET合约账户名称
+      tradename:"OCT",  //ET交易币种的名称
+      selectcode:"OCT_EOS_octtothemoon",    //ET交易币种的唯一code
       precisionNumber: 4,
       showMore:false,  
       showMoreTitle:"更多",
@@ -101,9 +101,9 @@ class Transaction extends BaseComponent {
             if(et!=undefined && et != null && et != ""){
                 this.setState({
                     modal: false,
-                    contractAccount: et.base_contract ? et.base_contract : "issuemytoken",
-                    tradename:et.base_balance_uom ? et.base_balance_uom : "TEST",
-                    selectcode:et.code ?  et.code : "TEST_EOS_issuemytoken",
+                    contractAccount: et.base_contract ? et.base_contract : "octtothemoon",
+                    tradename:et.base_balance_uom ? et.base_balance_uom : "OCT",
+                    selectcode:et.code ?  et.code : "OCT_EOS_octtothemoon",
                     });
             }
 
@@ -1232,7 +1232,7 @@ class Transaction extends BaseComponent {
                                     <Text style={[styles.formName,{flex: 3,color: UColor.lightgray}]}>账号</Text>
                                     <Text style={[styles.formName,{flex: 4,color: UColor.lightgray}]}>数量(EOS)</Text>
                                     <Text style={[styles.formName,{flex: 3.5,color: UColor.lightgray}]}>价格(EOS)</Text>
-                                    <Text style={[styles.formName,{flex: 2.5,color: UColor.lightgray}]}>时间</Text>
+                                    <Text style={[styles.formName,{flex: 2.7,color: UColor.lightgray}]}>时间</Text>
                                 </View>
                             }
                             dataSource={this.state.dataSource.cloneWithRows(this.state.newetTradeLog == null ? [] : this.state.newetTradeLog)} 
@@ -1244,14 +1244,14 @@ class Transaction extends BaseComponent {
                                         <Text style={[styles.payertext,{flex: 3,color: UColor.fontColor}]} numberOfLines={1}>{rowData.account}</Text>
                                         <Text style={[styles.selltext,{flex: 4,color: UColor.riseColor}]} numberOfLines={1}>卖 {(rowData.price == null || rowData.price == '0') ? this.precisionTransfer(rowData.token_qty,8) : rowData.eos_qty.replace("EOS", "")}</Text>
                                         <Text style={[styles.selltext,{flex: 3.5,color: UColor.riseColor}]} numberOfLines={1}>{rowData.price != 0? this.precisionTransfer(rowData.price,8):''}</Text>
-                                        <Text style={[styles.payertext,{flex: 2.5, color: UColor.riseColor}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
+                                        <Text style={[styles.payertext,{flex: 2.7, color: UColor.riseColor}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
                                     </View>
                                     :
                                     <View style={styles.liststrip}>
                                         <Text style={[styles.payertext,{flex: 3,color: UColor.fontColor}]} numberOfLines={1}>{rowData.account}</Text>
                                         <Text style={[styles.selltext,{flex: 4,color: UColor.fallColor}]} numberOfLines={1}>买 {rowData.eos_qty.replace("EOS", "")}</Text>
                                         <Text style={[styles.selltext,{flex: 3.5,color: UColor.fallColor}]} numberOfLines={1}>{rowData.price != 0? this.precisionTransfer(rowData.price,8):''}</Text>
-                                        <Text style={[styles.payertext,{flex: 2.5, color: UColor.riseColor}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
+                                        <Text style={[styles.payertext,{flex: 2.7, color: UColor.riseColor}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
                                     </View>
                                     }
                                 </View>
@@ -1270,7 +1270,7 @@ class Transaction extends BaseComponent {
                         <Text style={[styles.formName,{flex: 3,color: UColor.lightgray}]}>账号</Text>
                         <Text style={[styles.formName,{flex: 4,color: UColor.lightgray}]}>数量(EOS)</Text>
                         <Text style={[styles.formName,{flex: 3.5,color: UColor.lightgray}]}>价格(EOS)</Text>
-                        <Text style={[styles.formName,{flex: 2.5,color: UColor.lightgray}]}>时间</Text>
+                        <Text style={[styles.formName,{flex: 2.7,color: UColor.lightgray}]}>时间</Text>
                     </View>
                     }
                       dataSource={this.state.dataSource.cloneWithRows(this.props.etBigTradeLog == null ? [] : this.props.etBigTradeLog)} 
@@ -1282,14 +1282,14 @@ class Transaction extends BaseComponent {
                                     <Text style={[styles.payertext,{flex: 3,color: UColor.fontColor}]} numberOfLines={1}>{rowData.account}</Text>
                                     <Text style={[styles.selltext,{flex: 4,color: UColor.riseColor}]} numberOfLines={1}>卖 {(rowData.price == null || rowData.price == '0') ? this.precisionTransfer(rowData.token_qty,8) : rowData.eos_qty.replace("EOS", "")}</Text>
                                     <Text style={[styles.selltext,{flex: 3.5,color: UColor.riseColor}]} numberOfLines={1}>{rowData.price != 0 ? this.precisionTransfer(rowData.price,8):''}</Text>
-                                    <Text style={[styles.payertext,{flex: 2.5, color: UColor.riseColor}]} numberOfLines={1} >{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
+                                    <Text style={[styles.payertext,{flex: 2.7, color: UColor.riseColor}]} numberOfLines={1} >{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
                                 </View>
                                 :
                                 <View style={styles.liststrip}>
                                     <Text style={[styles.payertext,{flex: 3,color: UColor.fontColor}]} numberOfLines={1}>{rowData.account}</Text>
                                     <Text style={[styles.selltext,{flex: 4,color: UColor.fallColor}]} numberOfLines={1}>买 {rowData.eos_qty.replace("EOS", "")}</Text>
                                     <Text style={[styles.selltext,{flex: 3.5,color: UColor.fallColor}]} numberOfLines={1}>{rowData.price != 0 ? this.precisionTransfer(rowData.price,8):''}</Text>
-                                    <Text style={[styles.payertext,{flex: 2.5, color: UColor.riseColor}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
+                                    <Text style={[styles.payertext,{flex: 2.7, color: UColor.riseColor}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
                                 </View>
                                 }
                             </View>

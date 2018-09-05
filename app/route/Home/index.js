@@ -476,13 +476,17 @@ class Home extends React.Component {
     }
 
     this.setState({assetRefreshing: true});
-    this.props.dispatch({ type: 'assets/fetchMyAssetsFromNet', payload: { accountName: this.props.defaultWallet.name}, callback: () => {
-      this.props.dispatch({ type: 'assets/getBalance', payload: { accountName: this.props.defaultWallet.name, myAssets: this.props.myAssets}, callback: () => {
-        this.setState({assetRefreshing: false});
-      }});
-    }});
+    // this.props.dispatch({ type: 'assets/fetchMyAssetsFromNet', payload: { accountName: this.props.defaultWallet.name}, callback: () => {
+    //   this.props.dispatch({ type: 'assets/getBalance', payload: { accountName: this.props.defaultWallet.name, myAssets: this.props.myAssets}, callback: () => {
+    //     this.setState({assetRefreshing: false});
+    //   }});
+    // }});
 
     this.getDefaultWalletEosBalance(); // 默认钱包余额
+
+    this.getMyAssetsInfo(() => {
+      this.setState({assetRefreshing: false});
+    });
   }
 
   isTipShow() {
@@ -564,7 +568,7 @@ class Home extends React.Component {
 
             <View style={styles.addto}>
               <View style={styles.addtoouttop}>
-                <Text style={{fontSize: ScreenUtil.setSpText(32), color: UColor.btnColor}}>≈ {this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : this.adjustTotalBalance(this.state.totalBalance)) : '****'}</Text>
+                <Text style={{fontSize: ScreenUtil.setSpText(32), color: UColor.btnColor}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '≈ 0.00' : "≈ " + this.adjustTotalBalance(this.state.totalBalance)) : '****'}</Text>
                 <View style={[styles.incdocupout,(this.state.increase>=0 || this.state.totalBalance == "0.00")?{borderColor: UColor.fallColor,backgroundColor: UColor.fallColor}:{borderColor: UColor.riseColor,backgroundColor: UColor.riseColor}]}>
                   <Text style={[styles.cupcdo,{color: UColor.btnColor}]}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
                 </View>
