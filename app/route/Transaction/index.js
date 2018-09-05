@@ -21,7 +21,7 @@ const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
 const transactionOption = ['最新交易','我的交易','最近大单','持仓大户'];
-
+var DeviceInfo = require('react-native-device-info');
 @connect(({transaction,sticker,wallet}) => ({...transaction, ...sticker, ...wallet}))
 class Transaction extends BaseComponent {
 
@@ -1072,6 +1072,14 @@ class Transaction extends BaseComponent {
     return true;
   }
 
+    isIos11(iphoneAdjustStyle){
+        if(Platform.OS == 'ios'&& DeviceInfo.getSystemVersion()>"11.0"){
+            return iphoneAdjustStyle;
+        }else{
+            return null;
+        }
+    }
+
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
     <TouchableOpacity style={styles.transactiontou}  onPress={this.openbusiness.bind(this)} activeOpacity={0.8}>
@@ -1096,7 +1104,7 @@ class Transaction extends BaseComponent {
           </View>
         </Button>}
     <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
-      <ScrollView scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"refreshControl={
+      <ScrollView  {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"refreshControl={
             <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
             tintColor={UColor.fontColor} colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}
             >
