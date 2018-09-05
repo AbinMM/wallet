@@ -303,11 +303,11 @@ class createWallet extends BaseComponent {
       <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
           <View style={[styles.significantout,{backgroundColor: UColor.mainColor,borderColor: UColor.riseColor}]}>
-            <Image source={UImage.warning} style={styles.imgBtn} />
-            <View style={{flex: 1,paddingLeft: ScreenUtil.autowidth(5),}}>
-              <Text style={[styles.significanttext,{color: UColor.riseColor}]} >重要声明:</Text>
-              <Text style={[styles.significanttext,{color: UColor.riseColor}]} >密码用于保护私钥和交易授权，建议设置高强度密码；EosToken不存储密码，也无法帮您找回，请务必牢记。</Text>
+            <View style={{flexDirection: 'row',alignItems: 'center',}}>
+              <Image source={UImage.warning_h} style={styles.imgBtn} />
+              <Text style={[styles.statementtext,{color: UColor.riseColor}]} >重要声明</Text>
             </View>
+            <Text style={[styles.significanttext,{color: UColor.riseColor}]} >密码用于保护私钥和交易授权，建议设置高强度密码；EosToken不存储密码，也无法帮您找回，请务必牢记。</Text>
           </View>
           <View style={{backgroundColor: UColor.mainColor,}}>
             <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]} >
@@ -387,19 +387,24 @@ const styles = StyleSheet.create({
   significantout: {
     borderWidth: 1,
     borderRadius: 5,
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: 'center', 
     padding: ScreenUtil.autowidth(5),
     marginVertical: ScreenUtil.autoheight(16),
     marginHorizontal: ScreenUtil.autowidth(20),
   },
   imgBtn: {
-    margin: ScreenUtil.autowidth(5),
-    width: ScreenUtil.autowidth(30),
-    height: ScreenUtil.autowidth(30),
+    width: ScreenUtil.autowidth(25),
+    height: ScreenUtil.autowidth(25),
+    marginRight: ScreenUtil.autowidth(10),
+  },
+  statementtext: {
+    fontWeight: "bold",
+    fontSize: ScreenUtil.setSpText(16), 
   },
   significanttext: {
     fontSize: ScreenUtil.setSpText(12), 
+    lineHeight: ScreenUtil.autoheight(20),
   },
   inptout: {
     borderBottomWidth: 1,

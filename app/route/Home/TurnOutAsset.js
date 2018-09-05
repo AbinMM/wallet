@@ -338,7 +338,10 @@ class TurnOutAsset extends BaseComponent {
                     </TouchableOpacity>
                 </KeyboardAvoidingView>
                 <View style={[styles.warningout,{borderColor: UColor.showy}]}>
-                    <Image source={UImage.warning} style={styles.imgBtn} />
+                    <View style={{flexDirection: 'row',alignItems: 'center',}}>
+                        <Image source={UImage.warning_h} style={styles.imgBtn} />
+                        <Text style={[styles.headtext,{color: UColor.showy}]} >温馨提示</Text>
+                    </View>
                     <Text style={[styles.headtitle,{color: UColor.showy}]}>温馨提示：如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
                 </View>
                 <Button onPress={this._rightButtonClick.bind(this)} style={styles.btnnextstep}>
@@ -377,14 +380,17 @@ class TurnOutAsset extends BaseComponent {
                                     </View>
 
                                     {this.state.memo== ""&&
-                                    <View style={styles.warningoutShow}>
-                                        <Image source={UImage.warning} style={styles.imgBtn} />
-                                        <Text style={styles.headtitle}>温馨提示：如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
+                                    <View style={[styles.warningoutShow,{borderColor: UColor.showy}]}>
+                                        <View style={{flexDirection: 'row',alignItems: 'center',}}>
+                                            <Image source={UImage.warning_h} style={styles.imgBtn} />
+                                            <Text style={[styles.headtext,{color: UColor.showy}]} >温馨提示</Text>
+                                        </View>
+                                        <Text style={[styles.headtitle,{color: UColor.showy}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
                                     </View>}
                                     
                                     <Button onPress={() => { this.inputPwd() }}>
-                                        <View style={styles.btnoutsource}>
-                                            <Text style={styles.btntext}>确认</Text>
+                                        <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
+                                            <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
                                         </View>
                                     </Button>
                                 </View>
@@ -565,32 +571,33 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         alignItems: 'center', 
-        flexDirection: "row",
-        justifyContent: 'center',
-        paddingVertical: ScreenUtil.autoheight(5),
+        flexDirection: "column",
         marginVertical: ScreenUtil.autoheight(10),
-        marginHorizontal: ScreenUtil.autowidth(20),
+        paddingVertical:  ScreenUtil.autoheight(5),
         paddingHorizontal: ScreenUtil.autowidth(10),
+        marginHorizontal:  ScreenUtil.autoheight(20),
     },
     warningoutShow: {
         borderWidth: 1,
         borderRadius: 5,
-        flexDirection: "row",
         alignItems: 'center',
-        width: ScreenWidth-40,
+        flexDirection: "column",
         marginTop: ScreenUtil.autoheight(10),
         marginHorizontal: ScreenUtil.autowidth(20),
-        paddingVertical: ScreenUtil.autoheight(5),
+        paddingVertical:  ScreenUtil.autoheight(5),
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
     imgBtn: {
         width: ScreenUtil.autowidth(20),
         height: ScreenUtil.autowidth(20),
+        marginRight: ScreenUtil.autowidth(10),
+    },
+    headtext: {
+        fontWeight: "bold",
+        fontSize: ScreenUtil.setSpText(14), 
     },
     headtitle: {
-        flex: 1,
         fontSize: ScreenUtil.setSpText(12),
-        paddingLeft: ScreenUtil.autowidth(10),
         lineHeight:  ScreenUtil.autoheight(20),
     },
 })
