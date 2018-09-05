@@ -179,7 +179,7 @@ class Set extends BaseComponent {
               </View>
           </View>
           
-          <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
+          {/* <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
               <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
                 <View style={styles.scrollView}>
                   <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>夜间模式</Text>
@@ -189,7 +189,7 @@ class Set extends BaseComponent {
                   value={this.state.skin} onValueChange={(value)=>{ this.setState({ skin:value, });this.changeTheme(value);}}/>
                 </View>
               </View>
-          </View>
+          </View> */}
           <Button onPress={() => this.checkVersion()}>
             <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
                 <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>

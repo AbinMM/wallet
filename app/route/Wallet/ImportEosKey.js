@@ -625,7 +625,7 @@ class ImportEosKey extends BaseComponent {
             </View>
         </TouchableOpacity>
         <Modal style={styles.touchableout} animationType={'slide'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
-            <TouchableOpacity style={styles.pupuo} activeOpacity={1.0}>
+            <TouchableOpacity style={[styles.pupuo,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
               <View style={[styles.modalStyle,{backgroundColor: UColor.btnColor}]}>
                 <View style={styles.subView}> 
                   <Text style={styles.titleout}/>
