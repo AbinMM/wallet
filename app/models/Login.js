@@ -207,18 +207,6 @@ export default {
       }
       if (callback) callback({ theme: theme });
     },
-    *getETRamType({ payload,callback }, { call, put }) {
-      var isRam = yield call(store.get, 'et_is_ram_type');
-      if (isRam == null || isRam == "") {
-        isRam = true;  
-          //没有记录要保存         
-          yield call(store.save, 'et_is_ram_type', isRam);
-      }
-      if (callback) callback(isRam);
-    },
-    *setETRamType({ payload,callback }, { call, put }) {
-      yield call(store.save, 'et_is_ram_type', payload.isRam ? payload.isRam : true);
-    },
     *geteostReceive({ payload, callback }, { call, put }) {
       try {
         const resp = yield call(Request.request, eostReceive, 'post', payload);
