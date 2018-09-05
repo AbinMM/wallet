@@ -68,9 +68,9 @@ class Transaction extends BaseComponent {
       logId: "-1",
       password : "", //买卖交易时的密码
       modal: false,
-      contractAccount:"issuemytoken", //ET合约账户名称
-      tradename:"TEST",  //ET交易币种的名称
-      selectcode:"TEST_EOS_issuemytoken",    //ET交易币种的唯一code
+      contractAccount:"octtothemoon", //ET合约账户名称
+      tradename:"OCT",  //ET交易币种的名称
+      selectcode:"OCT_EOS_octtothemoon",    //ET交易币种的唯一code
       precisionNumber: 4,
       showMore:false,  
       showMoreTitle:"更多",
@@ -101,9 +101,9 @@ class Transaction extends BaseComponent {
             if(et!=undefined && et != null && et != ""){
                 this.setState({
                     modal: false,
-                    contractAccount: et.base_contract ? et.base_contract : "issuemytoken",
-                    tradename:et.base_balance_uom ? et.base_balance_uom : "TEST",
-                    selectcode:et.code ?  et.code : "TEST_EOS_issuemytoken",
+                    contractAccount: et.base_contract ? et.base_contract : "octtothemoon",
+                    tradename:et.base_balance_uom ? et.base_balance_uom : "OCT",
+                    selectcode:et.code ?  et.code : "OCT_EOS_octtothemoon",
                     });
             }
 
