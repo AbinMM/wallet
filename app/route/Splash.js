@@ -133,6 +133,7 @@ class Splash extends React.Component {
           UImage.votea_bj= require('../img/day/votea_bj.png');
           UImage.votec_bj= require('../img/day/votec_bj.png');
           UImage.scan= require('../img/day/scan.png');
+          UImage.authExchangeBlue= require('../img/day/authExchangeBlue.png');
       }else{
           UColor.transport= 'rgba(0, 0, 0, 0.0)';
           UColor.mask= 'rgba(0, 0, 0, 0.4)'; //遮罩色 UColor.mask
