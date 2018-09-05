@@ -65,7 +65,7 @@ class Splash extends React.Component {
           UColor.titletop= '#2279C5'; //顶部标题背景色 UColor.navigation
           UColor.secdfont= "#FFFFFF";
           UColor.mainfont= "#FFFFFF";
-          UColor.tintstart= '#3baaff'; 
+          UColor.tintstart= '#3baaff'; //Loading背景色
           UColor.fonttint= "#FFFFFF";
           UImage.guide=require('../img/day/guide.png');
           UImage.my_community=require('../img/day/my_community.png');
@@ -162,7 +162,7 @@ class Splash extends React.Component {
           UColor.titletop= '#4e5e7d'; //顶部标题背景色 UColor.navigation
           UColor.secdfont= "#43536D";
           UColor.mainfont= '#4e5e7d';
-          UColor.tintstart= '#21232E';
+          UColor.tintstart= '#21232E'; //Loading背景色
           UColor.fonttint= "#65CAFF";
       }
     }});
