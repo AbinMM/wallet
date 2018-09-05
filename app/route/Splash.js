@@ -166,11 +166,6 @@ class Splash extends React.Component {
           UColor.fonttint= "#65CAFF";
       }
     }});
-
-    this.props.dispatch({type:'login/getETRamType',callback:(isRam)=>{
-      Constants.isRam = isRam;
-    } 
-    });
   }
 
   render() {

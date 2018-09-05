@@ -87,7 +87,7 @@ var TabContainer = TabNavigator(
   {
     Home: { screen: Home },
     Coins: { screen: Coins },
-    Transaction: { screen: (Constants.isRam ?  Ram : Transaction) },
+    Transaction: { screen: (Transaction) },
     News: { screen: News },
     Settings: { screen: Settings }
   },
