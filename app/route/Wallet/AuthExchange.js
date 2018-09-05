@@ -223,19 +223,17 @@ const styles = StyleSheet.create({
     head: {
         // flexDirection: "column",
         paddingVertical: ScreenUtil.autoheight(41),
-        paddingHorizontal: ScreenUtil.autowidth(30)
+        paddingHorizontal: ScreenUtil.autowidth(10)
     },
     bgout: {
-        
-        paddingTop: ScreenUtil.autoheight(60),
-        paddingHorizontal: ScreenUtil.autowidth(10),
-        width: (ScreenWidth - ScreenUtil.autowidth(60)),
-        height: (ScreenWidth)*0.683,
-        // height: (ScreenWidth - ScreenUtil.autowidth(20))*0.8437,
+        paddingTop: ScreenUtil.autoheight(70),
+        paddingHorizontal: ScreenUtil.autowidth(20),
+        width: ScreenWidth - ScreenUtil.autowidth(20),
+        height: (ScreenWidth - ScreenUtil.autowidth(20))*0.8437,
     },
     Explaintext: {
         fontSize: ScreenUtil.setSpText(14),
-        marginTop: ScreenUtil.autoheight(40),
+        marginTop: ScreenUtil.autoheight(60),
         lineHeight: ScreenUtil.autoheight(20), 
     },
     Explaintextmiddle: {
