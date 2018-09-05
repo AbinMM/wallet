@@ -21,7 +21,7 @@ const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
 const transactionOption = ['最新交易','我的交易','最近大单','持仓大户'];
-
+var DeviceInfo = require('react-native-device-info');
 @connect(({transaction,sticker,wallet}) => ({...transaction, ...sticker, ...wallet}))
 class Transaction extends BaseComponent {
 
@@ -1072,6 +1072,14 @@ class Transaction extends BaseComponent {
     return true;
   }
 
+    isIos11(iphoneAdjustStyle){
+        if(Platform.OS == 'ios'&& DeviceInfo.getSystemVersion()>"11.0"){
+            return iphoneAdjustStyle;
+        }else{
+            return null;
+        }
+    }
+
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
     <TouchableOpacity style={styles.transactiontou}  onPress={this.openbusiness.bind(this)} activeOpacity={0.8}>
@@ -1079,8 +1087,8 @@ class Transaction extends BaseComponent {
             <Text style={[styles.paneltext,{color: UColor.btnColor}]}>交易面板</Text>
         </View>
     </TouchableOpacity>
-    <ImageBackground source={UImage.transactionA} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.164}}>
-        <View style={[styles.headerTitle,]}>  
+    <ImageBackground source={UImage.transactionA} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.164,zIndex: 999,}}>
+        <View style={styles.headerTitle}>  
             <Button onPress={this._leftTopClick.bind()}>
                 <Image source={this.state.modal ? UImage.tx_slide0 : UImage.tx_slide1} style={styles.imgBtn} />
             </Button>
@@ -1095,8 +1103,8 @@ class Transaction extends BaseComponent {
               <Ionicons style={{marginRight: ScreenUtil.autowidth(5),color: UColor.btnColor}} name="ios-arrow-forward-outline" size={20} />
           </View>
         </Button>}
-    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
-      <ScrollView scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"refreshControl={
+    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
+      <ScrollView  {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"refreshControl={
             <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
             tintColor={UColor.fontColor} colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}
             >
@@ -2013,6 +2021,9 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(15),
         lineHeight: ScreenUtil.autoheight(30), 
     },
+    tab: {
+        flex: 1,
+    }
 });
 
 var upColor = '#f44961';

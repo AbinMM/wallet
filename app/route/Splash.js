@@ -36,7 +36,7 @@ class Splash extends React.Component {
       }
     }});
     this.props.dispatch({type:'login/getthemeSwitching',callback:(theme)=>{
-      if(!theme.theme){  
+      if(theme.theme){  
           UColor.transport= 'rgba(0, 0, 0, 0.0)';
           UColor.mask= 'rgba(0, 0, 0, 0.4)'; //遮罩色 UColor.mask
           UColor.mainColor=  '#FFFFFF'; //主色调 UColor.mainColor

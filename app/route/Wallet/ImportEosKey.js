@@ -620,12 +620,12 @@ class ImportEosKey extends BaseComponent {
               {this.state.isSenior!=true &&
               <View style={styles.logout}>
                   <Image source={UImage.bottom_log} style={styles.logimg}/>
-                  <Text style={[styles.logtext,{color: UColor.arrow}]}>ET 交易所</Text>
+                  <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
               </View>}
             </View>
         </TouchableOpacity>
         <Modal style={styles.touchableout} animationType={'slide'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
-            <TouchableOpacity style={styles.pupuo} activeOpacity={1.0}>
+            <TouchableOpacity style={[styles.pupuo,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
               <View style={[styles.modalStyle,{backgroundColor: UColor.btnColor}]}>
                 <View style={styles.subView}> 
                   <Text style={styles.titleout}/>

@@ -179,7 +179,7 @@ class Set extends BaseComponent {
               </View>
           </View>
           
-          <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
+          {/* <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
               <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
                 <View style={styles.scrollView}>
                   <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>夜间模式</Text>
@@ -189,7 +189,7 @@ class Set extends BaseComponent {
                   value={this.state.skin} onValueChange={(value)=>{ this.setState({ skin:value, });this.changeTheme(value);}}/>
                 </View>
               </View>
-          </View>
+          </View> */}
           <Button onPress={() => this.checkVersion()}>
             <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
                 <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
@@ -213,7 +213,7 @@ class Set extends BaseComponent {
         </View>
         <View style={styles.logout}>
           <Image source={UImage.bottom_log} style={styles.logimg}/>
-          <Text style={[styles.logtext,{color: UColor.arrow}]}>ET 交易所</Text>
+          <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
         </View>
       </View>
   </View>

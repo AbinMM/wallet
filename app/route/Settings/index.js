@@ -236,13 +236,7 @@ class Setting extends React.Component {
 
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-    {Constants.isNetWorkOffline &&
-        <Button onPress={this.openSystemSetting.bind(this)}>
-          <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
-              <Text style={[styles.systemSettingText,{color: UColor.fontColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
-              <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
-          </View>
-        </Button>}
+
         <ImageBackground source={UImage.signln_bg} resizeMode="cover" style={styles.linebgout}>
           <Button onPress={this.goProfile.bind(this)} style={{flex: 1,}}>
             <View style={styles.userHead} >
@@ -260,6 +254,13 @@ class Setting extends React.Component {
             </View>
           </Button>
         </ImageBackground>
+        {Constants.isNetWorkOffline &&
+        <Button onPress={this.openSystemSetting.bind(this)}>
+          <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
+              <Text style={[styles.systemSettingText,{color: UColor.fontColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
+              <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
+          </View>
+        </Button>}
         <View style={[styles.eosbtnout,{backgroundColor: UColor.mainColor}]}>
           <View style={styles.eosout}>
             <Text style={[styles.eosbtntext,{color: UColor.arrow}]}>活动奖励</Text>
