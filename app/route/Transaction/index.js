@@ -600,10 +600,10 @@ class Transaction extends BaseComponent {
         return ;
     };
 
-    if(parseFloat(this.state.buyETAmount) > 1){
-        this.setState({ error: true,errortext: '测试版本每次购买上限为１EOS.' });
-        return;
-    }
+    // if(parseFloat(this.state.buyETAmount) > 1){
+    //     this.setState({ error: true,errortext: '测试版本每次购买上限为１EOS.' });
+    //     return;
+    // }
     this.setState({ business: false});
     this. dismissKeyboardClick();
         const view =
