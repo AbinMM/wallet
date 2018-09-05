@@ -1103,7 +1103,7 @@ class Transaction extends BaseComponent {
               <Ionicons style={{marginRight: ScreenUtil.autowidth(5),color: UColor.btnColor}} name="ios-arrow-forward-outline" size={20} />
           </View>
         </Button>}
-    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
+    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
       <ScrollView  {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"refreshControl={
             <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
             tintColor={UColor.fontColor} colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}
@@ -2021,6 +2021,9 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(15),
         lineHeight: ScreenUtil.autoheight(30), 
     },
+    tab: {
+        flex: 1,
+    }
 });
 
 var upColor = '#f44961';
