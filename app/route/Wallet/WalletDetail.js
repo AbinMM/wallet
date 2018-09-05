@@ -488,7 +488,7 @@ class WalletDetail extends BaseComponent {
               {(!c.isactived || !c.hasOwnProperty('isactived')) ? <View style={[styles.notactivedout,{borderColor: UColor.showy}]}>
               <Text style={[styles.notactived,{color: UColor.showy}]}>未激活</Text>
               </View>:(c.isBackups ? null : <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
-              <Text style={[styles.stopoutBackups,{borderColor: UColor.tintColor}]}>未备份</Text>
+              <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]}>未备份</Text>
               </View>) }   
             </View>
           </View>
