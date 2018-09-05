@@ -22,7 +22,7 @@ var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 var dismissKeyboard = require('dismissKeyboard');
 const transactionOption = ['最新交易','我的交易','最近大单','持仓大户'];
-
+var DeviceInfo = require('react-native-device-info');
 @connect(({transaction,sticker,wallet,vote}) => ({...transaction, ...sticker, ...wallet, ...vote}))
 class Ram extends BaseComponent {
 
@@ -815,6 +815,14 @@ class Ram extends BaseComponent {
         }});
     }
 
+    isIos11(iphoneAdjustStyle){
+        if(Platform.OS == 'ios'&& DeviceInfo.getSystemVersion()>"11.0"){
+            return iphoneAdjustStyle;
+        }else{
+            return null;
+        }
+    }
+
     render() {
         return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
         <ImageBackground source={UImage.transactionA} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.164}}>
@@ -833,8 +841,8 @@ class Ram extends BaseComponent {
                 </View>
             </Button>
         }
-        <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
-        <ScrollView scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"refreshControl={
+        <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
+        <ScrollView {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"refreshControl={
                 <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} tintColor={UColor.fontColor} 
                     colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}>
                 <ImageBackground source={UImage.transactionB} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
@@ -1564,6 +1572,9 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(15),
         lineHeight: ScreenUtil.autoheight(30), 
     },
+    tab: {
+        flex: 1,
+    }
 });
 
 
