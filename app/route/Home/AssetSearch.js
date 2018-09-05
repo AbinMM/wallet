@@ -97,6 +97,7 @@ class AssetSearch extends BaseComponent {
   componentWillUnmount(){
     //结束页面前，资源释放操作
     super.componentWillUnmount();
+    DeviceEventEmitter.removeListener('scan_result');
   }
   //手动添加
   logout() {
