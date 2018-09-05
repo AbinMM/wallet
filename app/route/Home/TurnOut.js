@@ -366,7 +366,7 @@ class TurnOut extends BaseComponent {
             </ScrollView>
             <View style={{backgroundColor: UColor.riceWhite,}}>
                 <Modal animationType={'slide'} transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
-                    <TouchableOpacity style={[styles.modalStyle,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
+                    <TouchableOpacity style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
                         <View style={{ width: ScreenWidth,  height: ScreenHeight*4/6,  backgroundColor: UColor.btnColor,}}>
                             <View style={styles.subView}>
                                 <Text style={styles.buttontext}/>
