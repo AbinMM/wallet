@@ -735,7 +735,7 @@ class Transaction extends BaseComponent {
                                         <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号未进行交易授权！</Text>
                                         <Text style={[styles.Explaintext,{color: UColor.arrow}]}>进行交易前，需授权ET交易智能合约，否则无法进行交易!</Text>
                                     </View>
-                                    EasyShowLD.dialogShow("提示", view, "去授权", "呆会说", () => {
+                                    EasyShowLD.dialogShow("提示", view, "去授权", "待会说", () => {
                                     const { navigate } = this.props.navigation;
                                     navigate('AuthExchange', {wallet: this.props.defaultWallet});
                                     // EasyShowLD.dialogClose();
@@ -2019,7 +2019,7 @@ const styles = StyleSheet.create({
     },
     Explaintext: {
         fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autoheight(30), 
+        lineHeight: ScreenUtil.autoheight(25), 
     },
     tab: {
         flex: 1,
