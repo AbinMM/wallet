@@ -78,38 +78,38 @@ class Community extends BaseComponent {
               <TouchableHighlight onPress={this.prot.bind(this, 'wechat')} style={{flex: 1, marginRight: ScreenUtil.autowidth(2.5), }} underlayColor={UColor.secdColor}>
                 <ImageBackground  style={styles.wechatqq} source={UImage.cmy_wx} resizeMode="stretch">                  
                   <Text style={[styles.textname,{color:UColor.btnColor}]}>官方微信</Text>
-                  <Text style={[styles.textlinktwo,{color: UColor.navigation}]}>{this.state.wechat}</Text>           
+                  <Text style={[styles.textlinktwo,{color: UColor.tintnavigation}]}>{this.state.wechat}</Text>           
                 </ImageBackground>
               </TouchableHighlight>
               <TouchableHighlight onPress={this.prot.bind(this, 'qq')} style={{flex: 1, marginLeft: ScreenUtil.autowidth(2.5),}} underlayColor={UColor.secdColor}>
                 <ImageBackground style={styles.wechatqq} source={UImage.cmy_qq} resizeMode="stretch">          
                   <Text style={[styles.textname,{color:UColor.btnColor}]}>官方QQ</Text>
-                  <Text style={[styles.textlinktwo,{color: UColor.navigation}]}>{this.state.qq}</Text>           
+                  <Text style={[styles.textlinktwo,{color: UColor.tintnavigation}]}>{this.state.qq}</Text>           
                 </ImageBackground>  
               </TouchableHighlight>      
             </View>
             <TouchableHighlight onPress={this.prot.bind(this, 'public')} underlayColor={UColor.secdColor}>
               <ImageBackground style={styles.publicout} source={UImage.cmy_gzh} resizeMode="stretch">              
                 <Text style={[styles.textname,{color:UColor.btnColor}]}>官方公众号</Text>
-                <Text style={[styles.textlinktwo,{color: UColor.navigation}]}>{this.state.public}</Text>     
+                <Text style={[styles.textlinktwo,{color: UColor.tintnavigation}]}>{this.state.public}</Text>     
               </ImageBackground>
             </TouchableHighlight>
             <TouchableHighlight onPress={this.prot.bind(this, 'microblog')} underlayColor={UColor.secdColor}>
               <ImageBackground style={styles.sourceout} source={UImage.cmy_wb} resizeMode="stretch">            
                 <Text style={[styles.textname,{color:UColor.btnColor}]}>官方微博</Text>
-                <Text style={[styles.textlink,{color: UColor.navigation}]}>weibo.com/eostoken</Text>         
+                <Text style={[styles.textlink,{color: UColor.tintnavigation}]}>weibo.com/eostoken</Text>         
               </ImageBackground>    
             </TouchableHighlight>   
             <TouchableHighlight onPress={this.prot.bind(this, 'telegraph')} underlayColor={UColor.secdColor}>      
               <ImageBackground style={styles.sourceout} source={UImage.cmy_db} resizeMode="stretch">       
                 <Text style={[styles.textname,{color:UColor.btnColor}]}>EosToken电报群</Text>
-                <Text style={[styles.textlink,{color: UColor.navigation}]}>{this.state.telegraph}</Text>
+                <Text style={[styles.textlink,{color: UColor.tintnavigation}]}>{this.state.telegraph}</Text>
               </ImageBackground>   
             </TouchableHighlight>
             <TouchableHighlight onPress={this.prot.bind(this, 'source')} underlayColor={UColor.secdColor}>      
               <ImageBackground style={styles.sourceout} source={UImage.cmy_kydz} resizeMode="stretch">       
                 <Text style={[styles.textname,{color:UColor.btnColor}]}>代码开源地址</Text>
-                <Text style={[styles.textlink,{color: UColor.navigation}]}>{this.state.source}</Text>
+                <Text style={[styles.textlink,{color: UColor.tintnavigation}]}>{this.state.source}</Text>
               </ImageBackground>   
             </TouchableHighlight>        
           </View>   

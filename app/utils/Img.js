@@ -17,13 +17,6 @@ export default {
   resources_h: require('../img/resources_h.png'),
   more_h: require('../img/more_h.png'),
 
-  add_b: require('../img/day/add.png'),
-  qr_b: require('../img/day/qr.png'),
-  transfer_b: require('../img/day/transfer.png'),
-  resources_b: require('../img/day/resources.png'),
-  more_b: require('../img/day/more.png'),
-  coinsbg1: require('../img/day/coinsbg1.png'),
-  coinsbg2: require('../img/day/coinsbg2.png'),
 
 
   

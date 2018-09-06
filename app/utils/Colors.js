@@ -29,6 +29,7 @@ export default {
   mainfont: '#4e5e7d',
   tintstart: '#21232E',
   fonttint: "#65CAFF",
+  tintnavigation: "#65CAFF",
 
   // transport: 'rgba(0, 0, 0, 0.0)', //透明色UColor.transport
   // mask: 'rgba(0, 0, 0, 0.4)', //遮罩色 UColor.mask
@@ -60,4 +61,5 @@ export default {
   // mainfont: "#FFFFFF",
   // tintstart: '#65CAFF',
   // fonttint: "#FFFFFF",
+  //tintnavigation: '#2279C5',
 }
