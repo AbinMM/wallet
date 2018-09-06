@@ -90,13 +90,21 @@ class ExportPublicKey extends BaseComponent {
                 </View>
                 }
             </View>
-            <View style={styles.textout}>
+            {/* <View style={styles.textout}>
                 <Text style={[styles.titletext,{color: UColor.fontColor}]}>什么是拥有者权限？</Text>
                 <Text style={[styles.explaintext,{color: UColor.fontColor}]}>Owner 代表了对账户的所有权，可对权限进行设置，管理Active和其他角色</Text>
                 <Text style={[styles.titletext,{color: UColor.fontColor}]}>什么是管理者权限？</Text>
                 <Text style={[styles.explaintext,{color: UColor.fontColor}]}>Active 用于日常使用，比如转账，投票等。</Text>
                 <Text style={[styles.titletext,{color: UColor.fontColor}]}>什么是权重阈值？</Text>
                 <Text style={[styles.explaintext,{color: UColor.fontColor}]}>权重阈值是使用该权限的最低权重要求。</Text>
+            </View> */}
+            <View style={styles.textout}>
+                <Text style={[styles.titletext,{color: UColor.fontColor}]}>什么是拥有者权限（Owner）？</Text>
+                <Text style={[styles.explaintext,{color: UColor.arrow}]}>Owner 代表了对账户的所有权，可以对权限进行设置，管理Active和其他角色。</Text>
+                <Text style={[styles.titletext,{color: UColor.fontColor}]}>什么是管理者权限（Active）？</Text>
+                <Text style={[styles.explaintext,{color: UColor.arrow}]}>Active 用于日常使用，比如转账，投票等。</Text>
+                <Text style={[styles.titletext,{color: UColor.fontColor}]}>什么是权重阈值？</Text>
+                <Text style={[styles.explaintext,{color: UColor.arrow}]}>权重阈值是使用该权限的最低权重要求。</Text>
             </View>
             <View style={styles.logout}>
                 <Image source={UImage.bottom_log} style={styles.logimg}/>
@@ -106,7 +114,7 @@ class ExportPublicKey extends BaseComponent {
     </View>
   }
 }
-
+        
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -148,6 +156,7 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(25),
     },
+
     textout: {
         paddingVertical: ScreenUtil.autoheight(10),
         paddingHorizontal: ScreenUtil.autowidth(16),
@@ -162,6 +171,25 @@ const styles = StyleSheet.create({
         paddingLeft: ScreenUtil.autowidth(20),
         paddingVertical: ScreenUtil.autoheight(5),
     },
+    // textout: {
+    //     flex: 1,
+    //     justifyContent: 'center',
+    //     paddingHorizontal: ScreenUtil.autowidth(20),
+    // },
+    // titletext: {
+    //     fontSize: ScreenUtil.setSpText(15),
+    //     lineHeight: ScreenUtil.autoheight(35),
+    // },
+    // explaintext: {
+    //     fontSize: ScreenUtil.setSpText(13),
+    //     lineHeight: ScreenUtil.autoheight(20),
+    // },
+
+
+
+
+
+
     logout:{
         flex: 1,
         alignItems: 'center',
