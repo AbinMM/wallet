@@ -182,7 +182,7 @@ class Coins extends React.Component {
                 <Text style={{fontSize:ScreenUtil.setSpText(18),color:UColor.fontColor}}>￥{rowData.price}</Text>
                 <Text style={{fontSize:ScreenUtil.setSpText(10),color:UColor.arrow}}>量 {formatterNumber(rowData.txs)}</Text>
               </View>
-              <View style={[styles.cupcdo,{backgroundColor:rowData.increase>0?UColor.riseColor:UColor.fallColor}]}>
+              <View style={[styles.cupcdo,{backgroundColor:rowData.increase>0?UColor.fallColor:UColor.riseColor}]}>
                 <Text style={[styles.cupcdotext,{color:UColor.btnColor}]}>{rowData.increase>0?'+'+rowData.increase:rowData.increase}%</Text>
               </View>
             </View>

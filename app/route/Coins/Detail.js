@@ -122,7 +122,7 @@ class CoinDetail extends BaseComponent {
                     <Text style={{fontSize: ScreenUtil.setSpText(12),color:UColor.fontColor}}>$ {c.usd}</Text>
                     <Text style={{marginTop: ScreenUtil.autoheight(5),fontSize: ScreenUtil.setSpText(16),color:UColor.arrow}}>≈  ￥{c.price}</Text>
                   </View>
-                  <View style={[styles.cupcdo,{backgroundColor:c.increase>0?UColor.riseColor:UColor.fallColor}]}>
+                  <View style={[styles.cupcdo,{backgroundColor:c.increase>0?UColor.fallColor:UColor.riseColor}]}>
                     <Text style={[styles.cupcdotext,{color:UColor.btnColor}]}>{c.increase>0?'+'+c.increase:c.increase}%</Text>
                   </View>
                 </View>
