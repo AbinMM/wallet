@@ -278,16 +278,16 @@ class Setting extends React.Component {
         <View>
           {this._renderListItem()}
         </View>
+
         <View style={styles.footer}>
           <Text style={[styles.foottext,{color: UColor.arrow}]}>© 2018 eostoken all rights reserved </Text>
           {/* <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text> */}
           <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V2.3.3</Text>
         </View>
       
-      <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
-            <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
-              <View style={{ width: ScreenWidth-20, backgroundColor: UColor.fontColor, borderRadius: 5, }}>
-              {/* <ImageBackground source={UImage.congratulate} resizeMode="cover" style={styles.linebgout}> */}
+        <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
+          <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+            <View style={{ width: ScreenWidth-20, backgroundColor: UColor.fontColor, borderRadius: 5, }}>
                 <View style={styles.subViewBackup}> 
                   <Button onPress={this._setModalVisible.bind(this)} style={styles.buttonView}>
                       <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={30} />
@@ -299,22 +299,15 @@ class Setting extends React.Component {
                     <View style={styles.accountoue} >
                         <Text style={[styles.inptitle,{color: UColor.blackColor}]}>您的主网账号：</Text>
                         <Text style={[styles.inpt,{color: UColor.arrow}]}>{this.state.walletName}</Text>
-                        {/* <TextInput ref={(ref) => this._raccount = ref}  value={this.state.walletName} keyboardType="default"   
-                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}      
-                            placeholder="请输入EOS主网账号" underlineColorAndroid="transparent" keyboardType="default"  
-                            onChangeText={(walletName) => this.setState({ walletName })} maxLength = {12}
-                        /> */}
                     </View>
                 </View>
-                {/* </ImageBackground> */}
                 <Button onPress={this.eostreceive.bind(this)} style={styles.butout}>
                     <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
                         <Text style={[styles.deletetext,{color: UColor.btnColor}]}>提交</Text>
                     </View>
                 </Button> 
-               
-              </View> 
-            </TouchableOpacity>
+            </View> 
+          </TouchableOpacity>
         </Modal>
       </ScrollView>
     </View>

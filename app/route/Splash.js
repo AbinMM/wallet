@@ -125,6 +125,7 @@ class Splash extends React.Component {
           UImage.tab_3= require('../img/day/tab_3.png');
           UImage.tab_4= require('../img/day/tab_4.png');
           UImage.tab_5= require('../img/day/tab_5.png');
+          UImage.tab_5_h= require('../img/day/tab_5_h.png');
           UImage.add_h= require('../img//day/add_h.png');
           UImage.qr_h= require('../img//day/qr_h.png');
           UImage.transfer_h= require('../img/day/transfer_h.png');
