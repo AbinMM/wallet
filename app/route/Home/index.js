@@ -675,7 +675,7 @@ class Home extends React.Component {
                 </View>
                 <Text style={styles.contentText}>IOS用户重要提示</Text>
                 <View style={[styles.warningout,{borderColor: UColor.showy}]}>
-                    <Image source={UImage.warning_h} style={styles.imgBtn} />
+                    <Image source={UImage.warning} style={styles.imgBtn} />
                     <Text style={[styles.headtitle,{color: UColor.showy}]}>亲爱的eostoken用户：由于App Store平台自身存在证书授权过期问题导致app无法打开的情况发生，造成数据丢失。当前系统检测到您尚未备份钱包，为了避免资产损失，请您及时备份。</Text>
                 </View>
                 <Button onPress={this.WalletDetailBackup.bind(this,this.props.defaultWallet)}>
@@ -774,10 +774,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  listout: {
-    height: ScreenUtil.autoheight(70),
-  },
-
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -793,14 +789,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: "space-between",
-    paddingTop: ScreenUtil.autoheight(10),
+    paddingTop: ScreenUtil.autoheight(20),
     paddingHorizontal: ScreenUtil.autowidth(10),
   },
   toptext: {
     textAlign: "center",
-    height: ScreenUtil.autoheight(60),
+    height: ScreenUtil.autoheight(50),
     fontSize: ScreenUtil.setSpText(18),
-    lineHeight: ScreenUtil.autoheight(60),
+    lineHeight: ScreenUtil.autoheight(50),
   },
 
   bgout: {
@@ -831,14 +827,12 @@ const styles = StyleSheet.create({
   addto: {
     flex: 1, 
     flexDirection: "column",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     paddingHorizontal: ScreenUtil.autowidth(20),
-    paddingVertical:  ScreenUtil.autoheight(15),
   },
   addout: {
     flexDirection: "row",
     alignItems: 'center',
-    marginTop: ScreenUtil.autoheight(20), 
   },
 
   backoractivestyle: {
@@ -877,11 +871,7 @@ const styles = StyleSheet.create({
   addtoouttext: {
     fontSize: ScreenUtil.setSpText(20), 
   },
-  addtobtn: {
-    alignItems: 'center', 
-    justifyContent: "center",
-    width: ScreenUtil.autowidth(60), 
-  },
+
   addbtnout: {
     flex:1,  
     alignItems: 'center', 
@@ -1132,7 +1122,7 @@ deleteout: {
   borderRadius: 6,
   alignItems: 'center',
   justifyContent: 'center',
-  height: ScreenUtil.autoheight(50),
+  height: ScreenUtil.autoheight(45),
   marginVertical: ScreenUtil.autoheight(15),
   marginHorizontal: ScreenUtil.autowidth(60),
 },
