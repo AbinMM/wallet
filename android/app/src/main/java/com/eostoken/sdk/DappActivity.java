@@ -172,7 +172,7 @@ public class DappActivity extends Activity {
             // String name = "eosbille1234";
             // String str_res = "{wallets:{eos:[{name:" + name + ",address:" + name + ",tokens:{eos:" + "4.7583"  + "}}]}}";
             String execJs = "javascript:TPJSBrigeClient.startFunction(" + callback + "('" + str_res + "'));";
-            Toast.makeText(getApplicationContext(), methodName +"=" + execJs, Toast.LENGTH_LONG).show();
+            // Toast.makeText(getApplicationContext(), methodName +"=" + execJs, Toast.LENGTH_SHORT).show();
             mWebView.loadUrl(execJs);
         }
     }
@@ -221,7 +221,7 @@ public class DappActivity extends Activity {
                 object.put("callback", callback);
                 
                final String dataToRN = object.toString();          
-                Toast.makeText(getApplicationContext(), dataToRN, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), dataToRN, Toast.LENGTH_SHORT).show();
                 // new Handler().post(new Runnable() {
                 //     @Override
                 //     public void run() {
