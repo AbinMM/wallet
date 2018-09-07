@@ -48,12 +48,19 @@ class WalletManage extends BaseComponent {
     var th = this;
     this.props.dispatch({type:'wallet/getRevealWallet',callback:(reveal)=>{ this.setState({isEye:reveal.reveal,});}});
     this.props.dispatch({ type: 'wallet/walletList' });
+    this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
+      this.getAllWalletEosBalance();
+    }});
     DeviceEventEmitter.addListener('updateDefaultWallet', (tab) => {
         this.props.dispatch({ type: 'wallet/walletList' });
+        this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
+          this.getAllWalletEosBalance();
+        } });
       });
     DeviceEventEmitter.addListener('delete_wallet', (tab) => {
       this.props.dispatch({ type: 'wallet/walletList' });
     });
+
   }
 
   componentWillUnmount(){
@@ -65,6 +72,21 @@ class WalletManage extends BaseComponent {
     const { navigate } = this.props.navigation;
     var func = this.updateState;
     navigate('WalletDetail', { data, func, isEye: this.state.isEye });
+  }
+
+  getAllWalletEosBalance(){
+    if(this.props.walletList == null){
+      return;
+    }
+
+    for(var i = 0; i < this.props.walletList.length; i++) {
+      if (this.props.walletList[i] != null && this.props.walletList[i].name != null && (this.props.walletList[i].isactived && this.props.walletList[i].hasOwnProperty('isactived'))) {
+        this.props.dispatch({
+          type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.walletList[i].name, symbol: 'EOS' }
+        })
+  
+      }
+    }
   }
 
   // 创建钱包
