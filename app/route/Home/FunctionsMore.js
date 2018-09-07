@@ -124,9 +124,6 @@ class FunctionsMore extends React.Component {
     } 
     openTokenissue_DAPP() {
         this. _setModalVisible_DAPP();
-
-        // const { navigate } = this.props.navigation;
-        // navigate('DAPP', { title: this.state.selecttitle, url: this.state.selecturl });
         if(Platform.OS === 'ios')
         {
           NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.state.selecturl);
