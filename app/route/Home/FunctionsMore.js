@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, StyleSheet, Image, View, Text, Linking, Modal, TouchableOpacity,ListView,Platform,DeviceEventEmitter,NativeModules} from 'react-native';
+import { Dimensions, StyleSheet, Image, View, Text, Linking, Modal, TouchableOpacity,ListView,TextInput,Platform,DeviceEventEmitter,NativeModules} from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
@@ -10,9 +10,11 @@ import { EasyShowLD } from '../../components/EasyShow'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { EasyToast } from '../../components/Toast';
+import Constants from '../../utils/Constants'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
+var DeviceInfo = require('react-native-device-info');
 let g_props;
 @connect(({ news ,wallet,vote}) => ({ ...news, ...wallet, ...vote}))
 class FunctionsMore extends React.Component {
@@ -921,8 +923,10 @@ function getAppInfo(callback)
     if(Platform.OS === 'ios')
     {
       res.data.system = "ios";
+      res.data.sys_version =  "26";  //TODO
     }else{
       res.data.system = "android";
+      res.data.sys_version =  "26";
     }
     res.data.version =  DeviceInfo.getVersion();
     res.msg = "success";
