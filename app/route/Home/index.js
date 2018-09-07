@@ -43,14 +43,15 @@ class Home extends React.Component {
       Invalid: false,
       arr1: 0,
       isChecked: true,
-      isEye: false,
+      isEye: true,
       assetRefreshing: false,
     };
   }
 
   componentDidMount() {
     //加载地址数据
-    this.props.dispatch({type:'assets/getReveal',callback:(reveal)=>{ this.setState({isEye:reveal.reveal,});}});
+    this.props.dispatch({type:'assets/getReveal',callback:(reveal)=>{ 
+      this.setState({isEye:reveal.reveal,});}});
     this.props.dispatch({ type: 'wallet/updateInvalidState', payload: {Invalid: false}});
     this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
       this.setState({assetRefreshing: true});
