@@ -414,68 +414,6 @@ function getEosBalance(params, callback)
 
 }
 
-function getTableRows(params, callback)
-{
-  var str_res = '{"result":false,"data":{}}';
-  try{
-    var obj_param = JSON.parse(params);
-    if (!obj_param || obj_param.json == undefined || !obj_param.code || !obj_param.scope || !obj_param.table) {
-        console.log('getTableRows:missing params; "json", "code", "scope", "table" is required ');
-        if (callback)  callbackToSDK('getTableRows',callback,str_res);
-        return;
-    }
-
-  var res = new Object();
-  res.result = false;
-  res.data = {};
-
-  var objpayload = new Object();
-  objpayload.json = obj_param.json;
-  objpayload.code = obj_param.code;
-  objpayload.scope = obj_param.scope;
-  objpayload.table = obj_param.table;
-  if(obj_param.table_key)  
-  {
-    objpayload.table_key = obj_param.table_key;
-  }
-  if(obj_param.lower_bound)
-  {
-    objpayload.lower_bound = obj_param.lower_bound;
-  }
-  else if(obj_param.upper_bound)
-  {
-    objpayload.upper_bound = obj_param.upper_bound;
-  }
-  objpayload.limit = obj_param.limit ? obj_param.limit : 10;
-  g_props.dispatch({
-    type: 'wallet/getTableRows', payload: objpayload, callback: (resp) => {
-      try {
-        if (resp && resp.code == '0') {
-          res.result = true;
-          var obj = JSON.parse(resp.data);
-          res.data.rows = obj.rows;
-          res.msg = "success";
-        } else {
-            var errmsg = ((resp.data && resp.data.msg) ? resp.data.msg : "error");
-            console.log("getTableRows %s",errmsg);
-            res.result = false;
-            res.msg = errmsg;
-        }
-        str_res = JSON.stringify(res);
-        if (callback)  callbackToSDK('getTableRows',callback,str_res);
-      } catch (error) {
-        console.log("getTableRows error: %s",error.message);
-        if (callback)  callbackToSDK('getTableRows',callback,str_res);
-      }
-    }
-  });
-
-  }catch(error){
-    console.log("getTableRows error: %s",error.message);
-    if (callback)  callbackToSDK('getTableRows',callback,str_res);
-  }
-
-}
 function getEosTableRows(params, callback)
 {
   var str_res = '{"result":false,"data":{}}';
@@ -988,9 +926,6 @@ function callMessage(methodName, params, callback)
            break;
 
        case 'getTableRows':
-           getTableRows(params, callback);
-           break;
-
        case 'getEosTableRows':
            getEosTableRows(params, callback);
            break;

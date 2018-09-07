@@ -1,5 +1,6 @@
 import Request from '../utils/RequestUtil';
-import { address, getAccountsByPuk, isExistAccountName, getintegral, isExistAccountNameAndPublicKey,getFreeMortgage } from '../utils/Api';
+import { address, getAccountsByPuk, isExistAccountName, getintegral, isExistAccountNameAndPublicKey,getFreeMortgage,getEosTransactionRecord,
+    getEosTableRows,} from '../utils/Api';
 import { EasyToast } from '../components/Toast';
 
 import store from 'react-native-simple-store';
@@ -513,7 +514,37 @@ export default {
                 if (callback) callback({ code: 500, msg: "网络异常" });                
             }
         },
+        
+        *getEosTransactionRecord({ payload, callback }, { call, put }) {
+            try{
+                const resp = yield call(Request.request, getEosTransactionRecord, 'post', payload);
+                // alert('getEosTransactionRecord: '+JSON.stringify(resp) + " " + JSON.stringify(payload));
+                // if(resp.code=='0'){    
 
+                // }else{
+                //     EasyToast.show(resp.msg);
+                // }
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
+        *getEosTableRows({ payload, callback }, { call, put }) {
+            try{
+                const resp = yield call(Request.request, getEosTableRows, 'post', payload);
+                // alert('getEosTableRows: '+JSON.stringify(resp) + " " + JSON.stringify(payload));
+                // if(resp.code=='0'){    
+
+                // }else{
+                //     EasyToast.show(resp.msg);
+                // }
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
          *isExistAccountNameAndPublicKey({payload, callback},{call,put}) {
             // alert('22' + JSON.stringify(payload) )
             try{
