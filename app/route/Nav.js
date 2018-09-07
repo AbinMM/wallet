@@ -14,6 +14,7 @@ import Settings from './Settings'
 import Splash from './Splash'
 import Homepage from './Homepage'
 import Web from '../route/Web'
+import DAPP from './DAPP'
 import Coin from './Coins/Detail'
 import Login from './Login'
 import AssistantQrcode from './Login/AssistantQrcode'
@@ -161,6 +162,9 @@ const Nav = StackNavigator(
         headerLeft: null,
         headerRight: null,
       }
+    },
+    DAPP: {
+      screen: DAPP
     },
     Web: {
       screen: Web

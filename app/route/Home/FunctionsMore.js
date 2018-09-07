@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, StyleSheet, Image, View, Text, Linking, Modal, TouchableOpacity,} from 'react-native';
+import { Dimensions, StyleSheet, Image, View, Text, Linking, Modal, TouchableOpacity,ListView,} from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
@@ -9,6 +9,7 @@ import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { EasyToast } from '../../components/Toast';
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
@@ -24,6 +25,10 @@ class FunctionsMore extends React.Component {
     super(props);
     this.state = {
         Tokenissue: false,
+        dappPromp: false,
+        // dataSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
+        selecttitle:"",
+        selecturl:"",
     }
   }
 
@@ -56,6 +61,27 @@ class FunctionsMore extends React.Component {
     }
   }
 
+  onPressDapp(key, data = {}) {
+    if(key == 'DAPP1'){
+        this.setState({dappPromp: true,
+            selecttitle:"简影游戏",selecturl: "https://www.eosbao.io/pocket"});
+    }else if(key == 'DAPP2'){
+        this.setState({dappPromp: true,
+            selecttitle:"星域之门",selecturl: "https://m.ite.zone/#/ite4"});    
+    }else if(key == 'DAPP3'){
+        this.setState({dappPromp: true,
+            selecttitle:"隐秘世界OL",selecturl: "http://www.h5indiegame.com/run.php?id=38"});   
+    }else if(key == 'DAPP4'){
+        this.setState({dappPromp: true,
+            selecttitle:"EOSBET",selecturl: "https://dice.eosbet.io/token-pocket.html?ref=ecosystemlab"});     
+    }else if(key == 'DAPP5'){
+        this.setState({dappPromp: true,
+            selecttitle:"猜猜猜",selecturl: "http://luckyeos.cn/"});
+    }else{
+      EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
+    }
+  }
+
     // 显示/隐藏 modal  
     _setModalVisible() {  
         let isTokenissue = this.state.Tokenissue;  
@@ -68,7 +94,29 @@ class FunctionsMore extends React.Component {
         this. _setModalVisible();
         Linking.openURL("https://coincreate.github.io/EOS_coincreate/coincreate.html");
     }
-  
+
+    _setModalVisible_DAPP() {  
+        let dappPromp = this.state.dappPromp;  
+        this.setState({  
+            dappPromp:!dappPromp,  
+        });  
+    } 
+    openTokenissue_DAPP() {
+        this. _setModalVisible_DAPP();
+        const { navigate } = this.props.navigation;
+        navigate('DAPP', { title: this.state.selecttitle, url: this.state.selecturl });
+    }
+
+  renderRow = (rowData, sectionID, rowID) => { // cell样式
+    return( 
+        <TouchableOpacity activeOpacity={0.8} onPress={()=>{EasyToast.show("点击了")}} > 
+          <View style={styles.innerViewStyle}> 
+            <Image source={{uri:rowData.icon}} style={styles.iconStyle} /> 
+            <Text>{rowData.title}</Text> 
+          </View> 
+        </TouchableOpacity> 
+      ); 
+  }
   render() {
     return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
         <Header {...this.props} onPressLeft={true} title="全部" />
@@ -124,6 +172,51 @@ class FunctionsMore extends React.Component {
                 </View>
             </Button>
         </View>
+         <View style={{marginLeft:ScreenUtil.autowidth(10),marginTop:ScreenUtil.autoheight(10)}}>  
+             <Text style={{fontSize: ScreenUtil.setSpText(14),}}>DAPP Store</Text>
+         </View>
+        {/* <ListView  enableEmptySections={true} 
+          dataSource={this.state.dataSource.cloneWithRows((this.props.addressBook == null ? [] : this.props.addressBook))}
+          renderRow={this.renderRow}  
+          contentContainerStyle={styles.listViewStyle}
+         />     */}
+
+         <View style={[{backgroundColor: UColor.mainColor,marginTop:ScreenUtil.autoheight(10)}]}>
+           <View style={[styles.head]}>
+            <Button  onPress={this.onPressDapp.bind(this, 'DAPP1')}  style={styles.headbtn}>
+                <View style={styles.headbtnout}>
+                    <Image source={UImage.dapp_01} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>简影游戏</Text>
+                </View>
+            </Button>
+            <Button onPress={this.onPressDapp.bind(this, 'DAPP2')} style={styles.headbtn}>
+                <View style={styles.headbtnout}>
+                    <Image source={UImage.dapp_02} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>星域之门</Text>
+                </View>                      
+            </Button>
+            <Button onPress={this.onPressDapp.bind(this, 'DAPP3')} style={styles.headbtn}>
+                <View style={styles.headbtnout}>
+                    <Image source={UImage.dapp_03} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>隐秘世界OL</Text>
+                </View>                      
+            </Button>
+            <Button onPress={this.onPressDapp.bind(this, 'DAPP4')} style={styles.headbtn}>
+                <View style={styles.headbtnout}>
+                    <Image source={UImage.dapp_04} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>EOSBET</Text>
+                </View>
+            </Button>
+          </View>
+          <View style={[styles.head]}>
+            <Button  onPress={this.onPressDapp.bind(this, 'DAPP5')}  style={styles.headbtn}>
+                <View style={styles.headbtnout}>
+                    <Image source={UImage.dapp_01} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>猜猜猜</Text>
+                </View>
+            </Button>
+          </View>
+        </View>
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.Tokenissue} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
               <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
@@ -150,6 +243,30 @@ class FunctionsMore extends React.Component {
                     <Text style={[styles.centertext,{color: UColor.arrow}]}>3.在eostoken钱包中添加代币（添加公众号“深入浅出EOS”回复“eostoken”获取教程）</Text>
                 </View>
                 <Button onPress={this.openTokenissue.bind(this)} style={{}}>
+                    <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
+                        <Text style={[styles.deletetext,{color: UColor.btnColor}]}>知道了</Text>
+                    </View>
+                </Button>  
+                </View> 
+            </TouchableOpacity>
+        </Modal>
+        <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.dappPromp} onRequestClose={()=>{}}>
+            <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+              <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
+                <View style={styles.subViewBackup}> 
+                  <Button onPress={this._setModalVisible_DAPP.bind(this) } style={styles.buttonView2}>
+                      <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={30} />
+                  </Button>
+                </View>
+                <Text style={styles.contentText}>使用说明</Text>
+                <View style={[styles.warningout,{borderColor: UColor.showy}]}>
+                    <View style={{flexDirection: 'row',alignItems: 'center',}}>
+                        <Image source={UImage.warning} style={styles.imgBtnBackup} />
+                        <Text style={[styles.headtext,{color: UColor.riseColor}]} >免责声明</Text>
+                    </View>
+                    <Text style={[styles.headtitle,{color: UColor.showy}]}>本功能由第三方平台提供，不属于EosToken官方出品，《用户协议》和《应用风险》由该平台单独向您承担责任！</Text>
+                </View>
+                <Button onPress={this.openTokenissue_DAPP.bind(this)} style={{}}>
                     <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
                         <Text style={[styles.deletetext,{color: UColor.btnColor}]}>知道了</Text>
                     </View>
@@ -257,6 +374,39 @@ const styles = StyleSheet.create({
     },
     deletetext: {
         fontSize: ScreenUtil.setSpText(16),
+    },
+    listViewStyle:{ 
+        // 主轴方向 
+        flexDirection:'row', 
+        // 一行显示不下,换一行 
+        flexWrap:'wrap', 
+        // 侧轴方向 
+        alignItems:'center', // 必须设置,否则换行不起作用 
+      }, 
+    innerViewStyle:{ 
+        width:ScreenUtil.autowidth(100), 
+        height:ScreenUtil.autoheight(100), 
+        marginLeft:(ScreenUtil.screenWidth -ScreenUtil.autowidth(100) * 3) / (3 + 1), 
+        marginTop:ScreenUtil.autoheight(25), 
+        // 文字内容居中对齐 
+        alignItems:'center'
+    }, 
+    
+    iconStyle:{ 
+        width:ScreenUtil.autowidth(80), 
+        height:ScreenUtil.autoheight(80), 
+    }, 
+
+    touchablelist: {
+        width: '100%', 
+        borderBottomWidth: 1, 
+      },
+
+    imgBtnDAPP: {
+        marginTop : ScreenUtil.autoheight(10), 
+        margin: ScreenUtil.autowidth(5),
+        width: ScreenUtil.autowidth(30),
+        height: ScreenUtil.autoheight(30),
     },
 });
 export default FunctionsMore;
