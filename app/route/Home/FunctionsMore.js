@@ -91,10 +91,10 @@ class FunctionsMore extends React.Component {
             selecttitle:"星域之门",selecturl: "https://m.ite.zone/#/ite4"});    
     }else if(key == 'DAPP3'){
         this.setState({dappPromp: true,
-            selecttitle:"隐秘世界OL",selecturl: "http://www.h5indiegame.com/run.php?id=38"});   
+            selecttitle:"EOSBET",selecturl: "https://dice.eosbet.io/token-pocket.html?ref=ecosystemlab"});     
     }else if(key == 'DAPP4'){
         this.setState({dappPromp: true,
-            selecttitle:"EOSBET",selecturl: "https://dice.eosbet.io/token-pocket.html?ref=ecosystemlab"});     
+            selecttitle:"隐秘世界OL",selecturl: "http://www.h5indiegame.com/run.php?id=38"});   
     }else if(key == 'DAPP5'){
         this.setState({dappPromp: true,
             selecttitle:"猜猜猜",selecturl: "http://luckyeos.cn/"});
@@ -223,15 +223,15 @@ class FunctionsMore extends React.Component {
             </Button>
             <Button onPress={this.onPressDapp.bind(this, 'DAPP3')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_03} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>隐秘世界OL</Text>
-                </View>                      
-            </Button>
-            <Button onPress={this.onPressDapp.bind(this, 'DAPP4')} style={styles.headbtn}>
-                <View style={styles.headbtnout}>
                     <Image source={UImage.dapp_04} style={styles.imgBtnDAPP} />
                     <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>EOSBET</Text>
                 </View>
+            </Button>
+            <Button onPress={this.onPressDapp.bind(this, 'DAPP4')} style={styles.headbtn}>
+                <View style={styles.headbtnout}>
+                    <Image source={UImage.dapp_03} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>隐秘世界OL</Text>
+                </View>                      
             </Button>
           </View>
           <View style={[styles.head]}>
