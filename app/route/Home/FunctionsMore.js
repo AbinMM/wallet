@@ -685,7 +685,7 @@ function pushEosAction(params, callback)
 }
 function getEosBalance(params, callback)
 {
-  var str_res = '{"result":false,"data":{}}';
+  var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.account || !obj_param.contract || !obj_param.symbol) {
@@ -735,7 +735,7 @@ function getEosBalance(params, callback)
 
 function getEosTableRows(params, callback)
 {
-  var str_res = '{"result":false,"data":{}}';
+  var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.json || !obj_param.code || !obj_param.scope || !obj_param.table) {
@@ -798,7 +798,7 @@ function getEosTableRows(params, callback)
 
 function getEosAccountInfo(params, callback)
 {
-  var str_res = '{"result":false,"data":{}}';
+  var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.account) {
@@ -836,7 +836,7 @@ function getEosAccountInfo(params, callback)
 }
 function getEosTransactionRecord(params, callback)
 {
-  var str_res = '{"result":false,"data":{}}';
+  var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.account || obj_param.start == undefined || obj_param.count == undefined || !obj_param.sort) {
@@ -913,7 +913,7 @@ function getEosTransactionRecord(params, callback)
 
 function getAppInfo(callback)
 {
-  var str_res = '{"result":false,"data":{}}';
+  var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var res = new Object();
     res.result = true;
@@ -1113,8 +1113,7 @@ function getWallets(callback)
             var tmpobj = new Object();
             tmpobj.name = walletArr[i].name;
             tmpobj.address = walletArr[i].account;
-            // tmpobj.isactived = walletArr[i].isactived;
-            tmpobj.blockchain_id = 26;
+            tmpobj.blockchain_id = 4;  //4 for EOS
 
             objarray[i] = tmpobj;
           }
@@ -1190,7 +1189,7 @@ function sign(params,callback)
           if(r && r.isSuccess)
           {
             res.result = true;
-            res.data.deviceId = "123456789";  //TODO 
+            res.data.deviceId = "dexa23333";  //TODO 
             res.data.appid = obj_param.appid;
 
             let  now = moment();
