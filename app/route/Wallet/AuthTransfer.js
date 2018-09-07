@@ -114,6 +114,7 @@ class AuthTransfer extends BaseComponent {
             inputText:'',
             activeAuth:'',//更改的数据组
             ownerAuth:'',//更改的数据组
+            isRefreshing: false,
         }
     }
 
@@ -142,9 +143,10 @@ class AuthTransfer extends BaseComponent {
  
   //获取账户信息
   getAuthInfo(){
-    EasyShowLD.loadingShow();
+    // EasyShowLD.loadingShow();
+    this.setState({isRefreshing: true})//开始刷新
     this.props.dispatch({ type: 'vote/getAuthInfo', payload: { page:1,username: this.props.navigation.state.params.wallet.name},callback: (resp) => {
-        EasyShowLD.loadingClose();
+        // EasyShowLD.loadingClose();
         if(resp && resp.code == '0'){
             var authFlag=false;
             var tempActive=[];
@@ -226,6 +228,7 @@ class AuthTransfer extends BaseComponent {
                 ownerAuth:authTempOwner,
                 inputCount:0,
                 inputText:'',
+                isRefreshing: false
             });
         }else{
             this.setState({isAuth: false});
@@ -260,17 +263,18 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
             EasyToast.show('密码长度至少4位,请重输');
             return;
         }
+        EasyShowLD.dialogClose();
         // var privateKey = this.props.navigation.state.params.wallet.activePrivate;
         var privateKey = this.props.navigation.state.params.wallet.ownerPrivate;
         try {
-            EasyShowLD.loadingShow();
+            // EasyShowLD.loadingShow();
+            this.setState({isRefreshing: true})//开始刷新
             var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.navigation.state.params.wallet.salt);
             var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
             if (plaintext_privateKey.indexOf('eostoken') != -1) {
                 
                 plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                 this.EosUpdateAuth(this.props.navigation.state.params.wallet.name, plaintext_privateKey,authTemp,(r) => {
-                    EasyShowLD.loadingClose();
                         // alert(JSON.stringify(r));
                         console.log("r=%s",JSON.stringify(r))
                         if(r.isSuccess==true){
@@ -281,11 +285,11 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
                         this.getAuthInfo();//刷新一下
                     });
             } else {
-                EasyShowLD.loadingClose();
+                this.setState({isRefreshing: false})//开始刷新
                 EasyToast.show('密码错误');
             }
         } catch (e) {
-            EasyShowLD.loadingClose();
+            this.setState({isRefreshing: false})//开始刷新
             EasyToast.show('密码错误');
         }
     }, () => { EasyShowLD.dialogClose() });
@@ -401,7 +405,18 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
     return (
         <View style={{flex:1,}}>
           <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
-            <ScrollView keyboardShouldPersistTaps="always" >
+            <ScrollView keyboardShouldPersistTaps="handled" 
+                refreshControl={
+                <RefreshControl
+                    refreshing={this.state.isRefreshing}
+                    onRefresh={() => this._onRefresh()}
+                    tintColor={UColor.fontColor}
+                    colors={[UColor.lightgray, UColor.tintColor]}
+                    progressBackgroundColor={UColor.fontColor}
+                />
+            }
+            scrollEventThrottle={50}
+            >
             <FlatList
                 data={this.state.index==OWNER_MODE?(this.state.authOwnerKeys.length==null ?[]: this.state.authOwnerKeys):(this.state.authActiveKeys.length==null ?[]: this.state.authActiveKeys) }
                 extraData={this.state}
@@ -434,9 +449,52 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
         </View>
     );
   }
+
+  iosRenderScene = ({route}) => {
+    if(route.key==''){
+      return (<View></View>)
+    }
+    return (
+        <View style={{flex:1,}}>
+            <FlatList
+                data={this.state.index==OWNER_MODE?(this.state.authOwnerKeys.length==null ?[]: this.state.authOwnerKeys):(this.state.authActiveKeys.length==null ?[]: this.state.authActiveKeys) }
+                extraData={this.state}
+                renderItem={this._renderRow.bind(this)} >
+            </FlatList>
+            <View style={[styles.addUserTitle,{backgroundColor: UColor.mainColor}]}>
+                <View style={styles.titleStyle}>
+                    <View style={styles.buttonView}>
+                        <Text style={[styles.weightText,{color: UColor.arrow}]}>权重  </Text>
+                        <Text style={[styles.buttonText,{color: UColor.fontColor}]}>1</Text>
+                    </View>
+                </View>
+                <View style={{flex:1,flexDirection: "row",}}>
+                    <TextInput ref={(ref) => this._lphone = ref} value={this.state.inputText} returnKeyType="next" editable={true} autoFocus={false}
+                        selectionColor={UColor.tintColor} style={[styles.inptgo,{color: UColor.arrow,backgroundColor: UColor.secdColor,borderColor: UColor.arrow}]}  
+                        onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default" placeholderTextColor={UColor.arrow} 
+                        placeholder={this.state.index==OWNER_MODE?"请您输入Owner公钥":"请您输入Active公钥 "} underlineColorAndroid="transparent"  multiline={true}  />
+                    <View style={styles.addButton}>
+                        <Image source={UImage.adminAddA} style={styles.imgBtn} />
+                    </View>
+                </View>
+            </View>
+            <Button onPress={ this.submission.bind(this) }>
+                <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
+                    <Text style={[styles.btntext,{color: UColor.btnColor}]}>授权</Text>
+                </View>
+            </Button>
+        </View>
+    );
+  }
+
+
+_onRefresh(){
+    this.getAuthInfo();//刷新一下
+}
   
   render() {
     return (
+
     <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
         <Header {...this.props} onPressLeft={true} title="Owner权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scan}/>
         <View style={[styles.significantout,{backgroundColor: UColor.secdColor,borderColor: UColor.riseColor}]}>
@@ -446,7 +504,38 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
             </View>
             <Text style={[styles.significanttext,{color: UColor.warningRed}]} >请确保您清楚了解owner授权,并确保添加的授权用户是您信任的用户,添加的授权用户将获得账号的全部权限(包括变更权限和转账投票)。</Text>
         </View>
+
+{   Platform.OS == 'ios' ? 
+        <KeyboardAvoidingView behavior={"position"} style={styles.tab}>
+        <ScrollView keyboardShouldPersistTaps="handled" 
+            refreshControl={
+            <RefreshControl
+                refreshing={this.state.isRefreshing}
+                onRefresh={() => this._onRefresh()}
+                tintColor={UColor.fontColor}
+                colors={[UColor.lightgray, UColor.tintColor]}
+                progressBackgroundColor={UColor.fontColor}
+            />
+            }
+            scrollEventThrottle={50}
+        >
         <TabViewAnimated
+        lazy={true}
+        style={[styles.containertab,{backgroundColor: UColor.secdColor}]}
+        navigationState={this.state}
+        renderScene={this.iosRenderScene.bind(this)}
+        renderHeader={(props)=><TabBar onTabPress={this._handleTabItemPress} 
+        labelStyle={{fontSize:ScreenUtil.setSpText(15),margin:0,marginBottom:10,paddingTop:10,color:UColor.lightgray}} 
+        indicatorStyle={{backgroundColor:UColor.tintColor,width:93,marginLeft:0,}} 
+        style={{backgroundColor:UColor.secdColor,}} 
+        tabStyle={{width:100,padding:0,margin:0,}} 
+        scrollEnabled={true} {...props}/>}
+        onIndexChange={this._handleIndexChange}
+        initialLayout={{height:0,width:ScreenWidth}}
+        />
+        </ScrollView>
+        </KeyboardAvoidingView>
+        :<TabViewAnimated
         lazy={true}
         style={[styles.containertab,{backgroundColor: UColor.secdColor}]}
         navigationState={this.state}
@@ -459,7 +548,10 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
         scrollEnabled={true} {...props}/>}
         onIndexChange={this._handleIndexChange}
         initialLayout={{height:0,width:ScreenWidth}}
-        />
+        />}
+
+
+
     </View>);
   }
 }
