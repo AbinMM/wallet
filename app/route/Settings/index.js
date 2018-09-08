@@ -346,11 +346,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: ScreenUtil.autowidth(70),
-    height: ScreenUtil.autoheight(70),
+    height: ScreenUtil.autowidth(70),
   },
   headimg: {
     width: ScreenUtil.autowidth(55),
-    height: ScreenUtil.autoheight(55),
+    height: ScreenUtil.autowidth(55),
   },
   headtext: {
     fontSize: ScreenUtil.setSpText(15),
@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
   },
   signedimg: {
     width: ScreenUtil.autowidth(40),
-    height: ScreenUtil.autoheight(49)
+    height: ScreenUtil.autowidth(49)
   },
   eosbtnout: {
     width: ScreenWidth,
