@@ -27,18 +27,18 @@ class Header extends BaseComponent {
     render(){
         let {backgroundColor, onPressLeft, title, onPressRight, avatar, subName,} = this.props
         return (
-        <View style={[styles.header,{backgroundColor: backgroundColor ? backgroundColor : UColor.titletop}]}>
-          <TouchableOpacity style={styles.Leftout} onPress={() => {onPressLeft ? this.props.navigation.goBack() : undefined}}>
-            {onPressLeft &&<Ionicons style={{color:UColor.btnColor}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
-          </TouchableOpacity>
-          <View style={styles.center} >
-              <Text style={[styles.titletext,{color:UColor.btnColor}]} numberOfLines={1} ellipsizeMode='middle'>{title}</Text>
-          </View>   
-          <TouchableOpacity style={styles.Rightout} onPress={onPressRight}>
-              {avatar?<Image source={avatar} style={styles.Rightimg} resizeMode={'contain'} />:null}
-              {subName?<Text style={[styles.Righttext,{color: UColor.btnColor}]}>{subName}</Text>:null}
-          </TouchableOpacity>
-        </View>  
+        <View style={[styles.header,{backgroundColor: backgroundColor ? backgroundColor : UColor.titletop,borderBottomColor: UColor.secdColor}]}>
+            <TouchableOpacity style={styles.Leftout} onPress={() => {onPressLeft ? this.props.navigation.goBack() : undefined}}>
+                {onPressLeft &&<Ionicons style={{color:UColor.btnColor}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
+            </TouchableOpacity>
+            <View style={styles.center} >
+                <Text style={[styles.titletext,{color:UColor.btnColor}]} numberOfLines={1} ellipsizeMode='middle'>{title}</Text>
+            </View>   
+            <TouchableOpacity style={styles.Rightout} onPress={onPressRight}>
+                {avatar?<Image source={avatar} style={styles.Rightimg} resizeMode={'contain'} />:null}
+                {subName?<Text style={[styles.Righttext,{color: UColor.btnColor}]}>{subName}</Text>:null}
+            </TouchableOpacity>
+        </View>
         )
     }
 }
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
         alignItems:"center",
         paddingTop: ScreenUtil.autoheight(20),
         height: ScreenUtil.autoheight(65),
+        borderBottomWidth: ScreenUtil.autoheight(1),
     },
     Leftout: {
         flex: 1, 

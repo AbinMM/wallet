@@ -288,7 +288,6 @@ const styles = StyleSheet.create({
       flex: 1,
       borderWidth: 1,
       borderRadius: 5,
-      shadowOpacity: 1,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: 'center',
@@ -324,6 +323,7 @@ const styles = StyleSheet.create({
 
     package: {
       flexDirection: "row",
+      alignItems: 'center',
       padding: ScreenUtil.autowidth(5),
       marginTop: ScreenUtil.autoheight(2),
     },

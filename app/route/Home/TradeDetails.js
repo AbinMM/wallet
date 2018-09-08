@@ -154,39 +154,43 @@ class TradeDetails extends BaseComponent {
             <Text style={[styles.description,{color: UColor.tintColor}]}>{this.state.trade.type == 'buyram'?'(买)':'(卖)'}</Text>
           </View>
         }
-        <View style={{flexDirection: "row", borderBottomColor: UColor.mainsecd, borderBottomWidth: 0.5,paddingHorizontal: ScreenUtil.autowidth(10),paddingVertical: ScreenUtil.autoheight(20),}}>
-          <View style={styles.conout}>
-            <View style={styles.conouttext}>
-              <Text style={[styles.context,{color: UColor.arrow}]}>发  送  方: </Text> 
-              <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'from')}>{this.state.trade.from}</Text>
+        <View style={{borderBottomColor: UColor.mainsecd, borderBottomWidth: 0.5,paddingHorizontal: ScreenUtil.autowidth(10),paddingVertical: ScreenUtil.autoheight(20),}}>
+          <View style={{flexDirection: "row", }}>
+            <View style={styles.conout}>
+              <View style={styles.conouttext}>
+                <Text style={[styles.context,{color: UColor.arrow}]}>发  送  方: </Text> 
+                <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'from')}>{this.state.trade.from}</Text>
+              </View>
+              <View style={styles.conouttext}>
+                <Text style={[styles.context,{color: UColor.arrow}]}>接  受  方: </Text>
+                <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'to')}>{this.state.trade.to}</Text>
+              </View>
+              <View style={styles.conouttext}> 
+                <Text style={[styles.context,{color: UColor.arrow}]}>区块高度: </Text>
+                {(this.state.trade.blockNum == null || this.state.trade.blockNum == "") ? 
+                <Text style={[styles.showytext,{color: UColor.showy}]}>未确认</Text>:
+                <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'blockNum')}>{this.state.trade.blockNum}</Text>
+                }
+              </View>
             </View>
-            <View style={styles.conouttext}>
-              <Text style={[styles.context,{color: UColor.arrow}]}>接  受  方: </Text>
-              <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'to')}>{this.state.trade.to}</Text>
-            </View>
-            <View style={styles.conouttext}> 
-              <Text style={[styles.context,{color: UColor.arrow}]}>区块高度: </Text>
-              {(this.state.trade.blockNum == null || this.state.trade.blockNum == "") ? 
-              <Text style={[styles.showytext,{color: UColor.showy}]}>未确认</Text>:
-              <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'blockNum')}>{this.state.trade.blockNum}</Text>
-              }
-            </View>
-            <View style={styles.conouttext}>
-              <Text style={[styles.context,{color: UColor.arrow}]}> 备     注  : </Text>
-              <Text style={[styles.blocktext,{color: UColor.arrow}]} numberOfLines={8} ellipsizeMode='tail'>{this.state.trade.memo}</Text>
+          
+            <View style={styles.codeout}>
+              <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
+                <QRCode size={ScreenUtil.setSpText(90)} value={UrlHead + this.state.trade.transactionId } />
+              </View>
+              <Button onPress={this.copy.bind(this,this.state.trade)}>
+                <View style={{backgroundColor: UColor.mainColor,borderRadius: 25,}}>
+                  <Text style={{ fontSize: ScreenUtil.setSpText(12),color: UColor.arrow,paddingHorizontal: ScreenUtil.autowidth(10),paddingVertical: ScreenUtil.autoheight(2),}}>复制URL</Text>
+                </View>
+              </Button>
             </View>
           </View>
-          <View style={styles.codeout}>
-            <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
-               <QRCode size={ScreenUtil.setSpText(90)} value={UrlHead + this.state.trade.transactionId } />
-            </View>
-            <Button onPress={this.copy.bind(this,this.state.trade)}>
-               <View style={{backgroundColor: UColor.mainColor,borderRadius: 25,}}>
-                 <Text style={{ fontSize: ScreenUtil.setSpText(12),color: UColor.arrow,paddingHorizontal: ScreenUtil.autowidth(10),paddingVertical: ScreenUtil.autoheight(2),}}>复制URL</Text>
-               </View>
-            </Button>
+          <View style={[styles.conouttext,{paddingTop: ScreenUtil.autoheight(10),paddingBottom: 0,}]}>
+            <Text style={[styles.context,{flex: 1.9, color: UColor.arrow}]}> 备     注  : </Text>
+            <Text style={[styles.blocktext,{flex: 7, color: UColor.arrow}]} numberOfLines={8} ellipsizeMode='tail'>{this.state.trade.memo}</Text>
           </View>
         </View>
+        
         <View style={styles.tradehint}>
           <View style={styles.conouttext}>
             <Text style={[styles.contwotext,{color: UColor.arrow}]}>交  易  号: </Text>
@@ -241,6 +245,7 @@ const styles = StyleSheet.create({
   conout: {
     flex: 2,
     flexDirection: "column",
+    justifyContent: "space-around",
   },
   conouttext: {
     flexDirection: "row",
@@ -262,7 +267,7 @@ const styles = StyleSheet.create({
   },
   tradehint: {
     flex: 1,
-    marginTop: ScreenUtil.autoheight(40),
+    marginTop: ScreenUtil.autoheight(20),
     paddingHorizontal: ScreenUtil.autowidth(10),
   },
   blocktext: {
