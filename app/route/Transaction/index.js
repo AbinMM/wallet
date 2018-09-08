@@ -1505,6 +1505,7 @@ class Transaction extends BaseComponent {
                     <View style={styles.greeninptout}>
                         <Text style={[styles.redText,{color: UColor.showy}]}>单价: {this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price,8) : '0.0000'} EOS</Text>
                         <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>可卖: {(this.state.myETAvailable == null || this.state.myETAvailable == '') ? '0' : this.precisionTransfer(this.state.myETAvailable,8)} {this.state.tradename}</Text>
+                        {this.state.error&&<Text style={[styles.errortext,{color: UColor.showy}]}>{this.state.errortext}</Text>}
                     </View>
                   <View style={[styles.inputout,{backgroundColor: UColor.mainColor}]}>
                       <TextInput ref={(ref) => this._rrpass = ref} value={this.state.sellET + ''} returnKeyType="go" 
