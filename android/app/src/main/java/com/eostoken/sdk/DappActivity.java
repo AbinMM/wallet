@@ -34,7 +34,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-// import com.nexgo.jlkfg.jsbridge.BridgeImpl;
 // import com.nexgo.jlkfg.jsbridge.CallAppRet;
 import com.eostoken.sdk.JSBridge;
 import com.eostoken.sdk.JSBridgeWebChromeClient;
@@ -154,7 +153,6 @@ public class DappActivity extends Activity {
 
             //设置本地调用对象及其接口
             mWebView.addJavascriptInterface(new TPJSBrigeClient(), "TPJSBrigeClient");
-            // BridgeImpl.mActivity = this;
             // JSBridge.register(this,"bridge", BridgeImpl.class);
             webSettings.setSupportZoom(true);//支持缩放
 
