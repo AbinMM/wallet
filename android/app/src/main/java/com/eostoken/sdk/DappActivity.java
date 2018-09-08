@@ -3,12 +3,16 @@ package com.eostoken.sdk;
 import android.os.Bundle;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+
 import android.content.Intent;
 
 import org.devio.rn.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivity;
 
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -24,6 +28,7 @@ import android.webkit.WebSettings.LayoutAlgorithm;
 import android.content.ContentValues;
 
 import android.webkit.JavascriptInterface;
+import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -36,11 +41,6 @@ import com.eostoken.sdk.RNCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 import de.greenrobot.event.EventBus;
-
-import com.facebook.react.bridge.ReactApplicationContext;
-
-import com.facebook.react.modules.core.DeviceEventManagerModule;
-
 
 /**
  * 贴吧通用WebView，支持设置cookie、自定义javascript interface
@@ -165,14 +165,13 @@ public class DappActivity extends Activity {
     }
 
     //SDK回调数据给DAPP
-     void callbakcToWebview(String methodName,String callback,String resp){
+    public void callbakcToWebview(String methodName,String callback,String resp)
+     {
         if(!callback.isEmpty() && mWebView != null)
         {
             String str_res = resp;
-            // String name = "eosbille1234";
-            // String str_res = "{wallets:{eos:[{name:" + name + ",address:" + name + ",tokens:{eos:" + "4.7583"  + "}}]}}";
             String execJs = "javascript:TPJSBrigeClient.startFunction(" + callback + "('" + str_res + "'));";
-            // Toast.makeText(getApplicationContext(), methodName +"=" + execJs, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getApplicationContext(), methodName +"=" + execJs, Toast.LENGTH_LONG).show();
             mWebView.loadUrl(execJs);
         }
     }
@@ -203,38 +202,127 @@ public class DappActivity extends Activity {
         }
 
         @JavascriptInterface
-        public void callMessage(String methodName,String params,String callback) 
+        public void callMessage(String methodName, String params,String callback) 
         {
             if(methodName.isEmpty()){
                 return;
             }
-            //主动调起RN
-            sendEventToRN(methodName,params,callback);
-        }
+            // try {
+            //     JSONObject obj = new JSONObject();
+            //     obj.put("from", "eosbille1234");
+            //     obj.put("to", "chengengping");
+            //     obj.put("amount", 0.0010);
+            //     obj.put("tokenName", "EOS");
+            //     obj.put("precision", "4");
+            //     obj.put("contract", "eosio.token");
+            //     obj.put("memo", "test");
+            //     obj.put("address", "EOS7ds9A9FGDsKrdymQ4ynKbMgbCVaaaaaaaaaaa");
+            //     params = "";
+            //     params = obj.toString();
 
-        private void sendEventToRN(String methodName,String params,String callback) {
-           
-            try {
-                JSONObject object = new JSONObject();
-                object.put("methodName", methodName);
-                object.put("params", params);
-                object.put("callback", callback);
+            //     methodName = "eosTokenTransfer";
+               
+            // } catch (Exception e) {
+            //     //TODO: handle exception
+            // }
+
+            switch(methodName){
+                case "eosTokenTransfer":
+                case "pushEosAction":
+                case "sign":
+                    if(params.isEmpty() || callback.isEmpty()){
+                        return;
+                    }
+                    showEditDialog(methodName,params,callback);
+                    break;
                 
-               final String dataToRN = object.toString();          
-                // Toast.makeText(getApplicationContext(), dataToRN, Toast.LENGTH_SHORT).show();
-                // new Handler().post(new Runnable() {
-                //     @Override
-                //     public void run() {
-                EventBus.getDefault().post(new MessageToRN(dataToRN));
-                //     }
-                // });
-                    
-            } catch (Exception e) {
-                //TODO: handle exception
-                Toast.makeText(getApplicationContext(), "1111111", Toast.LENGTH_SHORT).show();
+                case "getDeviceId":
+                    //取 手机ID 
+                    break;
+                
+                case "shareNewsToSNS":
+                    //原生页面开启分享
+                    break;
+
+                case "invokeQRScanner":
+                    //原生页面开启扫码
+                    break;
+                
+                default:
+                    //其他情况，调RN处理
+                    sendEventToRN(methodName,params,"",callback);
+                    break;
             }
-       
+           
         }
+    
+    }
+
+    private void sendEventToRN(final String methodName,final String params,final String password,final String callback) {
+        try {
+            JSONObject object = new JSONObject();
+            object.put("methodName", methodName);
+            object.put("params", params);
+            object.put("password", password);
+            object.put("callback", callback);
+            
+           final String dataToRN = object.toString();          
+            // Toast.makeText(getApplicationContext(), dataToRN, Toast.LENGTH_SHORT).show();
+            EventBus.getDefault().post(new MessageToRN(dataToRN));
+                
+        } catch (Exception error) {
+            Toast.makeText(getApplicationContext(), "sendEventToRN:" + error.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showEditDialog(final String methodName,final String params,final String callback) {
+        final EditText editText = new EditText(this);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // builder.setIcon(R.mipmap.ic_launcher);
+        builder.setTitle("密码");
+        builder.setMessage("请输入密码");
+        builder.setView(editText);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String input = editText.getText().toString();
+                if(input.length() < 4){
+                    Toast.makeText(getApplicationContext(), "密码长度错", Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+                
+                sendEventToRN(methodName,params,input,callback);
+            }
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String resp = "";
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("result", false);
+
+                    JSONObject sub_obj = new JSONObject();
+                    sub_obj.put("transactionId", "");
+                    obj.put("data", sub_obj.toString());
+
+                    resp = obj.toString();
+                } catch (Exception e) {
+                    //TODO: handle exception
+                    resp = "";
+                }
+                final String tmp_resp = resp;
+
+                // Toast.makeText(getApplicationContext(), "=" + tmp_resp, Toast.LENGTH_LONG).show();
+                new Handler().postDelayed(new Runnable(){  
+                    public void run() { 
+                        EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
+                    } 
+                }, 100);   
+            }
+        });
+        builder.create().show();
     }
 
 }

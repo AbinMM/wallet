@@ -7,15 +7,23 @@ import Button from '../../components/Button'
 import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
+import {formatEosQua} from '../../utils/FormatUtil'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { EasyToast } from '../../components/Toast';
 import Constants from '../../utils/Constants'
+import { Eos } from "react-native-eosjs";
+import moment from 'moment';
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
+var AES = require("crypto-js/aes");
+var CryptoJS = require("crypto-js");
+
 var DeviceInfo = require('react-native-device-info');
 let g_props;
+let g_CallToRN = {methodName:"",callback:""}; //记录上次监听到的SDK方法和回调函数名
+
 @connect(({ news ,wallet,vote}) => ({ ...news, ...wallet, ...vote}))
 class FunctionsMore extends React.Component {
 
@@ -50,7 +58,17 @@ class FunctionsMore extends React.Component {
           //  alert(data);
            try {
             var obj = JSON.parse(data);
-            callMessage(obj.methodName,obj.params,obj.callback);
+            if(g_CallToRN.methodName == obj.methodName)
+            {
+                if(obj.callback && (g_CallToRN.callback == obj.callback))
+                {
+                  //同一个方法，同一个回调函数，重复消息拒绝掉
+                  return;
+                }
+            }
+            g_CallToRN.methodName = obj.methodName;
+            g_CallToRN.callback = obj.callback;
+            callMessage(obj.methodName,obj.params,obj.password,obj.callback);
            } catch (error) {
             console.log("event CallToRN error: %s",error.message);
            }
@@ -307,51 +325,6 @@ class FunctionsMore extends React.Component {
   }
 }
 
-
- function callbackToSDK(methodName,callback, resp){
-    NativeModules.SDKModule.callbackFromReactNative(methodName,callback, resp);
-  }
-  
-  //输入密码,取私钥
-  function inputPwd(defaultWallet,callback)
-  {
-    var password ="";
-    const view =
-        <View style={styles.passoutsource}>
-            <TextInput autoFocus={true} onChangeText={(pwd) => {password = pwd}} returnKeyType="go" 
-                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" style={styles.inptpass}  maxLength={Constants.PWD_MAX_LENGTH} 
-                placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
-        </View>
-        EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
-            
-        if (password == "" || password.length < Constants.PWD_MIN_LENGTH) {
-            EasyToast.show('密码长度至少4位,请重输');
-            return;
-        }
-        // 解析密钥
-        var plaintext_privateKey = "";
-        try {
-            var privateKey = defaultWallet.activePrivate;
-            var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, password + defaultWallet.salt);
-             plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-            if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-            } else {
-                EasyToast.show('密码错误');
-                plaintext_privateKey = "";
-            }
-        } catch (error) {
-            EasyToast.show('密码错误');
-            plaintext_privateKey = "";
-        }
-  
-        EasyShowLD.dialogClose();
-        if (callback)  callback(plaintext_privateKey);
-    }, () => {
-      EasyShowLD.dialogClose(); 
-      if (callback)  callback("");});
-  }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -481,20 +454,6 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(30),
     },
 
-    passoutsource: {
-        flexDirection: 'column', 
-        alignItems: 'center'
-      },
-    inptpass: {
-        color: UColor.tintColor,
-        height:  ScreenUtil.autoheight(45),
-        width: ScreenUtil.screenWidth-100,
-        paddingBottom:  ScreenUtil.autoheight(5),
-        fontSize: ScreenUtil.setSpText(16),
-        backgroundColor: UColor.fontColor,
-        borderBottomColor: UColor.baseline,
-        borderBottomWidth: 1,
-    },
 });
 export default FunctionsMore;
 
@@ -503,17 +462,73 @@ export default FunctionsMore;
  * 实现et.js/tp.js库对应的SDK 接口方法
  */
 
-function eosTokenTransfer(params, callback)
+function callbackToSDK(methodName,callback, resp){
+  NativeModules.SDKModule.callbackFromReactNative(methodName,callback, resp);
+}
+
+// //输入密码,取私钥
+function inputPwd(defaultWallet,password,callback)
+{
+    // 解析密钥
+    var plaintext_privateKey = "";
+    try {
+        var privateKey = defaultWallet.activePrivate;
+        var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, password + defaultWallet.salt);
+         plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+        if (plaintext_privateKey.indexOf('eostoken') != -1) {
+            plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
+        } else {
+            plaintext_privateKey = "";
+        }
+    } catch (error) {
+        plaintext_privateKey = "";
+    }
+
+    if (callback)  callback(plaintext_privateKey);
+}
+
+function eosTokenTransfer(params,password, callback)
 {
     var str_res = '{"result":false,"data":{}}';
     var obj_param;
     try {
       obj_param = JSON.parse(params);
       if (!obj_param || !obj_param.from || !obj_param.to || !obj_param.amount || !obj_param.tokenName 
-             || !obj_param.contract || !obj_param.precision) {
+             || !obj_param.contract || !obj_param.precision || !password) {
         console.log('eosTokenTransfer:missing params; "from", "to", "amount", "tokenName","contract", "precision" is required ');
         if (callback)  callbackToSDK('eosTokenTransfer',callback,str_res);
         return;
+      }
+      var type_amount = typeof(obj_param.amount);
+      if(type_amount == "number")
+      {
+        obj_param.amount = obj_param.amount.toString();
+      }else if(type_amount == "string")
+      {
+          // 需要的是 string
+      }else
+      {
+        console.log("eosTokenTransfer error: amount is not number or string");
+        if (callback)  callbackToSDK('eosTokenTransfer',callback,str_res);
+        return ;
+      }
+      var type_precision = typeof(obj_param.precision);
+      if(type_precision == "number")
+      {
+          // 需要的是 number
+      }else if(type_precision == "string")
+      {
+        obj_param.precision = parseInt(obj_param.precision);
+      }else
+      {
+        console.log("eosTokenTransfer error: precision is not number or string");
+        if (callback)  callbackToSDK('eosTokenTransfer',callback,str_res);
+        return ;
+      }
+      if (password == "" || password.length < Constants.PWD_MIN_LENGTH) {
+        console.log("eosTokenTransfer error: 密码长度错");
+        if (callback)  callbackToSDK('eosTokenTransfer',callback,str_res);
+        return ;
       }
     } catch (error) {
       console.log("eosTokenTransfer error: %s",error.message);
@@ -553,7 +568,7 @@ function eosTokenTransfer(params, callback)
     })
     .then((rdata)=>{
         return  new Promise(function(resolve, reject){
-          inputPwd(rdata,(data) => {
+          inputPwd(rdata,password,(data) => {
             if(data){
               //密码正确 ,返回私钥
               resolve(data);
@@ -566,9 +581,7 @@ function eosTokenTransfer(params, callback)
     })
     .then((rdata)=>{
         var plaintext_privateKey = rdata; 
-        EasyShowLD.loadingShow();          
         Eos.transfer(obj_param.contract, obj_param.from, obj_param.to, formatEosQua(obj_param.amount + " " + obj_param.tokenName,obj_param.precision), obj_param.memo, plaintext_privateKey, true, (r) => {
-            EasyShowLD.loadingClose();
             try {
               if(r && r.isSuccess)
               {
@@ -597,16 +610,21 @@ function eosTokenTransfer(params, callback)
 
 }
 
-function pushEosAction(params, callback)
+function pushEosAction(params,password, callback)
 {
     var str_res = '{"result":false,"data":{}}';
     var obj_param;
     try{
       obj_param = JSON.parse(params);
-      if (!obj_param || !obj_param.actions || !obj_param.account || !obj_param.address) {
+      if (!obj_param || !obj_param.actions || !obj_param.account || !obj_param.address || !password) {
           console.log('pushEosAction:missing params; "actions", "account", "address" is required ');
           if (callback)  callbackToSDK('pushEosAction',callback,str_res);
           return;
+      }
+      if (password == "" || password.length < Constants.PWD_MIN_LENGTH) {
+        console.log("pushEosAction error: 密码长度错");
+        if (callback)  callbackToSDK('pushEosAction',callback,str_res);
+        return ;
       }
     }catch(error){
       console.log("pushEosAction error: %s",error.message);
@@ -642,7 +660,7 @@ function pushEosAction(params, callback)
     })
     .then((rdata)=>{
         return  new Promise(function(resolve, reject){
-          inputPwd(rdata,(data) => {
+          inputPwd(rdata,password,(data) => {
             if(data){
               //密码正确 ,返回私钥
               resolve(data);
@@ -655,9 +673,7 @@ function pushEosAction(params, callback)
     })
     .then((rdata)=>{
         var plaintext_privateKey = rdata;
-        EasyShowLD.loadingShow();          
         Eos.transaction({actions: obj_param.actions}, plaintext_privateKey, (r) => {
-          EasyShowLD.loadingClose();
           try {
             if(r && r.isSuccess)
             {
@@ -998,68 +1014,68 @@ function getWalletList(params, callback)
   }
  
 }
-function getDeviceId(callback)
-{
-  var str_res = '{"device_id":""}';
-  try{
-    var res = new Object();
-    // res.result = true;
-    // res.data = {device_id:"dexa23333"};
-    res.device_id = 'dexa23333';
-    str_res = JSON.stringify(res);
-  }catch(error){
-    console.log("getDeviceId error: %s",error.message);
-  }
+// function getDeviceId(callback)
+// {
+//   var str_res = '{"device_id":""}';
+//   try{
+//     var res = new Object();
+//     // res.result = true;
+//     // res.data = {device_id:"dexa23333"};
+//     res.device_id = 'dexa23333';
+//     str_res = JSON.stringify(res);
+//   }catch(error){
+//     console.log("getDeviceId error: %s",error.message);
+//   }
 
-  if (callback)  callbackToSDK('getDeviceId',callback,str_res);
-}
+//   if (callback)  callbackToSDK('getDeviceId',callback,str_res);
+// }
 
-function shareNewsToSNS(params)
-{
-  try{
-    var obj_param = JSON.parse(params);
-    if (!obj_param || !obj_param.title || !obj_param.desc || !obj_param.url || !obj_param.previewImage) {
-        console.log('shareNewsToSNS:missing params; "title","desc","url","previewImage" is required ');
-        return;
-    }
-    //待分享 ,暂不实现
+// function shareNewsToSNS(params)
+// {
+//   try{
+//     var obj_param = JSON.parse(params);
+//     if (!obj_param || !obj_param.title || !obj_param.desc || !obj_param.url || !obj_param.previewImage) {
+//         console.log('shareNewsToSNS:missing params; "title","desc","url","previewImage" is required ');
+//         return;
+//     }
+//     //待分享 ,暂不实现
 
-  }catch(error){
-    console.log("shareNewsToSNS error: %s",error.message);
-  }
-}
-function invokeQRScanner(callback){
-  // var str_res = '{"result":false,"data":{}}';
-  var str_res = '';
-  try{
-    // var res = new Object();
-    // res.result = false;
-    // res.data = {qrResult:""};
-    var res = '';
+//   }catch(error){
+//     console.log("shareNewsToSNS error: %s",error.message);
+//   }
+// }
+// function invokeQRScanner(callback){
+//   // var str_res = '{"result":false,"data":{}}';
+//   var str_res = '';
+//   try{
+//     // var res = new Object();
+//     // res.result = false;
+//     // res.data = {qrResult:""};
+//     var res = '';
 
-    const { navigate } = g_props.navigation;
-    navigate('BarCode', {isTurnOut:true,coinType:"EOS"});
+//     const { navigate } = g_props.navigation;
+//     navigate('BarCode', {isTurnOut:true,coinType:"EOS"});
 
-    DeviceEventEmitter.addListener('scan_result', (data) => {
-      if(data && data.toaccount){
-        // res.result = true;
-        // res.data = {qrResult:data.toaccount};
-        res = data.toaccount;
-      }else{
-        // res.result = false;
-      }
+//     DeviceEventEmitter.addListener('scan_result', (data) => {
+//       if(data && data.toaccount){
+//         // res.result = true;
+//         // res.data = {qrResult:data.toaccount};
+//         res = data.toaccount;
+//       }else{
+//         // res.result = false;
+//       }
 
-      str_res = res;
-      // str_res = JSON.stringify(res);
-      if (callback)  callbackToSDK('invokeQRScanner',callback,str_res);
-    }); 
+//       str_res = res;
+//       // str_res = JSON.stringify(res);
+//       if (callback)  callbackToSDK('invokeQRScanner',callback,str_res);
+//     }); 
 
-  }catch(error){
-    console.log("invokeQRScanner error: %s",error.message);
-    if (callback)  callbackToSDK('invokeQRScanner',callback,str_res);
-  }
+//   }catch(error){
+//     console.log("invokeQRScanner error: %s",error.message);
+//     if (callback)  callbackToSDK('invokeQRScanner',callback,str_res);
+//   }
 
-}
+// }
 
 function getCurrentWallet(callback)
 {
@@ -1141,16 +1157,21 @@ function getWallets(callback)
 
 }
 
-function sign(params,callback)
+function sign(params,password,callback)
 {
   var str_res = '{"result":false,"data":{},"msg":""}';
   var obj_param;
   try{
      obj_param = JSON.parse(params);
-    if (!obj_param || !obj_param.appid) {
+    if (!obj_param || !obj_param.appid || !password) {
         console.log('sign:missing params; "appid" is required ');
         if (callback)  callbackToSDK('sign',callback,str_res);
         return;
+    }
+    if (password == "" || password.length < Constants.PWD_MIN_LENGTH) {
+      console.log("pushEosAction error: 密码长度错");
+      if (callback)  callbackToSDK('pushEosAction',callback,str_res);
+      return ;
     }
   }catch(error){
     console.log("sign error: %s",error.message);
@@ -1175,7 +1196,7 @@ function sign(params,callback)
   })
   .then((rdata)=>{
       return  new Promise(function(resolve, reject){
-        inputPwd(rdata,(data) => {
+        inputPwd(rdata,password,(data) => {
           if(data){
             //密码正确 ,返回私钥
             resolve(data);
@@ -1221,7 +1242,7 @@ function sign(params,callback)
 
 }
 
-function callMessage(methodName, params, callback)
+function callMessage(methodName, params,password, callback)
 {
   var str_res = '{"result":false,"data":{}}';
 
@@ -1236,11 +1257,11 @@ function callMessage(methodName, params, callback)
    console.log("callMessage %s",methodName);
    switch(methodName){
        case 'eosTokenTransfer':
-           eosTokenTransfer(params, callback);
+           eosTokenTransfer(params,password, callback);
            break;
 
        case 'pushEosAction':
-           pushEosAction(params, callback);
+           pushEosAction(params,password, callback);
            break;
 
        case 'getEosBalance':
@@ -1269,17 +1290,17 @@ function callMessage(methodName, params, callback)
            getWalletList(params, callback);
            break;
        
-       case 'getDeviceId':
-           getDeviceId(callback);
-           break;
+      //  case 'getDeviceId':
+      //      getDeviceId(callback);
+      //      break;
 
-       case 'shareNewsToSNS':
-           shareNewsToSNS(params);
-           break;
+      //  case 'shareNewsToSNS':
+      //      shareNewsToSNS(params);
+      //      break;
 
-       case 'invokeQRScanner':
-           invokeQRScanner(callback);
-           break;
+      //  case 'invokeQRScanner':
+      //      invokeQRScanner(callback);
+      //      break;
 
        case 'getCurrentWallet':
            getCurrentWallet(callback);
@@ -1290,7 +1311,7 @@ function callMessage(methodName, params, callback)
            break;     
 
       case 'sign':
-           sign(params,callback);
+           sign(params,password,callback);
            break;  
            
        default :
@@ -1299,7 +1320,3 @@ function callMessage(methodName, params, callback)
            break;
    }
 }
-
-// //将函数注册到window对象里
-// window['TPJSBrigeClient']['$'] = $;
-// window['TPJSBrigeClient']['callMessage'] = callMessage;
