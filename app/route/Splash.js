@@ -68,6 +68,7 @@ class Splash extends React.Component {
           UColor.tintstart= '#3baaff'; //Loading背景色
           UColor.fonttint= "#FFFFFF";
           UColor.tintnavigation= '#2279C5';
+          UColor.fontrice= "#EDEDED";
           UImage.guide=require('../img/day/guide.png');
           UImage.my_community=require('../img/day/my_community.png');
           UImage.account_manage=require('../img/day/account_manage.png');
@@ -168,6 +169,7 @@ class Splash extends React.Component {
           UColor.tintstart= '#21232E'; //Loading背景色
           UColor.fonttint= "#65CAFF";
           UColor.tintnavigation= "#65CAFF";
+          UColor.fontrice= "#FFFFFF";
       }
     }});
   }

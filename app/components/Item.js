@@ -71,7 +71,7 @@ export default class Item extends Component {
             <Switch 
               tintColor={UColor.secdColor}
               onTintColor={UColor.tintColor}
-              thumbTintColor={UColor.secdColor}
+              thumbTintColor={UColor.fontrice}
               value={this.state.value} onValueChange={(value)=>{
               this.setState({value:value})}}
             />)

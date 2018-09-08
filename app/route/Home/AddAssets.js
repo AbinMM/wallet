@@ -136,7 +136,7 @@ class AddAssets extends BaseComponent {
                     <Text style={[styles.quantity,{color: UColor.arrow}]}>合约账户 : {rowData.contractAccount == null ? "" : rowData.contractAccount}</Text>
                   </View>
                   <View style={styles.listInfoRight}>
-                    <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.btnColor}
+                    <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontrice}
                         value={this.isMyAsset(rowData)} onValueChange={(value)=>{
                           if(this.state.isAdding){ return }
                           this.setState({isAdding: true});

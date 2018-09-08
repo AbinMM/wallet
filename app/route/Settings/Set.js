@@ -162,7 +162,7 @@ class Set extends BaseComponent {
                   <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>手势密码</Text>
                 </View>
                 <View style={styles.listInfoRight}>
-                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.btnColor}
+                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontrice}
                   value={this.state.gesture} onValueChange={(gesture)=>{this.setState({gesture:gesture,});this.gesturepass(gesture);}}/>
                 </View>
               </View>
@@ -173,23 +173,23 @@ class Set extends BaseComponent {
                   <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>消息推送</Text>
                 </View>
                 <View style={styles.listInfoRight}>
-                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.btnColor}
+                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontrice}
                   value={this.state.value} onValueChange={(value)=>{ this.setState({ value:value, });this.changeJpush(value);}}/>
                 </View>
               </View>
           </View>
           
-          {/* <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
+          <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
               <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
                 <View style={styles.scrollView}>
                   <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>夜间模式</Text>
                 </View>
                 <View style={styles.listInfoRight}>
-                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.secdColor}
+                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontrice}
                   value={this.state.skin} onValueChange={(value)=>{ this.setState({ skin:value, });this.changeTheme(value);}}/>
                 </View>
               </View>
-          </View> */}
+          </View>
           <Button onPress={() => this.checkVersion()}>
             <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
                 <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>

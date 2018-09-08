@@ -30,7 +30,7 @@ export default {
   tintstart: '#21232E',
   fonttint: "#65CAFF",
   tintnavigation: "#65CAFF",
-
+  fontrice: "#FFFFFF",
   // transport: 'rgba(0, 0, 0, 0.0)', //透明色UColor.transport
   // mask: 'rgba(0, 0, 0, 0.4)', //遮罩色 UColor.mask
   // mainColor:  '#FFFFFF', //主色调 UColor.mainColor
@@ -62,4 +62,5 @@ export default {
   // tintstart: '#65CAFF',
   // fonttint: "#FFFFFF",
   //tintnavigation: '#2279C5',
+  //fontrice: "#EDEDED",
 }
