@@ -231,74 +231,75 @@ class ImportEosKey extends BaseComponent {
     if(AccArray==""){
       return ;
     }
-    // var retName=[];
-    // var callCount=0;
+    var retName=[];
+    var callCount=0;
 
-    // for(var ii=0;ii<AccArray.length;ii++){
-    //   console.log("AccArray[%d].name=%s",ii,AccArray[ii].name);
+    for(var ii=0;ii<AccArray.length;ii++){
+      // console.log("AccArray[%d].name=%s",ii,AccArray[ii].name);
 
-    //   this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: AccArray[ii].name},callback: (rdata) => {
-    //     if (rdata!=null) {
+      this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: AccArray[ii].name},callback: (rdata) => {
+        if (rdata!=null) {
 
-    //       console.log("checkKeyInAccount-->i=%s",ii);
-    //       var pFlag=false;
-    //       if(nkey.active_publicKey!=""){
-    //         var authTemp=rdata.permissions[0].required_auth.keys
-    //         for(var j=0;j<authTemp.length;j++){
-    //             if(authTemp[j].key == nkey.active_publicKey){
-    //               pFlag=true;
-    //               // retName.push(AccArray[ii]);
-    //               retName.push({name:rdata.account_name,isChecked:false})
-    //             }
-    //         }
-    //       }
+          // console.log("checkKeyInAccount-->i=%s",ii);
+          var pFlag=false;
+          if(nkey.active_publicKey!=""){
+            var authTemp=rdata.permissions[0].required_auth.keys
+            for(var j=0;j<authTemp.length;j++){
+                if(authTemp[j].key == nkey.active_publicKey){
+                  pFlag=true;
+                  // retName.push(AccArray[ii]);
+                  retName.push({name:rdata.account_name,isChecked:false})
+                }
+            }
+          }
 
-    //       if(nkey.owner_publicKey!=""){
-    //         var authTemp=rdata.permissions[1].required_auth.keys
-    //         for(var j=0;j<authTemp.length;j++){
-    //             if(authTemp[j].key == nkey.owner_publicKey && pFlag==false){
-    //               // retName.push(AccArray[ii]);
-    //               retName.push({name:rdata.account_name,isChecked:false})
-    //             }
-    //         }
-    //       }
-    //       if(++callCount>=AccArray.length){
-    //         // return retName;
-    //         if(retName==null||retName.length==0){
-    //           return ;
-    //         }
-    //         if(retName && retName.length == 1){ // 只有一个账号时直接导入，不弹选择框
-    //           this.state.walletList.push({name: retName[0].name, isChecked: true});
-    //           this.setState({keyObj:nkey});
-    //           this.specifiedAccountToWallet(this.state.walletList);   
-    //         }else if (Platform.OS == 'ios') {
-    //           this.setState({walletList : retName,keyObj:nkey});  
-    //           var th = this;
-    //             this.handle = setTimeout(() => {
-    //               th.setState({selectpromp: true}); 
-    //             }, 100);
-    //         }else{
-    //           this.setState({selectpromp: true,walletList : retName,keyObj:nkey});  
-    //         }
-    //       }
-    //     }
-    //   }});
-    // }
+          if(nkey.owner_publicKey!=""){
+            var authTemp=rdata.permissions[1].required_auth.keys
+            for(var j=0;j<authTemp.length;j++){
+                if(authTemp[j].key == nkey.owner_publicKey && pFlag==false){
+                  // retName.push(AccArray[ii]);
+                  retName.push({name:rdata.account_name,isChecked:false})
+                }
+            }
+          }
+          if(++callCount>=AccArray.length){
+            // return retName;
+            if(retName==null||retName.length==0){
+              EasyToast.show('请检查导入私钥对应的类型是否正确');
+              return ;
+            }
+            if(retName && retName.length == 1){ // 只有一个账号时直接导入，不弹选择框
+              this.state.walletList.push({name: retName[0].name, isChecked: true});
+              this.setState({keyObj:nkey});
+              this.specifiedAccountToWallet(this.state.walletList);   
+            }else if (Platform.OS == 'ios') {
+              this.setState({walletList : retName,keyObj:nkey});  
+              var th = this;
+                this.handle = setTimeout(() => {
+                  th.setState({selectpromp: true}); 
+                }, 100);
+            }else{
+              this.setState({selectpromp: true,walletList : retName,keyObj:nkey});  
+            }
+          }
+        }
+      }});
+    }
     
 
-    if(AccArray && AccArray.length == 1){ // 只有一个账号时直接导入，不弹选择框
-      this.state.walletList.push({name: AccArray[0].name, isChecked: true});
-      this.setState({keyObj:nkey});
-      this.specifiedAccountToWallet(this.state.walletList);   
-    }else if (Platform.OS == 'ios') {
-      this.setState({walletList : AccArray,keyObj:nkey});  
-      var th = this;
-        this.handle = setTimeout(() => {
-          th.setState({selectpromp: true}); 
-        }, 100);
-    }else{
-      this.setState({selectpromp: true,walletList : AccArray,keyObj:nkey});  
-    }
+    // if(AccArray && AccArray.length == 1){ // 只有一个账号时直接导入，不弹选择框
+    //   this.state.walletList.push({name: AccArray[0].name, isChecked: true});
+    //   this.setState({keyObj:nkey});
+    //   this.specifiedAccountToWallet(this.state.walletList);   
+    // }else if (Platform.OS == 'ios') {
+    //   this.setState({walletList : AccArray,keyObj:nkey});  
+    //   var th = this;
+    //     this.handle = setTimeout(() => {
+    //       th.setState({selectpromp: true}); 
+    //     }, 100);
+    // }else{
+    //   this.setState({selectpromp: true,walletList : AccArray,keyObj:nkey});  
+    // }
 
   }
   
