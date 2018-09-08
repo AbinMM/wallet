@@ -7,6 +7,8 @@ import android.app.AlertDialog;
 
 import android.content.Intent;
 
+import android.telephony.TelephonyManager;
+
 import org.devio.rn.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivity;
 
@@ -52,6 +54,7 @@ import de.greenrobot.event.EventBus;
 public class DappActivity extends Activity {
 
     private  String mUrl= "";
+    private static String device_id = "" ;
     private static WebView mWebView;
     //android调用JS网页的时候会用到
     // private static final Handler mHandler = new Handler();
@@ -65,6 +68,19 @@ public class DappActivity extends Activity {
         Intent intent =  getIntent();
         if(intent != null){
             mUrl = intent.getStringExtra("params");
+        }
+
+        if(device_id.isEmpty())
+        {
+            try {
+                TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+                device_id = telephonyManager.getDeviceId();
+                if (device_id == null) {
+                    device_id = "";
+                }
+            } catch (Exception error) {
+                error.printStackTrace();
+            }
         }
         initWebView();
     }
@@ -209,18 +225,19 @@ public class DappActivity extends Activity {
             }
             // try {
             //     JSONObject obj = new JSONObject();
-            //     obj.put("from", "eosbille1234");
-            //     obj.put("to", "chengengping");
-            //     obj.put("amount", 0.0010);
-            //     obj.put("tokenName", "EOS");
-            //     obj.put("precision", "4");
-            //     obj.put("contract", "eosio.token");
-            //     obj.put("memo", "test");
-            //     obj.put("address", "EOS7ds9A9FGDsKrdymQ4ynKbMgbCVaaaaaaaaaaa");
+            //     obj.put("appid", "eosbille1234");
+            //     // obj.put("from", "eosbille1234");
+            //     // obj.put("to", "chengengping");
+            //     // obj.put("amount", 0.0010);
+            //     // obj.put("tokenName", "EOS");
+            //     // obj.put("precision", "4");
+            //     // obj.put("contract", "eosio.token");
+            //     // obj.put("memo", "test");
+            //     // obj.put("address", "EOS7ds9A9FGDsKrdymQ4ynKbMgbCVaaaaaaaaaaa");
             //     params = "";
             //     params = obj.toString();
 
-            //     methodName = "eosTokenTransfer";
+            //     methodName = "sign";
                
             // } catch (Exception e) {
             //     //TODO: handle exception
@@ -238,6 +255,7 @@ public class DappActivity extends Activity {
                 
                 case "getDeviceId":
                     //取 手机ID 
+                    getDeviceId(methodName,callback);
                     break;
                 
                 case "shareNewsToSNS":
@@ -264,6 +282,7 @@ public class DappActivity extends Activity {
             object.put("methodName", methodName);
             object.put("params", params);
             object.put("password", password);
+            object.put("device_id", device_id);
             object.put("callback", callback);
             
            final String dataToRN = object.toString();          
@@ -292,7 +311,7 @@ public class DappActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "密码长度错", Toast.LENGTH_SHORT).show();
                     return ;
                 }
-                
+                // 待添加 通讯等待提示???
                 sendEventToRN(methodName,params,input,callback);
             }
         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -323,6 +342,26 @@ public class DappActivity extends Activity {
             }
         });
         builder.create().show();
+    }
+
+    private void  getDeviceId(final String methodName,final String callback)
+    {
+        String resp = "";
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("device_id", device_id);
+            resp = obj.toString();
+        } catch (Exception e) {
+            //TODO: handle exception
+            resp = "";
+        }
+        final String tmp_resp = resp;
+
+        new Handler().post(new Runnable(){  
+            public void run() { 
+                EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
+            } 
+        }); 
     }
 
 }

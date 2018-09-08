@@ -68,7 +68,7 @@ class FunctionsMore extends React.Component {
             }
             g_CallToRN.methodName = obj.methodName;
             g_CallToRN.callback = obj.callback;
-            callMessage(obj.methodName,obj.params,obj.password,obj.callback);
+            callMessage(obj.methodName,obj.params,obj.password,obj.device_id,obj.callback);
            } catch (error) {
             console.log("event CallToRN error: %s",error.message);
            }
@@ -1157,7 +1157,7 @@ function getWallets(callback)
 
 }
 
-function sign(params,password,callback)
+function sign(params,password,device_id,callback)
 {
   var str_res = '{"result":false,"data":{},"msg":""}';
   var obj_param;
@@ -1214,7 +1214,7 @@ function sign(params,password,callback)
           if(r && r.isSuccess)
           {
             res.result = true;
-            res.data.deviceId = "dexa23333";  //TODO 
+            res.data.deviceId = device_id;  
             res.data.appid = obj_param.appid;
 
             let  now = moment();
@@ -1242,7 +1242,7 @@ function sign(params,password,callback)
 
 }
 
-function callMessage(methodName, params,password, callback)
+function callMessage(methodName, params,password,device_id, callback)
 {
   var str_res = '{"result":false,"data":{}}';
 
@@ -1311,7 +1311,7 @@ function callMessage(methodName, params,password, callback)
            break;     
 
       case 'sign':
-           sign(params,password,callback);
+           sign(params,password,device_id,callback);
            break;  
            
        default :
