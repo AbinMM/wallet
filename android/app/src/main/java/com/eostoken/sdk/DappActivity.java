@@ -4,7 +4,8 @@ import android.os.Bundle;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-
+import android.text.InputFilter;
+import android.text.InputType;
 import android.content.Intent;
 
 import android.telephony.TelephonyManager;
@@ -296,28 +297,36 @@ public class DappActivity extends Activity {
     }
 
     private void showEditDialog(final String methodName,final String params,final String callback) {
-        final EditText editText = new EditText(this);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        // builder.setIcon(R.mipmap.ic_launcher);
-        builder.setTitle("密码");
-        builder.setMessage("请输入密码");
+    //        builder.setIcon(R.drawable.ic_launcher);
+        builder.setTitle("请输入密码");
+        final EditText editText = new EditText(this);
+        InputFilter[] filters = new InputFilter[]{new InputFilter.LengthFilter(18)};
+        editText.setFilters(filters);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         builder.setView(editText);
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("确定", null);
+        // builder.setPositiveButton("确定", new DialogInterface.OnClickListener()
+        // {
+        //     @Override
+        //     public void onClick(DialogInterface dialog, int which)
+        //     {
+        //         String input = editText.getText().toString();
+        //         if(input == null || input.length() < 4){
+        //             Toast.makeText(getApplicationContext(), "密码长度错", Toast.LENGTH_SHORT).show();
+        //             return ;
+        //         }
+        //         dialog.dismiss();
+        //         // 待添加 通讯等待提示???
+        //         sendEventToRN(methodName,params,input,callback);
+        //     }
+        // });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String input = editText.getText().toString();
-                if(input.length() < 4){
-                    Toast.makeText(getApplicationContext(), "密码长度错", Toast.LENGTH_SHORT).show();
-                    return ;
-                }
-                // 待添加 通讯等待提示???
-                sendEventToRN(methodName,params,input,callback);
-            }
-        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
+                dialog.dismiss();
                 String resp = "";
                 try {
                     JSONObject obj = new JSONObject();
@@ -333,16 +342,29 @@ public class DappActivity extends Activity {
                     resp = "";
                 }
                 final String tmp_resp = resp;
-
-                // Toast.makeText(getApplicationContext(), "=" + tmp_resp, Toast.LENGTH_LONG).show();
                 new Handler().postDelayed(new Runnable(){  
                     public void run() { 
                         EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
                     } 
-                }, 100);   
+                }, 100); 
             }
         });
-        builder.create().show();
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String input = editText.getText().toString().trim();
+                if(input == null || input.length() < 4){
+                    Toast.makeText(getApplicationContext(), "密码长度错", Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+
+                alertDialog.dismiss();
+                // 待添加 通讯等待提示???
+                sendEventToRN(methodName,params,input,callback);
+            }
+        });
     }
 
     private void  getDeviceId(final String methodName,final String callback)
