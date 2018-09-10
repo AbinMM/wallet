@@ -975,6 +975,9 @@ class Transaction extends BaseComponent {
 
   //小数点位数大于指定位数,强制显示指定位数,少于则按实际位数显示
   precisionTransfer(data,pos){
+      if(data == null || data == undefined){
+          return '0';
+      }
     try {
          var point = data.lastIndexOf(".");
          if(point <= 0){
@@ -987,7 +990,7 @@ class Transaction extends BaseComponent {
         }
         return precisionData;
     } catch (error) {
-        return data;
+        return data.toFixed(pos);
     }
   }
 
