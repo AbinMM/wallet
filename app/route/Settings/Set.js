@@ -36,6 +36,7 @@ class Set extends BaseComponent {
       skin: false,
     }
   }
+  
   componentDidMount() {
     const {dispatch}=this.props;
     dispatch({type:'login/getJpush',callback:(jpush)=>{
@@ -63,28 +64,30 @@ class Set extends BaseComponent {
       });
     }
   }
+
   componentWillUnmount(){
     //结束页面前，资源释放操作
     super.componentWillUnmount();
-    
   }
+
   logout = () =>{
     if(this.props.loginUser){
-      this.props.dispatch({type:'login/logout',payload:{},callback:()=>{
-        this.props.navigation.goBack();
-        AnalyticsUtil.onEvent('Sign_out');
-      }});
+      EasyShowLD.dialogShow("提示", "您确定要退出登录？", "是", "否", () => {
+        this.props.dispatch({type:'login/logout',payload:{},callback:()=>{
+          this.props.navigation.goBack();
+          AnalyticsUtil.onEvent('Sign_out');
+        }});
+        EasyShowLD.dialogClose()
+      }, () => { EasyShowLD.dialogClose() });
     }else{
       const { navigate } = this.props.navigation;
       navigate('Login', {});
     } 
   }
-
  
   gesturepass(){
     EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
   }
-
 
   changeJpush(state){
     const {dispatch}=this.props;

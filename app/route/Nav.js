@@ -452,9 +452,9 @@ class Route extends React.Component {
           if (data.code == 0) {
             if (DeviceInfo.getVersion() < data.data.version) {
               if (data.data.must == 1) {
-                EasyShowLD.dialogShow("版本更新", data.data.intr, "升级", "取消", () => { this.doUpgrade(data.data.url, data.data.version) }, () => { EasyShowLD.dialogClose()})
-              } else {
                 EasyShowLD.dialogShow("版本更新", data.data.intr, "升级", null, () => { this.doUpgrade(data.data.url, data.data.version) })
+              } else {
+                EasyShowLD.dialogShow("版本更新", data.data.intr, "升级", "取消", () => { this.doUpgrade(data.data.url, data.data.version) }, () => { EasyShowLD.dialogClose()})
               }
             }
           }
