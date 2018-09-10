@@ -487,7 +487,7 @@ function inputPwd(defaultWallet,password,callback)
     if (callback)  callback(plaintext_privateKey);
 }
 
-function eosTokenTransfer(params,password, callback)
+function eosTokenTransfer(methodName,params,password, callback)
 {
     var str_res = '{"result":false,"data":{}}';
     var obj_param;
@@ -496,7 +496,7 @@ function eosTokenTransfer(params,password, callback)
       if (!obj_param || !obj_param.from || !obj_param.to || !obj_param.amount || !obj_param.tokenName 
              || !obj_param.contract || !obj_param.precision || !password) {
         console.log('eosTokenTransfer:missing params; "from", "to", "amount", "tokenName","contract", "precision" is required ');
-        if (callback)  callbackToSDK('eosTokenTransfer',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
         return;
       }
       var type_amount = typeof(obj_param.amount);
@@ -509,7 +509,7 @@ function eosTokenTransfer(params,password, callback)
       }else
       {
         console.log("eosTokenTransfer error: amount is not number or string");
-        if (callback)  callbackToSDK('eosTokenTransfer',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
         return ;
       }
       var type_precision = typeof(obj_param.precision);
@@ -522,17 +522,17 @@ function eosTokenTransfer(params,password, callback)
       }else
       {
         console.log("eosTokenTransfer error: precision is not number or string");
-        if (callback)  callbackToSDK('eosTokenTransfer',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
         return ;
       }
       if (password == "" || password.length < Constants.PWD_MIN_LENGTH) {
         console.log("eosTokenTransfer error: 密码长度错");
-        if (callback)  callbackToSDK('eosTokenTransfer',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
         return ;
       }
     } catch (error) {
       console.log("eosTokenTransfer error: %s",error.message);
-      if (callback)  callbackToSDK('eosTokenTransfer',callback,str_res);
+      if (callback)  callbackToSDK(methodName,callback,str_res);
       return ;
     }
     //可选项
@@ -596,21 +596,21 @@ function eosTokenTransfer(params,password, callback)
                 res.msg = errmsg;
               }
               str_res = JSON.stringify(res);
-              if (callback)  callbackToSDK('eosTokenTransfer',callback,str_res);
+              if (callback)  callbackToSDK(methodName,callback,str_res);
             } catch (error) {
               console.log("eosTokenTransfer error: %s",error.message);
-              if (callback)  callbackToSDK('eosTokenTransfer',callback,str_res);
+              if (callback)  callbackToSDK(methodName,callback,str_res);
             }
         });
     })
     .catch((error)=>{
         console.log("eosTokenTransfer error: %s",error.message);
-        if (callback)  callbackToSDK('eosTokenTransfer',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
     });
 
 }
 
-function pushEosAction(params,password, callback)
+function pushEosAction(methodName,params,password, callback)
 {
     var str_res = '{"result":false,"data":{}}';
     var obj_param;
@@ -618,17 +618,17 @@ function pushEosAction(params,password, callback)
       obj_param = JSON.parse(params);
       if (!obj_param || !obj_param.actions || !obj_param.account || !obj_param.address || !password) {
           console.log('pushEosAction:missing params; "actions", "account", "address" is required ');
-          if (callback)  callbackToSDK('pushEosAction',callback,str_res);
+          if (callback)  callbackToSDK(methodName,callback,str_res);
           return;
       }
       if (password == "" || password.length < Constants.PWD_MIN_LENGTH) {
         console.log("pushEosAction error: 密码长度错");
-        if (callback)  callbackToSDK('pushEosAction',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
         return ;
       }
     }catch(error){
       console.log("pushEosAction error: %s",error.message);
-      if (callback)  callbackToSDK('pushEosAction',callback,str_res);
+      if (callback)  callbackToSDK(methodName,callback,str_res);
     }
     
     var res = new Object();
@@ -652,7 +652,12 @@ function pushEosAction(params,password, callback)
             {
               reject({message:"account is not exist"});
             }else{
-              resolve(walletArr[i]);
+              if(walletArr[i].isactived)
+              {
+                resolve(walletArr[i]); //激活的账户才能使用
+              }else{
+                reject({message:"account is not actived"});
+              }
             }
           }
         }
@@ -687,34 +692,35 @@ function pushEosAction(params,password, callback)
               res.msg = errmsg;
             }
             str_res = JSON.stringify(res);
-            if (callback)  callbackToSDK('pushEosAction',callback,str_res);
+            if (callback)  callbackToSDK(methodName,callback,str_res);
           } catch (error) {
             console.log("pushEosAction error: %s",error.message);
-            if (callback)  callbackToSDK('pushEosAction',callback,str_res);
+            if (callback)  callbackToSDK(methodName,callback,str_res);
           }
         
       });
     })
     .catch((error)=>{
         console.log("pushEosAction error: %s",error.message);
-        if (callback)  callbackToSDK('pushEosAction',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
     });
 
 }
-function getEosBalance(params, callback)
+function getEosBalance(methodName,params, callback)
 {
   var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.account || !obj_param.contract || !obj_param.symbol) {
         console.log('getEosBalance:missing params; "account", "contract", "symbol" is required ');
-        if (callback)  callbackToSDK('getEosBalance',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
         return;
     }
     
     var res = new Object();
     res.result = false;
     res.data = {};
+    res.msg = "";
     g_props.dispatch({
       type: 'wallet/getBalance', payload: { contract: obj_param.contract, account: obj_param.account, symbol: obj_param.symbol }, callback: (resp) => {
         try {
@@ -736,35 +742,36 @@ function getEosBalance(params, callback)
               res.msg = errmsg;
           }
           str_res = JSON.stringify(res);
-          if (callback)  callbackToSDK('getEosBalance',callback,str_res);
+          if (callback)  callbackToSDK(methodName,callback,str_res);
         } catch (error) {
           console.log("getEosBalance error: %s",error.message);
-          if (callback)  callbackToSDK('getEosBalance',callback,str_res);
+          if (callback)  callbackToSDK(methodName,callback,str_res);
         }
       }
     })
 
   }catch(error){
     console.log("getEosBalance error: %s",error.message);
-    if (callback)  callbackToSDK('getEosBalance',callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,str_res);
   }
 
 }
 
-function getEosTableRows(params, callback)
+function getEosTableRows(methodName,params, callback)
 {
   var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.json || !obj_param.code || !obj_param.scope || !obj_param.table) {
         console.log('getEosTableRows:missing params; "json", "code", "scope", "table" is required ');
-        if (callback)  callbackToSDK('getEosTableRows',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
         return;
     }
 
   var res = new Object();
   res.result = false;
   res.data = {};
+  res.msg = "";
 
   var objpayload = new Object();
   objpayload.json = obj_param.json;
@@ -799,36 +806,36 @@ function getEosTableRows(params, callback)
             res.msg = errmsg;
         }
         str_res = JSON.stringify(res);
-        if (callback)  callbackToSDK('getEosTableRows',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
       } catch (error) {
         console.log("getEosTableRows error: %s",error.message);
-        if (callback)  callbackToSDK('getEosTableRows',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
       }
     }
   });
 
   }catch(error){
     console.log("getEosTableRows error: %s",error.message);
-    if (callback)  callbackToSDK('getEosTableRows',callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,str_res);
   }
 
 }
 
-function getEosAccountInfo(params, callback)
+function getEosAccountInfo(methodName,params, callback)
 {
   var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.account) {
         console.log('getEosAccountInfo:missing params; "account" is required ');
-        if (callback)  callbackToSDK('getEosAccountInfo',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
         return;
     }
     
     var res = new Object();
     res.result = false;
     res.data = {};
-
+    res.msg = "";
     g_props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: obj_param.account},callback: (resp) => {
       try {
         if(resp){
@@ -840,31 +847,31 @@ function getEosAccountInfo(params, callback)
           res.msg = "fail";
         }
         str_res = JSON.stringify(res);
-        if (callback)  callbackToSDK('getEosAccountInfo',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
       } catch (error) {
         console.log("getEosAccountInfo error: %s",error.message);
-        if (callback)  callbackToSDK('getEosAccountInfo',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
       }
     } });
 
   }catch(error){
     console.log("getEosAccountInfo error: %s",error.message);
-    if (callback)  callbackToSDK('getEosAccountInfo',callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,str_res);
   }
 }
-function getEosTransactionRecord(params, callback)
+function getEosTransactionRecord(methodName,params, callback)
 {
   var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.account || obj_param.start == undefined || obj_param.count == undefined || !obj_param.sort) {
         console.log('getEosTransactionRecord:missing params; "account","start","count","sort" is required ');
-        if (callback)  callbackToSDK('getEosTransactionRecord',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
         return;
     }
     if(obj_param.count < 1 || obj_param.start < 0){
       console.log('getEosTransactionRecord:params; "count","start" is error ');
-      if (callback)  callbackToSDK('getEosTransactionRecord',callback,str_res);
+      if (callback)  callbackToSDK(methodName,callback,str_res);
       return;
     }
     if(obj_param.sort){
@@ -872,7 +879,7 @@ function getEosTransactionRecord(params, callback)
         {
             throw new Error('sort should be desc or asc');
             console.log('getEosTransactionRecord:sort should be desc or asc ');
-            if (callback)  callbackToSDK('getEosTransactionRecord',callback,str_res);
+            if (callback)  callbackToSDK(methodName,callback,str_res);
             return;
         }
     }else{
@@ -884,7 +891,8 @@ function getEosTransactionRecord(params, callback)
   var res = new Object();
   res.result = false;
   res.data = {};
-
+  res.msg = "";
+  
   var objpayload = new Object();
   objpayload.account = obj_param.account;
   objpayload.start = obj_param.start;
@@ -913,23 +921,126 @@ function getEosTransactionRecord(params, callback)
             res.msg = errmsg;
         }
         str_res = JSON.stringify(res);
-        if (callback)  callbackToSDK('getEosTransactionRecord',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
       } catch (error) {
         console.log("getEosTransactionRecord error: %s",error.message);
-        if (callback)  callbackToSDK('getEosTransactionRecord',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
       }
     }
   });
 
   }catch(error){
     console.log("getEosTransactionRecord error: %s",error.message);
-    if (callback)  callbackToSDK('getEosTransactionRecord',callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,str_res);
   }
 
 }
 
+function eosAuthSign(methodName,params,password,callback)
+{
+  var str_res = '{"result":false,"data":{},"msg":""}';
+  var obj_param;
+  try{
+     obj_param = JSON.parse(params);
+    if (!obj_param || !obj_param.from || !obj_param.publicKey || !obj_param.signdata || !password) {
+        console.log('eosAuthSign:missing params; "from","publicKey","signdata","password" is required ');
+        if (callback)  callbackToSDK(methodName,callback,str_res);
+        return;
+    }
+    if (password == "" || password.length < Constants.PWD_MIN_LENGTH) {
+      console.log("eosAuthSign error: 密码长度错");
+      if (callback)  callbackToSDK(methodName,callback,str_res);
+      return ;
+    }
+  }catch(error){
+    console.log("sign error: %s",error.message);
+    if (callback)  callbackToSDK(methodName,callback,str_res);
+  }
 
-function getAppInfo(callback)
+  var res = new Object();
+  res.result = false;
+  res.data = {};
+  res.msg = "";
+
+  new Promise(function(resolve, reject){
+    g_props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{ 
+        if (walletArr == undefined || walletArr == null || walletArr.length < 1) {
+          reject({message:"get walletList error"});
+        }else{
+          for(var i = 0;i < walletArr.length;i++)
+          {
+            if(walletArr[i].account == obj_param.from)
+            {
+              break;
+            }
+          }
+
+          if(i >= walletArr.length)
+          {
+            reject({message:"account is not exist"});
+          }else{
+            if(walletArr[i].isactived)
+            {
+              resolve(walletArr[i]); //激活的账户才能使用
+            }else{
+              reject({message:"account is not actived"});
+            }
+          }
+        }
+      }
+    });
+  })
+  .then((rdata)=>{
+      return  new Promise(function(resolve, reject){
+        inputPwd(rdata,password,(data) => {
+          if(data){
+            //密码正确 ,返回私钥
+            resolve(data);
+          }else{
+            //密码错误或取消
+            reject({message:"inputPwd error"});
+          }
+        });
+      });
+  })
+  .then((rdata)=>{
+    var plaintext_privateKey = rdata;
+    Eos.sign(obj_param.signdata, plaintext_privateKey, (r) => {
+        try {
+          if(r && r.isSuccess)
+          {
+            res.result = true;
+            res.data.signature = r.data;
+            res.data.ref = 'EosToken';
+            res.data.deviceId = device_id;  
+            res.data.signdata = obj_param.signdata;
+
+            let  now = moment();
+            res.data.timestamp = now.valueOf();
+            res.data.wallet = obj_param.from;  
+            console.log("eosAuthSign ok");
+          }else{
+            var errmsg = ((r.data && r.data.msg) ? r.data.msg : "");
+            console.log("eosAuthSign %s",errmsg);
+            res.result = false;
+            res.msg = errmsg;
+          }
+          str_res = JSON.stringify(res);
+          if (callback)  callbackToSDK(methodName,callback,str_res);
+        } catch (error) {
+          console.log("eosAuthSign error: %s",error.message);
+          if (callback)  callbackToSDK(methodName,callback,str_res);
+        }
+    });
+  })
+  .catch((error)=>{
+      console.log("sign error: %s",error.message);
+      if (callback)  callbackToSDK(methodName,callback,str_res);
+  });
+
+}
+
+function getAppInfo(methodName,callback)
 {
   var str_res = '{"result":false,"data":{},"msg":""}';
   try{
@@ -947,34 +1058,31 @@ function getAppInfo(callback)
     res.data.version =  DeviceInfo.getVersion();
     res.msg = "success";
     str_res = JSON.stringify(res);
-    if (callback)  callbackToSDK('getAppInfo',callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,str_res);
   }catch(error){
     console.log("getAppInfo error: %s",error.message);
-    if (callback)  callbackToSDK('getAppInfo',callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,str_res);
   }
 
 }
 
-function getWalletList(params, callback)
+function getWalletList(methodName,params, callback)
 {
   var str_res = '{wallets:{eos:[]}}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.type) {
         console.log('getWalletList:missing params; "type" is required ');
-        if (callback)  callbackToSDK('getWalletList',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
         return;
     }
     var res = new Object();
     res.wallets = {eos:[]};
-    // res.result = false;
-    // res.data = {eos:[]};
     g_props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{ 
       try {
         if (walletArr == undefined || walletArr == null || walletArr.length < 1) {
-          // res.result = false;
+          //返回错误
         }else{
-          // res.result = true;
           var objarray = new Array();
           for(var i = 0;i < walletArr.length;i++)
           {
@@ -996,25 +1104,24 @@ function getWalletList(params, callback)
               objarray[i] = tmpobj;
             }
           }
-          // res.data.eos = objarray;
           res.wallets.eos = objarray;
           str_res = JSON.stringify(res);
         }
-        if (callback)  callbackToSDK('getWalletList',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
       } catch (error) {
         console.log("walletList error: %s",error.message);
-        if (callback)  callbackToSDK('getWalletList',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
       }
     }
   });
 
   }catch(error){
     console.log("getWalletList error: %s",error.message);
-    if (callback)  callbackToSDK('getWalletList',callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,str_res);
   }
  
 }
-// function getDeviceId(callback)
+// function getDeviceId(methodName,callback)
 // {
 //   var str_res = '{"device_id":""}';
 //   try{
@@ -1030,7 +1137,7 @@ function getWalletList(params, callback)
 //   if (callback)  callbackToSDK('getDeviceId',callback,str_res);
 // }
 
-// function shareNewsToSNS(params)
+// function shareNewsToSNS(methodName,params)
 // {
 //   try{
 //     var obj_param = JSON.parse(params);
@@ -1044,7 +1151,7 @@ function getWalletList(params, callback)
 //     console.log("shareNewsToSNS error: %s",error.message);
 //   }
 // }
-// function invokeQRScanner(callback){
+// function invokeQRScanner(methodName,callback){
 //   // var str_res = '{"result":false,"data":{}}';
 //   var str_res = '';
 //   try{
@@ -1077,7 +1184,7 @@ function getWalletList(params, callback)
 
 // }
 
-function getCurrentWallet(callback)
+function getCurrentWallet(methodName,callback)
 {
   var str_res = '{"result":false,"data":{},"msg":""}';
   try{
@@ -1098,21 +1205,21 @@ function getCurrentWallet(callback)
                 res.msg = "fail";
             }
             str_res = JSON.stringify(res);
-            if (callback)  callbackToSDK('getCurrentWallet',callback,str_res);
+            if (callback)  callbackToSDK(methodName,callback,str_res);
           } catch (error) {
             console.log("getDefaultWallet error: %s",error.message);
-            if (callback)  callbackToSDK('getCurrentWallet',callback,str_res);
+            if (callback)  callbackToSDK(methodName,callback,str_res);
           }
       }
     });
 
   }catch(error){
     console.log("getCurrentWallet error: %s",error.message);
-    if (callback)  callbackToSDK('getCurrentWallet',callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,str_res);
   }
 
 }
-function getWallets(callback)
+function getWallets(methodName,callback)
 {
   var str_res = '{"result":false,"data":{},"msg":""}';
   try{
@@ -1141,10 +1248,10 @@ function getWallets(callback)
           res.msg = "success";
         }
         str_res = JSON.stringify(res);
-        if (callback)  callbackToSDK('getWallets',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
        } catch (error) {
         console.log("getWallets error: %s",error.message);
-        if (callback)  callbackToSDK('getWallets',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
        }
     }
 
@@ -1152,12 +1259,12 @@ function getWallets(callback)
     
   }catch(error){
     console.log("getWallets error: %s",error.message);
-    if (callback)  callbackToSDK('getWallets',callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,str_res);
   }
 
 }
 
-function sign(params,password,device_id,callback)
+function sign(methodName,params,password,device_id,callback)
 {
   var str_res = '{"result":false,"data":{},"msg":""}';
   var obj_param;
@@ -1165,17 +1272,17 @@ function sign(params,password,device_id,callback)
      obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.appid || !password) {
         console.log('sign:missing params; "appid" is required ');
-        if (callback)  callbackToSDK('sign',callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,str_res);
         return;
     }
     if (password == "" || password.length < Constants.PWD_MIN_LENGTH) {
-      console.log("pushEosAction error: 密码长度错");
-      if (callback)  callbackToSDK('pushEosAction',callback,str_res);
+      console.log("sign error: 密码长度错");
+      if (callback)  callbackToSDK(methodName,callback,str_res);
       return ;
     }
   }catch(error){
     console.log("sign error: %s",error.message);
-    if (callback)  callbackToSDK('sign',callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,str_res);
   }
 
   var res = new Object();
@@ -1228,16 +1335,16 @@ function sign(params,password,device_id,callback)
             res.msg = errmsg;
           }
           str_res = JSON.stringify(res);
-          if (callback)  callbackToSDK('sign',callback,str_res);
+          if (callback)  callbackToSDK(methodName,callback,str_res);
         } catch (error) {
           console.log("sign error: %s",error.message);
-          if (callback)  callbackToSDK('sign',callback,str_res);
+          if (callback)  callbackToSDK(methodName,callback,str_res);
         }
     });
   })
   .catch((error)=>{
       console.log("sign error: %s",error.message);
-      if (callback)  callbackToSDK('sign',callback,str_res);
+      if (callback)  callbackToSDK(methodName,callback,str_res);
   });
 
 }
@@ -1257,61 +1364,65 @@ function callMessage(methodName, params,password,device_id, callback)
    console.log("callMessage %s",methodName);
    switch(methodName){
        case 'eosTokenTransfer':
-           eosTokenTransfer(params,password, callback);
+           eosTokenTransfer(methodName,params,password, callback);
            break;
 
        case 'pushEosAction':
-           pushEosAction(params,password, callback);
+           pushEosAction(methodName,params,password, callback);
            break;
 
        case 'getEosBalance':
-           getEosBalance(params, callback);
+           getEosBalance(methodName,params, callback);
            break;
 
        case 'getTableRows':
        case 'getEosTableRows':
-           getEosTableRows(params, callback);
+           getEosTableRows(methodName,params, callback);
            break;
 
        case 'getEosAccountInfo':
-           getEosAccountInfo(params, callback);
+           getEosAccountInfo(methodName,params, callback);
            break;
 
        case 'getEosTransactionRecord':
-           getEosTransactionRecord(params, callback);
+           getEosTransactionRecord(methodName,params, callback);
+           break;
+
+       case 'eosAuthSign':
+           eosAuthSign(methodName,params,password, callback);
            break;
 
        //common
        case 'getAppInfo':
-           getAppInfo(callback);
+           getAppInfo(methodName,callback);
            break;    
 
        case 'getWalletList':
-           getWalletList(params, callback);
+           getWalletList(methodName,params, callback);
            break;
        
       //  case 'getDeviceId':
-      //      getDeviceId(callback);
+      //      getDeviceId(methodName,callback);
       //      break;
 
       //  case 'shareNewsToSNS':
-      //      shareNewsToSNS(params);
+      //      shareNewsToSNS(methodName,params);
       //      break;
 
       //  case 'invokeQRScanner':
-      //      invokeQRScanner(callback);
+      //      invokeQRScanner(methodName,callback);
       //      break;
 
        case 'getCurrentWallet':
-           getCurrentWallet(callback);
+           getCurrentWallet(methodName,callback);
            break;
 
       case 'getWallets':
-           getWallets(callback);
+           getWallets(methodName,callback);
            break;     
 
       case 'sign':
-           sign(params,password,device_id,callback);
+           sign(methodName,params,password,device_id,callback);
            break;  
            
        default :
