@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, DeviceEventEmitter, StyleSheet, Image, View, Text, Platform, Modal, Animated, TouchableOpacity, TextInput, Clipboard, ImageBackground, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { Dimensions, DeviceEventEmitter, StyleSheet, Image, View, Text, Platform, Modal, Animated, TouchableOpacity, TextInput, Clipboard, ImageBackground, ScrollView, KeyboardAvoidingView,Linking } from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
+import Button from  '../../components/Button'
 import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast"
@@ -184,6 +185,10 @@ authExchangeCtr= () =>{
 
 }
 
+goToGithub(){
+    Linking.openURL("https://github.com/eostoken");
+}
+
     dismissKeyboardClick() {
         dismissKeyboard();
     }
@@ -197,7 +202,9 @@ authExchangeCtr= () =>{
             <ImageBackground style={styles.bgout} source={UImage.authFrame} resizeMode="cover">
                 <Text style={[styles.Explaintext,{color: UColor.arrow}]}>使用ET交易平台进行交易时,必须授权于智能合约,否则无法交易!交易结束后,可取消授权。</Text>
                 <Text style={[styles.Explaintextmiddle,{color: UColor.arrow}]}>注:智能合约并不会记录或保留您的任何信息,请放心交易。(ET交易APP代码已开源)</Text>
-                <Text style={[styles.Tipstext2,{ color: UColor.tintColor}]}>开源地址：https://github.com/eostoken</Text>
+                <Button onPress={() => this.justToGithub()}>
+                    <Text style={[styles.Tipstext2,{ color: UColor.tintColor}]}>开源地址：https://github.com/eostoken</Text>
+                </Button>
             </ImageBackground>
         </View>
 
