@@ -172,9 +172,8 @@ class ModifyPassword extends BaseComponent {
 
     render() {
         return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-          <Header {...this.props} onPressLeft={true} title="修改密码" />
-          <ScrollView keyboardShouldPersistTaps="always">
-            <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
+            <Header {...this.props} onPressLeft={true} title="修改密码" />
+            <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex:1}}>
                     <View style={[styles.outsource,{backgroundColor: UColor.mainColor}]}>
                         <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
                             <TextInput ref={(ref) => this._lphone = ref} value={this.state.password} returnKeyType="next"
@@ -205,9 +204,11 @@ class ModifyPassword extends BaseComponent {
                                 placeholder="密码提示(可不填)" returnKeyType="next" />
                         </View>
                     </View>
-                    <View style={{padding: ScreenUtil.autowidth(20),}}>
+                    <View style={{paddingTop:  ScreenUtil.autoheight(20),paddingHorizontal: ScreenUtil.autowidth(20),paddingBottom: ScreenUtil.autoheight(60),}}>
                         <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.arrow, textAlign: 'left',paddingBottom: ScreenUtil.autoheight(10),}} >忘记密码? 导入助记词或私钥可重置密码。</Text>
-                        <Text onPress={() => this.importEosKey()} style={[styles.servicetext,{color: UColor.tintColor}]}>马上导入</Text>
+                        <View style={{alignItems: "flex-end"}}>
+                            <Text onPress={() => this.importEosKey()}  style={[styles.servicetext,{color: UColor.tintColor}]}>马上导入</Text>
+                        </View>
                     </View>
                     <Button onPress={() => this.updatePassword()}>
                         <View style={styles.btnout} backgroundColor = {this.state.CreateButton}>
@@ -219,8 +220,7 @@ class ModifyPassword extends BaseComponent {
                         <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
                     </View>
             </TouchableOpacity>
-        </ScrollView>   
-    </View>
+        </View>
     }
 }
 
@@ -247,7 +247,6 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         justifyContent: 'center', 
         height: ScreenUtil.autoheight(45), 
-        marginVertical: ScreenUtil.autoheight(40), 
         marginHorizontal: ScreenUtil.autowidth(30),  
     },
     buttext: {
@@ -256,9 +255,9 @@ const styles = StyleSheet.create({
     servicetext: {
         textAlign: 'right',
         fontSize: ScreenUtil.setSpText(14),
-        paddingBottom: ScreenUtil.autoheight(20), 
     },
     logout:{
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-end',
         height: ScreenUtil.autoheight(130),
