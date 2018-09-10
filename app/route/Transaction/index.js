@@ -358,7 +358,7 @@ class Transaction extends BaseComponent {
         this.setState({selectedTransactionRecord:opt});
         if(type == 0){
             if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
-                EasyToast.show('未检测到您的账号信息');
+                EasyToast.show('请导入您已激活的账号');
             }else{
                 if(!onRefreshing){
                     this.setState({logRefreshing: true});
