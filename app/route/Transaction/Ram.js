@@ -846,35 +846,35 @@ class Ram extends BaseComponent {
                 <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} tintColor={UColor.fontColor} 
                     colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}>
                 <ImageBackground source={UImage.transactionB} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
-                <View style={styles.header}>
-                    <View style={styles.leftout}>
-                    <View style={styles.nameout}>
-                        <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
-                        <Text style={[styles.nametext,{color: UColor.arrow}]}>内存占比</Text>
-                        <Text style={[styles.nametext,{color: UColor.arrow}]}>总资金</Text>
-                    </View>
-                    <View style={styles.recordout}>
-                        <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? (this.props.ramInfo.open * 1).toFixed(4) : '0'} EOS/KB</Text>
-                        <View style={styles.rowout}>
-                            <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? this.props.ramInfo.usage_ram : 0} GB/{this.props.ramInfo ? this.props.ramInfo.total_ram : 0} GB</Text>
-                            <Text style={[styles.ashtext,{color: UColor.arrow}]}> ({((this.props.ramInfo ? this.props.ramInfo.usage_ram_percent : '0') * 100).toFixed(2)}%)</Text>
+                    <View style={styles.header}>
+                        <View style={styles.leftout}>
+                            <View style={styles.nameout}>
+                                <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
+                                <Text style={[styles.nametext,{color: UColor.arrow}]}>内存占比</Text>
+                                <Text style={[styles.nametext,{color: UColor.arrow}]}>总资金</Text>
+                            </View>
+                            <View style={styles.recordout}>
+                                <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? (this.props.ramInfo.open * 1).toFixed(4) : '0'} EOS/KB</Text>
+                                <View style={styles.rowout}>
+                                    <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? this.props.ramInfo.usage_ram : 0} GB/{this.props.ramInfo ? this.props.ramInfo.total_ram : 0} GB</Text>
+                                    <Text style={[styles.ashtext,{color: UColor.arrow}]}> ({((this.props.ramInfo ? this.props.ramInfo.usage_ram_percent : '0') * 100).toFixed(2)}%)</Text>
+                                </View>
+                                <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? (this.props.ramInfo.total_eos * 1).toFixed(4) : '0'} EOS</Text>
+                            </View>
                         </View>
-                        <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? (this.props.ramInfo.total_eos * 1).toFixed(4) : '0'} EOS</Text>
-                    </View>
-                    </View>
-                    <View style={styles.rightout}>
-                        <View style={styles.presentprice}>
-                            <Text style={[styles.present,{color: UColor.btnColor}]}> {this.props.ramInfo ? (this.props.ramInfo.price * 1).toFixed(4) : '0.0000'}</Text>
-                            <Text style={[styles.toptext,{color: UColor.arrow}]}>价格</Text>
-                        </View>
-                        <View style={styles.titleout}>
-                            <Text style={[styles.cupcdo,{color: (this.props.ramInfo && this.props.ramInfo.increase>=0)?UColor.riseColor:UColor.fallColor}]}> 
-                                {this.props.ramInfo ? (this.props.ramInfo.increase > 0 ? '+' + (this.props.ramInfo.increase * 100).toFixed(2) : 
-                                    (this.props.ramInfo.increase * 100).toFixed(2)): '0.00'}%</Text>
-                            <Text style={[styles.Increasetext,{color:UColor.arrow}]}>涨幅</Text>
+                        <View style={styles.rightout}>
+                            <View style={styles.presentprice}>
+                                <Text style={[styles.present,{color: UColor.btnColor}]}> {this.props.ramInfo ? (this.props.ramInfo.price * 1).toFixed(4) : '0.0000'}</Text>
+                                <Text style={[styles.toptext,{color: UColor.arrow}]}>价格</Text>
+                            </View>
+                            <View style={styles.titleout}>
+                                <Text style={[styles.cupcdo,{color: (this.props.ramInfo && this.props.ramInfo.increase>=0)?UColor.riseColor:UColor.fallColor}]}> 
+                                    {this.props.ramInfo ? (this.props.ramInfo.increase > 0 ? '+' + (this.props.ramInfo.increase * 100).toFixed(2) : 
+                                        (this.props.ramInfo.increase * 100).toFixed(2)): '0.00'}%</Text>
+                                <Text style={[styles.Increasetext,{color:UColor.arrow}]}>涨幅</Text>
+                            </View>
                         </View>
                     </View>
-                </View>
                 </ImageBackground>
                 <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
                     <View style={styles.timetabout}>
@@ -1209,11 +1209,11 @@ const styles = StyleSheet.create({
     leftout: {
         flex: 6,
         flexDirection: "row",
-        height: ScreenUtil.autoheight(50),
+        justifyContent: "space-around",
     },
     nameout: {
         flexDirection: 'column',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
     },
     nametext: {
         fontSize: ScreenUtil.setSpText(13),

@@ -48,98 +48,98 @@ class Transaction extends BaseComponent {
         };
       };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedSegment:"5分",
-      selectedTransactionRecord: transactionOption[0],
-      isBuy: true,
-      isSell: false,
-      balance: '0.0000',      //EOS余额
-      slideCompletionValue: 0,
-      buyETAmount: "0",    //输入购买的额度
-      eosToET: '0.0000',
-      etToEos: '0.0000',
-      sellET: "0",    //输入出售的ET
-      myETAvailable: '0', // 我的可用 ET余额
-      dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
-      logRefreshing: false,
-      newetTradeLog: [],
-      logId: "-1",
-      password : "", //买卖交易时的密码
-      modal: false,
-      contractAccount:"octtothemoon", //ET合约账户名称
-      tradename:"OCT",  //ET交易币种的名称
-      selectcode:"OCT_EOS_octtothemoon",    //ET交易币种的唯一code
-      precisionNumber: 4,
-      showMore:false,  
-      showMoreTitle:"更多",
-      isKLine:true,  //是否K线
-      dataKLine: {},
-      business: false,
-      error: false,
-      errortext: '',
-      scrollEnabled: true, 
-   };
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedSegment:"5分",
+            selectedTransactionRecord: transactionOption[0],
+            isBuy: true,
+            isSell: false,
+            balance: '0.0000',      //EOS余额
+            slideCompletionValue: 0,
+            buyETAmount: "0",    //输入购买的额度
+            eosToET: '0.0000',
+            etToEos: '0.0000',
+            sellET: "0",    //输入出售的ET
+            myETAvailable: '0', // 我的可用 ET余额
+            dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
+            logRefreshing: false,
+            newetTradeLog: [],
+            logId: "-1",
+            password : "", //买卖交易时的密码
+            modal: false,
+            contractAccount:"octtothemoon", //ET合约账户名称
+            tradename:"OCT",  //ET交易币种的名称
+            selectcode:"OCT_EOS_octtothemoon",    //ET交易币种的唯一code
+            precisionNumber: 4,
+            showMore:false,  
+            showMoreTitle:"更多",
+            isKLine:true,  //是否K线
+            dataKLine: {},
+            business: false,
+            error: false,
+            errortext: '',
+            scrollEnabled: true, 
+        };
+    }
 
-  _rightTopClick = () =>{
-    const { navigate } = this.props.navigation;
-    navigate('Ram', {returnkey: true});
-  }
+    _rightTopClick = () =>{
+        const { navigate } = this.props.navigation;
+        navigate('Ram', {returnkey: true});
+    }
 
-  componentWillMount() {
-    super.componentWillMount();
-    // this.props.dispatch({type: 'transaction/clearRamPriceLine',payload:{}});
-  }
+    componentWillMount() {
+        super.componentWillMount();
+        // this.props.dispatch({type: 'transaction/clearRamPriceLine',payload:{}});
+    }
 
-  componentDidMount(){
-      try {
-        this.setState({logRefreshing: true});
-        // 获取ETB行情相关信息
-        this.props.dispatch({type:'transaction/getCurrentET',payload:{}, callback: (et) => {
-            if(et!=undefined && et != null && et != ""){
-                this.setState({
-                    modal: false,
-                    contractAccount: et.base_contract ? et.base_contract : "octtothemoon",
-                    tradename:et.base_balance_uom ? et.base_balance_uom : "OCT",
-                    selectcode:et.code ?  et.code : "OCT_EOS_octtothemoon",
-                    });
-            }
+    componentDidMount(){
+        try {
+            this.setState({logRefreshing: true});
+            // 获取ETB行情相关信息
+            this.props.dispatch({type:'transaction/getCurrentET',payload:{}, callback: (et) => {
+                if(et!=undefined && et != null && et != ""){
+                    this.setState({
+                        modal: false,
+                        contractAccount: et.base_contract ? et.base_contract : "octtothemoon",
+                        tradename:et.base_balance_uom ? et.base_balance_uom : "OCT",
+                        selectcode:et.code ?  et.code : "OCT_EOS_octtothemoon",
+                        });
+                }
 
-            this.props.dispatch({type: 'transaction/getETInfo',payload: {code:this.state.selectcode}, callback: () => {
-                this.setState({logRefreshing: false});
-            }});
-            // 默认获取ETB的时分图
-            // this.fetchETLine(24,'24小时');
-            // 获取曲线
-            this.onClickTimeType(this.state.selectedSegment);
-            // 获取钱包信息和余额
-            this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
-                this.getAccountInfo();
-            }});
-            this.getETTradeLog();
-            DeviceEventEmitter.addListener('getRamInfoTimer', (data) => {
-                this.onRefreshing();
-            });
-        }});    
+                this.props.dispatch({type: 'transaction/getETInfo',payload: {code:this.state.selectcode}, callback: () => {
+                    this.setState({logRefreshing: false});
+                }});
+                // 默认获取ETB的时分图
+                // this.fetchETLine(24,'24小时');
+                // 获取曲线
+                this.onClickTimeType(this.state.selectedSegment);
+                // 获取钱包信息和余额
+                this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
+                    this.getAccountInfo();
+                }});
+                this.getETTradeLog();
+                DeviceEventEmitter.addListener('getRamInfoTimer', (data) => {
+                    this.onRefreshing();
+                });
+            }});    
 
-      } catch (error) {
-        this.setState({logRefreshing: false});
-      }
+        } catch (error) {
+            this.setState({logRefreshing: false});
+        }
 
-  }
+    }
 
-  onRefreshing() {
-    this.getETInfo();
-    this.getAccountInfo();
-    this.setSelectedTransactionRecord(this.state.selectedTransactionRecord, true);
-  }
+    onRefreshing() {
+        this.getETInfo();
+        this.getAccountInfo();
+        this.setSelectedTransactionRecord(this.state.selectedTransactionRecord, true);
+    }
 
-  componentWillUnmount(){
-    //结束页面前，资源释放操作
-    super.componentWillUnmount();
-  }
+    componentWillUnmount(){
+        //结束页面前，资源释放操作
+        super.componentWillUnmount();
+    }
 
     _leftTopClick = () => {
         this.setState({ modal: !this.state.modal });
@@ -169,448 +169,629 @@ class Transaction extends BaseComponent {
         });
     }
 
-  getETInfo(){
-    //取头部开盘等信息
-    this.props.dispatch({type:'transaction/getETInfo',payload:{code:this.state.selectcode}});
-    // 获取曲线
-    this.onClickTimeType(this.state.selectedSegment);
-  }
-
-   getETTradeLog(){
-    this.props.dispatch({type: 'transaction/getETTradeLog',payload: {code:this.state.selectcode}, callback: (resp) => {
-        try {
-            if(this.props.etTradeLog && this.props.etTradeLog.length > 0){
-                this.setState({
-                    newetTradeLog: this.props.etTradeLog,
-                  });
-              }else{
-                this.setState({
-                    newetTradeLog: [],
-                  });
-              }
-        } catch (error) {
-
-        }
-    }}); 
-  }
-
-  getAccountInfo(){
-    if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
-        return;
+    getETInfo(){
+        //取头部开盘等信息
+        this.props.dispatch({type:'transaction/getETInfo',payload:{code:this.state.selectcode}});
+        // 获取曲线
+        this.onClickTimeType(this.state.selectedSegment);
     }
-    this.getBalance();  //取eos余额
-    this.getETBalance(); //取ET余额
-  } 
 
-  //获取时分图
-  fetchETLine(type,opt){
-    this.setState({logRefreshing: true});
-    InteractionManager.runAfterInteractions(() => {
-        try {
-            this.props.dispatch({type:'transaction/getETPriceLine',payload:{code:this.state.selectcode,type:type}, callback: (resp) => {
-                this.setState({logRefreshing: false});
-            }});
-        } catch (error) {
-            this.setState({logRefreshing: false});
-        }
-    });
-  }
-
-  //获取K线
-  fetchETKLine(dateType,opt){
-    this.setState({logRefreshing: true});
-    InteractionManager.runAfterInteractions(() => {
-        this.props.dispatch({type: 'transaction/getETKLine',payload: {code:this.state.selectcode,pageSize: "180", dateType: dateType}, callback: (resp) => {
-            try {
-                this.setState({logRefreshing: false});
-                if(this.props.etKLine && this.props.etKLine.length > 0){
-                // // 数据意义：日期(record_date),开盘(open)，收盘(close)，最低(min)，最高(max),交易量(volum)
-                // var data = splitData([
-                //     ['2013/1/24', 2320.26,2320.26,2287.3,2362.94,117990000],
-                var  arrayObj = new Array();
-                for(var i = 0;i < this.props.etKLine.length;i++){
-                    var elementArray = new Array("",0,0,0,0,0);
-                    var element = this.props.etKLine[i];
-                    if(element.record_date){
-                        var timezone;
-                        try {
-                            // timezone = moment(element.record_date).add(8,'hours').format('MM-DD HH:mm');
-                            timezone = moment(element.record_date).format('MM-DD HH:mm');
-                        } catch (error) {
-                            timezone = "";
-                        }
-                        elementArray[0] = timezone;
-                    }   
-                    if(element.open) {
-                        elementArray[1] = element.open;
-                    }
-                    if(element.close){
-                        elementArray[2] = element.close;
-                    }
-                    if(element.min){
-                        elementArray[3] = element.min;
-                    }
-                    if(element.max){
-                        elementArray[4] = element.max;
-                    }
-                    if(element.volum){
-                        elementArray[5] = element.volum;
-                    }
-                    arrayObj[i] = elementArray;
-                }
-                var constructdata = splitData(arrayObj);
-                var echartsoption = combineETKLine(constructdata);
-                this.setState({ dataKLine : echartsoption});
-                }else{
-                this.setState({ dataKLine : {}});
-                }
-            } catch (error) {
-                this.setState({ dataKLine : {}});
-                this.setState({logRefreshing: false});
-            }
-        }});
-    
-    });
- }
-
-  onClickTimeType(opt){
-    if(opt == "时分"){
-        this.setState({isKLine:false, showMore: false,selectedSegment:opt});
-        this.fetchETLine(24,'24小时');
-        return ;
-    }
-    this.setState({isKLine:true, showMore: false,selectedSegment:opt});
-    if(opt == "5分"){
-        this.fetchETKLine("5m",opt);
-    }else if(opt == "15分"){
-        this.fetchETKLine("15m",opt);
-    }else if(opt == "30分"){
-        this.fetchETKLine("30m",opt);
-    }else if(opt == "1小时"){
-        this.setState({showMoreTitle:opt});
-        this.fetchETKLine("1h",opt);
-    }else if(opt == "1天"){
-        this.setState({showMoreTitle:opt});
-        this.fetchETKLine("1d",opt);
-    }else if(opt == "1周"){
-        this.setState({showMoreTitle:opt});
-        this.fetchETKLine("1w",opt);
-    }else if(opt == "1月"){
-        this.setState({showMoreTitle:opt});
-        this.fetchETKLine("1M",opt);
-    }else if(opt == "更多"){
-        this.onClickMore();
-    }
-  }
-  
-   getDataLine(){
-        return this.props.etLineDatas ? this.props.etLineDatas : {};
-   }
-
-   getDataKLine(){
-        return this.state.dataKLine ? this.state.dataKLine : {};
-   }
-
-  onClickMore(){
-    this.setState({ showMore: !this.state.showMore });
-  }
-  
-  selectedTransactionRecord(opt){
-    this.setSelectedTransactionRecord(opt, false);
-  }
-
-  //我的交易，大盘交易
-  setSelectedTransactionRecord(opt, onRefreshing = false){
-    if(opt== transactionOption[0]){
-      this.selectionTransaction(1,opt,onRefreshing);
-    }else if(opt== transactionOption[1]){
-      this.selectionTransaction(0,opt,onRefreshing);
-    }else if(opt== transactionOption[2]){
-       this.fetchETBigTradeLog(0,opt,onRefreshing);
-    }else if(opt== transactionOption[3]){
-       this.fetchETBigTradeLog(1,opt,onRefreshing);
-    }else{
-
-    }
-  }
-
-  fetchETBigTradeLog(type,opt, onRefreshing = false){
-    this.setState({selectedTransactionRecord:opt});
-    if(type == 0){
-        if(!onRefreshing){
-            this.setState({logRefreshing: true});
-        }
-        this.props.dispatch({type: 'transaction/getETBigTradeLog',payload: {code:this.state.selectcode}, callback: () => {
-            this.setState({logRefreshing: false});
-        }});    
-    }else{
-        EasyToast.show('暂未开放');   
-        // if(!onRefreshing){
-        //     this.setState({logRefreshing: true});
-        // }
-        // this.props.dispatch({type: 'transaction/getBigRamRank',payload: {}, callback: () => {
-        //     this.setState({logRefreshing: false});
-        // }});
-    }
-  }
-
-  selectionTransaction(type, opt, onRefreshing = false){
-    this.setState({selectedTransactionRecord:opt});
-    if(type == 0){
-        if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
-            EasyToast.show('未检测到您的账号信息');
-        }else{
-            if(!onRefreshing){
-                this.setState({logRefreshing: true});
-            }
-            this.props.dispatch({type: 'transaction/getETTradeLogByAccount',payload: {code:this.state.selectcode,account_name: this.props.defaultWallet.account, last_id: this.state.logId}, callback: (resp) => {
-                try {
-                    if(this.props.etTradeLog && this.props.etTradeLog.length > 0){
-                        this.setState({
-                            newetTradeLog: this.props.etTradeLog,
-                            logRefreshing: false
-                          });
-                      }else{
-                        this.setState({
-                            newetTradeLog: [],
-                            logRefreshing: false,
-                          });
-                      }
-                } catch (error) {
-                    this.setState({
-                        logRefreshing: false
-                    });
-                }
-            }});
-        }
-    }else{
-        if(!onRefreshing){
-            this.setState({logRefreshing: true});
-        }
+    getETTradeLog(){
         this.props.dispatch({type: 'transaction/getETTradeLog',payload: {code:this.state.selectcode}, callback: (resp) => {
             try {
                 if(this.props.etTradeLog && this.props.etTradeLog.length > 0){
                     this.setState({
                         newetTradeLog: this.props.etTradeLog,
-                        logRefreshing: false
-                      });
-                  }else{
+                    });
+                }else{
                     this.setState({
                         newetTradeLog: [],
-                        logRefreshing: false,
-                      });
-                  }
+                    });
+                }
             } catch (error) {
-                this.setState({
-                    logRefreshing: false
-                });
+
             }
         }}); 
     }
-  }
 
-  setEosBalance(balance){
-    if (balance == null || balance == "") {
-        this.setState({balance: '0.0000'});
-      } else {
-          this.setState({ balance: balance.replace("EOS", "") });
-      }
-  }
-
-  getBalance() {
-    if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
-      return;
-    }
-    this.props.dispatch({
-        type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account, symbol: 'EOS' }, callback: (data) => {
-          if (data.code == '0') {
-            this.setEosBalance(data.data);
-          }
+    getAccountInfo(){
+        if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
+            return;
         }
-      })
-}
-
-  setETBalance(balance){
-    if (balance == null || balance == "") {
-        this.setState({myETAvailable: '0.0000'});
-      } else {
-          this.setState({ myETAvailable: balance.replace(this.state.tradename, "") });
-      }
-  }
-  getETBalance() {
-    if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
-      return;
-    }
-    this.props.dispatch({
-        type: 'transaction/getETBalance', payload: { contract: this.state.contractAccount, account: this.props.defaultWallet.account, symbol: this.state.tradename }, callback: (data) => {
-          if (data && data.code == '0') {
-            this.setETBalance(data.data);
-          }
-        }
-      })
-  }
-
-   // 更新"买，卖，交易记录，大单追踪"按钮的状态  
-   _updateBtnState(currentPressed, array) { 
-    if (currentPressed === 'undefined' || currentPressed === null || array === 'undefined' || array === null ) {  
-        return;  
-    }  
-    let newState = {...this.state};  
-    for (let type of array) {  
-        if (currentPressed == type) {  
-            newState[type] ? {} : newState[type] = !newState[type];  
-            this.setState(newState);  
-        } else {  
-            newState[type] ? newState[type] = !newState[type] : {};  
-            this.setState(newState);  
-        }  
+        this.getBalance();  //取eos余额
+        this.getETBalance(); //取ET余额
     } 
-    this.setSelectedTransactionRecord(this.state.selectedTransactionRecord);
-  }  
 
-  businesButton(style, selectedSate, stateType, buttonTitle) {  
-    let BTN_SELECTED_STATE_ARRAY = ['isBuy', 'isSell'];  
-    return(  
-        <TouchableOpacity style={[style, selectedSate ? {backgroundColor:UColor.tintColor} : {backgroundColor: UColor.secdColor}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
-            <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.tintColor}]}>{buttonTitle}</Text>  
-        </TouchableOpacity>  
-    );  
-  } 
+    //获取时分图
+    fetchETLine(type,opt){
+        this.setState({logRefreshing: true});
+        InteractionManager.runAfterInteractions(() => {
+            try {
+                this.props.dispatch({type:'transaction/getETPriceLine',payload:{code:this.state.selectcode,type:type}, callback: (resp) => {
+                    this.setState({logRefreshing: false});
+                }});
+            } catch (error) {
+                this.setState({logRefreshing: false});
+            }
+        });
+    }
 
-  transformColor(currentPressed) {
-      if(currentPressed == 'isBuy'){
-        return UColor.fallColor;
-      }else if(currentPressed == 'isSell'){
-        return UColor.showy;
-      }else{
-        return UColor.tintColor;
-      }
-  }
+    //获取K线
+    fetchETKLine(dateType,opt){
+        this.setState({logRefreshing: true});
+        InteractionManager.runAfterInteractions(() => {
+            this.props.dispatch({type: 'transaction/getETKLine',payload: {code:this.state.selectcode,pageSize: "180", dateType: dateType}, callback: (resp) => {
+                try {
+                    this.setState({logRefreshing: false});
+                    if(this.props.etKLine && this.props.etKLine.length > 0){
+                    // // 数据意义：日期(record_date),开盘(open)，收盘(close)，最低(min)，最高(max),交易量(volum)
+                    // var data = splitData([
+                    //     ['2013/1/24', 2320.26,2320.26,2287.3,2362.94,117990000],
+                    var  arrayObj = new Array();
+                    for(var i = 0;i < this.props.etKLine.length;i++){
+                        var elementArray = new Array("",0,0,0,0,0);
+                        var element = this.props.etKLine[i];
+                        if(element.record_date){
+                            var timezone;
+                            try {
+                                // timezone = moment(element.record_date).add(8,'hours').format('MM-DD HH:mm');
+                                timezone = moment(element.record_date).format('MM-DD HH:mm');
+                            } catch (error) {
+                                timezone = "";
+                            }
+                            elementArray[0] = timezone;
+                        }   
+                        if(element.open) {
+                            elementArray[1] = element.open;
+                        }
+                        if(element.close){
+                            elementArray[2] = element.close;
+                        }
+                        if(element.min){
+                            elementArray[3] = element.min;
+                        }
+                        if(element.max){
+                            elementArray[4] = element.max;
+                        }
+                        if(element.volum){
+                            elementArray[5] = element.volum;
+                        }
+                        arrayObj[i] = elementArray;
+                    }
+                    var constructdata = splitData(arrayObj);
+                    var echartsoption = combineETKLine(constructdata);
+                    this.setState({ dataKLine : echartsoption});
+                    }else{
+                    this.setState({ dataKLine : {}});
+                    }
+                } catch (error) {
+                    this.setState({ dataKLine : {}});
+                    this.setState({logRefreshing: false});
+                }
+            }});
+        
+        });
+    }
+
+    onClickTimeType(opt){
+        if(opt == "时分"){
+            this.setState({isKLine:false, showMore: false,selectedSegment:opt});
+            this.fetchETLine(24,'24小时');
+            return ;
+        }
+        this.setState({isKLine:true, showMore: false,selectedSegment:opt});
+        if(opt == "5分"){
+            this.fetchETKLine("5m",opt);
+        }else if(opt == "15分"){
+            this.fetchETKLine("15m",opt);
+        }else if(opt == "30分"){
+            this.fetchETKLine("30m",opt);
+        }else if(opt == "1小时"){
+            this.setState({showMoreTitle:opt});
+            this.fetchETKLine("1h",opt);
+        }else if(opt == "1天"){
+            this.setState({showMoreTitle:opt});
+            this.fetchETKLine("1d",opt);
+        }else if(opt == "1周"){
+            this.setState({showMoreTitle:opt});
+            this.fetchETKLine("1w",opt);
+        }else if(opt == "1月"){
+            this.setState({showMoreTitle:opt});
+            this.fetchETKLine("1M",opt);
+        }else if(opt == "更多"){
+            this.onClickMore();
+        }
+    }
+  
+    getDataLine(){
+            return this.props.etLineDatas ? this.props.etLineDatas : {};
+    }
+
+    getDataKLine(){
+            return this.state.dataKLine ? this.state.dataKLine : {};
+    }
+
+    onClickMore(){
+        this.setState({ showMore: !this.state.showMore });
+    }
+    
+    selectedTransactionRecord(opt){
+        this.setSelectedTransactionRecord(opt, false);
+    }
+
+    //我的交易，大盘交易
+    setSelectedTransactionRecord(opt, onRefreshing = false){
+        if(opt== transactionOption[0]){
+        this.selectionTransaction(1,opt,onRefreshing);
+        }else if(opt== transactionOption[1]){
+        this.selectionTransaction(0,opt,onRefreshing);
+        }else if(opt== transactionOption[2]){
+        this.fetchETBigTradeLog(0,opt,onRefreshing);
+        }else if(opt== transactionOption[3]){
+        this.fetchETBigTradeLog(1,opt,onRefreshing);
+        }else{
+
+        }
+    }
+
+    fetchETBigTradeLog(type,opt, onRefreshing = false){
+        this.setState({selectedTransactionRecord:opt});
+        if(type == 0){
+            if(!onRefreshing){
+                this.setState({logRefreshing: true});
+            }
+            this.props.dispatch({type: 'transaction/getETBigTradeLog',payload: {code:this.state.selectcode}, callback: () => {
+                this.setState({logRefreshing: false});
+            }});    
+        }else{
+            EasyToast.show('暂未开放');   
+            // if(!onRefreshing){
+            //     this.setState({logRefreshing: true});
+            // }
+            // this.props.dispatch({type: 'transaction/getBigRamRank',payload: {}, callback: () => {
+            //     this.setState({logRefreshing: false});
+            // }});
+        }
+    }
+
+    selectionTransaction(type, opt, onRefreshing = false){
+        this.setState({selectedTransactionRecord:opt});
+        if(type == 0){
+            if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
+                EasyToast.show('未检测到您的账号信息');
+            }else{
+                if(!onRefreshing){
+                    this.setState({logRefreshing: true});
+                }
+                this.props.dispatch({type: 'transaction/getETTradeLogByAccount',payload: {code:this.state.selectcode,account_name: this.props.defaultWallet.account, last_id: this.state.logId}, callback: (resp) => {
+                    try {
+                        if(this.props.etTradeLog && this.props.etTradeLog.length > 0){
+                            this.setState({
+                                newetTradeLog: this.props.etTradeLog,
+                                logRefreshing: false
+                            });
+                        }else{
+                            this.setState({
+                                newetTradeLog: [],
+                                logRefreshing: false,
+                            });
+                        }
+                    } catch (error) {
+                        this.setState({
+                            logRefreshing: false
+                        });
+                    }
+                }});
+            }
+        }else{
+            if(!onRefreshing){
+                this.setState({logRefreshing: true});
+            }
+            this.props.dispatch({type: 'transaction/getETTradeLog',payload: {code:this.state.selectcode}, callback: (resp) => {
+                try {
+                    if(this.props.etTradeLog && this.props.etTradeLog.length > 0){
+                        this.setState({
+                            newetTradeLog: this.props.etTradeLog,
+                            logRefreshing: false
+                        });
+                    }else{
+                        this.setState({
+                            newetTradeLog: [],
+                            logRefreshing: false,
+                        });
+                    }
+                } catch (error) {
+                    this.setState({
+                        logRefreshing: false
+                    });
+                }
+            }}); 
+        }
+    }
+
+    setEosBalance(balance){
+        if (balance == null || balance == "") {
+            this.setState({balance: '0.0000'});
+        } else {
+            this.setState({ balance: balance.replace("EOS", "") });
+        }
+    }
+
+    getBalance() {
+        if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
+        return;
+        }
+        this.props.dispatch({
+            type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account, symbol: 'EOS' }, callback: (data) => {
+            if (data.code == '0') {
+                this.setEosBalance(data.data);
+            }
+            }
+        })
+    }
+
+    setETBalance(balance){
+        if (balance == null || balance == "") {
+            this.setState({myETAvailable: '0.0000'});
+        } else {
+            this.setState({ myETAvailable: balance.replace(this.state.tradename, "") });
+        }
+    }
+    
+    getETBalance() {
+        if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
+        return;
+        }
+        this.props.dispatch({
+            type: 'transaction/getETBalance', payload: { contract: this.state.contractAccount, account: this.props.defaultWallet.account, symbol: this.state.tradename }, callback: (data) => {
+            if (data && data.code == '0') {
+                this.setETBalance(data.data);
+            }
+            }
+        })
+    }
+
+    // 更新"买，卖，交易记录，大单追踪"按钮的状态  
+    _updateBtnState(currentPressed, array) { 
+        if (currentPressed === 'undefined' || currentPressed === null || array === 'undefined' || array === null ) {  
+            return;  
+        }  
+        let newState = {...this.state};  
+        for (let type of array) {  
+            if (currentPressed == type) {  
+                newState[type] ? {} : newState[type] = !newState[type];  
+                this.setState(newState);  
+            } else {  
+                newState[type] ? newState[type] = !newState[type] : {};  
+                this.setState(newState);  
+            }  
+        } 
+        this.setSelectedTransactionRecord(this.state.selectedTransactionRecord);
+    }  
+
+    businesButton(style, selectedSate, stateType, buttonTitle) {  
+        let BTN_SELECTED_STATE_ARRAY = ['isBuy', 'isSell'];  
+        return(  
+            <TouchableOpacity style={[style, selectedSate ? {backgroundColor:UColor.tintColor} : {backgroundColor: UColor.secdColor}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
+                <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.tintColor}]}>{buttonTitle}</Text>  
+            </TouchableOpacity>  
+        );  
+    } 
+
+    transformColor(currentPressed) {
+        if(currentPressed == 'isBuy'){
+            return UColor.fallColor;
+        }else if(currentPressed == 'isSell'){
+            return UColor.showy;
+        }else{
+            return UColor.tintColor;
+        }
+    }
 
 
-  chkAccount(obj) {
-      var charmap = '.12345abcdefghijklmnopqrstuvwxyz';
-      for(var i = 0 ; i < obj.length;i++){
-          var tmp = obj.charAt(i);
-          for(var j = 0;j < charmap.length; j++){
-              if(tmp == charmap.charAt(j)){
-                  break;
-              }
-          }
-          if(j >= charmap.length){
-              //非法字符
-              obj = obj.replace(tmp, ""); 
-              EasyToast.show('请输入正确的账号');
-          }
-      }
-      return obj;
-  }
+    chkAccount(obj) {
+        var charmap = '.12345abcdefghijklmnopqrstuvwxyz';
+        for(var i = 0 ; i < obj.length;i++){
+            var tmp = obj.charAt(i);
+            for(var j = 0;j < charmap.length; j++){
+                if(tmp == charmap.charAt(j)){
+                    break;
+                }
+            }
+            if(j >= charmap.length){
+                //非法字符
+                obj = obj.replace(tmp, ""); 
+                EasyToast.show('请输入正确的账号');
+            }
+        }
+        return obj;
+    }
 
-  chkBuyEosQuantity(obj) {
-      obj = obj.replace(/[^\d.]/g, "");  //清除 "数字"和 "."以外的字符
-      obj = obj.replace(/^\./g, "");  //验证第一个字符是否为数字
-      obj = obj.replace(/\.{2,}/g, "."); //只保留第一个小数点，清除多余的
-      obj = obj.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
-      obj = obj.replace(/^(\-)*(\d+)\.(\d\d\d\d).*$/,'$1$2.$3'); //只能输入四个小数
-      var max = 9999999999.9999;  // 100亿 -1
-      var min = 0.0000;
-      var value = 0.0000;
-      var floatbalance;
-      try {
+    chkBuyEosQuantity(obj) {
+        obj = obj.replace(/[^\d.]/g, "");  //清除 "数字"和 "."以外的字符
+        obj = obj.replace(/^\./g, "");  //验证第一个字符是否为数字
+        obj = obj.replace(/\.{2,}/g, "."); //只保留第一个小数点，清除多余的
+        obj = obj.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
+        obj = obj.replace(/^(\-)*(\d+)\.(\d\d\d\d).*$/,'$1$2.$3'); //只能输入四个小数
+        var max = 9999999999.9999;  // 100亿 -1
+        var min = 0.0000;
+        var value = 0.0000;
+        var floatbalance;
+        try {
+            value = parseFloat(obj);
+            floatbalance = parseFloat(this.state.balance);
+        } catch (error) {
+            value = 0.0000;
+            floatbalance = 0.0000;
+        }
+        if(value < min|| value > max){
+            EasyToast.show("输入错误");
+            obj = "";
+        }
+        if (value > floatbalance) {
+            EasyToast.show('账户余额不足,请重输');
+            obj = "";
+        }
+        return obj;
+    }
+
+    chkInputSellET(obj) {
+        obj = obj.replace(/[^\d.]/g, "");  //清除 "数字"以外的字符
+        obj = obj.replace(/^\./g, "");  //验证第一个字符是否为数字
+        obj = obj.replace(/\.{2,}/g, "."); //只保留第一个小数点，清除多余的
+        obj = obj.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
+        obj = obj.replace(/^(\-)*(\d+)\.(\d\d\d\d).*$/,'$1$2.$3'); //只能输入四个小数
+        var max = 9999999999.9999;  // 100亿 -1
+        var min = 0.0000;
+        var value = 0.0000;
+        var tmp_et = 0;
+        try {
         value = parseFloat(obj);
-        floatbalance = parseFloat(this.state.balance);
-      } catch (error) {
+        tmp_et = parseFloat(this.state.myETAvailable);
+        } catch (error) {
         value = 0.0000;
-        floatbalance = 0.0000;
-      }
-      if(value < min|| value > max){
+        tmp_et = 0.0000;
+        }
+        if(value < min|| value > max){
         EasyToast.show("输入错误");
         obj = "";
-      }
-      if (value > floatbalance) {
-        EasyToast.show('账户余额不足,请重输');
+        }
+        if (value * 1 > tmp_et) {
+        EasyToast.show('可卖数量不足,请重输');
         obj = "";
+        }
+        return obj;
     }
-      return obj;
-  }
-  chkInputSellET(obj) {
-    obj = obj.replace(/[^\d.]/g, "");  //清除 "数字"以外的字符
-    obj = obj.replace(/^\./g, "");  //验证第一个字符是否为数字
-    obj = obj.replace(/\.{2,}/g, "."); //只保留第一个小数点，清除多余的
-    obj = obj.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
-    obj = obj.replace(/^(\-)*(\d+)\.(\d\d\d\d).*$/,'$1$2.$3'); //只能输入四个小数
-    var max = 9999999999.9999;  // 100亿 -1
-    var min = 0.0000;
-    var value = 0.0000;
-    var tmp_et = 0;
-    try {
-      value = parseFloat(obj);
-      tmp_et = parseFloat(this.state.myETAvailable);
-    } catch (error) {
-      value = 0.0000;
-      tmp_et = 0.0000;
-    }
-    if(value < min|| value > max){
-      EasyToast.show("输入错误");
-      obj = "";
-    }
-    if (value * 1 > tmp_et) {
-      EasyToast.show('可卖数量不足,请重输');
-      obj = "";
-  }
-    return obj;
-}
 
   
-  chkAmountIsZero(amount,errInfo)
-  {
-      var tmp;
-      try {
-           tmp = parseFloat(amount);
-        } catch (error) {
-            tmp = 0;
+    chkAmountIsZero(amount,errInfo){
+        var tmp;
+        try {
+            tmp = parseFloat(amount);
+            } catch (error) {
+                tmp = 0;
+            }
+        if(tmp <= 0){
+            EasyToast.show(errInfo);
+            return true;
         }
-      if(tmp <= 0){
-          EasyToast.show(errInfo);
-          return true;
-      }
-      return false;
-  }
+        return false;
+    }
 
-  // 购买
-  buy = (rowData) => { 
-    if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
-        //EasyToast.show('请先创建并激活钱包');
+    // 购买
+    buy = (rowData) => { 
+        if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
+            //EasyToast.show('请先创建并激活钱包');
+            this.setState({ error: true,errortext: '请先创建并激活钱包' });
+            setTimeout(() => {
+                this.setState({ error: false,errortext: '' });
+            }, 2000);
+            return;
+        };
+        if(this.state.buyETAmount == ""||this.state.buyETAmount == '0'){
+            //EasyToast.show('请输入购买金额');
+            this.setState({ error: true,errortext: '请输入购买金额' });
+            setTimeout(() => {
+                this.setState({ error: false,errortext: '' });
+            }, 2000);
+            return;
+        };
+        if(this.chkAmountIsZero(this.state.buyETAmount,'请输入购买金额')){
+            this.setState({ buyETAmount: "" })
+            return ;
+        };
+
+        // if(parseFloat(this.state.buyETAmount) > 1){
+        //     this.setState({ error: true,errortext: '测试版本每次购买上限为１EOS.' });
+        //     return;
+        // }
+        this.setState({ business: false});
+        this. dismissKeyboardClick();
+            const view =
+            <View style={styles.passout}>
+                <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password : password })} returnKeyType="go" 
+                    selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
+                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
+                    placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
+            </View>
+            EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
+            if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
+                EasyToast.show('密码长度至少4位,请重输');
+                return;
+            }
+            var privateKey = this.props.defaultWallet.activePrivate;
+            try {
+                var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
+                var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                if (plaintext_privateKey.indexOf('eostoken') != -1) {
+                    plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
+                    EasyShowLD.loadingShow();
+                    Eos.transaction({
+                        actions: [
+                            // {
+                            //     account: "eosio",
+                            //     name: "updateauth", 
+                            //     authorization: [{
+                            //     actor: this.props.defaultWallet.account,
+                            //     permission: 'active'
+                            //     }], 
+                            //     data: {
+                            //         account: this.props.defaultWallet.account,
+                            //         permission: 'active',
+                            //         parent: "owner",
+                            //         auth: {
+                            //             threshold: 1,
+                            //             keys: [
+                            //                 {
+                            //                     key: this.props.defaultWallet.activePublic,
+                            //                     weight: 1,
+                            //                 }
+                            //             ],
+                            //             accounts: [
+                            //                 {
+                            //                     permission: {
+                            //                         actor: "etbexchanger",
+                            //                         permission: "eosio.code",
+                            //                     },
+                            //                     weight: 1,
+                            //                 }
+                            //             ],
+                            //         },
+                            //     }
+                            // },
+                            {
+                                account: "etbexchanger",
+                                name: "buytoken", 
+                                authorization: [{
+                                actor: this.props.defaultWallet.account,
+                                permission: 'active'
+                                }], 
+                                data: {
+                                    payer: this.props.defaultWallet.account,
+                                    eos_quant: formatEosQua(this.state.buyETAmount + " EOS"),
+                                    token_contract: this.props.etinfo.base_contract,//"issuemytoken",
+                                    token_symbol: this.state.precisionNumber + "," + this.props.etinfo.base_balance_uom, //"4,TEST",
+                                    fee_account: this.props.defaultWallet.account,
+                                    fee_rate: "1", 
+                                }
+                            },
+                            // {
+                            //     account: "eosio",
+                            //     name: "updateauth", 
+                            //     authorization: [{
+                            //     actor: this.props.defaultWallet.account,
+                            //     permission: 'active'
+                            //     }], 
+                            //     data: {
+                            //         account: this.props.defaultWallet.account,
+                            //         permission: 'active',
+                            //         parent: "owner",
+                            //         auth: {
+                            //             threshold: 1,
+                            //             keys: [
+                            //                 {
+                            //                     key: this.props.defaultWallet.activePublic,
+                            //                     weight: 1,
+                            //                 }
+                            //             ],
+                            //             accounts: [
+
+                            //             ],
+                            //         },
+                            //     }
+                            // },
+                        ]
+                    }, plaintext_privateKey, (r) => {
+                        EasyShowLD.loadingClose();
+                        if(r.isSuccess){
+                            this.getAccountInfo();
+                            EasyToast.show("购买成功");
+                        }else{
+                            if(r.data){
+                                if(r.data.code){
+                                    var errcode = r.data.code;
+                                    if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
+                                        || errcode == 3081001)
+                                    {
+                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
+                                            if(resp.code == 608)
+                                            { 
+                                                //弹出提示框,可申请免费抵押功能
+                                                const view =
+                                                <View style={styles.Explainout}>
+                                                    <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                    <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                                </View>
+                                                EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                                                const { navigate } = this.props.navigation;
+                                                navigate('FreeMortgage', {wallet: this.props.defaultWallet});
+                                                // EasyShowLD.dialogClose();
+                                                }, () => { EasyShowLD.dialogClose() });
+                                            }
+                                        }});
+                                    }else if(errcode == 3090003){
+                                        //弹出提示框
+                                        const view =
+                                        <View style={styles.Explainout}>
+                                            <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号未进行交易授权！</Text>
+                                            <Text style={[styles.Explaintext,{color: UColor.arrow}]}>进行交易前，需授权ET交易智能合约，否则无法进行交易!</Text>
+                                        </View>
+                                        EasyShowLD.dialogShow("提示", view, "去授权", "待会说", () => {
+                                        const { navigate } = this.props.navigation;
+                                        navigate('AuthExchange', {wallet: this.props.defaultWallet});
+                                        // EasyShowLD.dialogClose();
+                                        }, () => { EasyShowLD.dialogClose() });
+                                    }
+                                }
+                                if(r.data.msg){
+                                    EasyToast.show(r.data.msg);
+                                }else{
+                                    EasyToast.show("购买失败");
+                                }
+                            }else{
+                                EasyToast.show("购买失败");
+                            }
+                        }
+                    });
+                } else {
+                    EasyShowLD.loadingClose();
+                    EasyToast.show('密码错误');
+                }
+            } catch (e) {
+                EasyShowLD.loadingClose();
+                EasyToast.show('未知异常');
+            }
+            // EasyShowLD.dialogClose();
+        }, () => { EasyShowLD.dialogClose() });
+    };
+
+    // 出售
+    sell = (rowData) => {
+        if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
         this.setState({ error: true,errortext: '请先创建并激活钱包' });
         setTimeout(() => {
             this.setState({ error: false,errortext: '' });
         }, 2000);
         return;
-    };
-    if(this.state.buyETAmount == ""||this.state.buyETAmount == '0'){
-        //EasyToast.show('请输入购买金额');
-        this.setState({ error: true,errortext: '请输入购买金额' });
-        setTimeout(() => {
-            this.setState({ error: false,errortext: '' });
-        }, 2000);
-        return;
-    };
-    if(this.chkAmountIsZero(this.state.buyETAmount,'请输入购买金额')){
-        this.setState({ buyETAmount: "" })
-        return ;
-    };
-
-    // if(parseFloat(this.state.buyETAmount) > 1){
-    //     this.setState({ error: true,errortext: '测试版本每次购买上限为１EOS.' });
-    //     return;
-    // }
-    this.setState({ business: false});
-    this. dismissKeyboardClick();
+        }; 
+        if(this.state.sellET == ""||this.state.sellET == '0'){
+            this.setState({ error: true,errortext: '请输入出售数量' });
+            setTimeout(() => {
+                this.setState({ error: false,errortext: '' });
+            }, 2000);
+            return;
+        };
+        if(this.chkAmountIsZero(this.state.sellET,'请输入出售数量')){
+            this.setState({ sellET: "" })
+            return ;
+        };
+        this.setState({ business: false});
+        this. dismissKeyboardClick();
         const view =
         <View style={styles.passout}>
-            <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password : password })} returnKeyType="go" 
-                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
-                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
+            <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
+                selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
+                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}
                 placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
         </View>
         EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
@@ -625,6 +806,7 @@ class Transaction extends BaseComponent {
             if (plaintext_privateKey.indexOf('eostoken') != -1) {
                 plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                 EasyShowLD.loadingShow();
+
                 Eos.transaction({
                     actions: [
                         // {
@@ -660,16 +842,15 @@ class Transaction extends BaseComponent {
                         // },
                         {
                             account: "etbexchanger",
-                            name: "buytoken", 
+                            name: "selltoken", 
                             authorization: [{
                             actor: this.props.defaultWallet.account,
                             permission: 'active'
                             }], 
                             data: {
-                                payer: this.props.defaultWallet.account,
-                                eos_quant: formatEosQua(this.state.buyETAmount + " EOS"),
-                                token_contract: this.props.etinfo.base_contract,//"issuemytoken",
-                                token_symbol: this.state.precisionNumber + "," + this.props.etinfo.base_balance_uom, //"4,TEST",
+                                receiver: this.props.defaultWallet.account,
+                                token_contract: this.props.etinfo.base_contract, //"issuemytoken",
+                                quant: formatEosQua(this.state.sellET + " " + this.props.etinfo.base_balance_uom, this.state.precisionNumber),
                                 fee_account: this.props.defaultWallet.account,
                                 fee_rate: "1", 
                             }
@@ -704,7 +885,7 @@ class Transaction extends BaseComponent {
                     EasyShowLD.loadingClose();
                     if(r.isSuccess){
                         this.getAccountInfo();
-                        EasyToast.show("购买成功");
+                        EasyToast.show("出售成功");
                     }else{
                         if(r.data){
                             if(r.data.code){
@@ -723,19 +904,19 @@ class Transaction extends BaseComponent {
                                             </View>
                                             EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
                                             const { navigate } = this.props.navigation;
-                                            navigate('FreeMortgage', {wallet: this.props.defaultWallet});
+                                            navigate('FreeMortgage', {});
                                             // EasyShowLD.dialogClose();
                                             }, () => { EasyShowLD.dialogClose() });
                                         }
                                     }});
                                 }else if(errcode == 3090003){
-                                    //弹出提示框
+                                    //弹出交易授权提示框
                                     const view =
                                     <View style={styles.Explainout}>
                                         <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号未进行交易授权！</Text>
                                         <Text style={[styles.Explaintext,{color: UColor.arrow}]}>进行交易前，需授权ET交易智能合约，否则无法进行交易!</Text>
                                     </View>
-                                    EasyShowLD.dialogShow("提示", view, "去授权", "待会说", () => {
+                                    EasyShowLD.dialogShow("提示", view, "去授权", "呆会说", () => {
                                     const { navigate } = this.props.navigation;
                                     navigate('AuthExchange', {wallet: this.props.defaultWallet});
                                     // EasyShowLD.dialogClose();
@@ -745,13 +926,14 @@ class Transaction extends BaseComponent {
                             if(r.data.msg){
                                 EasyToast.show(r.data.msg);
                             }else{
-                                EasyToast.show("购买失败");
+                                EasyToast.show("出售失败");
                             }
                         }else{
-                            EasyToast.show("购买失败");
+                            EasyToast.show("出售失败");
                         }
                     }
                 });
+
             } else {
                 EasyShowLD.loadingClose();
                 EasyToast.show('密码错误');
@@ -761,319 +943,138 @@ class Transaction extends BaseComponent {
             EasyToast.show('未知异常');
         }
         // EasyShowLD.dialogClose();
-    }, () => { EasyShowLD.dialogClose() });
-  };
-
-  // 出售
-  sell = (rowData) => {
-    if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
-       this.setState({ error: true,errortext: '请先创建并激活钱包' });
-       setTimeout(() => {
-           this.setState({ error: false,errortext: '' });
-       }, 2000);
-       return;
-    }; 
-    if(this.state.sellET == ""||this.state.sellET == '0'){
-        this.setState({ error: true,errortext: '请输入出售数量' });
-        setTimeout(() => {
-            this.setState({ error: false,errortext: '' });
-        }, 2000);
-        return;
+        }, () => { EasyShowLD.dialogClose() });
     };
-    if(this.chkAmountIsZero(this.state.sellET,'请输入出售数量')){
-        this.setState({ sellET: "" })
-        return ;
-    };
-    this.setState({ business: false});
-    this. dismissKeyboardClick();
-    const view =
-    <View style={styles.passout}>
-        <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-            selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
-            style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}
-            placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
-    </View>
-    EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
-    if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-        EasyToast.show('密码长度至少4位,请重输');
-        return;
+
+    dismissKeyboardClick() {
+        dismissKeyboard();
     }
-    var privateKey = this.props.defaultWallet.activePrivate;
-    try {
-        var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-        var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-        if (plaintext_privateKey.indexOf('eostoken') != -1) {
-            plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-            EasyShowLD.loadingShow();
 
-            Eos.transaction({
-                actions: [
-                    // {
-                    //     account: "eosio",
-                    //     name: "updateauth", 
-                    //     authorization: [{
-                    //     actor: this.props.defaultWallet.account,
-                    //     permission: 'active'
-                    //     }], 
-                    //     data: {
-                    //         account: this.props.defaultWallet.account,
-                    //         permission: 'active',
-                    //         parent: "owner",
-                    //         auth: {
-                    //             threshold: 1,
-                    //             keys: [
-                    //                 {
-                    //                     key: this.props.defaultWallet.activePublic,
-                    //                     weight: 1,
-                    //                 }
-                    //             ],
-                    //             accounts: [
-                    //                 {
-                    //                     permission: {
-                    //                         actor: "etbexchanger",
-                    //                         permission: "eosio.code",
-                    //                     },
-                    //                     weight: 1,
-                    //                 }
-                    //             ],
-                    //         },
-                    //     }
-                    // },
-                    {
-                        account: "etbexchanger",
-                        name: "selltoken", 
-                        authorization: [{
-                        actor: this.props.defaultWallet.account,
-                        permission: 'active'
-                        }], 
-                        data: {
-                            receiver: this.props.defaultWallet.account,
-                            token_contract: this.props.etinfo.base_contract, //"issuemytoken",
-                            quant: formatEosQua(this.state.sellET + " " + this.props.etinfo.base_balance_uom, this.state.precisionNumber),
-                            fee_account: this.props.defaultWallet.account,
-                            fee_rate: "1", 
-                        }
-                    },
-                    // {
-                    //     account: "eosio",
-                    //     name: "updateauth", 
-                    //     authorization: [{
-                    //     actor: this.props.defaultWallet.account,
-                    //     permission: 'active'
-                    //     }], 
-                    //     data: {
-                    //         account: this.props.defaultWallet.account,
-                    //         permission: 'active',
-                    //         parent: "owner",
-                    //         auth: {
-                    //             threshold: 1,
-                    //             keys: [
-                    //                 {
-                    //                     key: this.props.defaultWallet.activePublic,
-                    //                     weight: 1,
-                    //                 }
-                    //             ],
-                    //             accounts: [
-
-                    //             ],
-                    //         },
-                    //     }
-                    // },
-                ]
-            }, plaintext_privateKey, (r) => {
-                EasyShowLD.loadingClose();
-                if(r.isSuccess){
-                    this.getAccountInfo();
-                    EasyToast.show("出售成功");
-                }else{
-                    if(r.data){
-                        if(r.data.code){
-                            var errcode = r.data.code;
-                            if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
-                                || errcode == 3081001)
-                            {
-                                this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
-                                    if(resp.code == 608)
-                                    { 
-                                        //弹出提示框,可申请免费抵押功能
-                                        const view =
-                                        <View style={styles.Explainout}>
-                                            <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                            <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                        </View>
-                                        EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                        const { navigate } = this.props.navigation;
-                                        navigate('FreeMortgage', {});
-                                        // EasyShowLD.dialogClose();
-                                        }, () => { EasyShowLD.dialogClose() });
-                                    }
-                                }});
-                            }else if(errcode == 3090003){
-                                //弹出交易授权提示框
-                                const view =
-                                <View style={styles.Explainout}>
-                                    <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号未进行交易授权！</Text>
-                                    <Text style={[styles.Explaintext,{color: UColor.arrow}]}>进行交易前，需授权ET交易智能合约，否则无法进行交易!</Text>
-                                </View>
-                                EasyShowLD.dialogShow("提示", view, "去授权", "呆会说", () => {
-                                const { navigate } = this.props.navigation;
-                                navigate('AuthExchange', {wallet: this.props.defaultWallet});
-                                // EasyShowLD.dialogClose();
-                                }, () => { EasyShowLD.dialogClose() });
-                            }
-                        }
-                        if(r.data.msg){
-                            EasyToast.show(r.data.msg);
-                        }else{
-                            EasyToast.show("出售失败");
-                        }
-                    }else{
-                        EasyToast.show("出售失败");
-                    }
-                }
-            });
-
-        } else {
-            EasyShowLD.loadingClose();
-            EasyToast.show('密码错误');
+    eosToET(eos, currentPrice) {
+        if(eos == null || eos == '' || currentPrice == null || currentPrice == ''){
+            return '0';
         }
-    } catch (e) {
-        EasyShowLD.loadingClose();
-        EasyToast.show('未知异常');
-    }
-    // EasyShowLD.dialogClose();
-    }, () => { EasyShowLD.dialogClose() });
-  };
-
-  dismissKeyboardClick() {
-      dismissKeyboard();
-  }
-
-  eosToET(eos, currentPrice) {
-    if(eos == null || eos == '' || currentPrice == null || currentPrice == ''){
-        return '0';
-    }
-    var ret = (eos/currentPrice).toFixed(8); 
-    if(ret == 'NaN')
-    {
-        ret = '0';
-    }
-    return ret; 
-  }
-
-  etToEos(et, currentPrice){
-    if(et == null || et == '' || currentPrice == null || currentPrice == ''){
-        return '0.0000';
-    }
-    var ret = (et * currentPrice).toFixed(4);
-    if(ret == 'NaN')
-    {
-        ret = '0';
-    }
-    return ret
-  }
-
-  //小数点位数大于指定位数,强制显示指定位数,少于则按实际位数显示
-  precisionTransfer(data,pos){
-      if(data == null || data == undefined){
-          return '0';
-      }
-    try {
-         var point = data.lastIndexOf(".");
-         if(point <= 0){
-             return data; //无小数位
-         }
-        var pointnum = data.length - point - 1;
-        var precisionData = data;
-        if(pointnum > pos){
-            precisionData = data.substring(0,point + 1 + pos);
+        var ret = (eos/currentPrice).toFixed(8); 
+        if(ret == 'NaN')
+        {
+            ret = '0';
         }
-        return precisionData;
-    } catch (error) {
-        return data.toFixed(pos);
+        return ret; 
     }
-  }
 
-  openQuery =(payer) => {
-      if(payer == 'busines'){
-        if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
-            this.setState({ error: true,errortext: '未检测到您的账号信息' });
-            setTimeout(() => {
-                this.setState({ error: false,errortext: '' });
-            }, 2000);
+    etToEos(et, currentPrice){
+        if(et == null || et == '' || currentPrice == null || currentPrice == ''){
+            return '0.0000';
+        }
+        var ret = (et * currentPrice).toFixed(4);
+        if(ret == 'NaN')
+        {
+            ret = '0';
+        }
+        return ret
+    }
+
+    //小数点位数大于指定位数,强制显示指定位数,少于则按实际位数显示
+    precisionTransfer(data,pos){
+        if(data == null || data == undefined){
+            return '0';
+        }
+        try {
+            var point = data.lastIndexOf(".");
+            if(point <= 0){
+                return data; //无小数位
+            }
+            var pointnum = data.length - point - 1;
+            var precisionData = data;
+            if(pointnum > pos){
+                precisionData = data.substring(0,point + 1 + pos);
+            }
+            return precisionData;
+        } catch (error) {
+            return data.toFixed(pos);
+        }
+    }
+
+    openQuery =(payer) => {
+        if(payer == 'busines'){
+            if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
+                this.setState({ error: true,errortext: '未检测到您的账号信息' });
+                setTimeout(() => {
+                    this.setState({ error: false,errortext: '' });
+                }, 2000);
+            }else{
+                this.setState({ business: false});
+                const { navigate } = this.props.navigation;
+                navigate('RecordQueryET', {code:this.state.selectcode,tradename:this.state.tradename,record:this.props.defaultWallet.account});
+            }
         }else{
-            this.setState({ business: false});
             const { navigate } = this.props.navigation;
-            navigate('RecordQueryET', {code:this.state.selectcode,tradename:this.state.tradename,record:this.props.defaultWallet.account});
+            navigate('RecordQueryET', {code:this.state.selectcode,tradename:this.state.tradename,record:payer});
         }
-      }else{
-        const { navigate } = this.props.navigation;
-        navigate('RecordQueryET', {code:this.state.selectcode,tradename:this.state.tradename,record:payer});
-      }
-  }
-
-  dismissKeyboardClick() {
-    dismissKeyboard();
-  }
-  
-  transferTimeZone(time){
-    var timezone;
-    try {
-        timezone = moment(time).add(8,'hours').format('YYYY-MM-DD HH:mm');
-    } catch (error) {
-        timezone = time;
     }
-    return timezone;
-  }
 
-  openbusiness() {
-    if(this.props.etinfo.base_balance_uom != "TEST" && this.props.etinfo.base_balance_uom != "ABC"){
-        let business = this.state.business;  
-        this.setState({  
-            business:!business,
-            buyETAmount: '0',
-            sellET: '0',  
-        });
-        return;
-    } 
-
-    const view = 
-    <View style={styles.passoutsource}>
-      <Text　style={{height: 45,width: ScreenWidth-100,paddingBottom: 5,fontSize: 16,}}>TEST/EOS币仅用于测试,没有投资价值,请不要大量购买!</Text>  
-    </View>
-    EasyShowLD.dialogShow("警示", view, "确认", "取消", () => {
-        EasyShowLD.dialogClose();
-        let business = this.state.business;  
-        this.setState({  
-            business:!business,
-            buyETAmount: '0',
-            sellET: '0',  
-        });
-    }, () => { EasyShowLD.dialogClose() })
-  
-  }  
-
-  openSystemSetting(){
-    // console.log("go to set net!")
-    if (Platform.OS == 'ios') {
-      Linking.openURL('app-settings:')
-        .catch(err => console.log('error', err))
-    } else {
-      NativeModules.OpenSettings.openNetworkSettings(data => {
-        console.log('call back data', data)
-      })
+    dismissKeyboardClick() {
+        dismissKeyboard();
     }
-  }
+    
+    transferTimeZone(time){
+        var timezone;
+        try {
+            timezone = moment(time).add(8,'hours').format('YYYY-MM-DD HH:mm');
+        } catch (error) {
+            timezone = time;
+        }
+        return timezone;
+    }
 
-  onMoveLineView() {
-    this.setState({scrollEnabled: false});
-    return true;
-  }
+    openbusiness() {
+        if(this.props.etinfo.base_balance_uom != "TEST" && this.props.etinfo.base_balance_uom != "ABC"){
+            let business = this.state.business;  
+            this.setState({  
+                business:!business,
+                buyETAmount: '0',
+                sellET: '0',  
+            });
+            return;
+        } 
 
-  onMoveLineViewEnd(){
-    this.setState({scrollEnabled: true});
-    return true;
-  }
+        const view = 
+        <View style={styles.passoutsource}>
+        <Text　style={{height: 45,width: ScreenWidth-100,paddingBottom: 5,fontSize: 16,}}>TEST/EOS币仅用于测试,没有投资价值,请不要大量购买!</Text>  
+        </View>
+        EasyShowLD.dialogShow("警示", view, "确认", "取消", () => {
+            EasyShowLD.dialogClose();
+            let business = this.state.business;  
+            this.setState({  
+                business:!business,
+                buyETAmount: '0',
+                sellET: '0',  
+            });
+        }, () => { EasyShowLD.dialogClose() })
+    
+    }  
+
+    openSystemSetting(){
+        // console.log("go to set net!")
+        if (Platform.OS == 'ios') {
+        Linking.openURL('app-settings:')
+            .catch(err => console.log('error', err))
+        } else {
+        NativeModules.OpenSettings.openNetworkSettings(data => {
+            console.log('call back data', data)
+        })
+        }
+    }
+
+    onMoveLineView() {
+        this.setState({scrollEnabled: false});
+        return true;
+    }
+
+    onMoveLineViewEnd(){
+        this.setState({scrollEnabled: true});
+        return true;
+    }
 
     isIos11(iphoneAdjustStyle){
         if(Platform.OS == 'ios'&& DeviceInfo.getSystemVersion()>"11.0"){
@@ -1115,10 +1116,12 @@ class Transaction extends BaseComponent {
                 <View style={styles.header}>
                     <View style={styles.leftout}>
                         <View style={styles.nameout}>
+                            <Text style={[styles.nametext,{color: UColor.arrow}]}>CNY</Text>
                             <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
                             <Text style={[styles.nametext,{color: UColor.arrow}]}>交易量</Text>
                         </View>
                         <View style={styles.recordout}>
+                            <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price_rmb,8) : '0'}</Text>
                             <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.open,8) : '0'} EOS</Text>
                             <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.today_volum,8) : '0'} {this.state.tradename}</Text>
                         </View>
@@ -1565,31 +1568,7 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(16),
         paddingBottom: ScreenUtil.autoheight(5),
     },
-    container: {
-        flex: 1,
-        flexDirection:'column',
-    },
-    header: {
-        width: ScreenWidth,
-        flexDirection: 'row',
-        alignItems: 'center',
-        height: ScreenWidth*0.1733,
-        paddingHorizontal: ScreenUtil.autowidth(6),
-        paddingVertical: ScreenUtil.autoheight(10),
-    },
-    leftout: {
-        flex: 9,
-        flexDirection: "row",
-        justifyContent: "space-around",
-    },
-    nameout: {
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        height: ScreenWidth*0.1733-ScreenUtil.autoheight(20),
-    },
-    nametext: {
-        fontSize: ScreenUtil.setSpText(13),
-    },
+
     headerTitle: {
         width: ScreenWidth,
         flexDirection: "row",
@@ -1623,31 +1602,52 @@ const styles = StyleSheet.create({
         paddingLeft: ScreenUtil.autowidth(60),
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
+
+    container: {
+        flex: 1,
+        flexDirection:'column',
+    },
+    header: {
+        width: ScreenWidth,
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: ScreenWidth*0.1733,
+        paddingHorizontal: ScreenUtil.autowidth(6),
+    },
+    leftout: {
+        flex: 7,
+        flexDirection: "row",
+    },
+    nameout: {
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+    },
+    nametext: {
+        fontSize: ScreenUtil.setSpText(13),
+    },
     recordout: {
         flex: 1,
         flexDirection: "column",
         justifyContent: 'space-around',
         paddingLeft: ScreenUtil.autowidth(5),
-        height: ScreenWidth*0.1733-ScreenUtil.autoheight(20),
     },
     recordtext: {
         fontSize: ScreenUtil.setSpText(13),
     },
     rightout: {
-        flex:7,
+        flex:5,
         flexDirection:'column',
         alignItems:"flex-end",
         justifyContent: "space-between",
-    },
-    titleout: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
     },
     presentprice: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    present: {
+        textAlign:'center',
+        fontSize: ScreenUtil.setSpText(20),
     },
     toptext: {
         textAlign: 'center', 
@@ -1656,9 +1656,10 @@ const styles = StyleSheet.create({
         marginLeft: ScreenUtil.autowidth(5), 
         marginRight: ScreenUtil.autowidth(2),
     },
-    present: {
-        textAlign:'center',
-        fontSize: ScreenUtil.setSpText(20),
+    titleout: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     cupcdo:{
         textAlign:'center',
