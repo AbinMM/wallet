@@ -467,13 +467,12 @@ function callbackToSDK(methodName,callback, resp){
 }
 
 // //输入密码,取私钥
-function inputPwd(defaultWallet,password,callback)
+function inputPwd(privateKey,salt,password,callback)
 {
     // 解析密钥
     var plaintext_privateKey = "";
     try {
-        var privateKey = defaultWallet.activePrivate;
-        var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, password + defaultWallet.salt);
+        var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, password + salt);
          plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
         if (plaintext_privateKey.indexOf('eostoken') != -1) {
             plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
@@ -568,7 +567,7 @@ function eosTokenTransfer(methodName,params,password, callback)
     })
     .then((rdata)=>{
         return  new Promise(function(resolve, reject){
-          inputPwd(rdata,password,(data) => {
+          inputPwd(rdata.activePrivate,rdata.salt,password,(data) => {
             if(data){
               //密码正确 ,返回私钥
               resolve(data);
@@ -665,7 +664,7 @@ function pushEosAction(methodName,params,password, callback)
     })
     .then((rdata)=>{
         return  new Promise(function(resolve, reject){
-          inputPwd(rdata,password,(data) => {
+          inputPwd(rdata.activePrivate,rdata.salt,password,(data) => {
             if(data){
               //密码正确 ,返回私钥
               resolve(data);
@@ -892,7 +891,7 @@ function getEosTransactionRecord(methodName,params, callback)
   res.result = false;
   res.data = {};
   res.msg = "";
-  
+
   var objpayload = new Object();
   objpayload.account = obj_param.account;
   objpayload.start = obj_param.start;
@@ -953,7 +952,7 @@ function eosAuthSign(methodName,params,password,callback)
       return ;
     }
   }catch(error){
-    console.log("sign error: %s",error.message);
+    console.log("eosAuthSign error: %s",error.message);
     if (callback)  callbackToSDK(methodName,callback,str_res);
   }
 
@@ -961,6 +960,8 @@ function eosAuthSign(methodName,params,password,callback)
   res.result = false;
   res.data = {};
   res.msg = "";
+
+  var is_activePrivate = true; //是否使用active私钥
 
   new Promise(function(resolve, reject){
     g_props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{ 
@@ -971,7 +972,16 @@ function eosAuthSign(methodName,params,password,callback)
           {
             if(walletArr[i].account == obj_param.from)
             {
-              break;
+              if(walletArr[i].ownerPublic == obj_param.publicKey)
+              {
+                is_activePrivate = false; //用owner私钥
+                break;
+              }else if((walletArr[i].activePublic == obj_param.publicKey)){
+                is_activePrivate = true; //用active私钥
+                break;
+              }else{
+                //输入公钥 不匹配
+              }
             }
           }
 
@@ -991,8 +1001,9 @@ function eosAuthSign(methodName,params,password,callback)
     });
   })
   .then((rdata)=>{
+      var privateKey = (is_activePrivate == true) ? rdata.activePrivate : rdata.ownerPrivate;
       return  new Promise(function(resolve, reject){
-        inputPwd(rdata,password,(data) => {
+        inputPwd(privateKey,rdata.salt,password,(data) => {
           if(data){
             //密码正确 ,返回私钥
             resolve(data);
@@ -1012,12 +1023,13 @@ function eosAuthSign(methodName,params,password,callback)
             res.result = true;
             res.data.signature = r.data;
             res.data.ref = 'EosToken';
-            res.data.deviceId = device_id;  
             res.data.signdata = obj_param.signdata;
 
             let  now = moment();
             res.data.timestamp = now.valueOf();
             res.data.wallet = obj_param.from;  
+
+            res.msg = "success";
             console.log("eosAuthSign ok");
           }else{
             var errmsg = ((r.data && r.data.msg) ? r.data.msg : "");
@@ -1034,7 +1046,7 @@ function eosAuthSign(methodName,params,password,callback)
     });
   })
   .catch((error)=>{
-      console.log("sign error: %s",error.message);
+      console.log("eosAuthSign error: %s",error.message);
       if (callback)  callbackToSDK(methodName,callback,str_res);
   });
 
@@ -1288,6 +1300,7 @@ function sign(methodName,params,password,device_id,callback)
   var res = new Object();
   res.result = false;
   res.data = {};
+  res.msg = "";
 
   new Promise(function(resolve, reject){
     g_props.dispatch({type:'wallet/getDefaultWallet',callback:(data)=>{ 
@@ -1303,7 +1316,7 @@ function sign(methodName,params,password,device_id,callback)
   })
   .then((rdata)=>{
       return  new Promise(function(resolve, reject){
-        inputPwd(rdata,password,(data) => {
+        inputPwd(rdata.activePrivate,rdata.salt,password,(data) => {
           if(data){
             //密码正确 ,返回私钥
             resolve(data);
@@ -1327,6 +1340,7 @@ function sign(methodName,params,password,device_id,callback)
             let  now = moment();
             res.data.timestamp = now.valueOf();
             res.data.sign = r.data;
+            res.msg = "success";
             console.log("sign ok");
           }else{
             var errmsg = ((r.data && r.data.msg) ? r.data.msg : "");
