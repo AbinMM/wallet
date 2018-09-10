@@ -179,7 +179,7 @@ class TradeDetails extends BaseComponent {
                 <QRCode size={ScreenUtil.setSpText(90)} value={UrlHead + this.state.trade.transactionId } />
               </View>
               <Button onPress={this.copy.bind(this,this.state.trade)}>
-                <View style={{backgroundColor: UColor.mainColor,borderRadius: 25,}}>
+                <View style={{backgroundColor: UColor.fontrice,borderRadius: 25,}}>
                   <Text style={{ fontSize: ScreenUtil.setSpText(12),color: UColor.arrow,paddingHorizontal: ScreenUtil.autowidth(10),paddingVertical: ScreenUtil.autoheight(2),}}>复制URL</Text>
                 </View>
               </Button>

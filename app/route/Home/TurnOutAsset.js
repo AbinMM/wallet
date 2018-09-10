@@ -342,7 +342,7 @@ class TurnOutAsset extends BaseComponent {
                         <Image source={UImage.warning_h} style={styles.imgBtn} />
                         <Text style={[styles.headtext,{color: UColor.showy}]} >温馨提示</Text>
                     </View>
-                    <Text style={[styles.headtitle,{color: UColor.showy}]}>温馨提示：如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
+                    <Text style={[styles.headtitle,{color: UColor.showy}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
                 </View>
                 <Button onPress={this._rightButtonClick.bind(this)} style={styles.btnnextstep}>
                     <View style={[styles.nextstep,{backgroundColor: UColor.tintColor}]}>
