@@ -173,7 +173,8 @@ class Setting extends React.Component {
                   EasyShowLD.dialogClose()
                 }, () => { EasyShowLD.dialogClose() });
               }else if(integral.code == 607){
-                const view = <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>您没有活动奖励可领取！</Text>
+                const view = <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>此次活动已圆满结束，期待下一次有您的参与。</Text>
+                //<Text style={[styles.inptpasstext,{color: UColor.arrow}]}>您没有活动奖励可领取！</Text>
                 EasyShowLD.dialogShow("温馨提示",view,"知道了",null,()=>{EasyShowLD.dialogClose()}); 
               }else if(integral.code == 0){         
                 EasyShowLD.loadingClose();
