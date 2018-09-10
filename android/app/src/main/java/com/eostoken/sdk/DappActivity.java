@@ -223,19 +223,20 @@ public class DappActivity extends Activity {
             }
             // try {
             //     JSONObject obj = new JSONObject();
-            //     obj.put("appid", "eosbille1234");
-            //     // obj.put("from", "eosbille1234");
+            //     obj.put("signdata", "eosbille1234");
+            //     obj.put("from", "chengengping");
             //     // obj.put("to", "chengengping");
             //     // obj.put("amount", 0.0010);
             //     // obj.put("tokenName", "EOS");
             //     // obj.put("precision", "4");
             //     // obj.put("contract", "eosio.token");
             //     // obj.put("memo", "test");
-            //     // obj.put("address", "EOS7ds9A9FGDsKrdymQ4ynKbMgbCVaaaaaaaaaaa");
+            //     // obj.put("publicKey", "EOS6tqnNR3AiUVFdX29rYFy6mEasi7whzVQ5wUTe2kcGgQhmY6gum");
+            //     obj.put("publicKey", "EOS8aRN1UaqEw2xE1PtRtuPmkUwVQ13UMWjMaUVoKdJQUwoyQi2WN");
             //     params = "";
             //     params = obj.toString();
 
-            //     methodName = "sign";
+            //     methodName = "eosAuthSign";
                
             // } catch (Exception e) {
             //     //TODO: handle exception
@@ -244,10 +245,12 @@ public class DappActivity extends Activity {
             switch(methodName){
                 case "eosTokenTransfer":
                 case "pushEosAction":
+                case "eosAuthSign":
                 case "sign":
                     if(params.isEmpty() || callback.isEmpty()){
                         return;
                     }
+                    //提示订单详情
                     showEditDialog(methodName,params,callback);
                     break;
                 
