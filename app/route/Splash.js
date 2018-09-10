@@ -36,7 +36,8 @@ class Splash extends React.Component {
       }
     }});
     this.props.dispatch({type:'login/getthemeSwitching',callback:(theme)=>{
-      if(theme.theme){  
+      if(!theme.theme){  
+        //白色版
           UColor.transport= 'rgba(0, 0, 0, 0.0)';
           UColor.mask= 'rgba(0, 0, 0, 0.4)'; //遮罩色 UColor.mask
           UColor.mainColor=  '#FFFFFF'; //主色调 UColor.mainColor
@@ -138,6 +139,7 @@ class Splash extends React.Component {
           UImage.scan= require('../img/day/scan.png');
           UImage.authExchangeBlue= require('../img/day/authExchangeBlue.png');
       }else{
+        //黑色版
           UColor.transport= 'rgba(0, 0, 0, 0.0)';
           UColor.mask= 'rgba(0, 0, 0, 0.4)'; //遮罩色 UColor.mask
           UColor.mainColor=  '#4e5e7d'; //主色调 UColor.mainColor
@@ -170,6 +172,12 @@ class Splash extends React.Component {
           UColor.fonttint= "#65CAFF";
           UColor.tintnavigation= "#65CAFF";
           UColor.fontrice= "#FFFFFF";
+          UImage.tab_1= require('../img/tab_1.png');
+          UImage.tab_2= require('../img/tab_2.png');
+          UImage.tab_3= require('../img/tab_3.png');
+          UImage.tab_4= require('../img/tab_4.png');
+          UImage.tab_5= require('../img/tab_5.png');
+          UImage.tab_5_h= require('../img/tab_5_h.png');
       }
     }});
   }

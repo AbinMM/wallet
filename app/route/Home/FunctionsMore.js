@@ -76,25 +76,25 @@ class FunctionsMore extends React.Component {
             <Button onPress={this.onPress.bind(this, 'Receivables')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.qr} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>收币</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>收币</Text>
                 </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'transfer')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.transfer} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>转账</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>转账</Text>
                 </View>
             </Button>
             <Button  onPress={this.onPress.bind(this, 'Resources')}  style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.resources} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>资源管理</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>资源管理</Text>
                 </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'Tokenissue')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.tokenissue} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>发行代币</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>发行代币</Text>
                 </View>                      
             </Button>
         </View>
@@ -102,25 +102,25 @@ class FunctionsMore extends React.Component {
             <Button onPress={this.onPress.bind(this, 'Bvote')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.vote_node} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>节点投票</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>节点投票</Text>
                 </View>                      
             </Button>
             <Button onPress={this.onPress.bind(this, 'candy')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.candy} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>糖果信息</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>糖果信息</Text>
                 </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'FreeMortgage')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.free_mortgage} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>免费抵押</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>免费抵押</Text>
                 </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'navigation')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.navigation} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>EOS导航</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>EOS导航</Text>
                 </View>
             </Button>
         </View>

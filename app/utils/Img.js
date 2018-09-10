@@ -1,24 +1,24 @@
 export default {
+  tab_1: require('../img/day/tab_1.png'),
+  tab_2: require('../img/day/tab_2.png'),
+  tab_3: require('../img/day/tab_3.png'),
+  tab_4: require('../img/day/tab_4.png'),
+  tab_5: require('../img/day/tab_5.png'),
   signln_bg: require('../img/day/signln_bg.png'),
+  
   difficult: require('../img/difficult.png'),
   mustread: require('../img/mustread.png'),
   feedback: require('../img/feedback.png'),
   commonwt: require('../img/commonwt.png'),
-  
   coinsbg1: require('../img/coinsbg1.png'),
   coinsbg2: require('../img/coinsbg2.png'),
   transactionA: require('../img/transactionA.png'),
   transactionB: require('../img/transactionB.png'),
-
-
   add_h: require('../img/add_h.png'),
   qr_h: require('../img/qr_h.png'),
   transfer_h: require('../img/transfer_h.png'),
   resources_h: require('../img/resources_h.png'),
   more_h: require('../img/more_h.png'),
-
-
-
   
   a:require('../img/a.png'),
   aab1: require('../img/aab1.png'),
@@ -121,15 +121,15 @@ export default {
   small_bell:require('../img/small_bell.png'),  
   strip_bg:require('../img/strip_bg.png'),
   tab_1_h: require('../img/tab_1_h.png'),
-  tab_1: require('../img/tab_1.png'),
+  //tab_1: require('../img/tab_1.png'),
   tab_2_h: require('../img/tab_2_h.png'),
-  tab_2: require('../img/tab_2.png'),
+  //tab_2: require('../img/tab_2.png'),
   tab_3_h: require('../img/tab_3_h.png'),
-  tab_3: require('../img/tab_3.png'),
+  //tab_3: require('../img/tab_3.png'),
   tab_4_h: require('../img/tab_4_h.png'),
-  tab_4: require('../img/tab_4.png'),
+  //tab_4: require('../img/tab_4.png'),
   tab_5_h:require('../img/tab_5_h.png'),
-  tab_5:require('../img/tab_5.png'),
+  //tab_5:require('../img/tab_5.png'),
   tag:require('../img/tag.png'),
   Tick_h:require('../img/Tick_h.png'),
   Tick:require('../img/Tick.png'),
