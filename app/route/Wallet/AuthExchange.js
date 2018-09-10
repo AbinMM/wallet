@@ -202,7 +202,7 @@ goToGithub(){
             <ImageBackground style={styles.bgout} source={UImage.authFrame} resizeMode="cover">
                 <Text style={[styles.Explaintext,{color: UColor.arrow}]}>使用ET交易平台进行交易时,必须授权于智能合约,否则无法交易!交易结束后,可取消授权。</Text>
                 <Text style={[styles.Explaintextmiddle,{color: UColor.arrow}]}>注:智能合约并不会记录或保留您的任何信息,请放心交易。(ET交易APP代码已开源)</Text>
-                <Button onPress={() => this.justToGithub()}>
+                <Button onPress={() => this.goToGithub()}>
                     <Text style={[styles.Tipstext2,{ color: UColor.tintColor}]}>开源地址：https://github.com/eostoken</Text>
                 </Button>
             </ImageBackground>
