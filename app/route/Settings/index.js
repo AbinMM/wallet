@@ -242,7 +242,7 @@ class Setting extends React.Component {
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
       <ScrollView  keyboardShouldPersistTaps="always">
-        <ImageBackground source={UImage.signln_bg} resizeMode="cover" style={styles.linebgout}>
+        <ImageBackground source={UImage.signln_bg} resizeMode="stretch" style={styles.linebgout}>
           <Button onPress={this.goProfile.bind(this)} style={{flex: 1,}}>
             <View style={styles.userHead} >
               <View style={styles.headout}>

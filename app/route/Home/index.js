@@ -535,7 +535,7 @@ class Home extends React.Component {
     if(this.props.guide){
       return (
         <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-            <Image source={UImage.guide} style={styles.imgTop} resizeMode="cover"/>
+            <Image source={UImage.guide} style={styles.imgTop} resizeMode="stretch"/>
             <View style={styles.btnestablish}>
               <Button onPress={() => this.Establish()}>
                 <View style={[styles.btnimport,{backgroundColor: UColor.tintColor}]}>
@@ -553,7 +553,7 @@ class Home extends React.Component {
     }else{
       return (
         <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-          <ImageBackground style={styles.bgout} source={UImage.home_bg} resizeMode="cover">
+          <ImageBackground style={styles.bgout} source={UImage.home_bg} resizeMode="stretch">
             <View style={styles.topbtn}>
               <Button onPress={() => this.scan()}>
                 <Image source={UImage.scan} style={styles.imgBtn} />

@@ -27,7 +27,7 @@ class Header extends BaseComponent {
     render(){
         let {backgroundColor, onPressLeft, title, onPressRight, avatar, subName,} = this.props
         return (
-        <View style={[styles.header,{backgroundColor: backgroundColor ? backgroundColor : UColor.titletop,borderBottomColor: UColor.secdColor}]}>
+        <View style={[styles.header,{backgroundColor: backgroundColor ? backgroundColor: UColor.titletop}]}>
             <TouchableOpacity style={styles.Leftout} onPress={() => {onPressLeft ? this.props.navigation.goBack() : undefined}}>
                 {onPressLeft &&<Ionicons style={{color:UColor.btnColor}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
             </TouchableOpacity>
@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
         alignItems:"center",
         paddingTop: ScreenUtil.autoheight(20),
         height: ScreenUtil.autoheight(65),
-        borderBottomWidth: ScreenUtil.autoheight(0.5),
     },
     Leftout: {
         flex: 1, 

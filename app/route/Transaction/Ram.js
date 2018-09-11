@@ -843,7 +843,7 @@ class Ram extends BaseComponent {
 
     render() {
         return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-        <ImageBackground source={UImage.transactionA} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.164}}>
+        <ImageBackground source={UImage.transactionA} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.164}}>
             <Header {...this.props} onPressLeft={this.props.navigation.state.params ? this.props.navigation.state.params.returnkey : false} title="内存交易"  backgroundColor={UColor.transport} />
         </ImageBackground>
         <TouchableOpacity style={styles.transactiontou}  onPress={this.openbusiness.bind(this)} activeOpacity={0.8}>
@@ -863,7 +863,7 @@ class Ram extends BaseComponent {
         <ScrollView {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"refreshControl={
                 <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} tintColor={UColor.fontColor} 
                     colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}>
-                <ImageBackground source={UImage.transactionB} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
+                <ImageBackground source={UImage.transactionB} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
                     <View style={styles.header}>
                         <View style={styles.leftout}>
                             <View style={styles.nameout}>

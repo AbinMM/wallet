@@ -195,14 +195,14 @@ class Coins extends React.Component {
   render() {
     return (
       <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-      <ImageBackground source={UImage.coinsbg1} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1546,}}>
+      <ImageBackground source={UImage.coinsbg1} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1546,}}>
         <Header {...this.props} backgroundColor={UColor.transport} onPressLeft={false} title="行情" />
       </ImageBackground>
         <TabViewAnimated
         lazy={true}
         navigationState={this.state}
         renderScene={this.renderScene.bind(this)}
-        renderHeader={(props)=> <ImageBackground source={UImage.coinsbg2} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1013,}}>
+        renderHeader={(props)=> <ImageBackground source={UImage.coinsbg2} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1013,}}>
         <TabBar onTabPress={this._handleTabItemPress} 
         labelStyle={[styles.labelStyle,{color:UColor.btnColor}]} 
         indicatorStyle={[styles.indicatorStyle,{backgroundColor: UColor.fonttint}]} 

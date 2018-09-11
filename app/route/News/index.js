@@ -332,7 +332,7 @@ class News extends React.Component {
             lazy={true} 
             navigationState={this.state}
             renderScene={this.renderScene.bind(this)}
-            renderHeader={(props) => <ImageBackground source={UImage.coinsbg1} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1546,}}>
+            renderHeader={(props) => <ImageBackground source={UImage.coinsbg1} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1546,}}>
             <TabBar onTabPress={this._handleTabItemPress} 
             labelStyle={[styles.labelStyle,{color:UColor.btnColor}]} 
             indicatorStyle={[styles.indicatorStyle,{backgroundColor: UColor.fonttint}]} 

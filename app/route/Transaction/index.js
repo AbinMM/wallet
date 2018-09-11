@@ -1123,7 +1123,7 @@ class Transaction extends BaseComponent {
             <Text style={[styles.paneltext,{color: UColor.btnColor}]}>交易面板</Text>
         </View>
     </TouchableOpacity>
-    <ImageBackground source={UImage.transactionA} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.164,zIndex: 999,}}>
+    <ImageBackground source={UImage.transactionA} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.164,zIndex: 999,}}>
         <View style={styles.headerTitle}>  
             <Button onPress={this._leftTopClick.bind()}>
                 <Image source={this.state.modal ? UImage.tx_slide0 : UImage.tx_slide1} style={styles.imgBtn} />
@@ -1144,7 +1144,7 @@ class Transaction extends BaseComponent {
             <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
             tintColor={UColor.fontColor} colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}
             >
-            <ImageBackground source={UImage.transactionB} resizeMode="cover"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
+            <ImageBackground source={UImage.transactionB} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
                 <View style={styles.header}>
                     <View style={styles.leftout}>
                         <View style={styles.nameout}>
