@@ -1253,8 +1253,7 @@ class Transaction extends BaseComponent {
         }  
         {
             this.state.etOpenStatus ? 
-            (
-                this.state.isKLine ? 
+            (this.state.isKLine ? 
                 <View style={{width: ScreenWidth, backgroundColor: UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
                 {
                     <Echarts option={this.getDataKLine()} width={ScreenWidth} height={ScreenUtil.autoheight(300)} />
@@ -1269,11 +1268,12 @@ class Transaction extends BaseComponent {
             )
             :
             <View style={{width: ScreenWidth, height: ScreenUtil.autoheight(300), backgroundColor: UColor.bgEchar, alignItems: 'center', justifyContent: 'center'}}>
-            {
-                <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.riseColor}}>交易系统正在升级维护中, 请勿进行交易!</Text>
-            }
+                <View style={{flexDirection: 'row',alignItems: 'center',}}>
+                    <Image source={UImage.warning} style={styles.statementimg} />
+                    <Text style={[styles.statementtext,{color: UColor.riseColor}]} >警告</Text>
+                </View>
+                <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.riseColor,lineHeight: ScreenUtil.autoheight(30)}}>交易系统正在升级维护中, 请勿进行交易!</Text>
             </View>
-
         }
         <View style={styles.toptabout}>
             <SegmentedControls tint= {UColor.tintColor} selectedTint= {UColor.btnColor} onSelection={this.selectedTransactionRecord.bind(this) }
@@ -1742,6 +1742,19 @@ const styles = StyleSheet.create({
     timeinitial: {
         fontSize: ScreenUtil.setSpText(14), 
     },
+
+    statementimg: {
+        width: ScreenUtil.autowidth(25),
+        height: ScreenUtil.autowidth(25),
+        marginRight: ScreenUtil.autowidth(10),
+    },
+    statementtext: {
+        fontWeight: "bold",
+        fontSize: ScreenUtil.setSpText(16), 
+    },
+
+
+
     toptabout: {
         paddingTop: ScreenUtil.autoheight(10),
         paddingBottom: ScreenUtil.autoheight(5),
