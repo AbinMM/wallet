@@ -119,7 +119,12 @@ class WalletDetail extends BaseComponent {
     } else if (key == 'ModifyPassword') {
       navigate('ModifyPassword', this.props.navigation.state.params.data);
     } else if (key == 'Resources') {
-      navigate('Resources', {account_name:this.props.navigation.state.params.data.name});
+      if(this.props.navigation.state.params.data.isactived){
+        navigate('Resources', {account_name:this.props.navigation.state.params.data.name});
+      }else{
+        EasyToast.show("该账号还没激活，激活之后才能进入资源管理")
+      }
+      
     } else if(key == 'SeeBlockBrowser'){
       if(this.props.navigation.state.params.data.isactived){
         this.setState({ show: true,})
