@@ -1032,7 +1032,7 @@ class Route extends React.Component {
                   <ViewShot ref="viewShot" style={{ left: 20, width: ScreenWidth - 40 }} options={{ format: "jpg", quality: 0.9 }}>
                     <View style={{ backgroundColor: UColor.fontColor, width: '100%', height: '100%' }}>
                       <View style={{backgroundColor:UColor.navigation}}>
-                        <Image source={UImage.turninhead_h} resizeMode="stretch" style={{ width: ScreenWidth - 40, height:(ScreenWidth - 40)*0.3167 }} />
+                        <Image source={UImage.turninhead} resizeMode="stretch" style={{ width: ScreenWidth - 40, height:(ScreenWidth - 40)*0.3167 }} />
                         <View style={{ flexDirection: 'row', justifyContent: 'center',alignItems: 'center',}}>
                           <Text style={{fontSize: 30, color: UColor.btnColor, padding: 10, textAlign: 'center',}}>{this.state.turninamount}</Text>
                           <Text style={{fontSize: 22, color: UColor.baseline,}}>{this.state.turninsymbol}</Text>
