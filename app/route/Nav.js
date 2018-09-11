@@ -361,7 +361,6 @@ const Nav = StackNavigator(
 );
 
 let routeLength = 0;
-
 @connect(({ banner, news, newsType, common, login, wallet, assets }) => ({ ...banner, ...news, ...newsType, ...common, ...login,  ...wallet, ...assets }))
 class Route extends React.Component {
 
