@@ -234,28 +234,28 @@ class APactivation extends BaseComponent {
                 <TouchableOpacity style={[styles.modalStyle,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
                     <View style={[styles.subView,{backgroundColor: UColor.btnColor}]}>
                         <View style={styles.buttonView}>
-                            <Text style={[styles.titleText,{color: UColor.mainColor}]}>订单详情</Text>
+                            <Text style={[styles.titleText,{color: UColor.startup}]}>订单详情</Text>
                             <Button  onPress={this._setModalVisible.bind(this)}>
                                 <Text style={[styles.buttontext,{color: UColor.baseline}]}>×</Text>
                             </Button>
                         </View>
                         <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]} >
                             <View style={styles.buttonView}>
-                                <Text style={[styles.cpuramnet,{color: UColor.blackColor}]}>{parseFloat(this.state.cpu)+parseFloat(this.state.ram)+parseFloat(this.state.net)} </Text>
+                                <Text style={[styles.cpuramnet,{color: UColor.blackColor}]}>{(parseFloat(this.state.cpu)+parseFloat(this.state.ram)+parseFloat(this.state.net)).toFixed(4)} </Text>
                                 <Text style={[styles.modalcompany,{color: UColor.blackColor}]}> EOS</Text>
                             </View>
                         </View>
                         <View style={styles.accountout}>
                             <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]} >
                                 <View style={styles.rowInfo}>
-                                    <Text style={[styles.contentText,{color: UColor.mainColor}]}>购买账号：</Text>
-                                    <Text style={[styles.contentText,{color: UColor.mainColor}]}>{this.state.accountName}</Text>
+                                    <Text style={[styles.contentText,{color: UColor.startup}]}>购买账号：</Text>
+                                    <Text style={[styles.contentText,{color: UColor.startup}]}>{this.state.accountName}</Text>
                                 </View>
                             </View>
                             <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]} >
                                 <View style={styles.rowInfo}>
-                                    <Text style={[styles.contentText,{color: UColor.mainColor}]}>支付账号：</Text>
-                                    <Text style={[styles.contentText,{color: UColor.mainColor}]}>{this.props.defaultWallet.account}</Text>
+                                    <Text style={[styles.contentText,{color: UColor.startup}]}>支付账号：</Text>
+                                    <Text style={[styles.contentText,{color: UColor.startup}]}>{this.props.defaultWallet.account}</Text>
                                 </View>
                             </View>
                           
