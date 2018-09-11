@@ -34,6 +34,7 @@ class AssetSearch extends BaseComponent {
       selectasset: null,
       newAssetsList: [],
       reveal: true,
+      listener: null,
     }
   }
 
@@ -44,19 +45,20 @@ class AssetSearch extends BaseComponent {
       this.props.dispatch({ type: 'assets/list', payload: { page: 1}, callback: () => {
         EasyShowLD.loadingClose();
       } });
-      this.props.dispatch({ type: 'assets/myAssetInfo'});
       DeviceEventEmitter.addListener('updateAssetList', (data) => {
         this.props.dispatch({ type: 'assets/list', payload: { page: 1} });
       });
+
+      this.state.listener = DeviceEventEmitter.addListener('scan_result', (data) => {
+        if(data.toaccount){
+            this.setState({labelname:data.toaccount})
+            this._query(data.toaccount);
+        }
+      }); 
     } catch (error) {
       EasyShowLD.loadingClose();
     }
-    DeviceEventEmitter.addListener('scan_result', (data) => {
-      if(data.toaccount){
-          this.setState({labelname:data.toaccount})
-          this._query(data.toaccount);
-      }
-    }); 
+
   }
 
   //清空
@@ -97,7 +99,8 @@ class AssetSearch extends BaseComponent {
   componentWillUnmount(){
     //结束页面前，资源释放操作
     super.componentWillUnmount();
-    DeviceEventEmitter.removeListener('scan_result');
+    // DeviceEventEmitter.removeListener('scan_result');
+    this.state.listener.remove();
   }
   //手动添加
   logout() {
