@@ -269,7 +269,8 @@ class ActivationAt extends BaseComponent {
                     <View style={[styles.inptoutbg,{backgroundColor: UColor.mainColor}]}>
                         <View style={styles.headout}>
                             <Text style={[styles.inptitle,{color: UColor.fontColor}]}>重要说明：</Text>
-                            <Text style={[styles.headtitle,{color: UColor.arrow}]}>激活EOS主网账户需要消耗EOS，支付完成后将激活该账户.目前激活EOS账户最低内存约需1.5EOS</Text>
+                            <Text style={[styles.headtitle,{color: UColor.arrow}]}>根据EOS的规则，激活EOS主网账户需要消耗EOS资源，激活成本会随着EOS和RAM价格的波动而变化。</Text>
+                            <Text style={[styles.headtitle,{color: UColor.arrow}]}>为避免损失，激活后务必第一时间保存好两串51位的owner私钥和active私钥！</Text>
                         </View>  
                         <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
                             <TouchableOpacity onPress={() => this._onPressListItem()}>
@@ -362,8 +363,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
     headtitle: {
-        fontSize: ScreenUtil.setSpText(14),
-        lineHeight: ScreenUtil.autoheight(25),
+        fontSize: ScreenUtil.setSpText(12),
+        lineHeight: ScreenUtil.autoheight(20),
         marginBottom: ScreenUtil.autoheight(10),
     },
     codeout: {
