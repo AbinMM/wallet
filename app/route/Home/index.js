@@ -55,6 +55,7 @@ class Home extends React.Component {
     this.props.dispatch({ type: 'wallet/updateInvalidState', payload: {Invalid: false}});
     this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
       this.setState({assetRefreshing: true});
+      this.props.dispatch({ type: 'assets/setCurrentAccount', payload: { accountName: (this.props.defaultWallet ? this.props.defaultWallet.name : "") }});
       this.getDefaultWalletEosBalance( () => {
         this.setState({assetRefreshing: false});
       });
@@ -88,6 +89,7 @@ class Home extends React.Component {
     });
     DeviceEventEmitter.addListener('updateDefaultWallet', (data) => {
       this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
+        this.props.dispatch({ type: 'assets/setCurrentAccount', payload: { accountName: (this.props.defaultWallet ? this.props.defaultWallet.name : "") }});
         this.getDefaultWalletEosBalance(); // 默认钱包余额
         this.getAllWalletEosBalance();
         this.getMyAssetsInfo();
@@ -392,11 +394,13 @@ class Home extends React.Component {
           //     this.setState({assetRefreshing: false});
           //   }});
           // }});
-          this.getMyAssetsInfo(() => {
-            this.setState({assetRefreshing: false});
-          });
+          this.props.dispatch({ type: 'assets/setCurrentAccount', payload: { accountName: data.account }, callback: () => {
+            this.getMyAssetsInfo(() => {
+              this.setState({assetRefreshing: false});
+            });
+          }});
         }});
-        this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" } });
+        // this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" } });
       } catch (error) {
         this.setState({assetRefreshing: false});
       }

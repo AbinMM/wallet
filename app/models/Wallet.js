@@ -27,7 +27,6 @@ export default {
             // }
 
             yield put({ type: 'update', payload: { walletList: walletList, defaultWallet: defaultWallet } });
-            DeviceEventEmitter.emit('wallet_info');
             if (callback) callback();
         },
         *activeWallet({ wallet, callback}, {call, put}) {

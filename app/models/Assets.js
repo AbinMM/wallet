@@ -65,7 +65,8 @@ export default {
                 balance: '0.0000',
             }
             myAssets[0] = eosInfoDefault;
-            if(payload && payload.isInit){
+            var currentAccount = yield call(store.get, 'current_account');
+            if(payload && payload.isInit && currentAccount == payload.accountName){
                 yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
             }
             var resp;
@@ -83,9 +84,13 @@ export default {
 
             }
 
-            yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+            var currentAccount = yield call(store.get, 'current_account');
+            if(currentAccount == payload.accountName){
+                yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+            }
         }else{
-            if(payload && payload.isInit){
+            var currentAccount = yield call(store.get, 'current_account');
+            if(payload && payload.isInit && currentAccount == payload.accountName){
                 yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
             }
             try{
@@ -113,7 +118,8 @@ export default {
         // 
 
         var myAssetsNew = yield call(store.get, 'myAssets217_' + payload.accountName);
-        if((myAssetsNew == null || myAssetsNew.length == 0 || (myAssetsNew != null && myAssetsNew.length == myAssets.length))){
+        var currentAccount = yield call(store.get, 'current_account');
+        if((myAssetsNew == null || myAssetsNew.length == 0 || (myAssetsNew != null && myAssetsNew.length == myAssets.length && currentAccount == payload.accountName))){
             yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
             yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
         }
@@ -152,11 +158,13 @@ export default {
                 // var myAssetsNew = yield call(store.get, 'myAssets');
                 // if(myAssetsNew != null && myAssetsNew.length == myAssets.length){
                     // alert("getBalance" +JSON.stringify(myAssets));
-
                     yield call(store.save, 'accountName', payload.accountName);
                     yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
-                    yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
-                // }
+
+                    var currentAccount = yield call(store.get, 'current_account');
+                    if(currentAccount == payload.accountName){
+                        yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+                    }
 
                 DeviceEventEmitter.emit('updateMyAssetsBalance', payload);
             }
@@ -175,7 +183,10 @@ export default {
             item.balance = '0.0000';
         }
         yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
-        yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+        var currentAccount = yield call(store.get, 'current_account');
+        if(currentAccount == payload.accountName){
+            yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+        }
         if(callback) callback();
     },
     *addMyAsset({payload, callback},{call,put}){
@@ -192,9 +203,11 @@ export default {
                     myAssets.splice(i, 1);
                     yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
                     // alert("delMyAsset" +JSON.stringify(myAssets));
-                    yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+                    var currentAccount = yield call(store.get, 'current_account');
+                    if(currentAccount == payload.accountName){
+                        yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+                    }
                     if(callback) callback(myAssets);
-                    // DeviceEventEmitter.emit('updateMyAssets', payload);
                     return;
                 }
             }
@@ -214,9 +227,11 @@ export default {
         myAssets[myAssets.length] = _asset;
         yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
         // alert("addMyAsset" +JSON.stringify(myAssets));
-        yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+        var currentAccount = yield call(store.get, 'current_account');
+        if(currentAccount == payload.accountName){
+            yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+        }
         if(callback) callback(myAssets);
-        // DeviceEventEmitter.emit('updateMyAssets', payload);
      },
      *fetchMyAssetsFromNet({payload, callback},{call,put}) {
         if(payload && payload.accountName){
@@ -234,7 +249,7 @@ export default {
                         }
                         if(j == myAssets.length){ // 列表还没有该资产
                             resp1 = yield call(Request.request, listAssets, 'post', {code: resp.data[i]});
-                            if(resp1.code == '0' && resp1.data && resp1.data.length == 1){
+                            if(resp1 && resp1.code == '0' && resp1.data && resp1.data.length == 1){
                                 var eosInfo = {
                                     asset: resp1.data[0],
                                     value: true,
@@ -244,9 +259,14 @@ export default {
                             }                        
                         }
                     }
+
+                    yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
+
+                    var currentAccount = yield call(store.get, 'current_account');
+                    if(currentAccount == payload.accountName){ // 异步原因，可能钱包已切换
+                        yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+                    }
                 }
-                yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
-                yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
                 
             } catch (error) {
 
@@ -298,6 +318,13 @@ export default {
         }
         if (callback) callback({ reveal: reveal });
       },
+      *setCurrentAccount({ payload,callback }, { call, put }) {
+        if(payload && payload.accountName){
+            yield call(store.save, 'current_account', payload.accountName);
+        }
+        if(callback) callback();
+      },
+
     },
 
     reducers: {
