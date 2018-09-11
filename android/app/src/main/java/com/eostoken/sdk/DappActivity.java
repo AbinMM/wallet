@@ -35,14 +35,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-// import com.nexgo.jlkfg.jsbridge.CallAppRet;
 import com.eostoken.sdk.JSBridge;
 import com.eostoken.sdk.JSBridgeWebChromeClient;
 import com.eostoken.sdk.MessageToRN;
 import com.eostoken.sdk.RNCallback;
+import com.eostoken.sdk.ScanActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import de.greenrobot.event.EventBus;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 /**
  * 贴吧通用WebView，支持设置cookie、自定义javascript interface
@@ -58,6 +60,7 @@ public class DappActivity extends Activity {
     private static WebView mWebView;
     //android调用JS网页的时候会用到
     // private static final Handler mHandler = new Handler();
+    private String invokeQRScanner_callback = "";  
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,9 +101,9 @@ public class DappActivity extends Activity {
     protected void onResume() {
         super.onResume();
         Log.d("DappActivity","onResume()");
-        mWebView.getSettings().setJavaScriptEnabled(true);//打开js
+        // mWebView.getSettings().setJavaScriptEnabled(true);//打开js
     }
-
+   
     @Override
     protected void onStop() {
         Log.d("DappActivity","onStop()");
@@ -237,7 +240,7 @@ public class DappActivity extends Activity {
             //     params = "";
             //     params = obj.toString();
 
-            //     methodName = "eosAuthSign";
+            //    methodName = "invokeQRScanner";
                
             // } catch (Exception e) {
             //     //TODO: handle exception
@@ -266,6 +269,7 @@ public class DappActivity extends Activity {
 
                 case "invokeQRScanner":
                     //原生页面开启扫码
+                    invokeQRScanner(callback);
                     break;
                 
                 default:
@@ -306,21 +310,6 @@ public class DappActivity extends Activity {
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         builder.setView(editText);
         builder.setPositiveButton("确定", null);
-        // builder.setPositiveButton("确定", new DialogInterface.OnClickListener()
-        // {
-        //     @Override
-        //     public void onClick(DialogInterface dialog, int which)
-        //     {
-        //         String input = editText.getText().toString();
-        //         if(input == null || input.length() < 4){
-        //             Toast.makeText(getApplicationContext(), "密码长度错", Toast.LENGTH_SHORT).show();
-        //             return ;
-        //         }
-        //         dialog.dismiss();
-        //         // 待添加 通讯等待提示???
-        //         sendEventToRN(methodName,params,input,callback);
-        //     }
-        // });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener()
         {
             @Override
@@ -383,6 +372,100 @@ public class DappActivity extends Activity {
         new Handler().post(new Runnable(){  
             public void run() { 
                 EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
+            } 
+        }); 
+    }
+
+    private void invokeQRScanner(String callback){
+
+        invokeQRScanner_callback = callback;  //调用的回调接口
+
+        IntentIntegrator integrator = new IntentIntegrator(DappActivity.this);
+        // 设置要扫描的条码类型，ONE_D_CODE_TYPES：一维码，QR_CODE_TYPES-二维码
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
+        integrator.setCaptureActivity(ScanActivity.class);
+        integrator.setPrompt("请扫描二维码"); //底部的提示文字，设为""可以置空
+        integrator.setCameraId(0); //前置或者后置摄像头
+        integrator.setBeepEnabled(true); //扫描成功的「哔哔」声，默认开启
+        integrator.setBarcodeImageEnabled(true);
+        integrator.initiateScan();
+    }
+
+    private String  parseQRScanner(String strcoins){
+        String resp = "";
+        try
+        {
+            String lowerCointType = "eos";
+            String upperCointType = "eos".toUpperCase();
+            int length = strcoins.length();
+            int index = strcoins.lastIndexOf(lowerCointType + ':'); //"eos:"
+            if (index == 0) {
+                index += (lowerCointType.length() + 1); //"eos:"
+                int point = strcoins.lastIndexOf("?");
+                if(point <= index || point >= length)
+                {
+                    return resp;
+                }
+                String account = strcoins.substring(index,point);
+                if(account.isEmpty()){
+                    return resp;
+                }
+                index = point + 1; //"?"
+                int pointamount = strcoins.lastIndexOf("amount=");    
+                if(index != pointamount || pointamount >= length){
+                    return resp;
+                }
+                index += 7; //"amount="
+                int point2 = strcoins.lastIndexOf("&");    
+                if(point2 <= index || point2 >= length){
+                    return resp;
+                }
+                String amount = strcoins.substring(index,point2);
+                 // amount 允许为 ""
+                // if(amount == undefined || amount == null){
+                //     return this._errExit();
+                // }
+                index = point2 + 1; //"&"
+                int pointtoken = strcoins.lastIndexOf("token=");   
+                if(index != pointtoken || pointtoken >= length){
+                    return resp;
+                } 
+                index += 6; //"token="
+                String symbol = strcoins.substring(index,length);
+                if(symbol.isEmpty() || !symbol.equals(upperCointType))  //'EOS'
+                {
+                    return resp;
+                }
+                resp = account;                
+            } 
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+
+        return resp;
+    }
+     
+    // 回调获取扫描得到的条码值
+    @Override
+   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String resp = "";
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                // Toast.makeText(this, "扫码取消！", Toast.LENGTH_LONG).show();
+            } else {
+                // Toast.makeText(this, "扫描成功，条码值: " + result.getContents(), Toast.LENGTH_LONG).show();
+                // resp = parseQRScanner(result.getContents());
+                resp = result.getContents();  //TODO 直接返回，不解析
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+        final String tmp_resp = resp;
+        new Handler().post(new Runnable(){  
+            public void run() { 
+                EventBus.getDefault().post(new RNCallback("invokeQRScanner",invokeQRScanner_callback,tmp_resp));
             } 
         }); 
     }
