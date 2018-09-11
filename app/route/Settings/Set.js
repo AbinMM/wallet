@@ -45,6 +45,7 @@ class Set extends BaseComponent {
       });
     }});
     dispatch({type:'login/getthemeSwitching',callback:(theme)=>{
+      
       this.setState({
         skin:theme.theme,
       });
@@ -108,11 +109,10 @@ class Set extends BaseComponent {
   changeTheme() {
     const {dispatch}=this.props;
     dispatch({type:'login/changethemeSwitching',callback:(theme)=>{
-      this.setState({
-        skin:theme.theme,
-      });
+      this.setState({skin:theme.theme,});
       codePush.restartApp();
     }})
+    
   }
 
   doUpgrade = (url, version) => {
@@ -189,7 +189,12 @@ class Set extends BaseComponent {
                 </View>
                 <View style={styles.listInfoRight}>
                   <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontrice}
-                  value={this.state.skin} onValueChange={(value)=>{ this.setState({ skin:value, });this.changeTheme(value);}}/>
+                    value={this.state.skin} 
+                    onValueChange={(value)=>{ 
+                      this.setState({skin:value});
+                      this.changeTheme(value);
+                    }}
+                  />
                 </View>
               </View>
           </View>

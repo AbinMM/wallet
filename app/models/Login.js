@@ -164,8 +164,8 @@ export default {
       }else{
         jpush = !jpush;
       }
-      if (callback) callback({ jpush: jpush });
       yield call(store.save, 'jpush', jpush);
+      if (callback) callback({ jpush: jpush });
     },
     *getJpush({ payload,callback }, { call, put }) {
       var jpush = yield call(store.get, 'jpush');
@@ -195,8 +195,8 @@ export default {
       }else{
         theme = !theme;
       }
-      if (callback) callback({ theme: theme });
       yield call(store.save, 'theme', theme);
+      if (callback) callback({ theme: theme });
     },
     *getthemeSwitching({ payload,callback }, { call, put }) {
       var theme = yield call(store.get, 'theme');
