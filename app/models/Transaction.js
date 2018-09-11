@@ -1,6 +1,6 @@
 import Request from '../utils/RequestUtil';
 import {getRamInfo, getRamPriceLine, getRamTradeLog, getRamBigTradeLog, getRamTradeLogByAccount, getBigRamRank,
-    getRamKLines,getETList,getETInfo,getETPriceLine,getETKLine,getETTradeLog,getETBigTradeLog,getETTradeLogByAccount,getBalance} from '../utils/Api';
+    getRamKLines,getETList,getETInfo,getETPriceLine,getETKLine,getETTradeLog,getETBigTradeLog,getETTradeLogByAccount,getETServiceStatus,getBalance} from '../utils/Api';
 import store from 'react-native-simple-store';
 import { EasyToast } from '../components/Toast';
 import UColor from '../utils/Colors'
@@ -260,6 +260,15 @@ export default {
         },
         *setCurrentET({payload,callback},{call,put}){
             yield call(store.save, "et_current", payload.et);
+        },
+        //获取币信息
+        *getETServiceStatus({payload,callback},{call,put}) {
+            try{
+                const resp = yield call(Request.request, getETServiceStatus, 'get');
+                if (callback) callback(resp);                
+            } catch (error) {
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
         },
         //获取币信息
         *getETInfo({payload,callback},{call,put}) {

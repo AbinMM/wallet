@@ -80,6 +80,7 @@ class Transaction extends BaseComponent {
             error: false,
             errortext: '',
             scrollEnabled: true, 
+            etOpenStatus: true, 
         };
     }
 
@@ -96,6 +97,13 @@ class Transaction extends BaseComponent {
     componentDidMount(){
         try {
             this.setState({logRefreshing: true});
+
+            this.props.dispatch({type:'transaction/getETServiceStatus',payload:{}, callback: (data) => {
+                if(data && data.code == '0'){
+                    this.setState({etOpenStatus: data.data.open});
+                }
+            }});  
+
             // 获取ETB行情相关信息
             this.props.dispatch({type:'transaction/getCurrentET',payload:{}, callback: (et) => {
                 if(et!=undefined && et != null && et != ""){
@@ -131,6 +139,11 @@ class Transaction extends BaseComponent {
     }
 
     onRefreshing() {
+        this.props.dispatch({type:'transaction/getETServiceStatus',payload:{}, callback: (data) => {
+            if(data && data.code == '0'){
+                this.setState({etOpenStatus: data.data.open});
+            }
+        }}); 
         this.getETInfo();
         this.getAccountInfo();
         this.setSelectedTransactionRecord(this.state.selectedTransactionRecord, true);
@@ -1239,18 +1252,28 @@ class Transaction extends BaseComponent {
          
         }  
         {
-            this.state.isKLine ? 
-            <View style={{width: ScreenWidth, backgroundColor: UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
+            this.state.etOpenStatus ? 
+            (
+                this.state.isKLine ? 
+                <View style={{width: ScreenWidth, backgroundColor: UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
+                {
+                    <Echarts option={this.getDataKLine()} width={ScreenWidth} height={ScreenUtil.autoheight(300)} />
+                }
+                </View>
+                : 
+                <View style={{width: ScreenWidth, backgroundColor: UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
+                {
+                    <Echarts option={this.getDataLine()} width={ScreenWidth} height={ScreenUtil.autoheight(180)} />
+                }
+                </View>
+            )
+            :
+            <View style={{width: ScreenWidth, height: ScreenUtil.autoheight(300), backgroundColor: UColor.bgEchar, alignItems: 'center', justifyContent: 'center'}}>
             {
-                <Echarts option={this.getDataKLine()} width={ScreenWidth} height={ScreenUtil.autoheight(300)} />
+                <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.riseColor}}>交易系统正在升级维护中, 请勿进行交易!</Text>
             }
             </View>
-            : 
-            <View style={{width: ScreenWidth, backgroundColor: UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
-            {
-                <Echarts option={this.getDataLine()} width={ScreenWidth} height={ScreenUtil.autoheight(180)} />
-            }
-            </View>
+
         }
         <View style={styles.toptabout}>
             <SegmentedControls tint= {UColor.tintColor} selectedTint= {UColor.btnColor} onSelection={this.selectedTransactionRecord.bind(this) }
