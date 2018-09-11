@@ -1265,7 +1265,7 @@ class Transaction extends BaseComponent {
                                     <Text style={[styles.formName,{flex: 3,color: UColor.lightgray}]}>账号</Text>
                                     <Text style={[styles.formName,{flex: 4,color: UColor.lightgray}]}>数量(EOS)</Text>
                                     <Text style={[styles.formName,{flex: 3.5,color: UColor.lightgray}]}>价格(EOS)</Text>
-                                    <Text style={[styles.formName,{flex: 2.7,color: UColor.lightgray}]}>时间</Text>
+                                    <Text style={[styles.formName,{paddingLeft: ScreenUtil.autowidth(10),flex: 2.7,color: UColor.lightgray}]}>时间</Text>
                                 </View>
                             }
                             dataSource={this.state.dataSource.cloneWithRows(this.state.newetTradeLog == null ? [] : this.state.newetTradeLog)} 
@@ -1277,14 +1277,16 @@ class Transaction extends BaseComponent {
                                         <Text style={[styles.payertext,{flex: 3,color: UColor.fontColor}]} numberOfLines={1}>{rowData.account}</Text>
                                         <Text style={[styles.selltext,{flex: 4,color: UColor.riseColor}]} numberOfLines={1}>卖 {(rowData.price == null || rowData.price == '0') ? this.precisionTransfer(rowData.token_qty,8) : rowData.eos_qty.replace("EOS", "")}</Text>
                                         <Text style={[styles.selltext,{flex: 3.5,color: UColor.riseColor}]} numberOfLines={1}>{rowData.price != 0? this.precisionTransfer(rowData.price,8):''}</Text>
-                                        <Text style={[styles.payertext,{flex: 2.7, color: UColor.riseColor}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
+                                        <Text style={[styles.payertext,{paddingLeft: ScreenUtil.autowidth(10),flex: 2.7, color: UColor.riseColor}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
+                                        <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} />
                                     </View>
                                     :
                                     <View style={styles.liststrip}>
                                         <Text style={[styles.payertext,{flex: 3,color: UColor.fontColor}]} numberOfLines={1}>{rowData.account}</Text>
                                         <Text style={[styles.selltext,{flex: 4,color: UColor.fallColor}]} numberOfLines={1}>买 {rowData.eos_qty.replace("EOS", "")}</Text>
                                         <Text style={[styles.selltext,{flex: 3.5,color: UColor.fallColor}]} numberOfLines={1}>{rowData.price != 0? this.precisionTransfer(rowData.price,8):''}</Text>
-                                        <Text style={[styles.payertext,{flex: 2.7, color: UColor.riseColor}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
+                                        <Text style={[styles.payertext,{paddingLeft: ScreenUtil.autowidth(10),flex: 2.7, color: UColor.riseColor}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
+                                        <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} />
                                     </View>
                                     }
                                 </View>
@@ -1303,7 +1305,7 @@ class Transaction extends BaseComponent {
                         <Text style={[styles.formName,{flex: 3,color: UColor.lightgray}]}>账号</Text>
                         <Text style={[styles.formName,{flex: 4,color: UColor.lightgray}]}>数量(EOS)</Text>
                         <Text style={[styles.formName,{flex: 3.5,color: UColor.lightgray}]}>价格(EOS)</Text>
-                        <Text style={[styles.formName,{flex: 2.7,color: UColor.lightgray}]}>时间</Text>
+                        <Text style={[styles.formName,{paddingLeft: ScreenUtil.autowidth(10),flex: 2.7,color: UColor.lightgray}]}>时间</Text>
                     </View>
                     }
                       dataSource={this.state.dataSource.cloneWithRows(this.props.etBigTradeLog == null ? [] : this.props.etBigTradeLog)} 
@@ -1315,14 +1317,16 @@ class Transaction extends BaseComponent {
                                     <Text style={[styles.payertext,{flex: 3,color: UColor.fontColor}]} numberOfLines={1}>{rowData.account}</Text>
                                     <Text style={[styles.selltext,{flex: 4,color: UColor.riseColor}]} numberOfLines={1}>卖 {(rowData.price == null || rowData.price == '0') ? this.precisionTransfer(rowData.token_qty,8) : rowData.eos_qty.replace("EOS", "")}</Text>
                                     <Text style={[styles.selltext,{flex: 3.5,color: UColor.riseColor}]} numberOfLines={1}>{rowData.price != 0 ? this.precisionTransfer(rowData.price,8):''}</Text>
-                                    <Text style={[styles.payertext,{flex: 2.7, color: UColor.riseColor}]} numberOfLines={1} >{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
+                                    <Text style={[styles.payertext,{paddingLeft: ScreenUtil.autowidth(10),flex: 2.7, color: UColor.riseColor}]} numberOfLines={1} >{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
+                                    <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} />
                                 </View>
                                 :
                                 <View style={styles.liststrip}>
                                     <Text style={[styles.payertext,{flex: 3,color: UColor.fontColor}]} numberOfLines={1}>{rowData.account}</Text>
                                     <Text style={[styles.selltext,{flex: 4,color: UColor.fallColor}]} numberOfLines={1}>买 {rowData.eos_qty.replace("EOS", "")}</Text>
                                     <Text style={[styles.selltext,{flex: 3.5,color: UColor.fallColor}]} numberOfLines={1}>{rowData.price != 0 ? this.precisionTransfer(rowData.price,8):''}</Text>
-                                    <Text style={[styles.payertext,{flex: 2.7, color: UColor.riseColor}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
+                                    <Text style={[styles.payertext,{paddingLeft: ScreenUtil.autowidth(10),flex: 2.7, color: UColor.riseColor}]} numberOfLines={1}>{moment(rowData.record_date).add(8,'hours').fromNow()}</Text>
+                                    <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} />
                                 </View>
                                 }
                             </View>
