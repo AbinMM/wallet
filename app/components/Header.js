@@ -45,11 +45,12 @@ class Header extends BaseComponent {
  
 const styles = StyleSheet.create({
     header:{
+        zIndex: 999,
         flexDirection:"row",
         alignItems:"center",
         paddingTop: ScreenUtil.autoheight(20),
         height: ScreenUtil.autoheight(65),
-        borderBottomWidth: ScreenUtil.autoheight(1),
+        borderBottomWidth: ScreenUtil.autoheight(0.5),
     },
     Leftout: {
         flex: 1, 
