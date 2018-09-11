@@ -534,7 +534,7 @@ class Home extends React.Component {
 
     if(this.props.guide){
       return (
-        <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+        <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
             <Image source={UImage.guide} style={styles.imgTop} resizeMode="stretch"/>
             <View style={styles.btnestablish}>
               <Button onPress={() => this.Establish()}>
