@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: ScreenUtil.autowidth(90),
-        height: ScreenUtil.autoheight(45),
+        height: ScreenUtil.autoheight(35),
         marginHorizontal: ScreenUtil.autowidth(20),
     },
     Applytext: {
@@ -224,13 +224,13 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: 'center',
-        height: ScreenUtil.autoheight(45),
+        height: ScreenUtil.autoheight(35),
         marginLeft: ScreenUtil.autowidth(15),
         paddingLeft: ScreenUtil.autowidth(10),
     },
     inpt: {
         flex: 1,
-        height: ScreenUtil.autoheight(45),
+        height: ScreenUtil.autoheight(35),
         fontSize: ScreenUtil.setSpText(15),
     },
     canceltext: {

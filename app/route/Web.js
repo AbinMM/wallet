@@ -86,7 +86,7 @@ export default class Web extends BaseComponent {
   }
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: UColor.mainColor }}>
+      <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
         <Header {...this.props} onPressLeft={true} title={this.props.navigation.state.params.title} avatar={this.state.news && UImage.share_i} onPressRight={this.state.news && this.share.bind()}/>
         <WebView
           source={{ uri: this.props.navigation.state.params.url }}
