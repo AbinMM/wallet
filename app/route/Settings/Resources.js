@@ -95,6 +95,9 @@ class Resources extends BaseComponent {
             type: 'wallet/info',
             payload: {
                 address: "1111"
+            },
+            callback: () => {
+                this.getBalance();
             }
         });
         DeviceEventEmitter.addListener('wallet_info', (data) => {
@@ -447,8 +450,17 @@ class Resources extends BaseComponent {
             }
             var privateKey = this.props.defaultWallet.activePrivate;
             try {
-                var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                var bytes_privateKey;
+                var plaintext_privateKey;
+                try {
+                    bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
+                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                } catch (error) {
+                    EasyShowLD.loadingClose();
+                    EasyToast.show('密码错误');
+                    return;
+                }
+
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                     EasyShowLD.loadingShow();
@@ -536,8 +548,17 @@ class Resources extends BaseComponent {
             }
             var privateKey = this.props.defaultWallet.activePrivate;
             try {
-                var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                var bytes_privateKey;
+                var plaintext_privateKey;
+                try {
+                    bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
+                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                } catch (error) {
+                    EasyShowLD.loadingClose();
+                    EasyToast.show('密码错误');
+                    return;
+                }
+
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                     EasyShowLD.loadingShow();
@@ -625,8 +646,16 @@ class Resources extends BaseComponent {
             }
             var privateKey = this.props.defaultWallet.activePrivate;
             try {
-                var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                var bytes_privateKey;
+                var plaintext_privateKey;
+                try {
+                    bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
+                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                } catch (error) {
+                    EasyShowLD.loadingClose();
+                    EasyToast.show('密码错误');
+                    return;
+                }
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                     if(this.state.isOwn){
@@ -765,8 +794,16 @@ class Resources extends BaseComponent {
             }
             var privateKey = this.props.defaultWallet.activePrivate;
             try {
-                var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                var bytes_privateKey;
+                var plaintext_privateKey;
+                try {
+                    bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
+                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                } catch (error) {
+                    EasyShowLD.loadingClose();
+                    EasyToast.show('密码错误');
+                    return;
+                }
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                     if(this.state.isOwn){

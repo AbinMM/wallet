@@ -623,8 +623,17 @@ class Transaction extends BaseComponent {
             }
             var privateKey = this.props.defaultWallet.activePrivate;
             try {
-                var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                var bytes_privateKey;
+                var plaintext_privateKey;
+                try {
+                    bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
+                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                } catch (error) {
+                    EasyShowLD.loadingClose();
+                    EasyToast.show('密码错误');
+                    return;
+                }
+
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                     EasyShowLD.loadingShow();
@@ -803,8 +812,16 @@ class Transaction extends BaseComponent {
         }
         var privateKey = this.props.defaultWallet.activePrivate;
         try {
-            var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-            var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+            var bytes_privateKey;
+            var plaintext_privateKey;
+            try {
+                bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
+                plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+            } catch (error) {
+                EasyShowLD.loadingClose();
+                EasyToast.show('密码错误');
+                return;
+            }
             if (plaintext_privateKey.indexOf('eostoken') != -1) {
                 plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                 EasyShowLD.loadingShow();
