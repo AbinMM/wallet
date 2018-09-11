@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.content.Intent;
@@ -23,11 +24,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -38,6 +44,7 @@ import android.content.ContentValues;
 import android.webkit.JavascriptInterface;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.graphics.drawable.ColorDrawable;
 
 import com.eostoken.R;
 
@@ -311,29 +318,56 @@ public class DappActivity extends Activity {
      //提示订单详情
     private void showTransfer(final String methodName,final String params,final String callback)
     {
-        final AlertDialog mDialog = new AlertDialog.Builder(this).create();
-        mDialog.show();
-        // alertDialog.setContentView(R.layout.dialog_orderdetail);
+        // params 
+        String to = "";
+        String from = "";
+        String memo = "";
+        String amount = "";
+        try {
+            JSONObject obj = new JSONObject(params);
+            from = obj.getString("from");
+            to = obj.getString("to");
+            memo = obj.getString("memo");
+            amount =  obj.getString("amount");
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+        final Dialog  mShareDialog = new Dialog(this, R.style.dialog_bottom_full);
+        mShareDialog.setCanceledOnTouchOutside(true);
+        mShareDialog.setCancelable(true);
 
-        Window window = mDialog.getWindow();
+        Window window = mShareDialog.getWindow();
         window.setGravity(Gravity.BOTTOM);
         window.setWindowAnimations(R.style.popupAnimation);
         View view = View.inflate(this, R.layout.dialog_orderdetail, null);
+
+        final TextView tvTo =  (TextView) view.findViewById(R.id.to_account);
+        final TextView tvFrom =  (TextView) view.findViewById(R.id.from_account);
+        final TextView tvMemo =  (TextView) view.findViewById(R.id.memo);
+        final TextView tvAmount =  (TextView) view.findViewById(R.id.amount);
+
+        tvTo.setText(to);
+        tvFrom.setText(from);
+        tvMemo.setText(memo);
+        tvAmount.setText(amount);
+
         final Button btnConfirm = (Button) view.findViewById(R.id.confirm);
         final Button btnCancel = (Button) view.findViewById(R.id.cancel);
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-
+            public void onClick(View view) {
+                if (mShareDialog != null && mShareDialog.isShowing()) {
+                    mShareDialog.dismiss();
+                }
                 showEditDialog(methodName,params,callback);
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDialog.dismiss();
-
+                if (mShareDialog != null && mShareDialog.isShowing()) {
+                    mShareDialog.dismiss();
+                }
                 String resp = "";
                 try {
                     JSONObject obj = new JSONObject();
@@ -345,7 +379,6 @@ public class DappActivity extends Activity {
 
                     resp = obj.toString();
                 } catch (Exception e) {
-                    //TODO: handle exception
                     resp = "";
                 }
                 final String tmp_resp = resp;
@@ -357,13 +390,11 @@ public class DappActivity extends Activity {
             }
         });
 
-
         window.setContentView(view);
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);//设置横向全屏
-    
-        mDialog.setCanceledOnTouchOutside(true);
-        mDialog.setCancelable(true);
-          
+        
+        window.setBackgroundDrawableResource(R.color.white);
+        mShareDialog.show();
     }
 
     private void showEditDialog(final String methodName,final String params,final String callback) {
