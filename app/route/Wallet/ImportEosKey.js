@@ -247,8 +247,9 @@ class ImportEosKey extends BaseComponent {
             for(var j=0;j<authTemp.length;j++){
                 if(authTemp[j].key == nkey.active_publicKey){
                   pFlag=true;
-                  // retName.push(AccArray[ii]);
-                  retName.push({name:rdata.account_name,isChecked:false})
+                  if(nkey.owner_publicKey==""){
+                    retName.push({name:rdata.account_name,isChecked:false})
+                  }
                 }
             }
           }
@@ -256,9 +257,10 @@ class ImportEosKey extends BaseComponent {
           if(nkey.owner_publicKey!=""){
             var authTemp=rdata.permissions[1].required_auth.keys
             for(var j=0;j<authTemp.length;j++){
-                if(authTemp[j].key == nkey.owner_publicKey && pFlag==false){
-                  // retName.push(AccArray[ii]);
-                  retName.push({name:rdata.account_name,isChecked:false})
+                if(authTemp[j].key == nkey.owner_publicKey){
+                  if((nkey.active_publicKey!="" && pFlag==true)||(nkey.active_publicKey=="" && pFlag==false)){
+                    retName.push({name:rdata.account_name,isChecked:false})
+                  }
                 }
             }
           }
