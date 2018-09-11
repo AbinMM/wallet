@@ -106,8 +106,8 @@ class Set extends BaseComponent {
   }
 
   changeTheme() {
-    var th = this;
-    this.props.dispatch({type:'login/changethemeSwitching',callback:(theme)=>{
+    const {dispatch}=this.props;
+    dispatch({type:'login/changethemeSwitching',callback:(theme)=>{
       this.setState({
         skin:theme.theme,
       });
