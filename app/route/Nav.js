@@ -422,7 +422,13 @@ class Route extends React.Component {
   componentDidMount() {
     //回到app触发检测更新
     AppState.addEventListener("change", (newState) => {
-      newState === "active" && codePush.sync({ installMode: codePush.InstallMode.ON_NEXT_RESUME });
+      newState === "active" && codePush.sync({ installMode: codePush.InstallMode.ON_NEXT_RESUME }, syncStatus => {
+        switch (syncStatus) {
+            case CodePush.SyncStatus.UPDATE_INSTALLED:
+                CodePush.notifyAppReady();
+                break;
+        }
+    });
     });
     //加载广告
     this.props.dispatch({ type: 'banner/list', payload: {} });
@@ -1261,5 +1267,8 @@ class Route extends React.Component {
     </View>)
   }
 }
+
+let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };
+Route = codePush(codePushOptions)(Route);
 
 export default Route;
