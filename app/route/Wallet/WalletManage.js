@@ -128,7 +128,7 @@ class WalletManage extends BaseComponent {
   render() {
     return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>  
       <Header {...this.props} onPressLeft={true} title="钱包管理" onPressRight={this._rightTopClick.bind()} avatar={this.state.isEye ? UImage.reveal_wallet : UImage.reveal_h_wallet}/>
-      <View style={{paddingBottom: 60}}>
+      <View style={{paddingBottom: 50}}>
         <ListView initialListSize={10} style={{ backgroundColor: UColor.secdColor, }} enableEmptySections={true}
           renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 0.5, backgroundColor: UColor.secdColor }} />}
           refreshControl={<RefreshControl refreshing={false} tintColor={UColor.fontColor} colors={[UColor.lightgray, UColor.tintColor]} progressBackgroundColor={UColor.fontColor} />}
@@ -156,7 +156,6 @@ class WalletManage extends BaseComponent {
                     <Ionicons color={UColor.fontColor} name="ios-arrow-forward-outline" size={ScreenUtil.setSpText(20)} />     
                 </View>
               </View>
-               
             </Button>          
           )}
         /> 

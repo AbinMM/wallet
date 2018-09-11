@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     },
     btn: {
         flex: 1,
-        paddingBottom: ScreenUtil.autoheight(60),
+        paddingBottom: ScreenUtil.autoheight(50),
     },
     latelytext: {
         fontSize: ScreenUtil.setSpText(14),
@@ -344,8 +344,8 @@ const styles = StyleSheet.create({
     shiftshiftturnout: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
         flexDirection: 'row',
+        justifyContent: 'center',
     },
     shiftturn: {
         width: ScreenUtil.autowidth(30), 

@@ -378,20 +378,20 @@ class TurnOut extends BaseComponent {
                                     <Text style={[styles.buttontext,{color: UColor.baseline}]}>×</Text>
                                 </Button>
                             </View>
-                            <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]} >
+                            <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
                                 <Text style={[styles.amounttext,{color:UColor.blackColor}]}>{this.state.amount} </Text>
                                 <Text style={[styles.unittext,{color:UColor.blackColor}]}> EOS</Text>
                             </View>
                             <View style={{flex: 1,}}>
-                                <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]} >
+                                <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
                                     <Text style={[styles.explainText,{color: UColor.startup}]}>收款账户：</Text>
                                     <Text style={[styles.contentText,{color: UColor.startup}]}>{this.state.toAccount}</Text>
                                 </View>
-                                <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]}>
+                                <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]}>
                                     <Text style={[styles.explainText,{color: UColor.startup}]}>转出账户：</Text>
                                     <Text style={[styles.contentText,{color: UColor.startup}]}>{this.props.defaultWallet.account}</Text>
                                 </View>
-                                <View style={[styles.separationline,{borderBottomColor: UColor.lightgray}]} >
+                                <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
                                     <Text style={[styles.explainText,{color: UColor.startup}]}>备注：</Text> 
                                     <Text style={[styles.contentText,{color: UColor.startup}]} numberOfLines={1}>{this.state.memo}</Text> 
                                 </View>
