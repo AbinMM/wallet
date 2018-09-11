@@ -160,7 +160,7 @@ class undelegated extends BaseComponent {
               <Text style={[styles.accountText,{color: UColor.arrow}]}>主网赎回EOS存在少量网络冲突问题，可能导致</Text>
               <Text style={[styles.accountText,{color: UColor.arrow}]}>您的EOS赎回中途卡顿，如遇此情况请点击下面</Text>
               <Text style={[styles.accountText,{color: UColor.arrow}]}>按钮再次激活赎回指令!</Text>
-              <Button onPress={this.undelegatedRefund.bind()} style={styles.btnnextstep}>
+              <Button onPress={this.undelegatedRefund.bind()} >
                 <View style={[styles.nextstep,{backgroundColor: UColor.tintColor}]}>
                   <Text style={[styles.nextsteptext,{color: UColor.btnColor}]}>确认赎回</Text>
                 </View>
@@ -211,14 +211,11 @@ const styles = StyleSheet.create({
     paddingLeft: ScreenUtil.autowidth(2),
     lineHeight: ScreenUtil.autoheight(20),
   },
-  btnnextstep: {
-    height: ScreenUtil.autoheight(85),
-  },
   nextstep: {
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    height: ScreenUtil.autoheight(45),
+    height: ScreenUtil.autoheight(38),
     marginVertical: ScreenUtil.autowidth(20),
     marginHorizontal: ScreenUtil.autowidth(120),
   },

@@ -1091,8 +1091,7 @@ class Resources extends BaseComponent {
                             :
                             <View style={[styles.basc,{backgroundColor: UColor.secdColor}]}>
                                 <Button onPress={this.redemption.bind()}>
-                                 <View style={{ height: ScreenUtil.autoheight(30),justifyContent: 'flex-end', 
-                                                alignItems: 'flex-end'  }}>
+                                 <View style={{ height: ScreenUtil.autoheight(30),justifyContent: 'flex-end', alignItems: 'flex-end'  }}>
                                     <Text style={[styles.basctextright,{color: UColor.tintColor,borderBottomColor: UColor.tintColor}]}>赎回遇到问题？</Text>
                                  </View>
                                  </Button>
@@ -1219,7 +1218,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center', 
         width: ScreenUtil.autowidth(70), 
-        height: ScreenUtil.autoheight(30),  
+        height: ScreenUtil.autoheight(32),  
         marginLeft: ScreenUtil.autowidth(10), 
     },
     botText: {
