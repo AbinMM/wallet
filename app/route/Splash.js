@@ -77,6 +77,7 @@ class Splash extends React.Component {
           UImage.add= require('../img/day/add.png');
           UImage.adminA= require('../img/day/adminA.png');
           UImage.authExchangeBlue= require('../img/day/authExchangeBlue.png');
+          UImage.boot_bg= require('../img/day/boot_bg.png');
           UImage.candy= require('../img/day/candy.png');
           UImage.cmy_db= require('../img/day/cmy_db.png');
           UImage.cmy_gzh= require('../img/day/cmy_gzh.png');
@@ -176,6 +177,7 @@ class Splash extends React.Component {
           UImage.add= require('../img/add.png');
           UImage.adminA= require('../img/adminA.png');
           UImage.authExchangeBlue= require('../img/authExchangeBlue.png');
+          UImage.boot_bg= require('../img/boot_bg.png');
           UImage.candy= require('../img/candy.png');
           UImage.cmy_db= require('../img/cmy_db.png');
           UImage.cmy_gzh= require('../img/cmy_gzh.png');
