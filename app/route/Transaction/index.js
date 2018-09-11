@@ -1469,8 +1469,10 @@ class Transaction extends BaseComponent {
                 </View>
                 {this.state.isBuy?<View>
                     <View style={styles.greeninptout}>
-                        <Text style={[styles.greenText,{color: UColor.fallColor}]}>单价: {this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price,8) : '0'} EOS</Text>
-                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>余额: {this.state.balance==""? "0" : this.state.balance} EOS</Text>
+                        <View style={{flex: 1, flexDirection: 'column',alignItems: 'flex-start',}}>
+                            <Text style={[styles.greenText,{color: UColor.fallColor}]}>单价: {this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price,8) : '0'} EOS</Text>
+                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>余额: {this.state.balance==""? "0" : this.state.balance} EOS</Text>
+                        </View>
                         {this.state.error&&<Text style={[styles.errortext,{color: UColor.showy}]}>{this.state.errortext}</Text>}
                     </View>
                     <View style={[styles.inputout,{backgroundColor: UColor.mainColor}]}>
@@ -1745,8 +1747,8 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(12),
     },
     greeninptout: {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
         height: ScreenUtil.autoheight(50),
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
@@ -1766,7 +1768,6 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(14), 
     },
     errortext: {
-        flex: 1, 
         textAlign: 'left', 
         fontSize: ScreenUtil.setSpText(12), 
     },

@@ -1093,11 +1093,14 @@ class Ram extends BaseComponent {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            {this.state.error&&<Text style={[styles.errortext,{color: UColor.showy}]}>{this.state.errortext}</Text>}
+                            
                             {this.state.isBuy?<View>
                                 <View style={styles.greeninptout}>
-                                    <Text style={[styles.greenText,{color: UColor.fallColor}]}>单价: {this.props.ramInfo ? (this.props.ramInfo.price * 1).toFixed(4) : '0.0000'} EOS/KB</Text>
-                                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>余额: {this.state.balance==""? "0.0000" :this.state.balance} EOS</Text>
+                                    <View style={{flex: 1, flexDirection: 'column',alignItems: 'flex-start',}}>
+                                        <Text style={[styles.greenText,{color: UColor.fallColor}]}>单价: {this.props.ramInfo ? (this.props.ramInfo.price * 1).toFixed(4) : '0.0000'} EOS/KB</Text>
+                                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>余额: {this.state.balance==""? "0.0000" :this.state.balance} EOS</Text>
+                                    </View>
+                                    {this.state.error&&<Text style={[styles.errortext,{color: UColor.showy}]}>{this.state.errortext}</Text>} 
                                 </View>
                                 <View style={[styles.inputout,{backgroundColor: UColor.mainColor}]}>
                                     <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount + ''} returnKeyType="go" 
@@ -1414,14 +1417,12 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(12),
     },
     errortext: {
-        width: ScreenWidth, 
-        textAlign: 'right', 
-        fontSize: ScreenUtil.setSpText(12),
-        paddingHorizontal: ScreenUtil.autowidth(40), 
+        textAlign: 'left', 
+        fontSize: ScreenUtil.setSpText(12), 
     },
     greeninptout: {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
         height: ScreenUtil.autoheight(50),    
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
