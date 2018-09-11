@@ -463,7 +463,13 @@ export default FunctionsMore;
  */
 
 function callbackToSDK(methodName,callback, resp){
-  NativeModules.SDKModule.callbackFromReactNative(methodName,callback, resp);
+  if(Platform.OS === 'ios')
+  {
+    // NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.state.selecturl);
+  }else(Platform.OS === 'android')
+  {
+    NativeModules.SDKModule.callbackFromReactNative(methodName,callback, resp);
+  }
 }
 
 // //输入密码,取私钥
@@ -1373,7 +1379,6 @@ function callMessage(methodName, params,password,device_id, callback)
        if (callback)  callbackToSDK('callMessage',callback,str_res);
        return;
    }
-   var osType = (Platform.OS === 'ios') ? 1 : 0;
 
    console.log("callMessage %s",methodName);
    switch(methodName){

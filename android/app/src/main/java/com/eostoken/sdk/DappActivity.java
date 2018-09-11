@@ -24,6 +24,11 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Gravity;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebSettings.LayoutAlgorithm;
@@ -34,6 +39,7 @@ import android.webkit.JavascriptInterface;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.eostoken.R;
 
 import com.eostoken.sdk.JSBridge;
 import com.eostoken.sdk.JSBridgeWebChromeClient;
@@ -46,13 +52,6 @@ import de.greenrobot.event.EventBus;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-/**
- * 贴吧通用WebView，支持设置cookie、自定义javascript interface
- * <p/>
- * 文档： 工程根目录/doc/index.html
- *
- * @author zhaoxianlie
- */
 public class DappActivity extends Activity {
 
     private  String mUrl= "";
@@ -61,12 +60,13 @@ public class DappActivity extends Activity {
     //android调用JS网页的时候会用到
     // private static final Handler mHandler = new Handler();
     private String invokeQRScanner_callback = "";  
+    // private static int testnum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("DappActivity","onCreate()");
-        setContentView(com.eostoken.R.layout.activity_main);
+        setContentView(R.layout.activity_main);
         
         Intent intent =  getIntent();
         if(intent != null){
@@ -225,22 +225,27 @@ public class DappActivity extends Activity {
             if(methodName.isEmpty()){
                 return;
             }
+            // if(testnum > 0)
+            // {
+            //     return;
+            // }
+            // testnum++;
             // try {
             //     JSONObject obj = new JSONObject();
-            //     obj.put("signdata", "eosbille1234");
-            //     obj.put("from", "chengengping");
-            //     // obj.put("to", "chengengping");
-            //     // obj.put("amount", 0.0010);
-            //     // obj.put("tokenName", "EOS");
-            //     // obj.put("precision", "4");
-            //     // obj.put("contract", "eosio.token");
-            //     // obj.put("memo", "test");
-            //     // obj.put("publicKey", "EOS6tqnNR3AiUVFdX29rYFy6mEasi7whzVQ5wUTe2kcGgQhmY6gum");
-            //     obj.put("publicKey", "EOS8aRN1UaqEw2xE1PtRtuPmkUwVQ13UMWjMaUVoKdJQUwoyQi2WN");
+            //     // obj.put("signdata", "eosbille1234");
+            //     obj.put("from", "eosbille1234");
+            //     obj.put("to", "chengengping");
+            //     obj.put("amount", 0.0010);
+            //     obj.put("tokenName", "EOS");
+            //     obj.put("precision", "4");
+            //     obj.put("contract", "eosio.token");
+            //     obj.put("memo", "test");
+            //     obj.put("address", "EOS6tqnNR3AiUVFdX29rYFy6mEasi7whzVQ5wUTe2kcGgQhmY6gum");
+            //     // obj.put("publicKey", "EOS8aRN1UaqEw2xE1PtRtuPmkUwVQ13UMWjMaUVoKdJQUwoyQi2WN");
             //     params = "";
             //     params = obj.toString();
 
-            //    methodName = "invokeQRScanner";
+            //    methodName = "eosTokenTransfer";
                
             // } catch (Exception e) {
             //     //TODO: handle exception
@@ -248,18 +253,22 @@ public class DappActivity extends Activity {
 
             switch(methodName){
                 case "eosTokenTransfer":
+                    if(params.isEmpty() || callback.isEmpty()){
+                        return;
+                    }
+                    showTransfer(methodName,params,callback);
+                    break;
+
                 case "pushEosAction":
                 case "eosAuthSign":
                 case "sign":
                     if(params.isEmpty() || callback.isEmpty()){
                         return;
                     }
-                    //提示订单详情
                     showEditDialog(methodName,params,callback);
                     break;
                 
                 case "getDeviceId":
-                    //取 手机ID 
                     getDeviceId(methodName,callback);
                     break;
                 
@@ -268,7 +277,6 @@ public class DappActivity extends Activity {
                     break;
 
                 case "invokeQRScanner":
-                    //原生页面开启扫码
                     invokeQRScanner(callback);
                     break;
                 
@@ -298,6 +306,64 @@ public class DappActivity extends Activity {
         } catch (Exception error) {
             Toast.makeText(getApplicationContext(), "sendEventToRN:" + error.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+     //提示订单详情
+    private void showTransfer(final String methodName,final String params,final String callback)
+    {
+        final AlertDialog mDialog = new AlertDialog.Builder(this).create();
+        mDialog.show();
+        // alertDialog.setContentView(R.layout.dialog_orderdetail);
+
+        Window window = mDialog.getWindow();
+        window.setGravity(Gravity.BOTTOM);
+        window.setWindowAnimations(R.style.popupAnimation);
+        View view = View.inflate(this, R.layout.dialog_orderdetail, null);
+        final Button btnConfirm = (Button) view.findViewById(R.id.confirm);
+        final Button btnCancel = (Button) view.findViewById(R.id.cancel);
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+
+                showEditDialog(methodName,params,callback);
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+
+                String resp = "";
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("result", false);
+
+                    JSONObject sub_obj = new JSONObject();
+                    sub_obj.put("transactionId", "");
+                    obj.put("data", sub_obj.toString());
+
+                    resp = obj.toString();
+                } catch (Exception e) {
+                    //TODO: handle exception
+                    resp = "";
+                }
+                final String tmp_resp = resp;
+                new Handler().postDelayed(new Runnable(){  
+                    public void run() { 
+                        EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
+                    } 
+                }, 100); 
+            }
+        });
+
+
+        window.setContentView(view);
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);//设置横向全屏
+    
+        mDialog.setCanceledOnTouchOutside(true);
+        mDialog.setCancelable(true);
+          
     }
 
     private void showEditDialog(final String methodName,final String params,final String callback) {
