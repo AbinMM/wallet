@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     flexDirection:'row',  
     position:'absolute',
-    height: ScreenUtil.autoheight(60),   
+    height: ScreenUtil.autoheight(50),   
     paddingTop: ScreenUtil.autoheight(1),
   },
   footoutsource:{

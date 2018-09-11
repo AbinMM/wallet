@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         paddingVertical: ScreenUtil.autoheight(5),
         marginHorizontal: ScreenUtil.autowidth(5),
-        marginVertical: ScreenUtil.autowidth(2.5),
+        marginVertical: ScreenUtil.autowidth(0.5),
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
     top: {
@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         position: 'absolute',
         flexDirection: 'row',
-        height: ScreenUtil.autoheight(60),
+        height: ScreenUtil.autoheight(50),
         paddingTop: ScreenUtil.autoheight(1),
     },
     shiftshiftturnout: {

@@ -92,16 +92,16 @@ export default class Web extends BaseComponent {
           source={{ uri: this.props.navigation.state.params.url }}
           domStorageEnabled={true}
           javaScriptEnabled={true}
-          style={[styles.webview_style]}
+          style={[styles.webview_style,{backgroundColor: UColor.fontColor}]}
           onLoad={this._onLoad.bind(this)}
           onLoadStart={this._onLoadStart.bind(this)}
           onError={this._onError.bind(this)}
         >
         </WebView>
-        <View style={[styles.infoPage, this.state.error ? styles.showInfo : {}]}>
+        <View style={[styles.infoPage,{backgroundColor: UColor.secdColor},this.state.error ? styles.showInfo : {}]}>
           <Text style={{ color: UColor.mainColor }}>{"加载失败"}</Text>
         </View>
-        <Animated.View style={[styles.progress, { width: this.state.progress }]}></Animated.View>
+        <Animated.View style={[styles.progress, {backgroundColor: UColor.tintColor, width: this.state.progress }]}></Animated.View>
       </View>
     )
   }
@@ -110,7 +110,6 @@ export default class Web extends BaseComponent {
 const styles = StyleSheet.create({
   webview_style: {
     flex: 1,
-    backgroundColor: UColor.fontColor,
   },
   progress: {
     position: "absolute",
@@ -118,7 +117,6 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     overflow: "hidden",
-    backgroundColor: UColor.tintColor
   },
   infoPage: {
     position: "absolute",
@@ -131,7 +129,6 @@ const styles = StyleSheet.create({
     transform: [
       { translateX: ScreenWidth }
     ],
-    backgroundColor: UColor.secdColor
   },
   showInfo: {
     transform: [
