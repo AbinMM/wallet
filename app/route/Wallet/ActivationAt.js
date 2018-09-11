@@ -297,12 +297,12 @@ class ActivationAt extends BaseComponent {
                     </View> 
                     <Button onPress={() => this.contactWeChataide()}>
                         <View style={[styles.importPriout,{backgroundColor: UColor.tintColor}]}>
-                            <Text style={[styles.importPritext,{color: UColor.btnColor}]}>联系官方小助手激活</Text>
+                            <Text style={[styles.importPritext,{color: UColor.btnColor}]}>官方小助手微信</Text>
                         </View>
                     </Button>
                     <Button onPress={() => this.onShareFriend()}>
                         <View style={[styles.importPriout,{backgroundColor: UColor.tintColor}]}>
-                            <Text style={[styles.importPritext,{color: UColor.btnColor}]}>请朋友协助激活</Text>
+                            <Text style={[styles.importPritext,{color: UColor.btnColor}]}>请朋友或官方小助手协助激活</Text>
                         </View>
                     </Button>
                     <Button onPress={() => this.checkAccountActive()}>
