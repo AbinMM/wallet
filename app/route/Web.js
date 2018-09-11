@@ -92,7 +92,7 @@ export default class Web extends BaseComponent {
           source={{ uri: this.props.navigation.state.params.url }}
           domStorageEnabled={true}
           javaScriptEnabled={true}
-          style={[styles.webview_style,{backgroundColor: UColor.fontColor}]}
+          style={[styles.webview_style,{backgroundColor: UColor.btnColor}]}
           onLoad={this._onLoad.bind(this)}
           onLoadStart={this._onLoadStart.bind(this)}
           onError={this._onError.bind(this)}
