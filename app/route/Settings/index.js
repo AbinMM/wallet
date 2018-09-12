@@ -282,7 +282,7 @@ class Setting extends React.Component {
         <View style={styles.footer}>
           <Text style={[styles.foottext,{color: UColor.arrow}]}>© 2018 eostoken all rights reserved </Text>
           {/* <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text> */}
-          <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V2.3.3.1</Text>
+          <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V2.3.3.2</Text>
         </View>
       
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
