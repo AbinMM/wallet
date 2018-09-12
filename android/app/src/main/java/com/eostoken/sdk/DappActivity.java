@@ -646,7 +646,7 @@ public class DappActivity extends Activity {
                 if (mShareDialog != null && mShareDialog.isShowing()) {
                     mShareDialog.dismiss();
                 }
-                Toast.makeText(getApplicationContext(), "待实现分享", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "暂不支持", Toast.LENGTH_SHORT).show();
             }
         });
  
