@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, TouchableOpacity, TextInput, } from 'react-native';
+import { Dimensions, DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, Clipboard, TouchableOpacity, TextInput, } from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import { Eos } from "react-native-eosjs"
@@ -189,6 +189,11 @@ class MortgageRecord extends React.Component {
     navigate('BarCode', {isTurnOut:true,coinType:"EOS"});
   }
 
+  copyaccount(trade) {
+    Clipboard.setString(trade.to);
+    EasyToast.show('账号复制成功');
+  }
+
   render() {
     return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
      <Header {...this.props} onPressLeft={true} title="抵押记录" />
@@ -218,12 +223,12 @@ class MortgageRecord extends React.Component {
             <View style={[styles.outsource,{backgroundColor: UColor.mainColor}]}>
               <View style={styles.leftout}>
                 <Button onPress={this._setModalVisible.bind(this,rowData)} style={{flex: 1,}}>
-                    <View >
+                    <View>
                         <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.tintColor,}}>一键赎回</Text>
                     </View>
                 </Button> 
                 <View style={{flex: 1,justifyContent: 'space-between',}}>
-                  <Text style={[styles.fromtotext,{color: UColor.fontColor}]}>{rowData.to}</Text>
+                  <Text style={[styles.fromtotext,{color: UColor.fontColor}]} onLongPress={this.copyaccount.bind(this,rowData)}>{rowData.to}</Text>
                   <Text style={[styles.Receivercpu,{color: UColor.arrow}]}>Receiver</Text>
                 </View>
               </View>

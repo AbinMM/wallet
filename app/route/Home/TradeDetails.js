@@ -122,6 +122,16 @@ class TradeDetails extends BaseComponent {
     }
   }
 
+  copyaccount(key, data = {}) {
+    if(key == 'from'){
+      Clipboard.setString(this.state.trade.from);
+      EasyToast.show('账号复制成功');
+    }else if(key == 'to'){
+      Clipboard.setString(this.state.trade.to);
+      EasyToast.show('账号复制成功');
+    }
+  }
+
   copy = (trade) => {
     Clipboard.setString( UrlHead + trade.transactionId);
     EasyToast.show("复制成功");
@@ -159,11 +169,11 @@ class TradeDetails extends BaseComponent {
             <View style={styles.conout}>
               <View style={styles.conouttext}>
                 <Text style={[styles.context,{color: UColor.arrow}]}>发  送  方: </Text> 
-                <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'from')}>{this.state.trade.from}</Text>
+                <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'from')} onLongPress={this.copyaccount.bind(this, 'from')}>{this.state.trade.from}</Text>
               </View>
               <View style={styles.conouttext}>
                 <Text style={[styles.context,{color: UColor.arrow}]}>接  受  方: </Text>
-                <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'to')}>{this.state.trade.to}</Text>
+                <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'to')} onLongPress={this.copyaccount.bind(this, 'to')}>{this.state.trade.to}</Text>
               </View>
               <View style={styles.conouttext}> 
                 <Text style={[styles.context,{color: UColor.arrow}]}>区块高度: </Text>
