@@ -42,6 +42,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.webkit.WebSettings.LayoutAlgorithm;
 
 import android.content.ContentValues;
@@ -208,11 +209,22 @@ public class DappActivity extends Activity {
             // 必须要设置这个，要不然，webview加载页面以后，会被放大，这里的100表示页面按照原来尺寸的100%显示，不缩放
             mWebView.setInitialScale(100);
 
+            webSettings.setAppCacheEnabled(true); //设置 缓存模式 
+            webSettings.setCacheMode(WebSettings.LOAD_DEFAULT); // 开启 DOM storage API 功能 
+            webSettings.setDomStorageEnabled(true); 
+
             //打开网页时，不调用系统浏览器，而是在本WebView中显示，则放开
             //调用本地 html 不需要设置WebViewClient
             // 处理webview中的各种通知、请求事件等
             // 处理webview中的js对话框、网站图标、网站title、加载进度等
             mWebView.setWebChromeClient(new JSBridgeWebChromeClient());
+            mWebView.setWebViewClient(new WebViewClient(){
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    view.loadUrl(url);
+                    return true;
+                }
+            });
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -262,6 +274,7 @@ public class DappActivity extends Activity {
             if(methodName.isEmpty()){
                 return;
             }
+            // Toast.makeText(getApplicationContext(), methodName + "" + params, Toast.LENGTH_LONG).show();
             // if(testnum > 0)
             // {
             //     return;
