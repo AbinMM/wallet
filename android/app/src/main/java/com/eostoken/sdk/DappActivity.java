@@ -323,12 +323,14 @@ public class DappActivity extends Activity {
         String from = "";
         String memo = "";
         String amount = "";
+        String tokenName = "";
         try {
             JSONObject obj = new JSONObject(params);
             from = obj.getString("from");
             to = obj.getString("to");
             memo = obj.getString("memo");
             amount =  obj.getString("amount");
+            tokenName =  obj.getString("tokenName");
         } catch (Exception e) {
             //TODO: handle exception
         }
@@ -349,10 +351,10 @@ public class DappActivity extends Activity {
         tvTo.setText(to);
         tvFrom.setText(from);
         tvMemo.setText(memo);
-        tvAmount.setText(amount);
+        tvAmount.setText(amount + " "+tokenName);
 
         final Button btnConfirm = (Button) view.findViewById(R.id.confirm);
-        final Button btnCancel = (Button) view.findViewById(R.id.cancel);
+        final TextView btnCancel = (TextView) view.findViewById(R.id.cancel);
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
