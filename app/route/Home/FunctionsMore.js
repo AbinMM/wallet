@@ -113,11 +113,11 @@ class FunctionsMore extends React.Component {
         this.setState({dappPromp: true,
             selecttitle:"EOSBET",selecturl: "https://dice.eosbet.io/token-pocket.html?ref=ecosystemlab"});     
     }else if(key == 'DAPP4'){
-        this.setState({dappPromp: true,
-            selecttitle:"隐秘世界OL",selecturl: "http://www.h5indiegame.com/run.php?id=38"});   
+      this.setState({dappPromp: true,
+          selecttitle:"猜猜猜",selecturl: "http://luckyeos.cn/"});
     }else if(key == 'DAPP5'){
-        this.setState({dappPromp: true,
-            selecttitle:"猜猜猜",selecturl: "http://luckyeos.cn/"});
+      this.setState({dappPromp: true,
+          selecttitle:"隐秘世界OL",selecturl: "http://www.h5indiegame.com/run.php?id=38"});   
     }else{
       EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
     }
@@ -247,21 +247,21 @@ class FunctionsMore extends React.Component {
                     <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>EOSBET</Text>
                 </View>
             </Button>
-            <Button onPress={this.onPressDapp.bind(this, 'DAPP4')} style={styles.headbtn}>
+            <Button  onPress={this.onPressDapp.bind(this, 'DAPP4')}  style={styles.headbtn}>
+                <View style={styles.headbtnout}>
+                    <Image source={UImage.dapp_03} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>猜猜猜</Text>
+                </View>
+            </Button>
+          </View>
+          {/* <View style={[styles.head]}>
+            <Button onPress={this.onPressDapp.bind(this, 'DAPP5')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.dapp_03} style={styles.imgBtnDAPP} />
                     <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>隐秘世界OL</Text>
                 </View>                      
             </Button>
-          </View>
-          <View style={[styles.head]}>
-            <Button  onPress={this.onPressDapp.bind(this, 'DAPP5')}  style={styles.headbtn}>
-                <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_01} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>猜猜猜</Text>
-                </View>
-            </Button>
-          </View>
+          </View> */}
         </View>
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.Tokenissue} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
