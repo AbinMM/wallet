@@ -58,6 +58,8 @@ class News extends React.Component {
       }
       });
     } });
+    //页面加载先去获取一次ET快讯
+    this.props.dispatch({ type: 'news/list', payload: { type: '12', page: 1, newsRefresh: false } });
     //切换tab完成后执行,不影响ui流畅度
     InteractionManager.runAfterInteractions(() => {
       let i = 0;
