@@ -353,7 +353,7 @@ class TurnOutAsset extends BaseComponent {
             <View style={{backgroundColor: UColor.riceWhite,}}>
                 <Modal animationType={'slide'} transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
                     <TouchableOpacity style={[styles.modalStyle,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
-                        <View style={{ width: ScreenWidth, height: ScreenHeight*4/6, backgroundColor: UColor.btnColor,}}>
+                        <View style={{ width: ScreenWidth, backgroundColor: UColor.btnColor,}}>
                                 <View style={styles.subView}>
                                     <Text style={styles.buttontext}/>
                                     <Text style={[styles.titleText,{color: UColor.blackColor}]}>订单详情</Text>
@@ -365,7 +365,7 @@ class TurnOutAsset extends BaseComponent {
                                     <Text style={[styles.amounttext,{color:UColor.blackColor}]}>{this.state.amount} </Text>
                                     <Text style={[styles.unittext,{color:UColor.blackColor}]}> {c.asset.name}</Text>
                                 </View>
-                                <View style={{flex: 1,}}>
+                                <View>
                                     <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
                                         <Text style={[styles.explainText,{color: UColor.startup}]}>收款账户：</Text>
                                         <Text style={[styles.contentText,{color: UColor.startup}]}>{this.state.toAccount}</Text>
@@ -479,8 +479,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         borderBottomWidth: 0.5,
         justifyContent: 'center',
-        height: ScreenUtil.autoheight(40),
-        paddingHorizontal: ScreenUtil.autowidth(20),
+        height: ScreenUtil.autoheight(50),
+        marginHorizontal: ScreenUtil.autowidth(20),
     },
     amounttext: {
         textAlign: 'center',
@@ -498,9 +498,9 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         alignItems: 'center',
         justifyContent: 'center',
-        height: ScreenUtil.autoheight(45),
-        marginTop: ScreenUtil.autoheight(20),
-        marginHorizontal: ScreenUtil.autowidth(15),
+        height:  ScreenUtil.autoheight(45),
+        marginVertical: ScreenUtil.autowidth(20),
+        marginHorizontal: ScreenUtil.autoheight(15),
     },
     btntext: {
         fontSize: ScreenUtil.setSpText(16),
