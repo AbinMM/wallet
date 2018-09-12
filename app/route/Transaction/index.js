@@ -20,7 +20,7 @@ var CryptoJS = require("crypto-js");
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
-const transactionOption = ['最新交易','我的交易','最近大单','持仓大户'];
+const transactionOption = ['最新交易','我的交易','最近大单','交易大户'];
 var DeviceInfo = require('react-native-device-info');
 @connect(({transaction,sticker,wallet}) => ({...transaction, ...sticker, ...wallet}))
 class Transaction extends BaseComponent {
@@ -31,22 +31,11 @@ class Transaction extends BaseComponent {
           title: 'ET交易所',
           tabBarLabel: '交易所',
           tabBarIcon: ({ focused}) => (
-            <Image resizeMode='stretch'
-                source={focused ? UImage.tab_5_h : UImage.tab_5} style={{width: ScreenUtil.autoheight(40), height: ScreenUtil.autoheight(40),}}
-            />
-          
+            <Image resizeMode='stretch' source={focused ? UImage.tab_5_h : UImage.tab_5} style={{width: ScreenUtil.autoheight(40), height: ScreenUtil.autoheight(40),}}/>
           ),
           header: null,
-         //铃铛small_bell/small_bell_h
-        //   headerRight: (
-        //     <Button name="share" onPress={() => this._rightTopClick()} >
-        //       <View style={{ padding: 15 }}>
-        //       <Image source={UImage.small_bell} style={{ width: 22, height: 22 }}></Image>
-        //       </View>
-        //     </Button>
-        //   )
         };
-      };
+    };
 
     constructor(props) {
         super(props);
@@ -82,11 +71,6 @@ class Transaction extends BaseComponent {
             scrollEnabled: true, 
             etOpenStatus: true, 
         };
-    }
-
-    _rightTopClick = () =>{
-        const { navigate } = this.props.navigation;
-        navigate('Ram', {returnkey: true});
     }
 
     componentWillMount() {
@@ -160,10 +144,16 @@ class Transaction extends BaseComponent {
         this.props.dispatch({type:'transaction/getRamInfo',payload: {}});
     }
  
-      //选择ram 交易
+    //选择ram 交易
     selectRamTx(){
         this.setState({modal: false});
-        this._rightTopClick();
+        const { navigate } = this.props.navigation;
+        navigate('Ram', {returnkey: true});
+    }
+
+    _rightTopClick = () =>{
+        const { navigate } = this.props.navigation;
+        navigate('Detailsofmoney', {});
     }
 
     //选择ET交易
@@ -357,13 +347,13 @@ class Transaction extends BaseComponent {
                 this.setState({logRefreshing: false});
             }});    
         }else{
-            EasyToast.show('暂未开放');   
-            // if(!onRefreshing){
-            //     this.setState({logRefreshing: true});
-            // }
-            // this.props.dispatch({type: 'transaction/getBigRamRank',payload: {}, callback: () => {
-            //     this.setState({logRefreshing: false});
-            // }});
+            // EasyToast.show('暂未开放');   
+            if(!onRefreshing){
+                this.setState({logRefreshing: true});
+            }
+            this.props.dispatch({type: 'transaction/getLargeRankByCode',payload: {code:this.state.selectcode}, callback: () => {
+                this.setState({logRefreshing: false});
+            }});
         }
     }
 
@@ -1129,7 +1119,9 @@ class Transaction extends BaseComponent {
                 <Image source={this.state.modal ? UImage.tx_slide0 : UImage.tx_slide1} style={styles.imgBtn} />
             </Button>
             <Text style={[styles.headerTitleText,{color: UColor.btnColor}]}>{this.state.tradename + "/EOS"}</Text>
-            <View style={styles.imgBtn}></View>
+            <Button onPress={this._rightTopClick.bind()}>
+                <Image source={UImage.detailsofm} style={styles.imgBtn} />
+            </Button>
         </View> 
     </ImageBackground>
       {Constants.isNetWorkOffline &&
@@ -1360,25 +1352,22 @@ class Transaction extends BaseComponent {
                   </View> :
                   <View style={{flex: 1,}}>
                       <ListView style={{flex: 1,}} renderRow={this.renderRow} enableEmptySections={true} 
-                        dataSource={this.state.dataSource.cloneWithRows(this.props.bigAccouontRank == null ? [] : this.props.bigAccouontRank)} 
+                      renderHeader = {()=>
+                        <View style={styles.rankout}>
+                            <Text style={[styles.pertext,{flex: 1,color: UColor.lightgray}]}>排名</Text>
+                            <Text style={[styles.pertext,{flex: 5,color: UColor.lightgray}]}>账号</Text>
+                            <Text style={[styles.pertext,{flex: 4,color: UColor.lightgray}]}>持有数量</Text>
+                        </View>
+                        }
+                        dataSource={this.state.dataSource.cloneWithRows(this.props.largeRankByCode == null ? [] : this.props.largeRankByCode)} 
                         renderRow={(rowData, sectionID, rowID) => (                 
                             <Button onPress={this.openQuery.bind(this,rowData.account)}>
                                 <View style={[styles.businessRan,{backgroundColor: UColor.mainColor}]}>
-                                    <View style={styles.Rankleftout}>
-                                        <Text style={[styles.accounttext,{color: UColor.fontColor}]} numberOfLines={1}>{rowData.account}</Text>
-                                        <Text style={[styles.numtext,{color: UColor.arrow}]}>排名 {rowData.num}</Text>
-                                    </View>
-                                    <View style={styles.Rankcenterout}>
-                                        <Text style={[styles.profitLoss,{color: UColor.arrow}]}>盈亏 
-                                            <Text style={[styles.profittext,{ color:rowData.profit.indexOf('-') != -1 ? UColor.riseColor:UColor.fallColor}]}> {rowData.profit}</Text>
-                                        </Text>
-                                        <Text style={[styles.costout,{color: UColor.arrow}]}>成本价
-                                            <Text style={[styles.costtext,{color: UColor.fontColor}]}> {rowData.historyAverageCost}</Text>
-                                        </Text>
-                                    </View>
-                                    <View style={styles.Rankrightout}>
-                                        <Text style={[styles.pertext,{color: UColor.fontColor}]}>{rowData.per}</Text>
-                                        <Text style={[styles.quotatext,{color: UColor.arrow}]}>{rowData.ramQuota}</Text>
+                                    <View style={styles.liststrip}>
+                                        <Text style={[styles.numtext,{flex: 1,color: UColor.arrow}]} numberOfLines={1}>{rowData.seq}</Text>
+                                        <Text style={[styles.accounttext,{flex: 4,color: UColor.fontColor}]} numberOfLines={1}>{rowData.account}</Text>
+                                        <Text style={[styles.quotatext,{flex: 3,color: UColor.riseColor}]} numberOfLines={1}>{rowData.qty}</Text>
+                                        <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} />
                                     </View>
                                 </View>
                             </Button>
@@ -1742,7 +1731,6 @@ const styles = StyleSheet.create({
     timeinitial: {
         fontSize: ScreenUtil.setSpText(14), 
     },
-
     statementimg: {
         width: ScreenUtil.autowidth(25),
         height: ScreenUtil.autowidth(25),
@@ -1752,9 +1740,6 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: ScreenUtil.setSpText(16), 
     },
-
-
-
     toptabout: {
         paddingTop: ScreenUtil.autoheight(10),
         paddingBottom: ScreenUtil.autoheight(5),
@@ -1880,53 +1865,38 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(14),
         paddingLeft: ScreenUtil.autowidth(8),
     },
+
+
     businessRan: {
         borderRadius: 5,
         flexDirection: "row",
-        height: ScreenUtil.autoheight(50),
+        height: ScreenUtil.autoheight(30),
         marginVertical: ScreenUtil.autoheight(2),
         marginHorizontal: ScreenUtil.autowidth(5),
         paddingHorizontal: ScreenUtil.autowidth(5),
     },
-    Rankleftout: {
-        flex: 4.5,
-        flexDirection: "column",
-        justifyContent: "space-around",
+
+    numtext: {
+        textAlign: 'center',
+        fontSize: ScreenUtil.setSpText(14),
     },
     accounttext: {
-        fontSize: ScreenUtil.setSpText(15),
-    },
-    numtext: {
-        fontSize: ScreenUtil.setSpText(15),
-    },
-    Rankcenterout: {
-        flex: 4.5,
-        flexDirection: "column",
-        justifyContent: "space-around",
-    },
-    profitLoss: {
+        textAlign: 'center',
         fontSize: ScreenUtil.setSpText(14),
-    },
-    profittext: {
-        fontSize: ScreenUtil.setSpText(14), 
-    },
-    costout: {
-        fontSize: ScreenUtil.setSpText(14),
-    },
-    costtext: {
-        fontSize: ScreenUtil.setSpText(14),
-    },
-    Rankrightout: {
-        flex: 3,
-        flexDirection: "column",
-        justifyContent: "space-around",
-    },
-    pertext: {
-        textAlign: 'right',
-        fontSize: ScreenUtil.setSpText(15),
     },
     quotatext: {
         textAlign: 'right',
+        marginRight: ScreenUtil.autowidth(20),
+        fontSize: ScreenUtil.setSpText(14),
+    },
+    rankout: {
+        flexDirection: "row", 
+        marginVertical: ScreenUtil.autoheight(2),
+        marginHorizontal: ScreenUtil.autowidth(5),
+        paddingHorizontal: ScreenUtil.autowidth(5),
+    },
+    pertext: {
+        textAlign: 'center',
         fontSize: ScreenUtil.setSpText(14),
     },
     sliderow:{

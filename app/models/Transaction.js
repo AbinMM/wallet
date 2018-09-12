@@ -1,5 +1,5 @@
 import Request from '../utils/RequestUtil';
-import {getRamInfo, getRamPriceLine, getRamTradeLog, getRamBigTradeLog, getRamTradeLogByAccount, getBigRamRank,
+import {getRamInfo, getRamPriceLine, getRamTradeLog, getRamBigTradeLog, getRamTradeLogByAccount, getBigRamRank,getLargeRankByCode,
     getRamKLines,getETList,getETInfo,getETPriceLine,getETKLine,getETTradeLog,getETBigTradeLog,getETTradeLogByAccount,getETServiceStatus,getBalance} from '../utils/Api';
 import store from 'react-native-simple-store';
 import { EasyToast } from '../components/Toast';
@@ -172,7 +172,6 @@ export default {
         },
         *getBigRamRank({ payload, callback }, { call, put }) {
             var bigRamRankInCache = yield call(store.get, "bigRamRank");
-
             try{
                 const resp = yield call(Request.request, getBigRamRank, 'get');
                 // alert('getBigRamRank: '+JSON.stringify(resp));
@@ -390,6 +389,30 @@ export default {
                 if (callback) callback({ code: 500, msg: "网络异常" });                
             }
         },
+        //ET获取交易大户
+        *getLargeRankByCode({ payload, callback }, { call, put }) {
+            var largeRankByCodeInCache = yield call(store.get, "largeRankByCode_" + payload.code);
+            try{
+                const resp = yield call(Request.request, getLargeRankByCode + payload.code, 'post', payload);
+                //alert('getLargeRankByCode: '+JSON.stringify(resp));
+                if(resp.code=='0'){               
+                    yield put({ type: 'updateLargeRankByCode', payload: { largeRankByCode:resp.data } });
+                    yield call(store.save, "largeRankByCode_" + payload.code, resp.data);
+                }else{
+                    EasyToast.show(resp.msg);
+                    if(largeRankByCodeInCache){
+                        yield put({ type: 'updateLargeRankByCode', payload: { largeRankByCode: largeRankByCodeInCache } });
+                    }
+                }
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if(largeRankByCodeInCache){
+                    yield put({ type: 'updateLargeRankByCode', payload: { largeRankByCode: largeRankByCodeInCache } });
+                }
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
         //ET 根据账号分页获取用户最新交易单
         *getETTradeLogByAccount({ payload, callback }, { call, put }) {
             var etTradeLogByAccountInCache = yield call(store.get, "etTradeLogByAccount" );
@@ -494,6 +517,9 @@ export default {
             return { ...state, ...action.payload };
         },
         updateETBigTradeLog(state, action) {
+            return { ...state, ...action.payload };
+        },
+        updateLargeRankByCode(state, action) {
             return { ...state, ...action.payload };
         },
     }

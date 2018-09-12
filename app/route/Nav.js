@@ -1,26 +1,23 @@
 import React from 'react';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import { CameraRoll, Image, View, BackHandler, Text, Platform, DeviceEventEmitter, BackAndroid, AppState, Linking, Dimensions, ScrollView, Animated, Easing, NetInfo } from 'react-native';
-import { redirect } from '../utils/Api'
-import UColor from '../utils/Colors'
-import UImage from '../utils/Img'
-import Home from './Home'
+import moment from 'moment';
+import { connect } from 'react-redux'
+import QRCode from 'react-native-qrcode-svg';
+import codePush from 'react-native-code-push'
+import ViewShot from "react-native-view-shot";
+import Upgrade from 'react-native-upgrade-android';
+import SplashScreen from 'react-native-splash-screen'
+
+import Button from '../components/Button'
+import { EasyToast } from "../components/Toast"
+import { EasyShowLD } from "../components/EasyShow"
+import { EasyAdress } from "../components/Address"
+
 import Coins from './Coins'
-import Ram from './Transaction/Ram'
-import Transaction from './Transaction'
-import Community from './Settings/Community'
-import News from './News'
-import Settings from './Settings'
-import Splash from './Splash'
-import Homepage from './Homepage'
-import Web from '../route/Web'
 import Coin from './Coins/Detail'
-import Login from './Login'
-import AssistantQrcode from './Login/AssistantQrcode'
-import Forget from './Login/Forget'
-import Helpcenter from './Login/Helpcenter'
-import ProblemFeedback from './Login/ProblemFeedback'
-import SignIn from './Login/SignIn'
+
+import Home from './Home'
 import AddAssets from './Home/AddAssets'
 import AssetSearch from './Home/AssetSearch'
 import FreeMortgage from './Home/FreeMortgage'
@@ -32,57 +29,68 @@ import TurnIn from './Home/TurnIn'
 import TurnOut from './Home/TurnOut'
 import TurnInAsset from './Home/TurnInAsset'
 import TurnOutAsset from './Home/TurnOutAsset'
-import Share from './ShareInvite'
-import ActivationAt from './Wallet/ActivationAt'
-import APactivation from './Wallet/APactivation'
-import CreateWallet from './Wallet/CreateWallet'
-import BackupsAOkey from './Wallet/BackupsAOkey'
-import BackupsPkey from './Wallet/BackupsPkey'
-import ImportEosKey from './Wallet/ImportEosKey'
-import WalletManage from './Wallet/WalletManage'
-import WalletDetail from './Wallet/WalletDetail'
-import AuthChange from './Wallet/AuthChange'
-import AuthTransfer from './Wallet/AuthTransfer'
-import ModifyPassword from './Wallet/ModifyPassword'
-import ExportPublicKey from './Wallet/ExportPublicKey'
-import AuthManage from './Wallet/AuthManage'
-import AuthExchange from './Wallet/AuthExchange'
-import BarCode from './Wallet/BarcodeTest'
-import { EasyToast } from "../components/Toast"
-import { EasyShowLD } from "../components/EasyShow"
-import { EasyAdress } from "../components/Address"
-import Upgrade from 'react-native-upgrade-android';
-import codePush from 'react-native-code-push'
-var DeviceInfo = require('react-native-device-info');
-import { connect } from 'react-redux'
-import SplashScreen from 'react-native-splash-screen'
+
+import Login from './Login'
+import AssistantQrcode from './Login/AssistantQrcode'
+import Forget from './Login/Forget'
+import Helpcenter from './Login/Helpcenter'
+import ProblemFeedback from './Login/ProblemFeedback'
+import SignIn from './Login/SignIn'
+
+import News from './News'
+
+import Settings from './Settings'
 import AgentInfo from './Settings/AgentInfo'
+import Bvote from './Settings/Bvote'
+import Community from './Settings/Community'
 import Imvote from './Settings/Imvote'
+import MortgageRecord from './Settings/MortgageRecord'
+import Nodevoting from './Settings/Nodevoting'
 import Resources from './Settings/Resources'
+import Set from './Settings/Set'
 import undelegated from './Settings/undelegated' 
 import WithdrawMoney from './Settings/WithdrawMoney'
-import Set from './Settings/Set'
-import Nodevoting from './Settings/Nodevoting'
-import Bvote from './Settings/Bvote'
-import MortgageRecord from './Settings/MortgageRecord'
-import Boot from './Boot'
-import moment from 'moment';
-import Button from '../components/Button'
-import ViewShot from "react-native-view-shot";
-import QRCode from 'react-native-qrcode-svg';
-import Constants from '../utils/Constants'
-import ScreenUtil from '../utils/ScreenUtil'
-import RecordQueryRam from './Transaction/RecordQueryRam';
+
+import Transaction from './Transaction'
+import Detailsofmoney from './Transaction/Detailsofmoney'
+import Ram from './Transaction/Ram'
 import RecordQueryET from './Transaction/RecordQueryET';
+import RecordQueryRam from './Transaction/RecordQueryRam';
 import Warning from './Transaction/Warning'
 
+import ActivationAt from './Wallet/ActivationAt'
+import APactivation from './Wallet/APactivation'
+import AuthChange from './Wallet/AuthChange'
+import AuthExchange from './Wallet/AuthExchange'
+import AuthManage from './Wallet/AuthManage'
+import AuthTransfer from './Wallet/AuthTransfer'
+import BackupsAOkey from './Wallet/BackupsAOkey'
+import BackupsPkey from './Wallet/BackupsPkey'
+import BarCode from './Wallet/BarcodeTest'
+import CreateWallet from './Wallet/CreateWallet'
+import ExportPublicKey from './Wallet/ExportPublicKey'
+import ImportEosKey from './Wallet/ImportEosKey'
+import ModifyPassword from './Wallet/ModifyPassword'
+import WalletDetail from './Wallet/WalletDetail'
+import WalletManage from './Wallet/WalletManage'
+
+import Boot from './Boot'
+import Homepage from './Homepage'
+import Share from './ShareInvite'
+import Splash from './Splash'
+import Web from './Web'
+
+import UImage from '../utils/Img'
+import UColor from '../utils/Colors'
+import { redirect } from '../utils/Api'
+import Constants from '../utils/Constants'
+import ScreenUtil from '../utils/ScreenUtil'
+
 require('moment/locale/zh-cn');
+var DeviceInfo = require('react-native-device-info');
 var ScreenWidth = Dimensions.get('window').width;
 var ScreenHeight = Dimensions.get('window').height;
-
-// import Eosjs from '../components/eosjs/Eosjs'
 var WeChat = require('react-native-wechat');
-
 var TabContainer = TabNavigator(
   {
     Home: { screen: Home },
@@ -291,6 +299,9 @@ const Nav = StackNavigator(
     },
     TurnOut: {
       screen: TurnOut
+    },
+    Detailsofmoney: {
+      screen: Detailsofmoney
     },
     Ram: {
       screen: Ram
