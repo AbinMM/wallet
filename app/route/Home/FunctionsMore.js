@@ -149,7 +149,7 @@ class FunctionsMore extends React.Component {
           NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.state.selecturl);
         }else(Platform.OS === 'android')
         {
-          NativeModules.SDKModule.startActivityFromReactNative(this.state.selecturl);
+          NativeModules.SDKModule.startActivityFromReactNative(this.state.selecturl,this.state.selecttitle);
         }
     }
 

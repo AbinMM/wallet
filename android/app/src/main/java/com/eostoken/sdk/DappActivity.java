@@ -8,8 +8,11 @@ import android.app.Dialog;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.content.Intent;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 
 import android.telephony.TelephonyManager;
+
 
 import org.devio.rn.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivity;
@@ -31,6 +34,8 @@ import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -61,13 +66,17 @@ import com.google.zxing.integration.android.IntentResult;
 
 public class DappActivity extends Activity {
 
-    private  String mUrl= "";
+    private  String mUrl = "";
+    private  String title = "";
     private static String device_id = "" ;
-    private static WebView mWebView;
+    private  WebView mWebView;
     //android调用JS网页的时候会用到
     // private static final Handler mHandler = new Handler();
     private String invokeQRScanner_callback = "";  
     // private static int testnum = 0;
+    private TextView tv_close;
+    private TextView tv_title;
+    private ImageButton btn_share;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +86,8 @@ public class DappActivity extends Activity {
         
         Intent intent =  getIntent();
         if(intent != null){
-            mUrl = intent.getStringExtra("params");
+            mUrl = intent.getStringExtra("url");
+            title = intent.getStringExtra("title");
         }
 
         if(device_id.isEmpty())
@@ -92,6 +102,26 @@ public class DappActivity extends Activity {
                 error.printStackTrace();
             }
         }
+
+        tv_close =  (TextView)findViewById(R.id.tv_close);
+        tv_title =  (TextView)findViewById(R.id.titleName);
+        btn_share =  (ImageButton)findViewById(R.id.share_imbtn);
+
+        tv_title.setText(title);
+        tv_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        btn_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rightOnclick();
+            }
+        });
+
         initWebView();
     }
 
@@ -569,4 +599,61 @@ public class DappActivity extends Activity {
         }); 
     }
 
+
+     //刷新提示
+     private void rightOnclick()
+     {
+         final Dialog  mShareDialog = new Dialog(this, R.style.dialog_bottom_full);
+         mShareDialog.setCanceledOnTouchOutside(true);
+         mShareDialog.setCancelable(true);
+ 
+         Window window = mShareDialog.getWindow();
+         window.setGravity(Gravity.BOTTOM);
+         window.setWindowAnimations(R.style.popupAnimation);
+         View view = View.inflate(this, R.layout.dialog_share, null);
+ 
+         final RelativeLayout rl_refresh = (RelativeLayout) view.findViewById(R.id.view_refresh);
+         final RelativeLayout rl_copy_url = (RelativeLayout) view.findViewById(R.id.view_copy_url);
+         final RelativeLayout rl_share = (RelativeLayout) view.findViewById(R.id.view_share);
+         rl_refresh.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 if (mShareDialog != null && mShareDialog.isShowing()) {
+                     mShareDialog.dismiss();
+                 }
+                
+                 if(mWebView != null ){
+                    mWebView.loadUrl(mUrl);
+                }
+             }
+         });
+         rl_copy_url.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mShareDialog != null && mShareDialog.isShowing()) {
+                    mShareDialog.dismiss();
+                }
+                ClipboardManager cm = (ClipboardManager) DappActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText("text",mUrl));
+
+                Toast.makeText(getApplicationContext(),  mUrl + "已复制", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        rl_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mShareDialog != null && mShareDialog.isShowing()) {
+                    mShareDialog.dismiss();
+                }
+                Toast.makeText(getApplicationContext(), "待实现分享", Toast.LENGTH_SHORT).show();
+            }
+        });
+ 
+         window.setContentView(view);
+         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);//设置横向全屏
+         
+         window.setBackgroundDrawableResource(R.color.white);
+         mShareDialog.show();
+     }
 }
