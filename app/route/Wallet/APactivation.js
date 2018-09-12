@@ -290,17 +290,19 @@ const styles = StyleSheet.create({
         paddingBottom: ScreenUtil.autoheight(5),
     },
     inptpasstext: {
-        fontSize: ScreenUtil.setSpText(12),
-        marginBottom: ScreenUtil.autoheight(15),
-        lineHeight: ScreenUtil.autoheight(20),
+        fontSize: ScreenUtil.setSpText(14),
+        lineHeight: ScreenUtil.autoheight(25),
+        marginBottom: ScreenUtil.autoheight(10),
     },
     Becarefultext: {
-        fontSize: ScreenUtil.setSpText(12),
+        textAlign: "center",
+        fontSize: ScreenUtil.setSpText(18),
+        letterSpacing: ScreenUtil.autowidth(5),
+        paddingBottom: ScreenUtil.autoheight(10),
     },
     linkout: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
-        paddingTop: ScreenUtil.autoheight(20),
     },
     linktext: {
         fontSize: ScreenUtil.setSpText(14),
