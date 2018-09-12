@@ -643,8 +643,8 @@ class Home extends React.Component {
                 refreshing={this.state.assetRefreshing}
                 onRefresh={() => this.onRefresh()}
                 tintColor={UColor.fontColor}
-                colors={[UColor.lightgray, UColor.tintColor]}
-                progressBackgroundColor={UColor.fontColor}
+                colors={[UColor.tintColor]}
+                progressBackgroundColor={UColor.btnColor}
               />
             }
             dataSource={this.state.dataSource.cloneWithRows(this.props.myAssets == null ? [] : this.props.myAssets)} 

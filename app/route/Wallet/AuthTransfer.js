@@ -411,8 +411,8 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
                     refreshing={this.state.isRefreshing}
                     onRefresh={() => this._onRefresh()}
                     tintColor={UColor.fontColor}
-                    colors={[UColor.lightgray, UColor.tintColor]}
-                    progressBackgroundColor={UColor.fontColor}
+                    colors={[UColor.tintColor]}
+                    progressBackgroundColor={UColor.btnColor}
                 />
             }
             scrollEventThrottle={50}
@@ -513,8 +513,8 @@ _onRefresh(){
                 refreshing={this.state.isRefreshing}
                 onRefresh={() => this._onRefresh()}
                 tintColor={UColor.fontColor}
-                colors={[UColor.lightgray, UColor.tintColor]}
-                progressBackgroundColor={UColor.fontColor}
+                colors={[UColor.tintColor]}
+                progressBackgroundColor={UColor.btnColor}
             />
             }
             scrollEventThrottle={50}

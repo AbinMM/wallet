@@ -163,8 +163,8 @@ class Coins extends React.Component {
             refreshing={this.props.loading}
             onRefresh={() => this.onRefresh(route.key)}
             tintColor={UColor.fontColor}
-            colors={[UColor.lightgray,UColor.tintColor]} 
-            progressBackgroundColor={UColor.fontColor}
+            colors={[UColor.tintColor]} 
+            progressBackgroundColor={UColor.btnColor}
           />
         }
         dataSource={this.state.dataSource.cloneWithRows(this.props.coinList[route.key]==null?[]:this.props.coinList[route.key])}

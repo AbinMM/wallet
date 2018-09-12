@@ -265,8 +265,8 @@ class News extends React.Component {
             refreshing={this.props.newsRefresh}
             onRefresh={() => this.onRefresh(route.key, true)}
             tintColor={UColor.fontColor}
-            colors={[UColor.lightgray, UColor.tintColor]}
-            progressBackgroundColor={UColor.fontColor}
+            colors={[UColor.tintColor]}
+            progressBackgroundColor={UColor.btnColor}
           />
         }
         dataSource={this.state.dataSource.cloneWithRows(this.props.newsData[route.key] == null ? [] : this.props.newsData[route.key])}

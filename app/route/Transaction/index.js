@@ -1132,10 +1132,10 @@ class Transaction extends BaseComponent {
           </View>
         </Button>}
     <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
-      <ScrollView  {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"refreshControl={
-            <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
-            tintColor={UColor.fontColor} colors={[UColor.riceWhite, UColor.tintColor]} progressBackgroundColor={UColor.fontColor}/>}
-            >
+      <ScrollView {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} 
+            scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"
+            refreshControl={ <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
+            tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}>
             <ImageBackground source={UImage.transactionB} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
                 <View style={styles.header}>
                     <View style={styles.leftout}>

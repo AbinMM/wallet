@@ -180,8 +180,8 @@ class AssetInfo extends BaseComponent {
                         refreshing={this.state.logRefreshing}
                         onRefresh={() => this.onRefresh()}
                         tintColor={UColor.fontColor}
-                        colors={[UColor.lightgray, UColor.tintColor]}
-                        progressBackgroundColor={UColor.fontColor}
+                        colors={[UColor.tintColor]}
+                        progressBackgroundColor={UColor.btnColor}
                     />
                     }
                     dataSource={this.state.dataSource.cloneWithRows(this.props.tradeLog == null ? [] : this.props.tradeLog)} 

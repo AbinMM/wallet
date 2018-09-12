@@ -250,8 +250,8 @@ class RecordQueryRam extends React.Component {
             refreshing={this.state.logRefreshing}
             onRefresh={() => this.onRefresh()}
             tintColor={UColor.fontColor}
-            colors={[UColor.lightgray, UColor.tintColor]}
-            progressBackgroundColor={UColor.fontColor}
+            colors={[UColor.tintColor]}
+            progressBackgroundColor={UColor.btnColor}
           />
         }
         dataSource={this.state.dataSource.cloneWithRows(this.state.newramTradeLog == null ? [] : this.state.newramTradeLog)} 
