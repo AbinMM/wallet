@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -162,6 +163,21 @@ public class DappActivity extends Activity {
     public void finish() {
         super.finish();
         Log.d("DappActivity","finish()");
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (keyCode == KeyEvent.KEYCODE_BACK) { 
+                if(mWebView.canGoBack()){
+                    mWebView.goBack();  
+                }else{
+                    finish();
+                }
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 //     public static void clearWebview(){
