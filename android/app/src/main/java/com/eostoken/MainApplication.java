@@ -37,6 +37,7 @@ import com.theweflex.react.WeChatPackage;
 import com.umeng.commonsdk.UMConfigure;
 import com.reactnativecomponent.barcode.RCTCapturePackage;
 import com.eostoken.opensettings.*; 
+import com.eostoken.sdk.*; 
 public class MainApplication extends Application implements ReactApplication {
 
     private ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -68,6 +69,7 @@ public class MainApplication extends Application implements ReactApplication {
                     new UpgradeReactPackage(),
                     new DplusReactPackage(),
                     new WeChatPackage(),
+                    new SDKPackage(),
                     new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
             );
         }

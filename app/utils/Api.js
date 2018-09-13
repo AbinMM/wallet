@@ -81,3 +81,5 @@ export const getETTradeLogByAccount = rootaddr + '/etExchangePrice/getNewTradeOr
 export const getETServiceStatus = rootaddr + '/etExchangePrice/isOpenET';
 export const getLargeRankByCode = rootaddr + '/etExchangePrice/getLargeRankByCode/';
 export const getFreeMortgage = rootaddr + '/eosrpc/delegatebwRecord';
+export const getEosTransactionRecord = rootaddr + '/eosrpc/getEosTransactionRecord';
+export const getEosTableRows = rootaddr + '/eosrpc/getEosTableRows';

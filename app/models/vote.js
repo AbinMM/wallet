@@ -43,6 +43,13 @@ export default {
      *getaccountinfo({payload,callback},{call,put}) {
         var accountInfo = yield call(store.get, 'accountInfo');
 
+        if(payload && payload.username && accountInfo && accountInfo.account_name)
+        {
+            if(payload.username != accountInfo.account_name)
+            {
+                accountInfo = null; //输入参数与缓存不一样，不能用缓存
+            }
+        }
         try{
             const resp = yield call(Request.request, getAccountInfo, 'post', payload);
             if(resp && resp.code=='0'){ 
@@ -52,14 +59,20 @@ export default {
                 if (callback) callback(resp.data);
             }else{
                 EasyToast.show(resp.msg);
-                yield put({ type: 'updateAccountInfo', payload: { producers:(accountInfo.voter_info ? accountInfo.voter_info.producers : "") } });
-                yield put({ type: 'updateResources', payload: { Resources:accountInfo}  });
+                if(accountInfo)
+                {
+                    yield put({ type: 'updateAccountInfo', payload: { producers:(accountInfo.voter_info ? accountInfo.voter_info.producers : "") } });
+                    yield put({ type: 'updateResources', payload: { Resources:accountInfo}  });
+                }
                 if (callback) callback(accountInfo);
             }
         } catch (error) {
             EasyToast.show('网络繁忙,请稍后!');
-            yield put({ type: 'updateAccountInfo', payload: { producers:(accountInfo.voter_info ? accountInfo.voter_info.producers : "") } });
-            yield put({ type: 'updateResources', payload: { Resources:accountInfo}  });
+            if(accountInfo)
+            {
+                yield put({ type: 'updateAccountInfo', payload: { producers:(accountInfo.voter_info ? accountInfo.voter_info.producers : "") } });
+                yield put({ type: 'updateResources', payload: { Resources:accountInfo}  });
+            }
             if (callback) callback(accountInfo);
         }
      },
