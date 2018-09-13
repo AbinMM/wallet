@@ -180,11 +180,6 @@ public class DappActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
-//     public static void clearWebview(){
-//         mWebView.clearView();
-//         mWebView.clearHistory();
-//     }
-
     /**
      * 初始化webview的相关参数
      * @return
@@ -606,20 +601,21 @@ public class DappActivity extends Activity {
             if(result.getContents() == null) {
                 // Toast.makeText(this, "扫码取消！", Toast.LENGTH_LONG).show();
             } else {
-                // Toast.makeText(this, "扫描成功，条码值: " + result.getContents(), Toast.LENGTH_LONG).show();
                 // resp = parseQRScanner(result.getContents());
-                resp = result.getContents();  //TODO 直接返回，不解析
+                String qrResult = result.getContents();  //TODO 直接返回，不解析
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("qrResult", qrResult);
+                    resp = obj.toString();
+                } catch (Exception e) {
+                    //TODO: handle exception
+                    resp = "";
+                }
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-
-        final String tmp_resp = resp;
-        new Handler().post(new Runnable(){  
-            public void run() { 
-                EventBus.getDefault().post(new RNCallback("invokeQRScanner",invokeQRScanner_callback,tmp_resp));
-            } 
-        }); 
+        callbakcToWebview("invokeQRScanner",invokeQRScanner_callback,resp);
     }
 
 

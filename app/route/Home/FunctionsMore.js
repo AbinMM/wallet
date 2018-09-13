@@ -866,12 +866,15 @@ function getEosTransactionRecord(methodName,params, callback)
   var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
-    if (!obj_param || !obj_param.account || obj_param.start == undefined || obj_param.count == undefined || !obj_param.sort) {
-        console.log('getEosTransactionRecord:missing params; "account","start","count","sort" is required ');
+    if (!obj_param || !obj_param.account) {
+        console.log('getEosTransactionRecord:missing params; "account" is required ');
         if (callback)  callbackToSDK(methodName,callback,str_res);
         return;
     }
-    if(obj_param.count < 1 || obj_param.start < 0){
+   
+    obj_param.start = obj_param.start ? obj_param.start : 0;
+    obj_param.count = obj_param.count ? obj_param.count : 10;
+    if(obj_param.start < 0 || obj_param.count < 1){
       console.log('getEosTransactionRecord:params; "count","start" is error ');
       if (callback)  callbackToSDK(methodName,callback,str_res);
       return;
