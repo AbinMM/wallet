@@ -1,5 +1,5 @@
 import Request from '../utils/RequestUtil';
-import {getRamInfo, getRamPriceLine, getRamTradeLog, getRamBigTradeLog, getRamTradeLogByAccount, getBigRamRank,getLargeRankByCode,
+import {getRamInfo, getRamPriceLine, getRamTradeLog, getRamBigTradeLog, getRamTradeLogByAccount, getBigRamRank,getLargeRankByCode,getcoinInfo,
     getRamKLines,getETList,getETInfo,getETPriceLine,getETKLine,getETTradeLog,getETBigTradeLog,getETTradeLogByAccount,getETServiceStatus,getBalance} from '../utils/Api';
 import store from 'react-native-simple-store';
 import { EasyToast } from '../components/Toast';
@@ -453,6 +453,22 @@ export default {
                 if (callback) callback({ code: 500, msg: "网络异常" });                
             }
         },
+        //ET 币详情
+        *getCoinInfo({payload, callback}, {call, put}){
+            try{
+                const resp = yield call(Request.request, getcoinInfo  + payload.coinname, 'post', payload);
+                //alert('getETBalance: '+JSON.stringify(resp.data));
+                if(resp.code=='0'){               
+                    yield put({ type: 'updateCoinInfo', payload: { CoinInfo:resp.data } });
+                }else{
+                    EasyToast.show(resp.msg);
+                }
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
     },
 
     reducers : {
@@ -520,6 +536,9 @@ export default {
             return { ...state, ...action.payload };
         },
         updateLargeRankByCode(state, action) {
+            return { ...state, ...action.payload };
+        },
+        updateCoinInfo(state, action) {
             return { ...state, ...action.payload };
         },
     }

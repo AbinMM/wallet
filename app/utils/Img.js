@@ -160,8 +160,8 @@ export default {
   eos: require('../img/eos.png'),
   fav_h: require('../img/fav_h.png'),
   feedback: require('../img/feedback.png'),
-  fivestars_h: require('../img/fivestars_h.png'),
-  fivestars: require('../img/fivestars.png'),
+  
+ 
   freemortgage_bg: require('../img/freemortgage_bg.png'),
   imvote:require('../img/imvote.png'),
   inb:require('../img/inb.png'),
@@ -199,6 +199,9 @@ export default {
   shift_to:require('../img/shift_to.png'),
   small_bell_h:require('../img/small_bell_h.png'),  
   small_bell:require('../img/small_bell.png'),  
+  starempty: require('../img/starempty.png'),
+  starfull: require('../img/starfull.png'),
+  starhalf: require('../img/starhalf.png'),
   strip_bg:require('../img/strip_bg.png'),
   tab_1_h: require('../img/tab_1_h.png'),
   tab_2_h: require('../img/tab_2_h.png'),

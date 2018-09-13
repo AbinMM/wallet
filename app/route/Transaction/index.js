@@ -151,9 +151,9 @@ class Transaction extends BaseComponent {
         navigate('Ram', {returnkey: true});
     }
 
-    _rightTopClick = () =>{
+    _rightTopClick = (tradename) =>{
         const { navigate } = this.props.navigation;
-        navigate('Detailsofmoney', {});
+        navigate('Detailsofmoney', {tradename:tradename});
     }
 
     //选择ET交易
@@ -1119,7 +1119,7 @@ class Transaction extends BaseComponent {
                 <Image source={this.state.modal ? UImage.tx_slide0 : UImage.tx_slide1} style={styles.imgBtn} />
             </Button>
             <Text style={[styles.headerTitleText,{color: UColor.btnColor}]}>{this.state.tradename + "/EOS"}</Text>
-            <Button onPress={this._rightTopClick.bind()}>
+            <Button onPress={this._rightTopClick.bind(this,this.state.tradename)}>
                 <Image source={UImage.detailsofm} style={styles.imgBtn} />
             </Button>
         </View> 
