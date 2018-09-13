@@ -175,10 +175,9 @@ export default {
   delicon:require('../img/delicon.png'),
   authFrame:require('../img/authFrame.png'),
   authExchangeBlue:require('../img/authExchangeBlue.png'),
-  dapp_01:require('../img/dapp_01.png'),
-  dapp_02:require('../img/dapp_02.png'),
-  dapp_03:require('../img/dapp_03.png'),
-  dapp_04:require('../img/dapp_04.png'),
+  dapp_jianyin:require('../img/dapp_jianyin.png'),
+  dapp_ite:require('../img/dapp_ite.png'),
+  dapp_EOSBET:require('../img/dapp_EOSBET.png'),
   dapp_caicaicai:require('../img/dapp_caicaicai.png'),
   
 }

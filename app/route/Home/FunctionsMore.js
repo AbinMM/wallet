@@ -105,7 +105,7 @@ class FunctionsMore extends React.Component {
   onPressDapp(key, data = {}) {
     if(key == 'DAPP1'){
         this.setState({dappPromp: true,
-            selecttitle:"简影游戏",selecturl: "https://www.eosbao.io/pocket"});
+            selecttitle:"简影游戏",selecturl: "http://eosbao.io/pocket?tokenpocket=true&referrer=hezdanbtgega"});
     }else if(key == 'DAPP2'){
         this.setState({dappPromp: true,
             selecttitle:"星域之门",selecturl: "https://m.ite.zone/#/ite4"});    
@@ -231,19 +231,19 @@ class FunctionsMore extends React.Component {
            <View style={[styles.headDAPP]}>
             <Button  onPress={this.onPressDapp.bind(this, 'DAPP1')}  style={styles.headbtn}>
                 <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_01} style={styles.imgBtnDAPP} />
+                    <Image source={UImage.dapp_jianyin} style={styles.imgBtnDAPP} />
                     <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>简影游戏</Text>
                 </View>
             </Button>
             <Button onPress={this.onPressDapp.bind(this, 'DAPP2')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_02} style={styles.imgBtnDAPP} />
+                    <Image source={UImage.dapp_ite} style={styles.imgBtnDAPP} />
                     <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>星域之门</Text>
                 </View>                      
             </Button>
             <Button onPress={this.onPressDapp.bind(this, 'DAPP3')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_04} style={styles.imgBtnDAPP} />
+                    <Image source={UImage.dapp_EOSBET} style={styles.imgBtnDAPP} />
                     <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>EOSBET</Text>
                 </View>
             </Button>
