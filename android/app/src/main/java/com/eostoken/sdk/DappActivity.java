@@ -433,10 +433,7 @@ public class DappActivity extends Activity {
                 try {
                     JSONObject obj = new JSONObject();
                     obj.put("result", false);
-
-                    JSONObject sub_obj = new JSONObject();
-                    sub_obj.put("transactionId", "");
-                    obj.put("data", sub_obj.toString());
+                    obj.put("data", "{}");
 
                     resp = obj.toString();
                 } catch (Exception e) {
@@ -478,10 +475,7 @@ public class DappActivity extends Activity {
                 try {
                     JSONObject obj = new JSONObject();
                     obj.put("result", false);
-
-                    JSONObject sub_obj = new JSONObject();
-                    sub_obj.put("transactionId", "");
-                    obj.put("data", sub_obj.toString());
+                    obj.put("data", "{}");
 
                     resp = obj.toString();
                 } catch (Exception e) {
