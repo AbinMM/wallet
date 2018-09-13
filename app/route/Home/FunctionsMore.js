@@ -222,7 +222,7 @@ class FunctionsMore extends React.Component {
              <Text style={{fontSize: ScreenUtil.setSpText(14),}}>DAPP Store</Text>
          </View>
         {/* <ListView  enableEmptySections={true} 
-          dataSource={this.state.dataSource.cloneWithRows((this.props.addressBook == null ? [] : this.props.addressBook))}
+          dataSource={this.state.dataSource.cloneWithRows((this.props.Book == null ? [] : this.props.Book))}
           renderRow={this.renderRow}  
           contentContainerStyle={styles.listViewStyle}
          />     */}
@@ -555,7 +555,8 @@ function eosTokenTransfer(methodName,params,password, callback)
           }else{
             for(var i = 0;i < walletArr.length;i++)
             {
-              if(walletArr[i].account == obj_param.from)
+              //激活的账户
+              if((walletArr[i].isactived) && (walletArr[i].account == obj_param.from))
               {
                 break;
               }
@@ -563,7 +564,7 @@ function eosTokenTransfer(methodName,params,password, callback)
 
             if(i >= walletArr.length)
             {
-              reject({message:"from account is not exist"});
+              reject({message:"from account is not exist or not actived"});
             }else{
               resolve(walletArr[i]);
             }
@@ -647,7 +648,8 @@ function pushEosAction(methodName,params,password, callback)
           }else{
             for(var i = 0;i < walletArr.length;i++)
             {
-              if(walletArr[i].account == obj_param.account)
+              //激活的账户
+              if((walletArr[i].isactived) && (walletArr[i].account == obj_param.account))
               {
                 break;
               }
@@ -655,14 +657,9 @@ function pushEosAction(methodName,params,password, callback)
 
             if(i >= walletArr.length)
             {
-              reject({message:"account is not exist"});
+              reject({message:"account is not exist or not actived"});
             }else{
-              if(walletArr[i].isactived)
-              {
-                resolve(walletArr[i]); //激活的账户才能使用
-              }else{
-                reject({message:"account is not actived"});
-              }
+              resolve(walletArr[i]); 
             }
           }
         }
@@ -976,7 +973,8 @@ function eosAuthSign(methodName,params,password,callback)
         }else{
           for(var i = 0;i < walletArr.length;i++)
           {
-            if(walletArr[i].account == obj_param.from)
+            //激活的账户,账户,公钥匹配
+            if((walletArr[i].isactived) && (walletArr[i].account == obj_param.from))
             {
               if(walletArr[i].ownerPublic == obj_param.publicKey)
               {
@@ -993,14 +991,9 @@ function eosAuthSign(methodName,params,password,callback)
 
           if(i >= walletArr.length)
           {
-            reject({message:"account is not exist"});
+            reject({message:"account is not exist or not actived"});
           }else{
-            if(walletArr[i].isactived)
-            {
-              resolve(walletArr[i]); //激活的账户才能使用
-            }else{
-              reject({message:"account is not actived"});
-            }
+            resolve(walletArr[i]); 
           }
         }
       }
@@ -1109,8 +1102,7 @@ function getWalletList(methodName,params, callback)
             {
               var tmpobj = new Object();
               tmpobj.name = walletArr[i].name;
-              tmpobj.address = walletArr[i].account;
-              // tmpobj.tokens = {eos:walletArr[i].balance}; 
+              tmpobj.address = walletArr[i].activePublic;
               var floatbalance = 0;
               try {
                   floatbalance = parseFloat(walletArr[i].balance);
@@ -1209,14 +1201,14 @@ function getCurrentWallet(methodName,callback)
     var res = new Object();
     res.result = false;
     res.data = {name:"",address:"",blockchain_id:4};
-
+    res.msg = "";
     g_props.dispatch({
       type: 'wallet/getDefaultWallet', callback: (data) => {
           try {
             if (data != null && data.defaultWallet.account != null) {
               res.result = true;
               res.data.name = data.defaultWallet.name;
-              res.data.address = data.defaultWallet.account;
+              res.data.address = data.defaultWallet.activePublic;
               res.msg = "success";
             } else {
                 res.result = false;
@@ -1255,12 +1247,16 @@ function getWallets(methodName,callback)
           var objarray = new Array();
           for(var i = 0;i < walletArr.length;i++)
           {
-            var tmpobj = new Object();
-            tmpobj.name = walletArr[i].name;
-            tmpobj.address = walletArr[i].account;
-            tmpobj.blockchain_id = 4;  //4 for EOS
+            //激活账户才返回
+            if(walletArr[i].isactived)
+            {
+              var tmpobj = new Object();
+              tmpobj.name = walletArr[i].name;
+              tmpobj.address = walletArr[i].activePublic;
+              tmpobj.blockchain_id = 4;  //4 for EOS
 
-            objarray[i] = tmpobj;
+              objarray[i] = tmpobj;
+            }
           }
           res.data = objarray;
           res.msg = "success";
@@ -1436,11 +1432,11 @@ function callMessage(methodName, params,password,device_id, callback)
            getCurrentWallet(methodName,callback);
            break;
 
-      case 'getWallets':
+       case 'getWallets':
            getWallets(methodName,callback);
            break;     
 
-      case 'sign':
+       case 'sign':
            sign(methodName,params,password,device_id,callback);
            break;  
            
