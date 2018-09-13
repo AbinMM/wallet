@@ -228,7 +228,7 @@ class FunctionsMore extends React.Component {
          />     */}
 
          <View style={[{backgroundColor: UColor.mainColor,marginTop:ScreenUtil.autoheight(10)}]}>
-           <View style={[styles.head]}>
+           <View style={[styles.headDAPP]}>
             <Button  onPress={this.onPressDapp.bind(this, 'DAPP1')}  style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.dapp_01} style={styles.imgBtnDAPP} />
@@ -249,7 +249,7 @@ class FunctionsMore extends React.Component {
             </Button>
             <Button  onPress={this.onPressDapp.bind(this, 'DAPP4')}  style={styles.headbtn}>
                 <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_03} style={styles.imgBtnDAPP} />
+                    <Image source={UImage.dapp_caicaicai} style={styles.imgBtnDAPP} />
                     <Text style={[styles.headbtntext,{color: UColor.lightgray}]}>猜猜猜</Text>
                 </View>
             </Button>
@@ -447,11 +447,16 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1, 
       },
 
+    headDAPP: {
+        flexDirection: "row",
+        height: ScreenUtil.autoheight(80), 
+        paddingBottom: ScreenUtil.autoheight(10),
+    },
     imgBtnDAPP: {
         marginTop : ScreenUtil.autoheight(10), 
         margin: ScreenUtil.autowidth(5),
-        width: ScreenUtil.autowidth(30),
-        height: ScreenUtil.autoheight(30),
+        width: ScreenUtil.autowidth(40),
+        height: ScreenUtil.autoheight(40),
     },
 
 });

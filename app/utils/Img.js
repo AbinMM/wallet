@@ -179,4 +179,6 @@ export default {
   dapp_02:require('../img/dapp_02.png'),
   dapp_03:require('../img/dapp_03.png'),
   dapp_04:require('../img/dapp_04.png'),
+  dapp_caicaicai:require('../img/dapp_caicaicai.png'),
+  
 }
