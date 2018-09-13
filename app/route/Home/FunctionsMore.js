@@ -548,6 +548,8 @@ function eosTokenTransfer(methodName,params,password, callback)
     res.result = false;
     res.data = {};
 
+    var is_activePrivate = true; //是否使用active私钥
+
     new Promise(function(resolve, reject){
       g_props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{ 
           if (walletArr == undefined || walletArr == null || walletArr.length < 1) {
@@ -558,7 +560,21 @@ function eosTokenTransfer(methodName,params,password, callback)
               //激活的账户
               if((walletArr[i].isactived) && (walletArr[i].account == obj_param.from))
               {
-                break;
+                 if(obj_param.address)
+                 {  //传公钥，则校验
+                    if(walletArr[i].ownerPublic == obj_param.address)
+                    {
+                      is_activePrivate = false; //用owner私钥
+                      break;
+                    }else if((walletArr[i].activePublic == obj_param.address)){
+                      is_activePrivate = true; //用active私钥
+                      break;
+                    }else{
+                      //输入公钥 不匹配
+                    }
+                 }else{
+                    break; 
+                 }
               }
             }
 
@@ -573,8 +589,9 @@ function eosTokenTransfer(methodName,params,password, callback)
       });
     })
     .then((rdata)=>{
+        var privateKey = (is_activePrivate == true) ? rdata.activePrivate : rdata.ownerPrivate;
         return  new Promise(function(resolve, reject){
-          inputPwd(rdata.activePrivate,rdata.salt,password,(data) => {
+          inputPwd(privateKey,rdata.salt,password,(data) => {
             if(data){
               //密码正确 ,返回私钥
               resolve(data);
@@ -640,6 +657,8 @@ function pushEosAction(methodName,params,password, callback)
     var res = new Object();
     res.result = false;
     res.data = {};
+
+    var is_activePrivate = true; //是否使用active私钥
     
     new Promise(function(resolve, reject){
       g_props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{ 
@@ -651,7 +670,16 @@ function pushEosAction(methodName,params,password, callback)
               //激活的账户
               if((walletArr[i].isactived) && (walletArr[i].account == obj_param.account))
               {
-                break;
+                if(walletArr[i].ownerPublic == obj_param.address)
+                {
+                  is_activePrivate = false; //用owner私钥
+                  break;
+                }else if((walletArr[i].activePublic == obj_param.address)){
+                  is_activePrivate = true; //用active私钥
+                  break;
+                }else{
+                  //输入公钥 不匹配
+                }
               }
             }
 
@@ -666,8 +694,9 @@ function pushEosAction(methodName,params,password, callback)
       });
     })
     .then((rdata)=>{
+        var privateKey = (is_activePrivate == true) ? rdata.activePrivate : rdata.ownerPrivate;
         return  new Promise(function(resolve, reject){
-          inputPwd(rdata.activePrivate,rdata.salt,password,(data) => {
+          inputPwd(privateKey,rdata.salt,password,(data) => {
             if(data){
               //密码正确 ,返回私钥
               resolve(data);
