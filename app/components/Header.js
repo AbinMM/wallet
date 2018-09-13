@@ -52,8 +52,8 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(65),
     },
     Leftout: {
-        flex: 1, 
-        paddingLeft:ScreenUtil.autowidth(15), 
+        flex: 1.5, 
+        paddingLeft:ScreenUtil.autowidth(10), 
         alignItems:"flex-start",
     },
 
@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
     },
 
     Rightout: {
-        flex: 1, 
-        paddingRight: ScreenUtil.autowidth(15),  
+        flex: 1.5, 
+        paddingRight: ScreenUtil.autowidth(10),  
         alignItems:"flex-end",
     },
     Rightimg: {
