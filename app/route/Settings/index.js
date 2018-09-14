@@ -175,7 +175,7 @@ class Setting extends React.Component {
               }else if(integral.code == 607){
                 // const view = <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>您没有活动奖励可领取！</Text>
                 // EasyShowLD.dialogShow("温馨提示",view,"知道了",null,()=>{EasyShowLD.dialogClose()}); 
-                const view = <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>此次活动已圆满结束，期待下一次有您的参与。</Text>
+                const view = <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>首批奖励领取已圆满结束，期待您的下次参与！</Text>
                 EasyShowLD.dialogShow("温馨提示", view, "查看", "好的", () => {
                   navigate('Web', { title: "活动结束公告", url: "http://static.eostoken.im/html/20180831/1535698529506.html" });
                   EasyShowLD.dialogClose()
