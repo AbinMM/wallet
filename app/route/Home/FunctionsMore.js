@@ -108,16 +108,16 @@ class FunctionsMore extends React.Component {
             selecttitle:"简影游戏",selecturl: "http://eosbao.io/pocket?tokenpocket=true&referrer=hezdanbtgega"});
     }else if(key == 'DAPP2'){
         this.setState({dappPromp: true,
-            selecttitle:"星域之门",selecturl: "https://m.ite.zone/#/ite4"});    
+          selecttitle:"EOSBET",selecturl: "https://dice.eosbet.io/token-pocket.html?ref=ecosystemlab"});     
     }else if(key == 'DAPP3'){
-        this.setState({dappPromp: true,
-            selecttitle:"EOSBET",selecturl: "https://dice.eosbet.io/token-pocket.html?ref=ecosystemlab"});     
-    }else if(key == 'DAPP4'){
-      this.setState({dappPromp: true,
+       this.setState({dappPromp: true,
           selecttitle:"猜猜猜",selecturl: "http://luckyeos.cn/"});
-    }else if(key == 'DAPP5'){
-      this.setState({dappPromp: true,
-          selecttitle:"隐秘世界OL",selecturl: "http://www.h5indiegame.com/run.php?id=38"});   
+    // }else if(key == 'DAPP4'){
+    //       this.setState({dappPromp: true,
+    //         selecttitle:"星域之门",selecturl: "https://m.ite.zone/#/ite4"});   
+    // }else if(key == 'DAPP5'){
+    //   this.setState({dappPromp: true,
+    //       selecttitle:"隐秘世界OL",selecturl: "http://www.h5indiegame.com/run.php?id=38"});   
     }else{
       EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
     }
@@ -236,23 +236,23 @@ class FunctionsMore extends React.Component {
                 </View>
             </Button>
             <Button onPress={this.onPressDapp.bind(this, 'DAPP2')} style={styles.headbtn}>
-                <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_ite} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>星域之门</Text>
-                </View>                      
-            </Button>
-            <Button onPress={this.onPressDapp.bind(this, 'DAPP3')} style={styles.headbtn}>
-                <View style={styles.headbtnout}>
+               <View style={styles.headbtnout}>
                     <Image source={UImage.dapp_EOSBET} style={styles.imgBtnDAPP} />
                     <Text style={[styles.headbtntext,{color: UColor.arrow}]}>EOSBET</Text>
                 </View>
             </Button>
-            <Button  onPress={this.onPressDapp.bind(this, 'DAPP4')}  style={styles.headbtn}>
+            <Button onPress={this.onPressDapp.bind(this, 'DAPP3')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.dapp_caicaicai} style={styles.imgBtnDAPP} />
                     <Text style={[styles.headbtntext,{color: UColor.arrow}]}>猜猜猜</Text>
                 </View>
             </Button>
+            {/* <Button  onPress={this.onPressDapp.bind(this, 'DAPP4')}  style={styles.headbtn}>
+                <View style={styles.headbtnout}>
+                    <Image source={UImage.dapp_ite} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>星域之门</Text>
+                </View> 
+            </Button> */}
           </View>
           {/* <View style={[styles.head]}>
             <Button onPress={this.onPressDapp.bind(this, 'DAPP5')} style={styles.headbtn}>
@@ -647,8 +647,8 @@ function pushEosAction(methodName,params,password, callback)
     var obj_param;
     try{
       obj_param = JSON.parse(params);
-      if (!obj_param || !obj_param.actions || !obj_param.account || !obj_param.address || !password) {
-          console.log('pushEosAction:missing params; "actions", "account", "address" is required ');
+      if (!obj_param || !obj_param.actions || !obj_param.account || !password) {
+          console.log('pushEosAction:missing params; "actions" is required ');
           if (callback)  callbackToSDK(methodName,callback,str_res);
           return;
       }
@@ -657,6 +657,8 @@ function pushEosAction(methodName,params,password, callback)
         if (callback)  callbackToSDK(methodName,callback,str_res);
         return ;
       }
+      //可选项
+      obj_param.address = obj_param.address ? obj_param.address : "";
     }catch(error){
       console.log("pushEosAction error: %s",error.message);
       if (callback)  callbackToSDK(methodName,callback,str_res);
@@ -678,15 +680,20 @@ function pushEosAction(methodName,params,password, callback)
               //激活的账户
               if((walletArr[i].isactived) && (walletArr[i].account == obj_param.account))
               {
-                if(walletArr[i].ownerPublic == obj_param.address)
-                {
-                  is_activePrivate = false; //用owner私钥
-                  break;
-                }else if((walletArr[i].activePublic == obj_param.address)){
-                  is_activePrivate = true; //用active私钥
-                  break;
+                if(obj_param.address)
+                { //传公钥，则校验
+                  if(walletArr[i].ownerPublic == obj_param.address)
+                  {
+                    is_activePrivate = false; //用owner私钥
+                    break;
+                  }else if((walletArr[i].activePublic == obj_param.address)){
+                    is_activePrivate = true; //用active私钥
+                    break;
+                  }else{
+                    //输入公钥 不匹配
+                  }
                 }else{
-                  //输入公钥 不匹配
+                  break;
                 }
               }
             }

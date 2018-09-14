@@ -61,7 +61,9 @@ import com.eostoken.sdk.MessageToRN;
 import com.eostoken.sdk.RNCallback;
 import com.eostoken.sdk.ScanActivity;
 import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
 import de.greenrobot.event.EventBus;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -249,7 +251,7 @@ public class DappActivity extends Activity {
         {
             String str_res = resp;
             String execJs = "javascript:TPJSBrigeClient.startFunction(" + callback + "('" + str_res + "'));";
-            // Toast.makeText(getApplicationContext(), methodName +"=" + execJs, Toast.LENGTH_LONG).show();
+            // Toast.makeText(getApplicationContext(), methodName +"=" + execJs, Toast.LENGTH_SHORT).show();
             mWebView.loadUrl(execJs);
         }
     }
@@ -321,6 +323,12 @@ public class DappActivity extends Activity {
                     break;
 
                 case "pushEosAction":
+                    if(params.isEmpty() || callback.isEmpty()){
+                        return;
+                    }
+                    showActions(methodName,params,callback);
+                    break;
+
                 case "eosAuthSign":
                 case "sign":
                     if(params.isEmpty() || callback.isEmpty()){
@@ -449,6 +457,108 @@ public class DappActivity extends Activity {
         window.setBackgroundDrawableResource(R.color.white);
         mShareDialog.show();
     }
+
+     //提示订单详情  action
+     private void showActions(final String methodName,final String params,final String callback)
+     {
+         // params 
+         String from = "";
+         String memo = "";
+         try {
+             JSONObject obj = new JSONObject(params);
+             JSONArray  actions = obj.getJSONArray("actions"); //数组
+             for(int i = 0 ;i < actions.length();i++)
+             {
+                String strtemp = actions.getString(i);
+                memo += (" " + strtemp);
+            } 
+            from = obj.getString("account");   //传account
+         } catch (Exception e) {
+             //TODO: handle exception
+         }
+
+        if(memo.isEmpty() || from.isEmpty()){
+            Toast.makeText(getApplicationContext(), "输入参数无效", Toast.LENGTH_SHORT).show();
+            String resp = "";
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("result", false);
+                obj.put("data", "{}");
+
+                resp = obj.toString();
+            } catch (Exception e) {
+                resp = "";
+            }
+            callbakcToWebview(methodName,callback,resp);
+            return ;  
+         }
+         final Dialog  mShareDialog = new Dialog(this, R.style.dialog_bottom_full);
+         mShareDialog.setCanceledOnTouchOutside(true);
+         mShareDialog.setCancelable(true);
+ 
+         Window window = mShareDialog.getWindow();
+         window.setGravity(Gravity.BOTTOM);
+         window.setWindowAnimations(R.style.popupAnimation);
+         View view = View.inflate(this, R.layout.dialog_order_actions, null);
+ 
+         final TextView tvFrom =  (TextView) view.findViewById(R.id.from_account);
+         final TextView tvMemoTitle =  (TextView) view.findViewById(R.id.memo_title);
+        //  final TextView tvMemo =  (TextView) view.findViewById(R.id.memo);
+ 
+         tvFrom.setText(from);
+ 
+         final Button btnConfirm = (Button) view.findViewById(R.id.confirm);
+         final TextView btnCancel = (TextView) view.findViewById(R.id.cancel);
+      
+          //显示 actions详情
+        final String str_memo = memo;
+         tvMemoTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // tvMemo.setText(str_memo);
+
+            }
+        });
+         btnConfirm.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 if (mShareDialog != null && mShareDialog.isShowing()) {
+                     mShareDialog.dismiss();
+                 }
+                 showEditDialog(methodName,params,callback);
+             }
+         });
+         btnCancel.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 if (mShareDialog != null && mShareDialog.isShowing()) {
+                     mShareDialog.dismiss();
+                 }
+                 String resp = "";
+                 try {
+                     JSONObject obj = new JSONObject();
+                     obj.put("result", false);
+                     obj.put("data", "{}");
+ 
+                     resp = obj.toString();
+                 } catch (Exception e) {
+                     resp = "";
+                 }
+                 final String tmp_resp = resp;
+                 new Handler().postDelayed(new Runnable(){  
+                     public void run() { 
+                         EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
+                     } 
+                 }, 100); 
+             }
+         });
+ 
+         window.setContentView(view);
+         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);//设置横向全屏
+         
+         window.setBackgroundDrawableResource(R.color.white);
+         mShareDialog.show();
+     }
 
     private void showEditDialog(final String methodName,final String params,final String callback) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
