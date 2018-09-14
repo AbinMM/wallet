@@ -219,7 +219,7 @@ class FunctionsMore extends React.Component {
             </Button>
         </View>
          <View style={{marginLeft:ScreenUtil.autowidth(10),marginTop:ScreenUtil.autoheight(10)}}>  
-             <Text style={{fontSize: ScreenUtil.setSpText(14),}}>DAPP Store</Text>
+             <Text style={{fontSize: ScreenUtil.setSpText(14),color:UColor.fontColor}}>DAPP Store</Text>
          </View>
         {/* <ListView  enableEmptySections={true} 
           dataSource={this.state.dataSource.cloneWithRows((this.props.Book == null ? [] : this.props.Book))}
@@ -304,13 +304,16 @@ class FunctionsMore extends React.Component {
                       <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={30} />
                   </Button>
                 </View>
-                <Text style={styles.contentText}>使用说明</Text>
+                <Text style={styles.contentText}>您接下来访问的页面将跳转至第三方应用DAPP {this.state.selecttitle}</Text>
                 <View style={[styles.warningout,{borderColor: UColor.showy}]}>
                     <View style={{flexDirection: 'row',alignItems: 'center',}}>
                         <Image source={UImage.warning} style={styles.imgBtnBackup} />
                         <Text style={[styles.headtext,{color: UColor.riseColor}]} >免责声明</Text>
                     </View>
-                    <Text style={[styles.headtitle,{color: UColor.showy}]}>本功能由第三方平台提供，不属于EosToken官方出品，《用户协议》和《应用风险》由该平台单独向您承担责任！</Text>
+                    <Text style={[styles.headtitle,{color: UColor.showy}]}>注意：您接下来访问的页面将跳转至第三方应用DAPP {this.state.selecttitle}。您在此应用上的所有行为应遵守该应用的用户协议和隐私政策，
+                       并由DAPP {this.state.selecttitle}向您承担应有责任。</Text>
+                       <Text style={[styles.headtitle,{color: UColor.showy}]}>我确认已经仔细阅读并同意。</Text>   
+                    {/* <Text style={[styles.headtitle,{color: UColor.showy}]}>本功能由第三方平台提供，不属于EosToken官方出品，《用户协议》和《应用风险》由该平台单独向您承担责任！</Text> */}
                 </View>
                 <Button onPress={this.openTokenissue_DAPP.bind(this)} style={{}}>
                     <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
