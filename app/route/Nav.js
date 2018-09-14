@@ -85,7 +85,6 @@ import UColor from '../utils/Colors'
 import { redirect } from '../utils/Api'
 import Constants from '../utils/Constants'
 import ScreenUtil from '../utils/ScreenUtil'
-// import ShareUtile from '../utils/ShareUtile'
 
 require('moment/locale/zh-cn');
 var DeviceInfo = require('react-native-device-info');
