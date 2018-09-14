@@ -226,11 +226,10 @@ class Ram extends BaseComponent {
 
     fetchLine(opt, onRefreshing = false){
         if(opt == "时分"){
-            this.setState({isKLine:false, showMore: false,selectedSegment:opt});
+            this.setState({isKLine:false, showMore: false,selectedSegment:opt,showMoreTitle:opt});
             this.fetchRAMLine(24,'24小时', onRefreshing);
             return ;
         }
-        
         this.setState({isKLine:true, showMore: false,selectedSegment:opt});
         if(opt == "5分"){
             this.fetchRAMKLine("5m",opt, onRefreshing);
@@ -897,13 +896,6 @@ class Ram extends BaseComponent {
                 </ImageBackground>
                 <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
                     <View style={styles.timetabout}>
-                        <Button onPress={this.onClickTimeType.bind(this,"时分")}>
-                            <View style={[styles.timeview,{backgroundColor: this.state.selectedSegment == "时分"?UColor.tintColor:UColor.invalidbtn}]}>
-                                <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>时分</Text>
-                            </View>
-                        </Button>   
-                    </View>
-                    <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"5分")}>
                             <View style={[styles.timeview,{backgroundColor: this.state.selectedSegment == "5分"?UColor.tintColor:UColor.invalidbtn}]}>
                                 <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>5分</Text>
@@ -926,17 +918,13 @@ class Ram extends BaseComponent {
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"更多")}>
-                            <View style={[styles.timeview,{backgroundColor:(this.state.selectedSegment=="更多"||this.state.selectedSegment=="1小时"||this.state.selectedSegment=="1天"
-                                ||this.state.selectedSegment=="1周"||this.state.selectedSegment=="1月")?UColor.tintColor:UColor.invalidbtn}]}>
+                            <View style={[styles.timeview,{backgroundColor:(this.state.selectedSegment=="更多"||this.state.selectedSegment=="时分"||this.state.selectedSegment=="1小时"||
+                                this.state.selectedSegment=="1天"||this.state.selectedSegment=="1周"||this.state.selectedSegment=="1月")?UColor.tintColor:UColor.invalidbtn}]}>
                                 <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>{this.state.showMoreTitle}</Text>
                                 <Ionicons name={this.state.showMore ? "md-arrow-dropdown" : "md-arrow-dropright"} size={ScreenUtil.autowidth(20)} color={UColor.btnColor}/>
                             </View>
                         </Button> 
                     </View>
-                </View> 
-
-                {this.state.showMore &&       
-                <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
                     <View style={styles.timetabout}>
                         <Button disabled={true}>
                             <View style={styles.timeview} >
@@ -944,6 +932,9 @@ class Ram extends BaseComponent {
                             </View>
                         </Button> 
                     </View>
+                </View> 
+                {this.state.showMore &&       
+                <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"1小时")}>
                             <View style={[styles.timeview,{backgroundColor: this.state.showMoreTitle == "1小时"?UColor.tintColor:UColor.invalidbtn}]} >
@@ -971,6 +962,13 @@ class Ram extends BaseComponent {
                             <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1月</Text>
                             </View>
                         </Button> 
+                    </View>
+                    <View style={styles.timetabout}>
+                        <Button onPress={this.onClickTimeType.bind(this,"时分")}>
+                            <View style={[styles.timeview,{backgroundColor: this.state.showMoreTitle == "时分"?UColor.tintColor:UColor.invalidbtn}]}>
+                                <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>时分</Text>
+                            </View>
+                        </Button>   
                     </View>
                 </View> 
                 }  

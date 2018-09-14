@@ -56,7 +56,7 @@ export default {
   receivables: "#65CAFF",
   bgEchar: "#ffffff", // Echar背景色 UColor.bgEchar
   warningRed: "#FF4F4F",//警告字体色彩
-  invalidbtn: "#BFBFBF", //按钮默认颜色 UColor.invalidbtn
+  invalidbtn: "#DEDEDE", //按钮默认颜色 UColor.invalidbtn
   mainsecd: "#EDEDED",
   tintfont: "#65CAFF",
   titletop: '#2279C5', //顶部标题背景色 UColor.navigation
