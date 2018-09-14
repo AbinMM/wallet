@@ -85,6 +85,7 @@ import UColor from '../utils/Colors'
 import { redirect } from '../utils/Api'
 import Constants from '../utils/Constants'
 import ScreenUtil from '../utils/ScreenUtil'
+// import ShareUtile from '../utils/ShareUtile'
 
 require('moment/locale/zh-cn');
 var DeviceInfo = require('react-native-device-info');
@@ -702,6 +703,37 @@ class Route extends React.Component {
             }
           });
       });
+    }else if (e == 4) {
+      this.refs.viewShot.capture().then(uri => {
+         
+         th.setState({showShare:false});
+        //  ShareUtile.share('sssss','http://dev.umeng.com/images/tab2_1.png','http://www.umeng.com/','title',1,(code,message) =>{
+        //   alert(code);
+        //   if(code == 0){ // 分享成功
+        //     th.shareSuccess();
+        //   }else{
+        //     EasyToast.show(message);
+        //   }
+          
+        // });
+
+        // WeChat.isWXAppInstalled()
+        //   .then((isInstalled) => {
+        //     th.setState({ showShare: false });
+        //     if (isInstalled) {
+        //       WeChat.shareToTimeline({ type: 'imageFile', imageUrl: uri }).then((resp) => {
+        //         // EasyToast.show(JSON.stringify(resp));
+        //         if(resp && resp.errCode == 0){ // 分享成功
+        //           th.shareSuccess();
+        //         }
+        //       }).catch((error) => {
+        //           EasyToast.show(error.message);
+        //         });
+        //     } else {
+        //       EasyToast.show('没有安装微信软件，请您安装微信之后再试');
+        //     }
+        //   });
+      });
     }
 
   }
@@ -932,22 +964,28 @@ class Route extends React.Component {
               <View style={{ height: 125 }}>
                 <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
                 <View style={{ flexDirection: "row" }}>
-                  <Button onPress={() => { this.shareAction(1) }} style={{ width: '33%', justifyContent: 'center' }}>
+                  <Button onPress={() => { this.shareAction(1) }} style={{ width: '25%', justifyContent: 'center' }}>
                     <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                       <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                       <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
                     </View>
                   </Button>
-                  <Button onPress={() => { this.shareAction(2) }} style={{ width: '33%', justifyContent: 'center' }}>
+                  <Button onPress={() => { this.shareAction(2) }} style={{ width: '25%', justifyContent: 'center' }}>
                     <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                       <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                       <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
                     </View>
                   </Button>
-                  <Button onPress={() => { this.shareAction(3) }} style={{ width: '33%' }}>
+                  <Button onPress={() => { this.shareAction(3) }} style={{ width: '25%' }}>
                     <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                       <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                       <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
+                    </View>
+                  </Button>
+                  <Button onPress={() => { this.shareAction(4) }} style={{ width: '25%' }}>
+                    <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
+                      <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
+                      <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微博</Text>
                     </View>
                   </Button>
                 </View>
