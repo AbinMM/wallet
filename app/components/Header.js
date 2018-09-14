@@ -8,7 +8,7 @@ import UColor from '../utils/Colors'
 import BaseComponent from "../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
- 
+
 class Header extends BaseComponent {
    
     constructor(props) {
@@ -32,7 +32,7 @@ class Header extends BaseComponent {
                 {onPressLeft &&<Ionicons style={{color:UColor.btnColor}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
             </TouchableOpacity>
             <View style={styles.center} >
-                <Text style={[styles.titletext,{color:UColor.btnColor}]} numberOfLines={1} ellipsizeMode='middle'>{title}</Text>
+                <Text style={[styles.titletext,{color:UColor.btnColor}]} ellipsizeMode='middle'>{title}</Text>
             </View>   
             <TouchableOpacity style={styles.Rightout} onPress={onPressRight}>
                 {avatar?<Image source={avatar} style={styles.Rightimg} resizeMode={'contain'} />:null}
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         zIndex: 999,
         flexDirection:"row",
         alignItems:"center",
-        paddingTop: ScreenUtil.autoheight(20),
+        paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(25) : ScreenUtil.autoheight(20),
         height: ScreenUtil.autoheight(65),
     },
     Leftout: {

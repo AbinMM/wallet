@@ -1,10 +1,15 @@
 'use strict'
 import React from 'react';
-import {Dimensions, PixelRatio} from 'react-native';
+import {Dimensions, Platform, NativeModules, DeviceInfo, PixelRatio,} from 'react-native';
+const { PlatformConstants = {} } = NativeModules;
+const { minor = 0 } = PlatformConstants.reactNativeVersion || {};
+
 
 var ScreenUtil = {
     uiWidth: 375,//这里的值，是设计稿中的宽度，你们根据自己的设计稿改动，本人拿到的设计稿是iphone6的
     uiHeight: 667,//这里的值，是设计稿中的高度，你们根据自己的设计稿改动，本人拿到的设计稿是iphone6的
+    X_WIDTH: 375,
+    X_HEIGHT: 812,
     pixel: 1 / PixelRatio.get(),
     screenWidth: Dimensions.get('window').width,
     screenHeith: Dimensions.get('window').height,
@@ -34,6 +39,18 @@ var ScreenUtil = {
     setSpText: function (number) {
         number = Math.round((number * this.scale + 0.5) * this.pixelRatio / this.fontScale);
         return number / PixelRatio.get();
+    },
+    /*判断是不是苹果X，那么使用就是：ScreenUtil.isIphoneX()*/
+    isIphoneX: function(){
+        if (Platform.OS === 'web') return false;
+        if (minor >= 50) {
+            return DeviceInfo.isIPhoneX_deprecated;
+        }
+        return (
+            Platform.OS === 'ios' &&
+            ((this.screenHeith === this.X_HEIGHT && this.screenWidth === this.X_WIDTH) ||
+               (this.screenHeith === this.X_WIDTH && this.screenWidth === this.X_HEIGHT))
+        );
     },
     /*通过value删除数组元素*/
     removeByValue: function (arr, value) {

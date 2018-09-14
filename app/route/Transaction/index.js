@@ -1114,7 +1114,7 @@ class Transaction extends BaseComponent {
             <Text style={[styles.paneltext,{color: UColor.btnColor}]}>交易面板</Text>
         </View>
     </TouchableOpacity>
-    <ImageBackground source={UImage.transactionA} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.164,zIndex: 999,}}>
+    <ImageBackground source={UImage.transactionA} resizeMode="stretch"  style={{width:ScreenWidth,minHeight:ScreenWidth*0.164,zIndex: 999,}}>
         <View style={styles.headerTitle}>  
             <Button onPress={this._leftTopClick.bind()}>
                 <Image source={this.state.modal ? UImage.tx_slide0 : UImage.tx_slide1} style={styles.imgBtn} />
@@ -1621,8 +1621,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: "space-between",
-        paddingTop: ScreenUtil.autoheight(20),
         paddingHorizontal: ScreenUtil.autowidth(10),
+        paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(25) : ScreenUtil.autoheight(20),
     },
     headerTitleText: {
         textAlign: "center",

@@ -833,7 +833,7 @@ class Ram extends BaseComponent {
 
     render() {
         return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-        <ImageBackground source={UImage.transactionA} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.164}}>
+        <ImageBackground source={UImage.transactionA} resizeMode="stretch" style={[{width:ScreenWidth},ScreenUtil.isIphoneX()?{minHeight:ScreenWidth*0.164}:{height:ScreenWidth*0.164}]}>
             <Header {...this.props} onPressLeft={this.props.navigation.state.params ? this.props.navigation.state.params.returnkey : false} title="内存交易"  backgroundColor={UColor.transport} />
         </ImageBackground>
         <TouchableOpacity style={styles.transactiontou}  onPress={this.openbusiness.bind(this)} activeOpacity={0.8}>

@@ -338,7 +338,7 @@ class News extends React.Component {
             <TabBar onTabPress={this._handleTabItemPress} 
             labelStyle={[styles.labelStyle,{color:UColor.btnColor}]} 
             indicatorStyle={[styles.indicatorStyle,{backgroundColor: UColor.fonttint}]} 
-            style={[{paddingTop: ScreenUtil.autoheight(20),alignItems: 'center',justifyContent: 'center',backgroundColor:UColor.transport}]} 
+            style={[{paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(25) : ScreenUtil.autoheight(20),alignItems: 'center',justifyContent: 'center',backgroundColor:UColor.transport}]} 
             tabStyle={{ width: ScreenWidth / 3, padding: 0, margin: 0 }} 
             scrollEnabled={true} {...props} />
             </ImageBackground>}

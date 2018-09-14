@@ -45,13 +45,17 @@ class Home extends React.Component {
       isChecked: true,
       isEye: true,
       assetRefreshing: false,
+      mortgage: '0',
+      allowance: '0',
     };
   }
 
   componentDidMount() {
     //加载地址数据
     this.props.dispatch({type:'assets/getReveal',callback:(reveal)=>{ 
-      this.setState({isEye:reveal.reveal,});}});
+      this.setState({isEye:reveal.reveal,});
+    }});
+    
     this.props.dispatch({ type: 'wallet/updateInvalidState', payload: {Invalid: false}});
     this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
       this.setState({assetRefreshing: true});
@@ -73,7 +77,14 @@ class Home extends React.Component {
          })
       }
     }});
-
+    this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: (this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name},callback: (resources) => {
+      if(resources != null){
+        this.setState({
+          mortgage: resources.self_delegated_bandwidth ? Math.floor(resources.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100 + resources.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100 : '0',
+          allowance: resources.display_data ? resources.display_data.ram_left.replace("kb", "") : '0',
+        })
+      }
+    }});
     Animated.timing(
       this.state.fadeAnim,  //初始值
       {
@@ -400,16 +411,22 @@ class Home extends React.Component {
             });
           }});
         }});
+        this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: data.account },callback: (resources) => {
+          if(resources != null){
+            this.setState({
+              mortgage: resources.self_delegated_bandwidth ? Math.floor(resources.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100 + resources.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100 : '0',
+              allowance: resources.display_data ? resources.display_data.ram_left.replace("kb", "") : '0',
+            })
+          }
+        } });
         // this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" } });
       } catch (error) {
         this.setState({assetRefreshing: false});
       }
-
     }
   }
 
   assetInfo(asset) {
-
     if (this.props.defaultWallet == null || this.props.defaultWallet.account == null) {
       //todo 创建钱包引导
       EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
@@ -553,7 +570,7 @@ class Home extends React.Component {
     }else{
       return (
         <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-          <ImageBackground style={styles.bgout} source={UImage.home_bg} resizeMode="stretch">
+          <ImageBackground style={[styles.bgout,ScreenUtil.isIphoneX()?{minHeight:ScreenWidth*0.54}:{height:ScreenWidth*0.54}]} source={UImage.home_bg} resizeMode="stretch">
             <View style={styles.topbtn}>
               <Button onPress={() => this.scan()}>
                 <Image source={UImage.scan} style={styles.imgBtn} />
@@ -563,17 +580,15 @@ class Home extends React.Component {
                 <Image source={UImage.wallet_h} style={styles.imgBtn} />
               </Button>
             </View>
-
             {Constants.isNetWorkOffline &&<Button onPress={this.openSystemSetting.bind(this)}>
                 <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
                     <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
                     <Ionicons style={[styles.systemSettingArrow,{color: UColor.btnColor}]} name="ios-arrow-forward-outline" size={20} />
                 </View>
             </Button>}
-
             <View style={styles.addto}>
               <View style={styles.addtoouttop}>
-                <Text style={{fontSize: ScreenUtil.setSpText(32), color: UColor.btnColor}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '≈ 0.00' : "≈ " + this.adjustTotalBalance(this.state.totalBalance)) : '****'}</Text>
+                <Text style={{fontSize: ScreenUtil.setSpText(25), color: UColor.btnColor}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '≈ 0.00' : "≈ " + this.adjustTotalBalance(this.state.totalBalance)) : '****'}</Text>
                 <View style={[styles.incdocupout,(this.state.increase>=0 || this.state.totalBalance == "0.00")?{borderColor: UColor.fallColor,backgroundColor: UColor.fallColor}:{borderColor: UColor.riseColor,backgroundColor: UColor.riseColor}]}>
                   <Text style={[styles.cupcdo,{color: UColor.btnColor}]}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
                 </View>
@@ -584,6 +599,16 @@ class Home extends React.Component {
                   <TouchableOpacity onPress={this.onPressReveal.bind(this,this.state.isEye)}>
                     <Image source={this.state.isEye ? UImage.reveal_wallet : UImage.reveal_h_wallet} style={styles.imgTeOy}/>
                   </TouchableOpacity>
+              </View>
+              <View style={{flexDirection: "row"}}>
+                <View style={[styles.resourceout,{borderRightColor: UColor.tintColor,borderRightWidth: 0.5}]}>
+                  <Text style={[styles.ratiotext,{color: UColor.btnColor}]} numberOfLines={1}>{this.state.mortgage}</Text>
+                  <Text style={[styles.recordtext,{color: UColor.arrow}]}>已抵押资源(EOS)</Text>
+                </View>
+                <View style={[styles.resourceout,{borderLeftColor: UColor.tintColor,borderLeftWidth: 0.5}]}>
+                  <Text style={[styles.ratiotext,{color: UColor.btnColor}]} numberOfLines={1}>{this.state.allowance}</Text>
+                  <Text style={[styles.recordtext,{color: UColor.arrow}]}>RAM余量(KB)</Text>
+                </View>
               </View>
               <View style={styles.addout} >
                 <TouchableOpacity onPress={this.copyname.bind(this,this.props.defaultWallet)}>
@@ -794,19 +819,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: "space-between",
-    paddingTop: ScreenUtil.autoheight(20),
     paddingHorizontal: ScreenUtil.autowidth(10),
+    paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(25) : ScreenUtil.autoheight(20),
   },
   toptext: {
     textAlign: "center",
-    height: ScreenUtil.autoheight(50),
+    height: ScreenUtil.autoheight(40),
     fontSize: ScreenUtil.setSpText(18),
-    lineHeight: ScreenUtil.autoheight(50),
+    lineHeight: ScreenUtil.autoheight(40),
   },
 
   bgout: {
     width:ScreenWidth,
-    height: ScreenWidth*0.54,
     justifyContent: "center",
   },
   head: {
@@ -827,6 +851,18 @@ const styles = StyleSheet.create({
   },
   headbtntext: {
     fontSize: ScreenUtil.setSpText(14),
+  },
+  resourceout: {
+    flex: 1, 
+    flexDirection: "column",  
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ratiotext: {
+    fontSize: ScreenUtil.setSpText(14),
+  },
+  recordtext: {
+    fontSize: ScreenUtil.setSpText(12),
   },
 
   addto: {
@@ -856,7 +892,7 @@ const styles = StyleSheet.create({
   },
 
   addtotext: { 
-    fontSize: ScreenUtil.setSpText(16), 
+    fontSize: ScreenUtil.setSpText(12), 
   },
   imgTeOy: {
     width: ScreenUtil.autowidth(25),
@@ -874,7 +910,7 @@ const styles = StyleSheet.create({
     justifyContent: "center", 
   },
   addtoouttext: {
-    fontSize: ScreenUtil.setSpText(20), 
+    fontSize: ScreenUtil.setSpText(14), 
   },
 
   addbtnout: {
