@@ -111,6 +111,7 @@ class Splash extends React.Component {
           UImage.publickey= require('../img/day/publickey.png');
           UImage.qr_h= require('../img/day/qr_h.png');
           UImage.qr= require('../img/day/qr.png');
+          UImage.redclose= require('../img/day/redclose.png');
           UImage.resources_f= require('../img/day/resources_f.png');
           UImage.resources_h= require('../img/day/resources_h.png');
           UImage.resources= require('../img/day/resources.png');
@@ -211,6 +212,7 @@ class Splash extends React.Component {
           UImage.publickey= require('../img/publickey.png');
           UImage.qr_h= require('../img/qr_h.png');
           UImage.qr= require('../img/qr.png');
+          UImage.redclose= require('../img/redclose.png');
           UImage.resources_f= require('../img/resources_f.png');
           UImage.resources_h= require('../img/resources_h.png');
           UImage.resources= require('../img/resources.png');
