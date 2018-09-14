@@ -112,9 +112,9 @@ class FunctionsMore extends React.Component {
     }else if(key == 'DAPP3'){
        this.setState({dappPromp: true,
           selecttitle:"猜猜猜",selecturl: "http://luckyeos.cn/"});
-    // }else if(key == 'DAPP4'){
-    //       this.setState({dappPromp: true,
-    //         selecttitle:"星域之门",selecturl: "https://m.ite.zone/#/ite4"});   
+    }else if(key == 'DAPP4'){
+          this.setState({dappPromp: true,
+            selecttitle:"星域之门",selecturl: "https://m.ite.zone/#/ite4"});   
     // }else if(key == 'DAPP5'){
     //   this.setState({dappPromp: true,
     //       selecttitle:"隐秘世界OL",selecturl: "http://www.h5indiegame.com/run.php?id=38"});   
@@ -247,12 +247,12 @@ class FunctionsMore extends React.Component {
                     <Text style={[styles.headbtntext,{color: UColor.arrow}]}>猜猜猜</Text>
                 </View>
             </Button>
-            {/* <Button  onPress={this.onPressDapp.bind(this, 'DAPP4')}  style={styles.headbtn}>
+            <Button  onPress={this.onPressDapp.bind(this, 'DAPP4')}  style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.dapp_ite} style={styles.imgBtnDAPP} />
                     <Text style={[styles.headbtntext,{color: UColor.arrow}]}>星域之门</Text>
                 </View> 
-            </Button> */}
+            </Button>
           </View>
           {/* <View style={[styles.head]}>
             <Button onPress={this.onPressDapp.bind(this, 'DAPP5')} style={styles.headbtn}>

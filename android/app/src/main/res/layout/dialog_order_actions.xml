@@ -64,7 +64,7 @@
                 android:textColor="#21232E"
                 android:textSize="18sp" />
         </LinearLayout>
-         <View
+        <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="#C6C6C6"/>
@@ -97,12 +97,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:orientation="horizontal"
             android:layout_marginBottom="0dp">
 
             <TextView
+             android:id="@+id/memo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:text=""
+                android:textColor="#21232E"
+                android:textSize="18sp"/>
+
+            <TextView
                 android:id="@+id/memo_title"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="Actions详情"
@@ -110,10 +120,23 @@
                 android:textColor="#65CAFF"
                 android:textSize="18sp"/>
         </LinearLayout>
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="#C6C6C6"/>
+  
+        <LinearLayout
+            android:id="@+id/ll_actionsdetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginBottom="0dp">
+
+            <TextView
+                android:id="@+id/tv_actionsdetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text=""
+                android:textColor="#21232E"
+                android:textSize="12sp"/>
+        </LinearLayout>
         
         <LinearLayout
             android:layout_width="match_parent"

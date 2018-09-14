@@ -462,22 +462,49 @@ public class DappActivity extends Activity {
      private void showActions(final String methodName,final String params,final String callback)
      {
          // params 
+         String str_params = params;
          String from = "";
-         String memo = "";
+         String actions_detail = "";
+         String contract_account = "";
+         String name = "";
          try {
-             JSONObject obj = new JSONObject(params);
+             JSONObject obj = new JSONObject(str_params);
+             //actions 解析
              JSONArray  actions = obj.getJSONArray("actions"); //数组
+             //account 解析
+             if(!obj.isNull("account"))
+             {
+                 from = obj.getString("account");   
+             }
+
              for(int i = 0 ;i < actions.length();i++)
              {
                 String strtemp = actions.getString(i);
-                memo += (" " + strtemp);
+                actions_detail += (" " + strtemp);
+
+                JSONObject action_element = new JSONObject(strtemp);
+                contract_account = action_element.getString("account");//合约名称
+                name = action_element.getString("name"); //合约方法
+                //未传 account,则从actions->data
+                if(from.isEmpty())
+                {
+                    String str_data = action_element.getString("data"); 
+                    JSONObject obj_data = new JSONObject(str_data);
+                    if(!obj_data.isNull("account"))
+                    {
+                        from = obj_data.getString("account");
+                        obj.put("account", from); // params 放入account
+                    }
+                }
             } 
-            from = obj.getString("account");   //传account
+            
+            //转存一次输入params，兼容有些游戏，只传actions,不传account
+            str_params = obj.toString();
          } catch (Exception e) {
              //TODO: handle exception
          }
 
-        if(memo.isEmpty() || from.isEmpty()){
+        if(actions_detail.isEmpty() || from.isEmpty()){
             Toast.makeText(getApplicationContext(), "输入参数无效", Toast.LENGTH_SHORT).show();
             String resp = "";
             try {
@@ -502,30 +529,42 @@ public class DappActivity extends Activity {
          View view = View.inflate(this, R.layout.dialog_order_actions, null);
  
          final TextView tvFrom =  (TextView) view.findViewById(R.id.from_account);
+         final TextView tvMemo =  (TextView) view.findViewById(R.id.memo);
          final TextView tvMemoTitle =  (TextView) view.findViewById(R.id.memo_title);
-        //  final TextView tvMemo =  (TextView) view.findViewById(R.id.memo);
- 
+
+         final LinearLayout ll_actionsdetail = (LinearLayout) view.findViewById(R.id.ll_actionsdetail);
+         final TextView tv_actionsdetail = (TextView) view.findViewById(R.id.tv_actionsdetail);
+         
          tvFrom.setText(from);
+         tvMemo.setText(contract_account + " -> " + name);
  
          final Button btnConfirm = (Button) view.findViewById(R.id.confirm);
          final TextView btnCancel = (TextView) view.findViewById(R.id.cancel);
       
           //显示 actions详情
-        final String str_memo = memo;
+        final String str_memo = actions_detail;
          tvMemoTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // tvMemo.setText(str_memo);
-
+                if(ll_actionsdetail.getVisibility() == View.VISIBLE)
+                {
+                    ll_actionsdetail.setVisibility(View.GONE);
+                }
+                else{
+                    ll_actionsdetail.setVisibility(View.VISIBLE);
+                    tv_actionsdetail.setText(str_memo);
+                }
             }
         });
+
+        final String final_params = str_params;
          btnConfirm.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View view) {
                  if (mShareDialog != null && mShareDialog.isShowing()) {
                      mShareDialog.dismiss();
                  }
-                 showEditDialog(methodName,params,callback);
+                 showEditDialog(methodName,final_params,callback);
              }
          });
          btnCancel.setOnClickListener(new View.OnClickListener() {
