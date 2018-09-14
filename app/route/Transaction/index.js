@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import {Modal,Dimensions,ImageBackground,DeviceEventEmitter,NativeModules,InteractionManager,ListView,StyleSheet,View,RefreshControl,Text,ScrollView,TouchableOpacity,Image,Platform,TextInput,Slider,KeyboardAvoidingView,Linking,} from 'react-native';
+import {Modal,Dimensions,ImageBackground,DeviceEventEmitter,NativeModules,InteractionManager,ListView,StyleSheet,View,RefreshControl,Text,ScrollView,TouchableOpacity,Image,Platform,TextInput,Slider,KeyboardAvoidingView,Linking,ActivityIndicator,} from 'react-native';
 import moment from 'moment';
 import UImage from '../../utils/Img'
 import Echarts from 'native-echarts'
@@ -14,7 +14,7 @@ import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from '../../components/EasyShow'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
-import { SegmentedControls } from 'react-native-radio-buttons'
+import { SegmentedControls } from 'react-native-radio-buttons';
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 const ScreenWidth = Dimensions.get('window').width;
@@ -22,6 +22,7 @@ const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
 const transactionOption = ['最新交易','我的交易','最近大单','交易大户'];
 var DeviceInfo = require('react-native-device-info');
+
 @connect(({transaction,sticker,wallet}) => ({...transaction, ...sticker, ...wallet}))
 class Transaction extends BaseComponent {
 
@@ -1132,10 +1133,19 @@ class Transaction extends BaseComponent {
           </View>
         </Button>}
     <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
-      <ScrollView {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} 
+        <ScrollView {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} 
             scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"
-            refreshControl={ <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
-            tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}>
+            refreshControl={Platform.OS == 'ios' ? <RefreshControl refreshing={false} onRefresh={() => this.onRefreshing()} 
+            tintColor={UColor.transport} colors={[UColor.tintColor]} progressBackgroundColor={UColor.transport}
+            style={{backgroundColor: UColor.transport}}/>
+            :
+            <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} 
+            tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}
+            style={{backgroundColor: UColor.transport}}/>
+            }
+        >
+       {Platform.OS == 'ios' && <ActivityIndicator size="large" color={UColor.tintColor} animating={this.state.logRefreshing} 
+        style={[styles.loganimat, {height:this.state.logRefreshing? ScreenUtil.autoheight(60):0}]}/>}
             <ImageBackground source={UImage.transactionB} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
                 <View style={styles.header}>
                     <View style={styles.leftout}>
@@ -1639,7 +1649,16 @@ const styles = StyleSheet.create({
         paddingLeft: ScreenUtil.autowidth(60),
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
-
+    loganimat: {
+        zIndex: 999, 
+        position:'absolute', 
+        left: 0,
+        right: 0,
+        top: ScreenUtil.autoheight(200), 
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: ScreenUtil.autowidth(8),
+    },
     container: {
         flex: 1,
         flexDirection:'column',

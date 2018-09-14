@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import {Modal,Dimensions,ImageBackground,DeviceEventEmitter,NativeModules,InteractionManager,ListView,StyleSheet,View,RefreshControl,Text,ScrollView,TouchableOpacity,Image,Platform,TextInput,Slider,KeyboardAvoidingView,Linking,} from 'react-native';
+import {Modal,Dimensions,ImageBackground,DeviceEventEmitter,NativeModules,InteractionManager,ListView,StyleSheet,View,RefreshControl,Text,ScrollView,TouchableOpacity,Image,Platform,TextInput,Slider,KeyboardAvoidingView,Linking,ActivityIndicator,} from 'react-native';
 import moment from 'moment';
 import Echarts from 'native-echarts'
 import UImage from '../../utils/Img'
@@ -33,15 +33,6 @@ class Ram extends BaseComponent {
         tabBarIcon: ({ focused}) => (
             <Image resizeMode='stretch' source={focused ? UImage.tab_5_h : UImage.tab_5} style={{width: ScreenUtil.autoheight(40), height: ScreenUtil.autoheight(40)}}/>
         ),
-        //铃铛small_bell/small_bell_h
-        //   headerRight: (
-        //     // <Button name="share" onPress={() => this._rightTopClick()} >
-        //       <View style={{ padding: 15 }}>
-        //       <Image source={UImage.small_bell} style={{ width: 22, height: 22 }}></Image>
-        //       </View>
-        //     // </Button>
-        //   )
-        
     };
 
     constructor(props) {
@@ -860,9 +851,19 @@ class Ram extends BaseComponent {
             </Button>
         }
         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
-        <ScrollView {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"refreshControl={
-                <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} tintColor={UColor.fontColor} 
-                    colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}>
+            <ScrollView {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} 
+                scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"
+                refreshControl={Platform.OS == 'ios' ? <RefreshControl refreshing={false} onRefresh={() => this.onRefreshing()} 
+                tintColor={UColor.transport} colors={[UColor.transport]} progressBackgroundColor={UColor.transport}
+                style={{backgroundColor: UColor.transport}}/>
+                :
+                <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} 
+                tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}
+                style={{backgroundColor: UColor.transport}}/>
+                }
+            >
+            {Platform.OS == 'ios' && <ActivityIndicator size="large" color={UColor.tintColor} animating={this.state.logRefreshing} 
+             style={[styles.loganimat, {height:this.state.logRefreshing? ScreenUtil.autoheight(60):0}]}/>}
                 <ImageBackground source={UImage.transactionB} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
                     <View style={styles.header}>
                         <View style={styles.leftout}>
@@ -1219,6 +1220,16 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(45),
         fontSize: ScreenUtil.setSpText(16),
         paddingBottom:  ScreenUtil.autoheight(5),
+    },
+    loganimat: {
+        zIndex: 999, 
+        position:'absolute', 
+        left: 0,
+        right: 0,
+        top: ScreenUtil.autoheight(200), 
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: ScreenUtil.autowidth(8),
     },
     container: {
       flex: 1,
