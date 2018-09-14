@@ -104,7 +104,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
-        versionName "2.3.4.2"
+        versionName "2.3.5"
         manifestPlaceholders = [
                 JPUSH_APPKEY: "00c4f7dbd060f57fcdcfff10",
                 APP_CHANNEL : "default"
@@ -113,6 +113,7 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        multiDexEnabled true 
     }
     signingConfigs {
         release {
