@@ -40,6 +40,7 @@ class FunctionsMore extends React.Component {
         // dataSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
         selecttitle:"",
         selecturl:"",
+        dappList: [{},{}],
     }
     g_props = props;    
   }
@@ -47,6 +48,33 @@ class FunctionsMore extends React.Component {
   //加载地址数据
   componentDidMount() {
   
+    g_props.dispatch({
+      type: 'wallet/dappfindAllRecommend', callback: (resp) => {
+        try {
+          if (resp && resp.code == '0') {
+            if(resp.data && resp.data.length > 0)
+            {
+              var objarray = new Array();
+              for(var i = 0;i < resp.data.length;i++)
+              {
+                var tmpobj = new Object();
+                tmpobj.name = resp.data[i].name;
+                tmpobj.url = resp.data[i].url;
+                tmpobj.icon = resp.data[i].icon;
+  
+                objarray[i] = tmpobj;
+              }
+              this.setState({dappList : objarray});
+            }
+          } else {
+            console.log("dappfindAllRecommend error");
+          }
+        } catch (error) {
+          console.log("dappfindAllRecommend error: %s",error.message);
+        }
+      }
+    });
+
     //监听原生页面的消息
     if(Platform.OS === 'ios')
     {
@@ -77,7 +105,7 @@ class FunctionsMore extends React.Component {
       
     }
   }
-
+ 
   onPress(key, data = {}) {
     const { navigate } = this.props.navigation;
     if (key == 'Receivables') {
@@ -105,13 +133,17 @@ class FunctionsMore extends React.Component {
   onPressDapp(key, data = {}) {
     if(key == 'DAPP1'){
         this.setState({dappPromp: true,
-            selecttitle:"简影游戏",selecturl: "http://eosbao.io/pocket?tokenpocket=true&referrer=hezdanbtgega"});
+          selecttitle:this.state.dappList[0].name,selecturl: this.state.dappList[0].url});
     }else if(key == 'DAPP2'){
-        this.setState({dappPromp: true,
-          selecttitle:"EOSBET",selecturl: "https://dice.eosbet.io/token-pocket.html?ref=ecosystemlab"});     
+      // this.testdappfindAllCategory();
+        // this.setState({dappPromp: true,
+          // selecttitle:this.state.dappList[1].name,selecturl: this.state.dappList[1].url});
     }else if(key == 'DAPP3'){
-       this.setState({dappPromp: true,
-          selecttitle:"猜猜猜",selecturl: "http://luckyeos.cn/"});
+          this.setState({dappPromp: true,
+             selecttitle:"PRA糖果盒",selecturl: "https://chain.pro/h5/#/tokenPocket/candy"});       
+    // }else if(key == 'DAPP3'){
+    //    this.setState({dappPromp: true,
+    //       selecttitle:"猜猜猜",selecturl: "http://luckyeos.cn/"});
     }else if(key == 'DAPP4'){
           this.setState({dappPromp: true,
             selecttitle:"星域之门",selecturl: "https://m.ite.zone/#/ite4"});   
@@ -237,22 +269,28 @@ class FunctionsMore extends React.Component {
            <View style={[styles.headDAPP]}>
             <Button  onPress={this.onPressDapp.bind(this, 'DAPP1')}  style={styles.headbtn}>
                 <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_jianyin} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>简影游戏</Text>
+                    <Image source={{uri:this.state.dappList[0].icon ? this.state.dappList[0].icon : ""}} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>{this.state.dappList[0].name ? this.state.dappList[0].name : ""}</Text>
                 </View>
             </Button>
             <Button onPress={this.onPressDapp.bind(this, 'DAPP2')} style={styles.headbtn}>
                <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_EOSBET} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>EOSBET</Text>
+                    <Image source={{uri:this.state.dappList[1].icon ? this.state.dappList[1].icon : ""}} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>{this.state.dappList[1].name ? this.state.dappList[1].name : ""}</Text>
                 </View>
             </Button>
-            <Button onPress={this.onPressDapp.bind(this, 'DAPP3')} style={styles.headbtn}>
+            {/* <Button onPress={this.onPressDapp.bind(this, 'DAPP3')} style={styles.headbtn}>
+                <View style={styles.headbtnout}>
+                    <Image source={UImage.dapp_caicaicai} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>PRA糖果盒</Text>
+                </View>
+            </Button> */}
+            {/* <Button onPress={this.onPressDapp.bind(this, 'DAPP3')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.dapp_caicaicai} style={styles.imgBtnDAPP} />
                     <Text style={[styles.headbtntext,{color: UColor.arrow}]}>猜猜猜</Text>
                 </View>
-            </Button>
+            </Button> */}
             <Button  onPress={this.onPressDapp.bind(this, 'DAPP4')}  style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.dapp_ite} style={styles.imgBtnDAPP} />
