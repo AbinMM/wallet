@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, StyleSheet, Image, View, Text, Linking, Modal, TouchableOpacity,ListView,TextInput,Platform,DeviceEventEmitter,NativeModules} from 'react-native';
+import { Dimensions, StyleSheet, Image, View, Text, Linking, Modal, TouchableOpacity,ListView,TextInput,Platform,DeviceEventEmitter,NativeModules,RefreshControl} from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
@@ -16,7 +16,6 @@ import { Eos } from "react-native-eosjs";
 import moment from 'moment';
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
-
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 var DeviceInfo = require('react-native-device-info');
@@ -36,6 +35,7 @@ class FunctionsMore extends React.Component {
     this.state = {
         Tokenissue: false,
         dappPromp: false,
+        assetRefreshing: false,
         dataSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
         selecttitle:"",
         selecturl:"",
@@ -46,29 +46,22 @@ class FunctionsMore extends React.Component {
 
   //加载地址数据
   componentDidMount() {
-    g_props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
-        try {
+    try {
+      this.setState({assetRefreshing: true});
+      g_props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
           if (resp && resp.code == '0') {
             if(resp.data && resp.data.length > 0){
-              // var objarray = new Array();
-              // for(var i = 0;i < resp.data.length;i++)
-              // {
-              //   var tmpobj = new Object();
-              //   tmpobj.name = resp.data[i].name;
-              //   tmpobj.url = resp.data[i].url;
-              //   tmpobj.icon = resp.data[i].icon;
-              //   objarray[i] = tmpobj;
-              // }
               this.setState({dappList : resp.data});
             }
           } else {
             console.log("dappfindAllRecommend error");
           }
-        } catch (error) {
-          console.log("dappfindAllRecommend error: %s",error.message);
-        }
-      }
-    });
+          this.setState({assetRefreshing: false});
+      } });
+    } catch (error) {
+      console.log("dappfindAllRecommend error: %s",error.message);
+      this.setState({assetRefreshing: false});
+    }
 
     //监听原生页面的消息
     if(Platform.OS === 'ios'){
@@ -176,6 +169,7 @@ class FunctionsMore extends React.Component {
         </TouchableOpacity> 
       ); 
   }
+
   render() {
     return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
         <Header {...this.props} onPressLeft={true} title="全部" subName="DAPP搜索" onPressRight={this._rightTopClick.bind()}/>
@@ -234,18 +228,24 @@ class FunctionsMore extends React.Component {
          <View style={{marginLeft:ScreenUtil.autowidth(10),marginTop:ScreenUtil.autoheight(10)}}>  
              <Text style={{fontSize: ScreenUtil.setSpText(14),color:UColor.fontColor}}>DAPP Store</Text>
          </View>
-         <ListView initialListSize={1} enableEmptySections={true} 
-            contentContainerStyle={[styles.listViewStyle,{backgroundColor: UColor.mainColor}]}
+         <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{backgroundColor: UColor.mainColor}]}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.assetRefreshing}
+                onRefresh={() => this.onRefresh()}
+                tintColor={UColor.fontColor}
+                colors={[UColor.tintColor]}
+                progressBackgroundColor={UColor.btnColor}
+              />
+            }
             dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
-            renderRow={(rowData, sectionID, rowID) => (  
-              <View style={[styles.headDAPP]}>
-                <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headbtn}>
-                    <View style={styles.headbtnout}>
-                        <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} />
-                        <Text style={[styles.headbtntext,{color: UColor.arrow}]}>{rowData.name}</Text>
-                    </View>
-                </Button>
-              </View>
+            renderRow={(rowData) => (  
+              <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headDAPP}>
+                  <View style={styles.headbtnout}>
+                      <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} />
+                      <Text style={[styles.headbtntext,{color: UColor.arrow}]}>{rowData.name}</Text>
+                  </View>
+              </Button>
             )}                
           />  
          {/* <View style={[{backgroundColor: UColor.mainColor,marginTop:ScreenUtil.autoheight(10)}]}>
@@ -365,6 +365,26 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(70), 
         paddingBottom: ScreenUtil.autoheight(10),
     },
+    listViewStyle:{ 
+      flexWrap:'wrap', 
+      flexDirection:'row', 
+      alignItems:'center', // 必须设置,否则换行不起作用 
+      width: ScreenWidth, 
+      marginTop:ScreenUtil.autoheight(10)
+    }, 
+
+    headDAPP: {
+      width: ScreenWidth/4,
+      height: ScreenUtil.autoheight(80), 
+      paddingBottom: ScreenUtil.autoheight(10),
+    },
+    imgBtnDAPP: {
+      marginTop : ScreenUtil.autoheight(10), 
+      margin: ScreenUtil.autowidth(5),
+      width: ScreenUtil.autowidth(40),
+      height: ScreenUtil.autoheight(40),
+    },
+
     headbtn: {
         width: ScreenWidth/4,
         alignItems: 'center',
@@ -380,6 +400,7 @@ const styles = StyleSheet.create({
         width: ScreenUtil.autowidth(30),
         height: ScreenUtil.autoheight(30),
     },
+    
     headbtntext: {
         fontSize: ScreenUtil.setSpText(14),
     },
@@ -450,21 +471,6 @@ const styles = StyleSheet.create({
     deletetext: {
         fontSize: ScreenUtil.setSpText(16),
     },
-    listViewStyle:{ 
-        flexWrap:'wrap', 
-        flexDirection:'row', 
-        alignItems:'center', // 必须设置,否则换行不起作用 
-        marginTop:ScreenUtil.autoheight(10)
-    }, 
-    innerViewStyle:{ 
-        width:ScreenUtil.autowidth(100), 
-        height:ScreenUtil.autoheight(100), 
-        marginLeft:(ScreenUtil.screenWidth -ScreenUtil.autowidth(100) * 3) / (3 + 1), 
-        marginTop:ScreenUtil.autoheight(25), 
-        // 文字内容居中对齐 
-        alignItems:'center'
-    }, 
-    
     iconStyle:{ 
         width:ScreenUtil.autowidth(80), 
         height:ScreenUtil.autoheight(80), 
@@ -473,19 +479,13 @@ const styles = StyleSheet.create({
     touchablelist: {
         width: '100%', 
         borderBottomWidth: 1, 
-      },
+    },
 
-    headDAPP: {
-        flexDirection: "row",
-        height: ScreenUtil.autoheight(80), 
-        paddingBottom: ScreenUtil.autoheight(10),
-    },
-    imgBtnDAPP: {
-        marginTop : ScreenUtil.autoheight(10), 
-        margin: ScreenUtil.autowidth(5),
-        width: ScreenUtil.autowidth(40),
-        height: ScreenUtil.autoheight(40),
-    },
+ 
+
+
+
+   
 
 });
 export default FunctionsMore;
