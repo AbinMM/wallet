@@ -485,22 +485,36 @@ public class DappActivity extends Activity {
                 JSONObject action_element = new JSONObject(strtemp);
                 contract_account = action_element.getString("account");//合约名称
                 name = action_element.getString("name"); //合约方法
-                //未传 account,则从actions->data
+                //未传 account,则从actions->authorization
                 if(from.isEmpty())
                 {
-                    String str_data = action_element.getString("data"); 
-                    JSONObject obj_data = new JSONObject(str_data);
-                    if(!obj_data.isNull("account"))
+                    JSONArray  array_authorization = action_element.getJSONArray("authorization"); //数组
+                    for(int j = 0;j < array_authorization.length();j++)
                     {
-                        from = obj_data.getString("account");
-                        obj.put("account", from); // params 放入account
+                        String authorization_element = array_authorization.getString(i); 
+                        JSONObject obj_authorization_element = new JSONObject(authorization_element);
+                        if(!obj_authorization_element.isNull("actor"))
+                        {
+                            String actor = obj_authorization_element.getString("actor");//取actor
+                            String permission = "";
+                            if(!obj_authorization_element.isNull("permission"))
+                            {
+                              permission = obj_authorization_element.getString("permission");
+                            }
+
+                            if(permission.equals("active") || permission.equals("owner"))
+                            {
+                                from = actor;
+                                obj.put("account", from); // params 放入account
+                            }
+                        }
                     }
                 }
             } 
             
             //转存一次输入params，兼容有些游戏，只传actions,不传account
             str_params = obj.toString();
-         } catch (Exception e) {
+         } catch (Exception error) {
              //TODO: handle exception
          }
 
