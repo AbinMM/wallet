@@ -111,11 +111,11 @@ class Detailsofmoney extends BaseComponent {
                 </View>
                 <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
                     <Text style={[styles.nametext,{flex: 2,color:UColor.arrow}]}>市值</Text>
-                    <Text style={[styles.recordtext,{color:UColor.fontColor}]}>{this.state.coinInfodata.marke}</Text>
+                    <Text style={[styles.recordtext,{color:UColor.fontColor}]}>{this.state.coinInfodata.marketValueDesc}</Text>
                 </View>
                 <View style={[styles.separateout,{backgroundColor: UColor.mainColor,}]}>
                     <Text style={[styles.nametext,{flex: 2,color:UColor.arrow}]}>总量</Text>
-                    <Text style={[styles.recordtext,{color:UColor.fontColor}]}>{this.state.coinInfodata.total}</Text>
+                    <Text style={[styles.recordtext,{color:UColor.fontColor}]}>{this.state.coinInfodata.totalDesc}</Text>
                 </View>
                 <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
                     <Text style={[styles.nametext,{flex: 2,color:UColor.arrow}]}>官方网站</Text>
