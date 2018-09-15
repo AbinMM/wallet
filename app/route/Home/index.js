@@ -77,14 +77,7 @@ class Home extends React.Component {
          })
       }
     }});
-    this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: (this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name},callback: (resources) => {
-      if(resources != null){
-        this.setState({
-          mortgage: resources.self_delegated_bandwidth ? Math.floor(resources.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100 + resources.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100 : '0',
-          allowance: resources.display_data ? resources.display_data.ram_left.replace("kb", "") : '0',
-        })
-      }
-    }});
+    this.getResourcesinfo((this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name);
     Animated.timing(
       this.state.fadeAnim,  //初始值
       {
@@ -145,6 +138,18 @@ class Home extends React.Component {
         this.getIncrease();
       } });
     });
+  }
+
+  //获取资源详情
+  getResourcesinfo(username) {
+    this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: username },callback: (resources) => {
+      if(resources != null){
+        this.setState({
+          mortgage: resources.self_delegated_bandwidth ? Math.floor(resources.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100 + resources.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100 : '0',
+          allowance: resources.display_data ? resources.display_data.ram_left.replace("kb", "") : '0',
+        })
+      }
+    }});
   }
 
   componentWillUnmount(){
@@ -411,14 +416,15 @@ class Home extends React.Component {
             });
           }});
         }});
-        this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: data.account },callback: (resources) => {
-          if(resources != null){
-            this.setState({
-              mortgage: resources.self_delegated_bandwidth ? Math.floor(resources.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100 + resources.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100 : '0',
-              allowance: resources.display_data ? resources.display_data.ram_left.replace("kb", "") : '0',
-            })
-          }
-        } });
+        // this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: data.account },callback: (resources) => {
+        //   if(resources != null){
+        //     this.setState({
+        //       mortgage: resources.self_delegated_bandwidth ? Math.floor(resources.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100 + resources.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100 : '0',
+        //       allowance: resources.display_data ? resources.display_data.ram_left.replace("kb", "") : '0',
+        //     })
+        //   }
+        // } });
+        this.getResourcesinfo(data.account);
         // this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" } });
       } catch (error) {
         this.setState({assetRefreshing: false});
@@ -504,11 +510,13 @@ class Home extends React.Component {
     //   }});
     // }});
 
-    this.getDefaultWalletEosBalance(); // 默认钱包余额
+    // 默认钱包余额
+    this.getDefaultWalletEosBalance(); 
 
-    this.getMyAssetsInfo(() => {
-      this.setState({assetRefreshing: false});
-    });
+    //获取资源详情
+    this.getResourcesinfo((this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name);
+    
+    this.getMyAssetsInfo(() => {this.setState({assetRefreshing: false})});
   }
 
   isTipShow() {
