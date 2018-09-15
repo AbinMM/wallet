@@ -336,7 +336,17 @@ export default {
             return {...state,...action.payload};
         },
         updateMyAssets(state, action) {
-            return { ...state, ...action.payload };
+            let myAssets = action.payload.myAssets;
+            if(myAssets != null && myAssets.length != 0){
+                var tempA = [];
+                tempA.push(myAssets[0]); // EOS为第一个元素，不进行排列
+                myAssets.shift(); // 移除第一个元素，即EOS
+                myAssets.sort(compare("balance")); // 根据余额进行排列
+                // alert(JSON.stringify(myAssets) + "---" + JSON.stringify(tempA))
+                myAssets = tempA.concat(myAssets); // EOS重新放在第一个元素
+            }
+
+            return { ...state, myAssets, updateTime:Date.parse(new Date())};
         },
         updateDetails(state, action) {
             let tradeLog = state.tradeLog;
@@ -355,3 +365,10 @@ export default {
     }
   }
   
+  function compare(property){
+    return function(a,b){
+        var value1 = a[property];
+        var value2 = b[property];
+        return value2 - value1;
+    }
+  }
