@@ -76,7 +76,7 @@ class Dappsearch extends BaseComponent {
                              autoCorrect={true} returnKeyType="go" keyboardType="default"  />
                     </View>    
                     <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>  
-                        <Text style={[styles.canceltext,{color: UColor.fontColor}]}>搜索</Text>
+                        <Text style={[styles.canceltext,{color: UColor.fontColor}]}>打开</Text>
                     </TouchableOpacity>  
                     <TouchableOpacity   onPress={this._empty.bind(this,this.state.labelname)}>  
                         <Text style={[styles.canceltext,{color: UColor.fontColor}]}>清空</Text>
