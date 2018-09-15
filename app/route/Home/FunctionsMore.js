@@ -142,6 +142,7 @@ class FunctionsMore extends React.Component {
             dappPromp:!dappPromp,  
         });  
     } 
+
     openTokenissue_DAPP() {
         this. _setModalVisible_DAPP();
         if(Platform.OS === 'ios')
@@ -151,6 +152,11 @@ class FunctionsMore extends React.Component {
         {
           NativeModules.SDKModule.startActivityFromReactNative(this.state.selecturl,this.state.selecttitle);
         }
+    }
+
+    _rightTopClick = () =>{
+      const { navigate } = this.props.navigation;
+      navigate('Dappsearch', {});
     }
 
   renderRow = (rowData, sectionID, rowID) => { // cell样式
@@ -165,7 +171,7 @@ class FunctionsMore extends React.Component {
   }
   render() {
     return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-        <Header {...this.props} onPressLeft={true} title="全部" />
+        <Header {...this.props} onPressLeft={true} title="全部" subName="DAPP搜索" onPressRight={this._rightTopClick.bind()}/>
         <View style={[styles.head,{backgroundColor: UColor.mainColor,marginTop:ScreenUtil.autoheight(10)}]}>
             <Button onPress={this.onPress.bind(this, 'Receivables')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
