@@ -248,48 +248,7 @@ class FunctionsMore extends React.Component {
               </Button>
             )}                
           />  
-         {/* <View style={[{backgroundColor: UColor.mainColor,marginTop:ScreenUtil.autoheight(10)}]}>
-           <View style={[styles.headDAPP]}>
-            <Button  onPress={this.onPressDapp.bind(this, 'DAPP1')}  style={styles.headbtn}>
-                <View style={styles.headbtnout}>
-                    <Image source={{uri:this.state.dappList[0].icon ? this.state.dappList[0].icon : ""}} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>{this.state.dappList[0].name ? this.state.dappList[0].name : ""}</Text>
-                </View>
-            </Button>
-            <Button onPress={this.onPressDapp.bind(this, 'DAPP2')} style={styles.headbtn}>
-               <View style={styles.headbtnout}>
-                    <Image source={{uri:this.state.dappList[1].icon ? this.state.dappList[1].icon : ""}} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>{this.state.dappList[1].name ? this.state.dappList[1].name : ""}</Text>
-                </View>
-            </Button> */}
-            {/* <Button onPress={this.onPressDapp.bind(this, 'DAPP3')} style={styles.headbtn}>
-                <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_caicaicai} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>PRA糖果盒</Text>
-                </View>
-            </Button> */}
-            {/* <Button onPress={this.onPressDapp.bind(this, 'DAPP3')} style={styles.headbtn}>
-                <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_caicaicai} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>猜猜猜</Text>
-                </View>
-            </Button> */}
-            {/* <Button  onPress={this.onPressDapp.bind(this, 'DAPP4')}  style={styles.headbtn}>
-                <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_ite} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>星域之门</Text>
-                </View> 
-            </Button>
-          </View> */}
-          {/* <View style={[styles.head]}>
-            <Button onPress={this.onPressDapp.bind(this, 'DAPP5')} style={styles.headbtn}>
-                <View style={styles.headbtnout}>
-                    <Image source={UImage.dapp_03} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>隐秘世界OL</Text>
-                </View>                      
-            </Button>
-          </View> */}
-        {/* </View> */}
+          
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.Tokenissue} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
               <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
@@ -480,12 +439,6 @@ const styles = StyleSheet.create({
         width: '100%', 
         borderBottomWidth: 1, 
     },
-
- 
-
-
-
-   
 
 });
 export default FunctionsMore;
@@ -833,8 +786,8 @@ function getEosTableRows(methodName,params, callback)
   var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
-    if (!obj_param || !obj_param.json || !obj_param.code || !obj_param.scope || !obj_param.table) {
-        console.log('getEosTableRows:missing params; "json", "code", "scope", "table" is required ');
+    if (!obj_param || !obj_param.json || !obj_param.code || !obj_param.table) {
+        console.log('getEosTableRows:missing params; "json", "code", "table" is required ');
         if (callback)  callbackToSDK(methodName,callback,str_res);
         return;
     }
@@ -847,6 +800,10 @@ function getEosTableRows(methodName,params, callback)
   var objpayload = new Object();
   objpayload.json = obj_param.json;
   objpayload.code = obj_param.code;
+  if(!obj_param.scope)
+  { //DAPP 不传，默认用code
+    obj_param.scope = obj_param.code;
+  }
   objpayload.scope = obj_param.scope;
   objpayload.table = obj_param.table;
   if(obj_param.table_key)  
