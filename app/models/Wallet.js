@@ -1,6 +1,6 @@
 import Request from '../utils/RequestUtil';
 import { address, getAccountsByPuk, isExistAccountName, getintegral, isExistAccountNameAndPublicKey,getFreeMortgage,getEosTransactionRecord,
-    getEosTableRows,} from '../utils/Api';
+    getEosTableRows,dappfindAll,dappfindAllRecommend,dappfindAllCategory} from '../utils/Api';
 import { EasyToast } from '../components/Toast';
 
 import store from 'react-native-simple-store';
@@ -533,6 +533,51 @@ export default {
             try{
                 const resp = yield call(Request.request, getEosTableRows, 'post', payload);
                 // alert('getEosTableRows: '+JSON.stringify(resp) + " " + JSON.stringify(payload));
+                // if(resp.code=='0'){    
+
+                // }else{
+                //     EasyToast.show(resp.msg);
+                // }
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
+        *dappfindAll({ payload, callback }, { call, put }) {
+            try{
+                const resp = yield call(Request.request, dappfindAll, 'post', payload);
+                // alert('dappfindAll: '+JSON.stringify(resp) + " " + JSON.stringify(payload));
+                // if(resp.code=='0'){    
+
+                // }else{
+                //     EasyToast.show(resp.msg);
+                // }
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
+        *dappfindAllRecommend({ payload, callback }, { call, put }) {
+            try{
+                const resp = yield call(Request.request, dappfindAllRecommend, 'post');
+                // alert('dappfindAllRecommend: '+JSON.stringify(resp));
+                // if(resp.code=='0'){    
+
+                // }else{
+                //     EasyToast.show(resp.msg);
+                // }
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
+        *dappfindAllCategory({ payload, callback }, { call, put }) {
+            try{
+                const resp = yield call(Request.request, dappfindAllCategory, 'post');
+                // alert('dappfindAllCategory: '+JSON.stringify(resp));
                 // if(resp.code=='0'){    
 
                 // }else{

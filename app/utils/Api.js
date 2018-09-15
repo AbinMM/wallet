@@ -83,3 +83,6 @@ export const getLargeRankByCode = rootaddr + '/etExchangePrice/getLargeRankByCod
 export const getFreeMortgage = rootaddr + '/eosrpc/delegatebwRecord';
 export const getEosTransactionRecord = rootaddr + '/eosrpc/getEosTransactionRecord';
 export const getEosTableRows = rootaddr + '/eosrpc/getEosTableRows';
+export const dappfindAll = rootaddr + '/dapp/findAll ';
+export const dappfindAllRecommend = rootaddr + '/dapp/findAllRecommend ';
+export const dappfindAllCategory = rootaddr + '/dapp/findAllCategory ';
