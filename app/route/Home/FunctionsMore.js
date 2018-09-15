@@ -19,7 +19,6 @@ const ScreenHeight = Dimensions.get('window').height;
 
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
-
 var DeviceInfo = require('react-native-device-info');
 let g_props;
 let g_CallToRN = {methodName:"",callback:""}; //记录上次监听到的SDK方法和回调函数名
@@ -37,34 +36,30 @@ class FunctionsMore extends React.Component {
     this.state = {
         Tokenissue: false,
         dappPromp: false,
-        // dataSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
+        dataSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
         selecttitle:"",
         selecturl:"",
-        dappList: [{},{}],
+        dappList: [],
     }
     g_props = props;    
   }
 
   //加载地址数据
   componentDidMount() {
-  
-    g_props.dispatch({
-      type: 'wallet/dappfindAllRecommend', callback: (resp) => {
+    g_props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
         try {
           if (resp && resp.code == '0') {
-            if(resp.data && resp.data.length > 0)
-            {
-              var objarray = new Array();
-              for(var i = 0;i < resp.data.length;i++)
-              {
-                var tmpobj = new Object();
-                tmpobj.name = resp.data[i].name;
-                tmpobj.url = resp.data[i].url;
-                tmpobj.icon = resp.data[i].icon;
-  
-                objarray[i] = tmpobj;
-              }
-              this.setState({dappList : objarray});
+            if(resp.data && resp.data.length > 0){
+              // var objarray = new Array();
+              // for(var i = 0;i < resp.data.length;i++)
+              // {
+              //   var tmpobj = new Object();
+              //   tmpobj.name = resp.data[i].name;
+              //   tmpobj.url = resp.data[i].url;
+              //   tmpobj.icon = resp.data[i].icon;
+              //   objarray[i] = tmpobj;
+              // }
+              this.setState({dappList : resp.data});
             }
           } else {
             console.log("dappfindAllRecommend error");
@@ -76,11 +71,9 @@ class FunctionsMore extends React.Component {
     });
 
     //监听原生页面的消息
-    if(Platform.OS === 'ios')
-    {
+    if(Platform.OS === 'ios'){
     //   NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.props.navigation.state.params.url);
-    }else(Platform.OS === 'android')
-    {
+    }else if(Platform.OS === 'android'){
       DeviceEventEmitter.addListener('CallToRN', (data) => {
         if(data){
           //  alert(data);
@@ -130,66 +123,48 @@ class FunctionsMore extends React.Component {
     }
   }
 
-  onPressDapp(key, data = {}) {
-    if(key == 'DAPP1'){
-        this.setState({dappPromp: true,
-          selecttitle:this.state.dappList[0].name,selecturl: this.state.dappList[0].url});
-    }else if(key == 'DAPP2'){
-      // this.testdappfindAllCategory();
-        // this.setState({dappPromp: true,
-          // selecttitle:this.state.dappList[1].name,selecturl: this.state.dappList[1].url});
-    }else if(key == 'DAPP3'){
-          this.setState({dappPromp: true,
-             selecttitle:"PRA糖果盒",selecturl: "https://chain.pro/h5/#/tokenPocket/candy"});       
-    // }else if(key == 'DAPP3'){
-    //    this.setState({dappPromp: true,
-    //       selecttitle:"猜猜猜",selecturl: "http://luckyeos.cn/"});
-    }else if(key == 'DAPP4'){
-          this.setState({dappPromp: true,
-            selecttitle:"星域之门",selecturl: "https://m.ite.zone/#/ite4"});   
-    // }else if(key == 'DAPP5'){
-    //   this.setState({dappPromp: true,
-    //       selecttitle:"隐秘世界OL",selecturl: "http://www.h5indiegame.com/run.php?id=38"});   
-    }else{
-      EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
-    }
+  onPressDapp(data) {
+    this.setState({
+      dappPromp: true,
+      selecttitle:data.name,
+      selecturl: data.url
+    });
   }
 
-    // 显示/隐藏 modal  
-    _setModalVisible() {  
-        let isTokenissue = this.state.Tokenissue;  
-        this.setState({  
-            Tokenissue:!isTokenissue,  
-        });  
-    } 
+  // 显示/隐藏 modal  
+  _setModalVisible() {  
+      let isTokenissue = this.state.Tokenissue;  
+      this.setState({  
+          Tokenissue:!isTokenissue,  
+      });  
+  } 
 
-    openTokenissue() {
-        this. _setModalVisible();
-        Linking.openURL("https://coincreate.github.io/EOS_coincreate/coincreate.html");
-    }
+  openTokenissue() {
+      this. _setModalVisible();
+      Linking.openURL("https://coincreate.github.io/EOS_coincreate/coincreate.html");
+  }
 
-    _setModalVisible_DAPP() {  
-        let dappPromp = this.state.dappPromp;  
-        this.setState({  
-            dappPromp:!dappPromp,  
-        });  
-    } 
+  _setModalVisible_DAPP() {  
+      let dappPromp = this.state.dappPromp;  
+      this.setState({  
+          dappPromp:!dappPromp,  
+      });  
+  } 
 
-    openTokenissue_DAPP() {
-        this. _setModalVisible_DAPP();
-        if(Platform.OS === 'ios')
-        {
-          NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.state.selecturl);
-        }else(Platform.OS === 'android')
-        {
-          NativeModules.SDKModule.startActivityFromReactNative(this.state.selecturl,this.state.selecttitle);
-        }
-    }
+  openTokenissue_DAPP() {
+      this. _setModalVisible_DAPP();
+      if(Platform.OS === 'ios'){
+        // NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.state.selecturl);
+        EasyToast.show("IOS暂不支持，程序员正在紧急开发中");
+      }else if(Platform.OS === 'android'){
+        NativeModules.SDKModule.startActivityFromReactNative(this.state.selecturl,this.state.selecttitle);
+      }
+  }
 
-    _rightTopClick = () =>{
-      const { navigate } = this.props.navigation;
-      navigate('Dappsearch', {});
-    }
+  _rightTopClick = () =>{
+    const { navigate } = this.props.navigation;
+    navigate('Dappsearch', {});
+  }
 
   renderRow = (rowData, sectionID, rowID) => { // cell样式
     return( 
@@ -259,13 +234,21 @@ class FunctionsMore extends React.Component {
          <View style={{marginLeft:ScreenUtil.autowidth(10),marginTop:ScreenUtil.autoheight(10)}}>  
              <Text style={{fontSize: ScreenUtil.setSpText(14),color:UColor.fontColor}}>DAPP Store</Text>
          </View>
-        {/* <ListView  enableEmptySections={true} 
-          dataSource={this.state.dataSource.cloneWithRows((this.props.Book == null ? [] : this.props.Book))}
-          renderRow={this.renderRow}  
-          contentContainerStyle={styles.listViewStyle}
-         />     */}
-
-         <View style={[{backgroundColor: UColor.mainColor,marginTop:ScreenUtil.autoheight(10)}]}>
+         <ListView initialListSize={1} enableEmptySections={true} 
+            contentContainerStyle={[styles.listViewStyle,{backgroundColor: UColor.mainColor}]}
+            dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
+            renderRow={(rowData, sectionID, rowID) => (  
+              <View style={[styles.headDAPP]}>
+                <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headbtn}>
+                    <View style={styles.headbtnout}>
+                        <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} />
+                        <Text style={[styles.headbtntext,{color: UColor.arrow}]}>{rowData.name}</Text>
+                    </View>
+                </Button>
+              </View>
+            )}                
+          />  
+         {/* <View style={[{backgroundColor: UColor.mainColor,marginTop:ScreenUtil.autoheight(10)}]}>
            <View style={[styles.headDAPP]}>
             <Button  onPress={this.onPressDapp.bind(this, 'DAPP1')}  style={styles.headbtn}>
                 <View style={styles.headbtnout}>
@@ -278,7 +261,7 @@ class FunctionsMore extends React.Component {
                     <Image source={{uri:this.state.dappList[1].icon ? this.state.dappList[1].icon : ""}} style={styles.imgBtnDAPP} />
                     <Text style={[styles.headbtntext,{color: UColor.arrow}]}>{this.state.dappList[1].name ? this.state.dappList[1].name : ""}</Text>
                 </View>
-            </Button>
+            </Button> */}
             {/* <Button onPress={this.onPressDapp.bind(this, 'DAPP3')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.dapp_caicaicai} style={styles.imgBtnDAPP} />
@@ -291,13 +274,13 @@ class FunctionsMore extends React.Component {
                     <Text style={[styles.headbtntext,{color: UColor.arrow}]}>猜猜猜</Text>
                 </View>
             </Button> */}
-            <Button  onPress={this.onPressDapp.bind(this, 'DAPP4')}  style={styles.headbtn}>
+            {/* <Button  onPress={this.onPressDapp.bind(this, 'DAPP4')}  style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.dapp_ite} style={styles.imgBtnDAPP} />
                     <Text style={[styles.headbtntext,{color: UColor.arrow}]}>星域之门</Text>
                 </View> 
             </Button>
-          </View>
+          </View> */}
           {/* <View style={[styles.head]}>
             <Button onPress={this.onPressDapp.bind(this, 'DAPP5')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
@@ -306,7 +289,7 @@ class FunctionsMore extends React.Component {
                 </View>                      
             </Button>
           </View> */}
-        </View>
+        {/* </View> */}
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.Tokenissue} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
               <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
@@ -468,13 +451,11 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(16),
     },
     listViewStyle:{ 
-        // 主轴方向 
-        flexDirection:'row', 
-        // 一行显示不下,换一行 
         flexWrap:'wrap', 
-        // 侧轴方向 
+        flexDirection:'row', 
         alignItems:'center', // 必须设置,否则换行不起作用 
-      }, 
+        marginTop:ScreenUtil.autoheight(10)
+    }, 
     innerViewStyle:{ 
         width:ScreenUtil.autowidth(100), 
         height:ScreenUtil.autoheight(100), 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, DeviceEventEmitter, Linking, StyleSheet, Image, View, Text, TextInput, Modal, Switch, TouchableOpacity  } from 'react-native';
+import { Dimensions, DeviceEventEmitter, Linking, StyleSheet, Image, View, Text, TextInput, NativeModules, Switch, TouchableOpacity  } from 'react-native';
 import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
 import Header from '../../components/Header'
@@ -50,10 +50,14 @@ class Dappsearch extends BaseComponent {
             EasyToast.show('请输入DAPP网址');
             return;
         }else{
-            Linking.openURL(labelname);
+            if(Platform.OS === 'ios'){
+                // NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',labelname);
+                EasyToast.show("IOS暂不支持，程序员正在紧急开发中");
+            }else if(Platform.OS === 'android'){
+                NativeModules.SDKModule.startActivityFromReactNative('DappActivity',labelname);
+            }
         }
     }
-
 
     dismissKeyboardClick() {
         dismissKeyboard();
