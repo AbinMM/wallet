@@ -163,11 +163,12 @@ class Ram extends BaseComponent {
 
     //获取K线
     fetchRAMKLine(dateType,opt,onRefreshing = false){
+        this.setState({logRefreshing: true});
         InteractionManager.runAfterInteractions(() => {
             try {
-                if(!onRefreshing){
-                    this.setState({logRefreshing: true});
-                }
+                // if(!onRefreshing){
+                //     this.setState({logRefreshing: true});
+                // }
                 this.props.dispatch({type: 'transaction/getRamKLines',payload: {pageSize: "180", dateType: dateType}, callback: (resp) => {
                     this.setState({logRefreshing: false});
                     if(resp && resp.code == '0'){
@@ -1224,7 +1225,7 @@ const styles = StyleSheet.create({
         position:'absolute', 
         left: 0,
         right: 0,
-        top: ScreenUtil.autoheight(200), 
+        top: ScreenUtil.autoheight(10), 
         alignItems: 'center',
         justifyContent: 'center',
         padding: ScreenUtil.autowidth(8),

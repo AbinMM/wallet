@@ -1654,7 +1654,7 @@ const styles = StyleSheet.create({
         position:'absolute', 
         left: 0,
         right: 0,
-        top: ScreenUtil.autoheight(200), 
+        top: ScreenUtil.autoheight(10), 
         alignItems: 'center',
         justifyContent: 'center',
         padding: ScreenUtil.autowidth(8),

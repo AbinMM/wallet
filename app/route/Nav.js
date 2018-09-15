@@ -702,10 +702,11 @@ class Route extends React.Component {
             }
           });
       });
-    }else if (e == 4) {
-      this.refs.viewShot.capture().then(uri => {
+    }
+    // else if (e == 4) {
+    //   this.refs.viewShot.capture().then(uri => {
          
-         th.setState({showShare:false});
+    //      th.setState({showShare:false});
         //  ShareUtile.share('sssss','http://dev.umeng.com/images/tab2_1.png','http://www.umeng.com/','title',1,(code,message) =>{
         //   alert(code);
         //   if(code == 0){ // 分享成功
@@ -732,8 +733,8 @@ class Route extends React.Component {
         //       EasyToast.show('没有安装微信软件，请您安装微信之后再试');
         //     }
         //   });
-      });
-    }
+    //   });
+    // }
 
   }
 
@@ -981,12 +982,12 @@ class Route extends React.Component {
                       <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
                     </View>
                   </Button>
-                  <Button onPress={() => { this.shareAction(4) }} style={{ width: '25%' }}>
+                  {/* <Button onPress={() => { this.shareAction(4) }} style={{ width: '25%' }}>
                     <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                       <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                       <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微博</Text>
                     </View>
-                  </Button>
+                  </Button> */}
                 </View>
               </View>
               <Button onPress={() => { this.setState({ showShare: false }) }}>
