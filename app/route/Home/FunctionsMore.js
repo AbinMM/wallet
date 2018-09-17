@@ -251,7 +251,7 @@ class FunctionsMore extends React.Component {
                 <Text style={styles.contentText}>使用说明</Text>
                 <View style={[styles.warningout,{borderColor: UColor.showy}]}>
                     <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                        <Image source={UImage.warning} style={styles.imgBtnBackup} />
+                        <Image source={UImage.warning_h} style={styles.imgBtnBackup} />
                         <Text style={[styles.headtext,{color: UColor.riseColor}]} >免责声明</Text>
                     </View>
                     <Text style={[styles.headtitle,{color: UColor.showy}]}>本功能由第三方平台提供，不属于EosToken官方出品，《用户协议》和《应用风险》由该平台单独向您承担责任！</Text>
@@ -284,7 +284,7 @@ class FunctionsMore extends React.Component {
                 <Text style={styles.contentText}>您接下来访问的页面将跳转至第三方应用DAPP {this.state.selecttitle}</Text>
                 <View style={[styles.warningout,{borderColor: UColor.showy}]}>
                     <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                        <Image source={UImage.warning} style={styles.imgBtnBackup} />
+                        <Image source={UImage.warning_h} style={styles.imgBtnBackup} />
                         <Text style={[styles.headtext,{color: UColor.riseColor}]} >免责声明</Text>
                     </View>
                     <Text style={[styles.headtitle,{color: UColor.showy}]}>注意：您接下来访问的页面将跳转至第三方应用DAPP {this.state.selecttitle}。您在此应用上的所有行为应遵守该应用的用户协议和隐私政策，

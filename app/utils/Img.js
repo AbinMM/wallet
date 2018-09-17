@@ -228,6 +228,7 @@ export default {
   xin0:require('../img/xin0.png'),
   xin1:require('../img/xin1.png'),
   tx_ram:require('../img/tx_ram.png'),
+  warning_h:require('../img/warning_h.png'),
   dapp_jianyin:require('../img/dapp_jianyin.png'),
   dapp_ite:require('../img/dapp_ite.png'),
   dapp_EOSBET:require('../img/dapp_EOSBET.png'),

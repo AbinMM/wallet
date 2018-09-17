@@ -713,7 +713,7 @@ class Home extends React.Component {
                 </View>
                 <Text style={styles.contentText}>IOS用户重要提示</Text>
                 <View style={[styles.warningout,{borderColor: UColor.showy}]}>
-                    <Image source={UImage.warning} style={styles.imgBtn} />
+                    <Image source={UImage.warning_h} style={styles.imgBtn} />
                     <Text style={[styles.headtitle,{color: UColor.showy}]}>亲爱的eostoken用户：由于App Store平台自身存在证书授权过期问题导致app无法打开的情况发生，造成数据丢失。当前系统检测到您尚未备份钱包，为了避免资产损失，请您及时备份。</Text>
                 </View>
                 <Button onPress={this.WalletDetailBackup.bind(this,this.props.defaultWallet)}>
