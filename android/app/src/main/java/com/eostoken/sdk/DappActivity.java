@@ -286,6 +286,8 @@ public class DappActivity extends Activity {
      */
     public void onEventMainThread(RNCallback rnCallback) {
         Log.d("DappActivity","onEventMainThread(rnCallback)");
+        String errmsg = "";
+
         //SDK 有错误信息返回，则提示 错误信息
         String resp = rnCallback.resp;
         if(!resp.isEmpty()){
@@ -300,6 +302,7 @@ public class DappActivity extends Activity {
                             String msg =  obj.getString("msg");
                             if(!msg.isEmpty())
                             {
+                                errmsg = msg;
                                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -310,7 +313,13 @@ public class DappActivity extends Activity {
             }
         }
         if(rnCallback != null){
-            callbakcToWebview(rnCallback.methodName,rnCallback.callback,rnCallback.resp);
+             if(errmsg.equals("密码错误"))
+             {
+                 //不回调给dapp;兼容EOSBET
+             }else
+             {
+                callbakcToWebview(rnCallback.methodName,rnCallback.callback,rnCallback.resp);
+             }
         }
     }
 
