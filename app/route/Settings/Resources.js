@@ -448,18 +448,20 @@ class Resources extends BaseComponent {
                 EasyToast.show('密码长度至少4位,请重输');
                 return;
             }
-            var privateKey = this.props.defaultWallet.ownerPrivate;
-            var permission = 'owner';
-            if(this.props.defaultWallet.activePrivate && this.props.defaultWallet.activePrivate != ''){
-                privateKey = this.props.defaultWallet.activePrivate;
-                permission = 'active';
-            }
+
             try {
                 var bytes_privateKey;
                 var plaintext_privateKey;
+                var permission = 'active';
                 try {
+                    var privateKey = this.props.defaultWallet.activePrivate;
                     bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
                     plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                    if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
+                        bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
+                        plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                        permission = "owner"; 
+                    }
                 } catch (error) {
                     EasyShowLD.loadingClose();
                     EasyToast.show('密码错误');
@@ -567,18 +569,21 @@ class Resources extends BaseComponent {
                 EasyToast.show('密码长度至少4位,请重输');
                 return;
             }
-            var privateKey = this.props.defaultWallet.ownerPrivate;
-            var permission = 'owner';
-            if(this.props.defaultWallet.activePrivate && this.props.defaultWallet.activePrivate != ''){
-                privateKey = this.props.defaultWallet.activePrivate;
-                permission = 'active';
-            }
+
             try {
                 var bytes_privateKey;
                 var plaintext_privateKey;
+                var permission = 'active';
+
                 try {
+                    var privateKey = this.props.defaultWallet.activePrivate;    
                     bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
                     plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                    if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
+                        bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
+                        plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                        permission = "owner"; 
+                    }
                 } catch (error) {
                     EasyShowLD.loadingClose();
                     EasyToast.show('密码错误');
@@ -685,18 +690,21 @@ class Resources extends BaseComponent {
                 EasyToast.show('密码长度至少4位,请重输');
                 return;
             }
-            var privateKey = this.props.defaultWallet.ownerPrivate;
-            var permission = 'owner';
-            if(this.props.defaultWallet.activePrivate && this.props.defaultWallet.activePrivate != ''){
-                privateKey = this.props.defaultWallet.activePrivate;
-                permission = 'active';
-            }
+
             try {
                 var bytes_privateKey;
                 var plaintext_privateKey;
+                var permission = 'active';
+
                 try {
+                    var privateKey = this.props.defaultWallet.activePrivate;
                     bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
                     plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                    if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
+                        bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
+                        plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                        permission = "owner"; 
+                    }
                 } catch (error) {
                     EasyShowLD.loadingClose();
                     EasyToast.show('密码错误');
@@ -874,18 +882,21 @@ class Resources extends BaseComponent {
                 EasyToast.show('密码长度至少4位,请重输');
                 return;
             }
-            var privateKey = this.props.defaultWallet.ownerPrivate;
-            var permission = 'owner';
-            if(this.props.defaultWallet.activePrivate && this.props.defaultWallet.activePrivate != ''){
-                privateKey = this.props.defaultWallet.activePrivate;
-                permission = 'active';
-            }
+
             try {
                 var bytes_privateKey;
                 var plaintext_privateKey;
+                var permission = 'active';
+
                 try {
+                    var privateKey = this.props.defaultWallet.activePrivate;
                     bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
                     plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                    if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
+                        bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
+                        plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                        permission = "owner"; 
+                    }
                 } catch (error) {
                     EasyShowLD.loadingClose();
                     EasyToast.show('密码错误');
