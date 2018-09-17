@@ -173,7 +173,7 @@ class TurnOutAsset extends BaseComponent {
                     Eos.transaction({
                         actions: [
                             {
-                                account: "eosio.token",
+                                account: this.props.navigation.state.params.coins.asset.contractAccount,
                                 name: "transfer", 
                                 authorization: [{
                                 actor: this.props.defaultWallet.account,
