@@ -183,7 +183,7 @@ class FunctionsMore extends React.Component {
             <Button onPress={this.onPress.bind(this, 'transfer')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.transfer} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>转账</Text>`
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>转账</Text>
                 </View>
             </Button>
             <Button  onPress={this.onPress.bind(this, 'Resources')}  style={styles.headbtn}>
@@ -270,7 +270,7 @@ class FunctionsMore extends React.Component {
                         <Text style={[styles.deletetext,{color: UColor.btnColor}]}>知道了</Text>
                     </View>
                 </Button>  
-                </View> 
+              </View> 
             </TouchableOpacity>
         </Modal>
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.dappPromp} onRequestClose={()=>{}}>
@@ -297,7 +297,7 @@ class FunctionsMore extends React.Component {
                         <Text style={[styles.deletetext,{color: UColor.btnColor}]}>知道了</Text>
                     </View>
                 </Button>  
-                </View> 
+              </View> 
             </TouchableOpacity>
         </Modal>
     </View>
