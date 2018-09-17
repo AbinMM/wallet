@@ -471,7 +471,7 @@ function inputPwd(privateKey,salt,password,callback)
 
 function eosTokenTransfer(methodName,params,password, callback)
 {
-    var str_res = '{"result":false,"data":{}}';
+    var str_res = '{"result":false,"data":{},"msg":""}';
     var obj_param;
     try {
       obj_param = JSON.parse(params);
@@ -573,8 +573,9 @@ function eosTokenTransfer(methodName,params,password, callback)
               //密码正确 ,返回私钥
               resolve(data);
             }else{
-              //密码错误或取消
-              reject({message:"inputPwd error"});
+              //密码错误
+              str_res.msg = "密码错误";
+              reject({message:"密码错误"});
             }
           });
         });
@@ -612,7 +613,7 @@ function eosTokenTransfer(methodName,params,password, callback)
 
 function pushEosAction(methodName,params,password, callback)
 {
-    var str_res = '{"result":false,"data":{}}';
+    var str_res = '{"result":false,"data":{},"msg":""}';
     var obj_param;
     try{
       obj_param = JSON.parse(params);
@@ -685,8 +686,9 @@ function pushEosAction(methodName,params,password, callback)
               //密码正确 ,返回私钥
               resolve(data);
             }else{
-              //密码错误或取消
-              reject({message:"inputPwd error"});
+              //密码错误
+              str_res.msg = "密码错误";
+              reject({message:"密码错误"});
             }
           });
         });
@@ -1027,8 +1029,9 @@ function eosAuthSign(methodName,params,password,callback)
             //密码正确 ,返回私钥
             resolve(data);
           }else{
-            //密码错误或取消
-            reject({message:"inputPwd error"});
+            //密码错误
+            str_res.msg = "密码错误";
+            reject({message:"密码错误"});
           }
         });
       });
@@ -1343,8 +1346,9 @@ function sign(methodName,params,password,device_id,callback)
             //密码正确 ,返回私钥
             resolve(data);
           }else{
-            //密码错误或取消
-            reject({message:"inputPwd error"});
+            //密码错误
+            str_res.msg = "密码错误";
+            reject({message:"密码错误"});
           }
         });
       });
