@@ -56,8 +56,7 @@ const styles = StyleSheet.create({
     },
     titletext: {
         flex: 2,  
-        alignItems: 'center',
-        justifyContent: 'center',
+        textAlign: "center",
         fontSize: ScreenUtil.setSpText(18),
     },
     Rightout: {
