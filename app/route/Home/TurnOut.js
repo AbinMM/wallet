@@ -168,11 +168,11 @@ class TurnOut extends BaseComponent {
                 EasyToast.show('密码长度至少4位,请重输');
                 return;
             }
-            var privateKey = this.props.defaultWallet.activePrivate;
-            var permission = 'active';
-            if(this.props.defaultWallet.ownerPublic && this.props.defaultWallet.ownerPublic != ''){
-                privateKey = this.props.defaultWallet.ownerPublic;
-                permission = 'owner';
+            var privateKey = this.props.defaultWallet.ownerPrivate;
+            var permission = 'owner';
+            if(this.props.defaultWallet.activePrivate && this.props.defaultWallet.activePrivate != ''){
+                privateKey = this.props.defaultWallet.activePrivate;
+                permission = 'active';
             }
             try {
                 var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
