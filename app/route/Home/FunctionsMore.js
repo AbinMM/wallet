@@ -574,7 +574,7 @@ function eosTokenTransfer(methodName,params,password, callback)
               resolve(data);
             }else{
               //密码错误
-              str_res.msg = "密码错误";
+              str_res = '{"result":false,"data":{},"msg":"密码错误"}';
               reject({message:"密码错误"});
             }
           });
@@ -687,7 +687,7 @@ function pushEosAction(methodName,params,password, callback)
               resolve(data);
             }else{
               //密码错误
-              str_res.msg = "密码错误";
+              str_res = '{"result":false,"data":{},"msg":"密码错误"}';
               reject({message:"密码错误"});
             }
           });
@@ -1030,7 +1030,7 @@ function eosAuthSign(methodName,params,password,callback)
             resolve(data);
           }else{
             //密码错误
-            str_res.msg = "密码错误";
+            str_res = '{"result":false,"data":{},"msg":"密码错误"}';
             reject({message:"密码错误"});
           }
         });
@@ -1347,7 +1347,7 @@ function sign(methodName,params,password,device_id,callback)
             resolve(data);
           }else{
             //密码错误
-            str_res.msg = "密码错误";
+            str_res = '{"result":false,"data":{},"msg":"密码错误"}';
             reject({message:"密码错误"});
           }
         });

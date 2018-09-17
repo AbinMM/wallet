@@ -286,7 +286,29 @@ public class DappActivity extends Activity {
      */
     public void onEventMainThread(RNCallback rnCallback) {
         Log.d("DappActivity","onEventMainThread(rnCallback)");
-        // Toast.makeText(getApplicationContext(), "DappActivity:rnCallback:" + rnCallback.resp, Toast.LENGTH_SHORT).show();
+        //SDK 有错误信息返回，则提示
+        String resp = rnCallback.resp;
+        if(!resp.isEmpty()){
+            try {
+                JSONObject obj = new JSONObject(resp);
+                if(!obj.isNull("result"))
+                {
+                    boolean result = obj.getBoolean("result");
+                    if(result == false){
+                        if(!obj.isNull("msg"))
+                        {
+                            String msg =  obj.getString("msg");
+                            if(!msg.isEmpty())
+                            {
+                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }   
+                }
+            } catch (Exception error) {
+                //TODO: handle exception
+            }
+        }
         if(rnCallback != null){
             callbakcToWebview(rnCallback.methodName,rnCallback.callback,rnCallback.resp);
         }
