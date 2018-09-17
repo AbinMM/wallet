@@ -286,7 +286,7 @@ public class DappActivity extends Activity {
      */
     public void onEventMainThread(RNCallback rnCallback) {
         Log.d("DappActivity","onEventMainThread(rnCallback)");
-        //SDK 有错误信息返回，则提示
+        //SDK 有错误信息返回，则提示 错误信息
         String resp = rnCallback.resp;
         if(!resp.isEmpty()){
             try {
