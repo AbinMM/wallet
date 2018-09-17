@@ -229,15 +229,6 @@ class FunctionsMore extends React.Component {
              <Text style={{fontSize: ScreenUtil.setSpText(14),color:UColor.fontColor}}>DAPP Store</Text>
          </View>
          <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{backgroundColor: UColor.mainColor}]}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.assetRefreshing}
-                onRefresh={() => this.onRefresh()}
-                tintColor={UColor.fontColor}
-                colors={[UColor.tintColor]}
-                progressBackgroundColor={UColor.btnColor}
-              />
-            }
             dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
             renderRow={(rowData) => (  
               <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headDAPP}>
