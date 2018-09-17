@@ -552,6 +552,11 @@ class Ram extends BaseComponent {
             return;
         }
         var privateKey = this.props.defaultWallet.activePrivate;
+        var permission = 'active';
+        if(this.props.defaultWallet.ownerPublic && this.props.defaultWallet.ownerPublic != ''){
+            privateKey = this.props.defaultWallet.ownerPublic;
+            permission = 'owner';
+        }
         try {
             var bytes_privateKey;
             var plaintext_privateKey;
@@ -567,7 +572,23 @@ class Ram extends BaseComponent {
             if (plaintext_privateKey.indexOf('eostoken') != -1) {
                 plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                 EasyShowLD.loadingShow();
-                Eos.buyram(plaintext_privateKey, this.props.defaultWallet.account, this.props.defaultWallet.account, formatEosQua(this.state.buyRamAmount + " EOS"), (r) => {
+                Eos.transaction({
+                    actions: [
+                        {
+                            account: "eosio",
+                            name: "buyram", 
+                            authorization: [{
+                            actor: this.props.defaultWallet.account,
+                            permission: permission,
+                            }], 
+                            data: {
+                                payer: this.props.defaultWallet.account,
+                                receiver: this.props.defaultWallet.account,
+                                quant: formatEosQua(this.state.buyRamAmount + " EOS"),
+                            }
+                        },
+                    ]
+                }, plaintext_privateKey, (r) => {
                     EasyShowLD.loadingClose();
                     if(r.isSuccess){
                         this.getAccountInfo();
@@ -657,6 +678,11 @@ class Ram extends BaseComponent {
             return;
         }
         var privateKey = this.props.defaultWallet.activePrivate;
+        var permission = 'active';
+        if(this.props.defaultWallet.ownerPublic && this.props.defaultWallet.ownerPublic != ''){
+            privateKey = this.props.defaultWallet.ownerPublic;
+            permission = 'owner';
+        }
         try {
             var bytes_privateKey;
             var plaintext_privateKey;
@@ -672,7 +698,22 @@ class Ram extends BaseComponent {
             if (plaintext_privateKey.indexOf('eostoken') != -1) {
                 plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                 EasyShowLD.loadingShow();
-                Eos.sellram(plaintext_privateKey, this.props.defaultWallet.account, (this.state.sellRamBytes * 1024).toFixed(0), (r) => {
+                Eos.transaction({
+                    actions: [
+                        {
+                            account: "eosio",
+                            name: "sellram", 
+                            authorization: [{
+                            actor: this.props.defaultWallet.account,
+                            permission: permission,
+                            }], 
+                            data: {
+                                account: this.props.defaultWallet.account,
+                                bytes: (this.state.sellRamBytes * 1024).toFixed(0),
+                            }
+                        },
+                    ]
+                }, plaintext_privateKey, (r) => {
                     EasyShowLD.loadingClose();
                     if(r.isSuccess){
                         this.getAccountInfo();

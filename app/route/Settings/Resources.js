@@ -449,6 +449,11 @@ class Resources extends BaseComponent {
                 return;
             }
             var privateKey = this.props.defaultWallet.activePrivate;
+            var permission = 'active';
+            if(this.props.defaultWallet.ownerPublic && this.props.defaultWallet.ownerPublic != ''){
+                privateKey = this.props.defaultWallet.ownerPublic;
+                permission = 'owner';
+            }
             try {
                 var bytes_privateKey;
                 var plaintext_privateKey;
@@ -467,7 +472,23 @@ class Resources extends BaseComponent {
                     if(this.state.isOwn){
                         this.state.receiver = this.props.defaultWallet.account;
                     }
-                    Eos.buyram(plaintext_privateKey, this.props.defaultWallet.account, this.state.receiver, formatEosQua(this.state.buyRamAmount + " EOS"), (r) => {
+                    Eos.transaction({
+                        actions: [
+                            {
+                                account: "eosio",
+                                name: "buyram", 
+                                authorization: [{
+                                actor: this.props.defaultWallet.account,
+                                permission: permission,
+                                }], 
+                                data: {
+                                    payer: this.props.defaultWallet.account,
+                                    receiver: this.state.receiver,
+                                    quant: formatEosQua(this.state.buyRamAmount + " EOS"),
+                                }
+                            },
+                        ]
+                    }, plaintext_privateKey, (r) => {
                         EasyShowLD.loadingClose();
                         if(r.isSuccess){
                             this.getAccountInfo();
@@ -547,6 +568,11 @@ class Resources extends BaseComponent {
                 return;
             }
             var privateKey = this.props.defaultWallet.activePrivate;
+            var permission = 'active';
+            if(this.props.defaultWallet.ownerPublic && this.props.defaultWallet.ownerPublic != ''){
+                privateKey = this.props.defaultWallet.ownerPublic;
+                permission = 'owner';
+            }
             try {
                 var bytes_privateKey;
                 var plaintext_privateKey;
@@ -562,7 +588,22 @@ class Resources extends BaseComponent {
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                     EasyShowLD.loadingShow();
-                    Eos.sellram(plaintext_privateKey, this.props.defaultWallet.account, (this.state.sellRamBytes * 1024).toFixed(0), (r) => {
+                    Eos.transaction({
+                        actions: [
+                            {
+                                account: "eosio",
+                                name: "sellram", 
+                                authorization: [{
+                                actor: this.props.defaultWallet.account,
+                                permission: permission,
+                                }], 
+                                data: {
+                                    account: this.props.defaultWallet.account,
+                                    bytes: (this.state.sellRamBytes * 1024).toFixed(0),
+                                }
+                            },
+                        ]
+                    }, plaintext_privateKey, (r) => {
                         EasyShowLD.loadingClose();
                         if(r.isSuccess){
                             this.getAccountInfo();
@@ -645,6 +686,11 @@ class Resources extends BaseComponent {
                 return;
             }
             var privateKey = this.props.defaultWallet.activePrivate;
+            var permission = 'active';
+            if(this.props.defaultWallet.ownerPublic && this.props.defaultWallet.ownerPublic != ''){
+                privateKey = this.props.defaultWallet.ownerPublic;
+                permission = 'owner';
+            }
             try {
                 var bytes_privateKey;
                 var plaintext_privateKey;
@@ -667,7 +713,25 @@ class Resources extends BaseComponent {
                     EasyShowLD.loadingShow();
                     // 计算
                     if(this.state.isCalculation){
-                        Eos.delegate(plaintext_privateKey, this.props.defaultWallet.account, this.state.receiver, formatEosQua(this.state.delegateb + " EOS"), formatEosQua("0 EOS"), this.state.LeaseTransfer, (r) =>{
+                        Eos.transaction({
+                            actions: [
+                                {
+                                    account: "eosio",
+                                    name: "delegatebw", 
+                                    authorization: [{
+                                    actor: this.props.defaultWallet.account,
+                                    permission: permission,
+                                    }], 
+                                    data: {
+                                        from: this.props.defaultWallet.account,
+                                        receiver: this.state.receiver,
+                                        stake_net_quantity: formatEosQua("0 EOS"),
+                                        stake_cpu_quantity: formatEosQua(this.state.delegateb + " EOS"),
+                                        transfer: this.state.LeaseTransfer,
+                                    }
+                                },
+                            ]
+                        }, plaintext_privateKey, (r) => {
                             EasyShowLD.loadingClose();
                             if(r.isSuccess){
                                 this.getAccountInfo();
@@ -708,9 +772,27 @@ class Resources extends BaseComponent {
                                 }
                             }
                         });
-                        // 网络
+                    // 网络
                     }else if(this.state.isNetwork){
-                        Eos.delegate(plaintext_privateKey, this.props.defaultWallet.account, this.state.receiver,  formatEosQua("0 EOS"), formatEosQua(this.state.delegateb + " EOS"), this.state.LeaseTransfer,(r) =>{
+                        Eos.transaction({
+                            actions: [
+                                {
+                                    account: "eosio",
+                                    name: "delegatebw", 
+                                    authorization: [{
+                                    actor: this.props.defaultWallet.account,
+                                    permission: permission,
+                                    }], 
+                                    data: {
+                                        from: this.props.defaultWallet.account,
+                                        receiver: this.state.receiver,
+                                        stake_net_quantity: formatEosQua(this.state.delegateb + " EOS"),
+                                        stake_cpu_quantity: formatEosQua("0 EOS"),
+                                        transfer: this.state.LeaseTransfer,
+                                    }
+                                },
+                            ]
+                        }, plaintext_privateKey, (r) => {
                             EasyShowLD.loadingClose();
                             if(r.isSuccess){
                                 this.getAccountInfo();
@@ -793,6 +875,11 @@ class Resources extends BaseComponent {
                 return;
             }
             var privateKey = this.props.defaultWallet.activePrivate;
+            var permission = 'active';
+            if(this.props.defaultWallet.ownerPublic && this.props.defaultWallet.ownerPublic != ''){
+                privateKey = this.props.defaultWallet.ownerPublic;
+                permission = 'owner';
+            }
             try {
                 var bytes_privateKey;
                 var plaintext_privateKey;
@@ -812,7 +899,24 @@ class Resources extends BaseComponent {
                     EasyShowLD.loadingShow();
                     // 解除抵押
                     if(this.state.isCalculation){
-                        Eos.undelegate(plaintext_privateKey, this.props.defaultWallet.account, this.state.receiver, formatEosQua(this.state.undelegateb + " EOS"), formatEosQua("0 EOS"), (r) => {
+                        Eos.transaction({
+                            actions: [
+                                {
+                                    account: "eosio",
+                                    name: "undelegatebw", 
+                                    authorization: [{
+                                    actor: this.props.defaultWallet.account,
+                                    permission: permission,
+                                    }], 
+                                    data: {
+                                        from: this.props.defaultWallet.account,
+                                        receiver: this.state.receiver,
+                                        unstake_net_quantity: formatEosQua("0 EOS"),
+                                        unstake_cpu_quantity: formatEosQua(this.state.undelegateb + " EOS"),
+                                    }
+                                },
+                            ]
+                        }, plaintext_privateKey, (r) => {
                             EasyShowLD.loadingClose();
                             if(r.isSuccess){
                                 this.getAccountInfo();
@@ -852,9 +956,26 @@ class Resources extends BaseComponent {
                                     EasyToast.show("赎回失败");
                                 }
                             }
-                        })
+                        });
                     }else if(this.state.isNetwork){
-                        Eos.undelegate(plaintext_privateKey, this.props.defaultWallet.account, this.state.receiver, formatEosQua("0 EOS"), formatEosQua(this.state.undelegateb + " EOS"), (r) => {
+                        Eos.transaction({
+                            actions: [
+                                {
+                                    account: "eosio",
+                                    name: "undelegatebw", 
+                                    authorization: [{
+                                    actor: this.props.defaultWallet.account,
+                                    permission: permission,
+                                    }], 
+                                    data: {
+                                        from: this.props.defaultWallet.account,
+                                        receiver: this.state.receiver,
+                                        unstake_net_quantity: formatEosQua(this.state.undelegateb + " EOS"),
+                                        unstake_cpu_quantity: formatEosQua("0 EOS"),
+                                    }
+                                },
+                            ]
+                        }, plaintext_privateKey, (r) => {
                             EasyShowLD.loadingClose();
                             if(r.isSuccess){
                                 this.getAccountInfo();
@@ -894,7 +1015,7 @@ class Resources extends BaseComponent {
                                     EasyToast.show("赎回失败");
                                 }
                             }
-                        })
+                        });
                     }
                 } else {
                     EasyShowLD.loadingClose();

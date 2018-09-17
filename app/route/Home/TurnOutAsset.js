@@ -156,13 +156,35 @@ class TurnOutAsset extends BaseComponent {
                 return;
             }
             var privateKey = this.props.defaultWallet.activePrivate;
+            var permission = 'active';
+            if(this.props.defaultWallet.ownerPublic && this.props.defaultWallet.ownerPublic != ''){
+                privateKey = this.props.defaultWallet.ownerPublic;
+                permission = 'owner';
+            }
             try {
                 var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
                 var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
                     EasyShowLD.loadingShow();
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                    Eos.transfer(this.props.navigation.state.params.coins.asset.contractAccount, this.props.defaultWallet.account, this.state.toAccount, formatEosQua(this.state.amount + " " + this.props.navigation.state.params.coins.asset.name, this.props.navigation.state.params.coins.asset.precisionNumber), this.state.memo, plaintext_privateKey, true, (r) => {
+                    Eos.transaction({
+                        actions: [
+                            {
+                                account: "eosio.token",
+                                name: "transfer", 
+                                authorization: [{
+                                actor: this.props.defaultWallet.account,
+                                permission: permission,
+                                }], 
+                                data: {
+                                    from: this.props.defaultWallet.account,
+                                    to: this.state.toAccount,
+                                    quantity: formatEosQua(this.state.amount + " " + this.props.navigation.state.params.coins.asset.name, this.props.navigation.state.params.coins.asset.precisionNumber),
+                                    memo: this.state.memo,
+                                }
+                            },
+                        ]
+                    }, plaintext_privateKey, (r) => {
                         EasyShowLD.loadingClose();
                         if(r && r.isSuccess){
                             this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.props.defaultWallet.account, to: this.state.toAccount, amount: this.state.amount + " " + this.props.navigation.state.params.coins.asset.name, memo: this.state.memo, data: "push"}});
