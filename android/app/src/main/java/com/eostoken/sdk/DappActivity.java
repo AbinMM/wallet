@@ -380,7 +380,7 @@ public class DappActivity extends Activity {
                     if(params.isEmpty() || callback.isEmpty()){
                         return;
                     }
-                    showEditDialog(methodName,params,callback);
+                    showEditDialog(methodName,params,callback,null);
                     break;
                 
                 case "getDeviceId":
@@ -466,10 +466,10 @@ public class DappActivity extends Activity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mShareDialog != null && mShareDialog.isShowing()) {
-                    mShareDialog.dismiss();
-                }
-                showEditDialog(methodName,params,callback);
+                // if (mShareDialog != null && mShareDialog.isShowing()) {
+                //     mShareDialog.dismiss();
+                // }
+                showEditDialog(methodName,params,callback,mShareDialog);
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -478,22 +478,23 @@ public class DappActivity extends Activity {
                 if (mShareDialog != null && mShareDialog.isShowing()) {
                     mShareDialog.dismiss();
                 }
-                String resp = "";
-                try {
-                    JSONObject obj = new JSONObject();
-                    obj.put("result", false);
-                    obj.put("data", "{}");
+                //兼容EOSBET ，按取消,不返回
+                // String resp = "";
+                // try {
+                //     JSONObject obj = new JSONObject();
+                //     obj.put("result", false);
+                //     obj.put("data", "{}");
 
-                    resp = obj.toString();
-                } catch (Exception e) {
-                    resp = "";
-                }
-                final String tmp_resp = resp;
-                new Handler().postDelayed(new Runnable(){  
-                    public void run() { 
-                        EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
-                    } 
-                }, 100); 
+                //     resp = obj.toString();
+                // } catch (Exception e) {
+                //     resp = "";
+                // }
+                // final String tmp_resp = resp;
+                // new Handler().postDelayed(new Runnable(){  
+                //     public void run() { 
+                //         EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
+                //     } 
+                // }, 100); 
             }
         });
 
@@ -621,34 +622,36 @@ public class DappActivity extends Activity {
          btnConfirm.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View view) {
-                 if (mShareDialog != null && mShareDialog.isShowing()) {
-                     mShareDialog.dismiss();
-                 }
-                 showEditDialog(methodName,final_params,callback);
+                //  if (mShareDialog != null && mShareDialog.isShowing()) {
+                //      mShareDialog.dismiss();
+                //  }
+                 showEditDialog(methodName,final_params,callback,mShareDialog);
              }
          });
+
          btnCancel.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
                  if (mShareDialog != null && mShareDialog.isShowing()) {
                      mShareDialog.dismiss();
                  }
-                 String resp = "";
-                 try {
-                     JSONObject obj = new JSONObject();
-                     obj.put("result", false);
-                     obj.put("data", "{}");
+                 //兼容EOSBET ，按取消,不返回
+                //  String resp = "";
+                //  try {
+                //      JSONObject obj = new JSONObject();
+                //      obj.put("result", false);
+                //      obj.put("data", "{}");
  
-                     resp = obj.toString();
-                 } catch (Exception e) {
-                     resp = "";
-                 }
-                 final String tmp_resp = resp;
-                 new Handler().postDelayed(new Runnable(){  
-                     public void run() { 
-                         EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
-                     } 
-                 }, 100); 
+                //      resp = obj.toString();
+                //  } catch (Exception e) {
+                //      resp = "";
+                //  }
+                //  final String tmp_resp = resp;
+                //  new Handler().postDelayed(new Runnable(){  
+                //      public void run() { 
+                //          EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
+                //      } 
+                //  }, 100); 
              }
          });
  
@@ -659,7 +662,7 @@ public class DappActivity extends Activity {
          mShareDialog.show();
      }
 
-    private void showEditDialog(final String methodName,final String params,final String callback) {
+    private void showEditDialog(final String methodName,final String params,final String callback, final Dialog mShareDialog) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
     //        builder.setIcon(R.drawable.ic_launcher);
         builder.setTitle("请输入密码");
@@ -675,23 +678,24 @@ public class DappActivity extends Activity {
             public void onClick(DialogInterface dialog, int which)
             {
                 dialog.dismiss();
-                String resp = "";
-                try {
-                    JSONObject obj = new JSONObject();
-                    obj.put("result", false);
-                    obj.put("data", "{}");
+                //兼容EOSBET ，按取消,不返回
+                // String resp = "";
+                // try {
+                //     JSONObject obj = new JSONObject();
+                //     obj.put("result", false);
+                //     obj.put("data", "{}");
 
-                    resp = obj.toString();
-                } catch (Exception e) {
-                    //TODO: handle exception
-                    resp = "";
-                }
-                final String tmp_resp = resp;
-                new Handler().postDelayed(new Runnable(){  
-                    public void run() { 
-                        EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
-                    } 
-                }, 100); 
+                //     resp = obj.toString();
+                // } catch (Exception e) {
+                //     //TODO: handle exception
+                //     resp = "";
+                // }
+                // final String tmp_resp = resp;
+                // new Handler().postDelayed(new Runnable(){  
+                //     public void run() { 
+                //         EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
+                //     } 
+                // }, 100); 
             }
         });
         final AlertDialog alertDialog = builder.create();
@@ -703,6 +707,11 @@ public class DappActivity extends Activity {
                 if(input == null || input.length() < 4){
                     Toast.makeText(getApplicationContext(), "密码长度错", Toast.LENGTH_SHORT).show();
                     return ;
+                }
+
+                //关闭 订单详情
+                if (mShareDialog != null && mShareDialog.isShowing()) {
+                    mShareDialog.dismiss();
                 }
 
                 alertDialog.dismiss();
