@@ -183,7 +183,7 @@ class FunctionsMore extends React.Component {
             <Button onPress={this.onPress.bind(this, 'transfer')} style={styles.headbtn}>
                 <View style={styles.headbtnout}>
                     <Image source={UImage.transfer} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>转账</Text>
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>转账</Text>`
                 </View>
             </Button>
             <Button  onPress={this.onPress.bind(this, 'Resources')}  style={styles.headbtn}>
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
       marginTop : ScreenUtil.autoheight(10), 
       margin: ScreenUtil.autowidth(5),
       width: ScreenUtil.autowidth(40),
-      height: ScreenUtil.autoheight(40),
+      height: ScreenUtil.autowidth(40),
     },
 
     headbtn: {
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
     imgBtn: {
         margin: ScreenUtil.autowidth(5),
         width: ScreenUtil.autowidth(30),
-        height: ScreenUtil.autoheight(30),
+        height: ScreenUtil.autowidth(30),
     },
     
     headbtntext: {
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
     },
     imgBtnBackup: {
         width: ScreenUtil.autowidth(25),
-        height: ScreenUtil.autoheight(25),
+        height: ScreenUtil.autowidth(25),
         marginRight: ScreenUtil.autowidth(10),
     },
     headtext: {
@@ -423,7 +423,7 @@ const styles = StyleSheet.create({
     },
     iconStyle:{ 
         width:ScreenUtil.autowidth(80), 
-        height:ScreenUtil.autoheight(80), 
+        height:ScreenUtil.autowidth(80), 
     }, 
 
     touchablelist: {

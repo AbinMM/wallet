@@ -22,7 +22,7 @@ class Home extends React.Component {
     tabBarLabel: '钱包',
     tabBarIcon: ({ focused}) => (
       <Image resizeMode='stretch'
-          source={focused ? UImage.tab_1_h : UImage.tab_1} style={{width: ScreenUtil.autoheight(20), height: ScreenUtil.autoheight(20),}}
+          source={focused ? UImage.tab_1_h : UImage.tab_1} style={{width: ScreenUtil.autowidth(20), height: ScreenUtil.autowidth(20),}}
       />
     ),
     header: null,
@@ -904,7 +904,7 @@ const styles = StyleSheet.create({
   },
   imgTeOy: {
     width: ScreenUtil.autowidth(25),
-    height: ScreenUtil.autoheight(15),
+    height: ScreenUtil.autowidth(15),
     marginHorizontal: ScreenUtil.autowidth(5),
   },
   addtoouttop: {

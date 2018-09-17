@@ -30,7 +30,7 @@ class News extends React.Component {
     tabBarLabel: '资讯',
     tabBarIcon: ({ focused}) => (
       <Image resizeMode='stretch'
-          source={focused ? UImage.tab_3_h : UImage.tab_3} style={{width: ScreenUtil.autoheight(20), height: ScreenUtil.autoheight(20),}}
+          source={focused ? UImage.tab_3_h : UImage.tab_3} style={{width: ScreenUtil.autowidth(20), height: ScreenUtil.autowidth(20),}}
       />
     ),
     header: null,

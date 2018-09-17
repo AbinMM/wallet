@@ -26,12 +26,6 @@ export default class Web extends BaseComponent {
     return {
       title: navigation.state.params.title,
       header:null, 
-      headerRight: (navigation.state.params.news && <Button onPress={navigation.state.params.onPress}>
-        <View style={{ padding: 15 }}>
-          <Image source={UImage.share_i} style={{ width: 22, height: 22 }}></Image>
-        </View>
-      </Button>
-      ),
     }
   }
   

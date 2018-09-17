@@ -82,7 +82,7 @@ class Login extends BaseComponent {
     let img = Constants.rootaddr+kapimg + this.state.loginPhone + "?v=" + Math.ceil(Math.random() * 100000);
     const view = <View style={{ flexDirection: 'row' }}>
       <Button onPress={() => { this.refreshLcode() }}>
-        <Image onError={(e) => { this.loaderror() }} style={{ width: ScreenUtil.autowidth(100), height: ScreenUtil.autoheight(45) }} source={{ uri: img }} />
+        <Image onError={(e) => { this.loaderror() }} style={styles.butimg} source={{ uri: img }} />
       </Button>
       <TextInput autoFocus={true} onChangeText={(lcode) => this.setState({ lcode })} returnKeyType="go" placeholderTextColor={UColor.arrow}
         selectionColor={UColor.tintColor} style={[styles.inp,{ color: UColor.tintColor,backgroundColor: UColor.riceWhite,}]}   
@@ -409,7 +409,7 @@ class Login extends BaseComponent {
 const styles = StyleSheet.create({
   butimg: { 
     width: ScreenUtil.autowidth(100), 
-    height: ScreenUtil.autoheight(45), 
+    height: ScreenUtil.autowidth(45), 
   },
   inp: {
     textAlign: "center",

@@ -171,25 +171,6 @@ const styles = StyleSheet.create({
         paddingLeft: ScreenUtil.autowidth(20),
         paddingVertical: ScreenUtil.autoheight(5),
     },
-    // textout: {
-    //     flex: 1,
-    //     justifyContent: 'center',
-    //     paddingHorizontal: ScreenUtil.autowidth(20),
-    // },
-    // titletext: {
-    //     fontSize: ScreenUtil.setSpText(15),
-    //     lineHeight: ScreenUtil.autoheight(35),
-    // },
-    // explaintext: {
-    //     fontSize: ScreenUtil.setSpText(13),
-    //     lineHeight: ScreenUtil.autoheight(20),
-    // },
-
-
-
-
-
-
     logout:{
         flex: 1,
         alignItems: 'center',

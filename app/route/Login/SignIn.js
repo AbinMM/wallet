@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: "center",
     width: ScreenUtil.autowidth(169),
-    height: ScreenUtil.autoheight(169),
+    height: ScreenUtil.autowidth(169),
     marginHorizontal: (ScreenWidth-ScreenUtil.autowidth(169)) /2,
   },
   accumulativeout: {
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center', 
     justifyContent: 'center', 
     width: ScreenUtil.autowidth(320), 
-    height: ScreenUtil.autoheight(25), 
+    height: ScreenUtil.autowidth(25), 
     marginTop: ScreenUtil.autoheight(10), 
   },
 

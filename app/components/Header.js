@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     },
     Rightimg: {
         width: ScreenUtil.autowidth(28),
+        height: ScreenUtil.autowidth(28),
     },
     Righttext: {
         fontSize:ScreenUtil.autowidth(16),

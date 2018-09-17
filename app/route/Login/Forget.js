@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   },
   countimg: {
     width: ScreenUtil.autowidth(100),
-    height: ScreenUtil.autoheight(45),
+    height: ScreenUtil.autowidth(45),
   },   
   countinpt: {
     textAlign: "center",

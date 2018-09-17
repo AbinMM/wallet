@@ -31,7 +31,7 @@ class Ram extends BaseComponent {
         header:null,  
         tabBarLabel: '交易所',
         tabBarIcon: ({ focused}) => (
-            <Image resizeMode='stretch' source={focused ? UImage.tab_5_h : UImage.tab_5} style={{width: ScreenUtil.autoheight(40), height: ScreenUtil.autoheight(40)}}/>
+            <Image resizeMode='stretch' source={focused ? UImage.tab_5_h : UImage.tab_5} style={{width: ScreenUtil.autowidth(40), height: ScreenUtil.autowidth(40)}}/>
         ),
     };
 
@@ -1554,7 +1554,7 @@ const styles = StyleSheet.create({
     },
     busrecordimg: {
         width: ScreenUtil.autowidth(12),
-        height: ScreenUtil.autoheight(16),
+        height: ScreenUtil.autowidth(16),
     },
     busrecordtext: {
         fontSize: ScreenUtil.setSpText(14),

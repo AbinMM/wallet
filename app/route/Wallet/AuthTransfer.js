@@ -606,7 +606,7 @@ const styles = StyleSheet.create({
     },
     imgBtn: {
         width: ScreenUtil.autowidth(23),
-        height: ScreenUtil.autoheight(24),
+        height: ScreenUtil.autowidth(24),
     },
     pktext: {
         fontSize: ScreenUtil.setSpText(14),
@@ -640,7 +640,7 @@ const styles = StyleSheet.create({
     },
     imgBtnWarning: {
         width: ScreenUtil.autowidth(23),
-        height: ScreenUtil.autoheight(20),
+        height: ScreenUtil.autowidth(20),
         marginRight: ScreenUtil.autowidth(10),
     },
     significanttextHead: {
