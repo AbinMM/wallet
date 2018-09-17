@@ -317,7 +317,7 @@ class AuthChange extends BaseComponent {
             <Header {...this.props} onPressLeft={true} title="Active权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scan}/>
             <View style={[styles.significantout,{backgroundColor: UColor.secdColor,borderColor: UColor.riseColor}]}>
                 <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                    <Image source={UImage.warning_h} style={styles.imgBtnWarning} />
+                    <Image source={UImage.warning} style={styles.imgBtnWarning} />
                     <Text style={[styles.significanttextHead,{color: UColor.riseColor}]} >温馨提示</Text>
                 </View>
                 <Text style={[styles.significanttext,{color: UColor.riseColor}]} >请确保您清楚了解Active授权，并确保添加的授权用户是您信任的用户，添加的授权用户将可获得变更权限、转账和投票等操作的权限。</Text>

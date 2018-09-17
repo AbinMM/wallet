@@ -162,8 +162,6 @@ export default {
   eos: require('../img/eos.png'),
   fav_h: require('../img/fav_h.png'),
   feedback: require('../img/feedback.png'),
-  
- 
   freemortgage_bg: require('../img/freemortgage_bg.png'),
   imvote:require('../img/imvote.png'),
   inb:require('../img/inb.png'),
@@ -180,7 +178,6 @@ export default {
   point_full:require('../img/point_full.png'),
   qrcode:require('../img/qrcode.png'),
   record:require('../img/record.png'),
-
   refresh:require('../img/refresh.png'),
   resources_bj:require('../img/resources_bj.png'),
   reveal_h:require('../img/reveal_h.png'),
@@ -227,7 +224,6 @@ export default {
   wallet_1:require('../img/wallet_1.png'),
   wallet: require('../img/wallet.png'),
   wallet_h: require('../img/wallet_h.png'),
-  warning_h:require('../img/warning_h.png'),
   xin_import:require('../img/xin_import.png'),
   xin0:require('../img/xin0.png'),
   xin1:require('../img/xin1.png'),

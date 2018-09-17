@@ -151,7 +151,7 @@ class BackupsPkey extends BaseComponent {
                         <Text style={[styles.inptitle,{color: UColor.fontColor}]}>请立即备份您的私钥</Text>
                         <View style={[styles.warningout,{borderColor: UColor.showy}]}>
                             <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                                <Image source={UImage.warning_h} style={styles.imgBtn} />
+                                <Image source={UImage.warning} style={styles.imgBtn} />
                                 <Text style={[styles.significanttextHead,{color: UColor.showy}]} >安全警告</Text>
                             </View>
                             <Text style={[styles.headtitle,{color: UColor.showy}]}>私钥相当于您的银行卡密码，请妥善保管！（切勿截图、存储到网络硬盘、微信等传输！）</Text>

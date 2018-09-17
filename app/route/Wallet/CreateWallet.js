@@ -304,7 +304,7 @@ class createWallet extends BaseComponent {
         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
           <View style={[styles.significantout,{backgroundColor: UColor.mainColor,borderColor: UColor.riseColor}]}>
             <View style={{flexDirection: 'row',alignItems: 'center',}}>
-              <Image source={UImage.warning_h} style={styles.imgBtn} />
+              <Image source={UImage.warning} style={styles.imgBtn} />
               <Text style={[styles.statementtext,{color: UColor.riseColor}]} >重要声明</Text>
             </View>
             <Text style={[styles.significanttext,{color: UColor.riseColor}]} >密码用于保护私钥和交易授权，建议设置高强度密码；EosToken不存储密码，也无法帮您找回，请务必牢记。</Text>

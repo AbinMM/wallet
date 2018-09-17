@@ -499,7 +499,7 @@ _onRefresh(){
         <Header {...this.props} onPressLeft={true} title="Owner权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scan}/>
         <View style={[styles.significantout,{backgroundColor: UColor.secdColor,borderColor: UColor.riseColor}]}>
             <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                <Image source={UImage.warning_h} style={styles.imgBtnWarning} />
+                <Image source={UImage.warning} style={styles.imgBtnWarning} />
                 <Text style={[styles.significanttextHead,{color: UColor.warningRed}]} >安全警告</Text>
             </View>
             <Text style={[styles.significanttext,{color: UColor.warningRed}]} >请确保您清楚了解owner授权,并确保添加的授权用户是您信任的用户,添加的授权用户将获得账号的全部权限(包括变更权限和转账投票)。</Text>

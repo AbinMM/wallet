@@ -339,7 +339,7 @@ class TurnOutAsset extends BaseComponent {
                 </KeyboardAvoidingView>
                 <View style={[styles.warningout,{borderColor: UColor.showy}]}>
                     <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                        <Image source={UImage.warning_h} style={styles.imgBtn} />
+                        <Image source={UImage.warning} style={styles.imgBtn} />
                         <Text style={[styles.headtext,{color: UColor.showy}]} >温馨提示</Text>
                     </View>
                     <Text style={[styles.headtitle,{color: UColor.showy}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
@@ -382,7 +382,7 @@ class TurnOutAsset extends BaseComponent {
                                     {this.state.memo== ""&&
                                     <View style={[styles.warningoutShow,{borderColor: UColor.showy}]}>
                                         <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                                            <Image source={UImage.warning_h} style={styles.imgBtn} />
+                                            <Image source={UImage.warning} style={styles.imgBtn} />
                                             <Text style={[styles.headtext,{color: UColor.showy}]} >温馨提示</Text>
                                         </View>
                                         <Text style={[styles.headtitle,{color: UColor.showy}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
