@@ -28,6 +28,8 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
+import android.net.http.SslError;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Gravity;
@@ -41,6 +43,9 @@ import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.webkit.ClientCertRequest;
+import android.webkit.HttpAuthHandler;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -236,7 +241,26 @@ public class DappActivity extends Activity {
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     view.loadUrl(url);
                     return true;
+                }          
+                @Override
+                public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error){
+
+                    //handler.cancel(); 默认的处理方式，WebView变成空白页
+                    handler.proceed();  // let's ignore ssl error
+
+                    //handleMessage(Message msg); 其他处理
                 }
+
+                @Override
+                public void onReceivedClientCertRequest(WebView view, ClientCertRequest request) {
+                    super.onReceivedClientCertRequest(view, request);
+                }
+
+                @Override
+                public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
+                    super.onReceivedHttpAuthRequest(view, handler, host, realm);
+                }
+
             });
 
         } catch (Exception ex) {
