@@ -31,9 +31,7 @@ class Header extends BaseComponent {
             <TouchableOpacity style={styles.Leftout} onPress={() => {onPressLeft ? this.props.navigation.goBack() : undefined}}>
                 {onPressLeft &&<Ionicons style={{color:UColor.btnColor}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
             </TouchableOpacity>
-            <View style={styles.center} >
-                <Text style={[styles.titletext,{color:UColor.btnColor}]} ellipsizeMode='middle'>{title}</Text>
-            </View>   
+            <Text style={[styles.titletext,{color:UColor.btnColor}]} ellipsizeMode='middle' numberOfLines={1}>{title}</Text>
             <TouchableOpacity style={styles.Rightout} onPress={onPressRight}>
                 {avatar?<Image source={avatar} style={styles.Rightimg} resizeMode={'contain'} />:null}
                 {subName?<Text style={[styles.Righttext,{color: UColor.btnColor}]}>{subName}</Text>:null}
@@ -56,16 +54,12 @@ const styles = StyleSheet.create({
         paddingLeft:ScreenUtil.autowidth(10), 
         alignItems:"flex-start",
     },
-
-    center: {
-        flex: 2,  
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     titletext: {
+        flex: 2,  
+        alignItems: 'center',
+        justifyContent: 'center',
         fontSize: ScreenUtil.setSpText(18),
     },
-
     Rightout: {
         flex: 1.5, 
         paddingRight: ScreenUtil.autowidth(10),  
