@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
       marginTop : ScreenUtil.autoheight(10), 
       margin: ScreenUtil.autowidth(5),
       width: ScreenUtil.autowidth(40),
-      height: ScreenUtil.autowidth(40),
+      height: ScreenUtil.autoheight(40),
     },
 
     headbtn: {
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
     imgBtn: {
         margin: ScreenUtil.autowidth(5),
         width: ScreenUtil.autowidth(30),
-        height: ScreenUtil.autowidth(30),
+        height: ScreenUtil.autoheight(30),
     },
     
     headbtntext: {
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
     },
     imgBtnBackup: {
         width: ScreenUtil.autowidth(25),
-        height: ScreenUtil.autowidth(25),
+        height: ScreenUtil.autoheight(25),
         marginRight: ScreenUtil.autowidth(10),
     },
     headtext: {
@@ -423,7 +423,7 @@ const styles = StyleSheet.create({
     },
     iconStyle:{ 
         width:ScreenUtil.autowidth(80), 
-        height:ScreenUtil.autowidth(80), 
+        height:ScreenUtil.autoheight(80), 
     }, 
 
     touchablelist: {
@@ -469,16 +469,25 @@ function inputPwd(privateKey,salt,password,callback)
     if (callback)  callback(plaintext_privateKey);
 }
 
+//返回错误信息
+function getErrorMsg(msg)
+{
+  var res = new Object();
+  res.result = false;
+  res.data = {};
+  res.msg = msg;
+
+  return  JSON.stringify(res);
+}
 function eosTokenTransfer(methodName,params,password, callback)
 {
-    var str_res = '{"result":false,"data":{},"msg":""}';
     var obj_param;
     try {
       obj_param = JSON.parse(params);
       if (!obj_param || !obj_param.from || !obj_param.to || !obj_param.amount || !obj_param.tokenName 
              || !obj_param.contract || !obj_param.precision || !password) {
         console.log('eosTokenTransfer:missing params; "from", "to", "amount", "tokenName","contract", "precision" is required ');
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
         return;
       }
       var type_amount = typeof(obj_param.amount);
@@ -491,7 +500,7 @@ function eosTokenTransfer(methodName,params,password, callback)
       }else
       {
         console.log("eosTokenTransfer error: amount is not number or string");
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("amount参数类型非法"));
         return ;
       }
       var type_precision = typeof(obj_param.precision);
@@ -504,17 +513,17 @@ function eosTokenTransfer(methodName,params,password, callback)
       }else
       {
         console.log("eosTokenTransfer error: precision is not number or string");
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("precision参数类型非法"));
         return ;
       }
       if (password == "" || password.length < Constants.PWD_MIN_LENGTH) {
         console.log("eosTokenTransfer error: 密码长度错");
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("密码长度错"));
         return ;
       }
     } catch (error) {
       console.log("eosTokenTransfer error: %s",error.message);
-      if (callback)  callbackToSDK(methodName,callback,str_res);
+      if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
       return ;
     }
     //可选项
@@ -574,7 +583,6 @@ function eosTokenTransfer(methodName,params,password, callback)
               resolve(data);
             }else{
               //密码错误
-              str_res = '{"result":false,"data":{},"msg":"密码错误"}';
               reject({message:"密码错误"});
             }
           });
@@ -596,42 +604,40 @@ function eosTokenTransfer(methodName,params,password, callback)
                 res.result = false;
                 res.msg = errmsg;
               }
-              str_res = JSON.stringify(res);
-              if (callback)  callbackToSDK(methodName,callback,str_res);
+              if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
             } catch (error) {
               console.log("eosTokenTransfer error: %s",error.message);
-              if (callback)  callbackToSDK(methodName,callback,str_res);
+              if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
             }
         });
     })
     .catch((error)=>{
         console.log("eosTokenTransfer error: %s",error.message);
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
     });
 
 }
 
 function pushEosAction(methodName,params,password, callback)
 {
-    var str_res = '{"result":false,"data":{},"msg":""}';
     var obj_param;
     try{
       obj_param = JSON.parse(params);
       if (!obj_param || !obj_param.actions || !obj_param.account || !password) {
           console.log('pushEosAction:missing params; "actions" is required ');
-          if (callback)  callbackToSDK(methodName,callback,str_res);
+          if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
           return;
       }
       if (password == "" || password.length < Constants.PWD_MIN_LENGTH) {
         console.log("pushEosAction error: 密码长度错");
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("密码长度错"));
         return ;
       }
       //可选项
       obj_param.address = obj_param.address ? obj_param.address : "";
     }catch(error){
       console.log("pushEosAction error: %s",error.message);
-      if (callback)  callbackToSDK(methodName,callback,str_res);
+      if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
     }
     
     var res = new Object();
@@ -687,7 +693,6 @@ function pushEosAction(methodName,params,password, callback)
               resolve(data);
             }else{
               //密码错误
-              str_res = '{"result":false,"data":{},"msg":"密码错误"}';
               reject({message:"密码错误"});
             }
           });
@@ -708,29 +713,27 @@ function pushEosAction(methodName,params,password, callback)
               res.result = false;
               res.msg = errmsg;
             }
-            str_res = JSON.stringify(res);
-            if (callback)  callbackToSDK(methodName,callback,str_res);
+            if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
           } catch (error) {
             console.log("pushEosAction error: %s",error.message);
-            if (callback)  callbackToSDK(methodName,callback,str_res);
+            if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
           }
         
       });
     })
     .catch((error)=>{
         console.log("pushEosAction error: %s",error.message);
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
     });
 
 }
 function getEosBalance(methodName,params, callback)
 {
-  var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.account || !obj_param.contract || !obj_param.symbol) {
         console.log('getEosBalance:missing params; "account", "contract", "symbol" is required ');
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
         return;
     }
     
@@ -758,30 +761,28 @@ function getEosBalance(methodName,params, callback)
               res.result = false;
               res.msg = errmsg;
           }
-          str_res = JSON.stringify(res);
-          if (callback)  callbackToSDK(methodName,callback,str_res);
+          if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
         } catch (error) {
           console.log("getEosBalance error: %s",error.message);
-          if (callback)  callbackToSDK(methodName,callback,str_res);
+          if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
         }
       }
     })
 
   }catch(error){
     console.log("getEosBalance error: %s",error.message);
-    if (callback)  callbackToSDK(methodName,callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   }
 
 }
 
 function getEosTableRows(methodName,params, callback)
 {
-  var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.json || !obj_param.code || !obj_param.table) {
         console.log('getEosTableRows:missing params; "json", "code", "table" is required ');
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
         return;
     }
 
@@ -826,30 +827,28 @@ function getEosTableRows(methodName,params, callback)
             res.result = false;
             res.msg = errmsg;
         }
-        str_res = JSON.stringify(res);
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
       } catch (error) {
         console.log("getEosTableRows error: %s",error.message);
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
       }
     }
   });
 
   }catch(error){
     console.log("getEosTableRows error: %s",error.message);
-    if (callback)  callbackToSDK(methodName,callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   }
 
 }
 
 function getEosAccountInfo(methodName,params, callback)
 {
-  var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.account) {
         console.log('getEosAccountInfo:missing params; "account" is required ');
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
         return;
     }
     
@@ -867,27 +866,25 @@ function getEosAccountInfo(methodName,params, callback)
           res.result = false;
           res.msg = "fail";
         }
-        str_res = JSON.stringify(res);
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
       } catch (error) {
         console.log("getEosAccountInfo error: %s",error.message);
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
       }
     } });
 
   }catch(error){
     console.log("getEosAccountInfo error: %s",error.message);
-    if (callback)  callbackToSDK(methodName,callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   }
 }
 function getEosTransactionRecord(methodName,params, callback)
 {
-  var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.account) {
         console.log('getEosTransactionRecord:missing params; "account" is required ');
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
         return;
     }
    
@@ -895,7 +892,7 @@ function getEosTransactionRecord(methodName,params, callback)
     obj_param.count = obj_param.count ? obj_param.count : 10;
     if(obj_param.start < 0 || obj_param.count < 1){
       console.log('getEosTransactionRecord:params; "count","start" is error ');
-      if (callback)  callbackToSDK(methodName,callback,str_res);
+      if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
       return;
     }
     if(obj_param.sort){
@@ -903,7 +900,7 @@ function getEosTransactionRecord(methodName,params, callback)
         {
             throw new Error('sort should be desc or asc');
             console.log('getEosTransactionRecord:sort should be desc or asc ');
-            if (callback)  callbackToSDK(methodName,callback,str_res);
+            if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
             return;
         }
     }else{
@@ -944,41 +941,39 @@ function getEosTransactionRecord(methodName,params, callback)
             res.result = false;
             res.msg = errmsg;
         }
-        str_res = JSON.stringify(res);
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
       } catch (error) {
         console.log("getEosTransactionRecord error: %s",error.message);
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
       }
     }
   });
 
   }catch(error){
     console.log("getEosTransactionRecord error: %s",error.message);
-    if (callback)  callbackToSDK(methodName,callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   }
 
 }
 
 function eosAuthSign(methodName,params,password,callback)
 {
-  var str_res = '{"result":false,"data":{},"msg":""}';
   var obj_param;
   try{
      obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.from || !obj_param.publicKey || !obj_param.signdata || !password) {
         console.log('eosAuthSign:missing params; "from","publicKey","signdata","password" is required ');
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
         return;
     }
     if (password == "" || password.length < Constants.PWD_MIN_LENGTH) {
       console.log("eosAuthSign error: 密码长度错");
-      if (callback)  callbackToSDK(methodName,callback,str_res);
+      if (callback)  callbackToSDK(methodName,callback,getErrorMsg("密码长度错"));
       return ;
     }
   }catch(error){
     console.log("eosAuthSign error: %s",error.message);
-    if (callback)  callbackToSDK(methodName,callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   }
 
   var res = new Object();
@@ -1030,7 +1025,6 @@ function eosAuthSign(methodName,params,password,callback)
             resolve(data);
           }else{
             //密码错误
-            str_res = '{"result":false,"data":{},"msg":"密码错误"}';
             reject({message:"密码错误"});
           }
         });
@@ -1059,24 +1053,22 @@ function eosAuthSign(methodName,params,password,callback)
             res.result = false;
             res.msg = errmsg;
           }
-          str_res = JSON.stringify(res);
-          if (callback)  callbackToSDK(methodName,callback,str_res);
+          if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
         } catch (error) {
           console.log("eosAuthSign error: %s",error.message);
-          if (callback)  callbackToSDK(methodName,callback,str_res);
+          if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
         }
     });
   })
   .catch((error)=>{
       console.log("eosAuthSign error: %s",error.message);
-      if (callback)  callbackToSDK(methodName,callback,str_res);
+      if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   });
 
 }
 
 function getAppInfo(methodName,callback)
 {
-  var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var res = new Object();
     res.result = true;
@@ -1091,23 +1083,21 @@ function getAppInfo(methodName,callback)
     }
     res.data.version =  DeviceInfo.getVersion();
     res.msg = "success";
-    str_res = JSON.stringify(res);
-    if (callback)  callbackToSDK(methodName,callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
   }catch(error){
     console.log("getAppInfo error: %s",error.message);
-    if (callback)  callbackToSDK(methodName,callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   }
 
 }
 
 function getWalletList(methodName,params, callback)
 {
-  var str_res = '{wallets:{eos:[]}}';
   try{
     var obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.type) {
         console.log('getWalletList:missing params; "type" is required ');
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
         return;
     }
     var res = new Object();
@@ -1138,88 +1128,24 @@ function getWalletList(methodName,params, callback)
             }
           }
           res.wallets.eos = objarray;
-          str_res = JSON.stringify(res);
         }
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
       } catch (error) {
         console.log("walletList error: %s",error.message);
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
       }
     }
   });
 
   }catch(error){
     console.log("getWalletList error: %s",error.message);
-    if (callback)  callbackToSDK(methodName,callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   }
  
 }
-// function getDeviceId(methodName,callback)
-// {
-//   var str_res = '{"device_id":""}';
-//   try{
-//     var res = new Object();
-//     // res.result = true;
-//     // res.data = {device_id:"dexa23333"};
-//     res.device_id = 'dexa23333';
-//     str_res = JSON.stringify(res);
-//   }catch(error){
-//     console.log("getDeviceId error: %s",error.message);
-//   }
-
-//   if (callback)  callbackToSDK('getDeviceId',callback,str_res);
-// }
-
-// function shareNewsToSNS(methodName,params)
-// {
-//   try{
-//     var obj_param = JSON.parse(params);
-//     if (!obj_param || !obj_param.title || !obj_param.desc || !obj_param.url || !obj_param.previewImage) {
-//         console.log('shareNewsToSNS:missing params; "title","desc","url","previewImage" is required ');
-//         return;
-//     }
-//     //待分享 ,暂不实现
-
-//   }catch(error){
-//     console.log("shareNewsToSNS error: %s",error.message);
-//   }
-// }
-// function invokeQRScanner(methodName,callback){
-//   // var str_res = '{"result":false,"data":{}}';
-//   var str_res = '';
-//   try{
-//     // var res = new Object();
-//     // res.result = false;
-//     // res.data = {qrResult:""};
-//     var res = '';
-
-//     const { navigate } = g_props.navigation;
-//     navigate('BarCode', {isTurnOut:true,coinType:"EOS"});
-
-//     DeviceEventEmitter.addListener('scan_result', (data) => {
-//       if(data && data.toaccount){
-//         // res.result = true;
-//         // res.data = {qrResult:data.toaccount};
-//         res = data.toaccount;
-//       }else{
-//         // res.result = false;
-//       }
-
-//       str_res = res;
-//       // str_res = JSON.stringify(res);
-//       if (callback)  callbackToSDK('invokeQRScanner',callback,str_res);
-//     }); 
-
-//   }catch(error){
-//     console.log("invokeQRScanner error: %s",error.message);
-//     if (callback)  callbackToSDK('invokeQRScanner',callback,str_res);
-//   }
-
-// }
 
 function getCurrentWallet(methodName,callback)
 {
-  var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var res = new Object();
     res.result = false;
@@ -1237,24 +1163,22 @@ function getCurrentWallet(methodName,callback)
                 res.result = false;
                 res.msg = "fail";
             }
-            str_res = JSON.stringify(res);
-            if (callback)  callbackToSDK(methodName,callback,str_res);
+            if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
           } catch (error) {
             console.log("getDefaultWallet error: %s",error.message);
-            if (callback)  callbackToSDK(methodName,callback,str_res);
+            if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
           }
       }
     });
 
   }catch(error){
     console.log("getCurrentWallet error: %s",error.message);
-    if (callback)  callbackToSDK(methodName,callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   }
 
 }
 function getWallets(methodName,callback)
 {
-  var str_res = '{"result":false,"data":{},"msg":""}';
   try{
     var res = new Object();
     res.result = true;
@@ -1284,11 +1208,10 @@ function getWallets(methodName,callback)
           res.data = objarray;
           res.msg = "success";
         }
-        str_res = JSON.stringify(res);
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
        } catch (error) {
         console.log("getWallets error: %s",error.message);
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
        }
     }
 
@@ -1296,30 +1219,29 @@ function getWallets(methodName,callback)
     
   }catch(error){
     console.log("getWallets error: %s",error.message);
-    if (callback)  callbackToSDK(methodName,callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   }
 
 }
 
 function sign(methodName,params,password,device_id,callback)
 {
-  var str_res = '{"result":false,"data":{},"msg":""}';
   var obj_param;
   try{
      obj_param = JSON.parse(params);
     if (!obj_param || !obj_param.appid || !password) {
         console.log('sign:missing params; "appid" is required ');
-        if (callback)  callbackToSDK(methodName,callback,str_res);
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
         return;
     }
     if (password == "" || password.length < Constants.PWD_MIN_LENGTH) {
       console.log("sign error: 密码长度错");
-      if (callback)  callbackToSDK(methodName,callback,str_res);
+      if (callback)  callbackToSDK(methodName,callback,getErrorMsg("密码长度错"));
       return ;
     }
   }catch(error){
     console.log("sign error: %s",error.message);
-    if (callback)  callbackToSDK(methodName,callback,str_res);
+    if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   }
 
   var res = new Object();
@@ -1347,7 +1269,6 @@ function sign(methodName,params,password,device_id,callback)
             resolve(data);
           }else{
             //密码错误
-            str_res = '{"result":false,"data":{},"msg":"密码错误"}';
             reject({message:"密码错误"});
           }
         });
@@ -1374,29 +1295,26 @@ function sign(methodName,params,password,device_id,callback)
             res.result = false;
             res.msg = errmsg;
           }
-          str_res = JSON.stringify(res);
-          if (callback)  callbackToSDK(methodName,callback,str_res);
+          if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
         } catch (error) {
           console.log("sign error: %s",error.message);
-          if (callback)  callbackToSDK(methodName,callback,str_res);
+          if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
         }
     });
   })
   .catch((error)=>{
       console.log("sign error: %s",error.message);
-      if (callback)  callbackToSDK(methodName,callback,str_res);
+      if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   });
 
 }
 
 function callMessage(methodName, params,password,device_id, callback)
 {
-  var str_res = '{"result":false,"data":{}}';
-
    if(!methodName)
    {
        console.log("methodName is required");
-       if (callback)  callbackToSDK('callMessage',callback,str_res);
+       if (callback)  callbackToSDK('callMessage',callback,getErrorMsg("methodName is required"));
        return;
    }
 
@@ -1439,18 +1357,6 @@ function callMessage(methodName, params,password,device_id, callback)
        case 'getWalletList':
            getWalletList(methodName,params, callback);
            break;
-       
-      //  case 'getDeviceId':
-      //      getDeviceId(methodName,callback);
-      //      break;
-
-      //  case 'shareNewsToSNS':
-      //      shareNewsToSNS(methodName,params);
-      //      break;
-
-      //  case 'invokeQRScanner':
-      //      invokeQRScanner(methodName,callback);
-      //      break;
 
        case 'getCurrentWallet':
            getCurrentWallet(methodName,callback);
@@ -1466,7 +1372,7 @@ function callMessage(methodName, params,password,device_id, callback)
            
        default :
            console.log("methodName error");
-          if (callback)  callbackToSDK('callMessage',callback,str_res);
+          if (callback)  callbackToSDK('callMessage',callback,getErrorMsg("methodName error"));
            break;
    }
 }
