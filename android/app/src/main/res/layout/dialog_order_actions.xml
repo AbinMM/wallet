@@ -77,7 +77,7 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="转出账户:"
+                android:text="账户:"
                 android:textColor="#21232E"
                 android:textSize="18sp"/>
 
