@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, ListView, StyleSheet, View, Text, Image, TextInput, TouchableOpacity} from 'react-native';
+import { Dimensions, DeviceEventEmitter, ListView, StyleSheet, View, Text, Image, TextInput, TouchableOpacity, RefreshControl, ImageBackground} from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import { Eos } from "react-native-eosjs";
@@ -11,11 +11,15 @@ import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import { EasyShowLD } from "../../components/EasyShow"
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
+import { SegmentedControls } from 'react-native-radio-buttons'
+var dismissKeyboard = require('dismissKeyboard');
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
+const buttonSubscript = ['投票','已投'];
 
 @connect(({vote, wallet}) => ({...vote, ...wallet}))
 class Nodevoting extends BaseComponent {
@@ -24,6 +28,10 @@ class Nodevoting extends BaseComponent {
         title: "投票",
         header:null, 
     };
+
+    _rightTopClick = () =>{  
+        DeviceEventEmitter.emit('voteShare',""); 
+    }  
       
     constructor(props) {
         super(props);
@@ -38,24 +46,17 @@ class Nodevoting extends BaseComponent {
             arr1: 0,
             producers:[],
             isvoted: false,
+            labelname: '',
+            switchButton: buttonSubscript[0],
+            voteDatalist: [],
+            logRefreshing: false,
         };
     }
 
     componentDidMount() {
-        EasyShowLD.loadingShow();
-        this.props.dispatch({
-            type: 'wallet/getDefaultWallet', callback: (data) => {     
-                this.props.dispatch({ type: 'vote/list', payload: { page:1}, callback: (data) => {
-                    this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: this.props.defaultWallet.account}, callback: (data) => {
-                        this.setState({
-                            arr1 : this.props.producers.length,
-                            producers : this.props.producers
-                        });
-                    } });
-                    EasyShowLD.loadingClose();
-                }});
-            }
-        })
+        this.props.dispatch({ type: 'wallet/getDefaultWallet', callback: (data) => {     
+            this.onRefreshing()
+        } })
     }
 
     componentWillUnmount(){
@@ -63,12 +64,20 @@ class Nodevoting extends BaseComponent {
         super.componentWillUnmount();
     }
 
+    addunapp(){
+        if(this.state.switchButton==buttonSubscript[0]){
+            this.addvote();
+        }else if(this.state.switchButton==buttonSubscript[1]){
+            this.unapprove();
+        }
+    }
+    
+    //投票
     addvote = (rowData) => { // 选中用户
         if(!this.props.defaultWallet){
             EasyToast.show('请先创建钱包');
             return;
         }
-        
         var selectArr= [];
         const { dispatch } = this.props;
         this.props.voteData.forEach(element => {
@@ -76,7 +85,6 @@ class Nodevoting extends BaseComponent {
                 selectArr.push(element.account);
             }
         });
-
         if(selectArr && selectArr.length == 0){
             EasyToast.show('请先选择投票节点!');
             return;
@@ -90,13 +98,11 @@ class Nodevoting extends BaseComponent {
                 placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
             <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>提示：为确保您的投票生效成功，EOS将进行锁仓三天，期间转账或撤票都可能导致投票失败。</Text>  
         </View>
-
         EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
             if (!this.state.password || this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
                 EasyToast.show('密码长度至少4位,请重输');
                 return;
             }
-    
             var privateKey = this.props.defaultWallet.activePrivate;
             try {
                 var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
@@ -126,29 +132,25 @@ class Nodevoting extends BaseComponent {
                         if(r.data && r.data.transaction_id){
                             AnalyticsUtil.onEvent('vote');
                             EasyToast.show("投票成功");
+                            this.onRefreshing();
                         }else{
                             if(r.data.code){
                                 var errcode = r.data.code;
-                                if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
-                                    || errcode == 3081001)
-                                {
+                                if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
                                     this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
-                                    if(resp.code == 608)
-                                    { 
-                                        //弹出提示框,可申请免费抵押功能
-                                        const view =
-                                        <View style={styles.passoutsource2}>
-                                            <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                            <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                        </View>
-                                        EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                            
-                                        const { navigate } = this.props.navigation;
-                                        navigate('FreeMortgage', {});
-                                        // EasyShowLD.dialogClose();
-                                        }, () => { EasyShowLD.dialogClose() });
-                                    }
-                                }});
+                                        if(resp.code == 608){ 
+                                            //弹出提示框,可申请免费抵押功能
+                                            const view =
+                                            <View style={styles.passoutsource2}>
+                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                            </View>
+                                            EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                                                const { navigate } = this.props.navigation;
+                                                navigate('FreeMortgage', {});
+                                            }, () => { EasyShowLD.dialogClose() });
+                                        }
+                                    }});
                                 }
                             }
                             var errmsg = "投票失败: "+ r.data.msg;
@@ -166,21 +168,126 @@ class Nodevoting extends BaseComponent {
         }, () => { EasyShowLD.dialogClose() });
     };
 
+    //撤票
+    unapprove = (rowData) => { // 选中用户
+        if(!this.props.defaultWallet){
+            EasyToast.show('请先创建钱包');
+            return;
+        }
+        if(!this.props.producers || this.props.producers.length <=0){
+            EasyToast.show('您还未投票');
+            return;
+        }
+        var selectArr= [];
+        for(var i = 0; i < this.props.producers.length; i++){
+            selectArr.push(this.props.producers[i].account);
+        }
+        const { dispatch } = this.props;
+        this.props.voteData.forEach(element => {
+            if(element.isChecked){
+                selectArr.splice(selectArr.indexOf(element.account), 1);
+            }
+        });
+        selectArr.sort();
+            const view =
+            <View style={styles.passoutsource}>
+                <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
+                    selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
+                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
+                    placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
+            </View>
+            EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
+            if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
+                EasyToast.show('密码长度至少4位,请重输');
+                return;
+            }
+            var privateKey = this.props.defaultWallet.activePrivate;
+            try {
+                var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
+                var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                if (plaintext_privateKey.indexOf('eostoken') != -1) {
+                    plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
+                    EasyShowLD.loadingShow();
+                    //撤票
+                    Eos.transaction({
+                        actions:[
+                            {
+                                account: 'eosio',
+                                name: 'voteproducer',
+                                authorization: [{
+                                    actor: this.props.defaultWallet.account,
+                                    permission: 'active'
+                                }],
+                                data:{
+                                    voter: this.props.defaultWallet.account,
+                                    proxy: '',
+                                    producers:  selectArr, //["producer111f"]
+                                }
+                            }
+                        ]
+                    }, plaintext_privateKey, (r) => {
+                        EasyShowLD.loadingClose();
+                        if(r.data && r.data.transaction_id){
+                            this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: this.props.defaultWallet.account} });
+                            EasyToast.show("撤票成功");
+                            this.onRefreshing();
+                        }else{
+                            if(r.data.code){
+                                var errcode = r.data.code;
+                                if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
+                                    this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
+                                        if(resp.code == 608){ 
+                                            //弹出提示框,可申请免费抵押功能
+                                            const view =
+                                            <View style={styles.passoutsource2}>
+                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                            </View>
+                                            EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                                                const { navigate } = this.props.navigation;
+                                                navigate('FreeMortgage', {});
+                                                // EasyShowLD.dialogClose();
+                                            }, () => { EasyShowLD.dialogClose() });
+                                        }
+                                    }});
+                                }
+                            }
+                            var errmsg = "撤票失败: "+ r.data.msg;
+                            EasyToast.show(errmsg);
+                        }
+                    }); 
+                } else {
+                    EasyShowLD.loadingClose();
+                    EasyToast.show('密码错误');
+                }
+            } catch (e) {
+                EasyShowLD.loadingClose();
+                EasyToast.show('密码错误');
+            }
+        }, () => { EasyShowLD.dialogClose() });
+    };
+
+
 
     selectItem = (item,section) => { 
-        this.props.dispatch({ type: 'vote/up', payload: { item:item} });
-        let arr = this.props.voteData;
-        var cnt = 0;
-        for(var i = 0; i < arr.length; i++){ 
-            if(arr[i].isChecked == true){
-                cnt++;              
-            }     
+        if(this.state.switchButton==buttonSubscript[0]){
+            this.props.dispatch({ type: 'vote/up', payload: { item:item} });
+            let arr = this.props.voteData;
+            var cnt = 0;
+            for(var i = 0; i < arr.length; i++){ 
+                if(arr[i].isChecked == true){
+                    cnt++;              
+                }     
+            }
+            if(cnt == 0 && this.props.producers){
+                this.state.arr1 = this.props.producers.length;
+            }else{
+                this.state.arr1 = cnt;
+            }
+        }else if(this.state.switchButton==buttonSubscript[1]){
+            this.props.dispatch({ type: 'vote/up', payload: { item:item} });
         }
-        if(cnt == 0 && this.props.producers){
-            this.state.arr1 = this.props.producers.length;
-        }else{
-            this.state.arr1 = cnt;
-        }
+       
     }
 
     _openAgentInfo(coins) {
@@ -198,20 +305,151 @@ class Nodevoting extends BaseComponent {
                 return true;
             }
         }
-
         return false;
     }
+
+    //查询
+    _query =(labelname) => {
+        this.dismissKeyboardClick();
+        if (labelname == "") {
+            EasyToast.show('请输入名称或账号');
+            return;
+        }else{
+            let NumberArr = this.props.voteData;
+            for (var i = 0; i < NumberArr.length; i++) {
+                if (NumberArr[i].name.toUpperCase() == labelname.toUpperCase() || NumberArr[i].name.toLowerCase() == labelname.toLowerCase()) {
+                    this.setState({
+                        switchButton: buttonSubscript[0],
+                        voteDatalist:[NumberArr[i]],
+                    });
+                    break;
+                }
+            }
+            if(i == NumberArr.length){
+                EasyToast.show('没有搜索到该节点');
+            }
+        }
+    }
+
+    //清空
+    _empty = () => {
+        this.dismissKeyboardClick();
+        this.onRefreshing();
+        this.setState({ labelname: ''});
+    }
+
+    resources = () => {
+        const { navigate } = this.props.navigation;
+        navigate('Resources', {account_name:this.props.navigation.state.params.account_name});
+    }
+
+    //投票，已投
+    setSwitchButton(opt){
+        if(opt== buttonSubscript[0]){
+            this.fetchTrackLine(0,opt);
+        }else if(opt== buttonSubscript[1]){
+            this.fetchTrackLine(1,opt);
+        }
+    }
+
+    fetchTrackLine(type,opt, onRefreshing = false){
+        this.setState({switchButton:opt,logRefreshing: true,labelname: ''});
+        if(type == 0){
+            this.props.dispatch({ type: 'vote/list', payload: { page:1}, callback: () => {
+                this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: this.props.defaultWallet.account}, callback: () => {
+                    this.setState({
+                        logRefreshing: false,
+                        arr1 : this.props.producers.length,
+                        voteDatalist: this.props.voteData,
+                    })
+                } });
+            } });
+        }else{
+            this.props.dispatch({ type: 'vote/list', payload: { page:1}, callback: () => {
+                this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: this.props.defaultWallet.account}, callback: () => {
+                    this.setState({
+                        logRefreshing: false,
+                        arr1 : this.props.producers.length,
+                        voteDatalist: this.props.producers,
+                    })
+                } });
+            }});
+        }
+    }
+
+    onRefreshing() {
+        this.setState({logRefreshing: true});
+        if(this.state.switchButton==buttonSubscript[0]){
+            this.props.dispatch({ type: 'vote/list', payload: { page:1}, callback: (datalist) => {
+                this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: this.props.defaultWallet.account}, callback: () => {
+                    this.setState({
+                        logRefreshing: false,
+                        arr1 : this.props.producers.length,
+                        producers : this.props.producers,
+                        voteDatalist: this.props.voteData,
+                    });
+                } });
+            }});
+        }else if(this.state.switchButton==buttonSubscript[1]){
+            this.props.dispatch({ type: 'vote/list', payload: { page:1}, callback: (data) => {
+                this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: this.props.defaultWallet.account},callback: () => {
+                    this.setState({
+                        logRefreshing: false,
+                        arr1 : this.props.producers.length,
+                        voteDatalist: this.props.producers,
+                    });
+                } });
+            }});
+        }
+    }
+
+    dismissKeyboardClick() {
+        dismissKeyboard();
+    }
+
     render() {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-                <Header {...this.props} onPressLeft={true} title="投票" />
-                 <View style={[styles.headout,{backgroundColor: UColor.mainColor}]}>         
+                <Header {...this.props} onPressLeft={true} title="投票" subName="邀请投票" onPressRight={this._rightTopClick.bind()}/>
+                <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
+                    <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
+                        <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
+                        <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} selectionColor={UColor.tintColor}
+                            style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} autoCorrect={true}
+                            placeholder="输入名称或账号" underlineColorAndroid="transparent" keyboardType="default" 
+                            returnKeyType="go" onChangeText={(labelname) => this.setState({ labelname })} />
+                    </View>    
+                    <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>  
+                        <Text style={[styles.canceltext,{color: UColor.fontColor}]}>查询</Text>
+                    </TouchableOpacity>  
+                    <TouchableOpacity   onPress={this._empty.bind(this,this.state.labelname)}>  
+                        <Text style={[styles.canceltext,{color: UColor.fontColor}]}>清空</Text>
+                    </TouchableOpacity>  
+                </View> 
+                <ImageBackground  style={styles.lockoutsource} source={UImage.votec_bj} resizeMode="stretch" > 
+                    <TouchableOpacity style={styles.locktitleout} onPress={this.resources.bind(this)}>
+                        <Text style={[styles.locktitle,{color: UColor.tintnavigation}]}>资源管理</Text>
+                        <Ionicons color={UColor.tintnavigation} name="ios-arrow-forward-outline" size={18}/>
+                    </TouchableOpacity>             
+                    <View style={styles.locktextout}>
+                       <Text style={[styles.locktext,{color: UColor.fontColor}]}>· 进行投票前，需要抵押EOS换取投票权</Text>
+                       <Text style={[styles.locktext,{color: UColor.fontColor}]}>· 撤票赎回将于72小时到您的账号（撤票：投票失效）</Text>
+                    </View>     
+                </ImageBackground>     
+                <View style={styles.toptabout}>
+                    <SegmentedControls tint= {UColor.tintColor} selectedTint= {UColor.btnColor} onSelection={this.setSwitchButton.bind(this) }
+                        selectedOption={this.state.switchButton} backTint= {UColor.secdColor} options={buttonSubscript} />
+                </View>
+                <View style={[styles.headout,{backgroundColor: UColor.mainColor}]}>         
                     <Text style={[styles.nodename,{color: UColor.fontColor}]}>节点名称</Text>           
                     <Text style={[styles.rankingticket,{color: UColor.fontColor}]}>排名/票数</Text>           
                     <Text style={[styles.choice,{color: UColor.fontColor}]}>选择</Text>          
                 </View>
                 <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true} 
-                    dataSource={this.state.dataSource.cloneWithRows(this.props.voteData == null ? [] : this.props.voteData)} 
+                    refreshControl={<RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} 
+                    tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}
+                    style={{backgroundColor: UColor.transport}}/>}
+                    dataSource={this.state.dataSource.cloneWithRows(this.state.voteDatalist == null ? [] : this.state.voteDatalist)} 
                     renderRow={(rowData, sectionID, rowID) => (                  
                     <View>
                         <Button onPress={this._openAgentInfo.bind(this,rowData)}> 
@@ -227,16 +465,19 @@ class Nodevoting extends BaseComponent {
                                     <Text style={[styles.nameranking,{color: UColor.fontColor}]}>{rowData.ranking}</Text>
                                     <Text style={[styles.regiontotalvotes,{color: UColor.lightgray}]}>{parseInt(rowData.total_votes)}</Text> 
                                 </View>
-                                {this.isvoted(rowData) ? 
-                                <TouchableOpacity style={styles.taboue}>
-                                    <View style={[styles.tabview,{borderColor: UColor.lightgray}]} >
-                                        <Image source={UImage.Tick_h} style={styles.tabimg} />
-                                    </View>
-                                </TouchableOpacity> : <TouchableOpacity style={styles.taboue} onPress={ () => this.selectItem(rowData)}>
-                                    <View style={[styles.tabview,{borderColor: UColor.lightgray}]} >
-                                        <Image source={rowData.isChecked ? UImage.Tick:null} style={styles.tabimg} />
-                                    </View>  
-                                </TouchableOpacity> 
+                                {this.state.switchButton==buttonSubscript[0] && 
+                                    <TouchableOpacity style={styles.taboue} onPress={ () => this.selectItem(rowData)}>
+                                        <View style={[styles.tabview,{borderColor: UColor.lightgray}]} >
+                                            <Image source={this.isvoted(rowData) ? UImage.Tick_h : rowData.isChecked ? UImage.Tick:null} style={styles.tabimg} />
+                                        </View>  
+                                    </TouchableOpacity> 
+                                }
+                                {this.state.switchButton==buttonSubscript[1] && 
+                                    <TouchableOpacity style={styles.taboue} onPress={ () => this.selectItem(rowData)}>
+                                        <View style={[styles.tabview,{borderColor: UColor.lightgray}]} >
+                                            <Image source={rowData.isChecked ? UImage.Tick:null} style={styles.tabimg} />
+                                        </View>  
+                                    </TouchableOpacity>  
                                 }     
                             </View> 
                         </Button>  
@@ -246,14 +487,14 @@ class Nodevoting extends BaseComponent {
                 <View style={[styles.footer,{backgroundColor: UColor.secdColor}]}>
                     <Button style={styles.btn}>
                         <View style={[styles.btnnode,{backgroundColor: UColor.mainColor}]}>
-                        <Text style={[styles.nodenumber,{color: UColor.fontColor}]}>{30 - this.state.arr1}</Text>
+                            <Text style={[styles.nodenumber,{color: UColor.fontColor}]}>{this.props.producers == null ? 30 : 30 - this.state.arr1}</Text>
                             <Text style={[styles.nodetext,{color: UColor.lightgray,}]}>剩余可投节点</Text>
                         </View>
                     </Button>
-                    <Button onPress={this.addvote.bind()} style={styles.btn}>
+                    <Button onPress={this.addunapp.bind(this)} style={styles.btn}>
                         <View style={[styles.btnvote,{backgroundColor: UColor.mainColor}]}>
-                            <Image source={UImage.vote} style={styles.voteimg} />
-                            <Text style={[styles.votetext,{color: UColor.fontColor}]}>投票</Text>
+                            <Image source={this.state.switchButton==buttonSubscript[0]?UImage.vote:UImage.vote_h} style={styles.voteimg} />
+                            <Text style={[styles.votetext,{color: UColor.fontColor}]}>{this.state.switchButton==buttonSubscript[0]?'投票':'撤票'}</Text>
                         </View>
                     </Button>
                 </View>         
@@ -283,6 +524,78 @@ const styles = StyleSheet.create({
       flex: 1,
       flexDirection:'column',
     },
+    header: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: ScreenUtil.autoheight(1),
+        paddingVertical: ScreenUtil.autoheight(7),
+    },
+    inptout: {
+        flex: 1,
+        borderWidth: 1,
+        borderRadius: 5,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: 'center',
+        height: ScreenUtil.autoheight(30),
+        marginHorizontal: ScreenUtil.autowidth(10),
+    },
+    headleftimg: {
+        width: ScreenUtil.autowidth(18),
+        height: ScreenUtil.autowidth(18),
+        marginHorizontal: ScreenUtil.autowidth(10),
+    },
+    inpt: {
+        flex: 1,
+        height: ScreenUtil.autoheight(40),
+        fontSize: ScreenUtil.setSpText(14),
+    },
+    canceltext: {
+        justifyContent: 'flex-end',
+        fontSize: ScreenUtil.setSpText(15),
+        paddingRight: ScreenUtil.autowidth(10),
+    },
+
+    toptabout: {
+        paddingTop:ScreenUtil.autoheight(10),
+        paddingBottom: ScreenUtil.autoheight(5),
+        paddingHorizontal: ScreenUtil.autowidth(60),
+    },
+
+    lockoutsource: {
+        alignItems: 'center', 
+        flexDirection:'column', 
+        justifyContent: "flex-end", 
+        width: ScreenWidth,
+        height: ScreenWidth*0.35, 
+        paddingTop: ScreenUtil.autowidth(10),
+    },
+    locktitleout: {
+        flex: 1,
+        width: ScreenWidth,
+        flexDirection:'row', 
+        alignItems: 'flex-start',
+        justifyContent: 'flex-end', 
+        paddingHorizontal: ScreenUtil.autowidth(10),
+    },
+    locktitle: {
+        fontSize:ScreenUtil.setSpText(15),
+        paddingHorizontal: ScreenUtil.autowidth(5),
+    },
+
+    locktextout: {
+        flex: 1,
+        width: ScreenWidth,
+        flexDirection:'column',
+        justifyContent: 'flex-end', 
+        paddingHorizontal: ScreenUtil.autowidth(20),
+    },
+    locktext: {
+        fontSize: ScreenUtil.setSpText(12),
+        lineHeight: ScreenUtil.autoheight(20),
+    },
+
     headout: {
         flexDirection: 'row', 
         height: ScreenUtil.autoheight(25),

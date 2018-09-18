@@ -104,7 +104,7 @@ class FunctionsMore extends React.Component {
     }else if(key == 'candy'){
       Linking.openURL("https://eosdrops.io/");
     }else if(key == 'Bvote'){
-      navigate('Bvote', {});
+      navigate('Nodevoting', {account_name:this.props.navigation.state.params.account_name});
     }else if(key == 'Tokenissue'){
       this. _setModalVisible();
     }else if(key == 'FreeMortgage'){
@@ -324,11 +324,9 @@ const styles = StyleSheet.create({
 
     headDAPP: {
       width: ScreenWidth/4,
-      height: ScreenUtil.autoheight(80), 
-      paddingBottom: ScreenUtil.autoheight(10),
+      paddingVertical: ScreenUtil.autoheight(10),
     },
-    imgBtnDAPP: {
-      marginTop : ScreenUtil.autoheight(10), 
+    imgBtnDAPP: { 
       margin: ScreenUtil.autowidth(5),
       width: ScreenUtil.autowidth(40),
       height: ScreenUtil.autoheight(40),
