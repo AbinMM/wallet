@@ -21,7 +21,7 @@ var CryptoJS = require("crypto-js");
 var DeviceInfo = require('react-native-device-info');
 let g_props;
 let g_CallToRN = {methodName:"",callback:""}; //记录上次监听到的SDK方法和回调函数名
-
+var IosSDKModule = NativeModules.IosSDKModule;
 @connect(({ news ,wallet,vote}) => ({ ...news, ...wallet, ...vote}))
 class FunctionsMore extends React.Component {
 
@@ -148,7 +148,8 @@ class FunctionsMore extends React.Component {
       this. _setModalVisible_DAPP();
       if(Platform.OS === 'ios'){
         // NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.state.selecturl);
-        EasyToast.show("IOS暂不支持，程序员正在紧急开发中");
+        // EasyToast.show("IOS暂不支持，程序员正在紧急开发中");
+        IosSDKModule.openUrl(this.state.selecturl);
       }else if(Platform.OS === 'android'){
         NativeModules.SDKModule.startActivityFromReactNative(this.state.selecturl,this.state.selecttitle);
       }

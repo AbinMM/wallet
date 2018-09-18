@@ -13,6 +13,9 @@
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		0B59998CFC08404C9C4A3898 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 830E2706EED14E3298ED5E30 /* Zocial.ttf */; };
+		0C5ACA1B215093200042EE63 /* IosSDKModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5ACA16215093200042EE63 /* IosSDKModule.m */; };
+		0C5ACA1C215093200042EE63 /* DappsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5ACA17215093200042EE63 /* DappsViewController.m */; };
+		0C5ACA1D215093200042EE63 /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C5ACA1A215093200042EE63 /* View.xib */; };
 		0CD4DB10A6CF444BA9A3ABD0 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A0F888F2AB8149E6A9276D9D /* SimpleLineIcons.ttf */; };
 		0F15118864544AB0A18205FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1AEF070A3FC4B9C90227E4B /* Foundation.framework */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
@@ -476,6 +479,11 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* eostokenTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = eostokenTests.m; sourceTree = "<group>"; };
 		03494E2E6FB64387A180FD34 /* RNViewShot.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNViewShot.xcodeproj; path = "../node_modules/react-native-view-shot/ios/RNViewShot.xcodeproj"; sourceTree = "<group>"; };
+		0C5ACA16215093200042EE63 /* IosSDKModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IosSDKModule.m; sourceTree = "<group>"; };
+		0C5ACA17215093200042EE63 /* DappsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DappsViewController.m; sourceTree = "<group>"; };
+		0C5ACA18215093200042EE63 /* IosSDKModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IosSDKModule.h; sourceTree = "<group>"; };
+		0C5ACA19215093200042EE63 /* DappsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DappsViewController.h; sourceTree = "<group>"; };
+		0C5ACA1A215093200042EE63 /* View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
 		0DDD327C57D1416F9DDE6E4A /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		0E1D82B115C3401DB085B345 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		118D4FD77A6044DD8F757EC1 /* RCTWeChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = RCTWeChatTests.xctest; sourceTree = "<group>"; };
@@ -671,6 +679,18 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		0C5ACA15215093200042EE63 /* SDK */ = {
+			isa = PBXGroup;
+			children = (
+				0C5ACA16215093200042EE63 /* IosSDKModule.m */,
+				0C5ACA17215093200042EE63 /* DappsViewController.m */,
+				0C5ACA18215093200042EE63 /* IosSDKModule.h */,
+				0C5ACA19215093200042EE63 /* DappsViewController.h */,
+				0C5ACA1A215093200042EE63 /* View.xib */,
+			);
+			path = SDK;
+			sourceTree = "<group>";
+		};
 		0C966C2320BBB1C0000D1DAA /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -837,6 +857,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				0C5ACA15215093200042EE63 /* SDK */,
 				ABC6FB6C206E1D9800918A81 /* umeng */,
 				AB57E8C7206A5007005A9652 /* Fonts */,
 				13B07FAE1A68108700A75B9A /* eostoken */,
@@ -1589,6 +1610,7 @@
 				AB57E8DD206A5007005A9652 /* MaterialIcons.ttf in Resources */,
 				AB57E8D5206A5007005A9652 /* Entypo.ttf in Resources */,
 				F98B16032E9E4F0F9050DBBB /* Feather.ttf in Resources */,
+				0C5ACA1D215093200042EE63 /* View.xib in Resources */,
 				152AEEC63A374EF3BF3B0184 /* FontAwesome.ttf in Resources */,
 				5A592CEA02E34C8DAAA7D07E /* Foundation.ttf in Resources */,
 				AB57E8D9206A5007005A9652 /* FontAwesome.ttf in Resources */,
@@ -1633,6 +1655,8 @@
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				ABC6FBA8206E1E0300918A81 /* RNUMConfigure.m in Sources */,
 				ABC6FBA5206E1DF200918A81 /* UMAnalyticsModule.m in Sources */,
+				0C5ACA1B215093200042EE63 /* IosSDKModule.m in Sources */,
+				0C5ACA1C215093200042EE63 /* DappsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
