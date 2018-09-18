@@ -172,7 +172,7 @@ class TradeDetails extends BaseComponent {
                 <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'from')} onLongPress={this.copyaccount.bind(this, 'from')}>{this.state.trade.from}</Text>
               </View>
               <View style={styles.conouttext}>
-                <Text style={[styles.context,{color: UColor.arrow}]}>接  受  方: </Text>
+                <Text style={[styles.context,{color: UColor.arrow}]}>接  收  方: </Text>
                 <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'to')} onLongPress={this.copyaccount.bind(this, 'to')}>{this.state.trade.to}</Text>
               </View>
               <View style={styles.conouttext}> 
