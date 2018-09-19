@@ -673,43 +673,26 @@ public class DappActivity extends Activity {
 
     private void showEditDialog(final String methodName,final String params,final String callback, final Dialog mShareDialog) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    //        builder.setIcon(R.drawable.ic_launcher);
-        builder.setTitle("请输入密码");
-        final EditText editText = new EditText(this);
+
+        View view = View.inflate(this, R.layout.dialog_input_pwd, null);
+
+        EditText  editText = (EditText)view.findViewById(R.id.editPassword);
         InputFilter[] filters = new InputFilter[]{new InputFilter.LengthFilter(18)};
         editText.setFilters(filters);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        builder.setView(editText);
-        builder.setPositiveButton("确定", null);
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
-                //兼容EOSBET ，按取消,不返回
-                // String resp = "";
-                // try {
-                //     JSONObject obj = new JSONObject();
-                //     obj.put("result", false);
-                //     obj.put("data", "{}");
 
-                //     resp = obj.toString();
-                // } catch (Exception e) {
-                //     //TODO: handle exception
-                //     resp = "";
-                // }
-                // final String tmp_resp = resp;
-                // new Handler().postDelayed(new Runnable(){  
-                //     public void run() { 
-                //         EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
-                //     } 
-                // }, 100); 
+        Button btnCancel = (Button) view.findViewById(R.id.btnCancel);
+        Button btnEnter = (Button) view.findViewById(R.id.btnEnter);
+        
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
             }
         });
-        final AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+        btnEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String input = editText.getText().toString().trim();
@@ -724,10 +707,10 @@ public class DappActivity extends Activity {
                 }
 
                 alertDialog.dismiss();
-                // 待添加 通讯等待提示???
                 sendEventToRN(methodName,params,input,callback);
             }
         });
+        alertDialog.show();
     }
 
     private void  getDeviceId(final String methodName,final String callback)
