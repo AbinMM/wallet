@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     },
     inpt: {
         flex: 1,
-        height: ScreenUtil.autoheight(35),
+        height: ScreenUtil.autoheight(40),
         fontSize: ScreenUtil.setSpText(15),
     },
     canceltext: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { BackHandler, ImageBackground, Dimensions,NativeModules, Image, ScrollView, DeviceEventEmitter, InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, WebView, FlatList, Platform, Clipboard, TouchableHighlight,Linking, } from 'react-native';
+import { BackHandler, ImageBackground, Dimensions,NativeModules, Image, Modal, DeviceEventEmitter, InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, WebView, FlatList, Platform, Clipboard, TouchableHighlight, Linking, TouchableOpacity } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import moment from 'moment';
 import UImage from '../../utils/Img'
@@ -23,6 +23,10 @@ var ScreenHeight = Dimensions.get('window').height;
 var cangoback = false;
 var ITEM_HEIGHT = 100;
 
+let g_props;
+let g_CallToRN = {methodName:"",callback:""}; //记录上次监听到的SDK方法和回调函数名
+var IosSDKModule = NativeModules.IosSDKModule;
+
 @connect(({ banner, newsType, news, wallet}) => ({ ...banner, ...newsType, ...news, ...wallet }))
 class News extends React.Component {
 
@@ -42,9 +46,15 @@ class News extends React.Component {
       index: 0,
       h: ScreenWidth * 0.436,
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
-      routes: [{ key: '', title: '' }]
+      routes: [{ key: '', title: '' }],
+      dappPromp: false,
+      selecttitle:"",
+      selecturl:"",
+      dappList: [],
     };
+    g_props = props;    
   }
+
   //组件加载完成
   componentDidMount() {
     this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
@@ -80,7 +90,50 @@ class News extends React.Component {
       }
     });
     BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
-   
+
+    try {
+      this.setState({assetRefreshing: true});
+      g_props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
+          if (resp && resp.code == '0') {
+            if(resp.data && resp.data.length > 0){
+              this.setState({dappList : resp.data});
+            }
+          } else {
+            console.log("dappfindAllRecommend error");
+          }
+          this.setState({assetRefreshing: false});
+      } });
+    } catch (error) {
+      console.log("dappfindAllRecommend error: %s",error.message);
+      this.setState({assetRefreshing: false});
+    }
+
+    //监听原生页面的消息
+    if(Platform.OS === 'ios'){
+    //   NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.props.navigation.state.params.url);
+    }else if(Platform.OS === 'android'){
+      DeviceEventEmitter.addListener('CallToRN', (data) => {
+        if(data){
+          //  alert(data);
+           try {
+            var obj = JSON.parse(data);
+            if(g_CallToRN.methodName == obj.methodName)
+            {
+                if(obj.callback && (g_CallToRN.callback == obj.callback))
+                {
+                  //同一个方法，同一个回调函数，重复消息拒绝掉
+                  return;
+                }
+            }
+            g_CallToRN.methodName = obj.methodName;
+            g_CallToRN.callback = obj.callback;
+            callMessage(obj.methodName,obj.params,obj.password,obj.device_id,obj.callback);
+           } catch (error) {
+            console.log("event CallToRN error: %s",error.message);
+           }
+        }
+      });
+    }
   }
 
   onBackAndroid = () => {
@@ -210,10 +263,124 @@ class News extends React.Component {
     }
   }
 
+
+  onPressDapp(data) {
+    this.setState({
+      dappPromp: true,
+      selecttitle:data.name,
+      selecturl: data.url
+    });
+  }
+
+  _setModalVisible_DAPP() {  
+    let dappPromp = this.state.dappPromp;  
+    this.setState({  
+        dappPromp:!dappPromp,  
+    });  
+  } 
+
+  openTokenissue_DAPP() {
+      this. _setModalVisible_DAPP();
+      if(Platform.OS === 'ios'){
+        // NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.state.selecturl);
+        // EasyToast.show("IOS暂不支持，程序员正在紧急开发中");
+        IosSDKModule.openUrl(this.state.selecturl);
+      }else if(Platform.OS === 'android'){
+        NativeModules.SDKModule.startActivityFromReactNative(this.state.selecturl,this.state.selecttitle);
+      }
+  }
+
+  onPressTool(key, data = {}) {
+    const { navigate } = this.props.navigation;
+    if(key == 'Dappsearch'){
+      navigate('Dappsearch', {});
+    }else if(key == 'FreeMortgage'){
+      navigate('FreeMortgage');
+    }else if(key == 'eospark'){
+      navigate('Web', { title: 'eospark', url: "https://eospark.com" });
+    }else{
+      EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
+    }
+  }
+
   //渲染页面
   renderScene = ({ route }) => {
     if (route.key == '') {
       return (<View></View>)
+    }
+    //if (route.key == this.state.routes[0].key) { 当tab的第一个是DAPP的时候释放这里
+    if (route.key == '15') {   //现在暂时点击到官方公告时显示
+      return (<View>
+        <View style={{ height: this.state.h }}>
+          <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth}>
+            {this.renderSwipeView()}
+          </Carousel>
+        </View>
+        <View style={{backgroundColor: UColor.mainColor}}>
+          <View style={{paddingHorizontal: ScreenUtil.autowidth(5),paddingVertical:ScreenUtil.autoheight(10),}}>  
+            <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,paddingLeft: ScreenUtil.autoheight(12) }}>游戏娱乐</Text>
+          </View>
+          <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{backgroundColor: UColor.mainColor,borderBottomColor:UColor.mainsecd}]}
+            dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
+            renderRow={(rowData) => (  
+              <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headDAPP}>
+                  <View style={styles.headbtnout}>
+                      <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} />
+                      <Text style={[styles.headbtntext,{color: UColor.arrow}]}>{rowData.name}</Text>
+                  </View>
+              </Button>
+            )}                
+          /> 
+          <View style={{paddingHorizontal: ScreenUtil.autowidth(5),paddingVertical:ScreenUtil.autoheight(10),}}>  
+            <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,paddingLeft: ScreenUtil.autoheight(12) }}>工具箱</Text>
+          </View> 
+          <View style={styles.head}>
+            <Button  style={styles.headDAPP}  onPress={this.onPressTool.bind(this, 'Dappsearch')}>
+                <View style={styles.headbtnout}>
+                    <Image source={UImage.ManualSearch} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>搜索DAPP</Text>
+                </View>
+            </Button>
+            <Button  style={styles.headDAPP}  onPress={this.onPressTool.bind(this, 'eospark')}>
+                <View style={styles.headbtnout}>
+                    <Image source={UImage.eospark} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>eospark</Text>
+                </View>
+            </Button>
+            <Button  style={styles.headDAPP}  onPress={this.onPressTool.bind(this, 'FreeMortgage')}>
+                <View style={styles.headbtnout}>
+                    <Image source={UImage.Freemortgage} style={styles.imgBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>免费抵押</Text>
+                </View>
+            </Button>
+          </View>
+        </View>
+        <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.dappPromp} onRequestClose={()=>{}}>
+            <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+              <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
+                <View style={styles.subViewBackup}> 
+                  <Button onPress={this._setModalVisible_DAPP.bind(this) } style={styles.buttonView2}>
+                      <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={30} />
+                  </Button>
+                </View>
+                <Text style={styles.contentText}>您接下来访问的页面将跳转至第三方应用DAPP {this.state.selecttitle}</Text>
+                <View style={[styles.warningout,{borderColor: UColor.showy}]}>
+                    <View style={{flexDirection: 'row',alignItems: 'center',}}>
+                        <Image source={UImage.warning_h} style={styles.imgBtnBackup} />
+                        <Text style={[styles.headtext,{color: UColor.riseColor}]} >免责声明</Text>
+                    </View>
+                    <Text style={[styles.headtitle,{color: UColor.showy}]}>注意：您接下来访问的页面将跳转至第三方应用DAPP {this.state.selecttitle}。您在此应用上的所有行为应遵守该应用的用户协议和隐私政策，
+                       并由DAPP {this.state.selecttitle}向您承担应有责任。</Text>
+                </View>
+                <Button onPress={this.openTokenissue_DAPP.bind(this)} style={{}}>
+                    <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
+                        <Text style={[styles.deletetext,{color: UColor.btnColor}]}>我已阅读并同意</Text>
+                    </View>
+                </Button>  
+              </View> 
+            </TouchableOpacity>
+        </Modal>
+      </View>)
     }
     if (route.type == 1) {
       let url = route.url ? route.url.replace(/^\s+|\s+$/g, "") : "";
@@ -305,7 +472,7 @@ class News extends React.Component {
               </View>
             </View>
           </TouchableHighlight>
-        )}
+        )} 
       />
     );
     return (v);
@@ -339,7 +506,7 @@ class News extends React.Component {
             labelStyle={[styles.labelStyle,{color:UColor.btnColor}]} 
             indicatorStyle={[styles.indicatorStyle,{backgroundColor: UColor.fonttint}]} 
             style={[{paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(25) : ScreenUtil.autoheight(20),alignItems: 'center',justifyContent: 'center',backgroundColor:UColor.transport}]} 
-            tabStyle={{ width: ScreenWidth / 3, padding: 0, margin: 0 }} 
+            tabStyle={{ width: ScreenWidth / this.state.routes.length, padding: 0, margin: 0 }} 
             scrollEnabled={true} {...props} />
             </ImageBackground>}
             onIndexChange={this._handleIndexChange}
@@ -352,6 +519,96 @@ class News extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  listViewStyle:{ 
+    flexWrap:'wrap', 
+    flexDirection:'row', 
+    alignItems:'center', // 必须设置,否则换行不起作用 
+    width: ScreenWidth, 
+    borderBottomWidth: 1,
+  }, 
+  headDAPP: {
+    width: ScreenWidth/4,
+    paddingVertical: ScreenUtil.autoheight(10),
+  },
+  headbtnout: {
+    flex:1, 
+    alignItems: 'center', 
+    justifyContent: "center",
+  },
+  imgBtnDAPP: { 
+    margin: ScreenUtil.autowidth(5),
+    width: ScreenUtil.autowidth(40),
+    height: ScreenUtil.autoheight(40),
+  },
+  headbtntext: {
+    fontSize: ScreenUtil.setSpText(14),
+    lineHeight: ScreenUtil.autoheight(25), 
+  },
+  pupuoBackup: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  subViewBackup: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    height: ScreenUtil.autoheight(30),
+    width: ScreenWidth - ScreenUtil.autowidth(30),
+  },
+  buttonView2: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: ScreenUtil.autowidth(30),
+  },
+  contentText: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: ScreenUtil.setSpText(18),
+    paddingBottom: ScreenUtil.autoheight(5),
+  },
+  warningout: {
+    borderWidth: 1,
+    borderRadius: 5,
+    flexDirection: "column",
+    alignItems: 'center',
+    padding: ScreenUtil.autowidth(5),
+    marginHorizontal: ScreenUtil.autowidth(15),
+  },
+  imgBtnBackup: {
+    width: ScreenUtil.autowidth(25),
+    height: ScreenUtil.autoheight(25),
+    marginRight: ScreenUtil.autowidth(10),
+  },
+  headtext: {
+    fontWeight: "bold",
+    fontSize: ScreenUtil.setSpText(16), 
+  },
+  headtitle: {
+    fontSize: ScreenUtil.setSpText(14),
+    lineHeight: ScreenUtil.autoheight(20),
+  },
+  deleteout: {
+    borderRadius: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: ScreenUtil.autoheight(40),
+    marginHorizontal: ScreenUtil.autowidth(100),
+    marginVertical: ScreenUtil.autoheight(15),
+  },
+  deletetext: {
+    fontSize: ScreenUtil.setSpText(16),
+  },
+  head: {
+    flexDirection: "row",
+    width: ScreenWidth, 
+    minHeight: ScreenUtil.autoheight(90),
+  },
+ 
+
+
+
+
+
   labelStyle: {
     margin: 0, 
     fontSize: ScreenUtil.setSpText(15), 
