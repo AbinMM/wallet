@@ -224,6 +224,7 @@ export default {
   votec:require('../img/votec.png'),
   voted_bj:require('../img/voted_bj.png'),
   voted:require('../img/voted.png'),
+  votebc_bj: require('../img/votebc_bj.png'),
   wallet_1:require('../img/wallet_1.png'),
   wallet: require('../img/wallet.png'),
   wallet_h: require('../img/wallet_h.png'),

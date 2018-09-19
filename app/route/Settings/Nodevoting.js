@@ -427,15 +427,19 @@ class Nodevoting extends BaseComponent {
                     </TouchableOpacity>  
                 </View> 
                 <View  style={styles.lockoutsource} > 
-                    <TouchableOpacity style={styles.locktitleout} onPress={this.resources.bind(this)}>
-                        <Text style={[styles.locktitle,{color: UColor.tintnavigation}]}>资源管理</Text>
-                        <Ionicons color={UColor.tintnavigation} name="ios-arrow-forward-outline" size={18}/>
-                    </TouchableOpacity>             
+                    <View style={{flexDirection: 'row',padding: ScreenUtil.autowidth(10),}}>
+                        <View style={styles.locktitleout} />
+                        <Image source={UImage.votebc_bj} style={{width:ScreenWidth-ScreenUtil.autowidth(160),height:(ScreenWidth-ScreenUtil.autowidth(160))*0.1963}}/>
+                        <TouchableOpacity style={styles.locktitleout} onPress={this.resources.bind(this)}>
+                            <Text style={[styles.locktitle,{color:UColor.tintnavigation}]}>资源管理</Text>
+                            <Ionicons color={UColor.tintnavigation} name="ios-arrow-forward-outline" size={13}/>
+                        </TouchableOpacity> 
+                    </View>
                     <View style={styles.locktextout}>
                        <Text style={[styles.locktext,{color: UColor.fontColor}]}>·  参与EOS超级节点投票，需要抵押EOS。投票不消耗EOS数量</Text>
                        <Text style={[styles.locktext,{color: UColor.fontColor}]}>·  抵押的EOS数量在撤销投票后72小时返还到投票账户</Text>
                        <View style={{flexDirection: 'row',width: ScreenWidth-ScreenUtil.autowidth(30),}}>
-                            <Text>·  </Text>
+                            <Text style={[styles.locktext,{color: UColor.fontColor}]}>·  </Text>
                             <Text style={[styles.locktext,{color: UColor.fontColor}]}>每次投票最多可选择30个超级节点，撤消或更改再次投票生效有一定的延迟</Text>
                        </View>
                     </View>     
@@ -571,25 +575,19 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         flexDirection:'column', 
         justifyContent: "flex-end", 
-        width: ScreenWidth,
-        height: ScreenWidth*0.35, 
-        paddingTop: ScreenUtil.autowidth(10),
     },
     locktitleout: {
         flex: 1,
-        width: ScreenWidth,
         flexDirection:'row', 
         alignItems: 'flex-start',
         justifyContent: 'flex-end', 
-        paddingHorizontal: ScreenUtil.autowidth(10),
     },
     locktitle: {
-        fontSize:ScreenUtil.setSpText(15),
+        fontSize:ScreenUtil.setSpText(12),
         paddingHorizontal: ScreenUtil.autowidth(5),
     },
 
     locktextout: {
-        flex: 1,
         width: ScreenWidth,
         flexDirection:'column',
         justifyContent: 'flex-end', 
