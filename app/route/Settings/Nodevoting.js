@@ -426,16 +426,20 @@ class Nodevoting extends BaseComponent {
                         <Text style={[styles.canceltext,{color: UColor.fontColor}]}>清空</Text>
                     </TouchableOpacity>  
                 </View> 
-                <ImageBackground  style={styles.lockoutsource} source={UImage.votec_bj} resizeMode="stretch" > 
+                <View  style={styles.lockoutsource} > 
                     <TouchableOpacity style={styles.locktitleout} onPress={this.resources.bind(this)}>
                         <Text style={[styles.locktitle,{color: UColor.tintnavigation}]}>资源管理</Text>
                         <Ionicons color={UColor.tintnavigation} name="ios-arrow-forward-outline" size={18}/>
                     </TouchableOpacity>             
                     <View style={styles.locktextout}>
-                       <Text style={[styles.locktext,{color: UColor.fontColor}]}>· 进行投票前，需要抵押EOS换取投票权</Text>
-                       <Text style={[styles.locktext,{color: UColor.fontColor}]}>· 撤票赎回将于72小时到您的账号（撤票：投票失效）</Text>
+                       <Text style={[styles.locktext,{color: UColor.fontColor}]}>·  参与EOS超级节点投票，需要抵押EOS。投票不消耗EOS数量</Text>
+                       <Text style={[styles.locktext,{color: UColor.fontColor}]}>·  抵押的EOS数量在撤销投票后72小时返还到投票账户</Text>
+                       <View style={{flexDirection: 'row',width: ScreenWidth-ScreenUtil.autowidth(30),}}>
+                            <Text>·  </Text>
+                            <Text style={[styles.locktext,{color: UColor.fontColor}]}>每次投票最多可选择30个超级节点，撤消或更改再次投票生效有一定的延迟</Text>
+                       </View>
                     </View>     
-                </ImageBackground>     
+                </View>     
                 <View style={styles.toptabout}>
                     <SegmentedControls tint= {UColor.tintColor} selectedTint= {UColor.btnColor} onSelection={this.setSwitchButton.bind(this) }
                         selectedOption={this.state.switchButton} backTint= {UColor.secdColor} options={buttonSubscript} />
@@ -589,7 +593,7 @@ const styles = StyleSheet.create({
         width: ScreenWidth,
         flexDirection:'column',
         justifyContent: 'flex-end', 
-        paddingHorizontal: ScreenUtil.autowidth(20),
+        paddingHorizontal: ScreenUtil.autowidth(10),
     },
     locktext: {
         fontSize: ScreenUtil.setSpText(12),
