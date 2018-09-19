@@ -1427,7 +1427,7 @@ class Transaction extends BaseComponent {
                         </View>
                         <View style={{width:'28%'}}>
                             <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"center"}}>
-                            <Text style={[styles.greenincup,{color:(this.props.ramInfo && this.props.ramInfo.increase>=0)? UColor.fallColor:UColor.riseColor}]}>
+                            <Text style={[styles.greenincup,{color:(this.props.ramInfo && this.props.ramInfo.increase>=0)? UColor.riseColor:UColor.fallColor}]}>
                              {this.props.ramInfo ? (this.props.ramInfo.increase > 0 ? '+' + (this.props.ramInfo.increase * 100).toFixed(2) : (this.props.ramInfo.increase * 100).toFixed(2)): '0.00'}%</Text>
                             </View>
                         </View>
@@ -1471,7 +1471,7 @@ class Transaction extends BaseComponent {
                         </View>
                         <View style={{width:'28%'}}>
                             <View style={{flex:1,flexDirection:"row",alignItems: 'center',justifyContent:"center"}}>
-                                <Text style={[styles.greenincup,{color: rowData.increase>0? UColor.fallColor:UColor.riseColor}]}>
+                                <Text style={[styles.greenincup,{color: rowData.increase>0? UColor.riseColor:UColor.fallColor}]}>
                                 {rowData.increase>0?'+'+rowData.increase:rowData.increase}</Text>
                             </View>
                         </View>
