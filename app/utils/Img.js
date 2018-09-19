@@ -236,4 +236,14 @@ export default {
   dapp_ite:require('../img/dapp_ite.png'),
   dapp_EOSBET:require('../img/dapp_EOSBET.png'),
   dapp_caicaicai:require('../img/dapp_caicaicai.png'),
+
+  //活动
+  app12: require('../img/activity/app12.png'),
+  app13: require('../img/activity/app13.png'),
+  app14: require('../img/activity/app14.png'),
+  app15: require('../img/activity/app15.png'),
+  app16: require('../img/activity/app16.png'),
+  app17: require('../img/activity/app17.png'),
+  app18: require('../img/activity/app18.png'),
+  app19: require('../img/activity/app19.png'),
 }

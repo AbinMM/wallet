@@ -39,6 +39,7 @@ import ProblemFeedback from './Login/ProblemFeedback'
 import SignIn from './Login/SignIn'
 
 import News from './News'
+import OTCactivity from './News/OTCactivity'
 
 import Settings from './Settings'
 import AgentInfo from './Settings/AgentInfo'
@@ -263,6 +264,10 @@ const Nav = StackNavigator(
     },
     Set: {
       screen: Set
+    },
+    
+    OTCactivity: {
+      screen: OTCactivity
     },
 
     AgentInfo: {
