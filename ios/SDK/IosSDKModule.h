@@ -8,9 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 #import <React/RCTLog.h>
 #import <WebKit/WebKit.h>
 #import <UIKit/UIKit.h>
-@interface IosSDKModule : NSObject<RCTBridgeModule>
 
+//@interface IosSDKModule : NSObject<RCTBridgeModule>
+@interface IosSDKModule : RCTEventEmitter<RCTBridgeModule>
 @end
+

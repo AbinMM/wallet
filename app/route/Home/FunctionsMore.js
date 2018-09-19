@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, StyleSheet, Image, View, Text, Linking, Modal, TouchableOpacity,ListView,TextInput,Platform,DeviceEventEmitter,NativeModules,RefreshControl} from 'react-native';
+import { Dimensions, StyleSheet, Image, View, Text, Linking, Modal, TouchableOpacity,ListView,TextInput,Platform,DeviceEventEmitter,NativeModules,RefreshControl,NativeEventEmitter,} from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
@@ -66,7 +66,30 @@ class FunctionsMore extends React.Component {
     //监听原生页面的消息
     if(Platform.OS === 'ios'){
     //   NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.props.navigation.state.params.url);
-    }else if(Platform.OS === 'android'){
+    this.listener=null;
+    let eventEmitter = new NativeEventEmitter(IosSDKModule);
+    this.listener = eventEmitter.addListener("IosEventName", (obj) => {
+      try {
+
+        if(g_CallToRN.methodName == obj.methodName)
+        {
+            if(obj.callback && (g_CallToRN.callback == obj.callback))
+            {
+              //同一个方法，同一个回调函数，重复消息拒绝掉
+              IosSDKModule.iosDebugInfo("相同消息");
+              return;
+            }
+        }
+        g_CallToRN.methodName = obj.methodName;
+        g_CallToRN.callback = obj.callback;
+        callMessage(obj.methodName,obj.params,obj.password,obj.device_id,obj.callback);
+       } catch (error) {
+        IosSDKModule.iosDebugInfo("错误信息:"+error.message);
+        console.log("event CallToRN error: %s",error.message);
+       }
+
+    })
+  }else if(Platform.OS === 'android'){
       DeviceEventEmitter.addListener('CallToRN', (data) => {
         if(data){
           //  alert(data);
@@ -91,7 +114,12 @@ class FunctionsMore extends React.Component {
       
     }
   }
- 
+
+
+  componentWillUnmount() {
+    this.listener && this.listener.remove();
+  }
+
   onPress(key, data = {}) {
     const { navigate } = this.props.navigation;
     if (key == 'Receivables') {
@@ -149,7 +177,11 @@ class FunctionsMore extends React.Component {
       if(Platform.OS === 'ios'){
         // NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.state.selecturl);
         // EasyToast.show("IOS暂不支持，程序员正在紧急开发中");
-        IosSDKModule.openUrl(this.state.selecturl);
+        // IosSDKModule.openUrl(this.state.selecturl);
+        // let dict = {url:"http://eosbao.io/pocket?tokenpocket=true&referrer=eosgogogo", title: this.state.selecttitle};
+        let dict = {url:this.state.selecturl, title: this.state.selecttitle};
+        IosSDKModule.openDapps(dict);
+        
       }else if(Platform.OS === 'android'){
         NativeModules.SDKModule.startActivityFromReactNative(this.state.selecturl,this.state.selecttitle);
       }
@@ -439,8 +471,9 @@ export default FunctionsMore;
 function callbackToSDK(methodName,callback, resp){
   if(Platform.OS === 'ios')
   {
-    // NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.state.selecturl);
-  }else(Platform.OS === 'android')
+    let dict = {methodName:methodName, callback: callback,resp:resp};
+    IosSDKModule.getDictionaryFromRN(dict);
+  }else if(Platform.OS === 'android')
   {
     NativeModules.SDKModule.callbackFromReactNative(methodName,callback, resp);
   }
@@ -833,7 +866,6 @@ function getEosTableRows(methodName,params, callback)
   });
 
   }catch(error){
-    console.log("getEosTableRows error: %s",error.message);
     if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
   }
 
@@ -1103,6 +1135,7 @@ function getWalletList(methodName,params, callback)
       try {
         if (walletArr == undefined || walletArr == null || walletArr.length < 1) {
           //返回错误
+          IosSDKModule.iosDebugInfo("返回错误 getWalletList callback:"+walletArr);
         }else{
           var objarray = new Array();
           for(var i = 0;i < walletArr.length;i++)

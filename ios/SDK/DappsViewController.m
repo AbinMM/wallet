@@ -26,6 +26,7 @@
 #define sdkEosAuthSign            @"eosAuthSign"        //EOS授权签名
 
 
+#define rnNotification @"getValueFromRN"
 @interface DappsViewController ()<WKScriptMessageHandler,WKNavigationDelegate,WKUIDelegate>
 
 @property(nonatomic,strong)WKWebView *wkWebview;
@@ -92,9 +93,9 @@
 
 
 
--(void)showDapps:(NSURL *)url{
-  //  NSLog(@"showWebView传过来的url: %@", url);
-  self.title=@"DAPPS界面";
+-(void)showDapps:(NSURL *)url title:(NSString*)dappTitle{
+  NSLog(@"RN传过来的url: %@", url);
+  self.title=dappTitle;
   //1.创建config对象, 设置config的属性
   WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
   config.preferences.javaScriptCanOpenWindowsAutomatically = YES;//default value is NO
@@ -106,7 +107,9 @@
   
   CGFloat SCREEN_WIDTH = self.view.frame.size.width;
   CGFloat SCREEN_HEIGHT = self.view.frame.size.height;
-  self.wkWebview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 20, SCREEN_WIDTH, SCREEN_HEIGHT-20) configuration:config];
+  self.wkWebview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 60, SCREEN_WIDTH, SCREEN_HEIGHT-20) configuration:config];
+//  NSURLRequest *request =[NSURLRequest requestWithURL:url];
+//  NSURL *urll = [NSURL URLWithString:@"https://m.ite.zone/#/ite4"];
   NSURLRequest *request =[NSURLRequest requestWithURL:url];
   [self.wkWebview loadRequest:request];
   
@@ -114,7 +117,6 @@
   self.wkWebview.navigationDelegate = self;
   
   [self.view addSubview:self.wkWebview];
-
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -163,9 +165,12 @@
 
   //TODO:kvo监听，获得页面title和加载进度值
   [self.wkWebview addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:NULL];
-  [self.wkWebview addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionNew context:NULL];
+//  [self.wkWebview addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionNew context:NULL];
+  
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(returnValueToJS:) name:rnNotification object:nil];//通知监听
   
 }
+
 
 
 #pragma mark KVO的监听代理
@@ -196,31 +201,59 @@
       [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
   }
-  //DAPP title
-  else if ([keyPath isEqualToString:@"title"])
-  {
-    if (object == self.wkWebview)
-    {
-      self.title = self.wkWebview.title;
-    }
-    else
-    {
-      [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
-  }
+//  //DAPP title
+//  else if ([keyPath isEqualToString:@"title"])
+//  {
+//    if (object == self.wkWebview)
+//    {
+//      self.title = self.wkWebview.title;
+//    }
+//    else
+//    {
+//      [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+//    }
+//  }
   else
   {
     [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
   }
 }
 
-#pragma mark 移除观察者
+#pragma mark
 - (void)dealloc
 {
   [self.wkWebview removeObserver:self forKeyPath:@"estimatedProgress"];
-  [self.wkWebview removeObserver:self forKeyPath:@"title"];
+//  [self.wkWebview removeObserver:self forKeyPath:@"title"];
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [self clearCache];
+}
+
+
+
+-(void)returnValueToJS:(NSNotification *)sender {
+  NSLog(@"收到通知：%@",sender.userInfo);
   
-//  [_userContentController removeScriptMessageHandlerForName:@"callFunction"];
+  NSDictionary *dict = sender.userInfo;
+//  NSDictionary *rnBody = [dict objectForKey:@"rnBody"];
+//  NSString *callback = [rnBody objectForKey:@"callback"];
+//  NSString *returnData = [dict objectForKey:@"rnData"];
+  
+  NSString *callback = [dict objectForKey:@"callback"];
+  NSString *resp = [dict objectForKey:@"resp"];
+  
+  NSLog(@"callfun=>%@",callback);
+  if(callback==NULL){
+    return ;
+  }
+  
+  // 结果返回给js
+  NSString *jsStr = [NSString stringWithFormat:@"%@('%@')",callback,resp];
+  NSLog(@"jsStr=>%@",jsStr);
+  dispatch_async(dispatch_get_main_queue(), ^{  // 跳转界面，在主线程进行UI操作
+    [self.wkWebview evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+      NSLog(@"%@----%@",result, error);
+    }];
+  });
 }
 
 #pragma mark - WKScriptMessageHandler Delegate
@@ -229,19 +262,94 @@
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
   
   NSLog(@"DAPPS传过来的message.name: %@", message.name);
-  NSString *messageStr = [NSString stringWithFormat:@"%@",message.body];
-  NSLog(@"DAPPS传过来的message.body: %@", messageStr);
+  NSLog(@"DAPPS传过来的message.body: %@", message.body);
+  NSDictionary *body = [message.body objectForKey:@"body"];
+  NSString *callback = [body objectForKey:@"callback"];
+  NSString *params = [body objectForKey:@"params"];
+  NSString *password = @"";
+  NSString *device_id = @"";
   
+  NSLog(@"callBackFun=>%@",callback);
+  
+  NSDictionary *dict = @{
+                         @"methodName": message.name,
+                         @"callback" : callback,
+                         @"params" : params,
+                         @"password":password,
+                         @"device_id":device_id,
+                         };
+  
+    
   if ([message.name isEqualToString:sdkGetWalletList]) {
-//    [self locationHandler:message.body];
-    NSLog(@"sdkGetWalletList传过来的message.name: %@", message.name);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sendCustomEventNotification" object:self userInfo:@{@"requestInfo":dict}];
   } else if ([message.name isEqualToString:sdkEosTokenTransfer]) {
 
-//    [self finishLoginHandler:message.body];
   } else if ([message.name isEqualToString:sdkPushEosAction]) {
-//    [self relogin];
+    
+  }else{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sendCustomEventNotification" object:self userInfo:@{@"requestInfo":dict}];
   }
 }
+
+- (void)clearCache {
+// 清除所有
+NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
+
+//// Date from
+
+NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
+
+//// Execute
+
+[[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{
+  
+  // Done
+  NSLog(@"清楚缓存完毕");
+  
+}];
+}
+
+///** 清理缓存的方法，这个方法会清除缓存类型为HTML类型的文件*/
+//- (void)clearCache {
+//  /* 取得Library文件夹的位置*/
+//  NSString *libraryDir = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,NSUserDomainMask, YES)[0];
+//  /* 取得bundle id，用作文件拼接用*/
+//  NSString *bundleId  =  [[[NSBundle mainBundle] infoDictionary]objectForKey:@"CFBundleIdentifier"];
+//  /*
+//   * 拼接缓存地址，具体目录为App/Library/Caches/你的APPBundleID/fsCachedData
+//   */
+//  NSString *webKitFolderInCachesfs = [NSString stringWithFormat:@"%@/Caches/%@/fsCachedData",libraryDir,bundleId];
+//
+//  NSError *error;
+//  /* 取得目录下所有的文件，取得文件数组*/
+//  NSFileManager *fileManager = [NSFileManager defaultManager];
+//  //    NSArray *fileList = [[NSArray alloc] init];
+//  //fileList便是包含有该文件夹下所有文件的文件名及文件夹名的数组
+//  NSArray *fileList = [fileManager contentsOfDirectoryAtPath:webKitFolderInCachesfs error:&error];
+//  /* 遍历文件组成的数组*/
+//  for(NSString * fileName in fileList){
+//    /* 定位每个文件的位置*/
+//    NSString * path = [[NSBundle bundleWithPath:webKitFolderInCachesfs] pathForResource:fileName ofType:@""];
+//    /* 将文件转换为NSData类型的数据*/
+//    NSData * fileData = [NSData dataWithContentsOfFile:path];
+//    /* 如果FileData的长度大于2，说明FileData不为空*/
+//    if(fileData.length >2){
+//      /* 创建两个用于显示文件类型的变量*/
+//      int char1 =0;
+//      int char2 =0;
+//
+//      [fileData getBytes:&char1 range:NSMakeRange(0,1)];
+//      [fileData getBytes:&char2 range:NSMakeRange(1,1)];
+//      /* 拼接两个变量*/
+//      NSString *numStr = [NSString stringWithFormat:@"%i%i",char1,char2];
+//      /* 如果该文件前四个字符是6033，说明是Html文件，删除掉本地的缓存*/
+//      if([numStr isEqualToString:@"6033"]){
+//        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@",webKitFolderInCachesfs,fileName]error:&error];
+//        continue;
+//      }
+//    }
+//  }
+//}
 
 
 @end
