@@ -39,6 +39,8 @@
 /** js方法是否已添加 */
 @property (nonatomic) BOOL IsAddJS;
 
+/** js方法是否已添加 */
+@property (nonatomic) BOOL IsBackMode;
 @end
 
 @implementation DappsViewController
@@ -47,14 +49,10 @@
   [super viewDidLoad];
   [self clearCache];
 
-//  self.navigationController.navigationBar.barTintColor = [UIColor redColor];
-//  [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16],NSForegroundColorAttributeName:[UIColor whiteColor]}];
-//
-
   self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back"] style:(UIBarButtonItemStyleDone) target:self action:@selector(onBackItem)];
+//  [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+  //  self.view.backgroundColor = [UIColor colorWithRed:0.064 green:0.522 blue:1.000 alpha:1.000];
 
-//  self.view.backgroundColor = [UIColor blackColor];
-  
 }
 
 #pragma mark Actions
@@ -71,6 +69,36 @@
     [super didReceiveMemoryWarning];
      // Dispose of any resources that can be recreated.
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+  [super viewWillAppear:animated];
+  self.navigationController.navigationBar.translucent = NO;
+  if(_IsBackMode){
+    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0.262 green:0.325 blue:0.427 alpha:1.000];
+  }else{
+    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0.133 green:0.474 blue:0.772 alpha:1.000];
+  }
+  [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+//  [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+  self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+//  self.navigationController.navigationBar.barTintColor = [UIColor greenColor];
+  [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    //去除 navigationBar 底部的细线
+//    self.navigationController.navigationBar.shadowImage = [UIImage new];
+  
+  
+  
+  //TODO:kvo监听，获得页面title和加载进度值
+  [self.wkWebview addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:NULL];
+  //  [self.wkWebview addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionNew context:NULL];
+  
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(returnValueToJS:) name:rnNotification object:nil];//通知监听
+  
+}
+
+
+
 
 - (void)addAllScriptMessageHandler {
   // 注意：name参数需要和协议中名字相对应 还和html发送消息名字一样
@@ -127,6 +155,8 @@
 -(void)showDapps:(NSURL *)url title:(NSString*)dappTitle{
   NSLog(@"RN传过来的url: %@", url);
   self.title=dappTitle;
+  
+  _IsBackMode=NO;
   WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
   WKPreferences *preferences = [WKPreferences new];
   preferences.javaScriptCanOpenWindowsAutomatically = YES;
@@ -135,7 +165,7 @@
 
   CGFloat SCREEN_WIDTH = self.view.frame.size.width;
   CGFloat SCREEN_HEIGHT = self.view.frame.size.height;
-  self.wkWebview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, SCREEN_HEIGHT-64) configuration:configuration];
+  self.wkWebview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-64) configuration:configuration];
 
   NSURLRequest *request =[NSURLRequest requestWithURL:url];
   [self.wkWebview loadRequest:request];
@@ -178,7 +208,7 @@
   CGFloat WIDTH = self.view.frame.size.width;
   if (_progress == nil)
   {
-    _progress = [[UIProgressView alloc]initWithFrame:CGRectMake(0, 64, WIDTH, 2)];
+    _progress = [[UIProgressView alloc]initWithFrame:CGRectMake(0, 0, WIDTH, 2)];
     _progress.tintColor = [UIColor blueColor];
     _progress.backgroundColor = [UIColor lightGrayColor];
     [self.view addSubview:_progress];
@@ -186,17 +216,6 @@
   return _progress;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-  [super viewWillAppear:animated];
-
-  //TODO:kvo监听，获得页面title和加载进度值
-  [self.wkWebview addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:NULL];
-//  [self.wkWebview addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionNew context:NULL];
-  
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(returnValueToJS:) name:rnNotification object:nil];//通知监听
-  
-}
 
 
 
