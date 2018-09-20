@@ -47,10 +47,8 @@
             android:scaleType="fitXY"
             android:layout_alignParentRight="true"
             android:gravity="center"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:background="#2279c5"
-            android:src="@mipmap/dapp_set"
+            android:layout_marginRight="16dp"
+            android:background="@mipmap/dapp_set"
              />
 
     </RelativeLayout>

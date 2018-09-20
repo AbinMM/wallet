@@ -33,6 +33,7 @@ class FunctionsMore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+        theme: false,    //白色版
         Tokenissue: false,
         dappPromp: false,
         assetRefreshing: false,
@@ -46,6 +47,16 @@ class FunctionsMore extends React.Component {
 
   //加载地址数据
   componentDidMount() {
+
+    this.props.dispatch({type:'login/getthemeSwitching',callback:(theme)=>{
+      if(!theme.theme){  
+        //白色版
+        this.setState({theme:false});
+      }else{
+        this.setState({theme:true});
+      }
+    }});
+
     try {
       this.setState({assetRefreshing: true});
       g_props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
@@ -175,15 +186,12 @@ class FunctionsMore extends React.Component {
   openTokenissue_DAPP() {
       this. _setModalVisible_DAPP();
       if(Platform.OS === 'ios'){
-        // NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',this.state.selecturl);
-        // EasyToast.show("IOS暂不支持，程序员正在紧急开发中");
-        // IosSDKModule.openUrl(this.state.selecturl);
         // let dict = {url:"http://eosbao.io/pocket?tokenpocket=true&referrer=eosgogogo", title: this.state.selecttitle};
         let dict = {url:this.state.selecturl, title: this.state.selecttitle};
         IosSDKModule.openDapps(dict);
         
       }else if(Platform.OS === 'android'){
-        NativeModules.SDKModule.startActivityFromReactNative(this.state.selecturl,this.state.selecttitle);
+        NativeModules.SDKModule.startActivityFromReactNative(this.state.selecturl,this.state.selecttitle,this.state.theme);
       }
   }
 

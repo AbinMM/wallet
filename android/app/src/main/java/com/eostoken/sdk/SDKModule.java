@@ -44,13 +44,14 @@ public class SDKModule extends ReactContextBaseJavaModule {
         return "SDKModule";
     }
     @ReactMethod
-    public void startActivityFromReactNative(String url,String title){
+    public void startActivityFromReactNative(String url,String title,boolean theme){
         try {
             Activity currentActivity = getCurrentActivity();
             if(currentActivity != null){
                 Intent intent = new Intent(currentActivity,DappActivity.class);
                 intent.putExtra("url",url);
                 intent.putExtra("title",title);
+                intent.putExtra("theme",theme);
                 currentActivity.startActivity(intent);
             }
         } catch (Exception e) {

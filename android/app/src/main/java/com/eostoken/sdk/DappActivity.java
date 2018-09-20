@@ -74,21 +74,24 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 public class DappActivity extends Activity {
-
+    
     private  String mUrl = "";
     private  String title = "";
-    private static String device_id = "" ;
+    private  static String device_id = "" ;
     private  WebView mWebView;
     //android调用JS网页的时候会用到
     // private static final Handler mHandler = new Handler();
     private String invokeQRScanner_callback = "";  
     // private static int testnum = 0;
+    private RelativeLayout rl_title;
     private TextView tv_close;
     private TextView tv_title;
     private ImageButton btn_share;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        boolean theme = false;
+
         super.onCreate(savedInstanceState);
         Log.d("DappActivity","onCreate()");
         setContentView(R.layout.activity_main);
@@ -97,6 +100,7 @@ public class DappActivity extends Activity {
         if(intent != null){
             mUrl = intent.getStringExtra("url");
             title = intent.getStringExtra("title");
+            theme = intent.getBooleanExtra("theme", false);
         }
 
         if(device_id.isEmpty())
@@ -111,7 +115,7 @@ public class DappActivity extends Activity {
                 error.printStackTrace();
             }
         }
-
+        rl_title = (RelativeLayout)findViewById(R.id.title_user_artical);
         tv_close =  (TextView)findViewById(R.id.tv_close);
         tv_title =  (TextView)findViewById(R.id.titleName);
         btn_share =  (ImageButton)findViewById(R.id.share_imbtn);
@@ -131,6 +135,20 @@ public class DappActivity extends Activity {
             }
         });
 
+        Window window = getWindow();
+        //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //设置状态栏颜色
+        if(!theme)
+        {
+            window.setStatusBarColor(getResources().getColor(R.color.blue));
+            rl_title.setBackgroundColor(getResources().getColor(R.color.blue));
+        }else{
+            window.setStatusBarColor(getResources().getColor(R.color.black));
+            rl_title.setBackgroundColor(getResources().getColor(R.color.black));
+        }
         initWebView();
     }
 
