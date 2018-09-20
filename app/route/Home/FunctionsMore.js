@@ -1105,7 +1105,7 @@ function getAppInfo(methodName,callback)
     if(Platform.OS === 'ios')
     {
       res.data.system = "ios";
-      res.data.sys_version =  "26";  //TODO
+      res.data.sys_version =  "11";  //TODO
     }else{
       res.data.system = "android";
       res.data.sys_version =  "26";
