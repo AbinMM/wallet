@@ -45,11 +45,27 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  self.navigationItem.leftBarButtonItem.tintColor = [UIColor redColor];
-  self.navigationItem.leftItemsSupplementBackButton=YES;//左侧箭头
+  [self clearCache];
+
+//  self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+//  [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16],NSForegroundColorAttributeName:[UIColor whiteColor]}];
+//
+
+  self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back"] style:(UIBarButtonItemStyleDone) target:self action:@selector(onBackItem)];
+
 //  self.view.backgroundColor = [UIColor blackColor];
   
 }
+
+#pragma mark Actions
+- (void)onBackItem{
+  if ([self.wkWebview canGoBack]) {
+    [self.wkWebview goBack];
+  } else{
+    [self.navigationController popViewControllerAnimated:YES];
+  }
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -111,20 +127,16 @@
 -(void)showDapps:(NSURL *)url title:(NSString*)dappTitle{
   NSLog(@"RN传过来的url: %@", url);
   self.title=dappTitle;
-  //1.创建config对象, 设置config的属性
-  WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
-  config.preferences.javaScriptCanOpenWindowsAutomatically = YES;//default value is NO
-  
-  //2.创建userContentController对象; 绑定config
-  WKUserContentController *userContentController = [WKUserContentController new];
-  config.userContentController = userContentController;
-  //2.1 监听JS消息的发送, 实现JS调OC必须要做的一步, 由于循环引用的问题, 该步骤移到 viewDidAppear 中
-  
+  WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
+  WKPreferences *preferences = [WKPreferences new];
+  preferences.javaScriptCanOpenWindowsAutomatically = YES;
+  preferences.minimumFontSize = 10.0;
+  configuration.preferences = preferences;
+
   CGFloat SCREEN_WIDTH = self.view.frame.size.width;
   CGFloat SCREEN_HEIGHT = self.view.frame.size.height;
-  self.wkWebview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 60, SCREEN_WIDTH, SCREEN_HEIGHT-20) configuration:config];
-//  NSURLRequest *request =[NSURLRequest requestWithURL:url];
-//  NSURL *urll = [NSURL URLWithString:@"https://m.ite.zone/#/ite4"];
+  self.wkWebview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, SCREEN_HEIGHT-64) configuration:configuration];
+
   NSURLRequest *request =[NSURLRequest requestWithURL:url];
   [self.wkWebview loadRequest:request];
   
@@ -247,12 +259,7 @@
 
 -(void)returnValueToJS:(NSNotification *)sender {
   NSLog(@"收到通知：%@",sender.userInfo);
-  
   NSDictionary *dict = sender.userInfo;
-//  NSDictionary *rnBody = [dict objectForKey:@"rnBody"];
-//  NSString *callback = [rnBody objectForKey:@"callback"];
-//  NSString *returnData = [dict objectForKey:@"rnData"];
-  
   NSString *callback = [dict objectForKey:@"callback"];
   NSString *resp = [dict objectForKey:@"resp"];
   
@@ -310,19 +317,9 @@
 - (void)clearCache {
   
   if ([[UIDevice currentDevice].systemVersion floatValue] >= 9.0) {
-    NSSet *websiteDataTypes
-    = [NSSet setWithArray:@[
-                            WKWebsiteDataTypeDiskCache,
-                            //WKWebsiteDataTypeOfflineWebApplicationCache,
-                            WKWebsiteDataTypeMemoryCache,
-                            //WKWebsiteDataTypeLocalStorage,
-                            //WKWebsiteDataTypeCookies,
-                            //WKWebsiteDataTypeSessionStorage,
-                            //WKWebsiteDataTypeIndexedDBDatabases,
-                            //WKWebsiteDataTypeWebSQLDatabases
-                            ]];
+
     //// All kinds of data
-    //NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];// 清除所有
+    NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];// 清除所有
     //// Date from
     NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
     //// Execute
