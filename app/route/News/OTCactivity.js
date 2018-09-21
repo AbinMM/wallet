@@ -39,6 +39,7 @@ class OTCactivity extends BaseComponent {
             periodsseq: this.props.navigation.state.params.periodsseq, //当前进行第几期下标
             choicePeriods: 1, //选择了下拉列表的哪个下标
             dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
+            promptingState: '',
         }
     }
 
@@ -63,7 +64,6 @@ class OTCactivity extends BaseComponent {
                     this.props.dispatch({type: 'news/getWinActivityStageUsers', payload:{activityStageId:this.state.periodsseq},callback: (data) => {
                         //alert(this.state.periodsseq+JSON.stringify(data));
                         if(data && data.length > 0){
-                           
                             this.setState({
                                 nameList: data,
                                 logRefreshing: false,
@@ -75,6 +75,19 @@ class OTCactivity extends BaseComponent {
                     } });
                 } });
             } });
+            this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
+                if(this.props.defaultWallet == null || this.props.defaultWallet.account == null ||this.props.defaultWallet.name == null){
+                    this.setState({promptingState: '温馨提示：您暂时未参加本期活动'});
+                    return
+                }
+                this.props.dispatch({type: 'news/getActivityStageUsers', payload:{activityStageId:this.state.periodsseq,accountName:this.props.defaultWallet.name},callback: (data) => {
+                    if(data.length == 0){
+                        this.setState({promptingState: '温馨提示：您暂时未参加本期活动'});
+                    }else{
+                        this.setState({promptingState: '温馨提示：您已参加本期活动'});
+                    }
+                } })
+            }})
         } catch (error) {
             console.log(error.message);
         }
@@ -178,6 +191,11 @@ class OTCactivity extends BaseComponent {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
                 <Header {...this.props} onPressLeft={true} title="活动详情" />
+                <View style={styles.transactiontou}>
+                    <View style={[styles.transactionout,{backgroundColor: '#FF5353'}]}>
+                        <Text style={[styles.paneltext,{color: '#ffffff'}]}>{this.state.promptingState}</Text>
+                    </View>
+                </View>
                 <ImageBackground source={UImage.app16} resizeMode="stretch" style={styles.linebgout}>
                     <Image source={UImage.app12} style={styles.signedimg}/>
                     <View style={styles.header}>  
@@ -233,6 +251,11 @@ class OTCactivity extends BaseComponent {
                         </View>
                     </View>
                     <View style={[styles.listViewStyle,{backgroundColor: 'rgba(187, 223, 251, 0.8)'}]}>
+                    {this.state.nameList.length == 0 ?
+                        <View style={{flex: 1,alignItems: 'center',justifyContent: 'center'}}>
+                            <Image source={UImage.app20} style={{width: ScreenWidth-ScreenUtil.autowidth(40),height:(ScreenWidth-ScreenUtil.autowidth(40))*0.2064}} />
+                        </View>
+                        :
                         <ListView  enableEmptySections={true}  contentContainerStyle={{flexWrap:'wrap',flexDirection:'row', alignItems:'center',}}
                             removeClippedSubviews={false}
                             refreshControl={<RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing(this.state.choicePeriods)} 
@@ -245,7 +268,8 @@ class OTCactivity extends BaseComponent {
                                 </ImageBackground>
                             )}                
                         /> 
-
+                    }
+                      
                     </View>
                     
                 </ImageBackground>
@@ -258,7 +282,23 @@ const styles = StyleSheet.create({
       flex: 1,
       flexDirection:'column',
     },
-
+    transactiontou: { 
+        right: 0, 
+        zIndex: 999, 
+        position:'absolute', 
+        top: ScreenUtil.autoheight(70), 
+    },
+    transactionout: {
+        alignItems: "center",
+        justifyContent: "center",
+        borderTopLeftRadius: 25,
+        borderBottomLeftRadius: 25,
+        paddingVertical: ScreenUtil.autowidth(5),
+        paddingLeft: ScreenUtil.autowidth(10),
+    },
+    paneltext: {
+        fontSize: ScreenUtil.setSpText(10), 
+    },
     linebgout: {
         width: ScreenWidth,
         minHeight: ScreenWidth * 1.617,
@@ -270,24 +310,13 @@ const styles = StyleSheet.create({
         marginTop: ScreenUtil.autowidth(15),
         marginBottom: ScreenUtil.autowidth(10),
     },
-
-
-
-
     header: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
       paddingBottom: ScreenUtil.autoheight(5),
       paddingHorizontal: ScreenUtil.autowidth(40),
-
     },
-
-   
-
-
-
-
     leftout: {
       paddingLeft: ScreenUtil.autowidth(15),
     },
@@ -302,7 +331,6 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autowidth(14),
         marginRight: ScreenUtil.autowidth(5),
     },
-   
     explainimg: {
         width: ScreenUtil.autowidth(12),
         height: ScreenUtil.autowidth(12),
@@ -322,7 +350,6 @@ const styles = StyleSheet.create({
       flex: 1,
       borderWidth: 1,
       borderRadius: 3,
-      //alignItems: "center",
       justifyContent: 'center',
       height: ScreenUtil.autoheight(25),
       marginHorizontal: ScreenUtil.autowidth(5),

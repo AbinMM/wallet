@@ -91,4 +91,4 @@ export const dappfindAllCategory = rootaddr + '/dapp/findAllCategory';
 export const atcgetInfo = rootaddr + '/act/getInfo';
 export const getActivityStages = rootaddr + '/act/getActivityStages';
 export const getWinActivityStageUsers = rootaddr + '/act/getWinActivityStageUsers';
-
+export const getActivityStageUsers = rootaddr + '/act/getActivityStageUsers';

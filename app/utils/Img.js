@@ -248,4 +248,5 @@ export default {
   app17: require('../img/activity/app17.png'),
   app18: require('../img/activity/app18.png'),
   app19: require('../img/activity/app19.png'),
+  app20: require('../img/activity/app20.png'),
 }
