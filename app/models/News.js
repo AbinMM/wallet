@@ -1,5 +1,5 @@
 import Request from '../utils/RequestUtil';
-import {newsList,newsDown,newsUp,newsShare,newsView,shareAddPoint} from '../utils/Api';
+import {newsList,newsDown,newsUp,newsShare,newsView,shareAddPoint,atcgetInfo,getActivityStages,getWinActivityStageUsers} from '../utils/Api';
 import store from 'react-native-simple-store';
 import { EasyToast } from '../components/Toast';
 import Constants from '../utils/Constants'
@@ -142,6 +142,54 @@ export default {
       *openView({payload},{call,put}) {
         yield put({type:'open',...payload});
       },
+      
+        *getInfo({payload,callback},{call,put}) {
+            try{
+                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api'+atcgetInfo, 'post', payload);
+                //alert(''+JSON.stringify(resp));
+                // if(resp && resp.code=='0'){               
+                    // yield put({ type: 'updateAccountInfo', payload: { accountInfo:resp.data } });
+                // }else{
+                //     EasyToast.show(resp.msg);
+                // }
+                if (callback) callback(resp.data);
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });
+            }
+        },
+       
+        *getActivityStages({payload,callback},{call,put}) {
+            try{
+                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api'+getActivityStages, 'post', payload);
+                //alert(''+JSON.stringify(resp));
+                // if(resp && resp.code=='0'){               
+                    // yield put({ type: 'updateAccountInfo', payload: { accountInfo:resp.data } });
+                // }else{
+                //     EasyToast.show(resp.msg);
+                // }
+                if (callback) callback(resp.data);
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });
+            }
+        },
+        *getWinActivityStageUsers({payload,callback},{call,put}) {
+            try{
+                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api'+getWinActivityStageUsers, 'post', payload);
+                //alert(''+JSON.stringify(resp));
+                // if(resp && resp.code=='0'){               
+                //     yield put({ type: 'updateWinActivityStageUsers', payload: { nameList:resp.data } });
+                // }else{
+                //     EasyToast.show(resp.msg);
+                // }
+                if (callback) callback(resp.data);
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });
+            }
+        },
+
     },
    
     reducers: {
@@ -191,23 +239,6 @@ export default {
             newsData[n.tid] = list;
             return {...state,newsData};
         },
-
-        // updateSelect(state, action) {
-        //     let dts = state.voteData;
-        //     let newarr = new Array();
-        //     dts.map((item)=>{
-        //         if(item==action.payload.item){
-        //             if(item.isChecked){
-        //                 item.isChecked=false;
-        //             }else{
-        //                 item.isChecked=true;
-        //             }
-        //         }
-        //         newarr.push(item);
-        //     })
-        //     return {...state,voteData:newarr}; 
-        // }
-        
     }
   }
   
