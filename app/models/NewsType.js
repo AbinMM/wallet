@@ -13,8 +13,15 @@ export default {
         try{
             const resp = yield call(Request.request,newsTypes,'get');
             if(resp.code=='0'){
-                yield call(store.save,'newsTypes',resp.data);
-                yield put({type:'update',payload:{types:resp.data}});
+                var ret = [];
+                for(var i = 0; i < resp.data.length; i++){
+                    if(resp.data[i].title != "DAPP"){
+                        ret.push(resp.data[i]);
+                    }
+                }
+
+                yield call(store.save,'newsTypes',ret);
+                yield put({type:'update',payload:{types:ret}});
             }else{
                 EasyToast.show(resp.msg);
             }
