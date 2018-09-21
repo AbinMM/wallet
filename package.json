@@ -34,6 +34,7 @@
     "react-native-eosjs": "0.0.6",
     "react-native-gesture-handler": "^1.0.0-alpha.40",
     "react-native-linear-gradient": "^2.4.0",
+    "react-native-modal-dropdown": "^0.6.2",
     "react-native-progress-bar-classic": "^1.2.1",
     "react-native-qrcode-svg": "^5.0.6",
     "react-native-radio-buttons": "^1.0.0",
