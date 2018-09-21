@@ -57,6 +57,8 @@
     _textFieldTF.enablesReturnKeyAutomatically = YES; //这里设置为无文字就灰色不可点
     _textFieldTF.placeholder = @"请输入密码";
     _textFieldTF.secureTextEntry = YES;
+    _textFieldTF.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    _textFieldTF.textAlignment = NSTextAlignmentCenter;
     [self addSubview:_textFieldTF];
     
     UIColor * _lineColor = [UIColor lightGrayColor];

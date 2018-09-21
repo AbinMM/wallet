@@ -272,75 +272,11 @@
   [self clearCache];
 }
 
-
-
--(void)returnValueToJS:(NSNotification *)sender {
-  NSLog(@"收到通知：%@",sender.userInfo);
-  NSDictionary *dict = sender.userInfo;
-  NSString *callback = [dict objectForKey:@"callback"];
-  NSString *resp = [dict objectForKey:@"resp"];
-  
-  NSLog(@"callfun=>%@",callback);
-  if(callback==NULL){
-    return ;
-  }
-  
-  // 结果返回给js
-  NSString *jsStr = [NSString stringWithFormat:@"%@('%@')",callback,resp];
-  NSLog(@"jsStr=>%@",jsStr);
-  dispatch_async(dispatch_get_main_queue(), ^{  // 跳转界面，在主线程进行UI操作
-    [self.wkWebview evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-      NSLog(@"%@----%@",result, error);
-    }];
-  });
-}
-
-#pragma mark - WKScriptMessageHandler Delegate
-
-// 接收到JS发送消息时调用
-- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
-  
-  NSLog(@"DAPPS传过来的message.name: %@", message.name);
-  NSLog(@"DAPPS传过来的message.body: %@", message.body);
-  NSDictionary *body = [message.body objectForKey:@"body"];
-  NSString *callback = [body objectForKey:@"callback"];
-  NSString *params = [body objectForKey:@"params"];
-  NSString *password = @"";
-  NSString *device_id = @"";
-  
-  NSLog(@"callBackFun=>%@",callback);
-  
-  NSDictionary* dict = @{
-               @"methodName": message.name,
-               @"callback" : callback,
-               @"params" : params,
-               @"password":password,
-               @"device_id":device_id,
-               };
-
-    
-  if ([message.name isEqualToString:sdkGetWalletList]) {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"sendCustomEventNotification" object:self userInfo:@{@"requestInfo":dict}];
-  } else if ([message.name isEqualToString:sdkEosTokenTransfer]) {
-    [self orderDetails:dict];
-  } else if ([message.name isEqualToString:sdkPushEosAction]) {
-    
-  } else if ([message.name isEqualToString:sdkSign]) {
-    
-  } else if ([message.name isEqualToString:sdkEosAuthSign]) {
-    
-  } else if ([message.name isEqualToString:sdkGetDeviceId]) {
-    
-  } else{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"sendCustomEventNotification" object:self userInfo:@{@"requestInfo":dict}];
-  }
-}
-
 //清理WEB缓存
 - (void)clearCache {
   
   if ([[UIDevice currentDevice].systemVersion floatValue] >= 9.0) {
-
+    
     //// All kinds of data
     NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];// 清除所有
     //// Date from
@@ -362,6 +298,97 @@
 
 
 
+-(void)returnValueToJS:(NSNotification *)sender {
+  NSLog(@"收到通知：%@",sender.userInfo);
+  NSDictionary *dict = sender.userInfo;
+  NSString *callback = [dict objectForKey:@"callback"];
+  NSString *resp = [dict objectForKey:@"resp"];
+  
+  NSLog(@"callfun=>%@",callback);
+  if(callback==NULL){
+    return ;
+  }
+  
+  // 结果返回给DAPPS
+  NSString *jsStr = [NSString stringWithFormat:@"%@('%@')",callback,resp];
+  NSLog(@"jsStr=>%@",jsStr);
+  dispatch_async(dispatch_get_main_queue(), ^{  // 跳转界面，在主线程进行UI操作
+    [self.wkWebview evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+      NSLog(@"%@----%@",result, error);
+    }];
+  });
+}
+
+#pragma mark - WKScriptMessageHandler Delegate
+
+// 接收到DAPPS发送消息时调用
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+  
+  NSLog(@"DAPPS传过来的message.name: %@", message.name);
+  NSLog(@"DAPPS传过来的message.body: %@", message.body);
+  NSDictionary *body = [message.body objectForKey:@"body"];
+  NSString *callback = [body objectForKey:@"callback"];
+  NSString *params = [body objectForKey:@"params"];
+  NSString *password = @"";
+  NSString *device_id = @"";
+  
+  NSLog(@"callBackFun=>%@",callback);
+  
+  NSDictionary* paramDic = @{
+               @"methodName": message.name,
+               @"callback" : callback,
+               @"params" : params,
+               @"password":password,
+               @"device_id":device_id,
+               };
+
+    
+  if ([message.name isEqualToString:sdkEosTokenTransfer]) {
+    [self orderDetails:paramDic];
+  } else if ([message.name isEqualToString:sdkPushEosAction]) {
+    
+  } else if ([message.name isEqualToString:sdkSign]) {
+    [self inputPassword:paramDic];
+  } else if ([message.name isEqualToString:sdkEosAuthSign]) {
+    [self inputPassword:paramDic];
+  } else if ([message.name isEqualToString:sdkGetDeviceId]) {
+    
+  } else{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sendCustomEventNotification" object:self userInfo:@{@"requestInfo":paramDic}];
+  }
+}
+
+
+
+//输入密码
+- (void)inputPassword:(NSDictionary *)dict {
+  NSDictionary *paramDic = [dict objectForKey:@"paramDic"];
+  EncryptAlertView *alertview = [[EncryptAlertView alloc] initWithFrame:CGRectMake(0, 0, 280, 150) withTitle:@"密码" alertMessage:nil confrimBolck:^(NSString * str){
+    NSLog(@"paramDic:%@",paramDic);
+    
+    NSString *methodName = [paramDic objectForKey:@"methodName"];
+    NSString *callback = [paramDic objectForKey:@"callback"];
+    NSString *params = [paramDic objectForKey:@"params"];
+    NSString *device_id = [paramDic objectForKey:@"device_id"];
+    
+    NSDictionary *dicData = @{
+                              @"methodName": methodName,
+                              @"callback" : callback,
+                              @"params" : params,
+                              @"password":str,
+                              @"device_id":device_id,
+                              };
+    NSLog(@"button.paramDic:%@",dicData);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sendCustomEventNotification" object:self userInfo:@{@"requestInfo":dicData}];
+
+  } cancelBlock:^{
+    NSLog(@"点击了取消");
+  }];
+  [alertview show];
+}
+
+
+
 //订单详情
 - (void)orderDetails:(NSDictionary *)dict {
   NSString *params = [dict objectForKey:@"params"];
@@ -377,19 +404,13 @@
     return ;
   }
 
-  NSLog(@"清理缓存完毕dicData%@",dicData);
-
   NSString *from = [dicData objectForKey:@"from"];
   NSString *to = [dicData objectForKey:@"to"];
   NSString *memo = [dicData objectForKey:@"memo"];
   NSString *amount = [dicData objectForKey:@"amount"];
   NSString *tokenName = [dicData objectForKey:@"tokenName"];
   NSString *strAmount = [NSString stringWithFormat:@"%@ %@",amount,tokenName];
-//  NSString *tokenName = [dicData objectForKey:@"tokenName"];
-  
-  NSLog(@"清理缓存完毕from%@",from);
-  
-  
+
   CGRect range = CGRectMake(0, self.view.frame.size.height - 250, kSCREEN_WIDTH, 250);
   self.bottomDetailView = [[BottomDetailView alloc] initWithFrame:range];
   [self.view addSubview: self.bottomDetailView];
@@ -416,35 +437,11 @@
   
 }
 
+//确认支付
 -(void)buttonSubmitClick:(id)sender{
   MyButton * button = (MyButton * )sender;
   [self.bottomDetailView removeFromSuperview];
-  NSDictionary *paramDic = [button.paramDic objectForKey:@"paramDic"];
-  EncryptAlertView *alertview = [[EncryptAlertView alloc] initWithFrame:CGRectMake(0, 0, 280, 150) withTitle:@"密码" alertMessage:nil confrimBolck:^(NSString * str){
-
-    NSLog(@"paramDic:%@",paramDic);
-
-    NSString *methodName = [paramDic objectForKey:@"methodName"];
-    NSString *callback = [paramDic objectForKey:@"callback"];
-    NSString *params = [paramDic objectForKey:@"params"];
-//    NSString *password = [button.paramDic objectForKey:@"password"];
-    NSString *device_id = [paramDic objectForKey:@"device_id"];
-
-    NSDictionary *dicData = @{
-                         @"methodName": methodName,
-                         @"callback" : callback,
-                         @"params" : params,
-                         @"password":str,
-                         @"device_id":device_id,
-                         };
-    NSLog(@"button.paramDic:%@",dicData);
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"sendCustomEventNotification" object:self userInfo:@{@"requestInfo":dicData}];
-
-  } cancelBlock:^{
-    NSLog(@"点击了取消");
-  }];
-  [alertview show];
-  
+  [self inputPassword:button.paramDic];//输入密码
 }
 
 

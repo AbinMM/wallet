@@ -54,7 +54,7 @@
 -(void)setDataArray:(NSMutableArray *)dataArray {
     
     float left = 15;
-    float y = 35;
+    float y = 35+20;
     float width = 110;
     float height = 30;
     NSDictionary *paramDic = dataArray[0];
@@ -68,7 +68,7 @@
         UILabel *labelTitle = [[UILabel alloc] init];
         labelTitle.backgroundColor = [UIColor clearColor];
         labelTitle.textColor       = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
-        labelTitle.font            = [UIFont systemFontOfSize:20];
+        labelTitle.font            = [UIFont systemFontOfSize:18];
         labelTitle.textAlignment   = NSTextAlignmentLeft;
         [self addSubview:labelTitle];
         
@@ -79,7 +79,7 @@
         UILabel *labelContent = [[UILabel alloc] init];
         labelContent.backgroundColor = [UIColor clearColor];
         labelContent.textColor       = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
-        labelContent.font            = [UIFont systemFontOfSize:20];
+        labelContent.font            = [UIFont systemFontOfSize:18];
         labelContent.textAlignment   = NSTextAlignmentLeft;
         labelContent.numberOfLines   = 0;
         labelContent.preferredMaxLayoutWidth = [UIScreen mainScreen].bounds.size.width-104;
