@@ -145,7 +145,7 @@ export default {
       
         *getInfo({payload,callback},{call,put}) {
             try{
-                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api'+atcgetInfo, 'post', payload);
+                const resp = yield call(Request.request, atcgetInfo, 'post', payload);
                 //alert(''+JSON.stringify(resp));
                 // if(resp && resp.code=='0'){               
                     // yield put({ type: 'updateAccountInfo', payload: { accountInfo:resp.data } });
@@ -161,7 +161,7 @@ export default {
        
         *getActivityStages({payload,callback},{call,put}) {
             try{
-                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api'+getActivityStages, 'post', payload);
+                const resp = yield call(Request.request, getActivityStages, 'post', payload);
                 //alert(''+JSON.stringify(resp));
                 // if(resp && resp.code=='0'){               
                     // yield put({ type: 'updateAccountInfo', payload: { accountInfo:resp.data } });
@@ -176,7 +176,7 @@ export default {
         },
         *getWinActivityStageUsers({payload,callback},{call,put}) {
             try{
-                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api'+getWinActivityStageUsers, 'post', payload);
+                const resp = yield call(Request.request, getWinActivityStageUsers, 'post', payload);
                 //alert(''+JSON.stringify(resp));
                 // if(resp && resp.code=='0'){               
                 //     yield put({ type: 'updateWinActivityStageUsers', payload: { nameList:resp.data } });
