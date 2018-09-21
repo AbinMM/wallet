@@ -230,9 +230,9 @@ class News extends React.Component {
       const { navigate } = this.props.navigation;
       let url = banner.url.replace(/^\s+|\s+$/g, "");
       navigate('Web', { title: banner.title, url: url });
-      // if(banner.id== '40'){
-      //   navigate('OTCactivity');
-      // }
+      if(banner.id== '40'){
+        navigate('OTCactivity');
+      }
     }
   }
 
@@ -311,6 +311,23 @@ class News extends React.Component {
     }
   }
 
+  onPress = () =>{
+    const c = this.props.navigation.state.params.coins;
+    if(this.props.coinSelf && this.props.coinSelf[c.name.toLowerCase()]==1){
+      this.props.dispatch({type:'news/doCoinSelf',payload:{action:"rem",name:c.name.toLowerCase()},callback:function(){
+        DeviceEventEmitter.emit('coinSlefChange',"");
+      }});
+      this.props.navigation.setParams({img:UImage.fav,onPress:this.onPress});
+      EasyToast.show("已取消自选")
+    }else{
+      this.props.dispatch({type:'news/doCoinSelf',payload:{action:"add",name:c.name.toLowerCase()},callback:function(){
+        DeviceEventEmitter.emit('coinSlefChange',"");
+      }});
+      this.props.navigation.setParams({img:UImage.fav_h,onPress:this.onPress});
+      EasyToast.show("已加入自选")
+    }
+  }
+
   //渲染页面
   renderScene = ({ route }) => {
     if (route.key == '') {
@@ -327,7 +344,7 @@ class News extends React.Component {
         </View>
         <View style={{backgroundColor: UColor.mainColor}}>
           {/* <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
-            <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>自选DAPP</Text>
+            <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>常用DAPP</Text>
           </View>
           <ListView  enableEmptySections={true}  contentContainerStyle={[styles.selflist,{borderBottomColor:UColor.secdColor}]}
             dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
@@ -510,7 +527,7 @@ class News extends React.Component {
             renderHeader={(props) => <ImageBackground source={UImage.coinsbg1} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1546,}}>
             <TabBar onTabPress={this._handleTabItemPress} 
             labelStyle={[styles.labelStyle,{color:UColor.btnColor}]} 
-            indicatorStyle={[styles.indicatorStyle,{backgroundColor: UColor.fonttint}]} 
+            indicatorStyle={[styles.indicatorStyle,{width: ScreenWidth / this.state.routes.length - ScreenUtil.autowidth(40),backgroundColor: UColor.fonttint}]} 
             style={[{paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(25) : ScreenUtil.autoheight(20),alignItems: 'center',justifyContent: 'center',backgroundColor:UColor.transport}]} 
             tabStyle={{ width: ScreenWidth / this.state.routes.length, padding: 0, margin: 0 }} 
             scrollEnabled={true} {...props} />
@@ -628,12 +645,6 @@ const styles = StyleSheet.create({
   deletetext: {
     fontSize: ScreenUtil.setSpText(16),
   },
- 
-
-
-
-
-
   labelStyle: {
     margin: 0, 
     fontSize: ScreenUtil.setSpText(15), 
@@ -641,7 +652,6 @@ const styles = StyleSheet.create({
   indicatorStyle: {
     marginLeft: ScreenUtil.autowidth(20),
     marginBottom: ScreenUtil.autoheight(1),
-    width: ScreenWidth / 3 - ScreenUtil.autowidth(40),
   },
   container: {
     flex: 1,
