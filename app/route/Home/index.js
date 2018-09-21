@@ -66,6 +66,7 @@ class Home extends React.Component {
       this.getAllWalletEosBalance();
       this.getIncrease();
       this.getMyAssetsInfo();
+      this.getResourcesinfo();
     }});
     this.props.dispatch({ type: 'wallet/walletList' });
     this.props.dispatch({ type: 'wallet/invalidWalletList',  callback: (invalidWalletList) => {
@@ -77,7 +78,7 @@ class Home extends React.Component {
          })
       }
     }});
-    this.getResourcesinfo((this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name);
+   
     Animated.timing(
       this.state.fadeAnim,  //初始值
       {
@@ -141,8 +142,8 @@ class Home extends React.Component {
   }
 
   //获取资源详情
-  getResourcesinfo(username) {
-    this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: username },callback: (resources) => {
+  getResourcesinfo() {
+    this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: (this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name},callback: (resources) => {
       if(resources != null){
         this.setState({
           mortgage: resources.self_delegated_bandwidth ? Math.floor(resources.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100 + resources.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100 : '0',
@@ -474,15 +475,15 @@ class Home extends React.Component {
     navigate('ImportEosKey', {});
   }
 
-  getTodayIncrease()
-  {
+  getTodayIncrease(){
     var ret ;
     if(this.props.defaultWallet != null && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
       ret = '+0.00';  //未激活直接返回
     }else{
-      ret = (this.state.totalBalance == null || this.state.increase == null) ? '0.00' : ((this.state.increase>=0? "+" : "") +(((this.state.totalBalance * this.state.increase) / 100).toFixed(2)))
+      //ret = (this.state.totalBalance == null || this.state.increase == null) ? '0.00' : ((this.state.increase>=0? "+" : "") +(((this.state.totalBalance * this.state.increase) / 100).toFixed(2)))
+      ret = this.state.increase == null ? '0.00' : ((this.state.increase>=0? "+" : "") +(this.state.increase.toFixed(2)))
     }
-    return ret + '￥';
+    return ret + '%';
   }
 
   copyname(wallet) {
@@ -597,18 +598,20 @@ class Home extends React.Component {
             <View style={styles.addto}>
               <View style={styles.addtoouttop}>
                 <Text style={{fontSize: ScreenUtil.setSpText(25), color: UColor.btnColor}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '≈ 0.00' : "≈ " + this.adjustTotalBalance(this.state.totalBalance)) : '****'}</Text>
+                <Text style={[styles.addtoouttext,{color: UColor.btnColor}]}> ￥ </Text>
                 <View style={[styles.incdocupout,(this.state.increase>=0 || this.state.totalBalance == "0.00")?{borderColor: UColor.fallColor,backgroundColor: UColor.fallColor}:{borderColor: UColor.riseColor,backgroundColor: UColor.riseColor}]}>
                   <Text style={[styles.cupcdo,{color: UColor.btnColor}]}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
                 </View>
               </View>
               <View style={styles.addtoout} >
-                <Text style={[styles.addtotext,{color: UColor.btnColor}]}> 总资产</Text>
-                <Text style={[styles.addtoouttext,{color: UColor.btnColor}]}>(￥)</Text>
-                  <TouchableOpacity onPress={this.onPressReveal.bind(this,this.state.isEye)}>
-                    <Image source={this.state.isEye ? UImage.reveal_wallet : UImage.reveal_h_wallet} style={styles.imgTeOy}/>
-                  </TouchableOpacity>
+                <Text style={[styles.addtotext,{color: UColor.btnColor}]}>( 已抵押 </Text>
+                <Text style={[styles.addtotext,{color: UColor.btnColor}]}>{this.state.mortgage} EOS )</Text>
+                <TouchableOpacity onPress={this.onPressReveal.bind(this,this.state.isEye)}>
+                  <Image source={this.state.isEye ? UImage.reveal_wallet : UImage.reveal_h_wallet} style={styles.imgTeOy}/>
+                </TouchableOpacity>
               </View>
-              <View style={{flexDirection: "row"}}>
+            </View>
+              {/* <View style={{flexDirection: "row"}}>
                 <View style={[styles.resourceout,{borderRightColor: UColor.tintColor,borderRightWidth: 0.5}]}>
                   <Text style={[styles.ratiotext,{color: UColor.btnColor}]} numberOfLines={1}>{this.state.mortgage}</Text>
                   <Text style={[styles.recordtext,{color: UColor.arrow}]}>已抵押资源(EOS)</Text>
@@ -617,7 +620,7 @@ class Home extends React.Component {
                   <Text style={[styles.ratiotext,{color: UColor.btnColor}]} numberOfLines={1}>{this.state.allowance}</Text>
                   <Text style={[styles.recordtext,{color: UColor.arrow}]}>RAM余量(KB)</Text>
                 </View>
-              </View>
+              </View> */}
               <View style={styles.addout} >
                 <TouchableOpacity onPress={this.copyname.bind(this,this.props.defaultWallet)}>
                   <Text style={[styles.addtotext,{color: UColor.btnColor}]}>{(this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name}</Text>
@@ -634,7 +637,7 @@ class Home extends React.Component {
                     <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未备份</Text>
                   </View>) }   
               </View>
-            </View>
+            
           </ImageBackground> 
           
           <View style={[styles.head,{backgroundColor:UColor.mainColor, borderBottomColor: UColor.tintColor}]}>
@@ -876,12 +879,14 @@ const styles = StyleSheet.create({
   addto: {
     flex: 1, 
     flexDirection: "column",
-    justifyContent: "space-around",
+    justifyContent: "center",
     paddingHorizontal: ScreenUtil.autowidth(20),
   },
   addout: {
     flexDirection: "row",
     alignItems: 'center',
+    paddingHorizontal: ScreenUtil.autowidth(10),
+    paddingVertical: ScreenUtil.autowidth(15),
   },
 
   backoractivestyle: {
@@ -911,14 +916,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: 'center', 
     justifyContent: "center", 
+    paddingBottom:  ScreenUtil.autowidth(5),
+  },
+  addtoouttext: {
+    fontSize: ScreenUtil.setSpText(15), 
   },
   addtoout: {
     flexDirection: "row",
     alignItems: 'center', 
     justifyContent: "center", 
-  },
-  addtoouttext: {
-    fontSize: ScreenUtil.setSpText(14), 
   },
 
   addbtnout: {
@@ -1124,7 +1130,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: ScreenUtil.autoheight(10),
     paddingHorizontal: ScreenUtil.autowidth(10),
   },
   cupcdo:{
