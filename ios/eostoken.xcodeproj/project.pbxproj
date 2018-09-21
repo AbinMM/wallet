@@ -21,6 +21,7 @@
 		0C5ACA292153C5E60042EE63 /* UMS_shake_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C5ACA252153C5E60042EE63 /* UMS_shake_close@2x.png */; };
 		0C5ACA2A2153C5E60042EE63 /* EncryptAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5ACA262153C5E60042EE63 /* EncryptAlertView.m */; };
 		0C5ACA2D215485680042EE63 /* MyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5ACA2C215485680042EE63 /* MyButton.m */; };
+		0C73A7D92154CEDA0031A465 /* BottomActionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C73A7D82154CEDA0031A465 /* BottomActionsView.m */; };
 		0CD4DB10A6CF444BA9A3ABD0 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A0F888F2AB8149E6A9276D9D /* SimpleLineIcons.ttf */; };
 		0F15118864544AB0A18205FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1AEF070A3FC4B9C90227E4B /* Foundation.framework */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
@@ -497,6 +498,8 @@
 		0C5ACA262153C5E60042EE63 /* EncryptAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptAlertView.m; sourceTree = "<group>"; };
 		0C5ACA2B215485680042EE63 /* MyButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyButton.h; sourceTree = "<group>"; };
 		0C5ACA2C215485680042EE63 /* MyButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyButton.m; sourceTree = "<group>"; };
+		0C73A7A02154CED90031A465 /* BottomActionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BottomActionsView.h; sourceTree = "<group>"; };
+		0C73A7D82154CEDA0031A465 /* BottomActionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BottomActionsView.m; sourceTree = "<group>"; };
 		0DDD327C57D1416F9DDE6E4A /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		0E1D82B115C3401DB085B345 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		118D4FD77A6044DD8F757EC1 /* RCTWeChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = RCTWeChatTests.xctest; sourceTree = "<group>"; };
@@ -695,6 +698,8 @@
 		0C5ACA15215093200042EE63 /* SDK */ = {
 			isa = PBXGroup;
 			children = (
+				0C73A7A02154CED90031A465 /* BottomActionsView.h */,
+				0C73A7D82154CEDA0031A465 /* BottomActionsView.m */,
 				0C5ACA222153C5E60042EE63 /* BottomDetailView.h */,
 				0C5ACA232153C5E60042EE63 /* BottomDetailView.m */,
 				0C5ACA212153C5E60042EE63 /* EncryptAlertView.h */,
@@ -1675,6 +1680,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C5ACA2D215485680042EE63 /* MyButton.m in Sources */,
+				0C73A7D92154CEDA0031A465 /* BottomActionsView.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				ABC6FBA8206E1E0300918A81 /* RNUMConfigure.m in Sources */,

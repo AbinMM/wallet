@@ -10,6 +10,7 @@
 #import <WebKit/WebKit.h>
 #import "BottomDetailView.h"
 #import "EncryptAlertView.h"
+#import "BottomActionsView.h"
 
 // 协议中名字相对应,还和js发送消息名字一样
 #define sdkMethodName             @"methodName"         //通用方法
@@ -34,6 +35,7 @@
 #define rnNotification @"getValueFromRN"
 @interface DappsViewController ()<WKScriptMessageHandler,WKNavigationDelegate,WKUIDelegate>
 @property(nonatomic,strong)BottomDetailView *  bottomDetailView;
+@property(nonatomic,strong)BottomActionsView * bottomActionsView;
 @property(nonatomic,strong)WKWebView *wkWebview;
 @property (nonatomic,strong) UIProgressView *progress;
 
@@ -346,7 +348,7 @@
   if ([message.name isEqualToString:sdkEosTokenTransfer]) {
     [self orderDetails:paramDic];
   } else if ([message.name isEqualToString:sdkPushEosAction]) {
-    
+    [self orderActionsDetails:paramDic];
   } else if ([message.name isEqualToString:sdkSign]) {
     [self inputPassword:paramDic];
   } else if ([message.name isEqualToString:sdkEosAuthSign]) {
@@ -392,18 +394,8 @@
 //订单详情
 - (void)orderDetails:(NSDictionary *)dict {
   NSString *params = [dict objectForKey:@"params"];
-  
-  NSData *jsonData = [params dataUsingEncoding:NSUTF8StringEncoding];
-  NSError *err;
-  NSDictionary *dicData = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                      options:NSJSONReadingMutableContainers
-                                                        error:&err];
-  if(err)
-  {
-    NSLog(@"json解析失败：%@",err);
-    return ;
-  }
 
+  NSDictionary *dicData =[DappsViewController jsonToDict:params];
   NSString *from = [dicData objectForKey:@"from"];
   NSString *to = [dicData objectForKey:@"to"];
   NSString *memo = [dicData objectForKey:@"memo"];
@@ -442,6 +434,117 @@
   MyButton * button = (MyButton * )sender;
   [self.bottomDetailView removeFromSuperview];
   [self inputPassword:button.paramDic];//输入密码
+}
+
+//json转成字典
++ (NSDictionary *)jsonToDict:(NSString *)jsonString {
+  
+    if (jsonString == nil) {
+      return nil;
+    }
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSDictionary *dicData = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                            options:NSJSONReadingMutableContainers
+                                                              error:&err];
+    if(err)
+    {
+      NSLog(@"json解析失败：%@",err);
+      return nil;
+    }
+    return dicData;
+}
+
+
+
+//Action订单详情
+- (void)orderActionsDetails:(NSDictionary *)dict {
+
+  NSMutableDictionary * mutDict = [[NSMutableDictionary alloc]initWithDictionary:dict];
+  
+  NSString *params = [dict objectForKey:@"params"];
+  NSDictionary *parameD =[DappsViewController jsonToDict:params];
+  NSMutableDictionary * mutDictParame = [[NSMutableDictionary alloc]initWithDictionary:parameD];
+  
+  
+  NSLog(@"parameD：%@",parameD);
+  NSString *account = [parameD objectForKey:@"account"];
+//  NSString *actions = [parameD objectForKey:@"actions"];
+  
+  NSMutableArray * arrayActions = [parameD objectForKey:@"actions"];
+  NSLog(@"arrayActions：%@",arrayActions);
+  NSString *contractAccountName=@"";
+  NSInteger count = [arrayActions count];
+  for (int i = 0; i < count; i++) {
+    NSDictionary *dictArr = arrayActions[i];
+    NSLog(@"dictArr：%@",dictArr);
+    NSString *accountAction    = dictArr[@"account"];
+    NSString *name  = dictArr[@"name"];
+    NSMutableArray * authActions = [dictArr objectForKey:@"authorization"];
+    contractAccountName = [NSString stringWithFormat:@"%@->%@",accountAction,name];
+    if(account==nil){
+      NSLog(@"authActions：%@",authActions);
+        NSInteger count2 = [authActions count];
+        for (int  j= 0; j < count2; j++) {
+          NSDictionary *dictAuth = authActions[j];
+          NSString *actor = dictAuth[@"actor"];
+          NSString *permission = dictAuth[@"permission"];
+          if ([permission isEqualToString:@"active"]||[permission isEqualToString:@"owner"]){
+            if(actor!=nil){
+              account=actor;
+//              [mutDictParame setObject:account forKey:@"account"];
+//              [mutDict setObject:mutDictParame forKey:@"params"];
+              NSLog(@"mutDict：%@",mutDict);
+              break;
+            }
+          }
+        }
+      }else{
+        break;
+      }
+  }
+  
+
+  
+//  if(account==nil){
+//    account=@"jsukdkdk";
+//  }
+//
+//
+
+  
+  CGRect range = CGRectMake(0, self.view.frame.size.height - 220, kSCREEN_WIDTH, 220);
+  self.bottomActionsView = [[BottomActionsView alloc] initWithFrame:range];
+  [self.view addSubview: self.bottomActionsView];
+  self.bottomActionsView.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1];
+  
+  NSMutableArray * array = [[NSMutableArray alloc] init];
+  [array addObject:@{@"paramDic":mutDict}];//第一个先将参数传过去
+  [array addObject:@{@"title":@"类型:",@"content":@"actions"}];
+  [array addObject:@{@"title":@"接收方:",@"content":account}];
+  self.bottomActionsView.delegate = self;
+  [self.bottomActionsView setDataArray:array];
+  self.bottomActionsView.lastLabelTitle.text =contractAccountName;
+  self.bottomActionsView.lastLabelContent.text = params;
+
+  
+}
+
+
+
+-(void)cancelActionsButtonClick:(id)sender{
+  NSLog(@"cancelActionsButtonClick");
+  [self.bottomActionsView removeFromSuperview];
+  
+}
+
+-(void)buttonActionsSubmitClick:(id)sender{
+  NSLog(@"buttonActionsSubmitClick");
+  MyButton * button = (MyButton * )sender;
+  [self.bottomActionsView removeFromSuperview];
+  NSLog(@"buttonActionsSubmitClick button:%@",button.paramDic);
+  [self inputPassword:button.paramDic];//输入密码
+  
 }
 
 
