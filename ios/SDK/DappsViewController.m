@@ -455,7 +455,44 @@
     return dicData;
 }
 
+// 字典转json字符串方法
 
+-(NSString *)convertToJsonData:(NSDictionary *)dict
+{
+  
+  NSError *error;
+  
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
+  
+  NSString *jsonString;
+  
+  if (!jsonData) {
+    
+    NSLog(@"%@",error);
+    
+  }else{
+    
+    jsonString = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+  }
+  
+  NSMutableString *mutStr = [NSMutableString stringWithString:jsonString];
+  
+  NSRange range = {0,jsonString.length};
+  
+  //去掉字符串中的空格
+  
+  [mutStr replaceOccurrencesOfString:@" " withString:@"" options:NSLiteralSearch range:range];
+  
+  NSRange range2 = {0,mutStr.length};
+  
+  //去掉字符串中的换行符
+  
+  [mutStr replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:range2];
+  
+  return mutStr;
+  
+}
 
 //Action订单详情
 - (void)orderActionsDetails:(NSDictionary *)dict {
@@ -465,25 +502,19 @@
   NSString *params = [dict objectForKey:@"params"];
   NSDictionary *parameD =[DappsViewController jsonToDict:params];
   NSMutableDictionary * mutDictParame = [[NSMutableDictionary alloc]initWithDictionary:parameD];
-  
-  
-  NSLog(@"parameD：%@",parameD);
+
   NSString *account = [parameD objectForKey:@"account"];
-//  NSString *actions = [parameD objectForKey:@"actions"];
-  
+
   NSMutableArray * arrayActions = [parameD objectForKey:@"actions"];
-  NSLog(@"arrayActions：%@",arrayActions);
   NSString *contractAccountName=@"";
   NSInteger count = [arrayActions count];
   for (int i = 0; i < count; i++) {
     NSDictionary *dictArr = arrayActions[i];
-    NSLog(@"dictArr：%@",dictArr);
     NSString *accountAction    = dictArr[@"account"];
     NSString *name  = dictArr[@"name"];
     NSMutableArray * authActions = [dictArr objectForKey:@"authorization"];
     contractAccountName = [NSString stringWithFormat:@"%@->%@",accountAction,name];
     if(account==nil){
-      NSLog(@"authActions：%@",authActions);
         NSInteger count2 = [authActions count];
         for (int  j= 0; j < count2; j++) {
           NSDictionary *dictAuth = authActions[j];
@@ -492,9 +523,9 @@
           if ([permission isEqualToString:@"active"]||[permission isEqualToString:@"owner"]){
             if(actor!=nil){
               account=actor;
-//              [mutDictParame setObject:account forKey:@"account"];
-//              [mutDict setObject:mutDictParame forKey:@"params"];
-              NSLog(@"mutDict：%@",mutDict);
+              [mutDictParame setObject:account forKey:@"account"];
+              NSString *strParame =[self convertToJsonData:(NSDictionary *)mutDictParame];
+              [mutDict setObject:strParame forKey:@"params"];
               break;
             }
           }
@@ -505,12 +536,6 @@
   }
   
 
-  
-//  if(account==nil){
-//    account=@"jsukdkdk";
-//  }
-//
-//
 
   
   CGRect range = CGRectMake(0, self.view.frame.size.height - 220, kSCREEN_WIDTH, 220);
@@ -542,7 +567,6 @@
   NSLog(@"buttonActionsSubmitClick");
   MyButton * button = (MyButton * )sender;
   [self.bottomActionsView removeFromSuperview];
-  NSLog(@"buttonActionsSubmitClick button:%@",button.paramDic);
   [self inputPassword:button.paramDic];//输入密码
   
 }
