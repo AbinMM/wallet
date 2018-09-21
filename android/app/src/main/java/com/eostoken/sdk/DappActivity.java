@@ -20,7 +20,6 @@ import com.facebook.react.ReactActivity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -63,6 +62,7 @@ import com.eostoken.R;
 import com.eostoken.sdk.JSBridge;
 import com.eostoken.sdk.JSBridgeWebChromeClient;
 import com.eostoken.sdk.MessageToRN;
+import com.eostoken.sdk.ProgressDialog;
 import com.eostoken.sdk.RNCallback;
 import com.eostoken.sdk.ScanActivity;
 import org.json.JSONException;
@@ -73,6 +73,7 @@ import de.greenrobot.event.EventBus;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+
 public class DappActivity extends Activity {
     
     private  String mUrl = "";
@@ -80,13 +81,16 @@ public class DappActivity extends Activity {
     private  static String device_id = "" ;
     private  WebView mWebView;
     //android调用JS网页的时候会用到
-    // private static final Handler mHandler = new Handler();
+    private  final Handler mHandler = new Handler();
     private String invokeQRScanner_callback = "";  
     // private static int testnum = 0;
     private RelativeLayout rl_title;
     private TextView tv_close;
     private TextView tv_title;
     private ImageButton btn_share;
+
+    private boolean showProgress = false;
+    private ProgressDialog myProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +152,11 @@ public class DappActivity extends Activity {
         }else{
             window.setStatusBarColor(getResources().getColor(R.color.black));
             rl_title.setBackgroundColor(getResources().getColor(R.color.black));
+        }
+
+        if(myProgressDialog == null)
+        {
+            myProgressDialog = new ProgressDialog(DappActivity.this);
         }
         initWebView();
     }
@@ -249,6 +258,8 @@ public class DappActivity extends Activity {
             webSettings.setCacheMode(WebSettings.LOAD_DEFAULT); // 开启 DOM storage API 功能 
             webSettings.setDomStorageEnabled(true); 
 
+            webSettings.setUserAgentString("Name/tokenbank");
+
             //打开网页时，不调用系统浏览器，而是在本WebView中显示，则放开
             //调用本地 html 不需要设置WebViewClient
             // 处理webview中的各种通知、请求事件等
@@ -305,6 +316,7 @@ public class DappActivity extends Activity {
     public void onEventMainThread(RNCallback rnCallback) {
         Log.d("DappActivity","onEventMainThread(rnCallback)");
         String errmsg = "";
+        boolean result = false;
 
         //SDK 有错误信息返回，则提示 错误信息
         String resp = rnCallback.resp;
@@ -313,7 +325,7 @@ public class DappActivity extends Activity {
                 JSONObject obj = new JSONObject(resp);
                 if(!obj.isNull("result"))
                 {
-                    boolean result = obj.getBoolean("result");
+                    result = obj.getBoolean("result");
                     if(result == false){
                         if(!obj.isNull("msg"))
                         {
@@ -330,6 +342,20 @@ public class DappActivity extends Activity {
                 //TODO: handle exception
             }
         }
+
+        //关闭进度条
+        if(myProgressDialog != null)
+        {
+            if(myProgressDialog.isShowing())
+            {
+                myProgressDialog.cancelDialog();
+                if(result)
+                {
+                    Toast.makeText(getApplicationContext(), "操作成功", Toast.LENGTH_SHORT).show();
+                }
+                showProgress = false; //收到返回关闭显示
+            }
+        } 
         if(rnCallback != null){
              if(errmsg.equals("密码错误"))
              {
@@ -386,12 +412,13 @@ public class DappActivity extends Activity {
             // } catch (Exception e) {
             //     //TODO: handle exception
             // }
-
+            showProgress = false; //默认不显示
             switch(methodName){
                 case "eosTokenTransfer":
                     if(params.isEmpty() || callback.isEmpty()){
                         return;
                     }
+                    showProgress = true;
                     showTransfer(methodName,params,callback);
                     break;
 
@@ -399,6 +426,7 @@ public class DappActivity extends Activity {
                     if(params.isEmpty() || callback.isEmpty()){
                         return;
                     }
+                    showProgress = true;
                     showActions(methodName,params,callback);
                     break;
 
@@ -441,9 +469,23 @@ public class DappActivity extends Activity {
             object.put("device_id", device_id);
             object.put("callback", callback);
             
-           final String dataToRN = object.toString();          
+           final String dataToRN = object.toString();      
             // Toast.makeText(getApplicationContext(), dataToRN, Toast.LENGTH_SHORT).show();
             EventBus.getDefault().post(new MessageToRN(dataToRN));
+
+            //需要提示，则显示
+            if(showProgress == true)
+            {
+             mHandler.post(new Runnable(){
+                 @Override
+                 public void run() {
+                      if(!myProgressDialog.isShowing())
+                      {
+                          myProgressDialog.showDialog();
+                      } 
+                 }
+             });
+            }
                 
         } catch (Exception error) {
             Toast.makeText(getApplicationContext(), "sendEventToRN:" + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -493,9 +535,6 @@ public class DappActivity extends Activity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // if (mShareDialog != null && mShareDialog.isShowing()) {
-                //     mShareDialog.dismiss();
-                // }
                 showEditDialog(methodName,params,callback,mShareDialog);
             }
         });
@@ -580,6 +619,7 @@ public class DappActivity extends Activity {
                             {
                                 from = actor;
                                 obj.put("account", from); // params 放入account
+                                break;
                             }
                         }
                     }
@@ -903,4 +943,5 @@ public class DappActivity extends Activity {
          window.setBackgroundDrawableResource(R.color.white);
          mShareDialog.show();
      }
+
 }
