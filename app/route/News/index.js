@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { BackHandler, ImageBackground, Dimensions,NativeModules, Image, Modal, DeviceEventEmitter, InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, WebView, FlatList, Platform, Clipboard, TouchableHighlight, Linking, TouchableOpacity } from 'react-native';
+import { BackHandler, ImageBackground, Dimensions,NativeModules, Image, Modal, ScrollView, DeviceEventEmitter, InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, WebView, FlatList, Platform, Clipboard, TouchableHighlight, Linking, TouchableOpacity } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import moment from 'moment';
 import UImage from '../../utils/Img'
@@ -51,6 +51,11 @@ class News extends React.Component {
       selecttitle:"",
       selecturl:"",
       dappList: [],
+      holdallList: [
+        {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
+        {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
+        {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
+      ]
     };
     g_props = props;    
   }
@@ -225,6 +230,9 @@ class News extends React.Component {
       const { navigate } = this.props.navigation;
       let url = banner.url.replace(/^\s+|\s+$/g, "");
       navigate('Web', { title: banner.title, url: url });
+      // if(banner.id== '40'){
+      //   navigate('OTCactivity');
+      // }
     }
   }
 
@@ -290,13 +298,13 @@ class News extends React.Component {
       }
   }
 
-  onPressTool(key, data = {}) {
+  onPressTool(data) {
     const { navigate } = this.props.navigation;
-    if(key == 'Dappsearch'){
+    if(data.name == this.state.holdallList[0].name){
       navigate('Dappsearch', {});
-    }else if(key == 'FreeMortgage'){
+    }else if(data.name == this.state.holdallList[1].name){
       navigate('FreeMortgage');
-    }else if(key == 'eospark'){
+    }else if(data.name == this.state.holdallList[2].name){
       navigate('Web', { title: 'eospark', url: "https://eospark.com" });
     }else{
       EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
@@ -309,51 +317,63 @@ class News extends React.Component {
       return (<View></View>)
     }
     //if (route.key == this.state.routes[0].key) { 当tab的第一个是DAPP的时候释放这里
-    if (route.key == '15') {   //现在暂时点击到官方公告时显示
+    if (route.title == 'DAPP') {   //现在暂时点击到官方公告时显示
       return (<View>
+        <ScrollView  keyboardShouldPersistTaps="always">
         <View style={{ height: this.state.h }}>
           <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth}>
             {this.renderSwipeView()}
           </Carousel>
         </View>
         <View style={{backgroundColor: UColor.mainColor}}>
-          <View style={{paddingHorizontal: ScreenUtil.autowidth(5),paddingVertical:ScreenUtil.autoheight(10),}}>  
-            <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,paddingLeft: ScreenUtil.autoheight(12) }}>游戏娱乐</Text>
+          {/* <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
+            <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>自选DAPP</Text>
           </View>
-          <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{backgroundColor: UColor.mainColor,borderBottomColor:UColor.mainsecd}]}
+          <ListView  enableEmptySections={true}  contentContainerStyle={[styles.selflist,{borderBottomColor:UColor.secdColor}]}
+            dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
+            renderRow={(rowData) => (  
+              <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.selfDAPP}>
+                  <View style={styles.selfbtnout}>
+                    <Image source={{uri:rowData.icon}} style={styles.selfBtnDAPP} />
+                    <Text style={[styles.headbtntext,{color: UColor.fontColor}]} >{rowData.name}</Text>
+                  </View>
+              </Button>
+            )}                
+          />  */}
+          <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
+            <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>工具箱</Text>
+          </View> 
+          <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
+            dataSource={this.state.dataSource.cloneWithRows(this.state.holdallList == null ? [] : this.state.holdallList)} 
+            renderRow={(rowData) => (  
+              <Button  onPress={this.onPressTool.bind(this, rowData)}  style={styles.headDAPP}>
+                  <View style={styles.headbtnout}>
+                      <Image source={rowData.icon} style={styles.imgBtnDAPP} />
+                      <View style={{flex: 1}}>
+                        <Text style={[styles.headbtntext,{color: UColor.fontColor}]}>{rowData.name}</Text>
+                        <Text style={[styles.headbtntext,{color: UColor.arrow}]} numberOfLines={1}>{rowData.description}</Text>
+                      </View>
+                  </View>
+              </Button>
+            )}                
+          /> 
+          <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
+            <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>游戏娱乐</Text>
+          </View>
+          <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
             dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
             renderRow={(rowData) => (  
               <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headDAPP}>
                   <View style={styles.headbtnout}>
                       <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} />
-                      <Text style={[styles.headbtntext,{color: UColor.arrow}]}>{rowData.name}</Text>
+                      <View style={{flex: 1}}>
+                        <Text style={[styles.headbtntext,{color: UColor.fontColor}]}>{rowData.name}</Text>
+                        <Text style={[styles.headbtntext,{color: UColor.arrow}]} numberOfLines={1}>{rowData.description}</Text>
+                      </View>
                   </View>
               </Button>
             )}                
           /> 
-          <View style={{paddingHorizontal: ScreenUtil.autowidth(5),paddingVertical:ScreenUtil.autoheight(10),}}>  
-            <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,paddingLeft: ScreenUtil.autoheight(12) }}>工具箱</Text>
-          </View> 
-          <View style={styles.head}>
-            <Button  style={styles.headDAPP}  onPress={this.onPressTool.bind(this, 'Dappsearch')}>
-                <View style={styles.headbtnout}>
-                    <Image source={UImage.ManualSearch} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>搜索DAPP</Text>
-                </View>
-            </Button>
-            <Button  style={styles.headDAPP}  onPress={this.onPressTool.bind(this, 'eospark')}>
-                <View style={styles.headbtnout}>
-                    <Image source={UImage.eospark} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>eospark</Text>
-                </View>
-            </Button>
-            <Button  style={styles.headDAPP}  onPress={this.onPressTool.bind(this, 'FreeMortgage')}>
-                <View style={styles.headbtnout}>
-                    <Image source={UImage.Freemortgage} style={styles.imgBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>免费抵押</Text>
-                </View>
-            </Button>
-          </View>
         </View>
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.dappPromp} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
@@ -380,6 +400,8 @@ class News extends React.Component {
               </View> 
             </TouchableOpacity>
         </Modal>
+      </ScrollView>
+
       </View>)
     }
     if (route.type == 1) {
@@ -417,37 +439,21 @@ class News extends React.Component {
             activeDotStyle={{ backgroundColor: UColor.tintColor, width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}>
             {this.renderSwipeView()}
           </Swiper> */}
-          <Carousel
-            autoplay
-            autoplayTimeout={5000}
-            loop
-            index={0}
-            pageSize={ScreenWidth}>
+          <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth}>
             {this.renderSwipeView()}
           </Carousel>
         </View>
         }
-        refreshControl={
-          <RefreshControl
-            refreshing={this.props.newsRefresh}
-            onRefresh={() => this.onRefresh(route.key, true)}
-            tintColor={UColor.fontColor}
-            colors={[UColor.tintColor]}
-            progressBackgroundColor={UColor.btnColor}
-          />
-        }
+        refreshControl={<RefreshControl refreshing={this.props.newsRefresh} onRefresh={() => this.onRefresh(route.key, true)}
+          tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
         dataSource={this.state.dataSource.cloneWithRows(this.props.newsData[route.key] == null ? [] : this.props.newsData[route.key])}
         renderRow={(rowData) => (
           <TouchableHighlight onPress={() => { this.onPress(rowData) }} onLongPress={this.onShare.bind(this, rowData)} activeOpacity={0.5} underlayColor={UColor.secdColor}>
             <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
               <Text style={{ fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,fontWeight: "bold"}}>{rowData.title}</Text>
-              {
-                route.type == 2 && <Text numberOfLines={rowData.row} style={[styles.journalism,{color: UColor.lightgray}]} >{rowData.content}</Text>
-              }
+              {route.type == 2 && <Text numberOfLines={rowData.row} style={[styles.journalism,{color: UColor.lightgray}]} >{rowData.content}</Text>}
               {route.type == 2 && rowData.row == 3 && <Text style={[styles.moretext,{color: UColor.tintColor}]}>展开更多</Text>}
-              {
-                route.type != 2 && <Text style={[styles.journalism,{color: UColor.lightgray}]}>{rowData.content}</Text>
-              }
+              {route.type != 2 && <Text style={[styles.journalism,{color: UColor.lightgray}]}>{rowData.content}</Text>}
               <View style={styles.rowFooter}>
                 <Text style={[styles.pastTime,{color: UColor.lightgray}]}>{moment(rowData.createdate).fromNow()}</Text>
                 <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end" }}>
@@ -519,30 +525,54 @@ class News extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  listViewStyle:{ 
+  selflist:{ 
     flexWrap:'wrap', 
     flexDirection:'row', 
     alignItems:'center', // 必须设置,否则换行不起作用 
     width: ScreenWidth, 
+    marginTop:ScreenUtil.autoheight(10),
     borderBottomWidth: 1,
   }, 
-  headDAPP: {
+  selfDAPP: {
     width: ScreenWidth/4,
-    paddingVertical: ScreenUtil.autoheight(10),
+    paddingBottom: ScreenUtil.autoheight(10),
   },
-  headbtnout: {
+  selfbtnout: {
     flex:1, 
     alignItems: 'center', 
     justifyContent: "center",
   },
-  imgBtnDAPP: { 
-    margin: ScreenUtil.autowidth(5),
+  selfBtnDAPP: { 
     width: ScreenUtil.autowidth(40),
     height: ScreenUtil.autoheight(40),
+    margin: ScreenUtil.autowidth(5),
+  },
+  listViewStyle:{ 
+    flexDirection:'column', 
+    width: ScreenWidth, 
+    borderBottomWidth: 1,
+  }, 
+  headDAPP: {
+    paddingBottom: ScreenUtil.autoheight(10),
+    paddingHorizontal: ScreenUtil.autowidth(8),
+  },
+  headbtnout: {
+    flexDirection: 'row',
+    alignItems: 'center', 
+    justifyContent: "center",
+  },
+  imgBtnDAPP: { 
+    width: ScreenUtil.autowidth(40),
+    height: ScreenUtil.autoheight(40),
+    marginHorizontal: ScreenUtil.autowidth(15),
   },
   headbtntext: {
-    fontSize: ScreenUtil.setSpText(14),
-    lineHeight: ScreenUtil.autoheight(25), 
+    fontSize: ScreenUtil.setSpText(12),
+    lineHeight: ScreenUtil.autoheight(20), 
+  },
+  adddeleimg: {
+    width: ScreenUtil.autowidth(25),
+    height: ScreenUtil.autoheight(25),
   },
   pupuoBackup: {
     flex: 1,
@@ -597,11 +627,6 @@ const styles = StyleSheet.create({
   },
   deletetext: {
     fontSize: ScreenUtil.setSpText(16),
-  },
-  head: {
-    flexDirection: "row",
-    width: ScreenWidth, 
-    minHeight: ScreenUtil.autoheight(90),
   },
  
 
