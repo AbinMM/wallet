@@ -11,5 +11,5 @@
 
 
 @interface DappsViewController : UIViewController
--(void)showDapps:(NSURL *)url title:(NSString*)dappTitle;
+-(void)showDapps:(NSURL *)url title:(NSString*)dappTitle theme:(NSString*)theme;
 @end

@@ -8,7 +8,8 @@
 
 #import "DappsViewController.h"
 #import <WebKit/WebKit.h>
-
+#import "BottomDetailView.h"
+#import "EncryptAlertView.h"
 
 // 协议中名字相对应,还和js发送消息名字一样
 #define sdkMethodName             @"methodName"         //通用方法
@@ -32,7 +33,7 @@
 
 #define rnNotification @"getValueFromRN"
 @interface DappsViewController ()<WKScriptMessageHandler,WKNavigationDelegate,WKUIDelegate>
-
+@property(nonatomic,strong)BottomDetailView *  bottomDetailView;
 @property(nonatomic,strong)WKWebView *wkWebview;
 @property (nonatomic,strong) UIProgressView *progress;
 
@@ -41,6 +42,10 @@
 
 /** js方法是否已添加 */
 @property (nonatomic) BOOL IsBackMode;
+
+
+
+
 @end
 
 @implementation DappsViewController
@@ -152,11 +157,16 @@
 
 
 
--(void)showDapps:(NSURL *)url title:(NSString*)dappTitle{
-  NSLog(@"RN传过来的url: %@", url);
+-(void)showDapps:(NSURL *)url title:(NSString*)dappTitle theme:(NSString*)theme{
+  NSLog(@"RN传过来的theme: %@", theme);
   self.title=dappTitle;
   
-  _IsBackMode=NO;
+  if ([theme isEqualToString:@"true"]) {
+    _IsBackMode=YES;
+  }else{
+    _IsBackMode=NO;
+  }
+  
   WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
   WKPreferences *preferences = [WKPreferences new];
   preferences.javaScriptCanOpenWindowsAutomatically = YES;
@@ -247,18 +257,6 @@
       [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
   }
-//  //DAPP title
-//  else if ([keyPath isEqualToString:@"title"])
-//  {
-//    if (object == self.wkWebview)
-//    {
-//      self.title = self.wkWebview.title;
-//    }
-//    else
-//    {
-//      [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-//    }
-//  }
   else
   {
     [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -312,22 +310,28 @@
   
   NSLog(@"callBackFun=>%@",callback);
   
-  NSDictionary *dict = @{
-                         @"methodName": message.name,
-                         @"callback" : callback,
-                         @"params" : params,
-                         @"password":password,
-                         @"device_id":device_id,
-                         };
-  
+  NSDictionary* dict = @{
+               @"methodName": message.name,
+               @"callback" : callback,
+               @"params" : params,
+               @"password":password,
+               @"device_id":device_id,
+               };
+
     
   if ([message.name isEqualToString:sdkGetWalletList]) {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"sendCustomEventNotification" object:self userInfo:@{@"requestInfo":dict}];
   } else if ([message.name isEqualToString:sdkEosTokenTransfer]) {
-
+    [self orderDetails:dict];
   } else if ([message.name isEqualToString:sdkPushEosAction]) {
     
-  }else{
+  } else if ([message.name isEqualToString:sdkSign]) {
+    
+  } else if ([message.name isEqualToString:sdkEosAuthSign]) {
+    
+  } else if ([message.name isEqualToString:sdkGetDeviceId]) {
+    
+  } else{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"sendCustomEventNotification" object:self userInfo:@{@"requestInfo":dict}];
   }
 }
@@ -355,5 +359,169 @@
     
   }
 }
+
+
+
+//订单详情
+- (void)orderDetails:(NSDictionary *)dict {
+  NSString *params = [dict objectForKey:@"params"];
+  
+  NSData *jsonData = [params dataUsingEncoding:NSUTF8StringEncoding];
+  NSError *err;
+  NSDictionary *dicData = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                      options:NSJSONReadingMutableContainers
+                                                        error:&err];
+  if(err)
+  {
+    NSLog(@"json解析失败：%@",err);
+    return ;
+  }
+
+  NSLog(@"清理缓存完毕dicData%@",dicData);
+
+  NSString *from = [dicData objectForKey:@"from"];
+  NSString *to = [dicData objectForKey:@"to"];
+  NSString *memo = [dicData objectForKey:@"memo"];
+  NSString *amount = [dicData objectForKey:@"amount"];
+  NSString *tokenName = [dicData objectForKey:@"tokenName"];
+  NSString *strAmount = [NSString stringWithFormat:@"%@ %@",amount,tokenName];
+//  NSString *tokenName = [dicData objectForKey:@"tokenName"];
+  
+  NSLog(@"清理缓存完毕from%@",from);
+  
+  
+  CGRect range = CGRectMake(0, self.view.frame.size.height - 250, kSCREEN_WIDTH, 250);
+  self.bottomDetailView = [[BottomDetailView alloc] initWithFrame:range];
+  [self.view addSubview: self.bottomDetailView];
+  self.bottomDetailView.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1];
+
+  NSMutableArray * array = [[NSMutableArray alloc] init];
+  [array addObject:@{@"paramDic":dict}];//第一个先将参数传过去
+  [array addObject:@{@"title":@"订单类型:",@"content":@"转账"}];
+  [array addObject:@{@"title":@"接收方:",@"content":from}];
+  [array addObject:@{@"title":@"发送方:",@"content":to}];
+  [array addObject:@{@"title":@"备注:",@"content":memo}];
+  [array addObject:@{@"title":@"数量:",@"content":strAmount}];
+  
+  [self.bottomDetailView setDataArray:array];
+  self.bottomDetailView.delegate = self;
+  
+}
+
+
+
+-(void)cancelButtonClick:(id)sender{
+  NSLog(@"cancelButtonClick");
+  [self.bottomDetailView removeFromSuperview];
+  
+}
+
+-(void)buttonSubmitClick:(id)sender{
+  MyButton * button = (MyButton * )sender;
+  [self.bottomDetailView removeFromSuperview];
+  NSDictionary *paramDic = [button.paramDic objectForKey:@"paramDic"];
+  EncryptAlertView *alertview = [[EncryptAlertView alloc] initWithFrame:CGRectMake(0, 0, 280, 150) withTitle:@"密码" alertMessage:nil confrimBolck:^(NSString * str){
+
+    NSLog(@"paramDic:%@",paramDic);
+
+    NSString *methodName = [paramDic objectForKey:@"methodName"];
+    NSString *callback = [paramDic objectForKey:@"callback"];
+    NSString *params = [paramDic objectForKey:@"params"];
+//    NSString *password = [button.paramDic objectForKey:@"password"];
+    NSString *device_id = [paramDic objectForKey:@"device_id"];
+
+    NSDictionary *dicData = @{
+                         @"methodName": methodName,
+                         @"callback" : callback,
+                         @"params" : params,
+                         @"password":str,
+                         @"device_id":device_id,
+                         };
+    NSLog(@"button.paramDic:%@",dicData);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sendCustomEventNotification" object:self userInfo:@{@"requestInfo":dicData}];
+
+  } cancelBlock:^{
+    NSLog(@"点击了取消");
+  }];
+  [alertview show];
+  
+}
+
+
+- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView{
+  NSLog(@"webViewWebContentProcessDidTerminate:  当Web视图的网页内容被终止时调用。");
+}
+
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
+{
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+  NSLog(@"webView:didFinishNavigation:  响应渲染完成后调用该方法   webView : %@  -- navigation : %@  \n\n",webView,navigation);
+}
+
+
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation
+{
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  NSLog(@"webView:didStartProvisionalNavigation:  开始请求  \n\n");
+}
+
+- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation {
+  NSLog(@"webView:didCommitNavigation:   响应的内容到达主页面的时候响应,刚准备开始渲染页面应用 \n\n");
+}
+
+
+// error
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
+  // 类似 UIWebView 的- webView:didFailLoadWithError:
+  
+  NSLog(@"webView:didFailProvisionalNavigation:withError: 启动时加载数据发生错误就会调用这个方法。  \n\n");
+}
+
+
+
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error{
+  NSLog(@"webView:didFailNavigation: 当一个正在提交的页面在跳转过程中出现错误时调用这个方法。  \n\n");
+}
+
+
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
+  
+  NSLog(@"请求前会先进入这个方法  webView:decidePolicyForNavigationActiondecisionHandler: %@   \n\n  ",navigationAction.request);
+  
+  decisionHandler(WKNavigationActionPolicyAllow);
+  
+}
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler{
+  
+  NSLog(@"返回响应前先会调用这个方法  并且已经能接收到响应webView:decidePolicyForNavigationResponse:decisionHandler: Response?%@  \n\n",navigationResponse.response);
+  
+  decisionHandler(WKNavigationResponsePolicyAllow);
+}
+
+
+
+- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation{
+  
+  NSLog(@"webView:didReceiveServerRedirectForProvisionalNavigation: 重定向的时候就会调用  \n\n");
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @end

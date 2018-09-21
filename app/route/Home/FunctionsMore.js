@@ -187,7 +187,8 @@ class FunctionsMore extends React.Component {
       this. _setModalVisible_DAPP();
       if(Platform.OS === 'ios'){
         // let dict = {url:"http://eosbao.io/pocket?tokenpocket=true&referrer=eosgogogo", title: this.state.selecttitle};
-        let dict = {url:this.state.selecturl, title: this.state.selecttitle};
+        let dict = {url:this.state.selecturl, title: this.state.selecttitle, theme:""+this.state.theme};
+        // IosSDKModule.iosDebugInfo(dict);
         IosSDKModule.openDapps(dict);
         
       }else if(Platform.OS === 'android'){

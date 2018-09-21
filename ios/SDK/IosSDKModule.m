@@ -83,9 +83,10 @@ RCT_EXPORT_METHOD(getDictionaryFromRN:(NSDictionary *)dict){
 
 //打开DAPPS
 RCT_EXPORT_METHOD(openDapps:(NSDictionary *)dict){
-  
+   NSLog(@"RN接收传过来的dict: %@", dict);
   NSString *url = [dict objectForKey:@"url"];
   NSString *title = [dict objectForKey:@"title"];
+  NSString *theme = [dict objectForKey:@"theme"];
   
   NSLog(@"RN接收传过来的url: %@", url);
   
@@ -96,7 +97,7 @@ RCT_EXPORT_METHOD(openDapps:(NSDictionary *)dict){
     UINavigationController *rootNav = delegate.navController;
     rootNav.navigationBarHidden = NO;
     DappsViewController *nativeVC = [[DappsViewController alloc] init];
-    [nativeVC showDapps:urll title:title];
+    [nativeVC showDapps:urll title:title theme:theme];
     [rootNav pushViewController:nativeVC animated:YES];
   });
 }
