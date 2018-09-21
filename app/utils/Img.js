@@ -165,6 +165,7 @@ export default {
   feedback: require('../img/feedback.png'),
   freemortgage_bg: require('../img/freemortgage_bg.png'),
   Freemortgage: require('../img/Freemortgage.png'),
+  goto: require('../img/goto.png'),
   imvote:require('../img/imvote.png'),
   inb:require('../img/inb.png'),
   Invitation_vote:require('../img/Invitation_vote.png'),

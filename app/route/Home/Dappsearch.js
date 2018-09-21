@@ -37,13 +37,7 @@ class Dappsearch extends BaseComponent {
         super.componentWillUnmount();
     }
 
-    //清空
-    _empty = () => {
-        this.dismissKeyboardClick();
-        this.setState({ labelname: ''});
-    }
-
-    //查询
+    //前往
     _query =(labelname) => {
         this.dismissKeyboardClick();
         if (labelname == "") {
@@ -76,10 +70,7 @@ class Dappsearch extends BaseComponent {
                              autoCorrect={true} returnKeyType="go" keyboardType="default"  />
                     </View>    
                     <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>  
-                        <Text style={[styles.canceltext,{color: UColor.fontColor}]}>打开</Text>
-                    </TouchableOpacity>  
-                    <TouchableOpacity   onPress={this._empty.bind(this,this.state.labelname)}>  
-                        <Text style={[styles.canceltext,{color: UColor.fontColor}]}>清空</Text>
+                        <Image source={UImage.goto} style={styles.cancelimg} />
                     </TouchableOpacity>  
                 </View> 
                 <View style={styles.btnout}>
@@ -106,9 +97,7 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "center",
       paddingVertical: ScreenUtil.autoheight(7),
-    },
-    leftout: {
-      paddingLeft: ScreenUtil.autowidth(15),
+      paddingHorizontal: ScreenUtil.autowidth(15),
     },
     headleftimg: {
       width: ScreenUtil.autowidth(18),
@@ -123,120 +112,29 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: 'center',
       height: ScreenUtil.autoheight(30),
-      marginHorizontal: ScreenUtil.autowidth(10),
     },
     inpt: {
       flex: 1,
       height: ScreenUtil.autoheight(45),
       fontSize: ScreenUtil.setSpText(14),
     },
-    listItem: {
-      flex: 1,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    listInfo: {
-      flex: 1,
-      borderTopWidth:1,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      height: ScreenUtil.autoheight(65),
-      paddingHorizontal: ScreenUtil.autowidth(16),
-    },
-    scrollView: {
-      flex: 1,
-    },
-    listInfoTitle: {
-      fontSize: ScreenUtil.setSpText(16)
-    },
-    listInfoRight: {
-      flexDirection: "row",
-      alignItems: "center",
-    },
-    modalStyle: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    subView: {
-      borderRadius: 5,
-      borderWidth: 0.5,
-      alignSelf: 'stretch',
-      justifyContent: 'center',
-      marginHorizontal: ScreenUtil.autowidth(10),
-    },
-    buttonView: {
-      alignItems: 'flex-end',
-    },
-    butclose: {
-      width: ScreenUtil.autowidth(30),
-      height: ScreenUtil.autowidth(30),
-      fontSize: ScreenUtil.setSpText(28),
-    },
-    titleText: {
-      fontWeight: 'bold',
-      textAlign: 'center',
-      fontSize: ScreenUtil.setSpText(18),
-      marginBottom: ScreenUtil.autoheight(5),
-    },
-    passoutsource: {
-      alignItems: 'center',
-      flexDirection: 'column', 
-      padding:  ScreenUtil.autowidth(10),
-    },
-    inptpass: {
-      width: '100%',
-      height: ScreenUtil.autoheight(45),
-      fontSize: ScreenUtil.setSpText(16),
-      marginVertical: ScreenUtil.autoheight(10),
-      paddingHorizontal: ScreenUtil.autowidth(15),
-    },
-    copyout: {
-      borderRadius: 3,  
-      alignItems: 'center',
-      justifyContent: 'center', 
-      margin: ScreenUtil.autowidth(10), 
-      height: ScreenUtil.autoheight(45), 
-    },
-    copytext: {
-      fontSize: ScreenUtil.setSpText(16),
-    },
-    tab1:{
-      flex:1,
-    },
-    tab2:{
-      flex:1,
-      flexDirection: 'column',
-    }, 
-    canceltext: {
-      justifyContent: 'flex-end',
-      fontSize: ScreenUtil.setSpText(18),
-      paddingRight: ScreenUtil.autowidth(10),
+    cancelimg: {
+      width: ScreenUtil.autowidth(23),
+      height: ScreenUtil.autowidth(23),
+      marginLeft: ScreenUtil.autowidth(15),
     },
     prompttext: {
       fontSize: ScreenUtil.setSpText(12),
       lineHeight: ScreenUtil.autoheight(20),
     },
     btnout: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    manualout: {
-        paddingTop: ScreenUtil.autowidth(40),
-        paddingHorizontal: ScreenUtil.autowidth(35),
-    },
-    btnloginUser: {
-      borderRadius: 5,
+      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      width: ScreenUtil.autowidth(150),
-      height: ScreenUtil.autoheight(45),
     },
-    btntext: {
-      fontSize: ScreenUtil.setSpText(17),
+    manualout: {
+      paddingTop: ScreenUtil.autowidth(40),
+      paddingHorizontal: ScreenUtil.autowidth(35),
     },
     logout:{
       flex: 1,
