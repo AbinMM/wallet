@@ -55,7 +55,9 @@ class News extends React.Component {
         {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
         {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
         {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
-      ]
+      ],
+      periodstext: '', //当前进行第几期活动
+      periodsseq: '', //当前进行第几期下标
     };
     g_props = props;    
   }
@@ -139,6 +141,18 @@ class News extends React.Component {
         }
       });
     }
+
+    this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
+      let periodstext= '';
+      let periodsseq= '';
+      for(var i = 0; i < periodsdata.length; i++){
+          if(periodsdata[i].status == 'doing'){
+              periodstext= periodsdata[i].name;
+              periodsseq= periodsdata[i].seq;
+          }
+      }
+      this.setState({periodstext:periodstext,periodsseq:periodsseq});
+    } })
   }
 
   onBackAndroid = () => {
@@ -231,7 +245,7 @@ class News extends React.Component {
       let url = banner.url.replace(/^\s+|\s+$/g, "");
       navigate('Web', { title: banner.title, url: url });
       if(banner.id== '40'){
-        navigate('OTCactivity');
+        navigate('OTCactivity',{ periodstext:this.state.periodstext, periodsseq:this.state.periodsseq });
       }
     }
   }
@@ -272,7 +286,7 @@ class News extends React.Component {
   }
 
 
-  onPressDapp(data) {
+  onPressDapp(dappdata) {
     this.setState({
       dappPromp: true,
       selecttitle:data.name,
@@ -298,7 +312,7 @@ class News extends React.Component {
       }
   }
 
-  onPressTool(data) {
+  onPressTool(dappdata) {
     const { navigate } = this.props.navigation;
     if(data.name == this.state.holdallList[0].name){
       navigate('Dappsearch', {});
@@ -311,16 +325,16 @@ class News extends React.Component {
     }
   }
 
-  onPress = () =>{
+  onAddto = (dappdata) =>{
     const c = this.props.navigation.state.params.coins;
     if(this.props.coinSelf && this.props.coinSelf[c.name.toLowerCase()]==1){
-      this.props.dispatch({type:'news/doCoinSelf',payload:{action:"rem",name:c.name.toLowerCase()},callback:function(){
+      this.props.dispatch({type:'news/doCoinSelf',payload:{action:"rem",name:dappdata.name.toLowerCase()},callback:function(){
         DeviceEventEmitter.emit('coinSlefChange',"");
       }});
       this.props.navigation.setParams({img:UImage.fav,onPress:this.onPress});
       EasyToast.show("已取消自选")
     }else{
-      this.props.dispatch({type:'news/doCoinSelf',payload:{action:"add",name:c.name.toLowerCase()},callback:function(){
+      this.props.dispatch({type:'news/doCoinSelf',payload:{action:"add",name:dappdata.name.toLowerCase()},callback:function(){
         DeviceEventEmitter.emit('coinSlefChange',"");
       }});
       this.props.navigation.setParams({img:UImage.fav_h,onPress:this.onPress});
@@ -337,88 +351,87 @@ class News extends React.Component {
     if (route.title == 'DAPP') {   //现在暂时点击到官方公告时显示
       return (<View>
         <ScrollView  keyboardShouldPersistTaps="always">
-        <View style={{ height: this.state.h }}>
-          <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth}>
-            {this.renderSwipeView()}
-          </Carousel>
-        </View>
-        <View style={{backgroundColor: UColor.mainColor}}>
-          {/* <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
-            <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>常用DAPP</Text>
+          <View style={{ height: this.state.h }}>
+            <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth}>
+              {this.renderSwipeView()}
+            </Carousel>
           </View>
-          <ListView  enableEmptySections={true}  contentContainerStyle={[styles.selflist,{borderBottomColor:UColor.secdColor}]}
-            dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
-            renderRow={(rowData) => (  
-              <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.selfDAPP}>
-                  <View style={styles.selfbtnout}>
-                    <Image source={{uri:rowData.icon}} style={styles.selfBtnDAPP} />
-                    <Text style={[styles.headbtntext,{color: UColor.fontColor}]} >{rowData.name}</Text>
-                  </View>
-              </Button>
-            )}                
-          />  */}
-          <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
-            <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>工具箱</Text>
-          </View> 
-          <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
-            dataSource={this.state.dataSource.cloneWithRows(this.state.holdallList == null ? [] : this.state.holdallList)} 
-            renderRow={(rowData) => (  
-              <Button  onPress={this.onPressTool.bind(this, rowData)}  style={styles.headDAPP}>
+          <View style={{backgroundColor: UColor.mainColor}}>
+            {/* <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
+              <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>常用DAPP</Text>
+            </View>
+            <ListView  enableEmptySections={true}  contentContainerStyle={[styles.selflist,{borderBottomColor:UColor.secdColor}]}
+              dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
+              renderRow={(rowData) => (  
+                <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.selfDAPP}>
+                    <View style={styles.selfbtnout}>
+                      <Image source={{uri:rowData.icon}} style={styles.selfBtnDAPP} />
+                      <Text style={[styles.headbtntext,{color: UColor.fontColor}]} >{rowData.name}</Text>
+                    </View>
+                </Button>
+              )}                
+            />  */}
+            <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
+              <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>工具箱</Text>
+            </View> 
+            <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
+              dataSource={this.state.dataSource.cloneWithRows(this.state.holdallList == null ? [] : this.state.holdallList)} 
+              renderRow={(rowData) => (  
+                <Button  onPress={this.onPressTool.bind(this, rowData)}  style={styles.headDAPP}>
                   <View style={styles.headbtnout}>
-                      <Image source={rowData.icon} style={styles.imgBtnDAPP} />
-                      <View style={{flex: 1}}>
-                        <Text style={[styles.headbtntext,{color: UColor.fontColor}]}>{rowData.name}</Text>
-                        <Text style={[styles.headbtntext,{color: UColor.arrow}]} numberOfLines={1}>{rowData.description}</Text>
-                      </View>
+                    <Image source={rowData.icon} style={styles.imgBtnDAPP} />
+                    <View style={{flex: 1}}>
+                      <Text style={[styles.headbtntext,{color: UColor.fontColor}]}>{rowData.name}</Text>
+                      <Text style={[styles.headbtntext,{color: UColor.arrow}]} numberOfLines={1}>{rowData.description}</Text>
+                    </View>
                   </View>
-              </Button>
-            )}                
-          /> 
-          <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
-            <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>游戏娱乐</Text>
+                </Button>
+              )}                
+            /> 
+            <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
+              <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>游戏娱乐</Text>
+            </View>
+            <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
+              dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
+              renderRow={(rowData) => (  
+                <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headDAPP}>
+                  <View style={styles.headbtnout}>
+                    <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} />
+                    <View style={{flex: 1}}>
+                      <Text style={[styles.headbtntext,{color: UColor.fontColor}]}>{rowData.name}</Text>
+                      <Text style={[styles.headbtntext,{color: UColor.arrow}]} numberOfLines={1}>{rowData.description}</Text>
+                    </View>
+                  </View>
+                </Button>
+              )}                
+            /> 
           </View>
-          <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
-            dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
-            renderRow={(rowData) => (  
-              <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headDAPP}>
-                  <View style={styles.headbtnout}>
-                      <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} />
-                      <View style={{flex: 1}}>
-                        <Text style={[styles.headbtntext,{color: UColor.fontColor}]}>{rowData.name}</Text>
-                        <Text style={[styles.headbtntext,{color: UColor.arrow}]} numberOfLines={1}>{rowData.description}</Text>
-                      </View>
-                  </View>
-              </Button>
-            )}                
-          /> 
-        </View>
-        <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.dappPromp} onRequestClose={()=>{}}>
+          <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.dappPromp} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
               <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
                 <View style={styles.subViewBackup}> 
                   <Button onPress={this._setModalVisible_DAPP.bind(this) } style={styles.buttonView2}>
-                      <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={30} />
+                    <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={30} />
                   </Button>
                 </View>
                 <Text style={styles.contentText}>您接下来访问的页面将跳转至第三方应用DAPP {this.state.selecttitle}</Text>
                 <View style={[styles.warningout,{borderColor: UColor.showy}]}>
                     <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                        <Image source={UImage.warning_h} style={styles.imgBtnBackup} />
-                        <Text style={[styles.headtext,{color: UColor.riseColor}]} >免责声明</Text>
+                      <Image source={UImage.warning_h} style={styles.imgBtnBackup} />
+                      <Text style={[styles.headtext,{color: UColor.riseColor}]} >免责声明</Text>
                     </View>
                     <Text style={[styles.headtitle,{color: UColor.showy}]}>注意：您接下来访问的页面将跳转至第三方应用DAPP {this.state.selecttitle}。您在此应用上的所有行为应遵守该应用的用户协议和隐私政策，
-                       并由DAPP {this.state.selecttitle}向您承担应有责任。</Text>
+                      并由DAPP {this.state.selecttitle}向您承担应有责任。</Text>
                 </View>
-                <Button onPress={this.openTokenissue_DAPP.bind(this)} style={{}}>
+                <Button onPress={this.openTokenissue_DAPP.bind(this)}>
                     <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
-                        <Text style={[styles.deletetext,{color: UColor.btnColor}]}>我已阅读并同意</Text>
+                      <Text style={[styles.deletetext,{color: UColor.btnColor}]}>我已阅读并同意</Text>
                     </View>
                 </Button>  
               </View> 
             </TouchableOpacity>
-        </Modal>
-      </ScrollView>
-
+          </Modal>
+        </ScrollView>
       </View>)
     }
     if (route.type == 1) {
@@ -505,12 +518,7 @@ class News extends React.Component {
     if (this.props.banners != null) {
       return this.props.banners.map((item, i) => {
         return (<Button key={i} onPress={this.bannerPress.bind(this, item)}>
-        <Image
-          style={styles.image}
-          key={item}
-          source={{ uri: item.img, width: ScreenWidth }}
-          resizeMode="cover"
-        />
+          <Image style={styles.image} key={item} source={{ uri: item.img, width: ScreenWidth }} resizeMode="cover"/>
         </Button>)
       })
     } else {
@@ -520,9 +528,8 @@ class News extends React.Component {
   render() {
     return (
       <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-        {this.state.routes && <TabViewAnimated
-            lazy={true} 
-            navigationState={this.state}
+        {this.state.routes && <TabViewAnimated 
+            lazy={true} navigationState={this.state}
             renderScene={this.renderScene.bind(this)}
             renderHeader={(props) => <ImageBackground source={UImage.coinsbg1} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1546,}}>
             <TabBar onTabPress={this._handleTabItemPress} 
@@ -545,7 +552,7 @@ const styles = StyleSheet.create({
   selflist:{ 
     flexWrap:'wrap', 
     flexDirection:'row', 
-    alignItems:'center', // 必须设置,否则换行不起作用 
+    alignItems:'center', 
     width: ScreenWidth, 
     marginTop:ScreenUtil.autoheight(10),
     borderBottomWidth: 1,

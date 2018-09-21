@@ -35,8 +35,8 @@ class OTCactivity extends BaseComponent {
             logRefreshing: false, //下拉刷新
             cactivityYN: '', //活动是否开始
             searchResult: '', //搜索结果
-            periodstext: '第一期', //当前进行第几期活动
-            periodsseq: 1, //当前进行第几期下标
+            periodstext: this.props.navigation.state.params.periodstext, //当前进行第几期活动
+            periodsseq: this.props.navigation.state.params.periodsseq, //当前进行第几期下标
             choicePeriods: 1, //选择了下拉列表的哪个下标
             dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
         }
@@ -50,16 +50,16 @@ class OTCactivity extends BaseComponent {
                 this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
                     let arr = periodsdata;
                     let arr1 = [];
+                    let periodstext= '';
+                    let periodsseq= '';
                     for(var i = 0; i < arr.length; i++){
                         arr1.push(arr[i].name);
                         if(periodsdata[i].status == 'doing'){
-                            this.setState({
-                                periodstext: periodsdata[i].name,
-                                periodsseq: periodsdata[i].seq,
-                            })
+                            periodstext= periodsdata[i].name;
+                            periodsseq= periodsdata[i].seq;
                         }
                     }
-                    this.setState({ periodsList: arr1});
+                    this.setState({ periodsList: arr1,periodstext:periodstext,periodsseq:periodsseq});
                     this.props.dispatch({type: 'news/getWinActivityStageUsers', payload:{activityStageId:this.state.periodsseq},callback: (data) => {
                         //alert(this.state.periodsseq+JSON.stringify(data));
                         if(data && data.length > 0){
