@@ -89,7 +89,6 @@ public class DappActivity extends Activity {
     private TextView tv_title;
     private ImageButton btn_share;
 
-    private boolean showProgress = false;
     private ProgressDialog myProgressDialog;
 
     @Override
@@ -353,7 +352,6 @@ public class DappActivity extends Activity {
                 {
                     Toast.makeText(getApplicationContext(), "操作成功", Toast.LENGTH_SHORT).show();
                 }
-                showProgress = false; //收到返回关闭显示
             }
         } 
         if(rnCallback != null){
@@ -386,7 +384,7 @@ public class DappActivity extends Activity {
             if(methodName.isEmpty()){
                 return;
             }
-            // Toast.makeText(getApplicationContext(), methodName + "" + params, Toast.LENGTH_LONG).show();
+            // Toast.makeText(getApplicationContext(), methodName + "" + params, Toast.LENGTH_SHORT).show();
             // if(testnum > 0)
             // {
             //     return;
@@ -412,13 +410,11 @@ public class DappActivity extends Activity {
             // } catch (Exception e) {
             //     //TODO: handle exception
             // }
-            showProgress = false; //默认不显示
             switch(methodName){
                 case "eosTokenTransfer":
                     if(params.isEmpty() || callback.isEmpty()){
                         return;
                     }
-                    showProgress = true;
                     showTransfer(methodName,params,callback);
                     break;
 
@@ -426,7 +422,6 @@ public class DappActivity extends Activity {
                     if(params.isEmpty() || callback.isEmpty()){
                         return;
                     }
-                    showProgress = true;
                     showActions(methodName,params,callback);
                     break;
 
@@ -474,7 +469,7 @@ public class DappActivity extends Activity {
             EventBus.getDefault().post(new MessageToRN(dataToRN));
 
             //需要提示，则显示
-            if(showProgress == true)
+            if(methodName.equals("eosTokenTransfer") || methodName.equals("pushEosAction"))
             {
              mHandler.post(new Runnable(){
                  @Override
