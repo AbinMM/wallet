@@ -342,18 +342,21 @@ public class DappActivity extends Activity {
             }
         }
 
-        //关闭进度条
-        if(myProgressDialog != null)
+        //已经显示,关闭进度条
+        if(rnCallback.methodName.equals("eosTokenTransfer") || rnCallback.methodName.equals("pushEosAction"))
         {
-            if(myProgressDialog.isShowing())
+            if(myProgressDialog != null)
             {
-                myProgressDialog.cancelDialog();
-                if(result)
+                if(myProgressDialog.isShowing())
                 {
-                    Toast.makeText(getApplicationContext(), "操作成功", Toast.LENGTH_SHORT).show();
+                    myProgressDialog.cancelDialog();
+                    if(result)
+                    {
+                        Toast.makeText(getApplicationContext(), "操作成功", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-        } 
+        }
         if(rnCallback != null){
              if(errmsg.equals("密码错误"))
              {
