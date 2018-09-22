@@ -12,6 +12,10 @@
 #import "EncryptAlertView.h"
 #import "BottomActionsView.h"
 
+#import "XLPaymentSuccessHUD.h"
+#import "XLPaymentLoadingHUD.h"
+
+
 // 协议中名字相对应,还和js发送消息名字一样
 #define sdkMethodName             @"methodName"         //通用方法
 #define sdkEosTokenTransfer       @"eosTokenTransfer"   //转账
@@ -228,8 +232,32 @@
   return _progress;
 }
 
+//等待Loading
+-(void)showLoadingAnimation{
 
+  //隐藏支付完成动画
+  [XLPaymentSuccessHUD hideIn:self.view];
+  //显示支付中动画
+  [XLPaymentLoadingHUD showIn:self.view];
+}
 
+//操作成功
+-(void)showSuccessAnimation{
+  
+  //隐藏支付中成动画
+  [XLPaymentLoadingHUD hideIn:self.view];
+  //显示支付完成动画
+  [XLPaymentSuccessHUD showIn:self.view];
+}
+
+//操作完成
+-(void)showHideinAnimation{
+  
+  //隐藏支付中成动画
+  [XLPaymentLoadingHUD hideIn:self.view];
+  //显示支付完成动画
+  [XLPaymentSuccessHUD hideIn:self.view];
+}
 
 #pragma mark KVO的监听代理
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -303,10 +331,15 @@
 -(void)returnValueToJS:(NSNotification *)sender {
   NSLog(@"收到通知：%@",sender.userInfo);
   NSDictionary *dict = sender.userInfo;
+  NSString *methodName = [dict objectForKey:@"methodName"];
   NSString *callback = [dict objectForKey:@"callback"];
   NSString *resp = [dict objectForKey:@"resp"];
-  
-  NSLog(@"callfun=>%@",callback);
+  NSDictionary *respDict =[DappsViewController jsonToDict:resp];
+  NSLog(@"respDict=>%@",respDict);
+  NSNumber *result = [respDict objectForKey:@"result"];
+  NSLog(@"respReturn=>%@",result);
+  BOOL isSuccess=[result boolValue];;
+  NSLog(@"isSuccess=>%d",isSuccess);
   if(callback==NULL){
     return ;
   }
@@ -317,6 +350,15 @@
   dispatch_async(dispatch_get_main_queue(), ^{  // 跳转界面，在主线程进行UI操作
     [self.wkWebview evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
       NSLog(@"%@----%@",result, error);
+      if (([methodName isEqualToString:sdkEosTokenTransfer])||([methodName isEqualToString:sdkPushEosAction])) {
+        if((error==nil)&&(isSuccess)){
+          [self showSuccessAnimation];//操作成功
+        }
+        dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 1 * 1 * NSEC_PER_SEC);
+        dispatch_after(time, dispatch_get_main_queue(), ^(void){
+          [self showHideinAnimation];
+        });
+      }
     }];
   });
 }
@@ -333,8 +375,6 @@
   NSString *params = [body objectForKey:@"params"];
   NSString *password = @"";
   NSString *device_id = @"";
-  
-  NSLog(@"callBackFun=>%@",callback);
   
   NSDictionary* paramDic = @{
                @"methodName": message.name,
@@ -381,6 +421,10 @@
                               @"device_id":device_id,
                               };
     NSLog(@"button.paramDic:%@",dicData);
+    if (([methodName isEqualToString:sdkEosTokenTransfer])||([methodName isEqualToString:sdkPushEosAction])) {
+      [self showLoadingAnimation];
+    }
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"sendCustomEventNotification" object:self userInfo:@{@"requestInfo":dicData}];
 
   } cancelBlock:^{

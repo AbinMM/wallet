@@ -62,7 +62,7 @@ RCT_EXPORT_METHOD(getDictionaryFromRN:(NSDictionary *)dict){
   
 //  NSString *rnData=@"{\"wallets\":{\"eos\":[{\"name\":\"chengengping\",\"address\":\"EOS8Af2FhdiVTZVvg2bL43JHaGx8gPzq5aBonXawUoQMzaCVA9jpS\",\"tokens\":{\"eos\":1.0778}}]}}";
   NSLog(@"接收传过来的resp: %@", resp);
-  [[NSNotificationCenter defaultCenter] postNotificationName:rnNotification object:self userInfo:@{@"callback":callback,@"resp":resp}];
+  [[NSNotificationCenter defaultCenter] postNotificationName:rnNotification object:self userInfo:@{@"methodName":methodName,@"callback":callback,@"resp":resp}];
 }
 
 
