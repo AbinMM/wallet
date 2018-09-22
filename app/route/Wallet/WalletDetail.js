@@ -23,7 +23,8 @@ class WalletDetail extends BaseComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {};
     return {
-      headerTitle: params.data.name,
+      // headerTitle: params.data.name,
+      headerTitle: "账户管理",
       header:null,  
     };
   };
