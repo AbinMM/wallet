@@ -277,6 +277,12 @@ class News extends React.Component {
   }
 
   onPressDapp(data) {
+    if(this.props.defaultWallet == null || this.props.defaultWallet.name == null 
+          || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
+      EasyToast.show("请先导入已激活账号!");
+      return;
+    }
+
     this.setState({
       dappPromp: true,
       selecttitle:data.name,
@@ -299,10 +305,19 @@ class News extends React.Component {
 
   onPressTool(data) {
     const { navigate } = this.props.navigation;
+    if(data.name == this.state.holdallList[1].name){
+      navigate('Web', { title: 'eospark', url: "https://eospark.com" });
+      return ;
+    }
+
+    if(this.props.defaultWallet == null || this.props.defaultWallet.name == null 
+          || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
+      EasyToast.show("请先导入已激活账号!");
+      return;
+    }
+  
     if(data.name == this.state.holdallList[0].name){
       navigate('Dappsearch', {theme:this.state.theme});
-    }else if(data.name == this.state.holdallList[1].name){
-      navigate('Web', { title: 'eospark', url: "https://eospark.com" });
     }else if(data.name == this.state.holdallList[2].name){
       navigate('FreeMortgage');
     }else{
