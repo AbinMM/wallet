@@ -376,6 +376,8 @@
   NSString *password = @"";
   NSString *device_id = @"";
   
+
+  
   NSDictionary* paramDic = @{
                @"methodName": message.name,
                @"callback" : callback,
@@ -403,8 +405,8 @@
 
 
 //输入密码
-- (void)inputPassword:(NSDictionary *)dict {
-  NSDictionary *paramDic = [dict objectForKey:@"paramDic"];
+- (void)inputPassword:(NSDictionary *)paramDic {
+//  NSDictionary *paramDic = [dict objectForKey:@"paramDic"];
   EncryptAlertView *alertview = [[EncryptAlertView alloc] initWithFrame:CGRectMake(0, 0, 280, 150) withTitle:@"密码" alertMessage:nil confrimBolck:^(NSString * str){
     NSLog(@"paramDic:%@",paramDic);
     
@@ -477,7 +479,8 @@
 -(void)buttonSubmitClick:(id)sender{
   MyButton * button = (MyButton * )sender;
   [self.bottomDetailView removeFromSuperview];
-  [self inputPassword:button.paramDic];//输入密码
+  NSDictionary *paramDic = [button.paramDic objectForKey:@"paramDic"];
+  [self inputPassword:paramDic];//输入密码
 }
 
 //json转成字典
@@ -612,8 +615,8 @@
   NSLog(@"buttonActionsSubmitClick");
   MyButton * button = (MyButton * )sender;
   [self.bottomActionsView removeFromSuperview];
-  [self inputPassword:button.paramDic];//输入密码
-  
+  NSDictionary *paramDic = [button.paramDic objectForKey:@"paramDic"];
+  [self inputPassword:paramDic];//输入密码
 }
 
 

@@ -71,7 +71,8 @@
     
     
     _cancleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_cancleBtn setBackgroundColor:[UIColor colorWithRed: 107/255.0 green:202/255.0 blue:253/255.0 alpha:1]];
+//  [_cancleBtn setBackgroundColor:[UIColor colorWithRed: 107/255.0 green:202/255.0 blue:253/255.0 alpha:1]];
+    [_cancleBtn setBackgroundColor:[UIColor colorWithRed: 253/255.0 green:103/255.0 blue:105/255.0 alpha:1]];
     [_cancleBtn setTitle:@"取消" forState:UIControlStateNormal];
     [_cancleBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
@@ -81,7 +82,8 @@
     
     
     _sureBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_sureBtn setBackgroundColor:[UIColor colorWithRed: 253/255.0 green:103/255.0 blue:105/255.0 alpha:1]];
+//  [_sureBtn setBackgroundColor:[UIColor colorWithRed: 253/255.0 green:103/255.0 blue:105/255.0 alpha:1]];
+    [_sureBtn setBackgroundColor:[UIColor colorWithRed: 107/255.0 green:202/255.0 blue:253/255.0 alpha:1]];
     [_sureBtn setTitle:@"确认" forState:UIControlStateNormal];
     [_sureBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _sureBtn.frame = CGRectMake(self.frame.size.width/2 + 10, 100, self.frame.size.width/2 - 20-10, 40);
