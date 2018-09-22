@@ -367,14 +367,14 @@ class News extends React.Component {
     }
 }
 
-  onPressTool(dappdata) {
+  onPressTool(data) {
     const { navigate } = this.props.navigation;
     if(data.name == this.state.holdallList[0].name){
       navigate('Dappsearch', {});
     }else if(data.name == this.state.holdallList[1].name){
-      navigate('FreeMortgage');
-    }else if(data.name == this.state.holdallList[2].name){
       navigate('Web', { title: 'eospark', url: "https://eospark.com" });
+    }else if(data.name == this.state.holdallList[2].name){
+      navigate('FreeMortgage');
     }else{
       EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
     }
