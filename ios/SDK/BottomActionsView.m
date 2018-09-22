@@ -35,7 +35,7 @@
     showActions = NO;
     
     float width = 80;
-    CGRect rect = CGRectMake((kSCREEN_WIDTH - width)/2, 15, 100, 30);
+    CGRect rect = CGRectMake((kSCREEN_WIDTH - width)/2, 7, 100, 30);
     
     UILabel * titleLabel = [[UILabel alloc] initWithFrame:rect];
     [self addSubview:titleLabel];
@@ -67,7 +67,7 @@
     
     float left = 15;
     float y = 35;
-    float width = 110;
+    float width = 130;
     float height = 30;
   
     NSDictionary *paramDic = dataArray[0];
@@ -81,7 +81,7 @@
         UILabel *labelTitle = [[UILabel alloc] init];
         labelTitle.backgroundColor = [UIColor clearColor];
         labelTitle.textColor       = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
-        labelTitle.font            = [UIFont systemFontOfSize:20];
+        labelTitle.font            = [UIFont systemFontOfSize:18];
         labelTitle.textAlignment   = NSTextAlignmentLeft;
         [self addSubview:labelTitle];
         
@@ -92,12 +92,12 @@
         UILabel *labelContent = [[UILabel alloc] init];
         labelContent.backgroundColor = [UIColor clearColor];
         labelContent.textColor       = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
-        labelContent.font            = [UIFont systemFontOfSize:20];
+        labelContent.font            = [UIFont systemFontOfSize:18];
         labelContent.textAlignment   = NSTextAlignmentLeft;
         labelContent.numberOfLines   = 0;
         labelContent.preferredMaxLayoutWidth = [UIScreen mainScreen].bounds.size.width-104;
         [self addSubview:labelContent];
-        labelContent.frame = CGRectMake(left + width + left, y, width, height);
+        labelContent.frame = CGRectMake(width, y, width, height);
         
         labelContent.text = content;
         
@@ -159,7 +159,7 @@
   [self.lastLabelContent setTextColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
   [self.lastLabelContent setBackgroundColor:[UIColor clearColor]];
   [self.lastLabelContent.layer setBorderColor:[[UIColor clearColor] CGColor]];
-  [self.lastLabelContent setFont:[UIFont systemFontOfSize:18]];
+  [self.lastLabelContent setFont:[UIFont systemFontOfSize:12]];
   [self.lastLabelContent.layer setBorderWidth:1.0f];
   [self.lastLabelContent setDelegate:self];
   [self addSubview:self.lastLabelContent];

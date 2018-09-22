@@ -23,7 +23,7 @@
     self = [super initWithFrame:frame];
     
     float width = 80;
-    CGRect rect = CGRectMake((kSCREEN_WIDTH - width)/2, 15, 100, 30);
+    CGRect rect = CGRectMake((kSCREEN_WIDTH - width)/2, 7, 100, 30);
     
     UILabel * titleLabel = [[UILabel alloc] initWithFrame:rect];
     [self addSubview:titleLabel];
@@ -55,7 +55,7 @@
     
     float left = 15;
     float y = 35;
-    float width = 110;
+    float width = 130;
     float height = 30;
     NSDictionary *paramDic = dataArray[0];
     NSInteger count = [dataArray count];
@@ -84,7 +84,7 @@
         labelContent.numberOfLines   = 0;
         labelContent.preferredMaxLayoutWidth = [UIScreen mainScreen].bounds.size.width-104;
         [self addSubview:labelContent];
-        labelContent.frame = CGRectMake(left + width + left, y, width, height);
+        labelContent.frame = CGRectMake(width, y, width, height);
 
         labelContent.text = content;
 
@@ -104,7 +104,7 @@
         
     }
     
-    self.button = [[MyButton alloc] initWithFrame:CGRectMake(left , y, self.frame.size.width - 2* left, 40) ];
+    self.button = [[MyButton alloc] initWithFrame:CGRectMake(left , y+5, self.frame.size.width - 2* left, 40) ];
     self.button.paramDic = paramDic;
     self.button.layer.masksToBounds = YES;
 //    self.button.layer.cornerRadius  = 2;
