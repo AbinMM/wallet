@@ -58,7 +58,7 @@ export default {
                 yield call(store.save, 'accountInfo', resp.data);
                 if (callback) callback(resp.data);
             }else{
-                EasyToast.show(resp.msg);
+                // EasyToast.show(resp.msg);
                 if(accountInfo)
                 {
                     yield put({ type: 'updateAccountInfo', payload: { producers:(accountInfo.voter_info ? accountInfo.voter_info.producers : "") } });
