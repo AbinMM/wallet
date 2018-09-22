@@ -354,7 +354,7 @@ class News extends React.Component {
     });  
   } 
 
-  openTokenissue_DAPP() {
+  openDAPP() {
     this. _setModalVisible_DAPP();
     if(Platform.OS === 'ios'){
       // let dict = {url:"http://eosbao.io/pocket?tokenpocket=true&referrer=eosgogogo", title: this.state.selecttitle};
@@ -478,7 +478,7 @@ class News extends React.Component {
                     <Text style={[styles.headtitle,{color: UColor.showy}]}>注意：您接下来访问的页面将跳转至第三方应用DAPP {this.state.selecttitle}。您在此应用上的所有行为应遵守该应用的用户协议和隐私政策，
                       并由DAPP {this.state.selecttitle}向您承担应有责任。</Text>
                 </View>
-                <Button onPress={this.openTokenissue_DAPP.bind(this)}>
+                <Button onPress={this.openDAPP.bind(this)}>
                     <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
                       <Text style={[styles.deletetext,{color: UColor.btnColor}]}>我已阅读并同意</Text>
                     </View>
