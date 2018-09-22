@@ -1125,13 +1125,41 @@ class Transaction extends BaseComponent {
             </Button>
         </View> 
     </ImageBackground>
-      {Constants.isNetWorkOffline &&
-        <Button onPress={this.openSystemSetting.bind(this)}>
-          <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
-              <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
-              <Ionicons style={{marginRight: ScreenUtil.autowidth(5),color: UColor.btnColor}} name="ios-arrow-forward-outline" size={20} />
-          </View>
-        </Button>}
+    {Constants.isNetWorkOffline &&
+    <Button onPress={this.openSystemSetting.bind(this)}>
+        <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
+            <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
+            <Ionicons style={{marginRight: ScreenUtil.autowidth(5),color: UColor.btnColor}} name="ios-arrow-forward-outline" size={20} />
+        </View>
+    </Button>}
+    <ImageBackground source={UImage.transactionB} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
+        <View style={styles.header}>
+            <View style={styles.leftout}>
+                <View style={styles.nameout}>
+                    <Text style={[styles.nametext,{color: UColor.arrow}]}>CNY</Text>
+                    <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
+                    <Text style={[styles.nametext,{color: UColor.arrow}]}>交易量</Text>
+                </View>
+                <View style={styles.recordout}>
+                    <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price_rmb,8) : '0'}</Text>
+                    <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.open,8) : '0'} EOS</Text>
+                    <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.today_volum,8) : '0'} {this.state.tradename}</Text>
+                </View>
+            </View>
+            <View style={styles.rightout}>
+                <View style={styles.presentprice}>
+                    <Text style={[styles.present,{color: UColor.btnColor}]}> {this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price,8) : '0'}</Text>
+                    <Text style={[styles.toptext,{color: UColor.arrow}]}>价格</Text>
+                </View>
+                <View style={styles.titleout}>
+                    <Text style={[styles.cupcdo,{color: (this.props.etinfo && this.props.etinfo.increase>=0)?UColor.riseColor:UColor.fallColor}]}> 
+                        {this.props.etinfo ? (this.props.etinfo.increase > 0 ? '+' + (this.props.etinfo.increase * 100).toFixed(2) : 
+                        (this.props.etinfo.increase * 100).toFixed(2)): '0.00'}%</Text>
+                    <Text style={[styles.Increasetext,{color:UColor.arrow}]}>涨幅</Text>
+                </View>
+            </View>
+        </View>
+    </ImageBackground>
     <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
         <ScrollView {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} 
             scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"
@@ -1146,34 +1174,6 @@ class Transaction extends BaseComponent {
         >
        {Platform.OS == 'ios' && <ActivityIndicator size="large" color={UColor.tintColor} animating={this.state.logRefreshing} 
         style={[styles.loganimat, {height:this.state.logRefreshing? ScreenUtil.autoheight(60):0}]}/>}
-            <ImageBackground source={UImage.transactionB} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
-                <View style={styles.header}>
-                    <View style={styles.leftout}>
-                        <View style={styles.nameout}>
-                            <Text style={[styles.nametext,{color: UColor.arrow}]}>CNY</Text>
-                            <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
-                            <Text style={[styles.nametext,{color: UColor.arrow}]}>交易量</Text>
-                        </View>
-                        <View style={styles.recordout}>
-                            <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price_rmb,8) : '0'}</Text>
-                            <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.open,8) : '0'} EOS</Text>
-                            <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.today_volum,8) : '0'} {this.state.tradename}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.rightout}>
-                        <View style={styles.presentprice}>
-                            <Text style={[styles.present,{color: UColor.btnColor}]}> {this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price,8) : '0'}</Text>
-                            <Text style={[styles.toptext,{color: UColor.arrow}]}>价格</Text>
-                        </View>
-                        <View style={styles.titleout}>
-                            <Text style={[styles.cupcdo,{color: (this.props.etinfo && this.props.etinfo.increase>=0)?UColor.riseColor:UColor.fallColor}]}> 
-                                {this.props.etinfo ? (this.props.etinfo.increase > 0 ? '+' + (this.props.etinfo.increase * 100).toFixed(2) : 
-                                (this.props.etinfo.increase * 100).toFixed(2)): '0.00'}%</Text>
-                            <Text style={[styles.Increasetext,{color:UColor.arrow}]}>涨幅</Text>
-                        </View>
-                    </View>
-                </View>
-            </ImageBackground>
           <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
             <View style={styles.timetabout}>
                 <Button onPress={this.onClickTimeType.bind(this,"5分")}>
@@ -1251,7 +1251,6 @@ class Transaction extends BaseComponent {
                 </Button>   
             </View>
          </View> 
-         
         }  
         {
             this.state.etOpenStatus ? 
@@ -1654,7 +1653,7 @@ const styles = StyleSheet.create({
         position:'absolute', 
         left: 0,
         right: 0,
-        top: ScreenUtil.autoheight(10), 
+        top: ScreenUtil.autoheight(50), 
         alignItems: 'center',
         justifyContent: 'center',
         padding: ScreenUtil.autowidth(8),

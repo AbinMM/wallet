@@ -884,11 +884,6 @@ class Ram extends BaseComponent {
         <ImageBackground source={UImage.transactionA} resizeMode="stretch" style={[{width:ScreenWidth},ScreenUtil.isIphoneX()?{minHeight:ScreenWidth*0.164}:{height:ScreenWidth*0.164}]}>
             <Header {...this.props} onPressLeft={this.props.navigation.state.params ? this.props.navigation.state.params.returnkey : false} title="内存交易"  backgroundColor={UColor.transport} />
         </ImageBackground>
-        <TouchableOpacity style={styles.transactiontou}  onPress={this.openbusiness.bind(this)} activeOpacity={0.8}>
-            <View style={[styles.transactionout,{backgroundColor: UColor.tintColor}]}>
-                <Text style={[styles.paneltext,{color: UColor.btnColor}]}>交易面板</Text>
-            </View>
-        </TouchableOpacity>
         {Constants.isNetWorkOffline &&
             <Button onPress={this.openSystemSetting.bind(this)}>
                 <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
@@ -897,6 +892,42 @@ class Ram extends BaseComponent {
                 </View>
             </Button>
         }
+        <ImageBackground source={UImage.transactionB} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
+            <View style={styles.header}>
+                <View style={styles.leftout}>
+                    <View style={styles.nameout}>
+                        <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
+                        <Text style={[styles.nametext,{color: UColor.arrow}]}>内存占比</Text>
+                        <Text style={[styles.nametext,{color: UColor.arrow}]}>总资金</Text>
+                    </View>
+                    <View style={styles.recordout}>
+                        <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? (this.props.ramInfo.open * 1).toFixed(4) : '0'} EOS/KB</Text>
+                        <View style={styles.rowout}>
+                            <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? this.props.ramInfo.usage_ram : 0} GB/{this.props.ramInfo ? this.props.ramInfo.total_ram : 0} GB</Text>
+                            <Text style={[styles.ashtext,{color: UColor.arrow}]}> ({((this.props.ramInfo ? this.props.ramInfo.usage_ram_percent : '0') * 100).toFixed(2)}%)</Text>
+                        </View>
+                        <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? (this.props.ramInfo.total_eos * 1).toFixed(4) : '0'} EOS</Text>
+                    </View>
+                </View>
+                <View style={styles.rightout}>
+                    <View style={styles.presentprice}>
+                        <Text style={[styles.present,{color: UColor.btnColor}]}> {this.props.ramInfo ? (this.props.ramInfo.price * 1).toFixed(4) : '0.0000'}</Text>
+                        <Text style={[styles.toptext,{color: UColor.arrow}]}>价格</Text>
+                    </View>
+                    <View style={styles.titleout}>
+                        <Text style={[styles.cupcdo,{color: (this.props.ramInfo && this.props.ramInfo.increase>=0)?UColor.riseColor:UColor.fallColor}]}> 
+                            {this.props.ramInfo ? (this.props.ramInfo.increase > 0 ? '+' + (this.props.ramInfo.increase * 100).toFixed(2) : 
+                                (this.props.ramInfo.increase * 100).toFixed(2)): '0.00'}%</Text>
+                        <Text style={[styles.Increasetext,{color:UColor.arrow}]}>涨幅</Text>
+                    </View>
+                </View>
+            </View>
+        </ImageBackground>
+        <TouchableOpacity style={styles.transactiontou}  onPress={this.openbusiness.bind(this)} activeOpacity={0.8}>
+            <View style={[styles.transactionout,{backgroundColor: UColor.tintColor}]}>
+                <Text style={[styles.paneltext,{color: UColor.btnColor}]}>交易面板</Text>
+            </View>
+        </TouchableOpacity>
         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
             <ScrollView {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} 
                 scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"
@@ -911,37 +942,6 @@ class Ram extends BaseComponent {
             >
             {Platform.OS == 'ios' && <ActivityIndicator size="large" color={UColor.tintColor} animating={this.state.logRefreshing} 
              style={[styles.loganimat, {height:this.state.logRefreshing? ScreenUtil.autoheight(60):0}]}/>}
-                <ImageBackground source={UImage.transactionB} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
-                    <View style={styles.header}>
-                        <View style={styles.leftout}>
-                            <View style={styles.nameout}>
-                                <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
-                                <Text style={[styles.nametext,{color: UColor.arrow}]}>内存占比</Text>
-                                <Text style={[styles.nametext,{color: UColor.arrow}]}>总资金</Text>
-                            </View>
-                            <View style={styles.recordout}>
-                                <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? (this.props.ramInfo.open * 1).toFixed(4) : '0'} EOS/KB</Text>
-                                <View style={styles.rowout}>
-                                    <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? this.props.ramInfo.usage_ram : 0} GB/{this.props.ramInfo ? this.props.ramInfo.total_ram : 0} GB</Text>
-                                    <Text style={[styles.ashtext,{color: UColor.arrow}]}> ({((this.props.ramInfo ? this.props.ramInfo.usage_ram_percent : '0') * 100).toFixed(2)}%)</Text>
-                                </View>
-                                <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.ramInfo ? (this.props.ramInfo.total_eos * 1).toFixed(4) : '0'} EOS</Text>
-                            </View>
-                        </View>
-                        <View style={styles.rightout}>
-                            <View style={styles.presentprice}>
-                                <Text style={[styles.present,{color: UColor.btnColor}]}> {this.props.ramInfo ? (this.props.ramInfo.price * 1).toFixed(4) : '0.0000'}</Text>
-                                <Text style={[styles.toptext,{color: UColor.arrow}]}>价格</Text>
-                            </View>
-                            <View style={styles.titleout}>
-                                <Text style={[styles.cupcdo,{color: (this.props.ramInfo && this.props.ramInfo.increase>=0)?UColor.riseColor:UColor.fallColor}]}> 
-                                    {this.props.ramInfo ? (this.props.ramInfo.increase > 0 ? '+' + (this.props.ramInfo.increase * 100).toFixed(2) : 
-                                        (this.props.ramInfo.increase * 100).toFixed(2)): '0.00'}%</Text>
-                                <Text style={[styles.Increasetext,{color:UColor.arrow}]}>涨幅</Text>
-                            </View>
-                        </View>
-                    </View>
-                </ImageBackground>
                 <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"5分")}>
@@ -1272,7 +1272,7 @@ const styles = StyleSheet.create({
         position:'absolute', 
         left: 0,
         right: 0,
-        top: ScreenUtil.autoheight(10), 
+        top: ScreenUtil.autoheight(50), 
         alignItems: 'center',
         justifyContent: 'center',
         padding: ScreenUtil.autowidth(8),
