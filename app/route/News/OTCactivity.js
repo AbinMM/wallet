@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, Platform, ListView, StyleSheet, Image, View, Text, TextInput, RefreshControl, Switch, TouchableOpacity, ImageBackground, ScrollView  } from 'react-native';
+import { Dimensions, Platform, ListView, StyleSheet, Image, View, Text, TextInput, RefreshControl, FlatList, TouchableOpacity, ImageBackground, ScrollView  } from 'react-native';
 import moment from 'moment';
 import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
@@ -38,7 +38,6 @@ class OTCactivity extends BaseComponent {
             periodstext: this.props.navigation.state.params.periodstext, //当前进行第几期活动
             periodsseq: this.props.navigation.state.params.periodsseq, //当前进行第几期下标
             choicePeriods: 1, //选择了下拉列表的哪个下标
-            dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
             promptingState: '',
         }
     }
@@ -132,14 +131,14 @@ class OTCactivity extends BaseComponent {
             this.props.dispatch({type: 'news/getWinActivityStageUsers', payload:{activityStageId:this.state.choicePeriods,accountName:labelname.toLowerCase()},callback: (data) => {
                 if(data.length == 0){
                     this.setState({
-                        searchResult: '该账号未中奖',
                         nameList: data,
+                        searchResult: '该账号未中奖',
                         logRefreshing: false
                     });
                 }else{
                     this.setState({
-                        searchResult: data[0].isWinner=='y'&&data[0].isLucky=='y'?"恭喜您获得幸运奖及优胜奖！":data[0].isWinner=='n'&&data[0].isLucky=='y'?"恭喜您获得幸运奖！":"恭喜您获得优胜奖！",
                         nameList: data,
+                        searchResult: data[0].isWinner=='y'&&data[0].isLucky=='y'?"恭喜您获得幸运奖及优胜奖！":data[0].isWinner=='n'&&data[0].isLucky=='y'?"恭喜您获得幸运奖！":"恭喜您获得优胜奖！",
                         logRefreshing: false
                     });
                 }
@@ -202,8 +201,9 @@ class OTCactivity extends BaseComponent {
                         <View style={{width:ScreenUtil.autowidth(100),  height: ScreenUtil.autoheight(25),flexDirection: 'row', borderWidth: 1,borderRadius: 3,justifyContent: 'space-between',borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor,paddingHorizontal: ScreenUtil.autowidth(10),}}>
                             <ModalDropdown options={this.state.periodsList} defaultValue={this.state.periodstext}
                             style={{flex: 1,height: ScreenUtil.autoheight(25),justifyContent: 'center',}}
-                            textStyle={{fontSize: ScreenUtil.setSpText(12),color: UColor.startup,}}
-                            dropdownStyle={{width:ScreenUtil.autowidth(80),height: ScreenUtil.autowidth(200),top:0,}} defaultIndex={this.state.periodsseq-1}
+                            textStyle={{fontSize: ScreenUtil.setSpText(12),color: UColor.startup,textAlign: 'center'}}
+                            dropdownStyle={{width:ScreenUtil.autowidth(80),height: ScreenUtil.autowidth(160),top:0,alignItems:'center'}} 
+                            defaultIndex={this.state.periodsseq-1}
                             onSelect={(idx,value) => this.getonSelect(idx,value)}
                             onDropdownWillShow={this.dropdownwillShow.bind(this)}
                             onDropdownWillHide={this.dropdownwillHide.bind(this)}
@@ -256,20 +256,21 @@ class OTCactivity extends BaseComponent {
                             <Image source={UImage.app20} style={{width: ScreenWidth-ScreenUtil.autowidth(40),height:(ScreenWidth-ScreenUtil.autowidth(40))*0.2064}} />
                         </View>
                         :
-                        <ListView  enableEmptySections={true}  contentContainerStyle={{flexWrap:'wrap',flexDirection:'row', alignItems:'center',}}
-                            removeClippedSubviews={false}
+                        <FlatList 
+                            numColumns={3} 
+                            horizontal={false}
+                            enableEmptySections={true}
+                            keyExtractor={({item,index}) => ("index"+index+item)}  
                             refreshControl={<RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing(this.state.choicePeriods)} 
-                            tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}
-                            style={{backgroundColor: UColor.transport}}/>}
-                            dataSource={this.state.dataSource.cloneWithRows(this.state.nameList == null ? [] : this.state.nameList)} 
-                            renderRow={(rowData) => (  
-                                <ImageBackground source={rowData.isWinner=='y'&&rowData.isLucky == 'y' ? UImage.app13 : rowData.isWinner=='n'&&rowData.isLucky == 'y'?UImage.app14:UImage.app15} resizeMode="stretch" style={styles.namelist}>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(10),color: '#C25C5C' }}>{rowData.accountName}</Text>
+                            tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor} style={{backgroundColor: UColor.transport}}/>}
+                            data={this.state.nameList == null ? [] : this.state.nameList} 
+                            renderItem={({item}) => (  
+                                <ImageBackground source={item.isWinner=='y'&&item.isLucky == 'y' ? UImage.app13 : item.isWinner=='n'&&item.isLucky == 'y'?UImage.app14:UImage.app15} resizeMode="stretch" style={styles.namelist}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(10),color: '#C25C5C' }}>{item.accountName}</Text>
                                 </ImageBackground>
                             )}                
                         /> 
                     }
-                      
                     </View>
                     
                 </ImageBackground>

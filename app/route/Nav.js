@@ -20,6 +20,7 @@ import Coin from './Coins/Detail'
 import Home from './Home'
 import AddAssets from './Home/AddAssets'
 import AssetSearch from './Home/AssetSearch'
+import Dappsearch from './Home/Dappsearch'
 import FreeMortgage from './Home/FreeMortgage'
 import FunctionsMore from './Home/FunctionsMore'
 import AssetInfo from './Home/AssetInfo'
@@ -271,7 +272,6 @@ const Nav = StackNavigator(
     OTCactivity: {
       screen: OTCactivity
     },
-
     AgentInfo: {
       screen: AgentInfo
     },
