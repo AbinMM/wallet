@@ -20,7 +20,6 @@ import Coin from './Coins/Detail'
 import Home from './Home'
 import AddAssets from './Home/AddAssets'
 import AssetSearch from './Home/AssetSearch'
-import Dappsearch from './Home/Dappsearch'
 import FreeMortgage from './Home/FreeMortgage'
 import FunctionsMore from './Home/FunctionsMore'
 import AssetInfo from './Home/AssetInfo'
@@ -39,6 +38,7 @@ import ProblemFeedback from './Login/ProblemFeedback'
 import SignIn from './Login/SignIn'
 
 import News from './News'
+import Dappsearch from './News/Dappsearch'
 import OTCactivity from './News/OTCactivity'
 
 import Settings from './Settings'
@@ -265,7 +265,9 @@ const Nav = StackNavigator(
     Set: {
       screen: Set
     },
-    
+    Dappsearch: {
+      screen: Dappsearch
+    },
     OTCactivity: {
       screen: OTCactivity
     },
@@ -287,9 +289,6 @@ const Nav = StackNavigator(
     },
     AssetSearch: {
       screen: AssetSearch
-    },
-    Dappsearch: {
-      screen: Dappsearch
     },
     FunctionsMore: {
       screen:FunctionsMore

@@ -370,7 +370,7 @@ class News extends React.Component {
   onPressTool(data) {
     const { navigate } = this.props.navigation;
     if(data.name == this.state.holdallList[0].name){
-      navigate('Dappsearch', {});
+      navigate('Dappsearch', {theme:this.state.theme});
     }else if(data.name == this.state.holdallList[1].name){
       navigate('Web', { title: 'eospark', url: "https://eospark.com" });
     }else if(data.name == this.state.holdallList[2].name){
