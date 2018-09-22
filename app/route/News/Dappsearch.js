@@ -1,20 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, Platform, Linking, StyleSheet, Image, View, Text, TextInput, NativeModules, Switch, TouchableOpacity  } from 'react-native';
+import {  StyleSheet, Image, View, Text, TextInput, TouchableOpacity  } from 'react-native';
 import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
 import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
-import { EasyShowLD } from '../../components/EasyShow'
 import { EasyToast } from '../../components/Toast';
 import BaseComponent from "../../components/BaseComponent";
 var dismissKeyboard = require('dismissKeyboard');
-const ScreenWidth = Dimensions.get('window').width;
-const ScreenHeight = Dimensions.get('window').height;
 
-var IosSDKModule = NativeModules.IosSDKModule;
+import {sdkOpenDapp,sdkListenMessage,sdkRemoveListener} from '../News/DappSDK';
 
-@connect(({wallet, assets}) => ({...wallet, ...assets}))
+let g_props;
+@connect(({wallet, assets,vote}) => ({...wallet, ...assets, ...vote}))
 class Dappsearch extends BaseComponent {
 
     static navigationOptions = {
@@ -29,15 +27,19 @@ class Dappsearch extends BaseComponent {
             labelname: '',
             theme: this.props.navigation.state.params.theme,
         }
+
+        g_props = props;    
     }
 
     componentDidMount() {
-
+        sdkListenMessage(g_props);
     }
 
     componentWillUnmount(){
         //结束页面前，资源释放操作
         super.componentWillUnmount();
+
+        sdkRemoveListener();
     }
 
     //前往
@@ -47,15 +49,7 @@ class Dappsearch extends BaseComponent {
             EasyToast.show('请输入DAPP网址');
             return;
         }else{
-            if(Platform.OS === 'ios'){
-                // let dict = {url:"http://eosbao.io/pocket?tokenpocket=true&referrer=eosgogogo", title: this.state.selecttitle};
-                let dict = {url:labelname, title: 'CustomDapp', theme:""+this.state.theme};
-                // IosSDKModule.iosDebugInfo(dict);
-                IosSDKModule.openDapps(dict);
-                
-              }else if(Platform.OS === 'android'){
-                NativeModules.SDKModule.startActivityFromReactNative(labelname,'CustomDapp',this.state.theme);
-            }
+            sdkOpenDapp(labelname,'CustomDapp',this.state.theme);
         }
     }
 
