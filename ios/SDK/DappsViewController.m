@@ -374,16 +374,17 @@
   NSString *callback = [body objectForKey:@"callback"];
   NSString *params = [body objectForKey:@"params"];
   NSString *password = @"";
-  NSString *device_id = @"";
-  
+//  NSString *device_id = @"";
+  NSString *deviceUUID =[[[UIDevice currentDevice] identifierForVendor] UUIDString];
+  NSLog(@"deviceUUID：%@",deviceUUID);
 
-  
+
   NSDictionary* paramDic = @{
                @"methodName": message.name,
                @"callback" : callback,
                @"params" : params,
                @"password":password,
-               @"device_id":device_id,
+               @"device_id":deviceUUID,
                };
 
     
@@ -396,7 +397,8 @@
   } else if ([message.name isEqualToString:sdkEosAuthSign]) {
     [self inputPassword:paramDic];
   } else if ([message.name isEqualToString:sdkGetDeviceId]) {
-    
+      NSString *resp = [NSString stringWithFormat:@"{\"device_id\":\"%@\"}",deviceUUID];
+      [[NSNotificationCenter defaultCenter] postNotificationName:rnNotification object:self userInfo:@{@"methodName":message.name,@"callback":callback,@"resp":resp}];
   } else{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"sendCustomEventNotification" object:self userInfo:@{@"requestInfo":paramDic}];
   }
