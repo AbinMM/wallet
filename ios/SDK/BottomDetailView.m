@@ -54,7 +54,7 @@
 -(void)setDataArray:(NSMutableArray *)dataArray {
     
     float left = 15;
-    float y = 35+20;
+    float y = 35;
     float width = 110;
     float height = 30;
     NSDictionary *paramDic = dataArray[0];

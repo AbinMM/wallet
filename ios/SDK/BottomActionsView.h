@@ -23,15 +23,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface BottomActionsView : UIView
-
+@interface BottomActionsView : UIView<UITextViewDelegate>
 //设置标题
 -(void)setTitle:(NSString*)title;
 
 @property(nonatomic,retain) NSMutableArray * dataArray; //设置中间数据
 @property(nonatomic,retain) UILabel * lastLabelTitle;
 @property(nonatomic,retain) MyButton * showHideBotton;
-@property(nonatomic,retain) UILabel * lastLabelContent;
+@property(nonatomic,retain) UITextView * lastLabelContent;
 
 
 //-(void)setBottonTitle:(NSString*)title; //

@@ -8,7 +8,7 @@
 
 #import "BottomActionsView.h"
 
-@interface BottomActionsView(){
+@interface BottomActionsView()<UITextViewDelegate>{
     BOOL showActions;
     float oldframeY;
     float resetHeight;//显示隐藏的高度差
@@ -145,19 +145,29 @@
     y += 32;
     
     
-    self.lastLabelContent = [[UILabel alloc] init];
-    self.lastLabelContent.backgroundColor = [UIColor clearColor];
-    self.lastLabelContent.textColor       = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
-    self.lastLabelContent.font            = [UIFont systemFontOfSize:18];
-    self.lastLabelContent.textAlignment   = NSTextAlignmentLeft;
-    [self addSubview:self.lastLabelContent];
-    self.lastLabelContent.numberOfLines = 0;
-    self.lastLabelContent.lineBreakMode = NSLineBreakByWordWrapping;
-    CGSize size = [self.lastLabelContent sizeThatFits:CGSizeMake(300, MAXFLOAT)];//根据文字的长度返回一个最佳宽度和高度
-    self.lastLabelContent.frame = CGRectMake(10, y, 300, size.height);//假如是自适应高度的话，就把宽度确定
-    y += size.height;
-    
-     y += 10;//间隔为10
+  //    self.lastLabelContent = [[UILabel alloc] init];
+  //    self.lastLabelContent.backgroundColor = [UIColor clearColor];
+  //    self.lastLabelContent.textColor       = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
+  //    self.lastLabelContent.font            = [UIFont systemFontOfSize:18];
+  //    self.lastLabelContent.textAlignment   = NSTextAlignmentLeft;
+  //    [self addSubview:self.lastLabelContent];
+  //    self.lastLabelContent.numberOfLines = 0;
+  //    self.lastLabelContent.lineBreakMode = NSLineBreakByWordWrapping;
+  
+  
+  self.lastLabelContent=[[UITextView alloc]init];
+  [self.lastLabelContent setTextColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+  [self.lastLabelContent setBackgroundColor:[UIColor clearColor]];
+  [self.lastLabelContent.layer setBorderColor:[[UIColor clearColor] CGColor]];
+  [self.lastLabelContent setFont:[UIFont systemFontOfSize:18]];
+  [self.lastLabelContent.layer setBorderWidth:1.0f];
+  [self.lastLabelContent setDelegate:self];
+  [self addSubview:self.lastLabelContent];
+  CGSize size = [self.lastLabelContent sizeThatFits:CGSizeMake(kSCREEN_WIDTH -20, MAXFLOAT)];//根据文字的长度返回一个最佳宽度和高度
+  self.lastLabelContent.frame = CGRectMake(10, y, kSCREEN_WIDTH -20, size.height);//假如是自适应高度的话，就把宽度确定
+  //    y += size.height;
+  
+  y += 10;//间隔为10
     
     self.button = [[MyButton alloc] initWithFrame:CGRectMake(left , y, self.frame.size.width - 2* left, 40) ];
     self.button.paramDic = paramDic;
@@ -202,10 +212,28 @@
         if (showActions == NO) {
             showActions = YES;
             
-            CGRect oldrect = self.lastLabelContent.frame;
+          CGFloat maxHeight = kSCREEN_HEIGHT * 1/2;
+          
+          CGRect oldrect = self.lastLabelContent.frame;
+          
+          CGSize size = [self.lastLabelContent sizeThatFits:CGSizeMake(kSCREEN_WIDTH -20, MAXFLOAT)];//根据文字的长度返回一个最佳宽度和高度
+          if (size.height<= maxHeight) {
+            self.lastLabelContent.scrollEnabled = NO;    // 不允许滚动
             
-            CGSize size = [self.lastLabelContent sizeThatFits:CGSizeMake(300, MAXFLOAT)];//根据文字的长度返回一个最佳宽度和高度
-            self.lastLabelContent.frame = CGRectMake(oldrect.origin.x, oldrect.origin.y, 300, size.height);//假如是自适应高度的话，就把宽度确定
+          }else{
+            if (size.height >= maxHeight)
+            {
+              size.height = maxHeight;
+              self.lastLabelContent.scrollEnabled = YES;   // 允许滚动
+            }
+            else
+            {
+              self.lastLabelContent.scrollEnabled = NO;    // 不允许滚动
+            }
+          }
+          
+          
+          self.lastLabelContent.frame = CGRectMake(oldrect.origin.x, oldrect.origin.y, kSCREEN_WIDTH -20, size.height);//假如是自适应高度的话，就把宽度确定
             
             CGRect tmpFrame = self.button.frame;  // 1.取出原来的属性
             tmpFrame.origin.y = self.lastLabelContent.frame.origin.y+size.height+10;

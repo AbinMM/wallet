@@ -579,7 +579,7 @@
       }
   }
   
-
+//NSString *TESTparams = [NSString stringWithFormat:@"%@ %@ %@",params,params,params];
 
   
   CGRect range = CGRectMake(0, self.view.frame.size.height - 220, kSCREEN_WIDTH, 220);
@@ -595,6 +595,7 @@
   [self.bottomActionsView setDataArray:array];
   self.bottomActionsView.lastLabelTitle.text =contractAccountName;
   self.bottomActionsView.lastLabelContent.text = params;
+//  self.bottomActionsView.lastLabelContent.text = TESTparams;//params;
 
   
 }
