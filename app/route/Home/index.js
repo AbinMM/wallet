@@ -456,7 +456,12 @@ class Home extends React.Component {
 
   WalletDetail(data) {
     const { navigate } = this.props.navigation;
-    navigate('WalletDetail', { data,balance:this.props.myAssets[0].balance,});
+    var balance = "0.0000";
+    if(this.props.myAssets[0] && this.props.myAssets[0].balance)
+    {
+      balance = this.props.myAssets[0].balance;
+    }
+    navigate('WalletDetail', { data,balance:balance,});
     this.setState({
       modal: false
     });
