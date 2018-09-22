@@ -258,7 +258,7 @@ public class DappActivity extends Activity {
             webSettings.setCacheMode(WebSettings.LOAD_DEFAULT); // 开启 DOM storage API 功能 
             webSettings.setDomStorageEnabled(true); 
 
-            webSettings.setUserAgentString("Name/tokenbank");
+            // webSettings.setUserAgentString("Name/tokenbank");
 
             //打开网页时，不调用系统浏览器，而是在本WebView中显示，则放开
             //调用本地 html 不需要设置WebViewClient
