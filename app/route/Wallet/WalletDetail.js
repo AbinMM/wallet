@@ -475,7 +475,7 @@ class WalletDetail extends BaseComponent {
     const balance = this.props.navigation.state.params.balance
     const isEye = this.props.navigation.state.params.isEye
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>    
-      <Header {...this.props} onPressLeft={true} title={c.name} />
+      <Header {...this.props} onPressLeft={true} title={"账户管理"} />
       <ScrollView style={styles.scrollView}>
         <View>
           <View style={[styles.walletout,{backgroundColor: UColor.mainColor}]}>
