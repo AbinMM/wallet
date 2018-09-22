@@ -182,15 +182,19 @@ class News extends React.Component {
     }
 
     this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
-      let periodstext= '';
-      let periodsseq= '';
-      for(var i = 0; i < periodsdata.length; i++){
-          if(periodsdata[i].status == 'doing'){
-              periodstext= periodsdata[i].name;
-              periodsseq= periodsdata[i].seq;
+        try {
+          let periodstext= '';
+          let periodsseq= '';
+          for(var i = 0; i < periodsdata.length; i++){
+              if(periodsdata[i].status == 'doing'){
+                  periodstext= periodsdata[i].name;
+                  periodsseq= periodsdata[i].seq;
+              }
           }
-      }
-      this.setState({periodstext:periodstext,periodsseq:periodsseq});
+          this.setState({periodstext:periodstext,periodsseq:periodsseq});
+        } catch (error) {
+          
+        }
     } })
   }
 
