@@ -234,10 +234,6 @@ export default {
   xin1:require('../img/xin1.png'),
   tx_ram:require('../img/tx_ram.png'),
   warning_h:require('../img/warning_h.png'),
-  dapp_jianyin:require('../img/dapp_jianyin.png'),
-  dapp_ite:require('../img/dapp_ite.png'),
-  dapp_EOSBET:require('../img/dapp_EOSBET.png'),
-  dapp_caicaicai:require('../img/dapp_caicaicai.png'),
 
   //活动
   app12: require('../img/activity/app12.png'),
