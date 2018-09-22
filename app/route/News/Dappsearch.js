@@ -12,6 +12,8 @@ var dismissKeyboard = require('dismissKeyboard');
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
+var IosSDKModule = NativeModules.IosSDKModule;
+
 @connect(({wallet, assets}) => ({...wallet, ...assets}))
 class Dappsearch extends BaseComponent {
 
@@ -25,6 +27,7 @@ class Dappsearch extends BaseComponent {
         super(props);
         this.state = {
             labelname: '',
+            theme: this.props.navigation.state.params.theme,
         }
     }
 
@@ -45,10 +48,13 @@ class Dappsearch extends BaseComponent {
             return;
         }else{
             if(Platform.OS === 'ios'){
-                // NativeModules.SDKModule.presentViewControllerFromReactNative('DappActivity',labelname);
-                EasyToast.show("IOS暂不支持，程序员正在紧急开发中");
-            }else if(Platform.OS === 'android'){
-                NativeModules.SDKModule.startActivityFromReactNative(labelname,'DappActivity');
+                // let dict = {url:"http://eosbao.io/pocket?tokenpocket=true&referrer=eosgogogo", title: this.state.selecttitle};
+                let dict = {url:labelname, title: 'CustomDapp', theme:""+this.state.theme};
+                // IosSDKModule.iosDebugInfo(dict);
+                IosSDKModule.openDapps(dict);
+                
+              }else if(Platform.OS === 'android'){
+                NativeModules.SDKModule.startActivityFromReactNative(labelname,'CustomDapp',this.state.theme);
             }
         }
     }
