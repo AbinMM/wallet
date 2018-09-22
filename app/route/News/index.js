@@ -33,7 +33,7 @@ let g_props;
 class News extends React.Component {
 
   static navigationOptions = {
-    tabBarLabel: '资讯',
+    tabBarLabel: '发现',
     tabBarIcon: ({ focused}) => (
       <Image resizeMode='stretch'
           source={focused ? UImage.tab_3_h : UImage.tab_3} style={{width: ScreenUtil.autowidth(20), height: ScreenUtil.autowidth(20),}}
