@@ -472,7 +472,7 @@ class WalletDetail extends BaseComponent {
 
   render() {
     const c = this.props.navigation.state.params.data
-    const balance = this.props.navigation.state.params.balance
+    const balance = this.props.navigation.state.params.balance ? this.props.navigation.state.params.balance : "0.0000";
     const isEye = this.props.navigation.state.params.isEye
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>    
       <Header {...this.props} onPressLeft={true} title={"账户管理"} />

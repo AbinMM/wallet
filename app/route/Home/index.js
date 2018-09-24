@@ -460,8 +460,14 @@ class Home extends React.Component {
     if(this.props.myAssets && this.props.myAssets[0] && this.props.myAssets[0].balance)
     {
       balance = this.props.myAssets[0].balance;
+    }  
+
+    //未激活
+    if(!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))
+    {
+      balance = "0.0000";
     }
-    navigate('WalletDetail', { data,balance:balance,});
+    navigate('WalletDetail', { data,balance:balance,isEye: this.state.isEye});
     this.setState({
       modal: false
     });
