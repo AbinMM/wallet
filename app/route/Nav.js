@@ -268,8 +268,8 @@ const Nav = StackNavigator(
     Dappsearch: {
       screen: Dappsearch
     },
-    OTCactivity: {
-      screen: OTCactivity
+    OCTactivity: {
+      screen: OCTactivity
     },
     AgentInfo: {
       screen: AgentInfo
