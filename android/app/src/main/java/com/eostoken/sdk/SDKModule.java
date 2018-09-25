@@ -1,5 +1,6 @@
 package com.eostoken.sdk;
 
+import android.os.Handler;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
@@ -45,18 +46,23 @@ public class SDKModule extends ReactContextBaseJavaModule {
     }
     @ReactMethod
     public void startActivityFromReactNative(String url,String title,boolean theme){
-        try {
-            Activity currentActivity = getCurrentActivity();
-            if(currentActivity != null){
-                Intent intent = new Intent(currentActivity,DappActivity.class);
-                intent.putExtra("url",url);
-                intent.putExtra("title",title);
-                intent.putExtra("theme",theme);
-                currentActivity.startActivity(intent);
+        new Handler().post(new Runnable(){
+            @Override
+            public void run() {
+                try {
+                    Activity currentActivity = getCurrentActivity();
+                    if(currentActivity != null){
+                        Intent intent = new Intent(currentActivity,DappActivity.class);
+                        intent.putExtra("url",url);
+                        intent.putExtra("title",title);
+                        intent.putExtra("theme",theme);
+                        currentActivity.startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    throw new JSApplicationIllegalArgumentException("open activity fail: " + e.getMessage());
+                }
             }
-        } catch (Exception e) {
-            throw new JSApplicationIllegalArgumentException("open activity fail: " + e.getMessage());
-        }
+        });
     }
     @ReactMethod
     public void callbackFromReactNative(String methodName,String callback,String resp){

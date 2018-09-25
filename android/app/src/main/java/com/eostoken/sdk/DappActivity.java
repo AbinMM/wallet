@@ -176,7 +176,7 @@ public class DappActivity extends Activity {
     protected void onResume() {
         super.onResume();
         Log.d("DappActivity","onResume()");
-        // mWebView.getSettings().setJavaScriptEnabled(true);//打开js
+        mWebView.getSettings().setJavaScriptEnabled(true);//打开js
     }
    
     @Override
@@ -189,10 +189,20 @@ public class DappActivity extends Activity {
     public void onDestroy() {
         super.onDestroy();
         Log.d("DappActivity","onDestroy()");
-        mWebView.setVisibility(View.GONE);
-        mWebView.destroy(); //退出时释放webView
+        if(mWebView != null)
+        {
+            // mWebView.setVisibility(View.GONE);
+            try {
+                mWebView.clearCache(true);   
+                mWebView.clearHistory();  
+                mWebView.destroy(); //退出时释放webView
+            } catch (Exception e) {
+                //TODO: handle exception
+                e.printStackTrace();
+            }
+            mWebView = null ;
+        }
         EventBus.getDefault().unregister(this); //解除注册
-        mWebView = null ;
     }
 
     @Override
