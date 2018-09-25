@@ -410,7 +410,7 @@ class News extends React.Component {
                     <Image source={rowData.icon} style={styles.imgBtnDAPP} />
                     <View style={{flex: 1}}>
                       <Text style={[styles.headbtntext,{color: UColor.fontColor}]}>{rowData.name}</Text>
-                      <Text style={styles.descriptiontext} numberOfLines={1}>{rowData.description}</Text>
+                      <Text style={[styles.descriptiontext,{color: UColor.lightgray}]} numberOfLines={1}>{rowData.description}</Text>
                     </View>
                   </View>
                 </Button>
@@ -427,7 +427,7 @@ class News extends React.Component {
                     <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} />
                     <View style={{flex: 1}}>
                       <Text style={[styles.headbtntext,{color: UColor.fontColor}]}>{rowData.name}</Text>
-                      <Text style={styles.descriptiontext} numberOfLines={1}>{rowData.description}</Text>
+                      <Text style={[styles.descriptiontext,{color: UColor.lightgray}]} numberOfLines={1}>{rowData.description}</Text>
                     </View>
                   </View>
                 </Button>
@@ -656,7 +656,7 @@ const styles = StyleSheet.create({
     lineHeight: ScreenUtil.autoheight(20), 
   },
   descriptiontext: {
-    color: UColor.lightgray,
+   
     fontSize: ScreenUtil.setSpText(10),
     lineHeight: ScreenUtil.autoheight(20), 
   },

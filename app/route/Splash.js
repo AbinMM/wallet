@@ -50,7 +50,7 @@ class Splash extends React.Component {
           UColor.arrow= '#75859f'; //深字体色 UColor.arrow
           UColor.startup= '#21232E'; //启动也背景色 UColor.startup
           UColor.inash= '#4D607E'; // 列表底色 UColor.inash
-          UColor.lightgray= '#4c515b'; //浅字体色 UColor.lightgray
+          UColor.lightgray= '#999999'; //浅字体色 UColor.lightgray
           UColor.showy= '#ff6565'; //显眼色调 UColor.showy 
           UColor.baseline= '#cccccc'; //底色调 UColor.baseline
           UColor.blackColor= '#000000'; //纯黑色 UColor.blackColor
