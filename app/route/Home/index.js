@@ -611,11 +611,11 @@ class Home extends React.Component {
             </Button>}
             <View style={styles.addto}>
               <View style={styles.addtoouttop}>
-                <Text style={{fontSize: ScreenUtil.setSpText(25), color: UColor.btnColor}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '≈ 0.00' : "≈ " + this.adjustTotalBalance(this.state.totalBalance)) : '****'}</Text>
+                <Text style={{fontSize: ScreenUtil.setSpText(25), color: UColor.btnColor}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : "" + this.adjustTotalBalance(this.state.totalBalance)) : '****'}</Text>
                 <Text style={[styles.addtoouttext,{color: UColor.btnColor}]}> ￥ </Text>
-                <View style={[styles.incdocupout,(this.state.increase>=0 || this.state.totalBalance == "0.00")?{borderColor: UColor.fallColor,backgroundColor: UColor.fallColor}:{borderColor: UColor.riseColor,backgroundColor: UColor.riseColor}]}>
+                {/* <View style={[styles.incdocupout,(this.state.increase>=0 || this.state.totalBalance == "0.00")?{borderColor: UColor.fallColor,backgroundColor: UColor.fallColor}:{borderColor: UColor.riseColor,backgroundColor: UColor.riseColor}]}>
                   <Text style={[styles.cupcdo,{color: UColor.btnColor}]}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
-                </View>
+                </View> */}
               </View>
               <View style={styles.addtoout} >
                 <Text style={[styles.addtotext,{color: UColor.btnColor}]}>( 已抵押 </Text>
