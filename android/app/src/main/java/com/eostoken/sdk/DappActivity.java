@@ -196,8 +196,8 @@ public class DappActivity extends Activity {
                 // mWebView.setWebChromeClient(null);
                 // mWebView.setWebViewClient(null);
                 mWebView.setVisibility(View.GONE);
-                mWebView.clearCache(true);   
-                mWebView.clearHistory();  
+                // mWebView.clearCache(true);   
+                // mWebView.clearHistory();  
                 // mWebView.loadUrl("about:blank");
                 // mWebView.freeMemory();
                 // mWebView.pauseTimers();
