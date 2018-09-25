@@ -52,10 +52,14 @@ class OCTactivity extends BaseComponent {
                 this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
                     let arr = periodsdata;
                     let arr1 = [];
+                    let startTime = ''
                     for(var i = 0; i < arr.length; i++){
                         arr1.push(arr[i].name);
+                        if(periodsdata[i].status == 'doing'){
+                            startTime=arr[i].startDate;
+                        }
                     }
-                    this.setState({ periodsList: arr1, startTime:startDate,});
+                    this.setState({ periodsList: arr1, startTime:startTime,});
                     this.props.dispatch({type: 'news/getWinActivityStageUsers', payload:{activityStageId:this.state.periodsseq},callback: (data) => {
                         
                         if(data && data.length > 0){
@@ -234,7 +238,7 @@ class OCTactivity extends BaseComponent {
                         </View>
                         
                         <View style={{flexDirection: 'column',alignItems: 'center',justifyContent:'flex-end'}}>
-                            <CountDownReact date= {this.transferTimeZone(moment().format('YYYY-MM-DD ' +  '00:00:00'))} hours=':'  mins=':'
+                            <CountDownReact date= {this.transferTimeZone(moment().format('YYYY-MM-DD ' + '00:00:00'))} hours=':'  mins=':'
                                 hoursStyle={[styles.ratiotext,{color: '#2279C5'}]} minsStyle={[styles.ratiotext,{color: '#2279C5'}]}
                                 secsStyle={[styles.ratiotext,{color: '#2279C5'}]} firstColonStyle={[styles.ratiotext,{color: '#2279C5'}]}
                                 secondColonStyle={[styles.ratiotext,{color: '#2279C5'}]}
@@ -290,6 +294,7 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(10), 
     },
     linebgout: {
+        flex: 1,
         width: ScreenWidth,
         minHeight: ScreenWidth * 1.617,
     },
@@ -311,7 +316,6 @@ const styles = StyleSheet.create({
       paddingLeft: ScreenUtil.autowidth(15),
     },
     headleftimg: {
-     
       width: ScreenUtil.autowidth(18),
       height: ScreenUtil.autowidth(18),
       marginHorizontal: ScreenUtil.autowidth(10),
