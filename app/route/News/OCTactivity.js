@@ -40,6 +40,7 @@ class OCTactivity extends BaseComponent {
             periodsseq: this.props.navigation.state.params.periodsseq!=""?this.props.navigation.state.params.periodsseq:"1", //当前进行第几期下标
             choicePeriods: 1, //选择了下拉列表的哪个下标
             promptingState: '',
+            startTime: '',
         }
     }
 
@@ -47,15 +48,16 @@ class OCTactivity extends BaseComponent {
         try {
             this.setState({logRefreshing: true});
             this.props.dispatch({type: 'news/getInfo', payload:{activityId:"1"},callback: (datainfo) => {
-                this.setState({cactivityYN: datainfo.status,});
+                this.setState({cactivityYN: datainfo.status});
                 this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
                     let arr = periodsdata;
                     let arr1 = [];
                     for(var i = 0; i < arr.length; i++){
                         arr1.push(arr[i].name);
                     }
-                    this.setState({ periodsList: arr1,});
+                    this.setState({ periodsList: arr1, startTime:startDate,});
                     this.props.dispatch({type: 'news/getWinActivityStageUsers', payload:{activityStageId:this.state.periodsseq},callback: (data) => {
+                        
                         if(data && data.length > 0){
                             this.setState({
                                 nameList: data,
@@ -145,7 +147,7 @@ class OCTactivity extends BaseComponent {
      //转换时间
     transferTimeZone(datatime){
         if(this.state.cactivityYN == 'doing'){
-            let timezone = moment(datatime).add(24,'hours').format('YYYY-MM-DDTHH:mm:ss');
+            let timezone = moment(datatime).add(16,'hours').format('YYYY-MM-DDTHH:mm:ss');
             return  timezone;
         }else if(this.state.cactivityYN == 'new'){
             return  '00:00:00';
