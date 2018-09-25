@@ -66,7 +66,7 @@ class Splash extends React.Component {
           UColor.titletop= '#2279C5'; //顶部标题背景色 UColor.navigation
           UColor.secdfont= "#FFFFFF";
           UColor.mainfont= "#FFFFFF";
-          UColor.tintstart= '#3baaff'; //Loading背景色
+          UColor.tintstart= '#abb9d7'; //Loading背景色
           UColor.fonttint= "#FFFFFF";
           UColor.tintnavigation= '#2279C5';
           UColor.fontrice= "#EDEDED";

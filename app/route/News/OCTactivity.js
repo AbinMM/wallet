@@ -124,7 +124,6 @@ class OCTactivity extends BaseComponent {
                         nameList: data,
                         logRefreshing: false,
                         searchResult: '该账号未中奖', 
-                        
                     });
                 }else{
                     this.setState({
@@ -242,7 +241,7 @@ class OCTactivity extends BaseComponent {
                         </View>
                     </View>
                     <View style={[styles.listViewStyle,{backgroundColor: 'rgba(187, 223, 251, 0.8)'}]}>
-                    {this.state.nameList.length == 0 ?
+                    {this.state.nameList.length == 0 && this.state.searchResult!='该账号未中奖' ?
                         <View style={{flex: 1,alignItems: 'center',justifyContent: 'center'}}>
                             <Image source={UImage.app20} style={{width: ScreenWidth-ScreenUtil.autowidth(40),height:(ScreenWidth-ScreenUtil.autowidth(40))*0.2064}} />
                         </View>
