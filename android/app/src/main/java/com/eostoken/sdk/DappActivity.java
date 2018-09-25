@@ -358,13 +358,13 @@ public class DappActivity extends Activity {
             }
         }
         if(rnCallback != null){
-             if(errmsg.equals("密码错误"))
-             {
-                 //不回调给dapp;兼容EOSBET
-             }else
-             {
+            //  if(errmsg.equals("密码错误"))
+            //  {  //不能兼容，eosAuthSign ,eosSign 调用本身密码错，应该要回调
+            //      //不回调给dapp;兼容EOSBET
+            //  }else
+            //  {
                 callbakcToWebview(rnCallback.methodName,rnCallback.callback,rnCallback.resp);
-             }
+            //  }
         }
     }
 
