@@ -711,7 +711,7 @@ class Home extends React.Component {
                     <View style={styles.rights}>
                       <View style={styles.rightout}>
                           <Text style={[styles.rightbalance,{color: UColor.fontColor}]}>{this.state.isEye ? (rowData.balance==null || rowData.balance=="" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.0000" : rowData.balance.replace(rowData.asset.name, "") : '****'}</Text>
-                          <Text style={[styles.rightmarket,{color:  UColor.arrow}]}>≈（￥）{this.state.isEye ? (rowData.balance==null || rowData.balance=="" || rowData.asset.value == null || rowData.asset.value == "" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.00" : (rowData.balance.replace(rowData.asset.name, "")*rowData.asset.value).toFixed(2) : '****'}</Text>
+                          <Text style={[styles.rightmarket,{color:  UColor.arrow}]}>{(rowData.balance==null || rowData.balance=="" || rowData.asset.value == null || rowData.asset.value == "" || rowData.asset.value == 0 || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "" : this.state.isEye ? "≈（￥）" + (rowData.balance.replace(rowData.asset.name, "")*rowData.asset.value).toFixed(2) : '****'}</Text>
                       </View>
                     </View>
                   </View>
