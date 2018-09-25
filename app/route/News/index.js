@@ -51,6 +51,7 @@ class News extends React.Component {
       routes: [{ key: '', title: '' }],
       theme: false,    //白色版
       dappPromp: false,
+      Tokenissue: false,
       selecttitle:"",
       selecturl:"",
       dappList: [],
@@ -58,6 +59,7 @@ class News extends React.Component {
         {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
         {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
         {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
+        {icon: UImage.Currency_my,name:'一键发币',description:'莫与一键发币'},
       ],
       periodstext: '', //当前进行第几期活动
       periodsseq: '', //当前进行第几期下标
@@ -302,11 +304,24 @@ class News extends React.Component {
     });  
   } 
 
+  // 显示/隐藏 modal  
+  _setModalVisible() {  
+    let isTokenissue = this.state.Tokenissue;  
+    this.setState({  
+        Tokenissue:!isTokenissue,  
+    });  
+  } 
+
+  openTokenissue() {
+    this. _setModalVisible();
+    const { navigate } = this.props.navigation;
+    navigate('Web', { title: '莫与一键发币', url: "https://coincreate.github.io/EOS_coincreate/coincreate.html" });
+  }
+
   openDAPP() {
     this. _setModalVisible_DAPP();
-
     sdkOpenDapp(this.state.selecturl,this.state.selecttitle,this.state.theme);
-}
+  }
 
   onPressTool(data) {
     const { navigate } = this.props.navigation;
@@ -315,8 +330,7 @@ class News extends React.Component {
       return ;
     }
 
-    if(this.props.defaultWallet == null || this.props.defaultWallet.name == null 
-          || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
+    if(this.props.defaultWallet == null || this.props.defaultWallet.name == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
       EasyToast.show("请先导入已激活账号!");
       return;
     }
@@ -325,6 +339,8 @@ class News extends React.Component {
       navigate('Dappsearch', {theme:this.state.theme});
     }else if(data.name == this.state.holdallList[2].name){
       navigate('FreeMortgage');
+    }else if(data.name == this.state.holdallList[3].name){
+      this. _setModalVisible();
     }else{
       EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
     }
@@ -430,6 +446,39 @@ class News extends React.Component {
                 <Button onPress={this.openDAPP.bind(this)}>
                     <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
                       <Text style={[styles.deletetext,{color: UColor.btnColor}]}>我已阅读并同意</Text>
+                    </View>
+                </Button>  
+              </View> 
+            </TouchableOpacity>
+          </Modal>
+          <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.Tokenissue} onRequestClose={()=>{}}>
+            <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+              <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
+                <View style={styles.subViewBackup}> 
+                  <Button onPress={this._setModalVisible.bind(this) } style={styles.buttonView2}>
+                      <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={35} />
+                  </Button>
+                </View>
+                <Text style={styles.contentText}>使用说明</Text>
+                <View style={[styles.warningout,{borderColor: UColor.showy}]}>
+                    <View style={{flexDirection: 'row',alignItems: 'center',}}>
+                        <Image source={UImage.warning_h} style={styles.imgBtnBackup} />
+                        <Text style={[styles.headtext,{color: UColor.riseColor}]} >免责声明</Text>
+                    </View>
+                    <Text style={[styles.headtitle,{color: UColor.showy}]}>本功能由第三方平台提供，不属于EosToken官方出品，《用户协议》和《应用风险》由该平台单独向您承担责任！</Text>
+                </View>
+                <View style={{ width: ScreenWidth-70,marginHorizontal: ScreenUtil.autowidth(20), marginVertical: ScreenUtil.autoheight(10),}}>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>3分钟，3EOS！最方便，最便宜的EOS自助发币DAPP。</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>开发：清华大学计算机专业博士生莫与独立编写。</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>功能：帮助大家自助地发行基于EOS代币。价格比大家自己发币便宜了13倍！</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>流程：</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>1.根据指导生成自己代币的MEMO。</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>2.给指定合约账号转账3EOS，并备注之前生成的MEMO。</Text>
+                    <Text style={[styles.centertext,{color: UColor.arrow}]}>3.在eostoken钱包中添加代币（添加公众号“深入浅出EOS”回复“eostoken”获取教程）</Text>
+                </View>
+                <Button onPress={this.openTokenissue.bind(this)} style={{}}>
+                    <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
+                        <Text style={[styles.deletetext,{color: UColor.btnColor}]}>我已阅读并同意</Text>
                     </View>
                 </Button>  
               </View> 

@@ -154,6 +154,7 @@ export default {
   Calculation:require('../img/Calculation.png'),
   copy:require('../img/copy.png'),
   commonwt: require('../img/commonwt.png'),
+  Currency_my: require('../img/Currency_my.png'),
   d:require('../img/d.png'),
   delicon:require('../img/delicon.png'),
   detailsofm: require('../img/detailsofm.png'),
@@ -245,4 +246,5 @@ export default {
   app18: require('../img/activity/app18.png'),
   app19: require('../img/activity/app19.png'),
   app20: require('../img/activity/app20.png'),
+
 }
