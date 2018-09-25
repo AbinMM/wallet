@@ -371,8 +371,8 @@ class News extends React.Component {
                 </Button>
               )}                
             />  */}
-            <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
-              <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>工具箱</Text>
+            <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(15),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
+              <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,fontWeight:'bold',paddingLeft: ScreenUtil.autoheight(12) }}>工具箱</Text>
             </View> 
             <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
               dataSource={this.state.dataSource.cloneWithRows(this.state.holdallList == null ? [] : this.state.holdallList)} 
@@ -382,14 +382,14 @@ class News extends React.Component {
                     <Image source={rowData.icon} style={styles.imgBtnDAPP} />
                     <View style={{flex: 1}}>
                       <Text style={[styles.headbtntext,{color: UColor.fontColor}]}>{rowData.name}</Text>
-                      <Text style={[styles.headbtntext,{color: UColor.arrow}]} numberOfLines={1}>{rowData.description}</Text>
+                      <Text style={styles.descriptiontext} numberOfLines={1}>{rowData.description}</Text>
                     </View>
                   </View>
                 </Button>
               )}                
             /> 
-            <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
-              <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>游戏娱乐</Text>
+            <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(15),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
+              <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,fontWeight:'bold',paddingLeft: ScreenUtil.autoheight(12) }}>游戏娱乐</Text>
             </View>
             <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
               dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
@@ -399,7 +399,7 @@ class News extends React.Component {
                     <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} />
                     <View style={{flex: 1}}>
                       <Text style={[styles.headbtntext,{color: UColor.fontColor}]}>{rowData.name}</Text>
-                      <Text style={[styles.headbtntext,{color: UColor.arrow}]} numberOfLines={1}>{rowData.description}</Text>
+                      <Text style={styles.descriptiontext} numberOfLines={1}>{rowData.description}</Text>
                     </View>
                   </View>
                 </Button>
@@ -577,7 +577,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   }, 
   headDAPP: {
-    paddingBottom: ScreenUtil.autoheight(10),
+    paddingBottom: ScreenUtil.autoheight(15),
     paddingHorizontal: ScreenUtil.autowidth(8),
   },
   headbtnout: {
@@ -592,6 +592,11 @@ const styles = StyleSheet.create({
   },
   headbtntext: {
     fontSize: ScreenUtil.setSpText(12),
+    lineHeight: ScreenUtil.autoheight(20), 
+  },
+  descriptiontext: {
+    color: UColor.lightgray,
+    fontSize: ScreenUtil.setSpText(10),
     lineHeight: ScreenUtil.autoheight(20), 
   },
   adddeleimg: {

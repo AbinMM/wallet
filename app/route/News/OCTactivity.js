@@ -51,14 +51,10 @@ class OCTactivity extends BaseComponent {
                 this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
                     let arr = periodsdata;
                     let arr1 = [];
-                    let periodstext= '';
                     for(var i = 0; i < arr.length; i++){
                         arr1.push(arr[i].name);
-                        if(periodsdata[i].status == 'doing'){
-                            periodstext= periodsdata[i].name;
-                        }
                     }
-                    this.setState({ periodsList: arr1,periodstext:periodstext,});
+                    this.setState({ periodsList: arr1,});
                     this.props.dispatch({type: 'news/getWinActivityStageUsers', payload:{activityStageId:this.state.periodsseq},callback: (data) => {
                         if(data && data.length > 0){
                             this.setState({
@@ -67,10 +63,9 @@ class OCTactivity extends BaseComponent {
                                 searchResult: '',
                             });
                         }
-                        this.setState({logRefreshing: false});
                     } });
                 } });
-            } });
+            }});
             this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
                 if(this.props.defaultWallet == null || this.props.defaultWallet.account == null ||this.props.defaultWallet.name == null){
                     this.setState({promptingState: '温馨提示：您暂时未参加本期活动'});

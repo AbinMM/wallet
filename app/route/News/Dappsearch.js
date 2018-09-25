@@ -70,7 +70,7 @@ class Dappsearch extends BaseComponent {
                              autoCorrect={true} returnKeyType="go" keyboardType="default"  />
                     </View>    
                     <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>  
-                        <Image source={UImage.goto} style={styles.cancelimg} />
+                        <Image source={UImage.goto} style={styles.cancelimg} resizeMode='stretch'/>
                     </TouchableOpacity>  
                 </View> 
                 <View style={styles.btnout}>
