@@ -2130,7 +2130,7 @@ function combineETKLine(data) {
             axisPointer: {
                 type: 'cross',
                 crossStyle: {
-                    color: '#fff',
+                    color: UColor.fontColor,
                     width: 0.5,
                 },
             },
