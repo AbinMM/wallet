@@ -690,6 +690,7 @@ function getWalletList(methodName,params, callback)
           IosSDKModule.iosDebugInfo("返回错误 getWalletList callback:"+walletArr);
         }else{
           var objarray = new Array();
+          var index = 0;
           for(var i = 0;i < walletArr.length;i++)
           {
              //激活账户才返回
@@ -706,7 +707,7 @@ function getWalletList(methodName,params, callback)
               }
               tmpobj.tokens = {eos:floatbalance}; 
 
-              objarray[i] = tmpobj;
+              objarray[index++] = tmpobj;
             }
           }
           res.wallets.eos = objarray;
@@ -774,6 +775,7 @@ function getWallets(methodName,callback)
         }else{
           res.result = true;
           var objarray = new Array();
+          var index = 0;
           for(var i = 0;i < walletArr.length;i++)
           {
             //激活账户才返回
@@ -784,7 +786,7 @@ function getWallets(methodName,callback)
               tmpobj.address = walletArr[i].activePublic;
               tmpobj.blockchain_id = 4;  //4 for EOS
 
-              objarray[i] = tmpobj;
+              objarray[index++] = tmpobj;
             }
           }
           res.data = objarray;
