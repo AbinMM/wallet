@@ -940,9 +940,9 @@ class Route extends React.Component {
                       <Image source={UImage.share_time} style={{width: 25,height: 25}} />
                       <Text style={{marginLeft: 5,fontSize: ScreenUtil.setSpText(15),color: UColor.lightgray}}> {this.getTime(this.state.news.createdate)}</Text>
                   </View>
-                  <View style={{height: ScreenUtil.autoheight(400), marginVertical: ScreenUtil.autoheight(10), paddingHorizontal: ScreenUtil.autowidth(20), paddingBottom: ScreenUtil.autoheight(5),}}>
+                  <View style={{minHeight: ScreenUtil.autoheight(400), marginVertical: ScreenUtil.autoheight(10), paddingHorizontal: ScreenUtil.autowidth(20), paddingBottom: ScreenUtil.autoheight(5),}}>
                     <Text style={{ color: UColor.startup, fontSize: ScreenUtil.setSpText(24),}} >{this.state.news.title}</Text>
-                    <Text style={{ color: UColor.arrow, fontSize: ScreenUtil.setSpText(15), marginTop: ScreenUtil.autoheight(15) ,lineHeight: ScreenUtil.autoheight(25)}} numberOfLines={12} ellipsizeMode='tail'>{this.state.news.content}</Text>
+                    <Text style={{ color: UColor.arrow, fontSize: ScreenUtil.setSpText(15), marginTop: ScreenUtil.autoheight(15) ,lineHeight: ScreenUtil.autoheight(25)}} ellipsizeMode='tail'>{this.state.news.content}</Text>
                   </View>
                   <View style={{borderBottomWidth: 1,borderBottomColor: UColor.riceWhite ,justifyContent: 'center',}} >
                   </View>
