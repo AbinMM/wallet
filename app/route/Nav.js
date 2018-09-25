@@ -39,7 +39,7 @@ import SignIn from './Login/SignIn'
 
 import News from './News'
 import Dappsearch from './News/Dappsearch'
-import OCTactivity from './News/OTCactivity'
+import OCTactivity from './News/OCTactivity'
 
 import Settings from './Settings'
 import AgentInfo from './Settings/AgentInfo'
