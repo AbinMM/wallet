@@ -40,6 +40,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.webkit.ClientCertRequest;
@@ -47,6 +48,9 @@ import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
+import android.webkit.JsPromptResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings.LayoutAlgorithm;
 
@@ -60,7 +64,6 @@ import android.graphics.drawable.ColorDrawable;
 import com.eostoken.R;
 
 import com.eostoken.sdk.JSBridge;
-import com.eostoken.sdk.JSBridgeWebChromeClient;
 import com.eostoken.sdk.MessageToRN;
 import com.eostoken.sdk.ProgressDialog;
 import com.eostoken.sdk.RNCallback;
@@ -89,6 +92,7 @@ public class DappActivity extends Activity {
     private TextView tv_title;
     private ImageButton btn_share;
 
+    private ProgressBar mProgressBar;
     private ProgressDialog myProgressDialog;
 
     @Override
@@ -122,6 +126,7 @@ public class DappActivity extends Activity {
         tv_close =  (TextView)findViewById(R.id.tv_close);
         tv_title =  (TextView)findViewById(R.id.titleName);
         btn_share =  (ImageButton)findViewById(R.id.share_imbtn);
+        mProgressBar =  (ProgressBar)findViewById(R.id.progressBar);
 
         tv_title.setText(title);
         tv_close.setOnClickListener(new View.OnClickListener() {
@@ -293,6 +298,24 @@ public class DappActivity extends Activity {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    class JSBridgeWebChromeClient extends WebChromeClient {
+        @Override
+        public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
+            result.confirm(JSBridge.callJava(view, message));
+            return true;
+        }
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            super.onProgressChanged(view, newProgress);
+           if (newProgress == 100) {
+                mProgressBar.setVisibility(View.GONE);
+           }else{
+                mProgressBar.setVisibility(View.VISIBLE);
+                mProgressBar.setProgress(newProgress);
+           }
         }
     }
 
