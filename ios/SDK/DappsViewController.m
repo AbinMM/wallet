@@ -344,10 +344,21 @@
     return ;
   }
   
+  NSString *msgRet = [respDict objectForKey:@"msg"];
+ 
+  
+  
+  
   // 结果返回给DAPPS
   NSString *jsStr = [NSString stringWithFormat:@"%@('%@')",callback,resp];
   NSLog(@"jsStr=>%@",jsStr);
   dispatch_async(dispatch_get_main_queue(), ^{  // 跳转界面，在主线程进行UI操作
+    if(!isSuccess){
+      if(msgRet!=NULL){
+        [self toastTip:msgRet];//错误则加个吐司提示
+      }
+    }
+    
     [self.wkWebview evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
       NSLog(@"%@----%@",result, error);
       if (([methodName isEqualToString:sdkEosTokenTransfer])||([methodName isEqualToString:sdkPushEosAction])) {
@@ -685,7 +696,53 @@
 
 
 
+/**
+ 获取指定宽度width的字符串在UITextView上的高度
+ 
+ @param textView 待计算的UITextView
+ @param width 限制字符串显示区域的宽度
+ @return 返回的高度
+ */
+- (float)heightForString:(UITextView *)textView andWidth:(float)width {
+  CGSize sizeToFit = [textView sizeThatFits:CGSizeMake(width, MAXFLOAT)];
+  return sizeToFit.height;
+}
+#pragma mark - 显示提示信息
+- (void)toastTip:(NSString *)toastInfo {
+  CGRect frameRC = [[UIScreen mainScreen] bounds];
+  
+  frameRC.size.width = frameRC.size.width/2;
+  frameRC.origin.x = kSCREEN_WIDTH/4;
+  frameRC.origin.y = kSCREEN_HEIGHT*2/3;
+  __block UITextView *toastView = [[UITextView alloc] init];
+  
+  toastView.editable = NO;
+  toastView.selectable = NO;
+  
 
+  frameRC.size.height = [self heightForString:toastView andWidth:(frameRC.size.width)];
+  toastView.frame = frameRC;
+  
+  toastView.text = toastInfo;
+  toastView.backgroundColor = [UIColor whiteColor];
+  toastView.alpha = 1;
+  toastView.textAlignment = NSTextAlignmentCenter;
+  toastView.font=[UIFont systemFontOfSize:14];
+  toastView.layer.borderWidth=1.0;
+  toastView.layer.borderColor=[UIColor whiteColor].CGColor;
+  toastView.layer.cornerRadius=5.0;
+  
+  
+  
+  [self.view addSubview:toastView];
+  
+  dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+  
+  dispatch_after(popTime, dispatch_get_main_queue(), ^() {
+    [toastView removeFromSuperview];
+    toastView = nil;
+  });
+}
 
 
 
