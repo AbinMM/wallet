@@ -52,6 +52,7 @@ class News extends React.Component {
       theme: false,    //白色版
       dappPromp: false,
       Tokenissue: false,
+      logRefreshing: false,
       selecttitle:"",
       selecturl:"",
       dappList: [],
@@ -59,7 +60,7 @@ class News extends React.Component {
         {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
         {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
         {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
-        {icon: UImage.Currency_my,name:'一键发币',description:'莫与一键发币'},
+        {icon: UImage.Currency_my,name:'一键发币',description:'帮助大家自助地发行基于EOS代币。价格比大家自己发币便宜了13倍！'},
       ],
       periodstext: '', //当前进行第几期活动
       periodsseq: '', //当前进行第几期下标
@@ -111,21 +112,11 @@ class News extends React.Component {
         this.setState({theme:true});
       }
     }});
-    try {
-      this.props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
-          if (resp && resp.code == '0') {
-            if(resp.data && resp.data.length > 0){
-              this.setState({dappList : resp.data});
-            }
-          } else {
-            console.log("dappfindAllRecommend error");
-          }
-      } });
-    } catch (error) {
-      console.log("dappfindAllRecommend error: %s",error.message);
-    }
+   
 
     sdkListenMessage(g_props);
+
+    this.onRefreshing();
 
     this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
         try {
@@ -363,6 +354,24 @@ class News extends React.Component {
     }
   }
 
+  onRefreshing() {
+    try {
+      this.setState({logRefreshing: true});
+      this.props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
+          if (resp && resp.code == '0') {
+            if(resp.data && resp.data.length > 0){
+              this.setState({dappList : resp.data,logRefreshing: false});
+            }
+          } else {
+            this.setState({logRefreshing: false});
+            console.log("dappfindAllRecommend error");
+          }
+      } });
+    } catch (error) {
+      console.log("dappfindAllRecommend error: %s",error.message);
+    }
+  }
+
   //渲染页面
   renderScene = ({ route }) => {
     if (route.key == '') {
@@ -370,7 +379,10 @@ class News extends React.Component {
     }
     if (route.title == 'DAPP') {   
       return (<View>
-        <ScrollView  keyboardShouldPersistTaps="always">
+        <ScrollView  keyboardShouldPersistTaps="always"
+          refreshControl={<RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} 
+          tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor} style={{backgroundColor: UColor.transport}}/>}
+        >
           <View style={{ height: this.state.h }}>
             <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth}>
               {this.renderSwipeView()}
@@ -677,6 +689,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: ScreenUtil.setSpText(18),
     paddingBottom: ScreenUtil.autoheight(5),
+    paddingHorizontal:  ScreenUtil.autowidth(15),
   },
   warningout: {
     borderWidth: 1,
