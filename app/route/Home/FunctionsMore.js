@@ -125,7 +125,7 @@ class FunctionsMore extends React.Component {
               <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
                 <View style={styles.subViewBackup}> 
                   <Button onPress={this._setModalVisible.bind(this) } style={styles.buttonView2}>
-                      <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={30} />
+                      <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={35} />
                   </Button>
                 </View>
                 <Text style={styles.contentText}>使用说明</Text>
@@ -208,13 +208,13 @@ const styles = StyleSheet.create({
     subViewBackup: {
         alignItems: 'flex-end',
         justifyContent: 'center',
-        height: ScreenUtil.autoheight(30),
+        height: ScreenUtil.autoheight(35),
         width: ScreenWidth - ScreenUtil.autowidth(30),
     },
     buttonView2: {
         alignItems: 'center',
         justifyContent: 'center',
-        width: ScreenUtil.autowidth(30),
+        width: ScreenUtil.autowidth(35),
     },
     contentText: {
         fontWeight: 'bold',
