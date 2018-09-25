@@ -728,7 +728,7 @@
   toastView.alpha = 1;
   toastView.textAlignment = NSTextAlignmentCenter;
   toastView.font=[UIFont systemFontOfSize:14];
-  toastView.layer.borderWidth=0.8;
+  toastView.layer.borderWidth=0.7;
   toastView.layer.borderColor=[UIColor whiteColor].CGColor;
   toastView.layer.cornerRadius=5.0;
   
