@@ -117,9 +117,8 @@ export default {
         // alert("myAssetInfo" +JSON.stringify(myAssets));
         // 
 
-        var myAssetsNew = yield call(store.get, 'myAssets217_' + payload.accountName);
         var currentAccount = yield call(store.get, 'current_account');
-        if((myAssetsNew == null || myAssetsNew.length == 0 || (myAssetsNew != null && myAssetsNew.length == myAssets.length && currentAccount == payload.accountName))){
+        if((currentAccount == payload.accountName)){
             yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
             yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
         }
@@ -155,9 +154,6 @@ export default {
             }
 
             if(isBalanceChange){
-                // var myAssetsNew = yield call(store.get, 'myAssets');
-                // if(myAssetsNew != null && myAssetsNew.length == myAssets.length){
-                    // alert("getBalance" +JSON.stringify(myAssets));
                     yield call(store.save, 'accountName', payload.accountName);
                     yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
 
@@ -337,12 +333,25 @@ export default {
         },
         updateMyAssets(state, action) {
             let myAssets = action.payload.myAssets;
-            if(myAssets != null && myAssets.length != 0){
+            if(myAssets == undefined || myAssets == null || myAssets.length == 0){
+                return;
+            }
+            for(var i = 0; i < myAssets.length; i++){
+                if(myAssets[i].asset.name != "EOS"){
+                    continue;
+                }
+
+                var temp = myAssets[i];
+                myAssets[i] = myAssets[0];
+                myAssets[0] = temp;
+
+                break;
+            }
+            if(myAssets.length > 1){
                 var tempA = [];
                 tempA.push(myAssets[0]); // EOS为第一个元素，不进行排列
                 myAssets.shift(); // 移除第一个元素，即EOS
                 myAssets.sort(compare("balance")); // 根据余额进行排列
-                // alert(JSON.stringify(myAssets) + "---" + JSON.stringify(tempA))
                 myAssets = tempA.concat(myAssets); // EOS重新放在第一个元素
             }
 
