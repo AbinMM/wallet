@@ -58,7 +58,7 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  [self clearCache];
+//  [self clearCache];
 
   self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back"] style:(UIBarButtonItemStyleDone) target:self action:@selector(onBackItem)];
 //  [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
@@ -307,7 +307,7 @@
   [self.wkWebview removeObserver:self forKeyPath:@"estimatedProgress"];
 //  [self.wkWebview removeObserver:self forKeyPath:@"title"];
   [[NSNotificationCenter defaultCenter] removeObserver:self];
-  [self clearCache];
+//  [self clearCache];
 }
 
 //清理WEB缓存
