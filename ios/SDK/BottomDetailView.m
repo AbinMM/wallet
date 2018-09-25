@@ -84,7 +84,7 @@
         labelContent.numberOfLines   = 0;
         labelContent.preferredMaxLayoutWidth = [UIScreen mainScreen].bounds.size.width-104;
         [self addSubview:labelContent];
-        labelContent.frame = CGRectMake(width, y, width, height);
+        labelContent.frame = CGRectMake(width, y, width+30, height);
 
         labelContent.text = content;
 
