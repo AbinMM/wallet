@@ -106,6 +106,10 @@
   
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(returnValueToJS:) name:rnNotification object:nil];//通知监听
   
+  
+  if (!_IsAddJS) {
+    [self addAllScriptMessageHandler];
+  }
 }
 
 
@@ -194,17 +198,17 @@
 
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
-  if (!_IsAddJS) {
-    [self addAllScriptMessageHandler];
-  }
+//  if (!_IsAddJS) {
+//    [self addAllScriptMessageHandler];
+//  }
 }
 
 
 - (void)viewDidDisappear:(BOOL)animated {
   [super viewDidDisappear:animated];
-  if (_IsAddJS) {
-    [self removeAllScriptMessageHandler];
-  }
+//  if (_IsAddJS) {
+//    [self removeAllScriptMessageHandler];
+//  }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -214,6 +218,10 @@
     NSLog(@"clicked navigationbar back button");
     [self.navigationController setNavigationBarHidden:YES];
     [self.navigationController popViewControllerAnimated:YES];
+  }
+  
+  if (_IsAddJS) {
+    [self removeAllScriptMessageHandler];
   }
 }
 
