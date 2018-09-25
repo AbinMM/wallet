@@ -179,7 +179,7 @@ class OCTactivity extends BaseComponent {
 
     explain(){
         const { navigate } = this.props.navigation;
-        navigate('Web', { title: '活动说明', url: 'http://wx1.sinaimg.cn/mw690/925ebe55gy1fvlrigkcljj20ku12mq54.jpg' });
+        navigate('Web', { title: '活动说明', url: 'http://static.eostoken.im/xu/oct.png' });
     }
 
     render() {

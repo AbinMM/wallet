@@ -232,10 +232,6 @@ class News extends React.Component {
         return;
       }
       navigate('Web', { title: banner.title, url: url });
-      //取发现界面的活动banner图id 
-      if(banner.id== '45'){
-        navigate('OCTactivity',{ periodstext:this.state.periodstext, periodsseq:this.state.periodsseq });
-      }
     }
   }
 
