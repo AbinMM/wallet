@@ -971,19 +971,19 @@ class Route extends React.Component {
               <View style={{ height: 125 }}>
                 <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
                 <View style={{ flexDirection: "row" }}>
-                  <Button onPress={() => { this.shareAction(1) }} style={{ width: '25%', justifyContent: 'center' }}>
+                  <Button onPress={() => { this.shareAction(1) }} style={{ flex: 1, justifyContent: 'center' }}>
                     <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                       <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                       <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
                     </View>
                   </Button>
-                  <Button onPress={() => { this.shareAction(2) }} style={{ width: '25%', justifyContent: 'center' }}>
+                  <Button onPress={() => { this.shareAction(2) }} style={{ flex: 1, justifyContent: 'center' }}>
                     <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                       <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                       <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
                     </View>
                   </Button>
-                  <Button onPress={() => { this.shareAction(3) }} style={{ width: '25%' }}>
+                  <Button onPress={() => { this.shareAction(3) }} style={{ flex: 1, }}>
                     <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                       <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                       <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
@@ -1048,19 +1048,19 @@ class Route extends React.Component {
                 <View style={{ height: 125 }}>
                   <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
                   <View style={{ flexDirection: "row" }}>
-                    <Button style={{ width: '33%', justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
+                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
                       </View>
                     </Button>
-                    <Button  style={{ width: '33%', justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
+                    <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
                       </View>
                     </Button>
-                    <Button  style={{ width: '33%' }} onPress={() => { this.shareAction(3) }}>
+                    <Button  style={{ flex: 1, }} onPress={() => { this.shareAction(3) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
@@ -1119,19 +1119,19 @@ class Route extends React.Component {
                 <View style={{ height: 125 }}>
                   <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
                   <View style={{ flexDirection: "row" }}>
-                    <Button style={{ width: '33%', justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
+                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
                       </View>
                     </Button>
-                    <Button  style={{ width: '33%', justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
+                    <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
                       </View>
                     </Button>
-                    <Button  style={{ width: '33%' }} onPress={() => { this.shareAction(3) }}>
+                    <Button  style={{ flex: 1, }} onPress={() => { this.shareAction(3) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
@@ -1197,19 +1197,19 @@ class Route extends React.Component {
                 <View style={{ height: 125 }}>
                   <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
                   <View style={{ flexDirection: "row" }}>
-                    <Button style={{ width: '33%', justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
+                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
                       </View>
                     </Button>
-                    <Button  style={{ width: '33%', justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
+                    <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
                       </View>
                     </Button>
-                    <Button  style={{ width: '33%' }} onPress={() => { this.shareAction(3) }}>
+                    <Button  style={{ flex: 1, }} onPress={() => { this.shareAction(3) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
@@ -1291,19 +1291,19 @@ class Route extends React.Component {
                 <View style={{ height: 125 }}>
                   <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
                   <View style={{ flexDirection: "row" }}>
-                    <Button style={{ width: '33%', justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
+                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
                       </View>
                     </Button>
-                    <Button  style={{ width: '33%', justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
+                    <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
                       </View>
                     </Button>
-                    <Button  style={{ width: '33%' }} onPress={() => { this.shareAction(3) }}>
+                    <Button  style={{ flex: 1, }} onPress={() => { this.shareAction(3) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
