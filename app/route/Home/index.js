@@ -143,6 +143,9 @@ class Home extends React.Component {
 
   //获取资源详情
   getResourcesinfo() {
+    if (this.props.defaultWallet == null || this.props.defaultWallet.name == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
+      return;
+    }
     this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: (this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name},callback: (resources) => {
       if(resources != null){
         this.setState({
