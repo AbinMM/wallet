@@ -125,21 +125,21 @@ class News extends React.Component {
 
     sdkListenMessage(g_props);
 
-    // this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
-    //     try {
-    //       let periodstext= '';
-    //       let periodsseq= '';
-    //       for(var i = 0; i < periodsdata.length; i++){
-    //           if(periodsdata[i].status == 'doing'){
-    //               periodstext= periodsdata[i].name;
-    //               periodsseq= periodsdata[i].seq;
-    //           }
-    //       }
-    //       this.setState({periodstext:periodstext,periodsseq:periodsseq});
-    //     } catch (error) {
+    this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
+        try {
+          let periodstext= '';
+          let periodsseq= '';
+          for(var i = 0; i < periodsdata.length; i++){
+              if(periodsdata[i].status == 'doing'){
+                  periodstext= periodsdata[i].name;
+                  periodsseq= periodsdata[i].seq;
+              }
+          }
+          this.setState({periodstext:periodstext,periodsseq:periodsseq});
+        } catch (error) {
           
-    //     }
-    // } })
+        }
+    } })
   }
 
   componentWillUnmount() {
@@ -235,9 +235,10 @@ class News extends React.Component {
       const { navigate } = this.props.navigation;
       let url = banner.url.replace(/^\s+|\s+$/g, "");
       navigate('Web', { title: banner.title, url: url });
-      // if(banner.id== '45'){
-      //   navigate('OCTactivity',{ periodstext:this.state.periodstext, periodsseq:this.state.periodsseq });
-      // }
+      //取发现界面的活动banner图id 
+      if(banner.id== '45'){
+        navigate('OCTactivity',{ periodstext:this.state.periodstext, periodsseq:this.state.periodsseq });
+      }
     }
   }
 
@@ -347,8 +348,7 @@ class News extends React.Component {
     if (route.key == '') {
       return (<View></View>)
     }
-    //if (route.key == this.state.routes[0].key) { 当tab的第一个是DAPP的时候释放这里
-    if (route.title == 'DAPP') {   //现在暂时点击到官方公告时显示
+    if (route.title == 'DAPP') {   
       return (<View>
         <ScrollView  keyboardShouldPersistTaps="always">
           <View style={{ height: this.state.h }}>
