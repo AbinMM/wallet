@@ -347,13 +347,13 @@ export default {
 
                 break;
             }
-            if(myAssets.length > 1){
-                var tempA = [];
-                tempA.push(myAssets[0]); // EOS为第一个元素，不进行排列
-                myAssets.shift(); // 移除第一个元素，即EOS
-                myAssets.sort(compare("balance")); // 根据余额进行排列
-                myAssets = tempA.concat(myAssets); // EOS重新放在第一个元素
-            }
+            // if(myAssets.length > 1){
+            //     var tempA = [];
+            //     tempA.push(myAssets[0]); // EOS为第一个元素，不进行排列
+            //     myAssets.shift(); // 移除第一个元素，即EOS
+            //     myAssets.sort(compare("balance")); // 根据余额进行排列
+            //     myAssets = tempA.concat(myAssets); // EOS重新放在第一个元素
+            // }
 
             return { ...state, myAssets, updateTime:Date.parse(new Date())};
         },
