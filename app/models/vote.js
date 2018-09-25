@@ -45,8 +45,7 @@ export default {
 
         if(payload && payload.username && accountInfo && accountInfo.account_name)
         {
-            if(payload.username != accountInfo.account_name)
-            {
+            if(payload.username != accountInfo.account_name){
                 accountInfo = null; //输入参数与缓存不一样，不能用缓存
             }
         }
@@ -58,9 +57,8 @@ export default {
                 yield call(store.save, 'accountInfo', resp.data);
                 if (callback) callback(resp.data);
             }else{
-                // EasyToast.show(resp.msg);
-                if(accountInfo)
-                {
+                EasyToast.show(resp.msg);
+                if(accountInfo){
                     yield put({ type: 'updateAccountInfo', payload: { producers:(accountInfo.voter_info ? accountInfo.voter_info.producers : "") } });
                     yield put({ type: 'updateResources', payload: { Resources:accountInfo}  });
                 }
@@ -68,8 +66,7 @@ export default {
             }
         } catch (error) {
             EasyToast.show('网络繁忙,请稍后!');
-            if(accountInfo)
-            {
+            if(accountInfo){
                 yield put({ type: 'updateAccountInfo', payload: { producers:(accountInfo.voter_info ? accountInfo.voter_info.producers : "") } });
                 yield put({ type: 'updateResources', payload: { Resources:accountInfo}  });
             }
