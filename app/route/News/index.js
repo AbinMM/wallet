@@ -228,7 +228,7 @@ class News extends React.Component {
       const { navigate } = this.props.navigation;
       let url = banner.url.replace(/^\s+|\s+$/g, "");
       if(banner.url == "http://offw.etdac.io/pages/"){
-        navigate('OCTactivity',{ periodstext:this.state.periodstext, periodsseq:this.state.periodsseq });
+        navigate('OCTactivity',{ periodstext:this.state.periodstext, periodsseq:this.state.periodsseq, startTime: moment().format('YYYY-MM-DD ' + '00:00:00'),});
         return;
       }
       navigate('Web', { title: banner.title, url: url });

@@ -40,7 +40,7 @@ class OCTactivity extends BaseComponent {
             periodsseq: this.props.navigation.state.params.periodsseq!=""?this.props.navigation.state.params.periodsseq:"1", //当前进行第几期下标
             choicePeriods: 1, //选择了下拉列表的哪个下标
             promptingState: '',
-            startTime: '',
+            startTime: this.props.navigation.state.params.startTime!=""?this.props.navigation.state.params.startTime:"00:00:00",
         }
     }
 
@@ -52,14 +52,10 @@ class OCTactivity extends BaseComponent {
                 this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
                     let arr = periodsdata;
                     let arr1 = [];
-                    let startTime = ''
                     for(var i = 0; i < arr.length; i++){
                         arr1.push(arr[i].name);
-                        if(periodsdata[i].status == 'doing'){
-                            startTime=arr[i].startDate;
-                        }
                     }
-                    this.setState({ periodsList: arr1, startTime:startTime,});
+                    this.setState({ periodsList: arr1,});
                     this.props.dispatch({type: 'news/getWinActivityStageUsers', payload:{activityStageId:this.state.periodsseq},callback: (data) => {
                         
                         if(data && data.length > 0){
@@ -238,7 +234,7 @@ class OCTactivity extends BaseComponent {
                         </View>
                         
                         <View style={{flexDirection: 'column',alignItems: 'center',justifyContent:'flex-end'}}>
-                            <CountDownReact date= {this.transferTimeZone(moment().format('YYYY-MM-DD ' + '00:00:00'))} hours=':'  mins=':'
+                            <CountDownReact date= {this.transferTimeZone(this.state.startTime)} hours=':'  mins=':'
                                 hoursStyle={[styles.ratiotext,{color: '#2279C5'}]} minsStyle={[styles.ratiotext,{color: '#2279C5'}]}
                                 secsStyle={[styles.ratiotext,{color: '#2279C5'}]} firstColonStyle={[styles.ratiotext,{color: '#2279C5'}]}
                                 secondColonStyle={[styles.ratiotext,{color: '#2279C5'}]}
