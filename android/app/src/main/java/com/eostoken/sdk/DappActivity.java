@@ -48,9 +48,6 @@ import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
-import android.webkit.JsPromptResult;
-import android.webkit.WebChromeClient;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings.LayoutAlgorithm;
 
@@ -64,6 +61,7 @@ import android.graphics.drawable.ColorDrawable;
 import com.eostoken.R;
 
 import com.eostoken.sdk.JSBridge;
+import com.eostoken.sdk.JSBridgeWebChromeClient;
 import com.eostoken.sdk.MessageToRN;
 import com.eostoken.sdk.ProgressDialog;
 import com.eostoken.sdk.RNCallback;
@@ -268,7 +266,7 @@ public class DappActivity extends Activity {
             //调用本地 html 不需要设置WebViewClient
             // 处理webview中的各种通知、请求事件等
             // 处理webview中的js对话框、网站图标、网站title、加载进度等
-            mWebView.setWebChromeClient(new JSBridgeWebChromeClient());
+            mWebView.setWebChromeClient(new JSBridgeWebChromeClient(mProgressBar));
             mWebView.setWebViewClient(new WebViewClient(){
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -298,24 +296,6 @@ public class DappActivity extends Activity {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-    }
-
-    class JSBridgeWebChromeClient extends WebChromeClient {
-        @Override
-        public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
-            result.confirm(JSBridge.callJava(view, message));
-            return true;
-        }
-        @Override
-        public void onProgressChanged(WebView view, int newProgress) {
-            super.onProgressChanged(view, newProgress);
-           if (newProgress == 100) {
-                mProgressBar.setVisibility(View.GONE);
-           }else{
-                mProgressBar.setVisibility(View.VISIBLE);
-                mProgressBar.setProgress(newProgress);
-           }
         }
     }
 
