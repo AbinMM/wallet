@@ -109,8 +109,31 @@ class ImportEosKey extends BaseComponent {
 
 
   importPriKey() {
+
+    var activePkTemp= this.state.activePk.replace(/\s+/g, "");
+    activePkTemp = activePkTemp.replace(/<\/?.+?>/g,""); 
+    activePkTemp = activePkTemp.replace(/[\r\n]/g, ""); 
+
+    
+    var ownerPkTemp= this.state.ownerPk.replace(/\s+/g, "");
+    ownerPkTemp = ownerPkTemp.replace(/<\/?.+?>/g,""); 
+    ownerPkTemp = ownerPkTemp.replace(/[\r\n]/g, ""); 
+
+  // console.log("activePkTemp=%@",activePkTemp);
+  // console.log("ownerPkTemp=%@",ownerPkTemp);
+
+    if(activePkTemp.length>51){
+      EasyToast.show('active私钥有效长度不对!');
+      return;
+    }
+
+    if(ownerPkTemp.length>51){
+      EasyToast.show('owner私钥有效长度不对!');
+      return;
+    }
+
     //只判断active有没有输入
-    if (this.state.activePk == ''&& this.state.ownerPk == '') {
+    if (activePkTemp == ''&& ownerPkTemp == '') {
       EasyToast.show('请输入私钥');
       return;
     }
@@ -136,32 +159,32 @@ class ImportEosKey extends BaseComponent {
     }
 
     //两次调用校验，用promise模式
-    if(this.state.activePk==''){
-      Eos.checkPrivateKey(this.state.ownerPk, (r) => {
+    if(activePkTemp==''){
+      Eos.checkPrivateKey(ownerPkTemp, (r) => {
         if (!r.isSuccess) {
           EasyToast.show('无效的Active私钥，请检查输入是否正确');
           return;
         }
-        this.createWalletByPrivateKey(this.state.ownerPk, this.state.activePk);
+        this.createWalletByPrivateKey(ownerPkTemp, activePkTemp);
       });
     }else{
-      this.checkPk(this.state.activePk)
+      this.checkPk(activePkTemp)
       .then((rdata)=>{
           if (!rdata) {
             EasyToast.show('无效的Active私钥，请检查输入是否正确');
           }else{
-            if(this.state.ownerPk==""){
-              this.createWalletByPrivateKey(this.state.ownerPk, this.state.activePk);
+            if(ownerPkTemp==""){
+              this.createWalletByPrivateKey(ownerPkTemp, activePkTemp);
             }else{
-              return this.checkPk(this.state.ownerPk);
+              return this.checkPk(ownerPkTemp);
             }
           }
         })
       .then((rdata)=>{
         if(rdata){
-          this.createWalletByPrivateKey(this.state.ownerPk, this.state.activePk);
+          this.createWalletByPrivateKey(ownerPkTemp, activePkTemp);
         }else{
-          if(this.state.ownerPk!=""){
+          if(ownerPkTemp!=""){
             EasyToast.show('无效的私钥，请检查输入是否正确');
           }
         }
@@ -558,7 +581,7 @@ class ImportEosKey extends BaseComponent {
                 <View style={[styles.biginptout,{backgroundColor: UColor.mainColor}]} >
                   {/* <Text style={[styles.inptitle,{color: UColor.fontColor}]}>私钥</Text> */}
                   <TextInput ref={(ref) => this._lphone = ref} value={this.state.ownerPk} returnKeyType="next" editable={true}
-                    selectionColor={UColor.tintColor} placeholderTextColor={UColor.arrow} autoFocus={false} maxLength={51}
+                    selectionColor={UColor.tintColor} placeholderTextColor={UColor.arrow} autoFocus={false} maxLength={64}
                     style={[styles.inptgo,{color: UColor.arrow,borderColor: UColor.arrow,backgroundColor: UColor.secdColor,}]} 
                     onChangeText={(ownerPk) => this.setState({ ownerPk })}  onChange={this.intensity()} keyboardType="default"
                     placeholder="粘贴或输入owner私钥" underlineColorAndroid="transparent"  multiline={true}  />
@@ -567,7 +590,7 @@ class ImportEosKey extends BaseComponent {
                 <View style={[styles.biginptout,{backgroundColor: UColor.mainColor}]} >
                   {/* <Text style={[styles.inptitle,{color: UColor.fontColor}]}>私钥</Text> */}
                   <TextInput ref={(ref) => this._lphone = ref} value={this.state.activePk} returnKeyType="next" editable={true}
-                    selectionColor={UColor.tintColor} placeholderTextColor={UColor.arrow} autoFocus={false} maxLength={51}
+                    selectionColor={UColor.tintColor} placeholderTextColor={UColor.arrow} autoFocus={false} maxLength={64}
                     style={[styles.inptgo,{color: UColor.arrow,borderColor: UColor.arrow,backgroundColor: UColor.secdColor,}]} 
                     onChangeText={(activePk) => this.setState({ activePk })}  onChange={this.intensity()} keyboardType="default"
                     placeholder="粘贴或输入active私钥" underlineColorAndroid="transparent"  multiline={true}  />
