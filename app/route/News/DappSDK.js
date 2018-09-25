@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, StyleSheet, Image, View, Text, Linking, Modal, TouchableOpacity,ListView,TextInput,Platform,DeviceEventEmitter,NativeModules,RefreshControl,NativeEventEmitter,} from 'react-native';
+import { Platform,DeviceEventEmitter,NativeModules,NativeEventEmitter,} from 'react-native';
 import { EasyShowLD } from '../../components/EasyShow'
 import {formatEosQua} from '../../utils/FormatUtil'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
