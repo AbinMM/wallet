@@ -193,15 +193,15 @@ public class DappActivity extends Activity {
         {
             try {
                 mWebView.stopLoading();
-                mWebView.setWebChromeClient(null);
-                mWebView.setWebViewClient(null);
+                // mWebView.setWebChromeClient(null);
+                // mWebView.setWebViewClient(null);
                 mWebView.setVisibility(View.GONE);
                 mWebView.clearCache(true);   
                 mWebView.clearHistory();  
-                mWebView.loadUrl("about:blank");
-                mWebView.freeMemory();
-                mWebView.pauseTimers();
-                mWebView.removeAllViews();
+                // mWebView.loadUrl("about:blank");
+                // mWebView.freeMemory();
+                // mWebView.pauseTimers();
+                // mWebView.removeAllViews();
                 mWebView.destroy(); //退出时释放webView
             } catch (Exception e) {
                 //TODO: handle exception
