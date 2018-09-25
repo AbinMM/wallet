@@ -687,7 +687,7 @@ function getWalletList(methodName,params, callback)
       try {
         if (walletArr == undefined || walletArr == null || walletArr.length < 1) {
           //返回错误
-          IosSDKModule.iosDebugInfo("返回错误 getWalletList callback:"+walletArr);
+          
         }else{
           var objarray = new Array();
           var index = 0;
