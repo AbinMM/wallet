@@ -8,6 +8,7 @@ import QRCode from "react-native-qrcode-svg";
 import Button from "../../components/Button";
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast";
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 let dismissKeyboard = require("dismissKeyboard");
 
@@ -19,17 +20,33 @@ class TurnInAsset extends BaseComponent {
     header:null, 
   };
 
+  // 构造函数
+  constructor(props) {
+    super(props);
+    this.state = {
+      symbol: "",
+      toAccount: "",
+      amount: "",
+      memo: "",
+      defaultWallet: null,
+    };
+  }
+
   //组件加载完成
   componentDidMount() {
     const c = this.props.navigation;
-    this.props.dispatch({
-      type: "wallet/getDefaultWallet",
-      callback: data => {}
-    });
+    this.props.dispatch({ type: "wallet/getDefaultWallet",callback: data => {}});
     var params = this.props.navigation.state.params.coins;
     this.setState({
       symbol:  params.asset.name,
       toAccount: this.props.defaultWallet.account,
+    });
+
+    DeviceEventEmitter.addListener('transfer_token_result', (data) => {
+      alert(JSON.stringify(data));
+      this.setState({
+          symbol:data.asset.name,
+      });
     });
   }
   
@@ -44,17 +61,7 @@ class TurnInAsset extends BaseComponent {
     EasyToast.show("复制成功");
   };
 
-  // 构造函数
-  constructor(props) {
-    super(props);
-    this.state = {
-      symbol: "",
-      toAccount: "",
-      amount: "",
-      memo: "",
-      defaultWallet: null
-    };
-  }
+  
 
   _rightTopClick = () => {
     DeviceEventEmitter.emit(
@@ -102,7 +109,7 @@ class TurnInAsset extends BaseComponent {
         lowerstr = this.state.symbol.toLowerCase();
         upperstr = this.state.symbol.toUpperCase();
     }
-    var qrcode = lowerstr +':' + this.props.defaultWallet.account + '?amount=' + ((this.state.amount == "")?'0':this.state.amount) + '&token=' + upperstr;
+    var qrcode = lowerstr +':' + this.props.defaultWallet.account + '?amount=' + ((this.state.amount == "")?'0':this.state.amount) + '&token=' + upperstr ;
     return qrcode;
   }
 
@@ -113,6 +120,11 @@ class TurnInAsset extends BaseComponent {
 
   dismissKeyboardClick() {
     dismissKeyboard();
+  }
+
+  openChoiceToken() {
+    const { navigate } = this.props.navigation;
+    navigate('ChoiceToken', {isTurnOut:true,coinType:this.state.symbol});
   }
 
   render() {
@@ -136,7 +148,12 @@ class TurnInAsset extends BaseComponent {
                   style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.tintColor} placeholder="请输入金额(可不填)"
                   underlineColorAndroid="transparent" secureTextEntry={false} keyboardType="numeric"
                 />
-                <Text style={[styles.tokenText,{color: UColor.arrow}]}>{this.state.symbol}</Text>
+                <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>    
+                    <View style={{flexDirection: 'row',paddingVertical: ScreenUtil.autowidth(10),}}>                              
+                        <Text style={{fontSize: ScreenUtil.setSpText(15),color: UColor.arrow, marginRight: ScreenUtil.autowidth(5),}}>{this.state.symbol}</Text>
+                        <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} />
+                    </View>
+                </TouchableOpacity>
               </View>
               <Button onPress={this.copy.bind()} style={styles.btnnextstep}>
                 <View style={[styles.nextstep,{backgroundColor: UColor.tintColor}]}>

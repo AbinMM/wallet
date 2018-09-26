@@ -293,7 +293,8 @@ class Home extends React.Component {
       AnalyticsUtil.onEvent('Receipt_code');
       if (this.props.defaultWallet != null && this.props.defaultWallet.name != null && (this.props.defaultWallet.isactived && this.props.defaultWallet.hasOwnProperty('isactived'))) {
         // this._setModalVisible();
-        navigate('TurnIn', {});
+        //navigate('TurnIn', {});
+        navigate('TurnInAsset', {coins:this.props.myAssets[0], balance:this.props.myAssets[0].balance});
       } else {
         EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
           this.createWallet();
@@ -317,7 +318,8 @@ class Home extends React.Component {
         }, () => { EasyShowLD.dialogClose() });  
         return;
       }
-      navigate('TurnOut', { coins:'EOS', balance: this.state.balance });
+      //navigate('TurnOut', { coins:'EOS', balance: this.state.balance });
+      navigate('TurnOutAsset', { coins:this.props.myAssets[0], balance: this.props.myAssets[0].balance });
     }else if (key == 'Resources') {
       if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) {
         EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {

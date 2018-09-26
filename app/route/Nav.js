@@ -19,11 +19,12 @@ import Coin from './Coins/Detail'
 
 import Home from './Home'
 import AddAssets from './Home/AddAssets'
+import addressManage from './Home/addressManage'
+import AssetInfo from './Home/AssetInfo'
 import AssetSearch from './Home/AssetSearch'
+import ChoiceToken from './Home/ChoiceToken'
 import FreeMortgage from './Home/FreeMortgage'
 import FunctionsMore from './Home/FunctionsMore'
-import AssetInfo from './Home/AssetInfo'
-import addressManage from './Home/addressManage'
 import TradeDetails from './Home/TradeDetails'
 import TurnIn from './Home/TurnIn'
 import TurnOut from './Home/TurnOut'
@@ -288,6 +289,9 @@ const Nav = StackNavigator(
     },
     AssetSearch: {
       screen: AssetSearch
+    },
+    ChoiceToken: {
+      screen: ChoiceToken
     },
     FunctionsMore: {
       screen:FunctionsMore

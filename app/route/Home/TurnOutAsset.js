@@ -12,6 +12,7 @@ import { EasyToast } from '../../components/Toast';
 import {formatEosQua} from '../../utils/FormatUtil';
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import { EasyShowLD } from '../../components/EasyShow'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -37,6 +38,10 @@ class TurnOutAsset extends BaseComponent {
             defaultWallet: null,
             balance: '0',
             name: '',
+            tokenvalue: '',
+            tokenicon: "http://static.eostoken.im/images/20180319/1521432637907.png",
+            contractAccount: "eosio.token",
+            precisionNumber: '0',
         };
     }
 
@@ -53,8 +58,12 @@ class TurnOutAsset extends BaseComponent {
             toAccount: params.toaccount == null ? '' : params.toaccount,
             amount: params.amount == null ? '' : params.amount,
             name: params.asset.name,
+            tokenvalue: params.asset.value,
+            tokenicon: params.asset.icon,
             balance: tmpbalance == null ? '0.0000' : tmpbalance,
-            password:''
+            contractAccount: params.asset.contractAccount,
+            precisionNumber: params.asset.precisionNumber,
+            password:'',
         })
         DeviceEventEmitter.addListener('scan_result', (data) => {
             try {
@@ -79,6 +88,17 @@ class TurnOutAsset extends BaseComponent {
         DeviceEventEmitter.addListener('transfer_scan_result', (data) => {
             this.setState({toAccount:data.toaccount});
         });
+
+        DeviceEventEmitter.addListener('transfer_token_result', (data) => {
+            this.setState({
+                balance: data.balance,
+                name:data.asset.name,
+                tokenvalue: data.asset.value, 
+                tokenicon:data.asset.icon,
+                contractAccount: data.asset.contractAccount,
+                precisionNumber: data.asset.precisionNumber,
+            });
+        });
     }
 
     openAddressBook() {
@@ -86,14 +106,15 @@ class TurnOutAsset extends BaseComponent {
         navigate('addressManage', {isTurnOut:true,coinType:this.state.name});
     }
 
+    openChoiceToken() {
+        const { navigate } = this.props.navigation;
+        navigate('ChoiceToken', {isTurnOut:true,coinType:this.state.name});
+    }
+
     componentWillUnmount(){
         //结束页面前，资源释放操作
         super.componentWillUnmount();
         DeviceEventEmitter.removeListener('scan_result');
-    }
-
-    onPress(action) {
-        EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
     }
 
     _rightButtonClick() {
@@ -136,11 +157,6 @@ class TurnOutAsset extends BaseComponent {
         });
     }
 
-    goPage(coinType) {
-        const { navigate } = this.props.navigation;
-        navigate('addressManage', { coinType });
-    }
-
     inputPwd = () => {
         this._setModalVisible();
         const view =
@@ -173,7 +189,7 @@ class TurnOutAsset extends BaseComponent {
                     Eos.transaction({
                         actions: [
                             {
-                                account: this.props.navigation.state.params.coins.asset.contractAccount,
+                                account: this.state.contractAccount,
                                 name: "transfer", 
                                 authorization: [{
                                 actor: this.props.defaultWallet.account,
@@ -182,7 +198,7 @@ class TurnOutAsset extends BaseComponent {
                                 data: {
                                     from: this.props.defaultWallet.account,
                                     to: this.state.toAccount,
-                                    quantity: formatEosQua(this.state.amount + " " + this.props.navigation.state.params.coins.asset.name, this.props.navigation.state.params.coins.asset.precisionNumber),
+                                    quantity: formatEosQua(this.state.amount + " " + this.state.name, this.state.precisionNumber),
                                     memo: this.state.memo,
                                 }
                             },
@@ -190,7 +206,7 @@ class TurnOutAsset extends BaseComponent {
                     }, plaintext_privateKey, (r) => {
                         EasyShowLD.loadingClose();
                         if(r && r.isSuccess){
-                            this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.props.defaultWallet.account, to: this.state.toAccount, amount: this.state.amount + " " + this.props.navigation.state.params.coins.asset.name, memo: this.state.memo, data: "push"}});
+                            this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.props.defaultWallet.account, to: this.state.toAccount, amount: this.state.amount + " " + this.state.name, memo: this.state.memo, data: "push"}});
                             AnalyticsUtil.onEvent('Turn_out');
                             EasyToast.show('交易成功');
                             DeviceEventEmitter.emit('transaction_success');
@@ -314,16 +330,16 @@ class TurnOutAsset extends BaseComponent {
     }
 
     render() {
-        const c = this.props.navigation.state.params.coins;
         return (
         <View style={[styles.container,{backgroundColor:UColor.secdfont}]}>
-            <Header {...this.props} onPressLeft={true} title={this.props.navigation.state.params.coins.asset.name} avatar={UImage.scan} onPressRight={this._rightTopClick.bind()}/>
+            <Header {...this.props} onPressLeft={true} title={this.state.name} avatar={UImage.scan} onPressRight={this._rightTopClick.bind()}/>
             <ScrollView  keyboardShouldPersistTaps="always">
                 <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                     <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
                         <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
-                            <Text style={[styles.headertext,{color: UColor.fontColor}]}>{this.state.balance==""? "0.0000" :this.state.balance.replace(c.asset.name, "")} {c.asset.name}</Text>
-                            {/* <Text style={styles.rowtext}>≈ {c.value} ￥</Text> */}
+                            <Image source={{uri:this.state.tokenicon}} style={{width: ScreenUtil.autowidth(30),height: ScreenUtil.autowidth(30),margin: ScreenUtil.autowidth(5)}} />  
+                            <Text style={[styles.headertext,{color: UColor.fontColor}]}>{this.state.balance==""? "0.0000" :this.state.balance} {this.state.name}</Text>
+                            <Text style={[styles.rowtext,{color: UColor.lightgray}]}>≈ {(this.state.balance == null || this.state.tokenvalue == null) ? "0.00" : (this.state.balance * this.state.tokenvalue).toFixed(2)} ￥</Text>
                         </View>
                         <View style={styles.taboutsource}>
                             <View style={[styles.outsource,{backgroundColor:UColor.secdfont}]}>
@@ -342,13 +358,22 @@ class TurnOutAsset extends BaseComponent {
                                         </Button>
                                     </View>
                                 </View>
-                                <View style={[styles.textinptoue,{borderBottomColor:UColor.mainsecd}]} >
-                                    <Text style={[styles.inptitle,{color: UColor.fontColor}]}>转账数量</Text>
-                                    <TextInput  ref={(ref) => this._ramount = ref} value={this.state.amount} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
-                                        placeholder="转账数量"  underlineColorAndroid="transparent"   keyboardType="numeric"   maxLength = {15}
-                                        onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })}
+                                <View style={[styles.inptoutsource,{borderBottomColor:UColor.mainsecd}]}>
+                                    <View style={styles.accountoue} >
+                                        <Text style={[styles.inptitle,{color: UColor.fontColor}]}>转账数量</Text>
+                                        <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} placeholder="输入转账数量"
+                                            selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]} maxLength = {15} 
+                                            placeholderTextColor={UColor.arrow}  underlineColorAndroid="transparent"   keyboardType="numeric"  
+                                            onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })} returnKeyType="next"
                                         />
+                                    </View>
+                                   
+                                    <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>    
+                                        <View style={{flexDirection: 'row',paddingVertical: ScreenUtil.autowidth(10),}}>                              
+                                            <Text style={{fontSize: ScreenUtil.setSpText(15),color: UColor.tintColor, marginRight: ScreenUtil.autowidth(5),}}>{this.state.name}</Text>
+                                            <Ionicons color={UColor.tintColor} name="ios-arrow-forward-outline" size={20} />
+                                        </View>
+                                    </TouchableOpacity>
                                 </View>
                                 <View style={[styles.textinptoue,{borderBottomColor:UColor.mainsecd}]} >
                                     <Text style={[styles.inptitle,{color: UColor.fontColor}]}>备注</Text>
@@ -388,7 +413,7 @@ class TurnOutAsset extends BaseComponent {
                                 </View>
                                 <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
                                     <Text style={[styles.amounttext,{color:UColor.blackColor}]}>{this.state.amount} </Text>
-                                    <Text style={[styles.unittext,{color:UColor.blackColor}]}> {c.asset.name}</Text>
+                                    <Text style={[styles.unittext,{color:UColor.blackColor}]}> {this.state.name}</Text>
                                 </View>
                                 <View>
                                     <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
