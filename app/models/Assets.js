@@ -194,6 +194,7 @@ export default {
         for (var i = 0; i < myAssets.length; i++) {
             if (myAssets[i].asset.name == payload.asset.name) {
                 if(payload.value){ // 添加资产,  但资产已存在
+                    if(callback) callback(myAssets);
                     return;
                 }else{ // 删除资产
                     myAssets.splice(i, 1);
@@ -211,6 +212,7 @@ export default {
 
         // 如果目前我的资产没有传入的资产
         if(!payload.value){ // 删除资产直接退出
+            if(callback) callback(myAssets);
             return;
         }
 
