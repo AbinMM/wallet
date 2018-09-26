@@ -40,7 +40,7 @@ class OCTactivity extends BaseComponent {
             periodsseq: this.props.navigation.state.params.periodsseq!=""?this.props.navigation.state.params.periodsseq:"1", //当前进行第几期下标
             choicePeriods: 1, //选择了下拉列表的哪个下标
             promptingState: '',
-            startTime: this.props.navigation.state.params.startTime!=""?this.props.navigation.state.params.startTime:"00:00:00",
+            startTime: '',
         }
     }
 
@@ -52,12 +52,15 @@ class OCTactivity extends BaseComponent {
                 this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
                     let arr = periodsdata;
                     let arr1 = [];
+                    let startTime= '';
                     for(var i = 0; i < arr.length; i++){
                         arr1.push(arr[i].name);
+                        if(periodsdata[i].status == 'doing'){
+                            startTime = arr[i].endDate;
+                        }
                     }
-                    this.setState({ periodsList: arr1,});
+                    this.setState({ periodsList: arr1, startTime: startTime, });
                     this.props.dispatch({type: 'news/getWinActivityStageUsers', payload:{activityStageId:this.state.periodsseq},callback: (data) => {
-                        
                         if(data && data.length > 0){
                             this.setState({
                                 nameList: data,
@@ -144,10 +147,11 @@ class OCTactivity extends BaseComponent {
         dismissKeyboard();
     }
 
-     //转换时间
+    //转换时间
     transferTimeZone(datatime){
         if(this.state.cactivityYN == 'doing'){
-            let timezone = moment(datatime).add(16,'hours').format('YYYY-MM-DDTHH:mm:ss');
+            let timeover = moment(datatime).format("YYYY-MM-DD HH:mm:ss")
+            let timezone = moment(timeover).add(-8,'hours').format('YYYY-MM-DDTHH:mm:ss');
             return  timezone;
         }else if(this.state.cactivityYN == 'new'){
             return  '00:00:00';
@@ -172,10 +176,10 @@ class OCTactivity extends BaseComponent {
             showMore: !this.state.showMore,
         })
     }
-
+    
     explain(){
         const { navigate } = this.props.navigation;
-        navigate('Web', { title: '活动说明', url: 'http://static.eostoken.im/xu/oct.png' });
+        navigate('Web', { title: '活动说明', url: 'http://static.eostoken.im/html/20180926/1537929950430.html' });
     }
 
     render() {
@@ -234,7 +238,7 @@ class OCTactivity extends BaseComponent {
                         </View>
                         
                         <View style={{flexDirection: 'column',alignItems: 'center',justifyContent:'flex-end'}}>
-                            <CountDownReact date= {this.transferTimeZone(this.state.startTime)} hours=':'  mins=':'
+                            <CountDownReact date= {this.state.startTime!=''?this.transferTimeZone(this.state.startTime):'00:00:00'} hours=':'  mins=':'
                                 hoursStyle={[styles.ratiotext,{color: '#2279C5'}]} minsStyle={[styles.ratiotext,{color: '#2279C5'}]}
                                 secsStyle={[styles.ratiotext,{color: '#2279C5'}]} firstColonStyle={[styles.ratiotext,{color: '#2279C5'}]}
                                 secondColonStyle={[styles.ratiotext,{color: '#2279C5'}]}

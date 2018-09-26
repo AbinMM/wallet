@@ -153,11 +153,11 @@ render() {
       <View>
         {/* { (countDown.days>0) ? <Text style={this.props.daysStyle}>{ this.leadingZeros(countDown.days)+days}</Text> : null} */}
         {this.props.date == "00:00:00" ? <Text style={this.props.secsStyle}>{this.props.date}</Text> : <View style={styles.container}>
-        <Text style={this.props.hoursStyle}>{parseInt(this.leadingZeros(countDown.days)*24) + parseInt(this.leadingZeros(countDown.hours))}</Text>
+        <Text style={this.props.hoursStyle}>{isNaN(this.leadingZeros(countDown.hours)) || isNaN(this.leadingZeros(countDown.days))? "00" : parseInt(this.leadingZeros(countDown.days)*24) + parseInt(this.leadingZeros(countDown.hours))}</Text>
         <Text style={ this.props.firstColonStyle}>{this.props.hours}</Text>
-        <Text style={this.props.minsStyle}>{this.leadingZeros(countDown.min)}</Text>
+        <Text style={this.props.minsStyle}>{isNaN(this.leadingZeros(countDown.min)) ? "00" : this.leadingZeros(countDown.min)}</Text>
         <Text style={this.props.secondColonStyle}>{this.props.mins}</Text>
-        <Text style={this.props.secsStyle}>{this.leadingZeros(countDown.sec)}</Text>
+        <Text style={this.props.secsStyle}>{ isNaN(this.leadingZeros(countDown.sec)) ? "00" : this.leadingZeros(countDown.sec)}</Text>
         </View>}
         {/* <Text style={this.props.secondColonStyle}>{this.props.segs}</Text> */}
       </View>

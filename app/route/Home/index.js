@@ -704,7 +704,7 @@ class Home extends React.Component {
                 <Button onPress={this.assetInfo.bind(this, rowData)}>
                   <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
                     <View style={styles.lefts}>
-                      <View style={{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(10),}}> 
+                      <View style={{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(10),marginVertical: ScreenUtil.autowidth(8)}}> 
                         <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
                       </View>
                       <Text style={[styles.lefttext,{color: UColor.fontColor}]}>{rowData.asset.name}</Text>
