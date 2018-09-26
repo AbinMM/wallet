@@ -499,19 +499,28 @@ class WalletDetail extends BaseComponent {
             </View>
           </View>
           <View>{this._renderListItem()}</View>
-          {(!c.isactived || !c.hasOwnProperty('isactived')) ? 
-          <Button onPress={this.activeWallet.bind(this, c)} style={{ flex: 1 }}>
-            <View style={[styles.acttiveout,{backgroundColor: UColor.tintColor}]}>
-              <Text style={[styles.delete,{color: UColor.btnColor}]}>激活账户</Text>
+          {(!c.isactived || !c.hasOwnProperty('isactived'))?<View>
+                <View style={[styles.footer,{backgroundColor:UColor.secdColor}]}>
+                <Button onPress={this.activeWallet.bind(this, c)} style={{flex:1}}>
+                    <View style={[styles.footoutsource,{marginRight:0.5,backgroundColor:UColor.tintColor}]}>
+                        <Text style={[styles.delete,{color:UColor.btnColor}]}>激活账户</Text>
+                    </View>
+                </Button>
+                <Button  onPress={this.deleteAccount.bind(this, c)} style={{flex:1}}>
+                    <View style={[styles.footoutsource,{marginLeft: 0.5, backgroundColor:UColor.showy}]}>
+                        <Text style={[styles.delete,{color:UColor.btnColor}]}>删除账户</Text>
+                    </View>
+                </Button>
+              </View> 
             </View>
-          </Button>
-          :null
-          }
-          <Button onPress={this.deleteAccount.bind(this, c)} style={{ flex: 1 }}>
-            <View style={[styles.deleteout,{backgroundColor: UColor.showy}]}>
-              <Text style={[styles.delete,{color: UColor.btnColor}]}>删除账户</Text>
-            </View>
-          </Button>
+            :
+            <View>
+              <Button onPress={this.deleteAccount.bind(this, c)} style={{ flex: 1 }}>
+                <View style={[styles.deleteout,{backgroundColor: UColor.showy}]}>
+                  <Text style={[styles.delete,{color: UColor.btnColor}]}>删除账户</Text>
+                </View>
+              </Button>
+            </View>}
         </View>
       </ScrollView>
       <View style={{backgroundColor: UColor.riceWhite}}>
@@ -704,6 +713,25 @@ const styles = StyleSheet.create({
     width: ScreenUtil.autowidth(64), 
     height: ScreenUtil.autoheight(30), 
   },
+
+  footer:{
+    borderRadius: 5,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection:'row',  
+    height: ScreenUtil.autoheight(45),   
+    marginTop: ScreenUtil.autoheight(20),
+    marginHorizontal: ScreenUtil.autowidth(20),  
+  },
+  footoutsource:{
+    flex:1, 
+    flexDirection:'row',
+    alignItems: 'center', 
+    justifyContent: 'center', 
+  },
+
+ 
 });
 
 export default WalletDetail;
