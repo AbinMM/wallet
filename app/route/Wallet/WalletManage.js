@@ -140,7 +140,7 @@ class WalletManage extends BaseComponent {
                   <View style={styles.topout}>
                       <Button onPress={this.copyname.bind(this,rowData)} underlayColor={UColor.mainColor}>
                         <View style={{flexDirection: "row",}}>
-                          <Text style={[styles.outname,{color: UColor.fontColor}]}>{rowData.name}</Text>
+                          <Text style={[styles.outname,{color: UColor.fontColor}]}>{"地址 : "+rowData.name}</Text>
                           <Image source={UImage.copy} style={styles.imgBtn} />
                         </View>
                       </Button>

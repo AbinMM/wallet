@@ -637,7 +637,8 @@ class Home extends React.Component {
               </View> */}
               <View style={styles.addout} >
                 <TouchableOpacity onPress={this.copyname.bind(this,this.props.defaultWallet)}>
-                  <Text style={[styles.accountText,{color: UColor.btnColor}]}>{(this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name}</Text>
+                  {/* <Text style={[styles.accountText,{color: UColor.btnColor}]}>地址:</Text> */}
+                  <Text style={[styles.accountText,{color: UColor.btnColor}]}>{(this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? "地址 : "+this.state.account : "地址 : "+this.props.defaultWallet.name}</Text>
                 </TouchableOpacity>
                 {(this.props.defaultWallet != null && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) 
                 ? 
