@@ -43,7 +43,6 @@ class TurnInAsset extends BaseComponent {
     });
 
     DeviceEventEmitter.addListener('transfer_token_result', (data) => {
-      alert(JSON.stringify(data));
       this.setState({
           symbol:data.asset.name,
       });
