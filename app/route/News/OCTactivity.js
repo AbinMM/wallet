@@ -186,11 +186,13 @@ class OCTactivity extends BaseComponent {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
                 <Header {...this.props} onPressLeft={true} title="活动详情" />
+                <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={styles.tab}>
                 <View style={styles.transactiontou}>
                     <View style={[styles.transactionout,{backgroundColor: '#FF5353'}]}>
                         <Text style={[styles.paneltext,{color: '#ffffff'}]}>{this.state.promptingState}</Text>
                     </View>
                 </View>
+                {/* onPress={this.dismissKeyboardClick.bind(this)} */}
                 <ImageBackground source={UImage.app16} resizeMode="stretch" style={styles.linebgout}>
                     <Image source={UImage.app12} style={styles.signedimg}/>
                     <View style={styles.header}>  
@@ -267,7 +269,9 @@ class OCTactivity extends BaseComponent {
                     </View>
                     
                 </ImageBackground>
+                </TouchableOpacity>
             </View>
+            
         )
     }
 }
@@ -280,7 +284,7 @@ const styles = StyleSheet.create({
         right: 0, 
         zIndex: 999, 
         position:'absolute', 
-        top: ScreenUtil.autoheight(70), 
+        top: ScreenUtil.autoheight(5), 
     },
     transactionout: {
         alignItems: "center",
@@ -497,5 +501,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: ScreenUtil.setSpText(18),
     },
+
+      tab: {
+    flex: 1
+  },
 })
 export default OCTactivity;
