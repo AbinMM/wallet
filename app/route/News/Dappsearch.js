@@ -76,7 +76,7 @@ class Dappsearch extends BaseComponent {
                 <View style={styles.btnout}>
                   <View style={styles.manualout}>
                       <Text style={[styles.prompttext,{color: UColor.arrow}]}>注意：</Text>
-                      <Text style={[styles.prompttext,{color: UColor.arrow}]}>手动搜索页面,视为第三方应用,您在此应用上的所有行为应遵守该应用的用户协议和隐私政策,EosToken不承担应有责任。</Text>
+                      <Text style={[styles.prompttext,{color: UColor.arrow}]}>您所访问的页面将进入第三方Dapp,您在第三方Dapp上的所有行为应遵守该Dapp的用户协议和隐私政策,由该第三方Dapp直接并单独向您承担责任,EosToken不承担任何责任。</Text>
                   </View>
                   <View style={styles.logout}>
                       <Image source={UImage.bottom_log} style={styles.logimg}/>
