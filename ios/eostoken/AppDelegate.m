@@ -24,6 +24,16 @@
 
 #import <UMAnalytics/MobClick.h>
 
+
+// UIScreen width.
+#define  LL_ScreenWidth   [UIScreen mainScreen].bounds.size.width
+
+// UIScreen height.
+#define  LL_ScreenHeight  [UIScreen mainScreen].bounds.size.height
+// iPhone X
+#define  LL_iPhoneX (LL_ScreenWidth == 375.f && LL_ScreenHeight == 812.f ? YES : NO)
+
+
 @implementation AppDelegate
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
@@ -97,8 +107,18 @@
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
+  if(LL_iPhoneX==YES){
+    CGFloat SCREEN_WIDTH = [UIScreen mainScreen].bounds.size.width;
+    CGFloat SCREEN_HEIGHT = [UIScreen mainScreen].bounds.size.height;
+    self.window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-34)];
+  }else{
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+  }
+//  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 
-  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+  
+  
+  
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.navigationItem.backBarButtonItem= [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
   rootViewController.view = rootView;
