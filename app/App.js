@@ -2,14 +2,14 @@ import React from 'react';
 import {StatusBar,Platform,View} from 'react-native';
 import Colors from "./utils/Colors";
 import Route from "./route/Nav";
-
+import ScreenUtil from "./utils/ScreenUtil";
 import {Toast} from './components/Toast';
 
 import {LoadingDialog} from './components/EasyShow'
 import { EosProvider } from "react-native-eosjs";
 
 const App = () => (
- <View style={{flex:1}}>
+ <View style={{flex:1,paddingBottom: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(30) : 0,}}>
      {/* <EosProvider server="http://192.168.1.40:8888" />
      */}
     <EosProvider server="http://47.52.250.41:8001" chainId="aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"/>

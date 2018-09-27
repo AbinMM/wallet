@@ -436,7 +436,7 @@ class Nodevoting extends BaseComponent {
                         </TouchableOpacity> 
                     </View>
                     <View style={styles.locktextout}>
-                       <Text style={[styles.locktext,{color: UColor.fontColor}]}>·  参与EOS超级节点投票，需要抵押EOS。投票不消耗EOS数量</Text>
+                       <Text style={[styles.locktext,{color: UColor.fontColor}]}>·  参与EOS超级节点投票，需要抵押EOS，投票不消耗EOS数量</Text>
                        <Text style={[styles.locktext,{color: UColor.fontColor}]}>·  抵押的EOS数量在撤销投票后72小时返还到投票账户</Text>
                        <View style={{flexDirection: 'row',width: ScreenWidth-ScreenUtil.autowidth(30),}}>
                             <Text style={[styles.locktext,{color: UColor.fontColor}]}>·  </Text>
@@ -591,7 +591,7 @@ const styles = StyleSheet.create({
         width: ScreenWidth,
         flexDirection:'column',
         justifyContent: 'flex-end', 
-        paddingHorizontal: ScreenUtil.autowidth(10),
+        paddingHorizontal: ScreenUtil.autowidth(5),
     },
     locktext: {
         fontSize: ScreenUtil.setSpText(12),
