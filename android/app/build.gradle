@@ -166,6 +166,20 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-view-shot')
+    compile project(':react-native-vector-icons')
+    compile project(':react-native-upgrade-android')
+    compile project(':react-native-udp')
+    compile project(':react-native-tcp')
+    compile project(':react-native-svg')
+    compile project(':react-native-splash-screen')
+    compile project(':react-native-smart-barcode')
+    compile project(':react-native-randombytes')
+    compile project(':react-native-os')
+    compile project(':react-native-linear-gradient')
+    compile project(':react-native-gesture-handler')
+    compile project(':react-native-device-info')
+    compile project(':jpush-react-native')
     compile 'com.journeyapps:zxing-android-embedded:3.5.0'
     compile 'com.google.zxing:core:3.3.0'
     compile 'de.greenrobot:eventbus:2.4.0'

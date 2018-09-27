@@ -3,6 +3,21 @@ package com.eostoken;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.theweflex.react.WeChatPackage;
+import fr.greweb.reactnativeviewshot.RNViewShotPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.lenny.modules.upgrade.UpgradeReactPackage;
+import com.tradle.react.UdpSocketsModule;
+import com.peel.react.TcpSocketsModule;
+import com.horcrux.svg.SvgPackage;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
+import com.reactnativecomponent.barcode.RCTCapturePackage;
+import com.bitgo.randombytes.RandomBytesPackage;
+import com.peel.react.rnos.RNOSModule;
+import com.BV.LinearGradient.LinearGradientPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import cn.jpush.reactnativejpush.JPushPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import fr.greweb.reactnativeviewshot.RNViewShotPackage;
 import com.horcrux.svg.SvgPackage;
@@ -56,19 +71,24 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new WeChatPackage(),
+            new RNViewShotPackage(),
+            new VectorIconsPackage(),
+            new UpgradeReactPackage(),
+            new UdpSocketsModule(),
+            new TcpSocketsModule(),
+            new SvgPackage(),
+            new SplashScreenReactPackage(),
+            new RCTCapturePackage(),
+            new RandomBytesPackage(),
+            new RNOSModule(),
+            new LinearGradientPackage(),
+            new RNGestureHandlerPackage(),
+            new RNDeviceInfo(),
+            new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG),
             new LinearGradientPackage(),
             new OpenSettingsPackage(), /* setting add */
-                    new RCTCapturePackage(),
-                    new RNViewShotPackage(),
-                    new SvgPackage(),
-                    new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG),
-                    new RNDeviceInfo(),
-                    new VectorIconsPackage(),
-                    new SplashScreenReactPackage(),
-                    new RNGestureHandlerPackage(),
-                    new UpgradeReactPackage(),
                     new DplusReactPackage(),
-                    new WeChatPackage(),
                     new SDKPackage(),
                     new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
             );

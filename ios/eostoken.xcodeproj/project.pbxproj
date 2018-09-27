@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -86,6 +85,10 @@
 		F98B16032E9E4F0F9050DBBB /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24F235703580492A9873EC5C /* Feather.ttf */; };
 		FD4433B75567466A88478728 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C2FF719C054C8DB7A9DEE5 /* libresolv.tbd */; };
 		FE3017D409EE445CBC9E7274 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A0158F8C004F84B9099AC0 /* CFNetwork.framework */; };
+		BD0F7508D6A840358AC02EAD /* libRNOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 747E7190D9A244F28931849A /* libRNOS.a */; };
+		9BDDD11DFD2B44AF85AB3D22 /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49D8CF37503A477EAABDE311 /* libRNRandomBytes.a */; };
+		BBBD5E793F254403BC52E1B3 /* libTcpSockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3419827124444DA59E23D9B6 /* libTcpSockets.a */; };
+		5BB20E1EB5E04133AE06722C /* libUdpSockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 939DF1E2292E4982B814F623 /* libUdpSockets.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -588,6 +591,14 @@
 		F40BE070DEE64D2B882F7F93 /* CodePush.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
 		F55D4F5C6A2C4C1EA9F522CC /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		FFF579F7920C454EB208FA37 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		DF3AFC2A93454ADB974F2222 /* RNOS.xcodeproj */ = {isa = PBXFileReference; name = "RNOS.xcodeproj"; path = "../node_modules/react-native-os/ios/RNOS.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		747E7190D9A244F28931849A /* libRNOS.a */ = {isa = PBXFileReference; name = "libRNOS.a"; path = "libRNOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		5A3981C5E16E4645B4A8E94F /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; name = "RNRandomBytes.xcodeproj"; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		49D8CF37503A477EAABDE311 /* libRNRandomBytes.a */ = {isa = PBXFileReference; name = "libRNRandomBytes.a"; path = "libRNRandomBytes.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		A93CBE0B80124311B47F48B4 /* TcpSockets.xcodeproj */ = {isa = PBXFileReference; name = "TcpSockets.xcodeproj"; path = "../node_modules/react-native-tcp/ios/TcpSockets.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		3419827124444DA59E23D9B6 /* libTcpSockets.a */ = {isa = PBXFileReference; name = "libTcpSockets.a"; path = "libTcpSockets.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		34F84C32ACA2419FAB60457A /* UdpSockets.xcodeproj */ = {isa = PBXFileReference; name = "UdpSockets.xcodeproj"; path = "../node_modules/react-native-udp/ios/UdpSockets.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		939DF1E2292E4982B814F623 /* libUdpSockets.a */ = {isa = PBXFileReference; name = "libUdpSockets.a"; path = "libUdpSockets.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -636,6 +647,10 @@
 				E6A80DD78FBD45FB85AEDD92 /* RCTWeChatTests.xctest in Frameworks */,
 				AA841E3D0B4E428F979FA1CE /* libRCTBarcode.a in Frameworks */,
 				BDD776BE095949169C59C0A1 /* libBVLinearGradient.a in Frameworks */,
+				BD0F7508D6A840358AC02EAD /* libRNOS.a in Frameworks */,
+				9BDDD11DFD2B44AF85AB3D22 /* libRNRandomBytes.a in Frameworks */,
+				BBBD5E793F254403BC52E1B3 /* libTcpSockets.a in Frameworks */,
+				5BB20E1EB5E04133AE06722C /* libUdpSockets.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -884,6 +899,10 @@
 				9866B4913BC749F1A84436AA /* RCTWeChat.xcodeproj */,
 				646A2E09665C4243AC6461F0 /* RCTBarCode.xcodeproj */,
 				0E1D82B115C3401DB085B345 /* BVLinearGradient.xcodeproj */,
+				DF3AFC2A93454ADB974F2222 /* RNOS.xcodeproj */,
+				5A3981C5E16E4645B4A8E94F /* RNRandomBytes.xcodeproj */,
+				A93CBE0B80124311B47F48B4 /* TcpSockets.xcodeproj */,
+				34F84C32ACA2419FAB60457A /* UdpSockets.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1757,12 +1776,20 @@
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
 					"$(SRCROOT)/../node_modules/react-native-smart-barcode/ios/RCTBarcode/RCTBarcode",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-os/ios",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-tcp/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-udp/ios/**",
 				);
 				INFOPLIST_FILE = eostoken/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/eostoken\"",
+					"\"$(SRCROOT)/eostoken\"",
+					"\"$(SRCROOT)/eostoken\"",
+					"\"$(SRCROOT)/eostoken\"",
 					"\"$(SRCROOT)/eostoken\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1808,12 +1835,20 @@
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
 					"$(SRCROOT)/../node_modules/react-native-smart-barcode/ios/RCTBarcode/RCTBarcode",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-os/ios",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-tcp/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-udp/ios/**",
 				);
 				INFOPLIST_FILE = eostoken/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/eostoken\"",
+					"\"$(SRCROOT)/eostoken\"",
+					"\"$(SRCROOT)/eostoken\"",
+					"\"$(SRCROOT)/eostoken\"",
 					"\"$(SRCROOT)/eostoken\"",
 				);
 				OTHER_LDFLAGS = (
