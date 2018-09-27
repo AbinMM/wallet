@@ -848,7 +848,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: "space-between",
     paddingHorizontal: ScreenUtil.autowidth(10),
-    paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(25) : ScreenUtil.autoheight(20),
+    paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(44) : ScreenUtil.autoheight(20),
   },
   toptext: {
     textAlign: "center",

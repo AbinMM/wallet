@@ -5,7 +5,7 @@
 //  Created by xyg on 14/9/18.
 //  Copyright © 2018年 Facebook. All rights reserved.
 //
-
+#import "AppDelegate.h"
 #import "DappsViewController.h"
 #import <WebKit/WebKit.h>
 #import "BottomDetailView.h"
@@ -14,6 +14,8 @@
 
 #import "XLPaymentSuccessHUD.h"
 #import "XLPaymentLoadingHUD.h"
+
+
 
 
 // 协议中名字相对应,还和js发送消息名字一样
@@ -185,8 +187,10 @@
 
   CGFloat SCREEN_WIDTH = self.view.frame.size.width;
   CGFloat SCREEN_HEIGHT = self.view.frame.size.height;
-  self.wkWebview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-64) configuration:configuration];
 
+  self.wkWebview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-LL_StatusBarAndNavigationBarHeight) configuration:configuration];
+
+  
   NSURLRequest *request =[NSURLRequest requestWithURL:url];
   [self.wkWebview loadRequest:request];
   

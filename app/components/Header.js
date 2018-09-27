@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
         zIndex: 999,
         flexDirection:"row",
         alignItems:"center",
-        paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(25) : ScreenUtil.autoheight(20),
-        height: ScreenUtil.autoheight(65),
+        paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(44) : ScreenUtil.autoheight(20),
+        height: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(89):ScreenUtil.autoheight(65),
     },
     Leftout: {
         flex: 1.5, 

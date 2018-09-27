@@ -15,17 +15,24 @@ var ScreenUtil = {
     screenHeith: Dimensions.get('window').height,
     pixelRatio: PixelRatio.get(),
     fontScale: PixelRatio.getFontScale(),
+
     scale: Math.min(Dimensions.get('window').height / 667, Dimensions.get('window').width / 375),
     widthRadio: Dimensions.get('window').width / 375,
     heightRadio: Dimensions.get('window').height / 667,
 
+    //IPX
+    scaleIpx: Math.min(Dimensions.get('window').height / 812, Dimensions.get('window').width / 375),
+    widthRadioIpx: Dimensions.get('window').width / 375,
+    heightRadioIpx: Dimensions.get('window').height / 812,
+
+
     /*宽度适配，例如我的设计稿某个样式宽度是50pt，那么使用就是：ScreenUtil.autowidth(50)*/
     autowidth: function (value) {
-        return this.widthRadio * value;
+        return (this.isIphoneX()?this.widthRadioIpx:this.widthRadio) * value;
     },
     /*高度适配，例如我的设计稿某个样式高度是50pt，那么使用就是：ScreenUtil.autoheight(50)*/
     autoheight: function (value) {
-        return this.heightRadio * value;
+        return (this.isIphoneX()?this.heightRadioIpx:this.heightRadio) * value;
     },
     get: function (url, successCallback, failCallback) {
         fetch(url).then((response) => response.text())
@@ -37,7 +44,7 @@ var ScreenUtil = {
     },
     /*字体大小适配，例如我的设计稿字体大小是17pt，那么使用就是：ScreenUtil.setSpText(17)*/
     setSpText: function (number) {
-        number = Math.round((number * this.scale + 0.5) * this.pixelRatio / this.fontScale);
+        number = Math.round((number * (this.isIphoneX()?this.scaleIpx:this.scale) + 0.5) * this.pixelRatio / this.fontScale);
         return number / PixelRatio.get();
     },
     /*判断是不是苹果X，那么使用就是：ScreenUtil.isIphoneX()*/

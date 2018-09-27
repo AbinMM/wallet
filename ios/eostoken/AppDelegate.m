@@ -25,13 +25,6 @@
 #import <UMAnalytics/MobClick.h>
 
 
-// UIScreen width.
-#define  LL_ScreenWidth   [UIScreen mainScreen].bounds.size.width
-
-// UIScreen height.
-#define  LL_ScreenHeight  [UIScreen mainScreen].bounds.size.height
-// iPhone X
-#define  LL_iPhoneX (LL_ScreenWidth == 375.f && LL_ScreenHeight == 812.f ? YES : NO)
 
 
 @implementation AppDelegate
