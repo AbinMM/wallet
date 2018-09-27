@@ -379,6 +379,13 @@ class News extends React.Component {
           refreshControl={<RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} 
           tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor} style={{backgroundColor: UColor.transport}}/>}
         >
+        {Constants.isNetWorkOffline &&
+          <Button onPress={this.openSystemSetting.bind(this)}>
+            <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
+                <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
+                <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
+            </View>
+          </Button>}
           <View style={{ height: this.state.h }}>
             <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth}>
               {this.renderSwipeView()}
@@ -517,13 +524,13 @@ class News extends React.Component {
         renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 1, backgroundColor: UColor.secdColor }} />}
         onEndReached={() => this.onEndReached(route.key)}
         renderHeader = {()=><View style={{ height: this.state.h }}>
-        {Constants.isNetWorkOffline &&
+        {/* {Constants.isNetWorkOffline &&
           <Button onPress={this.openSystemSetting.bind(this)}>
             <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
                 <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
                 <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
             </View>
-          </Button>}
+          </Button>} */}
           {/* <Swiper height={this.state.h} loop={true} autoplay={true} horizontal={true} autoplayTimeout={5} 
             paginationStyle={{ bottom: ScreenUtil.autoheight(10) }}
             dotStyle={{ backgroundColor: 'rgba(255,255,255,.2)', width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}
