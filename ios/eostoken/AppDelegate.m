@@ -100,14 +100,14 @@
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
-  if(LL_iPhoneX==YES){
-    CGFloat SCREEN_WIDTH = [UIScreen mainScreen].bounds.size.width;
-    CGFloat SCREEN_HEIGHT = [UIScreen mainScreen].bounds.size.height;
-    self.window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-34)];
-  }else{
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  }
-//  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+//  if(LL_iPhoneX==YES){
+//    CGFloat SCREEN_WIDTH = [UIScreen mainScreen].bounds.size.width;
+//    CGFloat SCREEN_HEIGHT = [UIScreen mainScreen].bounds.size.height;
+//    self.window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-34)];
+//  }else{
+//    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+//  }
+  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 
   
   
