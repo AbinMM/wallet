@@ -655,7 +655,7 @@ const styles = StyleSheet.create({
   },
   imgBtnDAPP: { 
     width: ScreenUtil.autowidth(40),
-    height: ScreenUtil.autoheight(40),
+    height: ScreenUtil.autowidth(40),
     marginHorizontal: ScreenUtil.autowidth(15),
   },
   headbtntext: {
@@ -666,10 +666,6 @@ const styles = StyleSheet.create({
    
     fontSize: ScreenUtil.setSpText(10),
     lineHeight: ScreenUtil.autoheight(20), 
-  },
-  adddeleimg: {
-    width: ScreenUtil.autowidth(25),
-    height: ScreenUtil.autoheight(25),
   },
   pupuoBackup: {
     flex: 1,

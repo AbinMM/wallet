@@ -165,28 +165,26 @@ const styles = StyleSheet.create({
         paddingHorizontal: ScreenUtil.autowidth(10)
     },
     bgout: {
-        paddingTop: ScreenUtil.autoheight(70),
+        justifyContent: 'space-around',
+        paddingTop: ScreenUtil.autowidth(70),
+        paddingBottom: ScreenUtil.autowidth(20),
         paddingHorizontal: ScreenUtil.autowidth(20),
         width: ScreenWidth - ScreenUtil.autowidth(20),
         height: (ScreenWidth - ScreenUtil.autowidth(20))*0.8437,
     },
     Explaintext: {
         fontSize: ScreenUtil.setSpText(15),
-        marginTop: ScreenUtil.autoheight(25),
-        lineHeight: ScreenUtil.autoheight(25), 
+        lineHeight: ScreenUtil.autowidth(25), 
     },
     Explaintextmiddle: {
         fontSize: ScreenUtil.setSpText(15),
-        marginTop: ScreenUtil.autoheight(5),
-        lineHeight: ScreenUtil.autoheight(25), 
+        lineHeight: ScreenUtil.autowidth(25), 
     },
     Tipstext: {
         fontSize: ScreenUtil.setSpText(12),
-        marginTop: ScreenUtil.autoheight(12),
     },
     Tipstext2: {
         fontSize: ScreenUtil.setSpText(12),
-        marginTop: ScreenUtil.autoheight(5),
     },
     btnout: {
         flexDirection: "row",
