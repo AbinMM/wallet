@@ -102,16 +102,16 @@ class Tradingpool extends BaseComponent {
     render() {
         return (
         <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-        <ImageBackground style={[styles.bgout,ScreenUtil.isIphoneX()?{minHeight:ScreenWidth*0.54}:{height:ScreenWidth*0.54}]} source={UImage.home_bg} resizeMode="stretch">
-            <Header {...this.props} onPressLeft={true} backgroundColor={UColor.transport} title={this.props.navigation.state.params.tradename+'交易池子'} avatar={UImage.commonwt} onPressRight={this._rightTopClick.bind(this,this.props.navigation.state.params.tradename)}/>  
+        <ImageBackground style={[styles.bgout,{height:ScreenWidth*0.6066}]} source={UImage.pool_bg} resizeMode="stretch">
+            <Header {...this.props} onPressLeft={true} backgroundColor={UColor.transport} title={this.props.navigation.state.params.tradename+'交易池子'} avatar={UImage.pool_explain} onPressRight={this._rightTopClick.bind(this,this.props.navigation.state.params.tradename)}/>  
             <View style={{flex: 1, alignItems: 'center',justifyContent: 'space-around'}}>
-                <Text style={{fontSize: ScreenUtil.autowidth(12),color: UColor.arrow}}>昨日收益</Text>
+                <Text style={{fontSize: ScreenUtil.autowidth(12),color: UColor.lightgray}}>昨日收益</Text>
                 <Text style={{fontSize: ScreenUtil.autowidth(25),color: UColor.tintColor}}>0.22</Text>
                 <Text style={{fontSize: ScreenUtil.autowidth(12),color: UColor.btnColor}}>总投入：2592.26 OCT</Text>
                 <View style={{flexDirection: 'row'}}>
-                    <Text style={{flex: 1,fontSize: ScreenUtil.autowidth(12),color: UColor.arrow,textAlign: 'center'}}>池子总额(OCT)</Text>
-                    <Text style={{flex: 1,fontSize: ScreenUtil.autowidth(12),color: UColor.arrow,textAlign: 'center'}}>万份收益(OCT)</Text>
-                    <Text style={{flex: 1,fontSize: ScreenUtil.autowidth(12),color: UColor.arrow,textAlign: 'center'}}>七日年化（%）</Text>
+                    <Text style={{flex: 1,fontSize: ScreenUtil.autowidth(12),color: UColor.lightgray,textAlign: 'center'}}>池子总额(OCT)</Text>
+                    <Text style={{flex: 1,fontSize: ScreenUtil.autowidth(12),color: UColor.lightgray,textAlign: 'center'}}>万份收益(OCT)</Text>
+                    <Text style={{flex: 1,fontSize: ScreenUtil.autowidth(12),color: UColor.lightgray,textAlign: 'center'}}>七日年化（%）</Text>
                 </View>
                 <View style={{flexDirection: 'row'}}>
                     <Text style={{flex: 1,fontSize: ScreenUtil.autowidth(12),color: UColor.btnColor,textAlign: 'center'}}>123,746,521.01</Text>
@@ -121,26 +121,6 @@ class Tradingpool extends BaseComponent {
             </View>
         </ImageBackground>
             <ScrollView>
-                {/* <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
-                    <Text style={[styles.nametext,{color:UColor.fontColor}]}>类型</Text>
-                    <Text style={[styles.nametext,{paddingLeft: ScreenUtil.autowidth(8),color:UColor.fontColor}]}>分布式底层平台</Text>
-                    <View style={{flexDirection: 'row',alignItems: 'flex-start',justifyContent: 'center'}}>
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>（推荐指数：</Text>
-                        {this.renderStars(this.state.coinInfodata.recommendLevel)}
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>）</Text>
-                    </View>
-                </View>
-                <View style={[styles.separateout,{backgroundColor: UColor.mainColor,}]}>
-                    <Text style={[styles.nametext,{color:UColor.arrow}]}>同比该行业产品</Text>
-                    <View style={{flex: 1, flexDirection: 'row',justifyContent: 'center'}}>
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>项目创新</Text>
-                        <Text style={[styles.nametext,{paddingLeft: ScreenUtil.autowidth(5),color:UColor.tintColor}]}>{this.state.coinInfodata.projectCreative}</Text>
-                    </View>
-                    <View style={{flex: 1, flexDirection: 'row',justifyContent: 'center'}}>
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>投资价值</Text>
-                        <Text style={[styles.nametext,{paddingLeft: ScreenUtil.autowidth(5),color:UColor.tintColor}]}>{this.state.coinInfodata.investmentValue}</Text>
-                    </View>
-                </View> */}
                 <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
                     <Text style={[styles.nametext,{flex: 2,color:UColor.arrow}]}>当前交易总量</Text>
                     <Text style={[styles.recordtext,{color:UColor.fontColor}]} numberOfLines={1}>36,168,734,.02 OCT</Text>
@@ -165,13 +145,13 @@ class Tradingpool extends BaseComponent {
                 <View style={[styles.footer,{backgroundColor: UColor.secdColor}]}>
                     <Button onPress={this.turnInAsset.bind(this)} style={{ flex: 1 }}>
                         <View style={[styles.shiftshiftturnout,{backgroundColor: UColor.mainColor,marginRight: 0.5,}]}>
-                            <Image source={UImage.shift_to} style={styles.shiftturn} />
+                            <Image source={UImage.take_out} style={styles.shiftturn} />
                             <Text style={[styles.shifttoturnout,{color: UColor.warningRed}]}>取出</Text>
                         </View>
                     </Button>
                     <Button onPress={this.turnOutAsset.bind(this)} style={{ flex: 1 }}>
                         <View style={[styles.shiftshiftturnout,{backgroundColor: UColor.mainColor,marginLeft: 0.5}]}>
-                            <Image source={UImage.turn_out} style={styles.shiftturn} />
+                            <Image source={UImage.deposit_in} style={styles.shiftturn} />
                             <Text style={[styles.shifttoturnout,{color: UColor.fallColor}]}>存入</Text>
                         </View>
                     </Button>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { DeviceEventEmitter, ListView, StyleSheet, Image, View, RefreshControl, Text, } from 'react-native';
+import { DeviceEventEmitter, Dimensions, TouchableOpacity, ListView, StyleSheet, Image, View, RefreshControl, Text, } from 'react-native';
 import moment from 'moment';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
@@ -10,6 +10,8 @@ import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
+const ScreenWidth = Dimensions.get('window').width;
+const ScreenHeight = Dimensions.get('window').height;
 
 @connect(({ wallet, assets}) => ({ ...wallet, ...assets }))
 class AssetInfo extends BaseComponent {
@@ -20,7 +22,7 @@ class AssetInfo extends BaseComponent {
             header:null,
         };
     };
-   
+    
      // 构造函数  
      constructor(props) {
         super(props);
@@ -32,6 +34,11 @@ class AssetInfo extends BaseComponent {
             // detailInfo: "请稍候...",
             logRefreshing: false,
             logId: "-1",
+            isTransfer: true,
+            isMortgage: false, 
+            isMemory: false,
+            isExchange: false,
+            tradeLog:[],
         };
         DeviceEventEmitter.addListener('transaction_success', () => {
             try {
@@ -42,9 +49,9 @@ class AssetInfo extends BaseComponent {
         });
     }
 
-    componentWillMount() {
-        super.componentWillMount();
-        this.props.dispatch({type: 'assets/clearTradeDetails',payload:{}});
+    _rightTopClick = (tradename) =>{
+        const { navigate } = this.props.navigation;
+        navigate('Detailsofmoney', {tradename:tradename});
     }
 
     componentDidMount() {
@@ -60,6 +67,11 @@ class AssetInfo extends BaseComponent {
         } catch (error) {
             this.setState({logRefreshing: false});
         }
+    }
+
+    componentWillMount() {
+        super.componentWillMount();
+        this.props.dispatch({type: 'assets/clearTradeDetails',payload:{}});
     }
 
     componentWillUnmount(){
@@ -158,21 +170,89 @@ class AssetInfo extends BaseComponent {
         }}); 
     }
 
+    // 返回转账，抵押记录，内存交易，ET交易  
+    ownOthersButton(style, selectedSate, stateType, buttonTitle) {  
+        let BTN_SELECTED_STATE_ARRAY = ['isTransfer','isMortgage', 'isMemory', 'isExchange']; 
+        return(  
+            <TouchableOpacity style={[style, selectedSate ? {borderBottomWidth: 2,borderBottomColor: UColor.tintColor} : {}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
+                <Text style={[styles.tabText, selectedSate ? {color: UColor.fontColor} : {color: UColor.arrow}]}>{buttonTitle}</Text>  
+            </TouchableOpacity>  
+        );  
+    }  
+
+     // 更新"转账，抵押记录，内存交易，ET交易"按钮的状态  
+     _updateBtnState(currentPressed, array) {  
+        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {  
+            return;  
+        }  
+        let newState = {...this.state};  
+        for (let type of array) {  
+            if (currentPressed == type) {  
+                newState[type] ? {} : newState[type] = !newState[type];  
+                this.setState(newState);  
+            } else {  
+                newState[type] ? newState[type] = !newState[type] : {};  
+                this.setState(newState);  
+            }  
+        }  
+    }  
+
     render() {
         const c = this.props.navigation.state.params.asset;
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-                <Header {...this.props} onPressLeft={true} title={c.asset.name} />  
+                <Header {...this.props} onPressLeft={true} title={c.asset.name} avatar={UImage.pool_explain} onPressRight={this._rightTopClick.bind(this,this.props.navigation.state.params.asset.asset.name)}/>  
                 <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
                     <Text style={[styles.headbalance,{color: UColor.fontColor}]}>{this.state.balance==""? "0.0000" :this.state.balance.replace(c.asset.name, "")} {c.asset.name}</Text>
-                    <Text style={[styles.headmarket,{ color: UColor.lightgray}]}>≈ {(this.state.balance == null || c.asset.value == null) ? "0.00" : (this.state.balance.replace(c.asset.name, "") * c.asset.value).toFixed(2)} ￥</Text>
+                    <Text style={[styles.headmarket,{color: UColor.lightgray}]}>≈ {(this.state.balance == null || c.asset.value == null) ? "0.00" : (this.state.balance.replace(c.asset.name, "") * c.asset.value).toFixed(2)} ￥</Text>
                 </View>
                 <View style={styles.btn}>
-                    <Text style={[styles.latelytext,{color: UColor.arrow}]}>最近交易记录</Text>
-                    {/* {(this.props.tradeLog == null || this.props.tradeLog.length == 0) && 
-                    <View style={[styles.nothave,{backgroundColor: UColor.mainColor}]}>
-                      <Text style={[styles.copytext,{color: UColor.fontColor}]}>{this.state.detailInfo}</Text>
-                    </View>} */}
+                    <View style={[styles.OwnOthers]}>  
+                        {this.ownOthersButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', '转账')}  
+                        {this.ownOthersButton(styles.tabbutton, this.state.isMortgage, 'isMortgage', '抵押记录')}  
+                        {this.ownOthersButton(styles.tabbutton, this.state.isMemory, 'isMemory', '内存交易')}  
+                        {this.ownOthersButton(styles.tabbutton, this.state.isExchange, 'isExchange', 'ET交易')}
+                    </View>
+                    <Button onPress={this._openDetails.bind(this)}> 
+                        <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
+                            <View style={{alignItems: 'center',justifyContent: 'center',marginRight: ScreenUtil.autowidth(15)}}>
+                                <Image source={UImage.shift_to} style={styles.shiftturn} />
+                            </View>
+                            <View style={styles.top}>
+                                <View style={styles.timequantity}>
+                                    <Text style={[styles.timetext,{color: UColor.arrow}]}>2018-07-30 18:31</Text>
+                                    <Text style={[styles.quantity,{color: UColor.fontColor}]}>eos123451234</Text>
+                                </View>
+                                <View style={styles.typedescription}>
+                                    <Text style={[styles.typeto,{color:UColor.fallColor}]}>+0.36</Text>
+                                </View>
+                            </View>
+                            <View style={styles.Ionicout}>
+                                <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
+                            </View>
+                        </View>
+                    </Button>  
+                    <Button onPress={this._openDetails.bind(this)}> 
+                        <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
+                            <View style={{alignItems: 'center',justifyContent: 'center',marginRight: ScreenUtil.autowidth(15)}}>
+                                <Image source={UImage.turn_out} style={styles.shiftturn} />
+                            </View>
+                            <View style={styles.top}>
+                                <View style={styles.timequantity}>
+                                    <Text style={[styles.timetext,{color: UColor.arrow}]}>2018-07-30 18:31</Text>
+                                    <Text style={[styles.quantity,{color: UColor.fontColor}]}>eos123451234</Text>
+                                </View>
+                                <View style={styles.typedescription}>
+                                    <Text style={[styles.typeto,{color:UColor.warningRed}]}>-0.36</Text>
+                                </View>
+                            </View>
+                            <View style={styles.Ionicout}>
+                                <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
+                            </View>
+                        </View>
+                    </Button>  
+                  
+                    
                     <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} onEndReachedThreshold = {50}
                     onEndReached={() => this.onEndReached()}
                     refreshControl={
@@ -187,7 +267,7 @@ class AssetInfo extends BaseComponent {
                     dataSource={this.state.dataSource.cloneWithRows(this.props.tradeLog == null ? [] : this.props.tradeLog)} 
                     renderRow={(rowData, sectionID, rowID) => (                 
                     <View>
-                        <Button onPress={this._openDetails.bind(this,rowData)}> 
+                        {/* <Button onPress={this._openDetails.bind(this,rowData)}> 
                             <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
                                 <View style={styles.top}>
                                     <View style={styles.timequantity}>
@@ -196,7 +276,7 @@ class AssetInfo extends BaseComponent {
                                     </View>
                                     {(rowData.blockNum == null || rowData.blockNum == '') ? 
                                         <View style={styles.unconfirmedout}>
-                                            {/* <Image source={UImage.unconfirm} style={styles.shiftturn} /> */}
+                                            <Image source={UImage.unconfirm} style={styles.shiftturn} />
                                             <Text style={[styles.unconfirmed,{color: UColor.showy}]}>未确认...</Text>
                                         </View>
                                             :
@@ -210,6 +290,25 @@ class AssetInfo extends BaseComponent {
                                     <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
                                 </View>
                             </View>
+                        </Button>   */}
+                        <Button onPress={this._openDetails.bind(this)}> 
+                            <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
+                                <View style={{alignItems: 'center',justifyContent: 'center',marginRight: ScreenUtil.autowidth(15)}}>
+                                    <Image source={rowData.type=='转出'?UImage.turn_out:UImage.shift_to} style={styles.shiftturn} />
+                                </View>
+                                <View style={styles.top}>
+                                    <View style={styles.timequantity}>
+                                        <Text style={[styles.timetext,{color: UColor.arrow}]}>{this.transferTimeZone(rowData.blockTime)}</Text>
+                                        <Text style={[styles.quantity,{color: UColor.fontColor}]}>eos123451234</Text>
+                                    </View>
+                                    <View style={styles.typedescription}>
+                                        <Text style={[styles.typeto,{color:rowData.type=='转出'?UColor.warningRed:UColor.fallColor}]}>{rowData.type=='转出'?'-':'+'+rowData.quantity.replace(c.asset.name, "")}</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.Ionicout}>
+                                    <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
+                                </View>
+                            </View>
                         </Button>  
                     </View>)}                
                  /> 
@@ -218,13 +317,13 @@ class AssetInfo extends BaseComponent {
                     <Button onPress={this.turnInAsset.bind(this, c)} style={{ flex: 1 }}>
                         <View style={[styles.shiftshiftturnout,{backgroundColor: UColor.mainColor,marginRight: 0.5,}]}>
                             <Image source={UImage.shift_to} style={styles.shiftturn} />
-                            <Text style={[styles.shifttoturnout,{color: UColor.fontColor}]}>转入</Text>
+                            <Text style={[styles.shifttoturnout,{color: UColor.fallColor}]}>转入</Text>
                         </View>
                     </Button>
                     <Button onPress={this.turnOutAsset.bind(this, c)} style={{ flex: 1 }}>
                         <View style={[styles.shiftshiftturnout,{backgroundColor: UColor.mainColor,marginLeft: 0.5}]}>
                             <Image source={UImage.turn_out} style={styles.shiftturn} />
-                            <Text style={[styles.shifttoturnout,{color: UColor.fontColor}]}>转出</Text>
+                            <Text style={[styles.shifttoturnout,{color: UColor.warningRed}]}>转出</Text>
                         </View>
                     </Button>
                 </View>
@@ -258,10 +357,36 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingBottom: ScreenUtil.autoheight(50),
     },
-    latelytext: {
+
+    tabbutton: {  
+        flex: 1,
+        
+        alignItems: 'center',   
+        justifyContent: 'center', 
+        height: ScreenUtil.autoheight(33),
+    },  
+   
+    tabText: {  
         fontSize: ScreenUtil.setSpText(14),
-        margin: ScreenUtil.autowidth(5),
+    }, 
+    tablayout: {   
+        alignItems: 'center',
+        flexDirection: 'row',  
+        justifyContent: 'center',
+        paddingVertical: ScreenUtil.autoheight(5),
+        paddingHorizontal: ScreenUtil.autowidth(15),
+    },  
+
+
+  
+    OwnOthers: {
+        flexDirection: 'row',
+        marginHorizontal: ScreenUtil.autowidth(10),
+        marginVertical: ScreenUtil.autoheight(10),
     },
+
+
+
     nothave: {
         borderRadius: 5,
         flexDirection: "row",
@@ -277,7 +402,7 @@ const styles = StyleSheet.create({
         paddingVertical: ScreenUtil.autoheight(5),
         marginHorizontal: ScreenUtil.autowidth(5),
         marginVertical: ScreenUtil.autowidth(0.5),
-        paddingHorizontal: ScreenUtil.autowidth(20),
+        paddingHorizontal: ScreenUtil.autowidth(15),
     },
     top: {
         flex: 1,
@@ -290,7 +415,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignItems: 'flex-start',
         justifyContent: "space-around",
-        height: ScreenUtil.autoheight(60),
+        height: ScreenUtil.autoheight(50),
     },
     timetext: {
         textAlign: 'left',
@@ -318,10 +443,10 @@ const styles = StyleSheet.create({
     },
     typedescription: {
         flex: 2,
-        alignItems: 'center',
+        alignItems: 'flex-end',
         flexDirection: "column",
         justifyContent: "space-around",
-        height: ScreenUtil.autoheight(60),
+        height: ScreenUtil.autoheight(50),
     },
     typeto: {
         textAlign: 'center',
@@ -330,7 +455,7 @@ const styles = StyleSheet.create({
     Ionicout: {
         alignItems: 'flex-end',
         justifyContent: 'center',
-        width: ScreenUtil.autowidth(30),
+        width: ScreenUtil.autowidth(20),
     },
     footer: {
         left: 0,
