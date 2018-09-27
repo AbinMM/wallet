@@ -100,6 +100,8 @@ class Splash extends React.Component {
           UImage.logo= require('../img/day/logo1.png');
           UImage.more_h= require('../img/day/more_h.png');
           UImage.more= require('../img/day/more.png');
+          UImage.my_activity= require('../img/day/my_activity.png');
+          UImage.my_activityh= require('../img/day/my_activityh.png');
           UImage.my_community= require('../img/day/my_community.png');
           UImage.my_help= require('../img/day/my_help.png');
           UImage.my_recovery= require('../img/day/my_recovery.png');
@@ -201,6 +203,8 @@ class Splash extends React.Component {
           UImage.logo= require('../img/logo1.png');
           UImage.more_h= require('../img/more_h.png');
           UImage.more= require('../img/more.png');
+          UImage.my_activity= require('../img/my_activity.png');
+          UImage.my_activityh= require('../img/my_activityh.png');
           UImage.my_community= require('../img/my_community.png');
           UImage.my_help= require('../img/my_help.png');
           UImage.my_recovery= require('../img/my_recovery.png');

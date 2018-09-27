@@ -15,7 +15,7 @@ const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var DeviceInfo = require('react-native-device-info');
 
-@connect(({ wallet, login}) => ({ ...wallet, ...login}))
+@connect(({ wallet, login, news}) => ({ ...wallet, ...login, ...news}))
 class Setting extends React.Component {
 
   static navigationOptions = {
@@ -31,26 +31,39 @@ class Setting extends React.Component {
 
   constructor(props) {
     super(props);
-    this.config = [
-      { avatar:UImage.my_wallet, name: "钱包管理", onPress: this.goPage.bind(this, "WalletManage") },
-      { avatar:UImage.account_manage,  name: "通讯录", onPress: this.goPage.bind(this, "AccountManage") },
-      { avatar:UImage.my_share,  name: "邀请注册", onPress: this.goPage.bind(this, "share") },
-      // { avatar:UImage.my_recovery, name: "密钥恢复", onPress: this.goPage.bind(this, "Test1") },
-      { avatar:UImage.my_community, name: "ET社区", onPress: this.goPage.bind(this, "Community") },
-      { avatar:UImage.my_help, name: "帮助中心", onPress: this.goPage.bind(this, "Helpcenter") },
-      { avatar:UImage.my_system, name: "系统设置", onPress: this.goPage.bind(this, "set") },
-    ];
     this.state = {
       isquery: false,
       show: false,
       walletName: '',
-    }
+      status: true,
+    };
+    // this.config = [
+    //   { avatar:UImage.my_wallet, name: "钱包管理", onPress: this.goPage.bind(this, "WalletManage") },
+    //   { avatar:UImage.account_manage,  name: "通讯录", onPress: this.goPage.bind(this, "AccountManage") },
+    //   { avatar:UImage.my_share,  name: "邀请注册", onPress: this.goPage.bind(this, "share") },
+    //   // { avatar:UImage.my_recovery, name: "密钥恢复", onPress: this.goPage.bind(this, "Test1") },
+    //   { avatar:UImage.my_community, name: "ET社区", onPress: this.goPage.bind(this, "Community") },
+    //   { avatar:UImage.my_help, name: "帮助中心", onPress: this.goPage.bind(this, "Helpcenter") },
+    //   { avatar: this.state.status ? UImage.my_recovery : UImage.my_help, name: "活动中心", onPress: this.goPage.bind(this, "activity") },
+    //   { avatar:UImage.my_system, name: "系统设置",  onPress: this.goPage.bind(this, "set") },
+    // ];
   }
 
   //组件加载完成
   componentDidMount() {
     const {dispatch}=this.props;
     this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }});
+    //获取活动状态
+    this.props.dispatch({type: 'news/getInfo', payload:{activityId:"1"},callback: (datainfo) => {
+      if(datainfo && datainfo != null){
+        if(datainfo.status == 'doing'){
+            this.setState({status: true})
+        }else{
+            this.setState({status: false})
+        }
+      }
+    } })
+
     DeviceEventEmitter.addListener('nativeCallRn', (msg) => {
       title = "React Native界面,收到数据：" + msg;
       // ToastAndroid.show("发送成功", ToastAndroid.SHORT);
@@ -92,6 +105,8 @@ class Setting extends React.Component {
       navigate('Community', {});
     }else if (key == 'Helpcenter') {
       navigate('Helpcenter', {});
+    }else if (key == 'activity') {
+      navigate('Activity', {});
     } else{
       EasyShowLD.dialogShow("温馨提示", "暂未开放，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
     }
@@ -109,10 +124,25 @@ class Setting extends React.Component {
     })
   }
 
+  // _renderListItem() {
+  //   return this.config.map((item, i) => {
+  //     return (<Item key={i} {...item} />)
+  //   })
+  // }
+
   _renderListItem() {
-    return this.config.map((item, i) => {
-      return (<Item key={i} {...item} />)
-    })
+    return (
+      <View>
+        <Item avatar={UImage.my_wallet} name= "钱包管理" onPress={this.goPage.bind(this, "WalletManage")}/>
+        <Item avatar={UImage.account_manage} name= "通讯录" onPress={this.goPage.bind(this, "AccountManage")}/>
+        <Item avatar={UImage.my_share} name= "邀请注册" onPress={this.goPage.bind(this, "share")}/>
+        {/* <Item avatar={UImage.my_recovery} name= "密钥恢复" onPress={this.goPage.bind(this, "Test1")}/> */}
+        <Item avatar={UImage.my_community} name= "ET社区" onPress={this.goPage.bind(this, "Community")}/>
+        <Item avatar={UImage.my_help} name= "帮助中心" onPress={this.goPage.bind(this, "Helpcenter")}/>
+        <Item avatar={this.state.status ? UImage.my_activity : UImage.my_activityh}  name="活动中心" onPress={this.goPage.bind(this, "activity")} />
+        <Item avatar={UImage.my_system} name= "系统设置" onPress={this.goPage.bind(this, "set")}/>
+      </View>
+    )
   }
 
   goProfile() {
@@ -283,7 +313,7 @@ class Setting extends React.Component {
         <View>
           {this._renderListItem()}
         </View>
-
+        
         <View style={styles.footer}>
           <Text style={[styles.foottext,{color: UColor.arrow}]}>© 2018 eostoken all rights reserved </Text>
           {/* <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text> */}

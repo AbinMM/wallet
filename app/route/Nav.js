@@ -43,6 +43,7 @@ import Dappsearch from './News/Dappsearch'
 import OCTactivity from './News/OCTactivity'
 
 import Settings from './Settings'
+import Activity from './Settings/Activity'
 import AgentInfo from './Settings/AgentInfo'
 import Bvote from './Settings/Bvote'
 import Community from './Settings/Community'
@@ -59,6 +60,7 @@ import Detailsofmoney from './Transaction/Detailsofmoney'
 import Ram from './Transaction/Ram'
 import RecordQueryET from './Transaction/RecordQueryET';
 import RecordQueryRam from './Transaction/RecordQueryRam';
+//import Tradingpool from './Transaction/Tradingpool';
 import Warning from './Transaction/Warning'
 
 import ActivationAt from './Wallet/ActivationAt'
@@ -272,6 +274,9 @@ const Nav = StackNavigator(
     OCTactivity: {
       screen: OCTactivity
     },
+    Activity: {
+      screen: Activity
+    },
     AgentInfo: {
       screen: AgentInfo
     },
@@ -320,6 +325,9 @@ const Nav = StackNavigator(
     RecordQueryRam: {
       screen: RecordQueryRam
     },
+    // Tradingpool: {
+    //   screen: Tradingpool
+    // },
     RecordQueryET: {
       screen: RecordQueryET
     },
