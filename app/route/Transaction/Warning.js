@@ -133,7 +133,7 @@ class Warning extends BaseComponent {
                             <View style={[styles.outsource,{backgroundColor: UColor.secdColor}]}>
                                 <View style={[styles.textinptoue,{borderBottomColor: UColor.mainColor}]}  >
                                     <TextInput  ref={(ref) => this._ramount = ref} value={this.state.amount} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow} 
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
                                         placeholder="上涨0.25%"  underlineColorAndroid="transparent"   keyboardType="numeric"   maxLength = {15}
                                         onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })}
                                         />
@@ -141,7 +141,7 @@ class Warning extends BaseComponent {
                                 <View style={[styles.separate,{backgroundColor: UColor.secdColor}]}></View>
                                 <View style={[styles.textinptoue,{borderBottomColor: UColor.mainColor}]} >
                                     <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow}
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
                                         placeholder="下跌2%" underlineColorAndroid="transparent" keyboardType="default" maxLength={20} 
                                         onChangeText={(memo) => this.setState({ memo })}
                                         />

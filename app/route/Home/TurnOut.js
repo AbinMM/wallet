@@ -161,7 +161,7 @@ class TurnOut extends BaseComponent {
                 <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
                     selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
                     style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-                    placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
+                    placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
             </View>
             EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
             if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -348,7 +348,7 @@ class TurnOut extends BaseComponent {
                                     <View style={styles.accountoue} >
                                         <Text style={[styles.inptitle,{color: UColor.fontColor}]}>账户名称</Text>
                                         <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"   
-                                            selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}      
+                                            selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}      
                                             placeholder="收款人账号" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
                                             onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})} 
                                         />
@@ -362,7 +362,7 @@ class TurnOut extends BaseComponent {
                                 <View style={[styles.textinptoue,{borderBottomColor:UColor.mainsecd}]} >
                                     <Text style={[styles.inptitle,{color: UColor.fontColor}]}>转账数量</Text>
                                     <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow} 
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
                                         placeholder="输入转账数量"  underlineColorAndroid="transparent"   keyboardType="numeric"   maxLength = {15}
                                         onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })}
                                         />
@@ -370,7 +370,7 @@ class TurnOut extends BaseComponent {
                                 <View style={[styles.textinptoue,{borderBottomColor:UColor.mainsecd}]} >
                                     <Text style={[styles.inptitle,{color: UColor.fontColor}]}>备注</Text>
                                     <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow}
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
                                         placeholder="Memo" underlineColorAndroid="transparent" keyboardType="default" 
                                         onChangeText={(memo) => this.setState({ memo })}
                                         />

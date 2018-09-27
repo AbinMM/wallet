@@ -296,13 +296,13 @@ class addressManage extends BaseComponent {
                                     <Text style={styles.titleText}>添加地址</Text> 
                                     <View style={[styles.inptout,{backgroundColor: UColor.riceWhite}]} >
                                         <TextInput onChangeText={(labelName) => this.setState({ labelName })} returnKeyType="next" maxLength = {20}
-                                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}  
+                                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                                         placeholder="输入标签名称" underlineColorAndroid="transparent" value={this.state.labelName} />
                                     </View>    
                                     <View style={[styles.inptoutsource,{backgroundColor: UColor.riceWhite}]}>
                                         <View style={styles.accountoue} >
                                             <TextInput onChangeText={(address) => this.setState({ address: this.chkAccount(address) })} returnKeyType="next" maxLength = {12}
-                                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}
+                                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                                             placeholder="输入账户名称" underlineColorAndroid="transparent"  value={this.state.address}/>
                                         </View>    
                                         <View style={styles.scanning}>

@@ -111,7 +111,7 @@ class MortgageRecord extends React.Component {
         <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go"  
             selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
             style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor, borderBottomColor: UColor.baseline,}]} 
-            placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
+            placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
         {/* <Text style={[styles.inptpasstext,{color: UColor.lightgray}]}>提示：赎回 {Number(redeem.cpu_weight.replace("EOS", ""))+Number(redeem.net_weight.replace("EOS", ""))} EOS</Text> */}
     </View>
     EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
@@ -201,7 +201,7 @@ class MortgageRecord extends React.Component {
           <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
               <Image source={UImage.Magnifier_ash} style={styles.headleftimg}/>
               <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
-                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={12} 
+                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={12} 
                   placeholder="输入EOS账号" underlineColorAndroid="transparent" keyboardType="default"
                   onChangeText={(labelname) => this.setState({ labelname })}  numberOfLines={1} 
                   />    

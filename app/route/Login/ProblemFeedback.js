@@ -57,7 +57,7 @@ class ProblemFeedback extends BaseComponent {
         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex: 1,}}>
             <View style={styles.textinptoue}>
                 <View style={styles.inptout}>
-                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.delegatebw} placeholderTextColor={UColor.arrow}
+                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.delegatebw} placeholderTextColor={UColor.inputtip}
                     selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow,backgroundColor: UColor.btnColor}]} 
                     onChangeText={(delegatebw) => this.setState({ delegatebw })} autoFocus={false} editable={true}
                     placeholder="请详细描述您的问题......" underlineColorAndroid="transparent"   

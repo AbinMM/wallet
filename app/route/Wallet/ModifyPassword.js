@@ -177,13 +177,13 @@ class ModifyPassword extends BaseComponent {
                     <View style={[styles.outsource,{backgroundColor: UColor.mainColor}]}>
                         <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
                             <TextInput ref={(ref) => this._lphone = ref} value={this.state.password} returnKeyType="next"
-                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}
+                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                                 secureTextEntry={true} placeholder="当前密码"  underlineColorAndroid="transparent" autoFocus={false} maxLength = {20}
                                 editable={true} onChangeText={(password) => this.setState({ password })}   onChange={this.intensity()} />
                         </View>
                         <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
                             <TextInput ref={(ref) => this._lpass = ref} value={this.state.newPassword} returnKeyType="next" onChange={this.intensity()}
-                                style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={Constants.PWD_MAX_LENGTH}
+                                style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={Constants.PWD_MAX_LENGTH}
                                 secureTextEntry={true}  placeholder="新密码" underlineColorAndroid="transparent" selectionColor={UColor.tintColor}
                                 editable={true} onChangeText={(newPassword) => this.setState({ newPassword })} autoFocus={false} />
                             <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(50), alignItems: 'center', }}>
@@ -195,12 +195,12 @@ class ModifyPassword extends BaseComponent {
                         <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
                             <TextInput ref={(ref) => this._lpass = ref} autoFocus={false} editable={true} underlineColorAndroid="transparent"
                                 value={this.state.newRePassword} onChangeText={(newRePassword) => this.setState({ newRePassword })} returnKeyType="next"
-                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
                                 placeholder="重复密码"  secureTextEntry={true}  onChange={this.intensity()}  maxLength={Constants.PWD_MAX_LENGTH}/>
                         </View>
                         <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
                             <TextInput ref={(ref) => this._lpass = ref} autoFocus={false} editable={true} underlineColorAndroid="transparent" 
-                                style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} onChange={this.intensity()} 
+                                style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} onChange={this.intensity()} 
                                 placeholder="密码提示(可不填)" returnKeyType="next" />
                         </View>
                     </View>

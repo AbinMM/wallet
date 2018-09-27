@@ -144,7 +144,7 @@ class TurnInAsset extends BaseComponent {
               <Text style={styles.tokenText} />
                 <TextInput autoFocus={false} onChangeText={amount => this.setState({ amount: this.chkPrice(amount) })}
                   value = {this.state.amount} maxLength = {15} returnKeyType="go" selectionColor={UColor.tintColor}
-                  style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.tintColor} placeholder="请输入金额(可不填)"
+                  style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} placeholder="请输入金额(可不填)"
                   underlineColorAndroid="transparent" secureTextEntry={false} keyboardType="numeric"
                 />
                 <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>    

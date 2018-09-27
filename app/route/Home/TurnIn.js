@@ -116,7 +116,7 @@ class TurnIn extends BaseComponent {
                 <TextInput autoFocus={false} secureTextEntry={false} keyboardType="numeric" maxLength = {15} 
                     onChangeText={amount =>this.setState({ amount: this.chkPrice(amount) })} returnKeyType="go"
                     placeholder="请输入金额(可不填)" value = {this.state.amount} underlineColorAndroid="transparent"
-                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.tintColor}
+                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                   />
                 <Text style={[styles.tokenText,{color: UColor.arrow}]}>EOS</Text>
               </View>

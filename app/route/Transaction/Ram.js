@@ -544,7 +544,7 @@ class Ram extends BaseComponent {
             <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password : password })} returnKeyType="go" 
                 selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
                 style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-                placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
+                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
         </View>
         EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
         if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -673,7 +673,7 @@ class Ram extends BaseComponent {
             <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
                 selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
                 style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-                placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
+                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
         </View>
         EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
         if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -1173,7 +1173,7 @@ class Ram extends BaseComponent {
                                 </View>
                                 <View style={[styles.inputout,{backgroundColor: UColor.mainColor}]}>
                                     <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount + ''} returnKeyType="go" 
-                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.fontColor}]}  placeholderTextColor={UColor.arrow} 
+                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.fontColor}]}  placeholderTextColor={UColor.inputtip} 
                                     placeholder="输入购买的额度" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
                                     onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkBuyEosQuantity(buyRamAmount), 
                                         eosToKB: this.eosToKB(buyRamAmount, this.props.ramInfo?this.props.ramInfo.price:'')})}
@@ -1214,7 +1214,7 @@ class Ram extends BaseComponent {
                                 </View>
                             <View style={[styles.inputout,{backgroundColor: UColor.mainColor}]}>
                                 <TextInput ref={(ref) => this._rrpass = ref} value={this.state.sellRamBytes + ''} returnKeyType="go" 
-                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.fontColor}]} placeholderTextColor={UColor.arrow} 
+                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.fontColor}]} placeholderTextColor={UColor.inputtip} 
                                 placeholder="输入出售数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
                                 onChangeText={(sellRamBytes) => this.setState({ sellRamBytes: this.chkInputSellRamBytes(sellRamBytes), kbToEos: this.kbToEos(sellRamBytes, this.props.ramInfo?this.props.ramInfo.price:'')})}
                                 />

@@ -581,7 +581,7 @@ class ImportEosKey extends BaseComponent {
                 <View style={[styles.biginptout,{backgroundColor: UColor.mainColor}]} >
                   {/* <Text style={[styles.inptitle,{color: UColor.fontColor}]}>私钥</Text> */}
                   <TextInput ref={(ref) => this._lphone = ref} value={this.state.ownerPk} returnKeyType="next" editable={true}
-                    selectionColor={UColor.tintColor} placeholderTextColor={UColor.arrow} autoFocus={false} maxLength={64}
+                    selectionColor={UColor.tintColor} placeholderTextColor={UColor.inputtip} autoFocus={false} maxLength={64}
                     style={[styles.inptgo,{color: UColor.arrow,borderColor: UColor.arrow,backgroundColor: UColor.secdColor,}]} 
                     onChangeText={(ownerPk) => this.setState({ ownerPk })}  onChange={this.intensity()} keyboardType="default"
                     placeholder="粘贴或输入owner私钥" underlineColorAndroid="transparent"  multiline={true}  />
@@ -590,7 +590,7 @@ class ImportEosKey extends BaseComponent {
                 <View style={[styles.biginptout,{backgroundColor: UColor.mainColor}]} >
                   {/* <Text style={[styles.inptitle,{color: UColor.fontColor}]}>私钥</Text> */}
                   <TextInput ref={(ref) => this._lphone = ref} value={this.state.activePk} returnKeyType="next" editable={true}
-                    selectionColor={UColor.tintColor} placeholderTextColor={UColor.arrow} autoFocus={false} maxLength={64}
+                    selectionColor={UColor.tintColor} placeholderTextColor={UColor.inputtip} autoFocus={false} maxLength={64}
                     style={[styles.inptgo,{color: UColor.arrow,borderColor: UColor.arrow,backgroundColor: UColor.secdColor,}]} 
                     onChangeText={(activePk) => this.setState({ activePk })}  onChange={this.intensity()} keyboardType="default"
                     placeholder="粘贴或输入active私钥" underlineColorAndroid="transparent"  multiline={true}  />
@@ -607,7 +607,7 @@ class ImportEosKey extends BaseComponent {
                     </View>
                   </View>
                   <TextInput ref={(ref) => this._lpass = ref} value={this.state.walletpwd}  returnKeyType="next" editable={true}
-                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} autoFocus={false} maxLength={Constants.PWD_MAX_LENGTH}
+                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} autoFocus={false} maxLength={Constants.PWD_MAX_LENGTH}
                     onChangeText={(password) => this.setState({walletpwd: password })} underlineColorAndroid="transparent"
                     placeholder="输入密码至少8位,建议大小写字母与数字混合" secureTextEntry={true} onChange={this.intensity()} />
               </View>
@@ -616,7 +616,7 @@ class ImportEosKey extends BaseComponent {
                     <Text style={[styles.inptitle,{color: UColor.fontColor}]}>确认密码</Text>
                   </View>
                   <TextInput ref={(ref) => this._lpass = ref} value={this.state.reWalletpwd} returnKeyType="next" editable={true} 
-                      selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
+                      selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
                       placeholder="重复密码" underlineColorAndroid="transparent"  autoFocus={false} onChange={this.intensity()}
                       onChangeText={(reWalletpwd) => this.setState({ reWalletpwd })} />  
                 </View>

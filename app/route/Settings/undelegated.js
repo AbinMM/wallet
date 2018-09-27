@@ -69,7 +69,7 @@ class undelegated extends BaseComponent {
         <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
             selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
             style={[styles.inptpass,{ color: UColor.tintColor, backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-            placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
+            placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
 
     </View>
     EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {

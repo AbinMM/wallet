@@ -133,7 +133,7 @@ class FreeMortgage extends React.Component {
         <View style={styles.header}>  
           <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]} >
               <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
-                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} maxLength={12} 
+                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={12} 
                   placeholder="输入账号名" underlineColorAndroid="transparent" keyboardType="default"
                   onChangeText={(labelname) => this.setState({ labelname: this.chkAccount(labelname)})}   
                   />  

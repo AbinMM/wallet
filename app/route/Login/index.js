@@ -84,7 +84,7 @@ class Login extends BaseComponent {
       <Button onPress={() => { this.refreshLcode() }}>
         <Image onError={(e) => { this.loaderror() }} style={styles.butimg} source={{ uri: img }} />
       </Button>
-      <TextInput autoFocus={true} onChangeText={(lcode) => this.setState({ lcode })} returnKeyType="go" placeholderTextColor={UColor.arrow}
+      <TextInput autoFocus={true} onChangeText={(lcode) => this.setState({ lcode })} returnKeyType="go" placeholderTextColor={UColor.inputtip}
         selectionColor={UColor.tintColor} style={[styles.inp,{ color: UColor.tintColor,backgroundColor: UColor.riceWhite,}]}   
         keyboardType="phone-pad" placeholder="请输入计算结果" underlineColorAndroid="transparent" maxLength={8} />
     </View>
@@ -191,7 +191,7 @@ class Login extends BaseComponent {
     <Button onPress={() => { this.refresh() }}>
       <Image onError={(e) => { this.loaderror() }} style={styles.butimg} source={{ uri: img }} />
     </Button>
-    <TextInput autoFocus={true} onChangeText={(kcode) => this.setState({ kcode })} returnKeyType="go" placeholderTextColor={UColor.arrow}
+    <TextInput autoFocus={true} onChangeText={(kcode) => this.setState({ kcode })} returnKeyType="go" placeholderTextColor={UColor.inputtip}
       selectionColor={UColor.tintColor} style={[styles.inp,{ color: UColor.tintColor,backgroundColor: UColor.riceWhite,}]}   
       keyboardType="phone-pad" placeholder="请输入计算结果" underlineColorAndroid="transparent" maxLength={8} />
     </View>
@@ -291,7 +291,7 @@ class Login extends BaseComponent {
                 <Text style={[styles.inptitle,{color: UColor.fontColor}]}> 手机号</Text>
                 <TextInput ref={(ref) => this._lphone = ref} autoFocus={false} editable={true} 
                   value={this.state.loginPhone} returnKeyType="next" 
-                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                   placeholder="输入手机号" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
                   onChangeText={(loginPhone) => this.setState({ loginPhone })} />
               </View>
@@ -300,7 +300,7 @@ class Login extends BaseComponent {
                 <Text style={[styles.inptitle,{color: UColor.fontColor}]}> 密码</Text>
                 <TextInput ref={(ref) => this._lpass = ref}  
                   value={this.state.loginPwd} returnKeyType="go" autoFocus={false} editable={true}
-                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                   placeholder="输入密码" underlineColorAndroid="transparent" secureTextEntry={true} maxLength={20}
                   onSubmitEditing={() => this.loginKcaptrue()} onChangeText={(loginPwd) => this.setState({ loginPwd })}
                 />
@@ -327,7 +327,7 @@ class Login extends BaseComponent {
             <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]}>
               <Text style={[styles.inptitle,{color: UColor.fontColor}]}> 手机号</Text>
               <TextInput ref={(ref) => this._rphone = ref} value={this.state.phone} returnKeyType="next" 
-                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
                 placeholder="输入手机号" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
                 onChangeText={(phone) => this.setState({ phone })}/>
             </View>
@@ -336,7 +336,7 @@ class Login extends BaseComponent {
               <View style={styles.vfantext} >
                 <Text style={[styles.inptitle,{color: UColor.fontColor}]}> 验证码</Text>
                 <TextInput ref={(ref) => this._rcode = ref} value={this.state.code} returnKeyType="next" 
-                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                   placeholder="请输入验证码" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={6}
                   onChangeText={(code) => this.setState({ code })}/>
               </View>
@@ -352,7 +352,7 @@ class Login extends BaseComponent {
             <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]} >
               <Text style={[styles.inptitle,{color: UColor.fontColor}]}> 密码</Text>
               <TextInput ref={(ref) => this._rpass = ref} value={this.state.password} returnKeyType="next" 
-                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
                 placeholder="输入密码" underlineColorAndroid="transparent" secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
                 onChangeText={(password) => this.setState({ password })}/>
             </View>
@@ -360,7 +360,7 @@ class Login extends BaseComponent {
             <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]} >
               <Text style={[styles.inptitle,{color: UColor.fontColor}]}> 邀请码</Text>
               <TextInput ref={(ref) => this._rrpass = ref} value={this.state.invite} returnKeyType="go" 
-                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
                 placeholder="输入邀请码(非必填)" underlineColorAndroid="transparent" keyboardType="phone-pad" 
                 maxLength={8} onSubmitEditing={() => this.regSubmit()} onChangeText={(invite) => this.setState({ invite })}
               />

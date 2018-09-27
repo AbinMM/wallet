@@ -248,7 +248,7 @@ class BackupsAOkey extends BaseComponent {
                                 <Text  style={[styles.prompttext,{color: UColor.showy}]}>{this.state.PromptActtve}</Text>
                             </View>
                             <TextInput ref={(ref) => this._lphone = ref} value={this.state.activePk} returnKeyType="next" editable={true}
-                                selectionColor={UColor.tintColor} placeholderTextColor={UColor.arrow} autoFocus={false} multiline={true}
+                                selectionColor={UColor.tintColor} placeholderTextColor={UColor.inputtip} autoFocus={false} multiline={true}
                                 style={[styles.inptgo,{color: UColor.arrow, backgroundColor: UColor.secdColor}]}
                                 onChangeText={(activePk) => this.setState({ activePk })} keyboardType="default" onChange={this.intensity()} 
                                 placeholder="输入active私钥" underlineColorAndroid="transparent"   />
@@ -261,7 +261,7 @@ class BackupsAOkey extends BaseComponent {
                                 <Text style={[styles.prompttext,{color: UColor.showy}]}>{this.state.PromptOwner}</Text>
                             </View>
                             <TextInput ref={(ref) => this._lphone = ref} value={this.state.ownerPk} returnKeyType="next" editable={true}
-                                selectionColor={UColor.tintColor} placeholderTextColor={UColor.arrow} autoFocus={false}  multiline={true}
+                                selectionColor={UColor.tintColor} placeholderTextColor={UColor.inputtip} autoFocus={false}  multiline={true}
                                 style={[styles.inptgo,{color: UColor.arrow, backgroundColor: UColor.secdColor}]} 
                                 onChangeText={(ownerPk) => this.setState({ ownerPk })} keyboardType="default" onChange={this.intensity()} 
                                 placeholder="输入owner私钥" underlineColorAndroid="transparent"    />

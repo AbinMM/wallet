@@ -64,7 +64,7 @@ class Dappsearch extends BaseComponent {
                 <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
                     <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
                         <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
-                        <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} placeholderTextColor={UColor.arrow} 
+                        <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} placeholderTextColor={UColor.inputtip} 
                             selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholder="输入DAPP网址" 
                             underlineColorAndroid="transparent" onChangeText={(labelname) => this.setState({ labelname })}
                              autoCorrect={true} returnKeyType="go" keyboardType="default"  />

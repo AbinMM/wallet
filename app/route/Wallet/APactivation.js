@@ -74,7 +74,7 @@ class APactivation extends BaseComponent {
             <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
                 selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
                 style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}
-                placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
+                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
         </View>
         EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
         if (!this.state.password || this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -156,7 +156,7 @@ class APactivation extends BaseComponent {
                 </View>
                 <View style={styles.rankout}>
                     <TextInput ref={(ref) => this._raccount = ref} value={this.state.cpu} returnKeyType="next" 
-                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
                         placeholder="最低可输入0.1" underlineColorAndroid="transparent"
                         keyboardType="default" maxLength={12} onChangeText={(cpu) => this.setState({ cpu })} 
                     />
@@ -170,7 +170,7 @@ class APactivation extends BaseComponent {
                 </View>
                 <View style={styles.rankout}>
                     <TextInput ref={(ref) => this._raccount = ref} value={this.state.net} returnKeyType="next" 
-                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
                         placeholder="最低可输入0.1" underlineColorAndroid="transparent"
                         keyboardType="default" maxLength={12} onChangeText={(net) => this.setState({ net })} 
                     />
@@ -184,7 +184,7 @@ class APactivation extends BaseComponent {
                 </View>
                 <View style={styles.rankout}>
                     <TextInput ref={(ref) => this._raccount = ref} value={this.state.ram} returnKeyType="next" 
-                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
                         placeholder="最低可输入0.397" underlineColorAndroid="transparent"
                         keyboardType="default" maxLength={12} onChangeText={(ram) => this.setState({ ram })} 
                     />

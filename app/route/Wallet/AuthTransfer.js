@@ -256,7 +256,7 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
             <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
                 selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
                 style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-                placeholderTextColor={UColor.arrow} placeholder="请输入密码" underlineColorAndroid="transparent" />
+                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
         </View>
         EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
         if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -432,7 +432,7 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
                 <View style={{flex:1,flexDirection: "row",}}>
                     <TextInput ref={(ref) => this._lphone = ref} value={this.state.inputText} returnKeyType="next" editable={true} autoFocus={false}
                         selectionColor={UColor.tintColor} style={[styles.inptgo,{color: UColor.arrow,backgroundColor: UColor.secdColor,borderColor: UColor.arrow}]}  
-                        onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default" placeholderTextColor={UColor.arrow} 
+                        onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default" placeholderTextColor={UColor.inputtip} 
                         placeholder={this.state.index==OWNER_MODE?"请您输入Owner公钥":"请您输入Active公钥 "} underlineColorAndroid="transparent"  multiline={true}  />
                     <View style={styles.addButton}>
                         <Image source={UImage.adminAddA} style={styles.imgBtn} />
@@ -471,7 +471,7 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
                 <View style={{flex:1,flexDirection: "row",}}>
                     <TextInput ref={(ref) => this._lphone = ref} value={this.state.inputText} returnKeyType="next" editable={true} autoFocus={false}
                         selectionColor={UColor.tintColor} style={[styles.inptgo,{color: UColor.arrow,backgroundColor: UColor.secdColor,borderColor: UColor.arrow}]}  
-                        onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default" placeholderTextColor={UColor.arrow} 
+                        onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default" placeholderTextColor={UColor.inputtip} 
                         placeholder={this.state.index==OWNER_MODE?"请您输入Owner公钥":"请您输入Active公钥 "} underlineColorAndroid="transparent"  multiline={true}  />
                     <View style={styles.addButton}>
                         <Image source={UImage.adminAddA} style={styles.imgBtn} />

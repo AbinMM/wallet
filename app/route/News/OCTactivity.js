@@ -209,7 +209,7 @@ class OCTactivity extends BaseComponent {
                             <Ionicons name={this.state.showMore ? "md-arrow-dropdown" : "md-arrow-dropright"} size={20} style={{lineHeight: ScreenUtil.autoheight(25),color:UColor.arrow}}/>
                         </View>
                         <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
-                            <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} placeholderTextColor={UColor.arrow} 
+                            <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} placeholderTextColor={UColor.inputtip} 
                                 selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.startup}]} placeholder="输入账号" 
                                 underlineColorAndroid="transparent" onChangeText={(labelname) => this.setState({ labelname })}
                                 autoCorrect={true} returnKeyType="go" keyboardType="default"  maxLength={12} />

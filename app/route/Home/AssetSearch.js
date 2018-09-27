@@ -196,7 +196,7 @@ class AssetSearch extends BaseComponent {
                     <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
                         <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
                         <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
-                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} autoCorrect={true}
+                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} autoCorrect={true}
                             placeholder="输入token名称或合约账户" underlineColorAndroid="transparent" keyboardType="default"
                             onChangeText={(labelname) => this.setState({ labelname })} 
                             />
@@ -258,13 +258,13 @@ class AssetSearch extends BaseComponent {
                         <Text style={styles.titleText}>手动添加</Text>
                         <View style={styles.passoutsource}>
                             <TextInput ref={(ref) => this._raccount = ref} value={this.state.tokenname}  returnKeyType="next" 
-                                selectionColor={UColor.tintColor}  placeholderTextColor={UColor.arrow}
+                                selectionColor={UColor.tintColor}  placeholderTextColor={UColor.inputtip}
                                 style={[styles.inptpass,{backgroundColor: UColor.riceWhite,color: UColor.tintColor}]}   
                                 placeholder="输入Token名称" underlineColorAndroid="transparent" keyboardType="default"   
                                 onChangeText={(tokenname) => this.setState({ tokenname })}/>
                                 
                             <TextInput ref={(ref) => this._raccount = ref} value={this.state.address}  returnKeyType="go"  
-                                selectionColor={UColor.tintColor}  placeholderTextColor={UColor.arrow} maxLength = {12}
+                                selectionColor={UColor.tintColor}  placeholderTextColor={UColor.inputtip} maxLength = {12}
                                 style={[styles.inptpass,{backgroundColor: UColor.riceWhite,color: UColor.tintColor}]} 
                                 placeholder="输入合约账户" underlineColorAndroid="transparent"  keyboardType="default"  
                                 onChangeText={(address) => this.setState({ address })} />

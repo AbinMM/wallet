@@ -101,7 +101,7 @@ class Forget extends BaseComponent {
           <TextInput autoFocus={true} onChangeText={(kcode) => this.setState({kcode})} returnKeyType="go" 
               selectionColor={UColor.tintColor} keyboardType="ascii-capable"  maxLength={8}
               style={[styles.countinpt,{color: UColor.tintColor,backgroundColor: UColor.riceWhite,}]} 
-              placeholderTextColor={UColor.arrow} placeholder="请输入计算结果" underlineColorAndroid="transparent" 
+              placeholderTextColor={UColor.inputtip} placeholder="请输入计算结果" underlineColorAndroid="transparent" 
           />
       </View>
       EasyShowLD.dialogShow("计算结果",view,"获取","取消",()=>{
@@ -180,7 +180,7 @@ class Forget extends BaseComponent {
             <View style={[styles.phoneoue,{backgroundColor: UColor.mainColor}]} >
                 <Text style={[styles.texttitle,{color: UColor.fontColor}]}> 手机号</Text>
                 <TextInput ref={(ref) => this._rphone = ref}  value={this.state.phone}  returnKeyType="next" 
-                  selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow}
+                  selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
                   placeholder="请输入您注册时的手机号" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
                   onChangeText={(phone) => this.setState({phone})}
                 />
@@ -190,7 +190,7 @@ class Forget extends BaseComponent {
                 <View style={styles.codeout} >
                     <Text style={[styles.texttitle,{color: UColor.fontColor}]}> 验证码</Text>
                     <TextInput  value={this.state.code} ref={(ref) => this._rcode = ref}  returnKeyType="next" 
-                      selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                      selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
                       placeholder="输入验证码" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={6}
                       onChangeText={(code) => this.setState({code})}
                     />
@@ -207,7 +207,7 @@ class Forget extends BaseComponent {
             <View style={[styles.phoneoue,{backgroundColor: UColor.mainColor}]} >
                 <Text style={[styles.texttitle,{color: UColor.fontColor}]}> 新密码</Text>
                 <TextInput ref={(ref) => this._rpass = ref}  value={this.state.password} returnKeyType="next" 
-                  selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.arrow} 
+                  selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
                   placeholder="设置新的登录密码"  underlineColorAndroid="transparent" secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
                   onChangeText={(password) => this.setState({password})}
                 />

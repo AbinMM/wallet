@@ -314,7 +314,7 @@ class createWallet extends BaseComponent {
               <Text style={[styles.inptitle,{color: UColor.fontColor}]}>账号名称</Text>
               <View style={{flexDirection: 'row',justifyContent: 'center',alignItems: 'center',}}>
                 <TextInput ref={(ref) => this._raccount = ref} value={this.state.walletName} returnKeyType="next" 
-                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow} 
+                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
                   placeholder="输入a-z小写字母和1-5数字组合字符" underlineColorAndroid="transparent" onChange={this.intensity()} 
                   keyboardType="default" maxLength={12} onChangeText={(walletName) => this.setState({ walletName:this.chkAccount(walletName) })} />
                 <Button onPress={() => this.random()}>
@@ -334,7 +334,7 @@ class createWallet extends BaseComponent {
                   </View>
                 </View>
                 <TextInput ref={(ref) => this._lpass = ref} value={this.state.walletPassword}  returnKeyType="next" editable={true}
-                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}  
+                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}  
                     onChangeText={(walletPassword) => this.setState({walletPassword})} onChange={this.intensity()} autoFocus={false}
                     placeholder="输入密码至少8位,建议大小字母与数字混合" underlineColorAndroid="transparent" secureTextEntry={true} 
                     maxLength={Constants.PWD_MAX_LENGTH}/>
@@ -342,14 +342,14 @@ class createWallet extends BaseComponent {
             <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]} >
               <Text style={[styles.inptitle,{color: UColor.fontColor}]}>确认密码</Text>
               <TextInput ref={(ref) => this._lrpass = ref} value={this.state.reWalletPassword} returnKeyType="next"
-                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.arrow}
+                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                 placeholder="重复密码" underlineColorAndroid="transparent" secureTextEntry={true} onChange={this.intensity()} 
                 onChangeText={(reWalletPassword) => this.setState({ reWalletPassword })}  autoFocus={false} editable={true}
                 maxLength={Constants.PWD_MAX_LENGTH}/>
             </View>
             <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]} >
               <TextInput ref={(ref) => this._lnote = ref} value={this.state.passwordNote} selectionColor={UColor.tintColor} maxLength={40}
-                returnKeyType="go" placeholderTextColor={UColor.arrow} placeholder="密码提示(可不填)"  style={[styles.inpt,{color: UColor.arrow}]} 
+                returnKeyType="go" placeholderTextColor={UColor.inputtip} placeholder="密码提示(可不填)"  style={[styles.inpt,{color: UColor.arrow}]} 
                 underlineColorAndroid="transparent" onChangeText={(passwordNote) => this.setState({ passwordNote })}  />
             </View>
           </View>
