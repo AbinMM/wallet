@@ -306,6 +306,11 @@ class Transaction extends BaseComponent {
             this.onClickMore();
         }
     }
+
+    tradingpoolClick = (tradename) =>{
+        const { navigate } = this.props.navigation;
+        navigate('Tradingpool', {tradename:tradename});
+    }
   
     getDataLine(){
             return this.props.etLineDatas ? this.props.etLineDatas : {};
@@ -1109,7 +1114,7 @@ class Transaction extends BaseComponent {
 
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-    <TouchableOpacity style={styles.transactiontou}  onPress={this.openbusiness.bind(this)} activeOpacity={0.8}>
+    <TouchableOpacity style={styles.transactiontou}  onPress={this.openbusiness.bind(this)} activeOpacity={0.9}>
         <View style={[styles.transactionout,{backgroundColor: UColor.tintColor}]}>
             <Text style={[styles.paneltext,{color: UColor.btnColor}]}>交易面板</Text>
         </View>
@@ -1206,9 +1211,9 @@ class Transaction extends BaseComponent {
                 </Button> 
             </View>
             <View style={styles.timetabout}>
-                <Button disabled={true}>
+                <Button onPress={this.tradingpoolClick.bind(this,this.state.tradename)}>
                     <View style={styles.timeview} >
-                        <Text style={[styles.timeinitial,{color: UColor.fontColor}]}></Text>
+                        <Text style={[styles.timeinitial,{color: UColor.fontColor}]}>交易池</Text>
                     </View>
                 </Button> 
             </View>

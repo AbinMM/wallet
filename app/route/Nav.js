@@ -60,7 +60,7 @@ import Detailsofmoney from './Transaction/Detailsofmoney'
 import Ram from './Transaction/Ram'
 import RecordQueryET from './Transaction/RecordQueryET';
 import RecordQueryRam from './Transaction/RecordQueryRam';
-//import Tradingpool from './Transaction/Tradingpool';
+import Tradingpool from './Transaction/Tradingpool';
 import Warning from './Transaction/Warning'
 
 import ActivationAt from './Wallet/ActivationAt'
@@ -325,9 +325,9 @@ const Nav = StackNavigator(
     RecordQueryRam: {
       screen: RecordQueryRam
     },
-    // Tradingpool: {
-    //   screen: Tradingpool
-    // },
+    Tradingpool: {
+      screen: Tradingpool
+    },
     RecordQueryET: {
       screen: RecordQueryET
     },
