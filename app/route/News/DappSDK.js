@@ -977,7 +977,7 @@ export const sdkListenMessage = (props) =>
               if(obj.callback && (g_CallToRN.callback == obj.callback))
               {
                 //同一个方法，同一个回调函数，重复消息拒绝掉
-                IosSDKModule.iosDebugInfo("相同消息");
+                // IosSDKModule.iosDebugInfo("相同消息");
                 return;
               }
           }
@@ -985,7 +985,7 @@ export const sdkListenMessage = (props) =>
           g_CallToRN.callback = obj.callback;
           callMessage(obj.methodName,obj.params,obj.password,obj.device_id,obj.callback);
         } catch (error) {
-          IosSDKModule.iosDebugInfo("错误信息:"+error.message);
+          // IosSDKModule.iosDebugInfo("错误信息:"+error.message);
           console.log("event CallToRN error: %s",error.message);
         }
 
