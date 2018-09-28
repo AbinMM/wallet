@@ -13,6 +13,8 @@ import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
+const BTN_SELECTED_STATE_ARRAY = ['isTransfer','isDelegatebw', 'isMemory', 'isExchange']; 
+const logOption = ['转账','抵押记录','内存交易','ET交易'];
 @connect(({ wallet, assets}) => ({ ...wallet, ...assets }))
 class AssetInfo extends BaseComponent {
     static navigationOptions = ({ navigation }) => {
@@ -35,10 +37,11 @@ class AssetInfo extends BaseComponent {
             logRefreshing: false,
             logId: "-1",
             isTransfer: true,
-            isMortgage: false, 
+            isDelegatebw: false, 
             isMemory: false,
             isExchange: false,
             tradeLog:[],
+            logType: "transfer"
         };
         DeviceEventEmitter.addListener('transaction_success', () => {
             try {
@@ -60,7 +63,7 @@ class AssetInfo extends BaseComponent {
             //加载地址数据
             // EasyShowLD.loadingShow();
             this.props.dispatch({ type: 'wallet/getDefaultWallet' });
-            this.props.dispatch({ type: 'assets/getTradeDetails', payload: { account_name : this.props.defaultWallet.name, contract_account : this.state.asset.asset.contractAccount,  code : this.state.asset.asset.name, last_id: "-1", countPerPage: 10}, callback: (resp) => {
+            this.props.dispatch({ type: 'assets/getTradeDetails', payload: { account_name : this.props.defaultWallet.name, contract_account : this.state.asset.asset.contractAccount,  code : this.state.asset.asset.name, last_id: "-1", countPerPage: 10, type: this.state.logType}, callback: (resp) => {
                 this.setState({logRefreshing: false});
                 this.processResult();
             }});  
@@ -149,7 +152,7 @@ class AssetInfo extends BaseComponent {
             return;
         }
         this.setState({logRefreshing: true});
-        this.props.dispatch({ type: 'assets/getTradeDetails', payload: { account_name : this.props.defaultWallet.name, contract_account : this.state.asset.asset.contractAccount,  code : this.state.asset.asset.name, last_id: this.state.logId, countPerPage: 10}, callback: (resp) => {
+        this.props.dispatch({ type: 'assets/getTradeDetails', payload: { account_name : this.props.defaultWallet.name, contract_account : this.state.asset.asset.contractAccount,  code : this.state.asset.asset.name, last_id: this.state.logId, countPerPage: 10, type: this.state.logType}, callback: (resp) => {
             this.processResult();
             this.setState({logRefreshing: false});
         }}); 
@@ -164,7 +167,7 @@ class AssetInfo extends BaseComponent {
             return;
         }
         this.setState({logRefreshing: true});
-        this.props.dispatch({ type: 'assets/getTradeDetails', payload: { account_name : this.props.defaultWallet.name, contract_account : this.state.asset.asset.contractAccount,  code : this.state.asset.asset.name, last_id: "-1", countPerPage: 10}, callback: (resp) => {
+        this.props.dispatch({ type: 'assets/getTradeDetails', payload: { account_name : this.props.defaultWallet.name, contract_account : this.state.asset.asset.contractAccount,  code : this.state.asset.asset.name, last_id: "-1", countPerPage: 10, type: this.state.logType}, callback: (resp) => {
             this.processResult();
             this.setState({logRefreshing: false});
         }}); 
@@ -172,13 +175,16 @@ class AssetInfo extends BaseComponent {
 
     // 返回转账，抵押记录，内存交易，ET交易  
     ownOthersButton(style, selectedSate, stateType, buttonTitle) {  
-        let BTN_SELECTED_STATE_ARRAY = ['isTransfer','isMortgage', 'isMemory', 'isExchange']; 
         return(  
             <TouchableOpacity style={[style, selectedSate ? {borderBottomWidth: 2,borderBottomColor: UColor.tintColor} : {}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
                 <Text style={[styles.tabText, selectedSate ? {color: UColor.fontColor} : {color: UColor.arrow}]}>{buttonTitle}</Text>  
             </TouchableOpacity>  
         );  
     }  
+
+    changeLogType(type){
+        this.onRefresh();
+    }
 
      // 更新"转账，抵押记录，内存交易，ET交易"按钮的状态  
      _updateBtnState(currentPressed, array) {  
@@ -195,6 +201,17 @@ class AssetInfo extends BaseComponent {
                 this.setState(newState);  
             }  
         }  
+
+        if(currentPressed == BTN_SELECTED_STATE_ARRAY[0]){ // 转账
+            this.state.logType = "transfer"
+        }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[1]){
+            this.state.logType = "delegatebw";
+        }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[2]){
+            this.state.logType = "ram";
+        }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[3]){
+            this.state.logType = "ET";
+        }
+        this.changeLogType();
     }  
 
     render() {
@@ -208,12 +225,12 @@ class AssetInfo extends BaseComponent {
                 </View>
                 <View style={styles.btn}>
                     <View style={[styles.OwnOthers]}>  
-                        {this.ownOthersButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', '转账')}  
-                        {this.ownOthersButton(styles.tabbutton, this.state.isMortgage, 'isMortgage', '抵押记录')}  
-                        {this.ownOthersButton(styles.tabbutton, this.state.isMemory, 'isMemory', '内存交易')}  
-                        {this.ownOthersButton(styles.tabbutton, this.state.isExchange, 'isExchange', 'ET交易')}
+                        {this.ownOthersButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', logOption[0])}  
+                        {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isDelegatebw, 'isDelegatebw', logOption[1])}  
+                        {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isMemory, 'isMemory', logOption[2])}  
+                        {this.ownOthersButton(styles.tabbutton, this.state.isExchange, 'isExchange', logOption[3])}
                     </View>
-                    <Button onPress={this._openDetails.bind(this)}> 
+                    {/* <Button onPress={this._openDetails.bind(this)}> 
                         <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
                             <View style={{alignItems: 'center',justifyContent: 'center',marginRight: ScreenUtil.autowidth(15)}}>
                                 <Image source={UImage.shift_to} style={styles.shiftturn} />
@@ -250,7 +267,7 @@ class AssetInfo extends BaseComponent {
                                 <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
                             </View>
                         </View>
-                    </Button>  
+                    </Button>   */}
                   
                     
                     <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} onEndReachedThreshold = {50}
@@ -291,7 +308,7 @@ class AssetInfo extends BaseComponent {
                                 </View>
                             </View>
                         </Button>   */}
-                        <Button onPress={this._openDetails.bind(this)}> 
+                        <Button onPress={this._openDetails.bind(this, rowData)}> 
                             <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
                                 <View style={{alignItems: 'center',justifyContent: 'center',marginRight: ScreenUtil.autowidth(15)}}>
                                     <Image source={rowData.type=='转出'?UImage.turn_out:UImage.shift_to} style={styles.shiftturn} />
@@ -299,10 +316,10 @@ class AssetInfo extends BaseComponent {
                                 <View style={styles.top}>
                                     <View style={styles.timequantity}>
                                         <Text style={[styles.timetext,{color: UColor.arrow}]}>{this.transferTimeZone(rowData.blockTime)}</Text>
-                                        <Text style={[styles.quantity,{color: UColor.fontColor}]}>eos123451234</Text>
+                                        <Text style={[styles.quantity,{color: UColor.fontColor}]}>{rowData.type=='转出'? rowData.to : rowData.from}</Text>
                                     </View>
                                     <View style={styles.typedescription}>
-                                        <Text style={[styles.typeto,{color:rowData.type=='转出'?UColor.warningRed:UColor.fallColor}]}>{rowData.type=='转出'?'-':'+'+rowData.quantity.replace(c.asset.name, "")}</Text>
+                                        <Text style={[styles.typeto,{color:rowData.type=='转出'?UColor.warningRed:UColor.fallColor}]}>{(rowData.type=='转出'?'-':'+')+rowData.quantity.replace(c.asset.name, "")}</Text>
                                     </View>
                                 </View>
                                 <View style={styles.Ionicout}>
