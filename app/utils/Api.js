@@ -47,6 +47,7 @@ export const listAgent = rootaddr + '/eoselector/list';
 export const getAccountsByPuk = rootaddr + '/eosrpc/getKeyAccounts';
 export const isExistAccountName = rootaddr + '/eosrpc/isExistAccountName';
 
+export const getActions2 = rootaddr + '/eosrpc/getActions2'; // 新获取交易记录api， 20180928
 export const getActions = rootaddr + '/eosrpc/getActions';
 export const getintegral = rootaddr + '/pocketAsset/getCreateEosAccountNeedPoint';
 export const isSigned = rootaddr + '/user/isSigned'

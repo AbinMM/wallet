@@ -1,5 +1,5 @@
 import Request from '../utils/RequestUtil';
-import {getBalance, listAssets, addAssetToServer, getActions, fetchAssetsByAccount} from '../utils/Api';
+import {getBalance, listAssets, addAssetToServer, getActions, getActions2, fetchAssetsByAccount} from '../utils/Api';
 import store from 'react-native-simple-store';
 import { EasyToast } from '../components/Toast';
 import { DeviceEventEmitter } from 'react-native';
@@ -280,7 +280,7 @@ export default {
      },
      *getTradeDetails({payload, callback},{call,put}) {
         try{
-            const resp = yield call(Request.request, getActions, "post", payload);
+            const resp = yield call(Request.request, getActions2, "post", payload);
             if(resp && resp.code=='0'){               
                 yield put({ type: 'updateDetails', payload: { data:resp.data, ...payload } });
             }else{
