@@ -191,6 +191,17 @@ class AssetInfo extends BaseComponent {
         if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {  
             return;  
         }  
+
+        if(currentPressed == BTN_SELECTED_STATE_ARRAY[0]){ // 转账
+            this.state.logType = "transfer"
+        }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[1]){
+            this.state.logType = "delegatebw";
+        }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[2]){
+            this.state.logType = "ram";
+        }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[3]){
+            this.state.logType = "ET";
+        }
+        
         let newState = {...this.state};  
         for (let type of array) {  
             if (currentPressed == type) {  
@@ -202,15 +213,6 @@ class AssetInfo extends BaseComponent {
             }  
         }  
 
-        if(currentPressed == BTN_SELECTED_STATE_ARRAY[0]){ // 转账
-            this.state.logType = "transfer"
-        }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[1]){
-            this.state.logType = "delegatebw";
-        }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[2]){
-            this.state.logType = "ram";
-        }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[3]){
-            this.state.logType = "ET";
-        }
         this.changeLogType();
     }  
 
