@@ -22,7 +22,7 @@ class Community extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
-        wechat: 'EOS-TOKEN',
+        wechat: 'eostokenim',
         public: 'EosToken钱包',
         qq: '3090679927',
         telegraph: 't.me/eostokens',
