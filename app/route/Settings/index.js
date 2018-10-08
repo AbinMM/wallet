@@ -35,7 +35,7 @@ class Setting extends React.Component {
       isquery: false,
       show: false,
       walletName: '',
-      status: true,
+      status: false,
     };
     // this.config = [
     //   { avatar:UImage.my_wallet, name: "钱包管理", onPress: this.goPage.bind(this, "WalletManage") },
@@ -57,9 +57,9 @@ class Setting extends React.Component {
     this.props.dispatch({type: 'news/getInfo', payload:{activityId:"1"},callback: (datainfo) => {
       if(datainfo && datainfo != null){
         if(datainfo.status == 'doing'){
-            this.setState({status: true})
+          this.setState({status: true})
         }else{
-            this.setState({status: false})
+          this.setState({status: false})
         }
       }
     } })
@@ -131,6 +131,7 @@ class Setting extends React.Component {
   // }
 
   _renderListItem() {
+
     return (
       <View>
         <Item avatar={UImage.my_wallet} name= "钱包管理" onPress={this.goPage.bind(this, "WalletManage")}/>
@@ -139,7 +140,7 @@ class Setting extends React.Component {
         {/* <Item avatar={UImage.my_recovery} name= "密钥恢复" onPress={this.goPage.bind(this, "Test1")}/> */}
         <Item avatar={UImage.my_community} name= "ET社区" onPress={this.goPage.bind(this, "Community")}/>
         <Item avatar={UImage.my_help} name= "帮助中心" onPress={this.goPage.bind(this, "Helpcenter")}/>
-        <Item avatar={this.state.status ? UImage.my_activity : UImage.my_activityh}  name="活动中心" onPress={this.goPage.bind(this, "activity")} />
+        <Item avatar={this.state.status ? UImage.my_activityh : UImage.my_activity}  name="活动中心" onPress={this.goPage.bind(this, "activity")} />
         <Item avatar={UImage.my_system} name= "系统设置" onPress={this.goPage.bind(this, "set")}/>
       </View>
     )
