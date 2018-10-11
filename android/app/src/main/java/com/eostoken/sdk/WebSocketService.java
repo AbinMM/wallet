@@ -11,7 +11,7 @@ import org.json.JSONException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-// import com.eostoken.MainActivity;
+import com.eostoken.MainActivity;
 
 /***
  *  WebSocket 
@@ -76,9 +76,9 @@ public class WebSocketService extends WebSocketServer {
                     String plugin = "";
                     String type = "";
 
-                    JSONObject payloadobj = new JSONObject(str_json);
-                    plugin = payloadobj.getString("plugin");
-                    String data = payloadobj.getString("data");
+                    JSONObject jsonobj = new JSONObject(str_json);
+                    plugin = jsonobj.getString("plugin");
+                    String data = jsonobj.getString("data");
 
                     JSONObject data_obj = new JSONObject(data);
                     type = data_obj.getString("type");
@@ -99,7 +99,7 @@ public class WebSocketService extends WebSocketServer {
 
     private void callbakcToWebview(final String event,final String retJson)
     {
-       if(!event.isEmpty())
+       if(!event.isEmpty() && !retJson.isEmpty())
        {
             String retEvent = event;
             if(event.equals("pair"))
@@ -129,6 +129,10 @@ public class WebSocketService extends WebSocketServer {
 
             case "getOrRequestIdentity":
                 getOrRequestIdentity(type,plugin,data_obj);
+                break;
+
+            case "requestSignature":
+                requestSignature(type,plugin,data_obj);
                 break;
 
             default:
@@ -174,16 +178,15 @@ public class WebSocketService extends WebSocketServer {
     */
     private void identityFromPermissions(final String type,final String plugin,final JSONObject data_obj)
     {
-        String id = "";
         String origin = "";
         String resp = "";
         try {
             String payload = data_obj.getString("payload");
+            String id =  data_obj.getString("id");
 
             JSONObject payload_data_obj = new JSONObject(payload);
             origin = payload_data_obj.getString("origin");
     
-            id =  data_obj.getString("id");
 
             JSONObject obj = new JSONObject();
             obj.put("id", id);
@@ -203,22 +206,19 @@ public class WebSocketService extends WebSocketServer {
     }
     private void getOrRequestIdentity(final String type,final String plugin,final JSONObject data_obj)
     {
-        String id = "";
-        String origin = "";
         String resp = "";
         try {
             String payload = data_obj.getString("payload");
+            String id =  data_obj.getString("id");
 
             JSONObject payload_data_obj = new JSONObject(payload);
-            origin = payload_data_obj.getString("origin");
+            String origin = payload_data_obj.getString("origin");
 
             String fields =  payload_data_obj.getString("fields");
             JSONObject fields_obj = new JSONObject(fields);
             // String personal = fields_obj.getString("personal");
             // String location = fields_obj.getString("location");
             // String accounts = fields_obj.getString("accounts");
-
-            id =  data_obj.getString("id");
 
             JSONObject obj = new JSONObject();
             obj.put("id", id);
@@ -271,6 +271,38 @@ public class WebSocketService extends WebSocketServer {
         } catch (Exception e) {
             resp = "";
         }
+        callbakcToWebview("api",resp);
+    }
+
+    private void requestSignature(final String type,final String plugin,final JSONObject data_obj)
+    {
+        String resp = "";
+        try {
+            String payload = data_obj.getString("payload");
+            String id =  data_obj.getString("id");
+
+            JSONObject payload_data_obj = new JSONObject(payload);
+            String origin = payload_data_obj.getString("origin");
+
+            String transaction =  payload_data_obj.getString("transaction");
+            JSONObject transaction_obj = new JSONObject(transaction);
+            // String personal = fields_obj.getString("personal");
+
+            JSONObject obj = new JSONObject();
+            obj.put("id", id);
+            obj.put("type", type);
+            obj.put("plugin", plugin);
+
+            JSONObject subobj = new JSONObject();
+            subobj.put("origin", origin);
+            obj.put("payload", subobj.toString());
+
+            obj.put("result", "111");
+            resp = obj.toString();
+        } catch (Exception e) {
+            resp = "";
+        }
+        // MainActivity.Test("WebSocketService resp:" + resp);//debug
         callbakcToWebview("api",resp);
     }
 
