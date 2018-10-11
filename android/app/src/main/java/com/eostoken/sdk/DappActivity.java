@@ -13,13 +13,7 @@ import android.content.ClipboardManager;
 
 import android.telephony.TelephonyManager;
 
-
-import org.devio.rn.splashscreen.SplashScreen;
-import com.facebook.react.ReactActivity;
-
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,8 +44,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings.LayoutAlgorithm;
-
-import android.content.ContentValues;
 
 import android.webkit.JavascriptInterface;
 import android.widget.EditText;
