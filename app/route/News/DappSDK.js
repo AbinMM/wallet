@@ -918,9 +918,8 @@ function identityFromPermissions(methodName,params, callback)
     var obj_param;
     try{
       obj_param = JSON.parse(params);
-      if (!obj_param || !obj_param.plugin || !obj_param.data || !obj_param.data.id || !obj_param.data.type
-          || !obj_param.data.payload || !obj_param.data.payload.origin) {
-        console.log('identityFromPermissions:missing params; "plugin", "data" is required ');
+      if (!obj_param || !obj_param.data || !obj_param.data.id || !obj_param.data.payload || !obj_param.data.payload.origin) {
+        console.log('identityFromPermissions:missing params; "data,id,payload" is required ');
         if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
         return;
       }
@@ -931,9 +930,6 @@ function identityFromPermissions(methodName,params, callback)
 
       var resp_obj = new Object();
       resp_obj.id = obj_param.data.id;
-      // resp_obj.type = obj_param.data.type;
-      // resp_obj.plugin = obj_param.plugin;
-      // resp_obj.payload = {origin:obj_param.data.payload.origin};
 
       // var resultobj = new Object();
       // resultobj.accounts = 
@@ -954,14 +950,8 @@ function getOrRequestIdentity(methodName,params, callback)
     var obj_param;
     try{
       obj_param = JSON.parse(params);
-      if (!obj_param || !obj_param.plugin || !obj_param.data || !obj_param.data.id || !obj_param.data.type
-          || !obj_param.data.payload) {
-        console.log('getOrRequestIdentity:missing params; "plugin", "data" is required ');
-        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
-        return;
-      }
-      if (!obj_param.data.payload.fields) {
-        console.log('getOrRequestIdentity:missing params; "fields" is required ');
+      if (!obj_param || !obj_param.data || !obj_param.data.id || !obj_param.data.payload || !obj_param.data.payload.fields) {
+        console.log('getOrRequestIdentity:missing params;  "data","fields" is required ');
         if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
         return;
       }
@@ -1070,8 +1060,6 @@ function getOrRequestIdentity(methodName,params, callback)
 
               var resp_obj = new Object();
               resp_obj.id = obj_param.data.id;
-              resp_obj.type = obj_param.data.type;
-              resp_obj.plugin = obj_param.plugin;
               resp_obj.result = resultobj;
 
               res.data = resp_obj;
@@ -1187,8 +1175,6 @@ function requestSignature(methodName,params,password,callback)
 
             var resp_obj = new Object();
             resp_obj.id = obj_param.data.id;
-            resp_obj.type = obj_param.data.type;
-            resp_obj.plugin = obj_param.plugin;
             resp_obj.result = resultobj;
 
             res.data = resp_obj;
