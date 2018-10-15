@@ -945,6 +945,7 @@ function identityFromPermissions(methodName,params, callback)
     }
     
 }
+
 function getOrRequestIdentity(methodName,params, callback)
 {
     var obj_param;
@@ -1081,16 +1082,43 @@ function getOrRequestIdentity(methodName,params, callback)
     }
     
 }
+function forgetIdentity(methodName,params, callback)
+{
+    var obj_param;
+    try{
+      obj_param = JSON.parse(params);
+      if (!obj_param || !obj_param.data || !obj_param.data.id || !obj_param.data.payload || !obj_param.data.payload.origin) {
+        console.log('forgetIdentity:missing params; "data,id,payload" is required ');
+        if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
+        return;
+      }
 
+      var res = new Object();
+      res.result = false;
+      res.data = {};
+
+      var resp_obj = new Object();
+      resp_obj.id = obj_param.data.id;
+      resp_obj.result = true;
+
+      res.data = resp_obj;
+      res.result = true;
+      res.msg = "success";
+      if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
+    }catch(error){
+      console.log("forgetIdentity error: %s",error.message);
+      if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
+    }
+    
+}
 function requestSignature(methodName,params,password,callback)
 {
   var obj_param;
   var actor_account;
   try{
     obj_param = JSON.parse(params);
-    if (!obj_param || !obj_param.plugin || !obj_param.data || !obj_param.data.id || !obj_param.data.type
-        || !obj_param.data.payload) {
-      console.log('requestSignature:missing params; "plugin", "data" is required ');
+    if (!obj_param || !obj_param.data || !obj_param.data.id || !obj_param.data.payload) {
+      console.log('requestSignature:missing params; "data" is required ');
       if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
       return;
     }
@@ -1191,6 +1219,63 @@ function requestSignature(methodName,params,password,callback)
   });
 
 }
+
+function getPublicKey(methodName,params, callback)
+{
+  var obj_param;
+  try{
+    obj_param = JSON.parse(params);
+    if (!obj_param || !obj_param.data || !obj_param.data.id || !obj_param.data.payload) {
+      console.log('getPublicKey:missing params; "data" is required ');
+      if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
+      return;
+    }
+    if (!obj_param.data.payload.blockchain) {
+      console.log('getPublicKey:missing params; "blockchain" is required ');
+      if (callback)  callbackToSDK(methodName,callback,getErrorMsg("输入参数错误"));
+      return;
+    }
+    if(obj_param.data.payload.blockchain != 'eos'){
+      console.log('getPublicKey:missing params; "blockchain" is not eos ');
+      if (callback)  callbackToSDK(methodName,callback,getErrorMsg("目前仅支持EOS"));
+      return;
+    }
+
+  }catch(error){
+    console.log("getPublicKey error: %s",error.message);
+    if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
+  }
+
+  var res = new Object();
+  res.result = false;
+  res.data = {};
+  res.msg = "";
+
+  g_props.dispatch({
+    type: 'wallet/getDefaultWallet', callback: (data) => {
+        try {
+          if (data != null && data.defaultWallet.account != null) {
+            var resp_obj = new Object();
+            resp_obj.id = obj_param.data.id;
+            resp_obj.result = data.defaultWallet.activePublic;
+
+            res.data = resp_obj;
+            res.result = true;
+            res.msg = "success";
+          } else {
+              res.result = false;
+              res.msg = "fail";
+          }
+          if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
+        } catch (error) {
+          console.log("getDefaultWallet error: %s",error.message);
+          if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
+        }
+    }
+  });
+
+}
+
 function callMessage(methodName, params,password,device_id, callback)
 {
    if(!methodName)
@@ -1259,12 +1344,22 @@ function callMessage(methodName, params,password,device_id, callback)
            break;
 
        case 'getOrRequestIdentity':
-           getOrRequestIdentity(methodName,params,callback);
+          getOrRequestIdentity(methodName,params,callback);
+          break;
+
+       case 'forgetIdentity':
+           forgetIdentity(methodName,params,callback);
            break;
+           
 
        case 'requestSignature':
            requestSignature(methodName,params,password,callback);
            break;
+
+       case 'getPublicKey':
+           getPublicKey(methodName,params,callback);
+           break;
+           
            
        default :
            console.log("methodName error");
