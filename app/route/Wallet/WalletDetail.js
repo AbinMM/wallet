@@ -516,8 +516,8 @@ class WalletDetail extends BaseComponent {
         </View> 
         :
         <Button onPress={this.deleteAccount.bind(this, c)} style={{flex: 1,}}>
-          <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
-            <Text style={[styles.delete,{color: UColor.btnColor}]}>删除账户</Text>
+          <View style={[styles.deleteout,{backgroundColor: UColor.mainColor}]}>
+            <Text style={[styles.delete,{color: UColor.tintColor}]}>删除账户</Text>
           </View>
         </Button>
       }
@@ -641,7 +641,7 @@ const styles = StyleSheet.create({
     height: ScreenUtil.autoheight(50), 
   },
   delete: { 
-    fontSize: ScreenUtil.setSpText(15), 
+    fontSize: ScreenUtil.setSpText(18), 
   },
   modalStyle: {
     flex: 1,
