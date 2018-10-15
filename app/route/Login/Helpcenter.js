@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableHighlight, ScrollView } from 'react-native';
 import UImage from "../../utils/Img";
 import UColor from '../../utils/Colors'
 import Item from '../../components/Item'
@@ -23,6 +23,10 @@ class Helpcenter extends BaseComponent {
       { name: "如何导入EOS钱包？", onPress: this.goPage.bind(this, "iw") },
       { name: "如何添加钱包？", onPress: this.goPage.bind(this, "atw") },
       { name: "如何转账？", onPress: this.goPage.bind(this, "ta") },
+      { name: "Bancor池简介", onPress: this.goPage.bind(this, "bp") },
+      { name: "免责声明", onPress: this.goPage.bind(this, "dm") },
+      { name: "什么是坐庄", onPress: this.goPage.bind(this, "zz") },
+      { name: "为什么撤庄只可以一次性全部撤走？", onPress: this.goPage.bind(this, "cz") },
     ];
   }
 
@@ -56,6 +60,14 @@ class Helpcenter extends BaseComponent {
       navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/TransferAccounts.html" });
     }else if (key == 'vote') {
       navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/VoteCourse.html" });
+    }else if (key == 'bp') {
+      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Bancorpool.html" });
+    }else if (key == 'dm') {
+      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Disclaimer.html" });
+    }else if (key == 'zz') {
+      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/TheVillage.html" });
+    }else if (key == 'cz') {
+      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/WithdrawingTheVillage.html" });
     }else if (key == 'pf'){
       navigate('ProblemFeedback', {});
     }else if (key == 'NoviceMustRead') {
@@ -76,41 +88,43 @@ class Helpcenter extends BaseComponent {
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
         <Header {...this.props} onPressLeft={true} title="帮助中心" />
-        <View style={[styles.touchableout,{paddingTop: ScreenUtil.autoheight(10),marginBottom: ScreenUtil.autoheight(1)}]}>
-          <TouchableHighlight onPress={this.goPage.bind(this, 'commonproblem')} style={styles.touchable} activeOpacity={0.5} underlayColor={UColor.secdColor}>
-            <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginRight: 0.5,}]} borderColor={UColor.arrow}>
-              <Image source={UImage.commonwt} style={styles.problem}/>
-              <Text style={[styles.fontColortext,{color:UColor.fontColor}]}>EOS常见问题？</Text>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={this.goPage.bind(this, 'NoviceMustRead')} style={styles.touchable} activeOpacity={0.5} underlayColor={UColor.secdColor}>
-            <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginLeft: 0.5,}]} borderColor={UColor.arrow}>
-              <Image source={UImage.mustread} style={styles.problem}/>
-              <Text style={[styles.fontColortext,{color:UColor.fontColor}]}>新手必读？</Text>
-            </View>
-          </TouchableHighlight>
-        </View>
-        <View style={styles.touchableout}>
-          <TouchableHighlight onPress={this.goPage.bind(this, 'Troubleshooting')}  style={styles.touchable} activeOpacity={0.5} underlayColor={UColor.secdColor}>
-            <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginRight: 0.5,}]} borderColor={UColor.arrow}>
-              <Image source={UImage.difficult} style={styles.problem}/>
-              <Text style={[styles.fontColortext,{color:UColor.fontColor}]}>疑难解答？</Text>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={this.goPage.bind(this, 'pf')} style={styles.touchable} activeOpacity={0.5} underlayColor={UColor.secdColor}>
-            <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginLeft: 0.5,}]} borderColor={UColor.tintColor}>
-              <Image source={UImage.feedback} style={styles.problem}/>
-              <Text style={[styles.tintColortext,{color:UColor.fontColor}]}>问题反馈</Text>
-            </View>
-          </TouchableHighlight>
-        </View>
-        <View>
-          {this._renderListItem()}
-        </View>
-        <View style={styles.logout}>
-            <Image source={UImage.bottom_log} style={styles.logimg}/>
-            <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
-        </View>
+        <ScrollView>
+          <View style={[styles.touchableout,{paddingTop: ScreenUtil.autoheight(10),marginBottom: ScreenUtil.autoheight(1)}]}>
+            <TouchableHighlight onPress={this.goPage.bind(this, 'commonproblem')} style={styles.touchable} activeOpacity={0.5} underlayColor={UColor.secdColor}>
+              <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginRight: 0.5,}]} borderColor={UColor.arrow}>
+                <Image source={UImage.commonwt} style={styles.problem}/>
+                <Text style={[styles.fontColortext,{color:UColor.fontColor}]}>EOS常见问题？</Text>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight onPress={this.goPage.bind(this, 'NoviceMustRead')} style={styles.touchable} activeOpacity={0.5} underlayColor={UColor.secdColor}>
+              <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginLeft: 0.5,}]} borderColor={UColor.arrow}>
+                <Image source={UImage.mustread} style={styles.problem}/>
+                <Text style={[styles.fontColortext,{color:UColor.fontColor}]}>新手必读？</Text>
+              </View>
+            </TouchableHighlight>
+          </View>
+          <View style={styles.touchableout}>
+            <TouchableHighlight onPress={this.goPage.bind(this, 'Troubleshooting')}  style={styles.touchable} activeOpacity={0.5} underlayColor={UColor.secdColor}>
+              <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginRight: 0.5,}]} borderColor={UColor.arrow}>
+                <Image source={UImage.difficult} style={styles.problem}/>
+                <Text style={[styles.fontColortext,{color:UColor.fontColor}]}>疑难解答？</Text>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight onPress={this.goPage.bind(this, 'pf')} style={styles.touchable} activeOpacity={0.5} underlayColor={UColor.secdColor}>
+              <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginLeft: 0.5,}]} borderColor={UColor.tintColor}>
+                <Image source={UImage.feedback} style={styles.problem}/>
+                <Text style={[styles.tintColortext,{color:UColor.fontColor}]}>问题反馈</Text>
+              </View>
+            </TouchableHighlight>
+          </View>
+          <View>
+            {this._renderListItem()}
+          </View>
+          <View style={styles.logout}>
+              <Image source={UImage.bottom_log} style={styles.logimg}/>
+              <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
+          </View>
+        </ScrollView>
     </View>
   }
 }
