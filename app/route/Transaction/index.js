@@ -285,10 +285,13 @@ class Transaction extends BaseComponent {
         }
         this.setState({isKLine:true, showMore: false,selectedSegment:opt});
         if(opt == "5分"){
+            this.setState({showMoreTitle:'更多'});
             this.fetchETKLine("5m",opt);
         }else if(opt == "15分"){
+            this.setState({showMoreTitle:'更多'});
             this.fetchETKLine("15m",opt);
         }else if(opt == "30分"){
+            this.setState({showMoreTitle:'更多'});
             this.fetchETKLine("30m",opt);
         }else if(opt == "1小时"){
             this.setState({showMoreTitle:opt});
@@ -307,9 +310,9 @@ class Transaction extends BaseComponent {
         }
     }
 
-    tradingpoolClick = (tradename) =>{
+    tradingpoolClick = () =>{
         const { navigate } = this.props.navigation;
-        navigate('Tradingpool', {tradename:tradename});
+        navigate('Tradingpool', {precisionNumber:this.state.precisionNumber, etinfo:this.props.etinfo, account: this.props.defaultWallet.account, selectcode: this.state.selectcode, tradename:this.state.tradename, contract:this.state.contractAccount,});
     }
   
     getDataLine(){
@@ -1126,7 +1129,7 @@ class Transaction extends BaseComponent {
             </Button>
             <Text style={[styles.headerTitleText,{color: UColor.btnColor}]}>{this.state.tradename + "/EOS"}</Text>
             <Button onPress={this._rightTopClick.bind(this,this.state.tradename)}>
-                <Image source={UImage.detailsofm} style={styles.imgBtn} />
+                <Image source={UImage.pool_explain} style={styles.imgBtn} />
             </Button>
         </View> 
     </ImageBackground>
@@ -1211,9 +1214,9 @@ class Transaction extends BaseComponent {
                 </Button> 
             </View>
             <View style={styles.timetabout}>
-                <Button onPress={this.tradingpoolClick.bind(this,this.state.tradename)}>
-                    <View style={styles.timeview} >
-                        <Text style={[styles.timeinitial,{color: UColor.fontColor}]}>交易池</Text>
+                <Button onPress={this.tradingpoolClick.bind(this)}>
+                    <View style={[styles.tradingview,{backgroundColor:UColor.tintColor}]} >
+                        <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>坐庄</Text>
                     </View>
                 </Button> 
             </View>
@@ -1658,7 +1661,7 @@ const styles = StyleSheet.create({
         position:'absolute', 
         left: 0,
         right: 0,
-        top: ScreenUtil.autoheight(50), 
+        top: ScreenUtil.autoheight(80), 
         alignItems: 'center',
         justifyContent: 'center',
         padding: ScreenUtil.autowidth(8),
@@ -1749,6 +1752,14 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         justifyContent: 'center', 
         width: ScreenUtil.autowidth(50), 
+        height: ScreenUtil.autoheight(25),
+    },
+    tradingview: {
+        borderRadius: 3, 
+        flexDirection:'row',
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        width: (ScreenWidth - ScreenUtil.autowidth(10))/5, 
         height: ScreenUtil.autoheight(25),
     },
     timeinitial: {

@@ -81,6 +81,9 @@ export const getETBigTradeLog = rootaddr + '/etExchangePrice/getBigTradeOrders/'
 export const getETTradeLogByAccount = rootaddr + '/etExchangePrice/getNewTradeOrdersByAccountName';
 export const getETServiceStatus = rootaddr + '/etExchangePrice/isOpenET';
 export const getLargeRankByCode = rootaddr + '/etExchangePrice/getLargeRankByCode/';
+export const getEosShareholdersInfo = rootaddr + '/etExchangePrice/getEosShareholdersInfo';
+export const getEosMarkets = rootaddr + '/etExchangePrice/getEosMarkets';
+
 export const getFreeMortgage = rootaddr + '/eosrpc/delegatebwRecord';
 export const getEosTransactionRecord = rootaddr + '/eosrpc/getEosTransactionRecord';
 export const getEosTableRows = rootaddr + '/eosrpc/getEosTableRows';
@@ -93,3 +96,6 @@ export const atcgetInfo = rootaddr + '/act/getInfo';
 export const getActivityStages = rootaddr + '/act/getActivityStages';
 export const getWinActivityStageUsers = rootaddr + '/act/getWinActivityStageUsers';
 export const getActivityStageUsers = rootaddr + '/act/getActivityStageUsers';
+
+export const getcreateWxOrder = rootaddr + '/eosAccountOrder/createWxOrder';
+export const getcheckBy = rootaddr + '/eosAccountOrder/checkByAccountNameAndOwnerPublicKey';

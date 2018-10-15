@@ -1,6 +1,6 @@
 import Request from '../utils/RequestUtil';
-import {getRamInfo, getRamPriceLine, getRamTradeLog, getRamBigTradeLog, getRamTradeLogByAccount, getBigRamRank,getLargeRankByCode,getcoinInfo,
-    getRamKLines,getETList,getETInfo,getETPriceLine,getETKLine,getETTradeLog,getETBigTradeLog,getETTradeLogByAccount,getETServiceStatus,getBalance} from '../utils/Api';
+import {getRamInfo, getRamPriceLine, getRamTradeLog, getRamBigTradeLog, getRamTradeLogByAccount, getBigRamRank,getLargeRankByCode,getcoinInfo,getEosShareholdersInfo,
+    getEosMarkets, getRamKLines,getETList,getETInfo,getETPriceLine,getETKLine,getETTradeLog,getETBigTradeLog,getETTradeLogByAccount,getETServiceStatus,getBalance} from '../utils/Api';
 import store from 'react-native-simple-store';
 import { EasyToast } from '../components/Toast';
 import UColor from '../utils/Colors'
@@ -439,6 +439,7 @@ export default {
         },
         //ET 取余额
         *getETBalance({payload, callback}, {call, put}){
+            //alert('getETBalance: '+JSON.stringify(payload));
             try{
                 const resp = yield call(Request.request, getBalance, 'post', payload);
                 // alert('getETBalance: '+JSON.stringify(resp));
@@ -460,6 +461,72 @@ export default {
                 //alert('getETBalance: '+JSON.stringify(resp.data));
                 if(resp.code=='0'){               
                     yield put({ type: 'updateCoinInfo', payload: { CoinInfo:resp.data } });
+                }else{
+                    EasyToast.show(resp.msg);
+                }
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
+        //
+        *getEosShareholdersInfo({payload, callback}, {call, put}){
+            try{
+                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api' + getEosShareholdersInfo, 'post', payload);
+                // let marketsdata = yield call(store.get, 'tradingdata');
+                // let shareholdersdata = {};
+                //alert('getEosShareholdersInfo: '+JSON.stringify(resp));
+                if(resp.code=='0'){  
+                    // shareholdersdata = {
+                    //     EosBalance: Math.floor(marketsdata.EosBalancepool*resp.data.rows[0].map_acc_info[0].info.eos_holding.replace("EOS", "")/resp.data.rows[0].total_quant.replace("EOS", "")*100)/100,
+                    //     TokenBalance: Math.floor(marketsdata.TokenBalancepool*resp.data.rows[0].map_acc_info[0].info.token_holding.replace("ETB", "")/resp.data.rows[0].total_quant.replace("EOS", "")*100)/100,
+                    //     EosProportion: Math.floor(resp.data.rows[0].map_acc_info[0].info.eos_holding.replace("EOS", "")/resp.data.rows[0].total_quant.replace("EOS", "")*100)/100,
+                    //     TokenProportion: Math.floor(resp.data.rows[0].map_acc_info[0].info.token_holding.replace("ETB", "")/resp.data.rows[0].total_quant.replace("EOS", "")*100)/100,
+                    //     ExistingTrading: resp.data.rows[0].map_acc_info.length, //现有坐庄人数
+                    //     largeRankByCode: resp.data.rows[0].map_acc_info,
+                    // }          
+                    // let wholedata = {
+                    //     marketsdata: marketsdata,
+                    //     shareholdersdata: shareholdersdata,
+
+                    // }
+                    // yield call(store.save, 'tradingdata', wholedata);
+                    //alert(JSON.stringify(yield call(store.get, 'tradingdata')))  ;
+                    // yield put({ type: 'updateETTradeLog', payload: { etTradeLog:resp.data } });
+                }else{
+                    EasyToast.show(resp.msg);
+                }
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
+        *getEosMarkets({payload, callback}, {call, put}){
+            try{
+                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api' + getEosMarkets, 'post', payload);
+                //let marketsdata = {};
+                //alert('getEosMarkets: '+JSON.stringify(resp));
+                if(resp.code=='0'){  
+                    //alert(payload.tradename);
+                    // marketsdata = {
+                    //     EosTotalfee: Math.floor(resp.data.rows[0].total_fee.eos_fee.replace("EOS", "")*100)/100 , //Eos总收益
+                    //     TokenTotalfee: Math.floor(resp.data.rows[0].total_fee.token_fee.replace("ETB", "")*100)/100 , //Token总收益
+                    //     //TokenTotalfee: Math.round(resp.data.rows[0].total_fee.token_fee.replace(payload.tradename, " ")*100)/100 + payload.tradename, //Token总收益
+                    //     EosYesterdayfee: Math.floor(resp.data.rows[0].yesterday_fee.eos_fee.replace("EOS", "")*100)/100 , //Eos昨日收益
+                    //     TokenYesterdayfee: Math.floor(resp.data.rows[0].yesterday_fee.token_fee.replace("ETB", " ")*100)/100 , //Token昨日收益
+                    //     //TokenYesterdayfee: Math.floor(resp.data.rows[0].yesterday_fee.token_fee.replace(payload.tradename, " ")*100)/100 + payload.tradename, //Token昨日收益
+                    //     EosBalancepool:  Math.floor(resp.data.rows[0].quote.balance.replace("EOS", "")*100)/100, //Eos资金池
+                    //     TokenBalancepool: Math.floor(resp.data.rows[0].base.balance.replace("ETB", "")*100)/100 , //Token资金池
+                    //     //TokenBalancepool: Math.floor(resp.data.rows[0].base.balance.replace(payload.tradename, " ")*100)/100 + payload.tradename, //Token资金池
+                    //     BuyRate: resp.data.rows[0].buy_fee_rate/10000 + '%', //买费率
+                    //     SellRate: resp.data.rows[0].sell_fee_rate/10000 + '%', //卖费率
+                    //     MaxTrading: resp.data.rows[0].addtoken_max_number, //最多坐庄人数
+                    //     ConvertBalance: resp.data.rows[0].base.balance.replace("ETB", "")/resp.data.rows[0].quote.balance.replace("EOS", ""), //Eos转换Token算法
+                    // }
+                    // yield call(store.save, 'tradingdata', marketsdata);
+                    // yield put({ type: 'updateETTradeLog', payload: { etTradeLog:resp.data } });
                 }else{
                     EasyToast.show(resp.msg);
                 }

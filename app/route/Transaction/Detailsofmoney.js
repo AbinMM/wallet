@@ -89,57 +89,61 @@ class Detailsofmoney extends BaseComponent {
         <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
             <Header {...this.props} onPressLeft={true} title={this.props.navigation.state.params.tradename} />   
             <ScrollView>
-                <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
-                    <Text style={[styles.nametext,{color:UColor.fontColor}]}>类型</Text>
-                    <Text style={[styles.nametext,{paddingLeft: ScreenUtil.autowidth(8),color:UColor.fontColor}]}>分布式底层平台</Text>
-                    <View style={{flexDirection: 'row',alignItems: 'flex-start',justifyContent: 'center'}}>
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>（推荐指数：</Text>
-                        {this.renderStars(this.state.coinInfodata.recommendLevel)}
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>）</Text>
+                <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
+                    <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>类型</Text>
+                        <Text style={[styles.recordtext,{color:UColor.arrow}]}>分布式底层平台</Text>
                     </View>
-                </View>
-                <View style={[styles.separateout,{backgroundColor: UColor.mainColor,}]}>
-                    <Text style={[styles.nametext,{color:UColor.arrow}]}>同比该行业产品</Text>
-                    <View style={{flex: 1, flexDirection: 'row',justifyContent: 'center'}}>
+                    <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>推荐指数</Text>
+                        <View style={{flex: 2, justifyContent: 'flex-start'}}>
+                            {this.renderStars(this.state.coinInfodata.recommendLevel)}
+                        </View>
+                    </View>
+                    <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>当前市值</Text>
+                        <Text style={[styles.recordtext,{color:UColor.arrow}]} numberOfLines={1}>{this.state.coinInfodata.marketValueDesc}</Text>
+                    </View>
+                    <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>发行总量</Text>
+                        <Text style={[styles.recordtext,{color:UColor.arrow}]} numberOfLines={1}>{this.state.coinInfodata.totalDesc}</Text>
+                    </View>
+                    <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
                         <Text style={[styles.nametext,{color:UColor.fontColor}]}>项目创新</Text>
-                        <Text style={[styles.nametext,{paddingLeft: ScreenUtil.autowidth(5),color:UColor.tintColor}]}>{this.state.coinInfodata.projectCreative}</Text>
+                        <Text style={[styles.recordtext,{color:UColor.arrow}]}>{this.state.coinInfodata.projectCreative}</Text>
                     </View>
-                    <View style={{flex: 1, flexDirection: 'row',justifyContent: 'center'}}>
+                    <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
                         <Text style={[styles.nametext,{color:UColor.fontColor}]}>投资价值</Text>
-                        <Text style={[styles.nametext,{paddingLeft: ScreenUtil.autowidth(5),color:UColor.tintColor}]}>{this.state.coinInfodata.investmentValue}</Text>
+                        <Text style={[styles.recordtext,{color:UColor.arrow}]}>{this.state.coinInfodata.investmentValue}</Text>
+                    </View>
+                    <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>官方网站</Text>
+                        <Text style={[styles.recordtext,{color:UColor.tintColor}]} numberOfLines={1} onPress={this.prot.bind(this, 'site')}>{this.state.coinInfodata.site}</Text>
+                    </View>
+                    <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>募资成本</Text>
+                        <Text style={[styles.recordtext,{color:UColor.arrow}]} numberOfLines={1}>{this.state.coinInfodata.crowdfundingPrice}</Text>
+                    </View>
+                    <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>募资时间</Text>
+                        <Text style={[styles.recordtext,{color:UColor.arrow}]} numberOfLines={1}>{this.state.coinInfodata.crowdfundingDate}</Text>
+                    </View>
+                    <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>白皮书</Text>
+                        <Text style={[styles.recordtext,{color:UColor.tintColor}]} numberOfLines={1} onPress={this.prot.bind(this, 'whitePaper')}>查看</Text>
+                    </View>
+                    <View style={[styles.outsource,{borderBottomColor: UColor.transport,}]}>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>区块信息</Text>
+                        <Text style={[styles.recordtext,{color:UColor.tintColor}]} numberOfLines={1} onPress={this.prot.bind(this, 'blockQuery')}>{this.state.coinInfodata.blockQueryUrl}</Text>
                     </View>
                 </View>
-                <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
-                    <Text style={[styles.nametext,{flex: 2,color:UColor.arrow}]}>市值</Text>
-                    <Text style={[styles.recordtext,{color:UColor.fontColor}]} numberOfLines={1}>{this.state.coinInfodata.marketValueDesc}</Text>
-                </View>
-                <View style={[styles.separateout,{backgroundColor: UColor.mainColor,}]}>
-                    <Text style={[styles.nametext,{flex: 2,color:UColor.arrow}]}>总量</Text>
-                    <Text style={[styles.recordtext,{color:UColor.fontColor}]} numberOfLines={1}>{this.state.coinInfodata.totalDesc}</Text>
-                </View>
-                <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
-                    <Text style={[styles.nametext,{flex: 2,color:UColor.arrow}]}>官方网站</Text>
-                    <Text style={[styles.recordtext,{color:UColor.tintColor}]} numberOfLines={1} onPress={this.prot.bind(this, 'site')}>{this.state.coinInfodata.site}</Text>
-                </View>
-                <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
-                    <Text style={[styles.nametext,{flex: 2,color:UColor.arrow}]}>募资成本</Text>
-                    <Text style={[styles.recordtext,{color:UColor.fontColor}]} numberOfLines={1}>{this.state.coinInfodata.crowdfundingPrice}</Text>
-                </View>
-                <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
-                    <Text style={[styles.nametext,{flex: 2,color:UColor.arrow}]}>募资时间</Text>
-                    <Text style={[styles.recordtext,{color:UColor.fontColor}]} numberOfLines={1}>{this.state.coinInfodata.crowdfundingDate}</Text>
-                </View>
-                <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
-                    <Text style={[styles.nametext,{flex: 2,color:UColor.arrow}]}>白皮书</Text>
-                    <Text style={[styles.recordtext,{color:UColor.tintColor}]} numberOfLines={1} onPress={this.prot.bind(this, 'whitePaper')}>查看</Text>
-                </View>
-                <View style={[styles.separateout,{backgroundColor: UColor.mainColor,}]}>
-                    <Text style={[styles.nametext,{flex: 2,color:UColor.arrow}]}>区块信息</Text>
-                    <Text style={[styles.recordtext,{color:UColor.tintColor}]} numberOfLines={1} onPress={this.prot.bind(this, 'blockQuery')}>{this.state.coinInfodata.blockQueryUrl}</Text>
-                </View>
-                <View style={[styles.synopsisout,{backgroundColor: UColor.mainColor}]}>
-                    <Text style={[styles.synopsis,{color:UColor.fontColor}]}>简介</Text>
+                <View style={[styles.synopsisout]}>
+                    <Text style={[styles.synopsis,{color:UColor.fontColor}]}>项目简介</Text>
                     <Text style={[styles.synopsiscenter,{color:UColor.arrow}]}>{this.state.coinInfodata.intr}</Text>
+                </View>
+                <View style={[styles.separateout]}>
+                    <Text style={[styles.separatetext,{color:UColor.tintColor}]}>勘误</Text>
+                    <Text style={[styles.separatetext,{color:UColor.tintColor}]}>负责声明</Text>
                 </View>
             </ScrollView>
         </View>
@@ -151,25 +155,25 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
     },
-    outsource:{
-        marginBottom: 1,
-        flexDirection: 'row',
-        paddingHorizontal: ScreenUtil.autowidth(15),
+    row: {
+        marginVertical: ScreenUtil.autowidth(20),
+        paddingVertical: ScreenUtil.autowidth(15), 
+        marginHorizontal: ScreenUtil.autowidth(15),
     },
-    separateout: {
+    outsource:{
         flexDirection: 'row',
-        marginBottom: ScreenUtil.autoheight(6),
+        borderBottomWidth: 1,
+        marginHorizontal: ScreenUtil.autowidth(5),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },
     nametext: {
-        textAlign: "left", 
-        fontSize: ScreenUtil.setSpText(12), 
+        flex: 1, 
+        fontSize: ScreenUtil.setSpText(14), 
         lineHeight: ScreenUtil.autoheight(32), 
     },
     recordtext: {
-        flex: 4, 
-        textAlign: "right", 
-        fontSize: ScreenUtil.setSpText(12), 
+        flex: 2, 
+        fontSize: ScreenUtil.setSpText(14), 
         lineHeight: ScreenUtil.autoheight(32),  
     },
     starsimg: {
@@ -182,16 +186,25 @@ const styles = StyleSheet.create({
         flex: 1, 
         flexDirection: 'column',
         marginBottom: ScreenUtil.autoheight(6),
-        paddingVertical:ScreenUtil.autowidth(10), 
-        paddingHorizontal:ScreenUtil.autowidth(15),
+        paddingHorizontal: ScreenUtil.autowidth(15),
     },
     synopsis: {
         fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autoheight(30),
+        lineHeight: ScreenUtil.autoheight(20),
     },
     synopsiscenter: {
         fontSize: ScreenUtil.setSpText(12), 
         lineHeight: ScreenUtil.autoheight(20),
+    },
+    separateout: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: ScreenUtil.autoheight(6),
+    },
+    separatetext: {
+        fontSize: ScreenUtil.setSpText(12),
+        paddingHorizontal: ScreenUtil.autowidth(5),
     },
 })
 export default Detailsofmoney;
