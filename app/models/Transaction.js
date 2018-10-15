@@ -473,7 +473,7 @@ export default {
         //
         *getEosShareholdersInfo({payload, callback}, {call, put}){
             try{
-                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api' + getEosShareholdersInfo, 'post', payload);
+                const resp = yield call(Request.request, getEosShareholdersInfo, 'post', payload);
                 // let marketsdata = yield call(store.get, 'tradingdata');
                 // let shareholdersdata = {};
                 //alert('getEosShareholdersInfo: '+JSON.stringify(resp));
@@ -505,7 +505,7 @@ export default {
         },
         *getEosMarkets({payload, callback}, {call, put}){
             try{
-                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api' + getEosMarkets, 'post', payload);
+                const resp = yield call(Request.request, getEosMarkets, 'post', payload);
                 //let marketsdata = {};
                 //alert('getEosMarkets: '+JSON.stringify(resp));
                 if(resp.code=='0'){  
