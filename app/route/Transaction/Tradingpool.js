@@ -91,6 +91,9 @@ class Tradingpool extends BaseComponent {
         // this.state.params.contract = 'etbexchange1',
         // this.state.params.tradename = 'ETB',
         // this.state.params.precisionNumber = '4',
+        // if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
+        //     return;
+        // }
         this.setState({logRefreshing: true});
         try {
             this.props.dispatch({ 
@@ -125,7 +128,7 @@ class Tradingpool extends BaseComponent {
                             let EosProportion = '0';
                             let TokenProportion = '0';
                             for(var i = 0; i < arr.length; i++){
-                                if(arr[i].account == this.state.params.account){
+                                if(arr[i].account == this.props.defaultWallet.account){
                                     EosInput = arr[i].info.eos_in;
                                     TokenInput = arr[i].info.token_in;
                                     EosBalance = this.state.EosBalancepool*arr[i].info.eos_holding.replace("EOS", "")/data.data.rows[0].total_quant.replace("EOS", "");

@@ -312,7 +312,7 @@ class Transaction extends BaseComponent {
 
     tradingpoolClick = () =>{
         const { navigate } = this.props.navigation;
-        navigate('Tradingpool', {precisionNumber:this.state.precisionNumber, etinfo:this.props.etinfo, account: this.props.defaultWallet.account, selectcode: this.state.selectcode, tradename:this.state.tradename, contract:this.state.contractAccount,});
+        navigate('Tradingpool', {precisionNumber:this.state.precisionNumber, etinfo:this.props.etinfo, selectcode: this.state.selectcode, tradename:this.state.tradename, contract:this.state.contractAccount,});
     }
   
     getDataLine(){

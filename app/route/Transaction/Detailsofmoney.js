@@ -75,12 +75,15 @@ class Detailsofmoney extends BaseComponent {
     }
 
     prot(key, data = {}) {
+        const { navigate } = this.props.navigation;
         if (key == 'site') {
             Linking.openURL(this.state.coinInfodata.site);
         }else if (key == 'whitePaper') {
             Linking.openURL(this.state.coinInfodata.whitePaperUrl);
         }else if (key == 'blockQuery') {
             Linking.openURL(this.state.coinInfodata.blockQueryUrl);
+        }else if (key == 'dm') {
+            navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Disclaimer.html" });
         }
     }
 
@@ -143,7 +146,7 @@ class Detailsofmoney extends BaseComponent {
                 </View>
                 <View style={[styles.separateout]}>
                     <Text style={[styles.separatetext,{color:UColor.tintColor}]}>勘误</Text>
-                    <Text style={[styles.separatetext,{color:UColor.tintColor}]}>负责声明</Text>
+                    <Text style={[styles.separatetext,{color:UColor.tintColor}]} onPress={this.prot.bind(this, "dm")} >免责声明</Text>
                 </View>
             </ScrollView>
         </View>
@@ -203,7 +206,7 @@ const styles = StyleSheet.create({
         marginTop: ScreenUtil.autoheight(6),
     },
     separatetext: {
-        fontSize: ScreenUtil.setSpText(12),
+        fontSize: ScreenUtil.setSpText(14),
         paddingHorizontal: ScreenUtil.autowidth(5),
     },
 })
