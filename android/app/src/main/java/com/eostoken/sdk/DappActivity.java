@@ -66,6 +66,14 @@ import de.greenrobot.event.EventBus;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.java_websocket.WebSocket;
+import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.WebSocketServer;
+
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.util.Collection;
+
 
 public class DappActivity extends Activity {
     
@@ -85,6 +93,12 @@ public class DappActivity extends Activity {
     private ProgressBar mProgressBar;
     private ProgressDialog myProgressDialog;
 
+    private boolean isWebSocket = false; 
+    private WebSocketService socketServer;
+
+    private Context gcontext;
+    private Activity mActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         boolean theme = false;
@@ -93,6 +107,9 @@ public class DappActivity extends Activity {
         Log.d("DappActivity","onCreate()");
         setContentView(R.layout.activity_main);
         
+        gcontext = getApplicationContext();
+        mActivity = this;
+
         Intent intent =  getIntent();
         if(intent != null){
             mUrl = intent.getStringExtra("url");
@@ -162,6 +179,15 @@ public class DappActivity extends Activity {
         if(mWebView != null ){
             mWebView.loadUrl(mUrl);
         }
+
+         //开始监听
+         try {
+            socketServer = new WebSocketService(50005);
+            socketServer.start();
+        } catch (Exception err) {
+            //TODO: handle exception
+            Toast.makeText(getApplicationContext(), err.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -202,6 +228,16 @@ public class DappActivity extends Activity {
             mWebView = null ;
         }
         EventBus.getDefault().unregister(this); //解除注册
+
+        //停止监听
+        try {
+            if(socketServer != null)
+            {
+                socketServer.stop();
+            }
+        } catch (Exception err) {
+            //TODO: handle exception
+        }
     }
 
     @Override
@@ -313,10 +349,16 @@ public class DappActivity extends Activity {
      {
         if(!callback.isEmpty() && mWebView != null)
         {
-            String str_res = resp;
-            String execJs = "javascript:TPJSBrigeClient.startFunction(" + callback + "('" + str_res + "'));";
-            // Toast.makeText(getApplicationContext(), methodName +"=" + execJs, Toast.LENGTH_SHORT).show();
-            mWebView.loadUrl(execJs);
+            if(!isWebSocket)
+            {
+                String str_res = resp;
+                String execJs = "javascript:TPJSBrigeClient.startFunction(" + callback + "('" + str_res + "'));";
+                // Toast.makeText(getApplicationContext(), methodName +"=" + execJs, Toast.LENGTH_SHORT).show();
+                mWebView.loadUrl(execJs);
+            }else{
+                // Toast.makeText(getApplicationContext(), "methodName:"+methodName+" callback:"+callback+" resp:" + resp, Toast.LENGTH_SHORT).show();
+                socketServer.retMessage(methodName, callback, resp);
+            }
         }
     }
 
@@ -325,8 +367,7 @@ public class DappActivity extends Activity {
      * @param rnCallback
      */
     public void onEventMainThread(RNCallback rnCallback) {
-        Log.d("DappActivity","onEventMainThread(rnCallback)");
-        String errmsg = "";
+        String data = "";
         boolean result = false;
 
         //SDK 有错误信息返回，则提示 错误信息
@@ -343,9 +384,13 @@ public class DappActivity extends Activity {
                             String msg =  obj.getString("msg");
                             if(!msg.isEmpty())
                             {
-                                errmsg = msg;
                                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                             }
+                        }
+                    }else{
+                        if(!obj.isNull("data"))
+                        {
+                            data =  obj.getString("data");
                         }
                     }   
                 }
@@ -370,13 +415,16 @@ public class DappActivity extends Activity {
             }
         }
         if(rnCallback != null){
-            //  if(errmsg.equals("密码错误"))
-            //  {  //不能兼容，eosAuthSign ,eosSign 调用本身密码错，应该要回调
-            //      //不回调给dapp;兼容EOSBET
-            //  }else
-            //  {
+            if(!isWebSocket)
+            {  
                 callbakcToWebview(rnCallback.methodName,rnCallback.callback,rnCallback.resp);
-            //  }
+            }else {
+                if(data.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "data is required", Toast.LENGTH_SHORT).show();
+                }else{
+                    callbakcToWebview(rnCallback.methodName,rnCallback.callback,data);
+                }
+            }
         }
     }
 
@@ -445,7 +493,7 @@ public class DappActivity extends Activity {
                     if(params.isEmpty() || callback.isEmpty()){
                         return;
                     }
-                    showEditDialog(methodName,params,callback,null);
+                    inputPwd(methodName,params,callback,null);
                     break;
                 
                 case "getDeviceId":
@@ -521,6 +569,12 @@ public class DappActivity extends Activity {
         } catch (Exception e) {
             //TODO: handle exception
         }
+        showTransfer_UI(methodName,params,callback,from,to,memo,amount,tokenName);
+    }
+
+    private void showTransfer_UI(final String methodName,final String params,final String callback,String from,String to,
+                                       String memo,String amount,String tokenName)
+    {
         final Dialog  mShareDialog = new Dialog(this, R.style.dialog_bottom_full);
         mShareDialog.setCanceledOnTouchOutside(true);
         mShareDialog.setCancelable(true);
@@ -545,7 +599,7 @@ public class DappActivity extends Activity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showEditDialog(methodName,params,callback,mShareDialog);
+                inputPwd(methodName,params,callback,mShareDialog);
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -555,22 +609,6 @@ public class DappActivity extends Activity {
                     mShareDialog.dismiss();
                 }
                 //兼容EOSBET ，按取消,不返回
-                // String resp = "";
-                // try {
-                //     JSONObject obj = new JSONObject();
-                //     obj.put("result", false);
-                //     obj.put("data", "{}");
-
-                //     resp = obj.toString();
-                // } catch (Exception e) {
-                //     resp = "";
-                // }
-                // final String tmp_resp = resp;
-                // new Handler().postDelayed(new Runnable(){  
-                //     public void run() { 
-                //         EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
-                //     } 
-                // }, 100); 
             }
         });
 
@@ -580,8 +618,7 @@ public class DappActivity extends Activity {
         window.setBackgroundDrawableResource(R.color.white);
         mShareDialog.show();
     }
-
-     //提示订单详情  action
+     //sdk提示订单详情  action
      private void showActions(final String methodName,final String params,final String callback)
      {
          // params 
@@ -657,89 +694,79 @@ public class DappActivity extends Activity {
             callbakcToWebview(methodName,callback,resp);
             return ;  
          }
-         final Dialog  mShareDialog = new Dialog(this, R.style.dialog_bottom_full);
-         mShareDialog.setCanceledOnTouchOutside(true);
-         mShareDialog.setCancelable(true);
- 
-         Window window = mShareDialog.getWindow();
-         window.setGravity(Gravity.BOTTOM);
-         window.setWindowAnimations(R.style.popupAnimation);
-         View view = View.inflate(this, R.layout.dialog_order_actions, null);
- 
-         final TextView tvFrom =  (TextView) view.findViewById(R.id.from_account);
-         final TextView tvMemo =  (TextView) view.findViewById(R.id.memo);
-         final TextView tvMemoTitle =  (TextView) view.findViewById(R.id.memo_title);
 
-         final LinearLayout ll_actionsdetail = (LinearLayout) view.findViewById(R.id.ll_actionsdetail);
-         final TextView tv_actionsdetail = (TextView) view.findViewById(R.id.tv_actionsdetail);
-         
-         tvFrom.setText(from);
-         tvMemo.setText(contract_account + " -> " + name);
- 
-         final Button btnConfirm = (Button) view.findViewById(R.id.confirm);
-         final TextView btnCancel = (TextView) view.findViewById(R.id.cancel);
-      
-          //显示 actions详情
-        final String str_memo = actions_detail;
-         tvMemoTitle.setOnClickListener(new View.OnClickListener() {
+        showActions_UI(methodName,str_params,callback,from,actions_detail,contract_account,name);
+     }
+    
+    private void showActions_UI(final String methodName,final String str_params,final String callback,String from, String actions_detail,String contract_account,String name)
+    {
+        final Dialog  mShareDialog = new Dialog(this, R.style.dialog_bottom_full);
+        mShareDialog.setCanceledOnTouchOutside(true);
+        mShareDialog.setCancelable(true);
+
+        Window window = mShareDialog.getWindow();
+        window.setGravity(Gravity.BOTTOM);
+        window.setWindowAnimations(R.style.popupAnimation);
+        View view = View.inflate(this, R.layout.dialog_order_actions, null);
+
+        final TextView tvFrom =  (TextView) view.findViewById(R.id.from_account);
+        final TextView tvMemo =  (TextView) view.findViewById(R.id.memo);
+        final TextView tvMemoTitle =  (TextView) view.findViewById(R.id.memo_title);
+
+        final LinearLayout ll_actionsdetail = (LinearLayout) view.findViewById(R.id.ll_actionsdetail);
+        final TextView tv_actionsdetail = (TextView) view.findViewById(R.id.tv_actionsdetail);
+        
+        tvFrom.setText(from);
+        tvMemo.setText(contract_account + " -> " + name);
+
+        final Button btnConfirm = (Button) view.findViewById(R.id.confirm);
+        final TextView btnCancel = (TextView) view.findViewById(R.id.cancel);
+     
+         //显示 actions详情
+       final String str_memo = actions_detail;
+        tvMemoTitle.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               if(ll_actionsdetail.getVisibility() == View.VISIBLE)
+               {
+                   ll_actionsdetail.setVisibility(View.GONE);
+               }
+               else{
+                   ll_actionsdetail.setVisibility(View.VISIBLE);
+                   tv_actionsdetail.setText(str_memo);
+               }
+           }
+       });
+
+       final String final_params = str_params;
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(ll_actionsdetail.getVisibility() == View.VISIBLE)
-                {
-                    ll_actionsdetail.setVisibility(View.GONE);
-                }
-                else{
-                    ll_actionsdetail.setVisibility(View.VISIBLE);
-                    tv_actionsdetail.setText(str_memo);
-                }
+               //  if (mShareDialog != null && mShareDialog.isShowing()) {
+               //      mShareDialog.dismiss();
+               //  }
+                inputPwd(methodName,final_params,callback,mShareDialog);
             }
         });
 
-        final String final_params = str_params;
-         btnConfirm.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                //  if (mShareDialog != null && mShareDialog.isShowing()) {
-                //      mShareDialog.dismiss();
-                //  }
-                 showEditDialog(methodName,final_params,callback,mShareDialog);
-             }
-         });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mShareDialog != null && mShareDialog.isShowing()) {
+                    mShareDialog.dismiss();
+                }
+                //兼容EOSBET ，按取消,不返回
+            }
+        });
 
-         btnCancel.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 if (mShareDialog != null && mShareDialog.isShowing()) {
-                     mShareDialog.dismiss();
-                 }
-                 //兼容EOSBET ，按取消,不返回
-                //  String resp = "";
-                //  try {
-                //      JSONObject obj = new JSONObject();
-                //      obj.put("result", false);
-                //      obj.put("data", "{}");
- 
-                //      resp = obj.toString();
-                //  } catch (Exception e) {
-                //      resp = "";
-                //  }
-                //  final String tmp_resp = resp;
-                //  new Handler().postDelayed(new Runnable(){  
-                //      public void run() { 
-                //          EventBus.getDefault().post(new RNCallback(methodName,callback,tmp_resp));
-                //      } 
-                //  }, 100); 
-             }
-         });
- 
-         window.setContentView(view);
-         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);//设置横向全屏
-         
-         window.setBackgroundDrawableResource(R.color.white);
-         mShareDialog.show();
-     }
+        window.setContentView(view);
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);//设置横向全屏
+        
+        window.setBackgroundDrawableResource(R.color.white);
+        mShareDialog.show();
+    }
 
-    private void showEditDialog(final String methodName,final String params,final String callback, final Dialog mShareDialog) {
+    private void inputPwd(final String methodName,final String params,final String callback, final Dialog mShareDialog) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         View view = View.inflate(this, R.layout.dialog_input_pwd, null);
@@ -953,5 +980,284 @@ public class DappActivity extends Activity {
          window.setBackgroundDrawableResource(R.color.white);
          mShareDialog.show();
      }
+
+
+
+
+     
+
+
+    /**
+     * WebSocketService
+    */
+
+     class WebSocketService extends WebSocketServer {
+    
+        public WebSocketService(int port) throws UnknownHostException {
+            super(new InetSocketAddress(port));
+        }
+    
+        public WebSocketService(InetSocketAddress address) {
+            super(address);
+        }
+    
+        @Override
+        public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
+    
+            String message = "40/scatter";
+            sendToClient(message);
+            // PromptError("WebSocketService onOpen:" + message);//debug
+            isWebSocket = true;
+        }
+    
+        @Override
+        public void onClose(WebSocket webSocket, int i, String s, boolean b) {
+            // String address = webSocket.getRemoteSocketAddress().getAddress().getHostAddress();
+            // String message = String.format("(%s) <退出房间！>", address);
+            // sendToClient(message);
+    
+            // PromptError("WebSocketService onClose");//debug
+            isWebSocket = false;
+        }
+    
+        @Override
+        public void onMessage(WebSocket webSocket, String msg) {
+            //服务端接收到消息
+            
+            String str_Prefix = "42/scatter,";
+            int index = msg.indexOf(str_Prefix);
+            if(index >= 0)
+            {
+                // PromptError("WebSocketService onMessage:" + msg);//debug
+                String str_data = msg.substring(index + str_Prefix.length(), msg.length());
+    
+                String event_pair = "pair";
+                String event_api = "api";
+                String event_rekey = "rekey";
+    
+                int pairIndex = str_data.indexOf(event_pair);
+                int apiIndex = str_data.indexOf(event_api);
+                int rekeyIndex = str_data.indexOf(event_rekey);
+                if(pairIndex >= 0)
+                {
+                    String str_json =  str_data.substring(pairIndex + event_pair.length() + 2, str_data.length()-1);
+                    // PromptError("WebSocketService pair str_json:" + str_json);//debug
+                    sendToWebview(event_pair,str_json);
+                }
+                else if(apiIndex >= 0)
+                {
+                    String str_json =  str_data.substring(apiIndex + event_api.length() + 2, str_data.length()-1);
+                    // PromptError("WebSocketService api str_json:" + str_json);//debug
+                    PromptError("WebSocketService api:" + msg);//debug
+                    if(!str_json.isEmpty())
+                    {
+                        processMessage(str_json);
+                    }
+                }
+                else if(rekeyIndex >= 0)
+                {
+                    String str_json =  str_data.substring(rekeyIndex + event_rekey.length() + 2, str_data.length()-1);
+                    // PromptError("WebSocketService pair str_json:" + str_json);//debug
+                    sendToWebview(event_rekey,str_json);
+                }
+            }
+        }
+        //返回消息给dapp
+        private void sendToWebview(final String event,final String retJson)
+        {
+           if(!event.isEmpty() && !retJson.isEmpty())
+           {
+                String retEvent = event;
+                if(event.equals("pair"))
+                {
+                   retEvent = "paired";
+                }
+    
+                StringBuffer sb = new StringBuffer();
+                sb.append("[");
+                sb.append("\"");
+                sb.append(retEvent);
+                sb.append("\"");
+                sb.append(",");
+                sb.append(retJson);
+                sb.append("]");
+            
+                sendToClient("42/scatter," + sb.toString());
+           }
+       }
+    
+        @Override
+        public void onError(WebSocket webSocket, Exception e) {
+            if (null != webSocket) {
+                webSocket.close(0);
+            }
+            e.printStackTrace();
+    
+            // PromptError("WebSocketService onError:" +  e.getMessage());//debug
+        }
+    
+        public void sendToClient(String message) {
+    
+            // PromptError("WebSocketService sendToClient:" + message);//debug
+              
+            // 获取所有连接的客户端
+            Collection<WebSocket> connections = connections();
+            //将消息发送给每一个客户端
+            for (WebSocket client : connections) {
+                client.send(message);
+            }
+        }
+    
+        @Override
+        public void onStart() {
+            System.out.println("Server started!");
+            setConnectionLostTimeout(0);
+            setConnectionLostTimeout(100);
+        }
+    
+        public void retMessage(String type,String callback,String resp)
+        {
+            sendToWebview("api",resp);
+        }
+    }
+
+  /**
+     *  scatter的API
+  */
+    private void processMessage(final String str_json) 
+    {
+        try {
+            JSONObject jsonobj = new JSONObject(str_json);
+
+            String plugin = jsonobj.getString("plugin");
+            String data = jsonobj.getString("data");
+
+            JSONObject data_obj = new JSONObject(data);
+            String type = data_obj.getString("type");
+            String id =  data_obj.getString("id");
+
+            switch(type){
+                case "requestSignature":
+                    requestSignature(type,id,str_json,data_obj);
+                    break;
+                
+                default:
+                    //其他情况，调RN处理
+                    sendEventToRN(type,str_json,"",id);
+                    break;
+            }
+        } catch (Exception error) {
+            //TODO: handle exception
+            PromptError(error.getMessage());
+        }
+    }
+
+    private void requestSignature(final String type,final String id,final String str_json,final JSONObject data_obj)
+    {
+        try {
+            String payload = data_obj.getString("payload");
+
+            JSONObject payload_data_obj = new JSONObject(payload);
+            String blockchain = payload_data_obj.getString("blockchain");
+            if(!blockchain.equals("eos"))
+            {
+                PromptError("blockchain目前仅支持eos");
+                return ;
+            }
+            String transaction = payload_data_obj.getString("transaction");
+            if(transaction.isEmpty())
+            {
+                PromptError("transaction 参数非法");
+            }
+            String from = "";
+            String actions_detail = "";
+            String contract_account = "";
+            String name = "";
+            String data = "";
+
+            JSONObject transaction_obj = new JSONObject(transaction);
+            //actions 解析
+            JSONArray actions = transaction_obj.getJSONArray("actions"); //数组
+            for(int i = 0 ;i < actions.length();i++)
+            {
+               String strtemp = actions.getString(i);
+               actions_detail += (" " + strtemp);
+
+               JSONObject action_element = new JSONObject(strtemp);
+               contract_account = action_element.getString("account");//合约名称
+               name = action_element.getString("name"); //合约方法
+               data = action_element.getString("data"); 
+               //未传 account,则从actions->authorization
+               if(from.isEmpty())
+               {
+                   JSONArray  array_authorization = action_element.getJSONArray("authorization"); //数组
+                   for(int j = 0;j < array_authorization.length();j++)
+                   {
+                       String authorization_element = array_authorization.getString(i); 
+                       JSONObject obj_authorization_element = new JSONObject(authorization_element);
+                       if(!obj_authorization_element.isNull("actor"))
+                       {
+                           String actor = obj_authorization_element.getString("actor");//取actor
+                           String permission = "";
+                           if(!obj_authorization_element.isNull("permission"))
+                           {
+                             permission = obj_authorization_element.getString("permission");
+                           }
+
+                           if(permission.equals("active") || permission.equals("owner"))
+                           {
+                               from = actor;
+                            //    transaction_obj.put("account", from); // params 放入account
+                               break;
+                           }
+                       }
+                   }
+               }
+           } 
+
+            if(actions_detail.isEmpty() || from.isEmpty()){
+                PromptError("输入参数无效");
+                return ;  
+            }
+
+            final String final_from = from;
+            if(name.equals("transfer"))
+            {
+                //解析data 字符串
+                String to = "chengengping";
+                String memo = "Scatter测试";
+                String amount = "0.001";
+                final String final_to = to;  
+                final String final_memo = memo;
+                final String final_amount = amount;
+                ((Activity)mActivity).runOnUiThread(new Runnable() {
+                    public void run() {
+                        showTransfer_UI(type,str_json,id,final_from,final_to,final_memo,final_amount,"eos");
+                    }
+                });
+            }else{
+                final String final_actions_detail = actions_detail;
+                final String final_contract_account = contract_account;
+                final String final_name = name;
+                ((Activity)mActivity).runOnUiThread(new Runnable() {
+                    public void run() {
+                        showActions_UI(type,str_json,id,final_from,final_actions_detail,final_contract_account,final_name);
+                    }
+                });
+            }
+        } catch (Exception error) {
+            PromptError(error.getMessage());
+        }
+    }
+    
+    public void PromptError(String info)
+    {
+        ((Activity)mActivity).runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(gcontext, info, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 }
