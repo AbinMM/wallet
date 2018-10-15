@@ -1104,7 +1104,9 @@ function requestSignature(methodName,params,password,callback)
       if (callback)  callbackToSDK(methodName,callback,getErrorMsg("目前仅支持EOS"));
       return;
     }
-    actor_account = obj_param.data.payload.transaction.actions[0].authorization.actor;
+    actor_account = obj_param.data.payload.transaction.actions[0].authorization[0].actor;
+
+    // obj_param.data.payload.messages = "";//???
   }catch(error){
     console.log("requestSignature error: %s",error.message);
     if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
@@ -1114,8 +1116,6 @@ function requestSignature(methodName,params,password,callback)
   res.result = false;
   res.data = {};
   res.msg = "";
-
-  var resultobj = new Object();
 
   new Promise(function(resolve, reject){
     g_props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{ 
@@ -1156,26 +1156,17 @@ function requestSignature(methodName,params,password,callback)
   })
   .then((rdata)=>{
     var plaintext_privateKey = rdata;
-    var appid = obj_param.data.payload.transaction;// 待定????
+    var appid = obj_param.data.payload.buf;
     Eos.sign(appid, plaintext_privateKey, (r) => {
         try {
           if(r && r.isSuccess)
           {
+            
             res.result = true;
-
-            // res.data.deviceId = device_id;  
-            // res.data.appid = obj_param.appid;
-
-            // let  now = moment();
-            // res.data.timestamp = now.valueOf();
-            // res.data.sign = r.data;
-            // res.msg = "success";
-
-            resultobj.data = r.data;
-
             var resp_obj = new Object();
             resp_obj.id = obj_param.data.id;
-            resp_obj.result = resultobj;
+
+            resp_obj.result = r.data;
 
             res.data = resp_obj;
             res.msg = "success";

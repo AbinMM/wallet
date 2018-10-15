@@ -419,11 +419,7 @@ public class DappActivity extends Activity {
             {  
                 callbakcToWebview(rnCallback.methodName,rnCallback.callback,rnCallback.resp);
             }else {
-                if(data.isEmpty()){
-                    Toast.makeText(getApplicationContext(), "data is required", Toast.LENGTH_SHORT).show();
-                }else{
-                    callbakcToWebview(rnCallback.methodName,rnCallback.callback,data);
-                }
+                callbakcToWebview(rnCallback.methodName,rnCallback.callback,data);
             }
         }
     }
@@ -1110,7 +1106,6 @@ public class DappActivity extends Activity {
     
         @Override
         public void onStart() {
-            System.out.println("Server started!");
             setConnectionLostTimeout(0);
             setConnectionLostTimeout(100);
         }
@@ -1129,7 +1124,6 @@ public class DappActivity extends Activity {
         try {
             JSONObject jsonobj = new JSONObject(str_json);
 
-            String plugin = jsonobj.getString("plugin");
             String data = jsonobj.getString("data");
 
             JSONObject data_obj = new JSONObject(data);
