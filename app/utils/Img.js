@@ -142,10 +142,11 @@ export default {
   // votea_bj:require('../img/votea_bj.png'),
   // votec_bj:require('../img/votec_bj.png'),
   // warning:require('../img/warning.png'),
-
+  
   //公用图
   a:require('../img/a.png'),
   account_scan: require('../img/account_scan.png'),
+  account_jh: require('../img/accountnumber_jh.png'),
   activation_head: require('../img/activation_head.png'),
   activation_wallet: require('../img/activation_wallet.png'),
   Agent: require('../img/Agent.png'),
@@ -159,6 +160,7 @@ export default {
   bottom_log:require('../img/bottom_log.png'),
   c:require('../img/c.png'),
   Calculation:require('../img/Calculation.png'),
+  character_jh:require('../img/character_jh.png'),
   copy:require('../img/copy.png'),
   commonwt: require('../img/commonwt.png'),
   Currency_my: require('../img/Currency_my.png'),
@@ -171,6 +173,7 @@ export default {
   down_h:require('../img/down_h.png'),
   eos: require('../img/eos.png'),
   eospark: require('../img/eospark.png'),
+  etlogo: require('../img/etlogo.png'),
   fav_h: require('../img/fav_h.png'),
   feedback: require('../img/feedback.png'),
   freemortgage_bg: require('../img/freemortgage_bg.png'),
@@ -209,6 +212,7 @@ export default {
   share_time:require('../img/share_time.png'),
   share_wx:require('../img/share_wx.png'),
   share:require('../img/share.png'),
+  share_jh: require('../img/share_jh.png'), 
   sharebg:require('../img/sharebg.png'),
   shift_to:require('../img/shift_to.png'),
   small_bell_h:require('../img/small_bell_h.png'),  

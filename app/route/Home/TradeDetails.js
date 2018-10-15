@@ -186,7 +186,8 @@ class TradeDetails extends BaseComponent {
           
             <View style={styles.codeout}>
               <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
-                <QRCode size={ScreenUtil.setSpText(90)} value={UrlHead + this.state.trade.transactionId } />
+                <QRCode size={ScreenUtil.setSpText(90)}  value={UrlHead + this.state.trade.transactionId } 
+                  logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(20)} logoBorderRadius={5}/>
               </View>
               <Button onPress={this.copy.bind(this,this.state.trade)}>
                 <View style={{backgroundColor: UColor.fontrice,borderRadius: 25,}}>

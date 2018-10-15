@@ -107,7 +107,8 @@ class TurnIn extends BaseComponent {
               <Text style={[styles.accountText,{color: UColor.arrow}]}>账户：{this.props.defaultWallet == null ? "" : this.props.defaultWallet.account}</Text>
               <View style={styles.codeout}>
                 <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
-                  <QRCode size={170} style={{ width: 170 }} value={'eos:' + this.props.defaultWallet.account + '?amount=' + ((this.state.amount == "")?'0':this.state.amount) + '&token=EOS'}/>
+                  <QRCode size={170} style={{ width: 170 }} logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(35)} logoBorderRadius={5}
+                  value={'eos:' + this.props.defaultWallet.account + '?amount=' + ((this.state.amount == "")?'0':this.state.amount) + '&token=EOS'}/>
                 </View>
               </View>
               <Text style={[styles.prompttext,{color: UColor.fontColor}]}>扫一扫，向我转账</Text>

@@ -136,7 +136,7 @@ class TurnInAsset extends BaseComponent {
               <Text style={[styles.accountText,{color: UColor.arrow}]}> 账户：{this.props.defaultWallet == null ? "" : this.props.defaultWallet.account}</Text>
               <View style={styles.codeout}>
                 <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
-                  <QRCode size={170} style={{ width: 170 }} value = {this.getQRCode()}/>
+                  <QRCode size={170} style={{ width: 170 }} value = {this.getQRCode()} logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(35)} logoBorderRadius={5}/>
                 </View>
               </View>
               <Text style={[styles.prompttext,{color: UColor.fontColor}]}>扫一扫，向我转账</Text>

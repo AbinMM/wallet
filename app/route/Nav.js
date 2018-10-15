@@ -965,7 +965,8 @@ class Route extends React.Component {
                         <Text style={{ color: UColor.btnColor, fontSize: ScreenUtil.setSpText(13), textAlign: 'center', padding: 5, backgroundColor: UColor.blueDeep, margin: 15,}}>更多精彩 长按识别二维码</Text>
                       </View>
                       <View style={{ width: (ScreenWidth - 40) * 0.319, justifyContent: 'center', alignSelf: 'center' }}>
-                        <QRCode size={(ScreenWidth - 40) * 0.319 - 20} value={Constants.rootaddr+redirect + (Constants.loginUser ? Constants.loginUser.uid : "nuid") + "/" + (Constants.token ? Constants.token.substr(0, 4) : "ntk") + "/" + this.state.news.id} />
+                        <QRCode size={(ScreenWidth - 40) * 0.319 - 20} logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(20)} logoBorderRadius={5}
+                        value={Constants.rootaddr+redirect + (Constants.loginUser ? Constants.loginUser.uid : "nuid") + "/" + (Constants.token ? Constants.token.substr(0, 4) : "ntk") + "/" + this.state.news.id} />
                       </View>
                     </View>
                   </View>
@@ -1034,9 +1035,8 @@ class Route extends React.Component {
                       <View style={{ padding: 10 }}>
                         <Image source={UImage.Invitation_vote} resizeMode="cover" style={{ width: '100%', height:ScreenWidth-70 }} />
                         <View style={{ width: (ScreenWidth - 40) * 0.319, justifyContent: 'center', alignSelf: 'center',paddingBottom:20, }}>
-                          <QRCode size={100} style={{ width: 100, }} value={'http://eostoken.im/'} />
+                          <QRCode size={100} style={{ width: 100, }} value={'http://eostoken.im/'} logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(20)} logoBorderRadius={5}/>
                         </View>
-
                       </View>
                       <View style={{ backgroundColor: UColor.btnColor, width: '100%', paddingVertical: 5, flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' }}>
                         <View style={{ width: ScreenWidth - 40, justifyContent: 'center', alignSelf: 'center' }}>
@@ -1111,7 +1111,8 @@ class Route extends React.Component {
                           <Text style={{fontSize: 22, color: UColor.baseline,}}>{this.state.turninsymbol}</Text>
                         </View>
                         <View style={{ justifyContent: 'center', alignSelf: 'center', paddingHorizontal: 30, paddingVertical:20, backgroundColor:UColor.btnColor }}>
-                          <QRCode size={150}  value={this.state.turninsymbol.toLowerCase() +':' + this.state.turnintoaccount + '?amount=' + ((this.state.turninamount == "")?'0':this.state.turninamount) + '&token=' + this.state.turninsymbol.toUpperCase()}/>
+                          <QRCode size={150}  logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(30)} logoBorderRadius={5}
+                          value={this.state.turninsymbol.toLowerCase() +':' + this.state.turnintoaccount + '?amount=' + ((this.state.turninamount == "")?'0':this.state.turninamount) + '&token=' + this.state.turninsymbol.toUpperCase()}/>
                           <Text style={{ color: UColor.startup, fontSize: 19, textAlign: 'center', marginTop: 20 }}>扫码向他支付</Text>
                         </View>
                         <Text style={{ color:UColor.baseline, fontSize: 16, textAlign: 'left', marginTop: 5, paddingHorizontal: 30, paddingTop: 10, paddingBottom: 30,}}>收款账号: <Text style={{color: UColor.btnColor, fontSize: 15, }}>{this.state.turnintoaccount}</Text></Text>
@@ -1177,7 +1178,8 @@ class Route extends React.Component {
                       <View style={{ }}>
                         <Image source={UImage.activation_head} resizeMode="stretch" style={{ width: ScreenWidth - 40, height: (ScreenWidth - 40)*0.234}} />
                         <View style={{ justifyContent: 'center', alignSelf: 'center',paddingVertical:20, }}>
-                          <QRCode size={120}  value={'{"action":"' + 'activeWallet'  + '","account":"' + this.state.turnintoaccount + '","owner":"' + this.state.turninamount + '","active":"' + this.state.turninsymbol  + '","cpu":"' + this.state.cpu  + '","net":"' + this.state.net  + '","ram":"' + this.state.ram + '"}'}/>
+                          <QRCode size={120}  logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(26)} logoBorderRadius={5}
+                          value={'{"action":"' + 'activeWallet'  + '","account":"' + this.state.turnintoaccount + '","owner":"' + this.state.turninamount + '","active":"' + this.state.turninsymbol  + '","cpu":"' + this.state.cpu  + '","net":"' + this.state.net  + '","ram":"' + this.state.ram + '"}'}/>
                         </View>
                         <Text style={{ color: UColor.arrow, fontSize: 15, textAlign: 'center',}}>使用ET钱包扫一扫支付EOS激活此账号</Text>
                         <View style={{paddingVertical: 10, paddingHorizontal: 20,}}>
@@ -1284,7 +1286,8 @@ class Route extends React.Component {
                             <Text style={{ color: UColor.btnColor, fontSize: 12, textAlign: 'center',width: '100%', paddingVertical: 5, backgroundColor: UColor.blueDeep,}}>EosToken技术提供</Text>
                           </View>
                           <View style={{justifyContent: 'center', alignSelf: 'center', paddingLeft: 10, }}>
-                            <QRCode size={96} value={"https://eosmonitor.io/account/" + this.state.turnintoaccount} />
+                            <QRCode size={96} logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(26)} logoBorderRadius={5}
+                            value={"https://eosmonitor.io/account/" + this.state.turnintoaccount} logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(29)} logoBorderRadius={5}/>
                           </View>
                         </View>
                       </View>

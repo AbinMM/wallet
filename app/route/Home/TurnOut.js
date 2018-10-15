@@ -435,7 +435,7 @@ class TurnOut extends BaseComponent {
                                     </View>
                                 </Button>
                             </View>
-                    </View>
+                        </View>
                     </TouchableOpacity>
                 </Modal>
             </View>
