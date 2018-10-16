@@ -1,8 +1,10 @@
 
 export default function RenderScatter(props) {
-        let account = {name:props.defaultWallet.account,
+     let account = {name:props.defaultWallet.account,
                publicKey:props.defaultWallet.activePublic,
                perm_name:"active" };
+        // var account = {name:"eosbille1234",publicKey:"EOS6tqnNR3AiUVFdX29rYFy6mEasi7whzVQ5wUTe2kcGgQhmY6gum",
+        //        perm_name:"active" };
       if(account){
         return `
         iden = {
@@ -77,7 +79,6 @@ export default function RenderScatter(props) {
                             });
                         })
                     }
-
                 }
             }
         };
