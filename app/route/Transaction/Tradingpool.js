@@ -739,7 +739,7 @@ class Tradingpool extends BaseComponent {
                             <View style={[styles.inputout]}>
                                 <Text style={[styles.unittext,{color: UColor.blackColor}]}>{this.state.params.tradename}数量:</Text>
                                 <View style={[styles.inpout,{borderBottomColor: UColor.blackColor,}]}>
-                                    <Text style={[styles.unittext,{color: UColor.blackColor,}]}>{(this.state.eosToToken == null || this.state.eosToToken == '') ? '0' : this.state.eosToToken}</Text>
+                                    <Text style={[styles.unittext,{color: UColor.arrow,}]}>{(this.state.eosToToken == null || this.state.eosToToken == '') ? '0' : this.state.eosToToken}</Text>
                                 </View>
                             </View>
                             <View style={styles.agreementout}>

@@ -1532,11 +1532,11 @@ class Transaction extends BaseComponent {
                         onChangeText={(buyETAmount) => this.setState({ buyETAmount: this.chkBuyEosQuantity(buyETAmount), 
                             eosToET: this.eosToET(buyETAmount, this.props.etinfo?this.props.etinfo.price:''), error: false,errortext: '' })}
                         />
-                        <Text style={[styles.unittext,{color: UColor.btnColor}]}>EOS</Text>
+                        <Text style={[styles.unittext,{color: UColor.fontColor}]}>EOS</Text>
                     </View>
                     <View style={[styles.inputout,{backgroundColor: UColor.mainColor}]}>
                         <Text style={[styles.conversion,{color: UColor.arrow}]}>≈{this.precisionTransfer(this.state.eosToET,8)}</Text>
-                        <Text style={[styles.unittext,{color: UColor.btnColor}]}>{this.state.tradename}</Text>
+                        <Text style={[styles.unittext,{color: UColor.fontColor}]}>{this.state.tradename}</Text>
                     </View>
                     <View style={styles.inptoutsource}>
                         <View style={styles.outsource}>
@@ -1563,8 +1563,10 @@ class Transaction extends BaseComponent {
                 :
                 <View>
                     <View style={styles.greeninptout}>
-                        <Text style={[styles.redText,{color: UColor.showy}]}>单价: {this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price,8) : '0.0000'} EOS</Text>
-                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>可卖: {(this.state.myETAvailable == null || this.state.myETAvailable == '') ? '0' : this.precisionTransfer(this.state.myETAvailable,8)} {this.state.tradename}</Text>
+                        <View style={{flex: 1, flexDirection: 'column',alignItems: 'flex-start',}}>
+                            <Text style={[styles.redText,{color: UColor.showy}]}>单价: {this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price,8) : '0.0000'} EOS</Text>
+                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>可卖: {(this.state.myETAvailable == null || this.state.myETAvailable == '') ? '0' : this.precisionTransfer(this.state.myETAvailable,8)} {this.state.tradename}</Text>
+                        </View>
                         {this.state.error&&<Text style={[styles.errortext,{color: UColor.showy}]}>{this.state.errortext}</Text>}
                     </View>
                   <View style={[styles.inputout,{backgroundColor: UColor.mainColor}]}>
@@ -1573,11 +1575,11 @@ class Transaction extends BaseComponent {
                       placeholder="输入出售数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
                       onChangeText={(sellET) => this.setState({ sellET: this.chkInputSellET(sellET), etToEos: this.etToEos(sellET, this.props.etinfo?this.props.etinfo.price:'')})}
                       />
-                      <Text style={[styles.unittext,{color: UColor.btnColor}]}>{this.state.tradename}</Text>
+                      <Text style={[styles.unittext,{color: UColor.fontColor}]}>{this.state.tradename}</Text>
                   </View>
                   <View style={[styles.inputout,{backgroundColor: UColor.mainColor}]}>
                       <Text style={[styles.conversion,{color: UColor.arrow}]}>≈{(this.state.etToEos == null || this.state.etToEos == '') ? '0' : this.state.etToEos}</Text>
-                      <Text style={[styles.unittext,{color: UColor.btnColor}]}>EOS</Text>
+                      <Text style={[styles.unittext,{color: UColor.fontColor}]}>EOS</Text>
                   </View>
                   <View style={styles.inptoutsource}>
                         <View style={styles.outsource}>
