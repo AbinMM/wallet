@@ -50,6 +50,20 @@ export default function RenderScatter(props) {
                             });
                         })
                     },
+                    transfer:function(from,to,amount,memo){
+                        alert("from:" + from + " to:" + to + " amount:" + amount + " memo:" + memo);
+                        return new Promise((resolve, reject) => {
+                            var key = new Date().getTime();
+                            window.postMessage(JSON.stringify({key,scatter:"transfer",params:{from:from,to:to,amount:amount,memo:memo}}));
+                            document.addEventListener("message",function(msg){
+                                document.removeEventListener("message",this);
+                                var obj = eval("(" + msg.data + ")");
+                                if(obj.scatter==="transfer" && obj.key===key){ 
+                                    resolve(obj.data);
+                                }
+                            });
+                        })
+                    },
                     transaction:function(actions){
                         alert("a");
                         return new Promise((resolve, reject) => {
@@ -64,6 +78,7 @@ export default function RenderScatter(props) {
                             });
                         })
                     }
+
                 }
             }
         };
