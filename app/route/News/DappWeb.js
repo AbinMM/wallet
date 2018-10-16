@@ -332,7 +332,7 @@ export default class DappWeb extends Component {
                 </TouchableOpacity>
             </Modal>
         </View>
-        <Animated.View style={[styles.progress, {backgroundColor: UColor.tintColor, width: this.state.progress }]}></Animated.View>
+        <Animated.View style={[styles.progress, {backgroundColor: UColor.fallColor, width: this.state.progress }]}></Animated.View>
       </View>
     )
   }
@@ -356,9 +356,9 @@ const styles = StyleSheet.create({
     },
     progress: {
       position: "absolute",
-      height: 2,
+      height: 5,
       left: 0,
-      top: 0,
+      top: 64,
       overflow: "hidden",
     },
     infoPage: {
