@@ -39,6 +39,7 @@ import ProblemFeedback from './Login/ProblemFeedback'
 import SignIn from './Login/SignIn'
 
 import News from './News'
+import DappWeb from './News/DappWeb'
 import Dappsearch from './News/Dappsearch'
 import OCTactivity from './News/OCTactivity'
 
@@ -270,6 +271,9 @@ const Nav = StackNavigator(
     },
     Dappsearch: {
       screen: Dappsearch
+    },
+    DappWeb: {
+      screen: DappWeb
     },
     OCTactivity: {
       screen: OCTactivity
