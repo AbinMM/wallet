@@ -367,7 +367,7 @@ class Tradingpool extends BaseComponent {
                         if(r.isSuccess){
                             this.getAccountTrading();
                             this.getAccountInfo();
-                            EasyToast.show("做庄成功");
+                            EasyToast.show("坐庄成功");
                         }else{
                             if(r.data){
                                 if(r.data.code){
