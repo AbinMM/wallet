@@ -110,7 +110,7 @@ class Tradingpool extends BaseComponent {
                         TokenBalancepool: Math.floor(data.data.rows[0].base.balance.replace(this.state.params.tradename, "")*100)/100 , //Token资金池
                         BuyRate: data.data.rows[0].buy_fee_rate/10000, //买费率
                         SellRate: data.data.rows[0].sell_fee_rate/10000, //卖费率
-                        MaxTrading: data.data.rows[0].addtoken_max_number, //最多坐庄人数
+                        MaxTrading: data.data.rows[0].banker_max_number, //最多坐庄人数
                         ConvertBalance: data.data.rows[0].base.balance.replace(this.state.params.tradename, "")/data.data.rows[0].quote.balance.replace("EOS", ""), //Eos转换Token算法
                     })
                 }else{
