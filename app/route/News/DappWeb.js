@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import {SafeAreaView,InteractionManager,Text,View,WebView,Animated,Platform,Dimensions,StyleSheet} from 'react-native'
-// import {Colors,WalletUtils} from '../utils'
+import {InteractionManager,Text,View,WebView,Animated,Platform,Dimensions,StyleSheet} from 'react-native'
 import UColor from '../../utils/Colors'
 
 import Header from '../../components/Header'
@@ -8,12 +7,7 @@ import RenderScatter from './RenderScatter';
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 import { connect } from 'react-redux';
-// import { Toast } from '../comps/Toast';
-// import {DappTx} from '../comps';
-// import { Auth } from '../comps/Auth';
 // import { Eos } from '../comps/eosjs';
-// import { Loading } from '../comps/Loading';
-// import Globle from '../utils/Globle';
 // import { WalletList } from '../comps/WalletList';
 
 @connect(({ wallet }) => ({ }))
@@ -25,17 +19,20 @@ export default class DappWeb extends Component {
     }
   }
 
-  constructor(props){
-      super(props)
-      this.state = {
-        progress: new Animated.Value(10),
-        error: false
-      }
-      this.props.navigation.setParams({onPress:this.share});
-      let noop = () => {}
-      this.__onLoad = this.props.onLoad || noop
-      this.__onLoadStart = this.props.onLoadStart || noop
-      this.__onError = this.props.onError || noop
+  constructor(props) {
+    super(props)
+    this.props.navigation.setParams({ onPress: this.share });
+    this.state = {
+      progress: new Animated.Value(10),
+      error: false,
+      news: this.props.navigation.state.params.news,
+      transformY: new Animated.Value(200),
+      transformY1: new Animated.Value(-1000)
+    }
+    let noop = () => { }
+    this.__onLoad = this.props.onLoad || noop
+    this.__onLoadStart = this.props.onLoadStart || noop
+    this.__onError = this.props.onError || noop
   }
 
   _onLoad() {
