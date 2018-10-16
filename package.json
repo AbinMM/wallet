@@ -72,7 +72,7 @@
     "react-native-upgrade-android": "^1.0.0",
     "react-native-vector-icons": "^4.5.0",
     "react-native-view-shot": "^2.3.0",
-    "react-native-wechat": "^1.9.9",
+    "react-native-wechat": "^1.9.10",
     "react-navigation": "^1.5.1",
     "react-navigation-redux-helpers": "^1.0.3",
     "react-redux": "^5.0.7",

@@ -251,10 +251,12 @@ class ActivationAt extends BaseComponent {
     }
 
     contactWeChataide() {
-        EasyShowLD.loadingShow();
-        this.props.dispatch({
+        try {
+            EasyShowLD.loadingShow();
+            this.props.dispatch({
             type: "wallet/getcreateWxOrder", payload: {accountName: this.state.name, ownerPublicKey: this.state.ownerPublic, activePublicKey: this.state.activePublic}, 
             callback:(result) =>{
+                // alert(JSON.stringify(result))
                 //alert(JSON.stringify(result.data.partnerid + result.data.prepay_id + result.data.nonceStr + result.data.timeStamp + result.data.package + result.data.sign));
                 WeChat.isWXAppInstalled().then((isInstalled) => {
                     if (isInstalled) {
@@ -262,16 +264,16 @@ class ActivationAt extends BaseComponent {
                         WeChat.pay(
                             {
                                 partnerId: result.data.partnerid,  // 商家向财付通申请的商家id
-                                prepayId: result.data.prepay_id,   // 预支付订单
-                                nonceStr: result.data.nonceStr,   // 随机串，防重发
-                                timeStamp: result.data.timeStamp,  // 时间戳，防重发
+                                prepayId: result.data.prepayid,   // 预支付订单
+                                nonceStr: result.data.noncestr,   // 随机串，防重发
+                                timeStamp: result.data.timestamp,  // 时间戳，防重发
                                 package: result.data.package,    // 商家根据财付通文档填写的数据和签名
                                 sign: result.data.sign,       // 商家根据微信开放平台文档对数据做的签名
                             }
                         ).then((success)=>{
-                            EasyToast.show(success);
+                            EasyToast.show("支付成功");
                         }).catch((error)=>{
-                            EasyToast.show(error);
+                            EasyToast.show("支付失败");
                         })
                         EasyShowLD.loadingClose();
                     }else {
@@ -281,6 +283,16 @@ class ActivationAt extends BaseComponent {
                 })
             }
         })
+        } catch (e) {
+            // if (e instanceof WeChat.WechatError) {
+            //     console.error(e.stack);
+            // } else {
+            //     throw e;
+            // }
+            EasyShowLD.loadingClose();
+            EasyToast.show("支付失败");
+        }
+        
         // const { navigate } = this.props.navigation;
         // navigate('AssistantQrcode', {});
     }
