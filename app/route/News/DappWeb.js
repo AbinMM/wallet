@@ -30,6 +30,11 @@ export default class DappWeb extends Component {
 
   constructor(props) {
     super(props)
+    this.props.dispatch({
+        type: "wallet/getDefaultWallet",
+        callback: data => {}
+      });
+      
     this.props.navigation.setParams({ onPress: this.share });
     this.state = {
       show: false,
