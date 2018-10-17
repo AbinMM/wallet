@@ -531,7 +531,7 @@ export default {
         },
         *getEosTableRows({ payload, callback }, { call, put }) {
             try{
-                const resp = yield call(Request.request, 'http://192.168.1.120:8088/api' + getEosTableRows, 'post', payload);
+                const resp = yield call(Request.request, getEosTableRows, 'post', payload);
                 // alert('getEosTableRows: '+JSON.stringify(resp) + " " + JSON.stringify(payload));
                 // if(resp.code=='0'){    
 
