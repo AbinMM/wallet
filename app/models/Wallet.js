@@ -531,7 +531,7 @@ export default {
         },
         *getEosTableRows({ payload, callback }, { call, put }) {
             try{
-                const resp = yield call(Request.request, 'http://192.168.1.120:8088/api' + getEosTableRows, 'post', payload);
+                const resp = yield call(Request.request, getEosTableRows, 'post', payload);
                 // alert('getEosTableRows: '+JSON.stringify(resp) + " " + JSON.stringify(payload));
                 // if(resp.code=='0'){    
 
@@ -610,13 +610,13 @@ export default {
         },
         *getcreateWxOrder({ payload, callback }, { call, put }) {
             try{
-                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api' + getcreateWxOrder, 'post', payload);
-                //alert('getcreateWxOrder: '+JSON.stringify(resp));
-                // if(resp.code=='0'){    
+                const resp = yield call(Request.request, getcreateWxOrder, 'post', payload);
+                // alert('getcreateWxOrder: '+JSON.stringify(resp));
+                if(resp && resp.code=='0'){    
 
-                // }else{
-                //     EasyToast.show(resp.msg);
-                // }
+                }else{
+                    EasyToast.show(resp.msg);
+                }
                 if (callback) callback(resp);                
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
@@ -625,13 +625,13 @@ export default {
         },
         *getcheckBy({ payload, callback }, { call, put }) {
             try{
-                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api' + getcheckBy, 'post', payload);
+                const resp = yield call(Request.request, getcheckBy, 'post', payload);
                 // alert('dappfindAllCategory: '+JSON.stringify(resp));
-                // if(resp.code=='0'){    
+                if(resp && resp.code=='0'){    
 
-                // }else{
-                //     EasyToast.show(resp.msg);
-                // }
+                }else{
+                    EasyToast.show(resp.msg);
+                }
                 if (callback) callback(resp);                
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
