@@ -313,19 +313,20 @@ inputPwd_Tx = () => {
           try {
                 var tmp_balance = "";
                 if (resp && resp.code == '0') {
-                if (resp.data == "") {
-                    tmp_balance = '0.0000';
-                } else {
-                    tmp_balance = resp.data;
-                }
+                    if (resp.data == "") {
+                        tmp_balance = '0.0000';
+                    } else {
+                        tmp_balance = resp.data;
+                    }
                 } else {
                     var errmsg = ((resp.data && resp.data.msg) ? resp.data.msg : "");
                     EasyToast.show(errmsg);
                 }
-                this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{result:tmp_balance}}));
+                this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:tmp_balance}));
+                
             } catch (error) {
                 EasyToast.show(error.message);
-                this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{result:""}}));
+                this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:""}));
             }
         }
       })
