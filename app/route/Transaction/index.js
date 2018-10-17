@@ -285,10 +285,13 @@ class Transaction extends BaseComponent {
         }
         this.setState({isKLine:true, showMore: false,selectedSegment:opt});
         if(opt == "5分"){
+            this.setState({showMoreTitle:'更多'});
             this.fetchETKLine("5m",opt);
         }else if(opt == "15分"){
+            this.setState({showMoreTitle:'更多'});
             this.fetchETKLine("15m",opt);
         }else if(opt == "30分"){
+            this.setState({showMoreTitle:'更多'});
             this.fetchETKLine("30m",opt);
         }else if(opt == "1小时"){
             this.setState({showMoreTitle:opt});
@@ -1653,7 +1656,7 @@ const styles = StyleSheet.create({
         position:'absolute', 
         left: 0,
         right: 0,
-        top: ScreenUtil.autoheight(50), 
+        top: ScreenUtil.autoheight(80), 
         alignItems: 'center',
         justifyContent: 'center',
         padding: ScreenUtil.autowidth(8),
