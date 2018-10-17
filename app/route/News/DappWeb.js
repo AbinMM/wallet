@@ -128,7 +128,7 @@ export default class DappWeb extends Component {
                 }
 
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                    EasyShowLD.loadingShow();
+                    // EasyShowLD.loadingShow();
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                     Eos.transaction({
                         actions: [
@@ -174,7 +174,7 @@ export default class DappWeb extends Component {
                 }
             } catch (error) {
                 EasyShowLD.loadingClose();
-                EasyToast.show(error.message);
+                EasyToast.show('密码错误');
                 this.callbackToWebview("");
             }
             // EasyShowLD.dialogClose();
@@ -227,7 +227,7 @@ inputPwd_Tx = () => {
             // }
 
             if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                EasyShowLD.loadingShow();
+                // EasyShowLD.loadingShow();
                 plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                 Eos.transaction({
                     actions: this.state.transactionInfo.params.actions
@@ -247,16 +247,16 @@ inputPwd_Tx = () => {
                             EasyToast.show("交易失败");
                         }
                     }
-                    this.callbackToWebview(transaction_id);
+                    this.callbackToWebview(r.data);
                 });
             } else {
                 EasyShowLD.loadingClose();
                 EasyToast.show('密码错误');
                 this.callbackToWebview("");
             }
-        } catch (err) {
+        } catch (error) {
             EasyShowLD.loadingClose();
-            EasyToast.show(error.message);
+            EasyToast.show('密码错误');
             this.callbackToWebview("");
         }
         // EasyShowLD.dialogClose();
@@ -265,10 +265,11 @@ inputPwd_Tx = () => {
   callbackToWebview(retResult)
   {
     var obj_result = new Object();
-    obj_result.key = this.state.key;
     obj_result.scatter = this.state.name;
-    obj_result.data = {result:retResult};
+    obj_result.key = this.state.key;
 
+    // obj_result.data = {result:retResult};
+    obj_result.data = retResult;
     this.refs.refWebview.postMessage(JSON.stringify(obj_result));
   }
   onMessage = (e) =>{
