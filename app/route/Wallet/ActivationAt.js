@@ -148,28 +148,33 @@ class ActivationAt extends BaseComponent {
             this.props.dispatch({
                 type: "wallet/getcreateWxOrder", payload: {accountName: this.state.name, ownerPublicKey: this.state.ownerPublic, activePublicKey: this.state.activePublic}, 
                 callback:(result) =>{
-                    WeChat.isWXAppInstalled().then((isInstalled) => {
-                        if (isInstalled) {
-                            WeChat.pay(
-                                {
-                                    partnerId: result.data.partnerid,  // 商家向财付通申请的商家id
-                                    prepayId: result.data.prepayid,   // 预支付订单
-                                    nonceStr: result.data.noncestr,   // 随机串，防重发
-                                    timeStamp: result.data.timestamp,  // 时间戳，防重发
-                                    package: result.data.package,    // 商家根据财付通文档填写的数据和签名
-                                    sign: result.data.sign      // 商家根据微信开放平台文档对数据做的签名
-                                }
-                            ).then((success)=>{
-                                EasyToast.show("支付成功");
-                            }).catch((error)=>{
-                                EasyToast.show("支付失败");
-                            })
-                            EasyShowLD.loadingClose();
-                        }else {
-                            EasyShowLD.loadingClose();
-                            EasyToast.show('没有安装微信软件，请您安装微信之后再试');
-                        }
-                    })
+                    if(result && result.code=='0'){
+                        WeChat.isWXAppInstalled().then((isInstalled) => {
+                            if (isInstalled) {
+                                WeChat.pay(
+                                    {
+                                        partnerId: result.data.partnerid,  // 商家向财付通申请的商家id
+                                        prepayId: result.data.prepayid,   // 预支付订单
+                                        nonceStr: result.data.noncestr,   // 随机串，防重发
+                                        timeStamp: result.data.timestamp,  // 时间戳，防重发
+                                        package: result.data.package,    // 商家根据财付通文档填写的数据和签名
+                                        sign: result.data.sign      // 商家根据微信开放平台文档对数据做的签名
+                                    }
+                                ).then((success)=>{
+                                    EasyToast.show("支付成功");
+                                }).catch((error)=>{
+                                    EasyToast.show("支付失败");
+                                })
+                                EasyShowLD.loadingClose();
+                            }else {
+                                EasyShowLD.loadingClose();
+                                EasyToast.show('没有安装微信软件，请您安装微信之后再试');
+                            }
+                        })
+                    }else{
+                        EasyShowLD.loadingClose();
+                    }
+
                 }
             })
         } catch (e) {
