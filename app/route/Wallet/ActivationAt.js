@@ -128,6 +128,9 @@ class ActivationAt extends BaseComponent {
 
                                 // 未成功创建账号情况, 包括支付成功但未创建
                                 // alert(result.msg);
+                                EasyShowLD.dialogShow("温馨提示", (<View>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(20), color: UColor.showy, textAlign: 'center',}}>{result.msg}</Text>
+                                </View>), "知道了", null,  () => { EasyShowLD.dialogClose() });
                             }
                         })
                     }

@@ -630,7 +630,7 @@ export default {
                 if(resp && resp.code=='0'){    
 
                 }else{
-                    EasyToast.show(resp.msg);
+                    // EasyToast.show(resp.msg);
                 }
                 if (callback) callback(resp);                
             } catch (error) {
