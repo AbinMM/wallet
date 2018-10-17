@@ -488,14 +488,6 @@ inputPwd_Tx = () => {
                                 <Text style={[styles.explainText,{color: UColor.startup}]}>备注：</Text> 
                                 <Text style={[styles.contentText,{color: UColor.startup}]} numberOfLines={1}>{this.state.tranferInfo.memo}</Text> 
                             </View>
-                            {this.state.tranferInfo.memo== ""&&
-                            <View style={[styles.warningoutShow,{borderColor: UColor.showy}]}>
-                                <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                                    <Image source={UImage.warning_h} style={styles.imgBtn} />
-                                    <Text style={[styles.headtext,{color: UColor.showy}]} >温馨提示</Text>
-                                </View>
-                                <Text style={[styles.headtitle,{color: UColor.showy}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
-                            </View>}
                             
                             <Button onPress={() => { this.inputPwd() }}>
                                 <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
@@ -656,55 +648,8 @@ const styles = StyleSheet.create({
     btntext: {
         fontSize: ScreenUtil.setSpText(16),
     },
-    btnnextstep: {
-        height:  ScreenUtil.autoheight(85),
-        marginTop:  ScreenUtil.autoheight(30),
-    },
-    nextstep: {
-        borderRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: ScreenUtil.autowidth(20),
-        height:  ScreenUtil.autoheight(45),
-    },
-    nextsteptext: {
-        fontSize: ScreenUtil.setSpText(15),
-    },
-    warningout: {
-        borderWidth: 1,
-        borderRadius: 5,
-        alignItems: 'center', 
-        flexDirection: "column",
-        marginVertical: ScreenUtil.autoheight(10),
-        paddingVertical:  ScreenUtil.autoheight(5),
-        paddingHorizontal: ScreenUtil.autowidth(10),
-        marginHorizontal:  ScreenUtil.autoheight(20),
-    },
-    warningoutShow: {
-        borderWidth: 1,
-        borderRadius: 5,
-        alignItems: 'center',
-        flexDirection: "column",
-        marginTop: ScreenUtil.autoheight(10),
-        marginHorizontal: ScreenUtil.autowidth(20),
-        paddingVertical:  ScreenUtil.autoheight(5),
-        paddingHorizontal: ScreenUtil.autowidth(10),
-    },
-    imgBtn: {
-        width: ScreenUtil.autowidth(20),
-        height: ScreenUtil.autowidth(20),
-        marginRight: ScreenUtil.autowidth(10),
-    },
-    headtext: {
-        fontWeight: "bold",
-        fontSize: ScreenUtil.setSpText(14), 
-    },
-    headtitle: {
-        fontSize: ScreenUtil.setSpText(12),
-        lineHeight:  ScreenUtil.autoheight(20),
-    },
+    
     actionsdetail: {
         fontSize: ScreenUtil.setSpText(10),
-        // lineHeight:  ScreenUtil.autoheight(20),
     },
   })
