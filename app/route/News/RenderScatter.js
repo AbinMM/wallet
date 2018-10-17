@@ -3,8 +3,7 @@ export default function RenderScatter(props) {
      let account = {name:props.defaultWallet.account,
                publicKey:props.defaultWallet.activePublic,
                perm_name:"active" };
-        // var account = {name:"eosbille1234",publicKey:"EOS6tqnNR3AiUVFdX29rYFy6mEasi7whzVQ5wUTe2kcGgQhmY6gum",
-        //        perm_name:"active" };
+
       if(account){
         return `
         iden = {
@@ -52,10 +51,9 @@ export default function RenderScatter(props) {
                         })
                     },
                     transfer:function(from,to,amount,memo){
-                        // alert("from:" + from + " to:" + to + " amount:" + amount + " memo:" + memo);
                         return new Promise((resolve, reject) => {
                             var key = new Date().getTime();
-                            window.postMessage(JSON.stringify({key,scatter:"transfer",params:{from:from,to:to,amount:amount,memo:memo}}));
+                            window.postMessage(JSON.stringify({key,scatter:"transfer",params:{from,to,amount,memo}}));
                             document.addEventListener("message",function(msg){
                                 document.removeEventListener("message",this);
                                 var obj = eval("(" + msg.data + ")");
@@ -66,7 +64,6 @@ export default function RenderScatter(props) {
                         })
                     },
                     transaction:function(actions){
-                        alert("a");
                         return new Promise((resolve, reject) => {
                             var key = new Date().getTime();
                             window.postMessage(JSON.stringify({key,scatter:"transaction",params:{...actions}}));
