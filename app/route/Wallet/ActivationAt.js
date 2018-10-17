@@ -91,14 +91,19 @@ class ActivationAt extends BaseComponent {
  
     //查询激活状态
     checkAccountActive(){
+        const wallet = this.props.navigation.state.params.parameter;
+        var name = wallet.name;
+        var owner = wallet.ownerPublic;
+        var active = wallet.activePublic
         try {
             EasyShowLD.loadingShow();
             this.props.dispatch({
-                type: "wallet/isExistAccountNameAndPublicKey", payload: {account_name: this.state.name, owner: this.state.ownerPublic, active: this.state.activePublic}, 
+                type: "wallet/isExistAccountNameAndPublicKey", payload: {account_name: name, owner: owner, active: active}, 
                 callback:(result) =>{
-                    EasyShowLD.loadingClose();
-                    if(result.code == 0 && result.data == true){
-                        wallet.isactived = true
+                    if(result && result.code == 0 && result.data == true){
+                        EasyShowLD.loadingClose();
+
+                        wallet.isactived = true;
                         this.props.dispatch({type: 'wallet/activeWallet', wallet: wallet});
                         //msg:success,data:true, code:0 账号已存在
                         EasyShowLD.dialogShow("恭喜激活成功", (<View>
@@ -107,8 +112,25 @@ class ActivationAt extends BaseComponent {
                     }else {
                         this.props.dispatch({
                             type: "wallet/getcheckBy", payload: {accountName: this.state.name, ownerPublicKey: this.state.ownerPublic}, 
-                            callback:(data) =>{
-                                EasyToast.show(data.msg);
+                            callback:(result) =>{
+                                EasyShowLD.loadingClose();
+
+                                if(result && result.code == 0){ // 创建账号成功, 修改钱包状态
+                                    wallet.isactived = true;
+                                    this.props.dispatch({type: 'wallet/activeWallet', wallet: wallet});
+                                    //msg:success,data:true, code:0 账号已存在
+                                    EasyShowLD.dialogShow("恭喜激活成功", (<View>
+                                        <Text style={{fontSize: ScreenUtil.setSpText(20), color: UColor.showy, textAlign: 'center',}}>{name}</Text>
+                                    </View>), "知道了", null,  () => { EasyShowLD.dialogClose() });
+
+                                    return;
+                                }
+
+                                // 未成功创建账号情况, 包括支付成功但未创建
+                                // alert(result.msg);
+                                EasyShowLD.dialogShow("温馨提示", (<View>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(20), color: UColor.showy, textAlign: 'center',}}>{result.msg}</Text>
+                                </View>), "知道了", null,  () => { EasyShowLD.dialogClose() });
                             }
                         })
                     }
