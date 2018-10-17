@@ -1,6 +1,6 @@
 import Request from '../utils/RequestUtil';
-import { address, getAccountsByPuk, isExistAccountName, getintegral, isExistAccountNameAndPublicKey,getFreeMortgage,getEosTransactionRecord,
-    getEosTableRows,dappfindAll,dappfindAllRecommend,dappfindAllCategory} from '../utils/Api';
+import { address, getAccountsByPuk, isExistAccountName, getintegral, isExistAccountNameAndPublicKey, getFreeMortgage, getEosTransactionRecord,
+    getEosTableRows, dappfindAll, dappfindAllRecommend, dappfindAllCategory, getcreateWxOrder, getcheckBy,} from '../utils/Api';
 import { EasyToast } from '../components/Toast';
 
 import store from 'react-native-simple-store';
@@ -531,7 +531,7 @@ export default {
         },
         *getEosTableRows({ payload, callback }, { call, put }) {
             try{
-                const resp = yield call(Request.request, getEosTableRows, 'post', payload);
+                const resp = yield call(Request.request, 'http://192.168.1.120:8088/api' + getEosTableRows, 'post', payload);
                 // alert('getEosTableRows: '+JSON.stringify(resp) + " " + JSON.stringify(payload));
                 // if(resp.code=='0'){    
 
@@ -589,7 +589,7 @@ export default {
                 if (callback) callback({ code: 500, msg: "网络异常" });                
             }
         },
-         *isExistAccountNameAndPublicKey({payload, callback},{call,put}) {
+        *isExistAccountNameAndPublicKey({payload, callback},{call,put}) {
             // alert('22' + JSON.stringify(payload) )
             try{
                 let resp = yield call(Request.request, isExistAccountNameAndPublicKey,"post", payload);
@@ -602,13 +602,42 @@ export default {
             } catch (error) {
                 if (callback) callback({ code: 500, msg: "网络异常" });
             }
-         },
+        },
 
-         *updateTipState({payload, callback},{call,put}) {
+        *updateTipState({payload, callback},{call,put}) {
             yield put({ type: 'updateTip', payload: { tipFlagIOS: payload.tipFlagIOS } });
             if (callback) callback(payload);
-         },
+        },
+        *getcreateWxOrder({ payload, callback }, { call, put }) {
+            try{
+                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api' + getcreateWxOrder, 'post', payload);
+                //alert('getcreateWxOrder: '+JSON.stringify(resp));
+                // if(resp.code=='0'){    
 
+                // }else{
+                //     EasyToast.show(resp.msg);
+                // }
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
+        *getcheckBy({ payload, callback }, { call, put }) {
+            try{
+                const resp = yield call(Request.request, 'http://192.168.1.66:8088/api' + getcheckBy, 'post', payload);
+                // alert('dappfindAllCategory: '+JSON.stringify(resp));
+                // if(resp.code=='0'){    
+
+                // }else{
+                //     EasyToast.show(resp.msg);
+                // }
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
     },
     reducers: {
         update(state, action) {

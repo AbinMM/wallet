@@ -81,7 +81,7 @@ class WalletDetail extends BaseComponent {
           <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
             selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
             style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-            placeholderTextColor={UColor.arrow}  placeholder="请输入密码"  underlineColorAndroid="transparent" />
+            placeholderTextColor={UColor.inputtip}  placeholder="请输入密码"  underlineColorAndroid="transparent" />
         </View>
       EasyShowLD.dialogShow("密码", view, "确定", "取消", () => {
         if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -269,7 +269,7 @@ class WalletDetail extends BaseComponent {
         <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
           selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
           style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-          placeholderTextColor={UColor.arrow}  placeholder="请输入密码"  underlineColorAndroid="transparent" />
+          placeholderTextColor={UColor.inputtip}  placeholder="请输入密码"  underlineColorAndroid="transparent" />
       </View>
     EasyShowLD.dialogShow("密码", view, "确定", "取消", () => {
       if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -416,7 +416,7 @@ class WalletDetail extends BaseComponent {
         <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
           selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
           style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-          placeholderTextColor={UColor.arrow}  placeholder="请输入密码"  underlineColorAndroid="transparent"/>
+          placeholderTextColor={UColor.inputtip}  placeholder="请输入密码"  underlineColorAndroid="transparent"/>
       </View>
 
     EasyShowLD.dialogShow("密码", view, "备份", "取消", () => {
@@ -477,43 +477,50 @@ class WalletDetail extends BaseComponent {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>    
       <Header {...this.props} onPressLeft={true} title={"账户管理"} />
       <ScrollView style={styles.scrollView}>
-        <View>
-          <View style={[styles.walletout,{backgroundColor: UColor.mainColor}]}>
-            <View style={styles.accountout} >
-              <Text style={[styles.accounttext,{color: UColor.fontColor}]}>{isEye ? (c.isactived && c.balance != null && c.balance != ""? c.balance : balance) : "******"}</Text>
-               <Text style={[styles.company,{color: UColor.fontColor}]}> EOS</Text>
-            </View>
-            <View style={styles.topout}>
-              <Text style={[styles.category,{color:  UColor.fontColor}]}>账户名称：</Text>
-                <Button onPress={this.copyname.bind(this,c)} underlayColor={UColor.mainColor}>
-                  <View style={{flexDirection: "row",}}>
-                    <Text style={[styles.outname,{color: UColor.arrow}]}>{c.name}</Text>
-                    <Image source={UImage.copy} style={styles.imgBtn} />
-                  </View>
-                </Button>
-              {(!c.isactived || !c.hasOwnProperty('isactived')) ? <View style={[styles.notactivedout,{borderColor: UColor.showy}]}>
-              <Text style={[styles.notactived,{color: UColor.showy}]}>未激活</Text>
-              </View>:(c.isBackups ? null : <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
-              <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]}>未备份</Text>
-              </View>) }   
-            </View>
+        <View style={[styles.walletout,{backgroundColor: UColor.mainColor}]}>
+          <View style={styles.accountout} >
+            <Text style={[styles.accounttext,{color: UColor.fontColor}]}>{isEye ? (c.isactived && c.balance != null && c.balance != ""? c.balance : balance) : "******"}</Text>
+              <Text style={[styles.company,{color: UColor.fontColor}]}> EOS</Text>
           </View>
-          <View>{this._renderListItem()}</View>
-          {(!c.isactived || !c.hasOwnProperty('isactived')) ? 
-          <Button onPress={this.activeWallet.bind(this, c)} style={{ flex: 1 }}>
-            <View style={[styles.acttiveout,{backgroundColor: UColor.tintColor}]}>
-              <Text style={[styles.delete,{color: UColor.btnColor}]}>激活账户</Text>
-            </View>
-          </Button>
-          :null
-          }
-          <Button onPress={this.deleteAccount.bind(this, c)} style={{ flex: 1 }}>
-            <View style={[styles.deleteout,{backgroundColor: UColor.showy}]}>
-              <Text style={[styles.delete,{color: UColor.btnColor}]}>删除账户</Text>
-            </View>
-          </Button>
+          <View style={styles.topout}>
+            <Text style={[styles.category,{color:  UColor.fontColor}]}>账户名称：</Text>
+              <Button onPress={this.copyname.bind(this,c)} underlayColor={UColor.mainColor}>
+                <View style={{flexDirection: "row",}}>
+                  <Text style={[styles.outname,{color: UColor.arrow}]}>{c.name}</Text>
+                  <Image source={UImage.copy} style={styles.imgBtn} />
+                </View>
+              </Button>
+            {(!c.isactived || !c.hasOwnProperty('isactived')) ? <View style={[styles.notactivedout,{borderColor: UColor.showy}]}>
+            <Text style={[styles.notactived,{color: UColor.showy}]}>未激活</Text>
+            </View>:(c.isBackups ? null : <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
+            <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]}>未备份</Text>
+            </View>) }   
+          </View>
         </View>
+        <View>{this._renderListItem()}</View>
       </ScrollView>
+      {(!c.isactived || !c.hasOwnProperty('isactived'))?
+        <View style={[styles.footer,{backgroundColor:UColor.secdColor}]}>
+          <Button onPress={this.activeWallet.bind(this, c)} style={{flex:1}}>
+              <View style={[styles.footoutsource,{marginRight:0.5,backgroundColor:UColor.mainColor}]}>
+                <Image source={UImage.activation_wallet} style={styles.activationimg}/>
+                <Text style={[styles.delete,{color:UColor.showy}]}>激活账户</Text>
+              </View>
+          </Button>
+          <Button  onPress={this.deleteAccount.bind(this, c)} style={{flex:1}}>
+              <View style={[styles.footoutsource,{marginLeft: 0.5, backgroundColor:UColor.mainColor}]}>
+                <Image source={UImage.delete_wallet} style={styles.deleteimg}/>
+                <Text style={[styles.delete,{color:UColor.tintColor}]}>删除账户</Text>
+              </View>
+          </Button>
+        </View> 
+        :
+        <Button onPress={this.deleteAccount.bind(this, c)} style={{flex: 1,}}>
+          <View style={[styles.deleteout,{backgroundColor: UColor.mainColor}]}>
+            <Text style={[styles.delete,{color: UColor.tintColor}]}>删除账户</Text>
+          </View>
+        </Button>
+      }
       <View style={{backgroundColor: UColor.riceWhite}}>
         <Modal animationType='slide' transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
           <View style={[styles.modalStyle,{backgroundColor: UColor.mask}]}>
@@ -528,7 +535,7 @@ class WalletDetail extends BaseComponent {
                 <Button onPress={() => { this.eospark() }}>
                   <View style={[styles.eosparktext,{backgroundColor: UColor.tintColor}]}>
                   <Text style={[styles.buttonText,{color: UColor.btnColor}]}>查看</Text>
-                  </View>
+                  </View> 
                 </Button>
               </View>
               <View style={[styles.eosecoout,{borderColor: UColor.tintColor}]}>
@@ -628,24 +635,13 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(10),
     paddingHorizontal: ScreenUtil.autowidth(8),
   },
-  acttiveout: {
-    borderRadius: 5,
-    alignItems: 'center', 
-    justifyContent: 'center',
-    height: ScreenUtil.autoheight(45), 
-    marginTop: ScreenUtil.autoheight(20),
-    marginHorizontal: ScreenUtil.autowidth(20), 
-  },
   deleteout: {
-    borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center', 
-    height: ScreenUtil.autoheight(45), 
-    marginTop: ScreenUtil.autoheight(20),
-    marginHorizontal: ScreenUtil.autowidth(20),  
+    height: ScreenUtil.autoheight(50), 
   },
   delete: { 
-    fontSize: ScreenUtil.setSpText(15), 
+    fontSize: ScreenUtil.setSpText(18), 
   },
   modalStyle: {
     flex: 1,
@@ -704,6 +700,35 @@ const styles = StyleSheet.create({
     width: ScreenUtil.autowidth(64), 
     height: ScreenUtil.autoheight(30), 
   },
+
+  footer:{
+    borderRadius: 5,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    position:'absolute',
+    flexDirection:'row',  
+    height: ScreenUtil.autoheight(50),   
+    paddingTop: ScreenUtil.autoheight(1),
+  },
+  footoutsource:{
+    flex:1, 
+    flexDirection:'row',
+    alignItems: 'center', 
+    justifyContent: 'center', 
+  },
+  activationimg: {
+    width: ScreenUtil.autowidth(18),
+    height: ScreenUtil.autowidth(18)*1.1428,
+    marginRight: ScreenUtil.autowidth(5),
+  },
+  deleteimg: {
+    width: ScreenUtil.autowidth(20),
+    height: ScreenUtil.autowidth(20),
+    marginRight: ScreenUtil.autowidth(5),
+  },
+
+ 
 });
 
 export default WalletDetail;
