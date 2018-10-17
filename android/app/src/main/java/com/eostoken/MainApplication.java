@@ -55,22 +55,22 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
-                    new MainReactPackage(),
-            new LinearGradientPackage(),
-            new OpenSettingsPackage(), /* setting add */
-                    new RCTCapturePackage(),
-                    new RNViewShotPackage(),
-                    new SvgPackage(),
-                    new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG),
-                    new RNDeviceInfo(),
-                    new VectorIconsPackage(),
-                    new SplashScreenReactPackage(),
-                    new RNGestureHandlerPackage(),
-                    new UpgradeReactPackage(),
-                    new DplusReactPackage(),
-                    new WeChatPackage(),
-                    new SDKPackage(),
-                    new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
+                new MainReactPackage(),
+                new LinearGradientPackage(),
+                new OpenSettingsPackage(), /* setting add */
+                new RCTCapturePackage(),
+                new RNViewShotPackage(),
+                new SvgPackage(),
+                new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG),
+                new RNDeviceInfo(),
+                new VectorIconsPackage(),
+                new SplashScreenReactPackage(),
+                new RNGestureHandlerPackage(),
+                new UpgradeReactPackage(),
+                new DplusReactPackage(),
+                new WeChatPackage(),
+                new SDKPackage(),
+                new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
             );
         }
 
