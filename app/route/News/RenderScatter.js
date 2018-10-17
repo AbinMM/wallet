@@ -21,6 +21,11 @@ export default function RenderScatter(props) {
                 resolve(iden);
             })
         },
+        forgetIdentity:function(){
+            return new Promise((resolve, reject) => {
+                resolve(iden);
+            })
+        },
         eos:(e,t,r,n) =>{
             return {
                 getCurrencyBalance:function(contract,name,coin){
@@ -71,7 +76,7 @@ export default function RenderScatter(props) {
                             document.removeEventListener("message",this);
                             var obj = eval("(" + msg.data + ")");
                             if(obj.scatter==="transaction" && obj.key===key){ 
-                                alert("b");
+                                alert(obj.data);
                                 resolve(obj.data);
                             }
                         });

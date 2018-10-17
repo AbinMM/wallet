@@ -49,7 +49,9 @@ class Dappsearch extends BaseComponent {
             EasyToast.show('请输入DAPP网址');
             return;
         }else{
-            sdkOpenDapp(labelname,'CustomDapp',this.state.theme);
+            const { navigate } = this.props.navigation;
+            // sdkOpenDapp(labelname,'CustomDapp',this.state.theme);
+            navigate('DappWeb', { title: 'CustomDapp', url: labelname });
         }
     }
 

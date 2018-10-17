@@ -295,8 +295,13 @@ inputPwd_Tx = () => {
     obj_result.scatter = this.state.name;
     obj_result.key = this.state.key;
 
-    // obj_result.data = {result:retResult};
-    obj_result.data = retResult;
+    // var obj_data = {code:500,error:{details:"110"}};
+    // var obj_data = {transaction_id:"69a5202b1ca8cca6622a06f3b281173d056136b628a13c6478333ec48d62a5ab"};
+    
+    // obj_result.data = JSON.stringify(obj_data);
+    obj_result.data = "69a5202b1ca8cca6622a06f3b281173d056136b628a13c6478333ec48d62a5ab";
+
+    // obj_result.data = retResult;
     this.refs.refWebview.postMessage(JSON.stringify(obj_result));
   }
   onMessage = (e) =>{
@@ -325,7 +330,12 @@ inputPwd_Tx = () => {
       })
      
     }else if(result.scatter==="getAccount"){
-      this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: result.params},callback: (resp) => {
+        var account_name = "";
+        if(result.params.account.account_name)
+        {
+            account_name = result.params.account.account_name;
+        }
+      this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: account_name},callback: (resp) => {
           if(resp){
             this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{result:resp}}));
           }else{
