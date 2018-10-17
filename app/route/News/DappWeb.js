@@ -338,10 +338,10 @@ inputPwd_Tx = () => {
         }
       this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: account_name},callback: (resp) => {
           if(resp){
-            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{result:resp}}));
+            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:resp}));
           }else{
             EasyToast.show('账户获取失败');
-            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{result:""}}));
+            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
           }
       } });
     }else if(result.scatter==="transaction"){
