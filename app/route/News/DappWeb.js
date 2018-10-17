@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {InteractionManager,Text,View,WebView,Animated,TextInput,Dimensions,StyleSheet,Modal,TouchableOpacity,Image} from 'react-native'
+import {DeviceEventEmitter,Clipboard,InteractionManager,Text,View,WebView,Animated,TextInput,Dimensions,StyleSheet,Modal,TouchableOpacity,Image} from 'react-native'
 import UColor from '../../utils/Colors'
 import { EasyShowLD } from '../../components/EasyShow'
 import { EasyToast } from '../../components/Toast';
@@ -48,7 +48,8 @@ export default class DappWeb extends Component {
       error: false,
       news: this.props.navigation.state.params.news,
       transformY: new Animated.Value(200),
-      transformY1: new Animated.Value(-1000)
+      transformY1: new Animated.Value(-1000),
+      optionShow:false,
     }
     let noop = () => { }
     this.__onLoad = this.props.onLoad || noop
@@ -91,6 +92,32 @@ export default class DappWeb extends Component {
     this._setModalVisible_Tx();
     this.callbackToWebview("");
   }
+          // 显示/隐藏 右上角的更多选项 modal  
+          moreOption() {
+            let isShow = this.state.optionShow;
+            this.setState({
+                optionShow: !isShow,
+            });
+        }
+
+    //
+    pressRefalsh(){
+        this.moreOption();
+        this._refWebview.reload();
+    }
+
+    //
+    pressCopyUrl(){
+        this.moreOption();
+        Clipboard.setString(this.props.navigation.state.params.url);
+        EasyToast.show("复制成功!");
+    }
+
+    pressShare(){
+        this.moreOption();
+        DeviceEventEmitter.emit('dappShare', this.props.navigation.state.params.url);
+    }
+
     // 显示/隐藏 modal  
     _setModalVisible() {
         let isShow = this.state.show;
@@ -443,9 +470,12 @@ inputPwd_Tx = () => {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
-        <Header {...this.props} onPressLeft={true} title={this.props.navigation.state.params.title} avatar={this.state.news && UImage.share_i} onPressRight={this.state.news && this.share.bind()}/>
+        <Header {...this.props} onPressLeft={true} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
+        onPressRight={this.moreOption.bind(this)} />
+        
         <WebView
-            ref="refWebview"
+            // ref="refWebview"
+            ref={(ref) => this._refWebview = ref}
             source={{uri:this.props.navigation.state.params.url}}
             domStorageEnabled={true}
             javaScriptEnabled={true}
@@ -539,6 +569,41 @@ inputPwd_Tx = () => {
             </Modal>
         </View>
         <Animated.View style={[styles.progress, {backgroundColor: UColor.fallColor, width: this.state.progress }]}></Animated.View>
+     
+ <View style={{backgroundColor: UColor.riceWhite,}}>
+            <Modal animationType={'slide'} transparent={true} visible={this.state.optionShow} onShow={() => { }} onRequestClose={() => { }} >
+                <TouchableOpacity onPress={() => {{
+                                    this.setState({
+                                        optionShow:false
+                                    })
+                                }}}
+
+                style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
+                    <View style={[styles.head,{ width: ScreenWidth,backgroundColor: UColor.btnColor,}]}>
+
+                        <Button onPress={this.pressRefalsh.bind(this)} style={styles.headbtn}>
+                        <View style={styles.headbtnout}>
+                            <Image source={UImage.refresh_dapp} style={styles.imgBtnBig} />
+                            <Text style={[styles.headbtntext,{color: UColor.arrow}]}>刷新</Text>
+                        </View>
+                        </Button>
+                        <Button onPress={this.pressCopyUrl.bind(this)} style={styles.headbtn}>
+                        <View style={styles.headbtnout}>
+                            <Image source={UImage.copy_dapp} style={styles.imgBtnBig} />
+                            <Text style={[styles.headbtntext,{color: UColor.arrow}]}>复制URL</Text>
+                        </View>
+                        </Button>
+                        <Button  onPress={this.pressShare.bind(this)}  style={styles.headbtn}>
+                        <View style={styles.headbtnout}>
+                            <Image source={UImage.share_dapp} style={styles.imgBtnBig} />
+                            <Text style={[styles.headbtntext,{color: UColor.arrow}]}>分享</Text>
+                        </View>
+                        </Button>
+
+                    </View>
+                </TouchableOpacity>
+            </Modal>
+        </View>
       </View>
     )
   }
@@ -652,5 +717,78 @@ const styles = StyleSheet.create({
     
     actionsdetail: {
         fontSize: ScreenUtil.setSpText(10),
+    },
+
+    btnnextstep: {
+        height:  ScreenUtil.autoheight(85),
+        marginTop:  ScreenUtil.autoheight(30),
+    },
+    nextstep: {
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: ScreenUtil.autowidth(20),
+        height:  ScreenUtil.autoheight(45),
+    },
+    nextsteptext: {
+        fontSize: ScreenUtil.setSpText(15),
+    },
+    warningout: {
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: 'center', 
+        flexDirection: "column",
+        marginVertical: ScreenUtil.autoheight(10),
+        paddingVertical:  ScreenUtil.autoheight(5),
+        paddingHorizontal: ScreenUtil.autowidth(10),
+        marginHorizontal:  ScreenUtil.autoheight(20),
+    },
+    warningoutShow: {
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: 'center',
+        flexDirection: "column",
+        marginTop: ScreenUtil.autoheight(10),
+        marginHorizontal: ScreenUtil.autowidth(20),
+        paddingVertical:  ScreenUtil.autoheight(5),
+        paddingHorizontal: ScreenUtil.autowidth(10),
+    },
+    imgBtn: {
+        width: ScreenUtil.autowidth(20),
+        height: ScreenUtil.autowidth(20),
+        marginRight: ScreenUtil.autowidth(10),
+    },
+    imgBtnBig: {
+        width: ScreenUtil.autowidth(30),
+        height: ScreenUtil.autowidth(30),
+        margin: ScreenUtil.autowidth(5),
+    },
+    headtext: {
+        fontWeight: "bold",
+        fontSize: ScreenUtil.setSpText(14), 
+    },
+    headtitle: {
+        fontSize: ScreenUtil.setSpText(12),
+        lineHeight:  ScreenUtil.autoheight(20),
+    },
+    head: {
+        flexDirection: "row",
+        borderBottomWidth: 2,
+        height: ScreenUtil.autoheight(70), 
+      },
+    headbtn: {
+        flex: 1, 
+        alignItems: 'center',
+        justifyContent: "center", 
+        padding: ScreenUtil.autowidth(5),
+      },
+
+    headbtnout: {
+        flex:1, 
+        alignItems: 'center', 
+        justifyContent: "center",
+    },
+    headbtntext: {
+        fontSize: ScreenUtil.setSpText(12),
     },
   })

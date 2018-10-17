@@ -262,4 +262,10 @@ export default {
   app19: require('../img/activity/app19.png'),
   app20: require('../img/activity/app20.png'),
 
+  //DAPP
+  share_dapp:require('../img/share_dapp.png'),
+  copy_dapp:require('../img/copy_dapp.png'),
+  refresh_dapp:require('../img/refresh_dapp.png'),
+  dapp_set:require('../img/dapp_set.png'),
+  
 }
