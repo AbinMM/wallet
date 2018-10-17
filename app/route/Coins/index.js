@@ -11,6 +11,7 @@ import ScreenUtil from '../../utils/ScreenUtil'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import {formatterNumber,formatterUnit} from '../../utils/FormatUtil'
+import { EasyToast } from '../../components/Toast';
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 const pages = [];
@@ -109,8 +110,9 @@ class Coins extends React.Component {
 
   //点击
   onPress = (coins) => {
-    const { navigate } = this.props.navigation;
-    navigate('Coin', { coins });
+    // const { navigate } = this.props.navigation;
+    // navigate('Coin', { coins });
+    EasyToast.show("暂不支持行情查看~");
     AnalyticsUtil.onEvent('Details_money');
   };
 
