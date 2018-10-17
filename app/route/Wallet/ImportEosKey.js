@@ -75,7 +75,7 @@ class ImportEosKey extends BaseComponent {
     }else  if (key == 'privatekey') {
     navigate('Web', { title: "什么是私钥", url: "http://static.eostoken.im/html/Keystore.html" });
     }else  if (key == 'howImportPrivatekey') {
-    navigate('Web', { title: "如何导入私钥", url: "http://static.eostoken.im/html/importPrivatekey.html" });
+    navigate('Web', { title: "如何导入私钥", url: "http://static.eostoken.im/html/20181017/1539763702729.html" });
     }
   }
 
