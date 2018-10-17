@@ -231,6 +231,13 @@ class News extends React.Component {
         navigate('OCTactivity',{ periodstext:this.state.periodstext, periodsseq:this.state.periodsseq,});
         return;
       }
+      if((banner.url.indexOf("http://") != 0) && (banner.url.indexOf("https://") != 0)){
+        try {
+          navigate(banner.url, {}); // app内部的js跳转
+        } catch (error) {
+        }
+        return;
+      }
       navigate('Web', { title: banner.title, url: url });
     }
   }
