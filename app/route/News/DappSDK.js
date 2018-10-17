@@ -400,8 +400,8 @@ function getEosTableRows(methodName,params, callback)
       try {
         if (resp && resp.code == '0') {
           res.result = true;
-          var obj = JSON.parse(resp.data);
-          res.data.rows = obj.rows;
+          // var obj = JSON.parse(resp.data);
+          res.data.rows = resp.data.rows;
           res.msg = "success";
         } else {
             var errmsg = ((resp.data && resp.data.msg) ? resp.data.msg : "error");
