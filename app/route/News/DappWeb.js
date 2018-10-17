@@ -103,7 +103,8 @@ export default class DappWeb extends Component {
     //
     pressRefalsh(){
         this.moreOption();
-        this._refWebview.reload();
+        // this._refWebview.reload();
+        this.refs.refWebview.reload();
     }
 
     //
@@ -484,8 +485,8 @@ inputPwd_Tx = () => {
         onPressRight={this.moreOption.bind(this)} />
         
         <WebView
-            // ref="refWebview"
-            ref={(ref) => this._refWebview = ref}
+            ref="refWebview"
+            // ref={(ref) => this._refWebview = ref}
             source={{uri:this.props.navigation.state.params.url}}
             domStorageEnabled={true}
             javaScriptEnabled={true}
