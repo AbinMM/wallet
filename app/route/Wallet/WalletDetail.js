@@ -653,13 +653,13 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     alignSelf: 'stretch',
     justifyContent: 'center',
-    marginHorizontal: ScreenUtil.setSpText(15),
+    marginHorizontal: ScreenUtil.autowidth(15),
   },
   closeText: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: ScreenUtil.setSpText(50),
-    height: ScreenUtil.setSpText(50),
+    width: ScreenUtil.autowidth(50),
+    height: ScreenUtil.autowidth(50),
   },
   buttonText: {
     fontSize: ScreenUtil.setSpText(16),

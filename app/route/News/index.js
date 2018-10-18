@@ -363,6 +363,7 @@ class News extends React.Component {
   onRefreshing() {
     try {
       this.setState({logRefreshing: true});
+      this.props.dispatch({ type: 'wallet/dappfindAllCategory', });
       this.props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
           if (resp && resp.code == '0') {
             if(resp.data && resp.data.length > 0){

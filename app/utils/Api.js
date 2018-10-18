@@ -27,6 +27,7 @@ export const newsDown = rootaddr + '/news/down/';
 export const newsView = rootaddr + '/news/view/';
 export const newsShare = rootaddr + '/news/share/';
 export const redirect = rootaddr + '/news/redirect/';
+export const sysNotificationList = rootaddr + '/news/sysNotificationList'; 
 export const fetchPoint = rootaddr + '/user/point/fetch';
 export const shareAddPoint = rootaddr + '/user/shareAddPoint';
 export const eostReceive = rootaddr + '/user/eostReceive'; 

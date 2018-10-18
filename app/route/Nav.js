@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackNavigator, TabNavigator } from 'react-navigation';
-import { CameraRoll, Image, View, BackHandler, Text, Platform, DeviceEventEmitter, BackAndroid, AppState, Linking, Dimensions, ScrollView, Animated, Easing, NetInfo } from 'react-native';
+import { CameraRoll, Image, View, BackHandler, Text, Platform, DeviceEventEmitter, BackAndroid, AppState, Linking, Dimensions, ScrollView, Animated, Easing, NetInfo, StyleSheet, Modal, TouchableOpacity, ImageBackground } from 'react-native';
 import moment from 'moment';
 import { connect } from 'react-redux'
 import QRCode from 'react-native-qrcode-svg';
@@ -8,7 +8,7 @@ import codePush from 'react-native-code-push'
 import ViewShot from "react-native-view-shot";
 import Upgrade from 'react-native-upgrade-android';
 import SplashScreen from 'react-native-splash-screen'
-
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import Button from '../components/Button'
 import { EasyToast } from "../components/Toast"
 import { EasyShowLD } from "../components/EasyShow"
@@ -90,6 +90,8 @@ import { redirect } from '../utils/Api'
 import Constants from '../utils/Constants'
 import ScreenUtil from '../utils/ScreenUtil'
 
+
+
 require('moment/locale/zh-cn');
 var DeviceInfo = require('react-native-device-info');
 var ScreenWidth = Dimensions.get('window').width;
@@ -104,32 +106,6 @@ var TabContainer = TabNavigator(
     Settings: { screen: Settings }
   },
   {
-    // navigationOptions: ({ navigation }) => ({
-    //   tabBarIcon: ({ focused }) => {
-    //     const { routeName } = navigation.state;
-    //     let iconName;
-    //     switch (routeName) {
-    //       case 'Home':
-    //         iconName = focused ? UImage.tab_1_h : UImage.tab_1
-    //         break;
-    //       case 'Coins':
-    //         iconName = focused ? UImage.tab_2_h : UImage.tab_2
-    //         break;
-    //       case 'Ram':
-    //         iconName = focused ? UImage.tab_5_h : UImage.tab_5
-    //         break;  
-    //       case 'Transaction':
-    //         iconName = focused ? UImage.tab_5_h : UImage.tab_5
-    //         break;  
-    //       case 'News':
-    //         iconName = focused ? UImage.tab_3_h : UImage.tab_3
-    //         break;
-    //       case 'Settings':
-    //         iconName = focused ? UImage.tab_4_h : UImage.tab_4
-    //     }
-    //     return (<Image source={iconName} style={{ width: 20, height: 20, padding: 0, margin: 0, }} />);
-    //   },
-    // }),
     initialRouteName: "News", // 默认页面组件
     lazy: true,
     tabBarPosition: 'bottom', // 显示在底端，android 默认是显示在页面顶端的
@@ -411,7 +387,9 @@ class Route extends React.Component {
     APtransformY1: new Animated.Value(-1000),
     rAPtransformY: new Animated.Value(200),
     rAPtransformY1: new Animated.Value(-1000),
-
+    SysteminfoModal: false,
+    SysteminfoImg: '',
+    SysteminfoUrl: '',
     showDappShare:false,
   }
 
@@ -456,7 +434,7 @@ class Route extends React.Component {
                 CodePush.notifyAppReady();
                 break;
         }
-    });
+      });
     });
     //加载广告
     this.props.dispatch({ type: 'banner/list', payload: {} });
@@ -483,7 +461,7 @@ class Route extends React.Component {
       this.props.dispatch({
         type: 'common/upgrade', payload: { os: DeviceInfo.getSystemName() }, callback: (data) => {
           if (data.code == 0) {
-            if (DeviceInfo.getVersion() < data.data.version) {
+            if (DeviceInfo.getVersion()  < data.data.version) {
               if (data.data.must == 1) {
                 EasyShowLD.dialogShow("版本更新", data.data.intr, "升级", null, () => { this.doUpgrade(data.data.url, data.data.version) })
               } else {
@@ -494,7 +472,23 @@ class Route extends React.Component {
         }
       })
     }, 1000);
-
+     
+    //获取系统通知
+    this.props.dispatch({
+      type: 'common/sysNotificationList',callback: (data) => {
+        if(data.data != null){
+          this.setState({
+            SysteminfoImg: data.data.picurl,
+            SysteminfoUrl: data.data.url,
+          })
+          this.gainImg(data.data.picurl);
+          setTimeout(() => { this._setModalVisible() }, 2000);
+        }else{
+          this.setState({ SysteminfoModal: false, })
+        }
+      }
+    })
+    
     BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
 
     DeviceEventEmitter.addListener('Activation', (news) => {
@@ -942,9 +936,11 @@ class Route extends React.Component {
       this.props.dispatch({ type: 'wallet/updateTipState', payload: {tipFlagIOS: false}});
     }
   }
+
   createWallet() {
     DeviceEventEmitter.emit('createWallet');
   }
+
   getTime(obj){
     var date;
     try {
@@ -954,8 +950,48 @@ class Route extends React.Component {
     }
     return date;
   }
+
+  Openlink(url) {
+    if(url){
+      this._setModalVisible();
+      Linking.openURL(url);
+    }
+  }
+
+   // 显示/隐藏 modal  
+   _setModalVisible() {
+    let isSysteminfoModal = this.state.SysteminfoModal;
+    this.setState({
+      SysteminfoModal: !isSysteminfoModal,
+    });
+  }
+ 
+  //获取图片的宽高比
+  gainImg(imageUri) {
+    Image.getSize(imageUri,(width,height) => {
+      this.setState({
+        WHratio: Math.floor((height/width)*10000)/10000
+      })
+    })
+  }
+
   render() {
     return (<View style={{ flex: 1 }}>
+     <View style={{backgroundColor: UColor.riceWhite}}>
+        <Modal animationType='slide' transparent={true} visible={this.state.SysteminfoModal} onShow={() => { }} onRequestClose={() => { }} >
+          <TouchableOpacity onPress={this._setModalVisible.bind(this)} style={[styles.modalStyle,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+            <View style={[styles.subView,{}]} >
+              <Button onPress={this.Openlink.bind(this,this.state.SysteminfoUrl)}>
+                <Image source={{uri:this.state.SysteminfoImg}} style={{width: ScreenWidth - ScreenUtil.autowidth(70), height: (ScreenWidth - ScreenUtil.autowidth(70))*this.state.WHratio, zIndex: 999,}} />
+              </Button>
+            </View>
+            <View style={{paddingTop: ScreenUtil.autoheight(20),}}>
+                <Ionicons color={UColor.btnColor} name="ios-close-circle" size={ScreenUtil.setSpText(40)}/>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      </View>
+      
       <Nav ref="nav" onNavigationStateChange={(prevNav, nav, action) => { this.switchRoute(prevNav, nav, action) }} />
       {this.state.showShare ? (
         <View style={{ position: 'absolute', zIndex: 100000, top: 0, left: 0, width: ScreenWidth, height: ScreenHeight, backgroundColor: UColor.mask }}>
@@ -1431,6 +1467,18 @@ class Route extends React.Component {
     </View>)
   }
 }
+const styles = StyleSheet.create({
+  modalStyle: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  subView: {
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    marginHorizontal: ScreenUtil.setSpText(35),
+  },
+})
 
 let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };
 Route = codePush(codePushOptions)(Route);
