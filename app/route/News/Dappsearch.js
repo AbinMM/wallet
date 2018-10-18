@@ -50,8 +50,8 @@ class Dappsearch extends BaseComponent {
             return;
         }else{
             const { navigate } = this.props.navigation;
-            sdkOpenDapp(labelname,'CustomDapp',this.state.theme);
-            // navigate('DappWeb', { title: 'CustomDapp', url: labelname });
+            // sdkOpenDapp(labelname,'CustomDapp',this.state.theme);
+            navigate('DappWeb', { title: 'CustomDapp', url: labelname });
         }
     }
 

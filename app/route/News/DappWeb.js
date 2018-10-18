@@ -126,7 +126,7 @@ export default class DappWeb extends Component {
             show: !isShow,
         });
     }
-    inputPwd = () => {
+    inputPwd = (isTransfer) => {
        
         const view =
             <View style={styles.passout}>
@@ -140,41 +140,56 @@ export default class DappWeb extends Component {
                 EasyToast.show('密码长度至少4位,请重输');
                 return;
             }
+            var actions;
+            var permission;
+            var privateKey;
             //关闭订单详情
-            this._setModalVisible();
+            if(isTransfer){
+                this._setModalVisible();
+                actions = [
+                    {
+                        account: "eosio.token",
+                        name: "transfer", 
+                        authorization: [{
+                        actor: this.state.tranferInfo.fromAccount,
+                        permission: permission,
+                        }], 
+                        data: {
+                            from: this.state.tranferInfo.fromAccount,
+                            to: this.state.tranferInfo.toAccount,
+                            quantity: formatEosQua(this.state.tranferInfo.amount + " EOS"),
+                            memo: this.state.tranferInfo.memo,
+                        }
+                    },
+                ];
+                privateKey = this.state.walletArr.activePrivate;
+                permission = 'active';  //transfer 用 active
+            }else{
+                this._setModalVisible_Tx();
+                actions = this.state.transactionInfo.params.actions;
+
+                permission = this.state.transactionInfo.params.actions[0].authorization[0].permission;
+                if(permission == 'owner')
+                {
+                    privateKey = this.state.walletArr.ownerPrivate;
+                }else{
+                    privateKey = this.state.walletArr.activePrivate;
+                }
+            }
             try {
-
-                var privateKey = this.state.walletArr.activePrivate;
-                var permission = 'active';
-
                 var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.state.walletArr.salt);
                 var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
-                    bytes_privateKey = CryptoJS.AES.decrypt(this.state.walletArr.ownerPrivate, this.state.password + this.state.walletArr.salt);
-                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                    permission = "owner"; 
-                }
+                // if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
+                //     bytes_privateKey = CryptoJS.AES.decrypt(this.state.walletArr.ownerPrivate, this.state.password + this.state.walletArr.salt);
+                //     plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                //     permission = "owner"; 
+                // }
 
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
                     // EasyShowLD.loadingShow();
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                     Eos.transaction({
-                        actions: [
-                            {
-                                account: "eosio.token",
-                                name: "transfer", 
-                                authorization: [{
-                                actor: this.state.tranferInfo.fromAccount,
-                                permission: permission,
-                                }], 
-                                data: {
-                                    from: this.state.tranferInfo.fromAccount,
-                                    to: this.state.tranferInfo.toAccount,
-                                    quantity: formatEosQua(this.state.tranferInfo.amount + " EOS"),
-                                    memo: this.state.tranferInfo.memo,
-                                }
-                            },
-                        ]
+                        actions: actions
                     }, plaintext_privateKey, (r) => {
                         EasyShowLD.loadingClose();
 
@@ -221,75 +236,7 @@ _handleActions() {
         showActions: !showActions,
     });
 }
-inputPwd_Tx = () => {
-    
-    const view =
-        <View style={styles.passout}>
-            <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
-                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-        </View>
-        EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
-        if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-            EasyToast.show('密码长度至少4位,请重输');
-            return;
-        }
-        //关闭订单详情
-        this._setModalVisible_Tx();
-        try {
-            var permission = this.state.transactionInfo.params.actions[0].authorization[0].permission;
-            var privateKey;
-            if(permission == 'owner')
-            {
-                privateKey = this.state.walletArr.ownerPrivate;
-            }else{
-                privateKey = this.state.walletArr.activePrivate;
-            }
 
-            var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.state.walletArr.salt);
-            var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-            // if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
-            //     bytes_privateKey = CryptoJS.AES.decrypt(this.state.walletArr.ownerPrivate, this.state.password + this.state.walletArr.salt);
-            //     plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-            // }
-
-            if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                // EasyShowLD.loadingShow();
-                plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                Eos.transaction({
-                    actions: this.state.transactionInfo.params.actions
-                }, plaintext_privateKey, (r) => {
-                    EasyShowLD.loadingClose();
-                    // var transaction_id = "";
-                    if(r && r.isSuccess){
-                        // transaction_id = r.data.transaction_id ? r.data.transaction_id : "";
-                    }else{
-                        if(r && r.data){
-                            if(r.data.msg){
-                                EasyToast.show(r.data.msg);
-                            }else{
-                                EasyToast.show("交易失败");
-                            }
-                        }else{
-                            EasyToast.show("交易失败");
-                        }
-                    }
-                    this.callbackToWebview(r.data);
-                });
-            } else {
-                EasyShowLD.loadingClose();
-                EasyToast.show('密码错误');
-                this.callbackToWebview("");
-            }
-        } catch (error) {
-            EasyShowLD.loadingClose();
-            EasyToast.show('密码错误');
-            this.callbackToWebview("");
-        }
-        // EasyShowLD.dialogClose();
-    }, () => { EasyShowLD.dialogClose()});
-}
   callbackToWebview(retResult)
   {
     var obj_result = new Object();
@@ -555,7 +502,7 @@ inputPwd_Tx = () => {
                                 <Text style={[styles.contentText,{color: UColor.startup}]} numberOfLines={1}>{this.state.tranferInfo.memo}</Text> 
                             </View>
                             
-                            <Button onPress={() => { this.inputPwd() }}>
+                            <Button onPress={() => { this.inputPwd(true) }}>
                                 <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
                                     <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
                                 </View>
@@ -593,7 +540,7 @@ inputPwd_Tx = () => {
                                 <Text style={[styles.actionsdetail,{color: UColor.startup}]}>{this.state.transactionInfo.actions}</Text>
                             </View>}
                             
-                            <Button onPress={() => { this.inputPwd_Tx() }}>
+                            <Button onPress={() => { this.inputPwd(false) }}>
                                 <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
                                     <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
                                 </View>
