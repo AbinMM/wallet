@@ -7,12 +7,13 @@ import {Toast} from './components/Toast';
 
 import {LoadingDialog} from './components/EasyShow'
 import { EosProvider } from "react-native-eosjs";
+import Constants from './utils/Constants'
 
 const App = () => (
  <View style={{flex:1,paddingBottom: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(30) : 0,}}>
      {/* <EosProvider server="http://192.168.1.40:8888" />
      */}
-    <EosProvider server="http://47.52.250.41:8001" chainId="aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"/>
+    <EosProvider server= {Constants.EosNode} chainId="aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"/>
 
     <Toast />
     <LoadingDialog />

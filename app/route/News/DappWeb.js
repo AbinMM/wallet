@@ -336,8 +336,16 @@ inputPwd_Tx = () => {
     }
   }
   dapp_getContract(result){
-      //取合约的abis
-    this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+    this.props.dispatch({
+        type: 'wallet/getContract', payload: {account_name:result.params.contract }, callback: (resp) => {
+            if(resp){
+                this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:resp}));
+            }else{
+                EasyToast.show('合约获取失败');
+                this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+            }
+        }
+      })
   }
   dapp_getCurrencyBalance(result){
     this.props.dispatch({
