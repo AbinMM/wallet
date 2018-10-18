@@ -307,8 +307,39 @@ inputPwd_Tx = () => {
   }
   onMessage = (e) =>{
     let result = JSON.parse(e.nativeEvent.data);
-    if(result.scatter==="getCurrencyBalance"){
-      this.props.dispatch({
+    switch(result.scatter)
+    {
+        case 'getCurrencyBalance':
+            this.dapp_getCurrencyBalance(result);
+            break;
+        
+        case 'getAccount':
+            this.dapp_getAccount(result);
+            break;
+
+        case 'transaction':
+            this.dapp_transaction(result);
+            break;
+
+        case 'transfer':
+            this.dapp_transfer(result);
+            break;
+
+        case 'noaccount':
+            EasyToast.show('请导入账户');
+            InteractionManager.runAfterInteractions(() => {
+                // WalletList.show(Globle.wallet,false,(select)=>{
+                
+                // });
+            });
+            break;    
+
+        default:
+            break;
+    }
+  }
+  dapp_getCurrencyBalance(result){
+    this.props.dispatch({
         type: 'wallet/getBalance', payload: { contract: result.params.contract, account: result.params.name, symbol: result.params.coin }, callback: (resp) => {
           try {
                 var tmp_balance = "";
@@ -330,33 +361,21 @@ inputPwd_Tx = () => {
             }
         }
       })
-     
-    }else if(result.scatter==="getAccount"){
-        var account_name = "";
-        if(result.params.account.account_name)
-        {
-            account_name = result.params.account.account_name;
-        }
-      this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: account_name},callback: (resp) => {
-          if(resp){
+  }
+  dapp_getAccount(result){
+    var account_name = "";
+    if(result.params.account.account_name)
+    {
+        account_name = result.params.account.account_name;
+    }
+    this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: account_name},callback: (resp) => {
+        if(resp){
             this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:resp}));
-          }else{
+        }else{
             EasyToast.show('账户获取失败');
             this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
-          }
-      } });
-    }else if(result.scatter==="transaction"){
-        this.dapp_transaction(result);
-    }else if(result.scatter==="transfer"){
-        this.dapp_transfer(result);
-    }else if(result.scatter==="noaccount"){
-        EasyToast.show('请导入账户');
-        InteractionManager.runAfterInteractions(() => {
-            // WalletList.show(Globle.wallet,false,(select)=>{
-            
-            // });
-        });
-    }
+        }
+    } });
   }
   dapp_transaction(result){
     this.setState({
@@ -423,12 +442,7 @@ inputPwd_Tx = () => {
   dapp_transfer(result) {
     this.setState({
         walletArr: null,
-        tranferInfo:{
-            fromAccount:'',
-            toAccount:'',
-            amount: '',
-            memo: '',
-        },
+        tranferInfo:{fromAccount:'',toAccount:'',amount: '',memo: ''},
         name: '',
         key: '',
     });
