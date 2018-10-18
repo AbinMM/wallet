@@ -39,7 +39,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>201809251010102</string>
+	<string>201810181010101</string>
 	<key>CodePushDeploymentKey</key>
 	<string>HK7naPLH8W7kTDeNk2gC5T7gPLGYd2d1e747-00dc-4337-91b1-dcf9377d3873</string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -70,13 +70,13 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>EosToken需要使用您的相机扫描二维码，需要您的同意，才能访问相机</string>
+	<string>若不允许,你将无法在eosToken中使用扫码、扫码转账等功能.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>需要访问您的相册</string>
+	<string>若不允许,你将无法在选择照片上传到eosToken</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>需要访问您的相册</string>
+	<string>若不允许,你将无法在选择照片上传到eosToken</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
