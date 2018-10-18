@@ -171,26 +171,44 @@ function eosTokenTransfer(methodName,params,password, callback)
         });
     })
     .then((rdata)=>{
-        var plaintext_privateKey = rdata; 
-        Eos.transfer(obj_param.contract, obj_param.from, obj_param.to, formatEosQua(obj_param.amount + " " + obj_param.tokenName,obj_param.precision), obj_param.memo, plaintext_privateKey, true, (r) => {
-            try {
-              if(r && r.isSuccess)
-              {
-                g_props.dispatch({type: 'wallet/pushTransaction', payload: { from: obj_param.from, to: obj_param.to, amount: formatEosQua(obj_param.amount + " " + obj_param.tokenName,obj_param.precision), memo: obj_param.memo, data: "push"}});
-                res.result = true;
-                res.data.transactionId = r.data.transaction_id ? r.data.transaction_id : "";
-                console.log("transfer ok");
-              }else{
-                var errmsg = ((r.data && r.data.msg) ? r.data.msg : "");
-                console.log("transfer %s",errmsg);
-                res.result = false;
-                res.msg = errmsg;
-              }
-              if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
-            } catch (error) {
-              console.log("eosTokenTransfer error: %s",error.message);
-              if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
+          var plaintext_privateKey = rdata; 
+          var permission = (is_activePrivate == true) ? "active" : "owner";
+          Eos.transaction({
+            actions: [
+                {
+                    account: obj_param.contract,
+                    name: "transfer", 
+                    authorization: [{
+                    actor: obj_param.from,
+                    permission: permission,
+                    }], 
+                    data: {
+                        from: obj_param.from,
+                        to: obj_param.to,
+                        quantity: formatEosQua(obj_param.amount + " " + obj_param.tokenName,obj_param.precision),
+                        memo: obj_param.memo,
+                    }
+                },
+            ]
+        }, plaintext_privateKey, (r) => {
+          try {
+            if(r && r.isSuccess)
+            {
+              g_props.dispatch({type: 'wallet/pushTransaction', payload: { from: obj_param.from, to: obj_param.to, amount: formatEosQua(obj_param.amount + " " + obj_param.tokenName,obj_param.precision), memo: obj_param.memo, data: "push"}});
+              res.result = true;
+              res.data.transactionId = r.data.transaction_id ? r.data.transaction_id : "";
+              console.log("transfer ok");
+            }else{
+              var errmsg = ((r.data && r.data.msg) ? r.data.msg : "");
+              console.log("transfer %s",errmsg);
+              res.result = false;
+              res.msg = errmsg;
             }
+            if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
+          } catch (error) {
+            console.log("eosTokenTransfer error: %s",error.message);
+            if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
+          }
         });
     })
     .catch((error)=>{

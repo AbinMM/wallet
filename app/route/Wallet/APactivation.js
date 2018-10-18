@@ -81,38 +81,94 @@ class APactivation extends BaseComponent {
             EasyToast.show('密码长度至少4位,请重输');
             return;
         }
-        var privateKey = this.props.defaultWallet.activePrivate;
         try {
-            var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-            var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+            var bytes_privateKey;
+            var plaintext_privateKey;
+            var permission = 'active';
+
+            try {
+                var privateKey = this.props.defaultWallet.activePrivate;
+                bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
+                plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
+                    bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
+                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+                    permission = "owner"; 
+                }
+            } catch (error) {
+                EasyShowLD.loadingClose();
+                EasyToast.show('密码错误');
+                return;
+            }
+
             if (plaintext_privateKey.indexOf('eostoken') != -1) {
                 // EasyShowLD.dialogClose();
                 EasyShowLD.loadingShow();
                 plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                Eos.createAndDelegateAccount(this.props.defaultWallet.account, plaintext_privateKey, this.state.accountName, this.state.ownerPuk, this.state.activePuk,
-                    formatEosQua(this.state.cpu + " EOS"), formatEosQua(this.state.net + " EOS"), formatEosQua(this.state.ram + " EOS"), 1, (r)=>{
-                  EasyShowLD.loadingClose();
-                  if(r.isSuccess){
-                    //   EasyToast.show("创建账号成功");
-                    EasyShowLD.dialogShow("支付成功", (<View>
-                        <Text style={[styles.Becarefultext,{color: UColor.showy}]}>{this.state.accountName}</Text>
-                        <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>该账号完成支付，请告知账号主人点击激活即可正常使用。</Text>
-                        <View style={styles.linkout}>
-                            <Text style={[styles.linktext,{color: UColor.tintColor}]} onPress={() => this.onShareFriend()}>分享给您的朋友</Text>
-                        </View>
-                    </View>), "知道了", null,  () => { EasyShowLD.dialogClose();this.props.navigation.goBack(); });
-                  }else{
-                      if(r.data){
-                          if(r.data.msg){
-                              EasyToast.show(r.data.msg);
-                          }else{
-                              EasyToast.show("创建账号失败");
-                          }
-                      }else{
-                          EasyToast.show("创建账号失败");
-                      }
-                  }
-                });
+                Eos.transaction({
+                    actions: [{
+                        account: "eosio",
+                        name: "newaccount",
+                        authorization: [{
+                            actor: this.props.defaultWallet.account,
+                            permission: permission
+                        }],
+                        data: {
+                            creator: this.props.defaultWallet.account,
+                            name: this.state.accountName,
+                            owner: this.state.ownerPuk,
+                            active: this.state.activePuk
+                        }
+                    },{
+                        account: "eosio",
+                        name: "buyram",
+                        authorization: [{
+                            actor: this.props.defaultWallet.account,
+                            permission: permission
+                        }],
+                        data: {
+                            payer: this.props.defaultWallet.account,
+                            receiver: this.state.accountName,
+                            quant: formatEosQua(this.state.ram + " EOS")
+                        }
+                    },{
+                        account: "eosio",
+                        name: "delegatebw",
+                        authorization: [{
+                            actor: this.props.defaultWallet.account,
+                            permission: permission
+                        }],
+                        data: {
+                            from: this.props.defaultWallet.account,
+                            receiver: this.state.accountName,
+                            stake_net_quantity:formatEosQua(this.state.net + " EOS"),
+                            stake_cpu_quantity:formatEosQua(this.state.cpu + " EOS"),
+                            transfer:1
+                        }
+                    }]
+                }, plaintext_privateKey, (r)=>{
+                    EasyShowLD.loadingClose();
+                    if(r.isSuccess){
+                      //   EasyToast.show("创建账号成功");
+                      EasyShowLD.dialogShow("支付成功", (<View>
+                          <Text style={[styles.Becarefultext,{color: UColor.showy}]}>{this.state.accountName}</Text>
+                          <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>该账号完成支付，请告知账号主人点击激活即可正常使用。</Text>
+                          <View style={styles.linkout}>
+                              <Text style={[styles.linktext,{color: UColor.tintColor}]} onPress={() => this.onShareFriend()}>分享给您的朋友</Text>
+                          </View>
+                      </View>), "知道了", null,  () => { EasyShowLD.dialogClose();this.props.navigation.goBack(); });
+                    }else{
+                        if(r.data){
+                            if(r.data.msg){
+                                EasyToast.show(r.data.msg);
+                            }else{
+                                EasyToast.show("创建账号失败");
+                            }
+                        }else{
+                            EasyToast.show("创建账号失败");
+                        }
+                    }
+                  });
             } else {
                 EasyShowLD.loadingClose();
                 EasyToast.show('密码错误');

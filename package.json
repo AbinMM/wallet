@@ -31,7 +31,7 @@
     "react-native-banner-carousel": "^1.0.3",
     "react-native-code-push": "^5.4.1",
     "react-native-device-info": "^0.17.4",
-    "react-native-eosjs": "0.0.6",
+    "react-native-eosjs": "1.0.0",
     "react-native-gesture-handler": "^1.0.0-alpha.40",
     "react-native-linear-gradient": "^2.4.0",
     "react-native-modal-dropdown": "^0.6.2",
