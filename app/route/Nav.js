@@ -26,8 +26,6 @@ import ChoiceToken from './Home/ChoiceToken'
 import FreeMortgage from './Home/FreeMortgage'
 import FunctionsMore from './Home/FunctionsMore'
 import TradeDetails from './Home/TradeDetails'
-import TurnIn from './Home/TurnIn'
-import TurnOut from './Home/TurnOut'
 import TurnInAsset from './Home/TurnInAsset'
 import TurnOutAsset from './Home/TurnOutAsset'
 
@@ -313,12 +311,6 @@ const Nav = StackNavigator(
     },
     TradeDetails: {
       screen: TradeDetails
-    },
-    TurnIn: {
-      screen: TurnIn
-    },
-    TurnOut: {
-      screen: TurnOut
     },
     Detailsofmoney: {
       screen: Detailsofmoney

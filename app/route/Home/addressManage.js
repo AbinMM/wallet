@@ -157,9 +157,8 @@ class addressManage extends BaseComponent {
             DeviceEventEmitter.emit('transfer_scan_result',coins);
         }else{
             const { navigate } = this.props.navigation;
-            navigate('TurnOut', { coins: coins });
+            navigate('TurnOutAsset', { coins: coins });
         }
-        console.log("selectAddress:%s",selectAccount);
     }
 
     dismissKeyboardClick() {

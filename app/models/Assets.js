@@ -323,7 +323,19 @@ export default {
         }
         if(callback) callback();
       },
-
+      *getmyAssetInfo({ payload,callback }, { call, put }) {
+        if(payload && payload.accountName){
+            var myAssets = yield call(store.get, 'myAssets217_' + payload.accountName);
+            var myAssetstoken = [];
+            for (var i = 0; i < myAssets.length; i++) {
+                if (myAssets[i].asset.name == payload.symbol) {
+                    myAssetstoken= myAssets[i];
+                }
+            }
+            //alert(JSON.stringify(myAssetstoken));
+            if(callback) callback(myAssetstoken);
+        }
+      }
     },
 
     reducers: {

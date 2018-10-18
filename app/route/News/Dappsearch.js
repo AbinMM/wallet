@@ -66,10 +66,10 @@ class Dappsearch extends BaseComponent {
                 <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
                     <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
                         <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
-                        <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} placeholderTextColor={UColor.inputtip} 
-                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholder="输入DAPP网址" 
+                        <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} keyboardType="default"
+                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} autoCorrect={true}
                             underlineColorAndroid="transparent" onChangeText={(labelname) => this.setState({ labelname })}
-                             autoCorrect={true} returnKeyType="go" keyboardType="default"  />
+                            placeholderTextColor={UColor.inputtip}  placeholder="输入DAPP网址"  returnKeyType="go" />
                     </View>    
                     <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>  
                         <Image source={UImage.goto} style={styles.cancelimg} resizeMode='stretch'/>

@@ -476,7 +476,7 @@ export default {
                 const resp = yield call(Request.request, "http://192.168.1.127:8088/api" + getEosShareholdersInfo, 'post', payload);
                 // let marketsdata = yield call(store.get, 'tradingdata');
                 // let shareholdersdata = {};
-                alert('getEosShareholdersInfo: '+JSON.stringify(resp));
+                //alert('getEosShareholdersInfo: '+JSON.stringify(resp));
                 if(resp.code=='0'){  
                     // shareholdersdata = {
                     //     EosBalance: Math.floor(marketsdata.EosBalancepool*resp.data.rows[0].map_acc_info[0].info.eos_holding.replace("EOS", "")/resp.data.rows[0].total_quant.replace("EOS", "")*100)/100,
@@ -507,7 +507,7 @@ export default {
             try{
                 const resp = yield call(Request.request, "http://192.168.1.127:8088/api" + getEosMarkets, 'post', payload);
                 //let marketsdata = {};
-                alert('getEosMarkets: '+JSON.stringify(resp));
+                //alert('getEosMarkets: '+JSON.stringify(resp));
                 if(resp.code=='0'){  
                     //alert(payload.tradename);
                     // marketsdata = {

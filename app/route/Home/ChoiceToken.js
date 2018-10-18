@@ -30,36 +30,34 @@ class ChoiceToken extends BaseComponent {
   }
 
   componentDidMount() {
-    this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
-        this.props.dispatch({ type: 'assets/myAssetInfo', payload: { page: 1, isInit: true, accountName: this.props.defaultWallet.name}, callback: (myAssets) => {
-
-        } })
-    } })
-
-
+    this.props.dispatch({ 
+      type: 'wallet/info', payload: { address: "1111" }, callback: () => {
+        this.props.dispatch({ 
+          type: 'assets/myAssetInfo', payload: { page: 1, isInit: true, accountName: this.props.defaultWallet.name}, 
+          callback: () => {} 
+        })
+      } 
+    })
   }
-
-  
   
   componentWillUnmount(){
     //结束页面前，资源释放操作
     super.componentWillUnmount();
   }
 
-    assetInfo(asset){
-        this.props.navigation.goBack();  //正常返回上一个页面
-        if(this.state.isTurnOut){
-            DeviceEventEmitter.emit('transfer_token_result',asset);
-        }else{
-            const { navigate } = this.props.navigation;
-            navigate('TurnOutAsset', { coins: asset, balance: asset.balance});
-        }
-        console.log("coins:%s",asset);
-    }
+  assetInfo(asset){
+      this.props.navigation.goBack();  //正常返回上一个页面
+      if(this.state.isTurnOut){
+          DeviceEventEmitter.emit('transfer_token_result',asset);
+      }else{
+          const { navigate } = this.props.navigation;
+          navigate('TurnOutAsset', { coins: asset });
+      }
+  }
 
-    dismissKeyboardClick() {
-        dismissKeyboard();
-    }
+  dismissKeyboardClick() {
+      dismissKeyboard();
+  }
 
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>

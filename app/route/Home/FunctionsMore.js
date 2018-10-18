@@ -28,26 +28,27 @@ class FunctionsMore extends React.Component {
   }
 
   onPress(key, data = {}) {
+    let params = this.props.navigation.state.params;
     const { navigate } = this.props.navigation;
     if (key == 'Receivables') {
         AnalyticsUtil.onEvent('Receipt_code');
-        navigate('TurnIn', {});
+        navigate('TurnInAsset', {coins: params.coins, Choicesymbol: true });
     }else if (key == 'transfer') {
-      navigate('TurnOut', { coins:'EOS', balance: this.props.navigation.state.params.balance });
+        navigate('TurnOutAsset', { coins: params.coins, Choicesymbol: true });
     }else if (key == 'Resources') {
-      navigate('Resources', {account_name:this.props.navigation.state.params.account_name});
+        navigate('Resources', {account_name: params.account_name});
     }else if(key == 'candy'){
-      Linking.openURL("https://eosdrops.io/");
+        Linking.openURL("https://eosdrops.io/");
     }else if(key == 'Bvote'){
-      navigate('Nodevoting', {account_name:this.props.navigation.state.params.account_name});
+        navigate('Nodevoting', {account_name: params.account_name});
     }else if(key == 'Tokenissue'){
-      this. _setModalVisible();
+        this. _setModalVisible();
     }else if(key == 'FreeMortgage'){
         navigate('FreeMortgage');
     }else if(key == 'navigation'){
         Linking.openURL("https://eostoken.github.io/EOS-Navigator/");
     }else{
-      EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
+        EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
     }
   }
 

@@ -20,31 +20,50 @@ class TurnInAsset extends BaseComponent {
     header:null, 
   };
 
+  _rightTopClick = () => {
+    DeviceEventEmitter.emit(
+      "turninShare",
+      '{"toaccount":"' +
+        this.props.defaultWallet.account +
+        '","amount":"' +
+        this.state.amount +
+        '","symbol":"' +
+        this.state.symbol +
+        '", "contractAccount":"' +
+        this.state.contractAccount +
+        '"}'
+    );
+  };
+
   // 构造函数
   constructor(props) {
     super(props);
     this.state = {
-      symbol: "",
-      toAccount: "",
-      amount: "",
-      memo: "",
-      defaultWallet: null,
+      toAccount: "", //钱包账户
+      symbol: "", //币种
+      amount: "", //数量
+      contractAccount: "", //契约帐户
+      Choicesymbol: this.props.navigation.state.params.Choicesymbol, //是否具有选择币种功能
     };
   }
 
   //组件加载完成
   componentDidMount() {
-    const c = this.props.navigation;
-    this.props.dispatch({ type: "wallet/getDefaultWallet",callback: data => {}});
+    this.props.dispatch({ type: "wallet/getDefaultWallet",callback: () => {}});
     var params = this.props.navigation.state.params.coins;
-    this.setState({
-      symbol:  params.asset.name,
-      toAccount: this.props.defaultWallet.account,
-    });
-
+    if(params != null){
+      this.setState({
+        symbol: params.asset.name,
+        contractAccount: params.asset.contractAccount,
+        toAccount: this.props.defaultWallet == null ? "" : this.props.defaultWallet.account,
+      });
+    }
+    
+    //选择代币返回的数据
     DeviceEventEmitter.addListener('transfer_token_result', (data) => {
       this.setState({
           symbol:data.asset.name,
+          contractAccount: data.asset.contractAccount,
       });
     });
   }
@@ -59,20 +78,7 @@ class TurnInAsset extends BaseComponent {
     Clipboard.setString(address);
     EasyToast.show("复制成功");
   };
-
   
-
-  _rightTopClick = () => {
-    DeviceEventEmitter.emit(
-      "turninShare",
-      '{"toaccount":"' +
-        this.props.defaultWallet.account +
-        '","amount":"' +
-        this.state.amount +
-        '","symbol":"' + this.state.symbol +'"}'
-    );
-  };
-
   chkPrice(obj) {
     obj = obj.replace(/[^\d.]/g, "");  //清除 "数字"和 "."以外的字符
     obj = obj.replace(/^\./g, "");  //验证第一个字符是否为数字
@@ -97,8 +103,8 @@ class TurnInAsset extends BaseComponent {
     return obj;
   }
 
+  //生成二维码
   getQRCode(){ 
-    // var  qrcode={'eos:' + this.props.defaultWallet.account + '?amount=' + ((this.state.amount == "")?'0':this.state.amount) +'&token=EOS'}
     var lowerstr;
     var upperstr;
     if(this.state.symbol == null || this.state.symbol == ""){
@@ -108,7 +114,7 @@ class TurnInAsset extends BaseComponent {
         lowerstr = this.state.symbol.toLowerCase();
         upperstr = this.state.symbol.toUpperCase();
     }
-    var qrcode = lowerstr +':' + this.props.defaultWallet.account + '?amount=' + ((this.state.amount == "")?'0':this.state.amount) + '&token=' + upperstr ;
+    var qrcode = lowerstr +':' + this.props.defaultWallet.account + '?amount=' + ((this.state.amount == "")?'0':this.state.amount) + '&contractAccount=' + this.state.contractAccount + '&token=' + upperstr ;
     return qrcode;
   }
 
@@ -121,6 +127,7 @@ class TurnInAsset extends BaseComponent {
     dismissKeyboard();
   }
 
+  // 选择代币
   openChoiceToken() {
     const { navigate } = this.props.navigation;
     navigate('ChoiceToken', {isTurnOut:true,coinType:this.state.symbol});
@@ -147,12 +154,16 @@ class TurnInAsset extends BaseComponent {
                   style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} placeholder="请输入金额(可不填)"
                   underlineColorAndroid="transparent" secureTextEntry={false} keyboardType="numeric"
                 />
+                {this.state.Choicesymbol ? 
                 <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>    
                     <View style={{flexDirection: 'row',paddingVertical: ScreenUtil.autowidth(10),}}>                              
-                        <Text style={{fontSize: ScreenUtil.setSpText(15),color: UColor.arrow, marginRight: ScreenUtil.autowidth(5),}}>{this.state.symbol}</Text>
-                        <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} />
+                        <Text style={{fontSize: ScreenUtil.setSpText(15),color: UColor.tintColor, marginRight: ScreenUtil.autowidth(5),}}>{this.state.symbol}</Text>
+                        <Ionicons color={UColor.tintColor} name="ios-arrow-forward-outline" size={20} />
                     </View>
                 </TouchableOpacity>
+                :
+                <Text style={[styles.tokenText,{color: UColor.arrow}]}>{this.state.symbol}</Text>
+                }
               </View>
               <Button onPress={this.copy.bind()} style={styles.btnnextstep}>
                 <View style={[styles.nextstep,{backgroundColor: UColor.tintColor}]}>

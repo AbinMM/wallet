@@ -20,7 +20,7 @@ var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 var dismissKeyboard = require('dismissKeyboard');
 
-@connect(({ wallet }) => ({ ...wallet }))
+@connect(({ wallet, assets }) => ({ ...wallet, ...assets }))
 class TurnOutAsset extends BaseComponent {
     static navigationOptions = {
         headerTitle: '转出' ,
@@ -31,67 +31,69 @@ class TurnOutAsset extends BaseComponent {
      constructor(props) {
         super(props);
         this.state = {
-            show: false,
-            toAccount: '',
-            amount: '',
-            memo: '',
-            defaultWallet: null,
-            balance: '0',
-            name: '',
-            tokenvalue: '',
-            tokenicon: "http://static.eostoken.im/images/20180319/1521432637907.png",
-            contractAccount: "eosio.token",
-            precisionNumber: '0',
+            show: false, 
+            toAccount: '', // 账户名称
+            amount: '', // 转账金额
+            memo: '', // 备注
+            balance: '0', // 代币余额
+            name: '', // 代币名称
+            tokenvalue: '', // 代币兑换比率
+            password:'',  //密码
+            tokenicon: "http://static.eostoken.im/images/20180319/1521432637907.png", // 代币图标
+            contractAccount: "eosio.token", // 契约帐户
+            precisionNumber: '0', // 代币经度
+            Choicesymbol: this.props.navigation.state.params.Choicesymbol, // 是否具有选择代币功能
+            getbalance: this.props.navigation.state.params.getbalance, // 扫码and页面进来
         };
     }
-
+    
+    //扫码
     _rightTopClick = () =>{
         const { navigate } = this.props.navigation;
-        navigate('BarCode', {isTurnOut:true,coinType:this.state.name});
+        navigate('BarCode', {isTurnOut:true,});
     }
 
     //组件加载完成
     componentDidMount() {
+        this.props.dispatch({ type: 'wallet/getDefaultWallet', callback: (data) => {}})
         var params = this.props.navigation.state.params.coins;
-        var tmpbalance = this.props.navigation.state.params.balance;
-        this.setState({
-            toAccount: params.toaccount == null ? '' : params.toaccount,
-            amount: params.amount == null ? '' : params.amount,
-            name: params.asset.name,
-            tokenvalue: params.asset.value,
-            tokenicon: params.asset.icon,
-            balance: tmpbalance == null ? '0.0000' : tmpbalance,
-            contractAccount: params.asset.contractAccount,
-            precisionNumber: params.asset.precisionNumber,
-            password:'',
-        })
+        if(this.state.getbalance){
+            this.setState({
+                name: params.asset.name,
+                balance: params.balance.replace(params.asset.name, ""),
+                tokenvalue: params.asset.value,
+                tokenicon: params.asset.icon,
+                contractAccount: params.asset.contractAccount,
+                precisionNumber: params.asset.precisionNumber,
+            })
+        }else{
+            this.getBalance(params);
+            this.setState({
+                toAccount: params.toaccount,
+                amount: params.amount,
+                name: params.symbol,
+            })
+        }
+     
+        //点击本页面的扫码返回的参数
         DeviceEventEmitter.addListener('scan_result', (data) => {
-            try {
-                //TODO: 开启扫码已做检测判断资产类型是否匹配，在此不必判断,this.state.name取值不准。
-                // if(data.symbol){
-                //     var tmpname = this.state.name;
-                //     if(data.symbol != tmpname){
-                //         EasyToast.show('扫码转账资产不匹配，请确认再转');
-                //         return ;
-                //     }
-                // }
-                if(data.toaccount){
-                    this.setState({toAccount:data.toaccount});
-                }
-                if(data.amount){
-                    this.setState({amount:data.amount})
-                }
-            } catch (error) {
-            }
-        });        
+            this.getBalance(data);
+            this.setState({
+                toAccount: data.toaccount,
+                amount: data.amount,
+                name: data.symbol,
+            })
+        });  
 
+        //选择联系人返回的参数
         DeviceEventEmitter.addListener('transfer_scan_result', (data) => {
             this.setState({toAccount:data.toaccount});
         });
 
+        //选择代币返回的参数
         DeviceEventEmitter.addListener('transfer_token_result', (data) => {
             this.setState({
-                balance: data.balance,
+                balance: data.balance.replace(data.asset.name, ""),
                 name:data.asset.name,
                 tokenvalue: data.asset.value, 
                 tokenicon:data.asset.icon,
@@ -101,24 +103,43 @@ class TurnOutAsset extends BaseComponent {
         });
     }
 
-    openAddressBook() {
-        const { navigate } = this.props.navigation;
-        navigate('addressManage', {isTurnOut:true,coinType:this.state.name});
-    }
-
-    openChoiceToken() {
-        const { navigate } = this.props.navigation;
-        navigate('ChoiceToken', {isTurnOut:true,coinType:this.state.name});
-    }
-
     componentWillUnmount(){
         //结束页面前，资源释放操作
         super.componentWillUnmount();
         DeviceEventEmitter.removeListener('scan_result');
     }
 
+    //查询代币余额
+    getBalance(data) {
+        this.props.dispatch({
+            type: 'assets/getmyAssetInfo', payload: { accountName: this.props.defaultWallet.account, symbol: data.symbol }, callback: (data) => {
+                this.setState({
+                    balance: data.balance.replace(data.asset.name, ""),
+                    name: data.asset.name,
+                    tokenvalue: data.asset.value, 
+                    tokenicon: data.asset.icon,
+                    contractAccount: data.asset.contractAccount,
+                    precisionNumber: data.asset.precisionNumber,
+                });
+            }
+        })
+    }
+   
+
+    //选择联系人
+    openAddressBook() {
+        const { navigate } = this.props.navigation;
+        navigate('addressManage', {isTurnOut:true,coinType:this.state.name});
+    }
+    
+    //选择代币
+    openChoiceToken() {
+        const { navigate } = this.props.navigation;
+        navigate('ChoiceToken', {isTurnOut:true,coinType:this.state.name});
+    }
+    
+    //下一步
     _rightButtonClick() {
-        //   console.log('右侧按钮点击了');  
         if (this.state.toAccount == null || this.state.toAccount == "") {
             EasyToast.show('请输入收款账号');
             return;  
@@ -192,8 +213,8 @@ class TurnOutAsset extends BaseComponent {
                                 account: this.state.contractAccount,
                                 name: "transfer", 
                                 authorization: [{
-                                actor: this.props.defaultWallet.account,
-                                permission: permission,
+                                    actor: this.props.defaultWallet.account,
+                                    permission: permission,
                                 }], 
                                 data: {
                                     from: this.props.defaultWallet.account,
@@ -238,7 +259,7 @@ class TurnOutAsset extends BaseComponent {
                                     }
                                 }
                                 if(r.data.msg){
-                                    EasyToast.show(r.data.msg);
+                                    EasyToast.show("1" + r.data.msg);
                                 }else{
                                     EasyToast.show("交易失败");
                                 }
@@ -332,13 +353,13 @@ class TurnOutAsset extends BaseComponent {
     render() {
         return (
         <View style={[styles.container,{backgroundColor:UColor.secdfont}]}>
-            <Header {...this.props} onPressLeft={true} title={this.state.name} avatar={UImage.scan} onPressRight={this._rightTopClick.bind()}/>
+            <Header {...this.props} onPressLeft={true} title={"转出" + this.state.name} avatar={UImage.scan} onPressRight={this._rightTopClick.bind()}/>
             <ScrollView  keyboardShouldPersistTaps="always">
                 <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                     <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
                         <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
                             <Image source={{uri:this.state.tokenicon}} style={{width: ScreenUtil.autowidth(30),height: ScreenUtil.autowidth(30),margin: ScreenUtil.autowidth(5)}} />  
-                            <Text style={[styles.headertext,{color: UColor.fontColor}]}>{this.state.balance==""? "0.0000" :this.state.balance} {this.state.name}</Text>
+                            <Text style={[styles.headertext,{color: UColor.fontColor}]}>{this.state.balance==""? "0.0000" :this.state.balance +" "+ this.state.name} {}</Text>
                             <Text style={[styles.rowtext,{color: UColor.lightgray}]}>≈ {(this.state.balance == null || this.state.tokenvalue == null) ? "0.00" : (this.state.balance * this.state.tokenvalue).toFixed(2)} ￥</Text>
                         </View>
                         <View style={styles.taboutsource}>
@@ -367,13 +388,18 @@ class TurnOutAsset extends BaseComponent {
                                             onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })} returnKeyType="next"
                                         />
                                     </View>
-                                   
+                                    {this.state.Choicesymbol ? 
                                     <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>    
                                         <View style={{flexDirection: 'row',paddingVertical: ScreenUtil.autowidth(10),}}>                              
                                             <Text style={{fontSize: ScreenUtil.setSpText(15),color: UColor.tintColor, marginRight: ScreenUtil.autowidth(5),}}>{this.state.name}</Text>
                                             <Ionicons color={UColor.tintColor} name="ios-arrow-forward-outline" size={20} />
                                         </View>
                                     </TouchableOpacity>
+                                    :
+                                    <View style={{alignSelf: 'flex-end',justifyContent: "flex-end",paddingVertical: ScreenUtil.autowidth(10),}}>
+                                        <Text style={[styles.tokenText,{color: UColor.arrow}]}>{this.state.name}</Text>
+                                    </View>
+                                    }
                                 </View>
                                 <View style={[styles.textinptoue,{borderBottomColor:UColor.mainsecd}]} >
                                     <Text style={[styles.inptitle,{color: UColor.fontColor}]}>备注</Text>
@@ -588,6 +614,10 @@ const styles = StyleSheet.create({
     scanningimg: {
         width: ScreenUtil.autowidth(30),
         height: ScreenUtil.autowidth(30),
+    },
+    tokenText: {
+        fontSize: ScreenUtil.setSpText(15),
+        marginRight: ScreenUtil.autowidth(5),
     },
     textinptoue: {
         borderBottomWidth: 1,

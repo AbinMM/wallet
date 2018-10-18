@@ -292,9 +292,7 @@ class Home extends React.Component {
     if (key == 'Receivables') {
       AnalyticsUtil.onEvent('Receipt_code');
       if (this.props.defaultWallet != null && this.props.defaultWallet.name != null && (this.props.defaultWallet.isactived && this.props.defaultWallet.hasOwnProperty('isactived'))) {
-        // this._setModalVisible();
-        //navigate('TurnIn', {});
-        navigate('TurnInAsset', {coins:this.props.myAssets[0], balance:this.props.myAssets[0].balance});
+        navigate('TurnInAsset', {coins:this.props.myAssets[0],Choicesymbol: true, getbalance: true });
       } else {
         EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
           this.createWallet();
@@ -309,7 +307,7 @@ class Home extends React.Component {
         }, () => { EasyShowLD.dialogClose() });  
         return;
       }
-      navigate('FunctionsMore', {data, balance: this.state.balance,account_name:(this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name});
+      navigate('FunctionsMore', {coins:this.props.myAssets[0], balance: this.state.balance,account_name:(this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name});
     }else if (key == 'transfer') {
       if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) {
         EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
@@ -318,8 +316,7 @@ class Home extends React.Component {
         }, () => { EasyShowLD.dialogClose() });  
         return;
       }
-      //navigate('TurnOut', { coins:'EOS', balance: this.state.balance });
-      navigate('TurnOutAsset', { coins:this.props.myAssets[0], balance: this.props.myAssets[0].balance });
+      navigate('TurnOutAsset', { coins:this.props.myAssets[0], Choicesymbol: true, getbalance: true });
     }else if (key == 'Resources') {
       if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) {
         EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {

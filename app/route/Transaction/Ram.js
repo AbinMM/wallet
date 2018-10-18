@@ -233,10 +233,13 @@ class Ram extends BaseComponent {
         }
         this.setState({isKLine:true, showMore: false,selectedSegment:opt});
         if(opt == "5分"){
+            this.setState({showMoreTitle:'更多'});
             this.fetchRAMKLine("5m",opt, onRefreshing);
         }else if(opt == "15分"){
+            this.setState({showMoreTitle:'更多'});
             this.fetchRAMKLine("15m",opt, onRefreshing);
         }else if(opt == "30分"){
+            this.setState({showMoreTitle:'更多'});
             this.fetchRAMKLine("30m",opt, onRefreshing);
         }else if(opt == "1小时"){
             this.setState({showMoreTitle:opt});
@@ -1272,7 +1275,7 @@ const styles = StyleSheet.create({
         position:'absolute', 
         left: 0,
         right: 0,
-        top: ScreenUtil.autoheight(50), 
+        top: ScreenUtil.autoheight(80), 
         alignItems: 'center',
         justifyContent: 'center',
         padding: ScreenUtil.autowidth(8),

@@ -40,7 +40,7 @@ export default class App extends BaseComponent {
     }
     
     _errExit(){
-        EasyToast.show('无效的' + this.state.coinType + '二维码');
+        EasyToast.show(a + '无效的' + this.state.coinType + '二维码');
         this.props.navigation.goBack();
         return;
     }
@@ -69,6 +69,9 @@ export default class App extends BaseComponent {
     }
 
     _onBarCodeRead = (e) => {
+        var strQRcode = JSON.stringify(e.nativeEvent.data.code);
+        //alert(strQRcode);
+        let coinType = strQRcode.match(/token=(\S*)"/)[1]
         this._stopScan();
         try {
             var strcoins = e.nativeEvent.data.code;
@@ -84,29 +87,29 @@ export default class App extends BaseComponent {
             }catch(e){
 
             }
-
-            var lowerCointType = this.state.coinType.toLowerCase();
-            var upperCointType = this.state.coinType.toUpperCase();
+           
+            var lowerCointType = coinType.toLowerCase();
+            var upperCointType = coinType.toUpperCase();
             var length = strcoins.length;
             var index = strcoins.lastIndexOf(lowerCointType + ':'); //"eos:"
             if (index == 0) {
                 index += (lowerCointType.length + 1); //"eos:"
                 var point = strcoins.lastIndexOf("?");
-                if(point <= index || point >= length)
-                {
+                if(point <= index || point >= length){
                     return this._errExit();
                 }
                 var account = strcoins.substring(index,point);
                 if(account == undefined || account == null || account == ""){
-                    return this._errExit();
+                    return this._errExit(5);
                 }
+
                 index = point + 1; //"?"
                 var pointamount = strcoins.lastIndexOf("amount=");    
                 if(index != pointamount || pointamount >= length){
                     return this._errExit();
                 }
                 index += 7; //"amount="
-                var point2 = strcoins.lastIndexOf("&");    
+                var point2 = strcoins.indexOf("&");    
                 if(point2 <= index || point2 >= length){
                     return this._errExit();
                 }
@@ -114,18 +117,31 @@ export default class App extends BaseComponent {
                 if(amount == undefined || amount == null){
                     return this._errExit();
                 }
-                index = point2 + 1; //"&"
+
+                index = point2 + 1 ; //"1&"
+                var pointAccount = strcoins.lastIndexOf("contractAccount=");   
+                if(index != pointAccount || pointAccount >= length){
+                    return this._errExit();
+                } 
+                index += 16 //"contractAccount="
+                var point3 = strcoins.lastIndexOf("&"); 
+                var contractAccount = strcoins.substring(index,point3);
+                if(contractAccount == null || contractAccount == undefined){
+                    return this._errExit();
+                }
+
+                index = point3 + 1; //"2&"
                 var pointtoken = strcoins.lastIndexOf("token=");   
                 if(index != pointtoken || pointtoken >= length){
                     return this._errExit();
                 } 
                 index += 6; //"token="
                 var symbol = strcoins.substring(index,length);
-                if(symbol == null || symbol != upperCointType)  //'EOS'
-                {
+                if(symbol == null || symbol != upperCointType){
                     return this._errExit();
                 }
-                var jsoncode = '{"toaccount":"' + account + '","amount":"' + amount + '","symbol":"' + this.state.coinType + '"}';
+
+                var jsoncode = '{"toaccount":"' + account + '","amount":"' + amount + '","contractAccount":"' + contractAccount + '","symbol":"' + coinType + '"}';
                 var coins = JSON.parse(jsoncode);
                 this.props.navigation.goBack();  //正常返回上一个页面
 
@@ -133,7 +149,7 @@ export default class App extends BaseComponent {
                     DeviceEventEmitter.emit('scan_result',coins);
                 }else{
                     const { navigate } = this.props.navigation;
-                    navigate('TurnOut', { coins: coins });
+                    navigate('TurnOutAsset', { coins: coins});
                 }
                 
             } else {
@@ -147,7 +163,7 @@ export default class App extends BaseComponent {
                          DeviceEventEmitter.emit('scan_result',coins);
                      }else{
                          const { navigate } = this.props.navigation;
-                         navigate('TurnOut', { coins: coins });
+                         navigate('TurnOutAsset', { coins: coins });
                      }
                  } else {
                     return this._errExit();
