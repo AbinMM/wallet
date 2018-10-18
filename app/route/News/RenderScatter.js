@@ -1,8 +1,10 @@
 
 export default function RenderScatter(props) {
-  let account = {name:props.defaultWallet.account,
-    publicKey:props.defaultWallet.activePublic,
-    perm_name:"active" };
+    let isActive=(props.defaultWallet.activePublic!=null && props.defaultWallet.activePublic.length==53)?true:false; 
+    let account = {name:props.defaultWallet.account,
+    publicKey:(isActive==false)?props.defaultWallet.ownerPublic:props.defaultWallet.activePublic,
+    perm_name:(isActive==false)?"owner":"active" };
+
   if(account){
     return `
     iden = {
