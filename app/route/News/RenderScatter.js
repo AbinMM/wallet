@@ -28,6 +28,19 @@ export default function RenderScatter(props) {
         },
         eos:(e,t,r,n) =>{
             return {
+                contract:function(contract){
+                    return new Promise((resolve, reject) => {
+                        var key = new Date().getTime();
+                        window.postMessage(JSON.stringify({key,scatter:"contract",params:{contract}}));
+                        document.addEventListener("message",function(msg){
+                            document.removeEventListener("message",this);
+                            var obj = eval("(" + msg.data + ")");
+                            if(obj.scatter==="contract" && obj.key===key){     
+                                resolve(obj.data);
+                            }
+                        });
+                    })
+                },
                 getCurrencyBalance:function(contract,name,coin){
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();

@@ -178,10 +178,10 @@ export default class DappWeb extends Component {
                     }, plaintext_privateKey, (r) => {
                         EasyShowLD.loadingClose();
 
-                        var transaction_id = "";
+                        // var transaction_id = "";
                         if(r && r.isSuccess){
                             this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.state.tranferInfo.fromAccount, to: this.state.tranferInfo.toAccount, amount: this.state.tranferInfo.amount + " EOS", memo: this.state.tranferInfo.memo, data: "push"}});
-                            transaction_id = r.data.transaction_id ? r.data.transaction_id : "";
+                            // transaction_id = r.data.transaction_id ? r.data.transaction_id : "";
                         }else{
                             if(r && r.data){
                                 if(r.data.msg){
@@ -193,7 +193,7 @@ export default class DappWeb extends Component {
                                 EasyToast.show("交易失败");
                             }
                         }
-                        this.callbackToWebview(transaction_id);
+                        this.callbackToWebview(r.data);
                     });
                 } else {
                     EasyShowLD.loadingClose();
@@ -261,9 +261,9 @@ inputPwd_Tx = () => {
                     actions: this.state.transactionInfo.params.actions
                 }, plaintext_privateKey, (r) => {
                     EasyShowLD.loadingClose();
-                    var transaction_id = "";
+                    // var transaction_id = "";
                     if(r && r.isSuccess){
-                        transaction_id = r.data.transaction_id ? r.data.transaction_id : "";
+                        // transaction_id = r.data.transaction_id ? r.data.transaction_id : "";
                     }else{
                         if(r && r.data){
                             if(r.data.msg){
@@ -295,20 +295,17 @@ inputPwd_Tx = () => {
     var obj_result = new Object();
     obj_result.scatter = this.state.name;
     obj_result.key = this.state.key;
-
-    // var obj_data = {code:500,error:{details:"110"}};
-    // var obj_data = {transaction_id:"69a5202b1ca8cca6622a06f3b281173d056136b628a13c6478333ec48d62a5ab"};
-    
-    // obj_result.data = JSON.stringify(obj_data);
-    obj_result.data = "69a5202b1ca8cca6622a06f3b281173d056136b628a13c6478333ec48d62a5ab";
-
-    // obj_result.data = retResult;
+    obj_result.data = retResult;
     this.refs.refWebview.postMessage(JSON.stringify(obj_result));
   }
   onMessage = (e) =>{
     let result = JSON.parse(e.nativeEvent.data);
     switch(result.scatter)
     {
+        case 'contract':
+            this.dapp_getContract(result);
+            break;
+
         case 'getCurrencyBalance':
             this.dapp_getCurrencyBalance(result);
             break;
@@ -337,6 +334,10 @@ inputPwd_Tx = () => {
         default:
             break;
     }
+  }
+  dapp_getContract(result){
+      //取合约的abis
+    this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
   }
   dapp_getCurrencyBalance(result){
     this.props.dispatch({
