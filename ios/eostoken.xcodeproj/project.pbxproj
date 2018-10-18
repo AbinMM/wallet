@@ -21,6 +21,8 @@
 		0C5ACA292153C5E60042EE63 /* UMS_shake_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C5ACA252153C5E60042EE63 /* UMS_shake_close@2x.png */; };
 		0C5ACA2A2153C5E60042EE63 /* EncryptAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5ACA262153C5E60042EE63 /* EncryptAlertView.m */; };
 		0C5ACA2D215485680042EE63 /* MyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5ACA2C215485680042EE63 /* MyButton.m */; };
+		0C709EB6217898F9001D8A7D /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C709EB5217898F9001D8A7D /* libsqlite3.0.tbd */; };
+		0C709EB821789905001D8A7D /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C709EB721789905001D8A7D /* libc++.tbd */; };
 		0C73A7D92154CEDA0031A465 /* BottomActionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C73A7D82154CEDA0031A465 /* BottomActionsView.m */; };
 		0C73A84A2155D9350031A465 /* XLPaymentLoadingHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C73A8112155D9350031A465 /* XLPaymentLoadingHUD.m */; };
 		0C73A84B2155D9350031A465 /* XLPaymentSuccessHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C73A8122155D9350031A465 /* XLPaymentSuccessHUD.m */; };
@@ -500,6 +502,8 @@
 		0C5ACA262153C5E60042EE63 /* EncryptAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptAlertView.m; sourceTree = "<group>"; };
 		0C5ACA2B215485680042EE63 /* MyButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyButton.h; sourceTree = "<group>"; };
 		0C5ACA2C215485680042EE63 /* MyButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyButton.m; sourceTree = "<group>"; };
+		0C709EB5217898F9001D8A7D /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		0C709EB721789905001D8A7D /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		0C73A7A02154CED90031A465 /* BottomActionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BottomActionsView.h; sourceTree = "<group>"; };
 		0C73A7D82154CEDA0031A465 /* BottomActionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BottomActionsView.m; sourceTree = "<group>"; };
 		0C73A80F2155D9350031A465 /* XLPaymentSuccessHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XLPaymentSuccessHUD.h; sourceTree = "<group>"; };
@@ -595,6 +599,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				892A77A18E954C7395EB3929 /* libz.tbd in Frameworks */,
+				0C709EB821789905001D8A7D /* libc++.tbd in Frameworks */,
+				0C709EB6217898F9001D8A7D /* libsqlite3.0.tbd in Frameworks */,
+				D641D2F0DD8744BEB0A636F0 /* CoreTelephony.framework in Frameworks */,
+				21A00E56D5DD420C8B52D701 /* SystemConfiguration.framework in Frameworks */,
 				ABC6FBAA206E263C00918A81 /* libsqlite3.tbd in Frameworks */,
 				ABC6FB55206E121000918A81 /* libRCTCameraRoll.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
@@ -615,17 +624,14 @@
 				C28821911465449B98A04104 /* libRNGestureHandler.a in Frameworks */,
 				D6C4C8A1D3EE4665BBA50F4A /* libRNVectorIcons.a in Frameworks */,
 				27C2401D8EE24AC2A126D070 /* libCodePush.a in Frameworks */,
-				892A77A18E954C7395EB3929 /* libz.tbd in Frameworks */,
 				47BFBDB93F5D4B2CAE03C4C4 /* libRNDeviceInfo.a in Frameworks */,
 				ABC6FBA2206E1DDE00918A81 /* UMCommon.framework in Frameworks */,
 				74AFBAEFD7974F6FA850BB2B /* libRCTJCoreModule.a in Frameworks */,
 				2ADFC6CBDD354658AB51F12C /* libRCTJPushModule.a in Frameworks */,
 				17A4F6AC5BC9496FBC8C4F85 /* UserNotifications.framework in Frameworks */,
-				D641D2F0DD8744BEB0A636F0 /* CoreTelephony.framework in Frameworks */,
 				D22BE2E17C154B4B85E10D76 /* Security.framework in Frameworks */,
 				FE3017D409EE445CBC9E7274 /* CFNetwork.framework in Frameworks */,
 				24966EFAD68D484CA75C85BC /* CoreFoundation.framework in Frameworks */,
-				21A00E56D5DD420C8B52D701 /* SystemConfiguration.framework in Frameworks */,
 				0F15118864544AB0A18205FA /* Foundation.framework in Frameworks */,
 				5A8821F3D4BA49FFBC02274C /* UIKit.framework in Frameworks */,
 				FD4433B75567466A88478728 /* libresolv.tbd in Frameworks */,
@@ -821,6 +827,8 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0C709EB721789905001D8A7D /* libc++.tbd */,
+				0C709EB5217898F9001D8A7D /* libsqlite3.0.tbd */,
 				ABC6FBA9206E263C00918A81 /* libsqlite3.tbd */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				71EBE9EEDD7C4D1F8C5C9F62 /* libz.tbd */,

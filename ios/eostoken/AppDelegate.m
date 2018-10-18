@@ -23,7 +23,7 @@
 #import "RNUMConfigure.h"
 
 #import <UMAnalytics/MobClick.h>
-
+#import <React/RCTLinkingManager.h>
 @implementation AppDelegate
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
@@ -111,5 +111,10 @@
   [SplashScreen show];
   return YES;
 }
-
+// ios 9.0+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+            options:(NSDictionary<NSString*, id> *)options
+{
+  return [RCTLinkingManager application:application openURL:url options:options];
+}
 @end
