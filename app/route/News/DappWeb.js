@@ -271,6 +271,10 @@ _handleActions() {
             this.dapp_transfer(result);
             break;
 
+        case 'getTableRows':
+            this.dapp_getTableRows(result);
+            break;
+
         case 'noaccount':
             EasyToast.show('请导入账户');
             InteractionManager.runAfterInteractions(() => {
@@ -483,6 +487,27 @@ _handleActions() {
             return false;
         }
     };
+
+  dapp_getTableRows(result)
+  {
+    this.props.dispatch({
+        type: 'wallet/getEosTableRows', payload: result.params.obj_param, callback: (resp) => {
+          try {
+            var rows;
+            if (resp && resp.code == '0') {
+              rows = resp.data.rows;
+            } else {
+              rows = [];  
+            }
+            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:rows}));
+          } catch (error) {
+            console.log("getEosTableRows error: %s",error.message);
+            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:[]}));
+          }
+        }
+      });
+  }
+
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
