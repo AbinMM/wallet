@@ -483,7 +483,6 @@ _handleActions() {
             this.refs['refWebview'].goBack();
             return true;
         } else {
-            this.props.navigation.goBack();
             return false;
         }
     };
