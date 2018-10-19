@@ -292,7 +292,7 @@ class Home extends React.Component {
     if (key == 'Receivables') {
       AnalyticsUtil.onEvent('Receipt_code');
       if (this.props.defaultWallet != null && this.props.defaultWallet.name != null && (this.props.defaultWallet.isactived && this.props.defaultWallet.hasOwnProperty('isactived'))) {
-        navigate('TurnInAsset', {coins:this.props.myAssets[0],Choicesymbol: true, getbalance: true });
+        navigate('TurnInAsset', {coins:this.props.myAssets[0],Choicesymbol: true, });
       } else {
         EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
           this.createWallet();

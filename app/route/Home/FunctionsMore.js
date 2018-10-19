@@ -34,7 +34,7 @@ class FunctionsMore extends React.Component {
         AnalyticsUtil.onEvent('Receipt_code');
         navigate('TurnInAsset', {coins: params.coins, Choicesymbol: true });
     }else if (key == 'transfer') {
-        navigate('TurnOutAsset', { coins: params.coins, Choicesymbol: true });
+        navigate('TurnOutAsset', { coins: params.coins, Choicesymbol: true, getbalance: true });
     }else if (key == 'Resources') {
         navigate('Resources', {account_name: params.account_name});
     }else if(key == 'candy'){
