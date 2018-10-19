@@ -29,7 +29,7 @@ var cangoback = false;
 var ITEM_HEIGHT = 100;
 
 let g_props;
-@connect(({ banner, newsType, news, wallet,vote}) => ({ ...banner, ...newsType, ...news, ...wallet , ...vote}))
+@connect(({ banner, newsType, news, wallet, vote, common,}) => ({ ...banner, ...newsType, ...news, ...wallet , ...vote, ...common,}))
 class News extends React.Component {
 
   static navigationOptions = {
@@ -64,12 +64,31 @@ class News extends React.Component {
       ],
       periodstext: '', //当前进行第几期活动
       periodsseq: '', //当前进行第几期下标
+      WHratio: '',
+      SysteminfoImg: '',
+      SysteminfoUrl: '',
+      SysteminfoModal: false,
     };
     g_props = props;    
   }
 
   //组件加载完成
   componentDidMount() {
+    //获取系统通知
+    this.props.dispatch({
+      type: 'common/sysNotificationList',callback: (data) => {
+        if(data.data != null){
+          this.setState({
+            SysteminfoImg: data.data.picurl,
+            SysteminfoUrl: data.data.url,
+          })
+          this.gainImg(data.data.picurl);
+        }else{
+          this.setState({ SysteminfoModal: false, })
+        }
+      }
+    })
+
     this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
       this.props.dispatch({ type: 'wallet/walletList', payload: {}, callback: (walletArr) => {
         if(walletArr == null || walletArr.length == 0){
@@ -604,6 +623,43 @@ class News extends React.Component {
       return (<View></View>)
     }
   }
+
+  Openlink = (bannerurl) => {
+    if(bannerurl && bannerurl != "" && bannerurl != null){
+      let url = bannerurl.replace(/^\s+|\s+$/g, "");
+      const { navigate } = this.props.navigation;
+      this._setModalVisible();
+      if(bannerurl.indexOf("app://") == 0){
+        let appurl = url.replace("app://", "")
+        navigate(appurl, {}); // app内部的js跳转
+      }else if(bannerurl.indexOf("https://") == 0){
+        navigate('Web', { title: '系统信息通知', url: url});
+      }else if(bannerurl.indexOf("http://") == 0){
+        navigate('Web', { title: '系统信息通知', url: url});
+      }
+    }
+  }
+
+  // 显示/隐藏 modal  
+  _setModalVisible() {
+    let isSysteminfoModal = this.state.SysteminfoModal;
+    this.setState({
+      SysteminfoModal: !isSysteminfoModal,
+    });
+  }
+ 
+  //获取图片的宽高比
+  gainImg(imageUri) {
+    if(imageUri && imageUri != "" && imageUri != null){
+      if((imageUri.indexOf("https://")) == 0 || (imageUri.indexOf("http://") == 0)){
+        Image.getSize(imageUri,(width,height) => {
+          this.setState({ WHratio: Math.floor((height/width)*10000)/10000 });
+          setTimeout(() => { this._setModalVisible() }, 1000);
+        })
+      }
+    }
+  }
+
   render() {
     return (
       <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
@@ -622,6 +678,18 @@ class News extends React.Component {
             initialLayout={{ height: 0, width: ScreenWidth }}
           />
         }
+        <Modal animationType='slide' transparent={true} visible={this.state.SysteminfoModal} onShow={() => { }} onRequestClose={() => { }} >
+          <TouchableOpacity onPress={this._setModalVisible.bind(this)} style={[styles.modalStyle,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+            <View style={[styles.subView,{}]} >
+              <Button onPress={this.Openlink.bind(this,this.state.SysteminfoUrl)}>
+                <Image source={{uri:this.state.SysteminfoImg}} style={{width: ScreenWidth - ScreenUtil.autowidth(70), height: (ScreenWidth - ScreenUtil.autowidth(70))*this.state.WHratio, zIndex: 999,}} />
+              </Button>
+            </View>
+            <View style={{paddingTop: ScreenUtil.autoheight(20),}}>
+                <Ionicons color={UColor.btnColor} name="ios-close-circle" size={ScreenUtil.setSpText(40)}/>
+            </View>
+          </TouchableOpacity>
+        </Modal>
       </View>
     );
   }
@@ -804,6 +872,17 @@ const styles = StyleSheet.create({
     marginRight: 2,
     height: "100%",
     width: ScreenWidth,
+  },
+
+  modalStyle: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  subView: {
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    marginHorizontal: ScreenUtil.setSpText(35),
   },
 });
 
