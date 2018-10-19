@@ -17,6 +17,7 @@ class Header extends BaseComponent {
 
     static propTypes = {
         onPressLeft: PropTypes.bool,
+        onPressRightFun: PropTypes.func,
         title: PropTypes.string.isRequired,
         onPressRight: PropTypes.func,
         avatar: PropTypes.number,
@@ -25,10 +26,10 @@ class Header extends BaseComponent {
     }
 
     render(){
-        let {backgroundColor, onPressLeft, title, onPressRight, avatar, subName,} = this.props
+        let {backgroundColor, onPressLeft, onPressRightFun,title, onPressRight, avatar, subName,} = this.props
         return (
         <View style={[styles.header,{backgroundColor: backgroundColor ? backgroundColor: UColor.titletop}]}>
-            <TouchableOpacity style={styles.Leftout} onPress={() => {onPressLeft ? this.props.navigation.goBack() : undefined}}>
+            <TouchableOpacity style={styles.Leftout} onPress={onPressLeft ? (onPressRightFun==undefined?() => {this.props.navigation.goBack()}:onPressRightFun) : () => {undefined}}>
                 {onPressLeft &&<Ionicons style={{color:UColor.btnColor}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
             </TouchableOpacity>
             <Text style={[styles.titletext,{color:UColor.btnColor}]} ellipsizeMode='middle' numberOfLines={1}>{title}</Text>

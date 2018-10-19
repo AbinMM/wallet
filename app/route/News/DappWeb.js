@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {DeviceEventEmitter,Clipboard,InteractionManager,Text,View,WebView,Animated,TextInput,Dimensions,StyleSheet,Modal,TouchableOpacity,Image} from 'react-native'
+import {Platform,BackHandler,DeviceEventEmitter,Clipboard,InteractionManager,Text,View,WebView,Animated,TextInput,Dimensions,StyleSheet,Modal,TouchableOpacity,Image} from 'react-native'
 import UColor from '../../utils/Colors'
 import { EasyShowLD } from '../../components/EasyShow'
 import { EasyToast } from '../../components/Toast';
@@ -55,6 +55,8 @@ export default class DappWeb extends Component {
     this.__onLoad = this.props.onLoad || noop
     this.__onLoadStart = this.props.onLoadStart || noop
     this.__onError = this.props.onError || noop
+    // 添加返回键监听(对Android原生返回键的处理)
+    this.addBackAndroidListener(this.props.navigation);
   }
 
   _onLoad() {
@@ -449,10 +451,42 @@ _handleActions() {
     });
   }
 
+    onNavigationStateChange = (navState) => {
+        this.setState({
+            backButtonEnabled: navState.canGoBack
+        });
+    };
+    // 显示/隐藏 右上角的更多选项 modal  
+    onRightFun() {
+        // this.props.navigation.goBack();
+        // this.refs['refWebview'].goBack();
+        //  官网中描述:backButtonEnabled: false,表示webView中没有返回事件，为true则表示该webView有回退事件
+        if (this.state.backButtonEnabled) {
+            this.refs['refWebview'].goBack();
+        } else {//否则返回到上一个页面
+            this.props.navigation.goBack();
+        }
+    }
+    // 监听原生返回键事件
+    addBackAndroidListener(navigator) {
+        if (Platform.OS === 'android') {
+            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+        }
+    }
+
+    onBackAndroid = () => {
+        if (this.state.backButtonEnabled) {
+            this.refs['refWebview'].goBack();
+            return true;
+        } else {
+            this.props.navigation.goBack();
+            return false;
+        }
+    };
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
-        <Header {...this.props} onPressLeft={true} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
+        <Header {...this.props} onPressLeft={true} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
         onPressRight={this.moreOption.bind(this)} />
         
         <WebView
@@ -468,6 +502,7 @@ _handleActions() {
             onLoadStart={this._onLoadStart.bind(this)}
             onError={this._onError.bind(this)}
             onMessage={(e)=>{this.onMessage(e)}}
+            onNavigationStateChange={this.onNavigationStateChange}
           >
         </WebView>
         <View style={[styles.infoPage,{backgroundColor: UColor.secdColor},this.state.error ? styles.showInfo : {}]}>
