@@ -227,16 +227,17 @@ export default function RenderScatter(props) {
                                             "for(var j=0;j<structs.length;j++){"+
                                                 "var st=structs[j];"+
                                                 "if(st.name==name){"+
-                                                    "if(arguments.length < st.fields.length){"+
-                                                        "alert('参数错误');"+
-                                                        "return;"+
-                                                    "}"+
+                                                   
                                                     "var tx={'account':contract,'name':name,authorization:[{'actor':ide.accounts[0].name,'permission':ide.accounts[0].authority}],data:{}};"+
                                                     "for(var f=0;f<st.fields.length;f++){"+
                                                         "var field=st.fields[f];"+
                                                         "var paramname=field.name;"+
-                                                        "var paramvalue=arguments[f];"+
-                                                  
+                                                        "var paramvalue='';"+
+                                                        "for(var iii in arguments[0]){"+
+                                                            "if(paramname==iii){"+
+                                                                "paramvalue=arguments[0][iii];"+
+                                                            "}"+
+                                                        "}"+
                                                         "tx.data[field.name]=paramvalue;"+
                                                     "}"+
                                                     "var key = new Date().getTime();"+
@@ -245,6 +246,7 @@ export default function RenderScatter(props) {
                                                         "document.removeEventListener('message',this);"+
                                                         "var obj = JSON.parse(msg.data);"+
                                                         "if(obj.scatter=='transaction' && obj.key===key){"+
+                                                            "alert('bbb'+JSON.stringify(obj.data));"+
                                                             "resolve(obj.data);"+
                                                         "}"+
                                                     "})"+

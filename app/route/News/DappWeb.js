@@ -301,17 +301,6 @@ _handleActions() {
         type: 'wallet/getContract', payload: {account_name:result.params.account }, callback: (resp) => {
             try {
                 if(resp){
-                    // if(result.params.account == 'betdiceusers'){
-                    //     var argument_obj = {"from":"eosbille1234"};
-                    //     var paramvalue = argument_obj;
-                    //     var paramname = 'from';
-                    //     var obj_type = typeof(argument_obj);
-                    //     if(obj_type == 'object'){
-                    //         if(argument_obj.hasOwnProperty(paramname)){
-                    //             paramvalue = argument_obj[paramname];
-                    //         }
-                    //     }
-                    // }
                     var respabi = {abi:resp.abi};
                     var obj_data = {fc:respabi};
                     this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:obj_data}));
