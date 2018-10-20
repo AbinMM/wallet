@@ -59,6 +59,11 @@ export default class DappWeb extends Component {
     this.addBackAndroidListener(this.props.navigation);
   }
 
+  componentWillUnmount(){
+      //结束页面前，资源释放操作
+    this.refs.refWebview.stopLoading();
+  }
+
   _onLoad() {
     Animated.timing(this.state.progress, {
       toValue: ScreenWidth,
@@ -94,13 +99,13 @@ export default class DappWeb extends Component {
     this._setModalVisible_Tx();
     this.callbackToWebview("");
   }
-          // 显示/隐藏 右上角的更多选项 modal  
-          moreOption() {
-            let isShow = this.state.optionShow;
-            this.setState({
-                optionShow: !isShow,
-            });
-        }
+        // 显示/隐藏 右上角的更多选项 modal  
+    moreOption() {
+        let isShow = this.state.optionShow;
+        this.setState({
+            optionShow: !isShow,
+        });
+    }
 
     //
     pressRefalsh(){
@@ -227,7 +232,7 @@ export default class DappWeb extends Component {
                 this.callbackToWebview("");
             }
             // EasyShowLD.dialogClose();
-        }, () => { EasyShowLD.dialogClose()});
+        }, () => { EasyShowLD.dialogClose(); this.callbackToWebview("");});
     }
 // 显示/隐藏 modal  
 _setModalVisible_Tx() {
