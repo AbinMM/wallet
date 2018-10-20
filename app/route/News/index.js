@@ -337,6 +337,9 @@ class News extends React.Component {
     
     // sdkOpenDapp(this.state.selecturl,this.state.selecttitle,this.state.theme);
     navigate('DappWeb', { title: this.state.selecttitle, url: this.state.selecturl });
+
+        // var url = "http://gme.eostoken1.com/";
+    // navigate('DappWeb', { title: this.state.selecttitle, url:  url});
   }
 
   onPressTool(data) {

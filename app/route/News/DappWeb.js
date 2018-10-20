@@ -248,54 +248,75 @@ _handleActions() {
     this.refs.refWebview.postMessage(JSON.stringify(obj_result));
   }
   onMessage = (e) =>{
-    let result = JSON.parse(e.nativeEvent.data);
-    switch(result.scatter)
-    {
-        case 'contract':
-            this.dapp_getContract(result);
-            break;
-
-        case 'getCurrencyBalance':
-            this.dapp_getCurrencyBalance(result);
-            break;
-        
-        case 'getAccount':
-            this.dapp_getAccount(result);
-            break;
-
-        case 'transaction':
-            this.dapp_transaction(result);
-            break;
-
-        case 'transfer':
-            this.dapp_transfer(result);
-            break;
-
-        case 'getTableRows':
-            this.dapp_getTableRows(result);
-            break;
-
-        case 'noaccount':
-            EasyToast.show('请导入账户');
-            InteractionManager.runAfterInteractions(() => {
-                // WalletList.show(Globle.wallet,false,(select)=>{
-                
-                // });
-            });
-            break;    
-
-        default:
-            break;
-    }
+      try {
+        let result = JSON.parse(e.nativeEvent.data);
+        switch(result.scatter)
+        {
+            case 'contract':
+                this.dapp_getContract(result);
+                break;
+    
+            case 'getCurrencyBalance':
+                this.dapp_getCurrencyBalance(result);
+                break;
+            
+            case 'getAccount':
+                this.dapp_getAccount(result);
+                break;
+    
+            case 'transaction':
+                this.dapp_transaction(result);
+                break;
+    
+            case 'transfer':
+                this.dapp_transfer(result);
+                break;
+    
+            case 'getTableRows':
+                this.dapp_getTableRows(result);
+                break;
+    
+            case 'noaccount':
+                EasyToast.show('请导入账户');
+                InteractionManager.runAfterInteractions(() => {
+                    // WalletList.show(Globle.wallet,false,(select)=>{
+                    
+                    // });
+                });
+                break;    
+    
+            default:
+                break;
+        }
+      } catch (error) {
+          
+      }
   }
   dapp_getContract(result){
     this.props.dispatch({
-        type: 'wallet/getContract', payload: {account_name:result.params.contract }, callback: (resp) => {
-            if(resp){
-                this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:resp}));
-            }else{
-                EasyToast.show('合约获取失败');
-                this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        type: 'wallet/getContract', payload: {account_name:result.params.account }, callback: (resp) => {
+            try {
+                if(resp){
+                    // if(result.params.account == 'betdiceusers'){
+                    //     var argument_obj = {"from":"eosbille1234"};
+                    //     var paramvalue = argument_obj;
+                    //     var paramname = 'from';
+                    //     var obj_type = typeof(argument_obj);
+                    //     if(obj_type == 'object'){
+                    //         if(argument_obj.hasOwnProperty(paramname)){
+                    //             paramvalue = argument_obj[paramname];
+                    //         }
+                    //     }
+                    // }
+                    var respabi = {abi:resp.abi};
+                    var obj_data = {fc:respabi};
+                    this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:obj_data}));
+                }else{
+                    EasyToast.show('合约获取失败');
+                    // this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{fc:null}}));
+                }      
+            } catch (error) {
+                  EasyToast.show(error.message);
             }
         }
       })

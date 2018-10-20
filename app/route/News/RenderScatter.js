@@ -7,7 +7,7 @@ export default function RenderScatter(props) {
 
   if(account){
     return `
-    iden = {
+    var iden = {
         name:"${account.name}",
         publicKey:"${account.publicKey}",
         accounts:[{
@@ -102,12 +102,6 @@ export default function RenderScatter(props) {
         },
         eos:(e,t,r,n) =>{
             return {
-                claimbalance:function(publicKey){
-                    alert('claimbalance');
-                    return new Promise((resolve, reject) => {
-                        resolve(iden);
-                    })
-                },
                 getInfo:function(publicKey){
                     alert('getInfo');
                     return new Promise((resolve, reject) => {
@@ -142,19 +136,6 @@ export default function RenderScatter(props) {
                     alert('getKeyAccounts');
                     return new Promise((resolve, reject) => {
                         resolve(iden);
-                    })
-                },
-                contract:function(contract){
-                    return new Promise((resolve, reject) => {
-                        var key = new Date().getTime();
-                        window.postMessage(JSON.stringify({key,scatter:"contract",params:{contract}}));
-                        document.addEventListener("message",function(msg){
-                            document.removeEventListener("message",this);
-                            var obj = eval("(" + msg.data + ")");
-                            if(obj.scatter==="contract" && obj.key===key){     
-                                resolve(obj.data);
-                            }
-                        });
                     })
                 },
                 getCurrencyBalance:function(contract,name,coin){
@@ -219,8 +200,61 @@ export default function RenderScatter(props) {
                             document.removeEventListener("message",this);
                             var obj = eval("(" + msg.data + ")");
                             if(obj.scatter==="transaction" && obj.key===key){ 
-                                alert(obj.data);
                                 resolve(obj.data);
+                            }
+                        });
+                    })
+                },
+                contract:function(name){
+                    return new Promise((resolve, reject) => {
+                        var key = new Date().getTime();
+                        window.postMessage(JSON.stringify({key,scatter:"contract",params:{account:name}}));
+                        document.addEventListener("message",function(msg){
+                            document.removeEventListener("message",this);
+                            var obj = eval("(" + msg.data + ")");
+                            if(obj.scatter==="contract" && obj.key===key){
+                                var resultContract = {};
+                                var ide = JSON.stringify(iden);
+                                var sts = JSON.stringify(obj.data.fc.abi.structs);
+                                for(var i=0;i<obj.data.fc.abi.actions.length;i++){
+                                    var action = obj.data.fc.abi.actions[i];
+                                    var fc = new Function(
+                                        "return new Promise((resolve, reject) => {"+
+                                            "var contract='"+name+"';"+
+                                            "var name='"+action.name+"';"+
+                                            "var structs=JSON.parse('"+sts+"');"+
+                                            "var ide=JSON.parse('"+ide+"');"+
+                                            "for(var j=0;j<structs.length;j++){"+
+                                                "var st=structs[j];"+
+                                                "if(st.name==name){"+
+                                                    "if(arguments.length < st.fields.length){"+
+                                                        "alert('参数错误');"+
+                                                        "return;"+
+                                                    "}"+
+                                                    "var tx={'account':contract,'name':name,authorization:[{'actor':ide.accounts[0].name,'permission':ide.accounts[0].authority}],data:{}};"+
+                                                    "for(var f=0;f<st.fields.length;f++){"+
+                                                        "var field=st.fields[f];"+
+                                                        "var paramname=field.name;"+
+                                                        "var paramvalue=arguments[f];"+
+                                                  
+                                                        "tx.data[field.name]=paramvalue;"+
+                                                    "}"+
+                                                    "var key = new Date().getTime();"+
+                                                    "window.postMessage(JSON.stringify({key,scatter:'transaction',params:{actions:[tx]}}));"+    
+                                                    "document.addEventListener('message',function(msg){"+
+                                                        "document.removeEventListener('message',this);"+
+                                                        "var obj = JSON.parse(msg.data);"+
+                                                        "if(obj.scatter=='transaction' && obj.key===key){"+
+                                                            "resolve(obj.data);"+
+                                                        "}"+
+                                                    "})"+
+                                                "}"+
+                                            "}"+
+                                        "})"
+                                    );
+                                    resultContract[action.name]=fc;
+                                }
+                                resolve(resultContract);
                             }
                         });
                     })
