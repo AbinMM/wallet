@@ -151,7 +151,7 @@ export default class DappWeb extends Component {
             var privateKey;
             //关闭订单详情
             if(isTransfer){
-                this._setModalVisible();
+                // this._setModalVisible();
                 actions = [
                     {
                         account: "eosio.token",
@@ -171,7 +171,7 @@ export default class DappWeb extends Component {
                 privateKey = this.state.walletArr.activePrivate;
                 permission = 'active';  //transfer 用 active
             }else{
-                this._setModalVisible_Tx();
+                // this._setModalVisible_Tx();
                 actions = this.state.transactionInfo.params.actions;
 
                 permission = this.state.transactionInfo.params.actions[0].authorization[0].permission;
