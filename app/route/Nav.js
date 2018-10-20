@@ -754,6 +754,64 @@ class Route extends React.Component {
 
   }
 
+  //分享DAPP 链接
+  shareDappAction = (e) => {
+    var th = this;
+    if (e == 1) {
+      // this.refs.viewShot.capture().then(uri => {
+        WeChat.isWXAppInstalled()
+          .then((isInstalled) => {
+            th.setState({ showDappShare: false });
+            if (isInstalled) {
+              WeChat.shareToSession({ 
+                type: 'news', 
+                webpageUrl: this.state.news,
+                title: ''+this.state.news,
+                description: 'eos dapp',
+              }).then((resp) => {
+                // EasyToast.show(JSON.stringify(resp));
+                if(resp && resp.errCode == 0){ // 分享成功
+                  // th.shareSuccess();
+                  EasyToast.show('分享成功');
+                  // this.setState({ showDappShare: false }); 
+                }
+              })
+                .catch((error) => {
+                  EasyToast.show(error.message);
+                });
+            } else {
+              EasyToast.show('没有安装微信软件，请您安装微信之后再试');
+            }
+          });
+      // });
+    } else if (e == 2) {
+      // this.refs.viewShot.capture().then(uri => {
+        WeChat.isWXAppInstalled()
+          .then((isInstalled) => {
+            th.setState({ showDappShare: false });
+            if (isInstalled) {
+              WeChat.shareToTimeline({ 
+              type: 'news', 
+              webpageUrl: this.state.news ,
+              title: 'DAPP分享:'+this.state.news,
+            }).then((resp) => {
+                // EasyToast.show(JSON.stringify(resp));
+                if(resp && resp.errCode == 0){ // 分享成功
+                  th.shareSuccess();
+                }
+              }).catch((error) => {
+                  EasyToast.show(error.message);
+                });
+            } else {
+              EasyToast.show('没有安装微信软件，请您安装微信之后再试');
+            }
+          });
+      // });
+    } 
+  }
+
+  
+
   shareSuccess(){
     // 增加积分
     this.props.dispatch({ type: 'news/shareAddPoint', payload: { }});
@@ -1093,7 +1151,7 @@ class Route extends React.Component {
    
       {this.state.showDappShare ? (
         <View style={{ position: 'absolute', zIndex: 100000, top: 0, left: 0, width: ScreenWidth, height: ScreenHeight, backgroundColor: UColor.mask }}>
-            <Animated.View style={{
+            {/* <Animated.View style={{
               height: ScreenHeight - 180, transform: [
                 { translateX: 0 },
                 { translateY: this.state.vtransformY1 },
@@ -1120,8 +1178,8 @@ class Route extends React.Component {
                   </ViewShot>
                 </View>
               </ScrollView>
-            </Animated.View>
-            <View style={{ height: 170, marginTop: 10 }}>
+            </Animated.View> */}
+            <View style={{ height: 170, marginTop: ScreenHeight - 180 }}>
               <Animated.View style={{
                 height: 170, flex: 1, backgroundColor: UColor.riceWhite, transform: [
                   { translateX: 0 },
@@ -1131,19 +1189,19 @@ class Route extends React.Component {
                 <View style={{ height: 125 }}>
                   <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
                   <View style={{ flexDirection: "row" }}>
-                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
+                    {/* <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareDappAction(4) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
                       </View>
-                    </Button>
-                    <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
+                    </Button> */}
+                    <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareDappAction(1) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
                       </View>
                     </Button>
-                    <Button  style={{ flex: 1, }} onPress={() => { this.shareAction(3) }}>
+                    <Button  style={{ flex: 1, }} onPress={() => { this.shareDappAction(2) }}>
                       <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
                         <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
                         <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
