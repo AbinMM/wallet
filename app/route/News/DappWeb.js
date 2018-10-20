@@ -61,7 +61,10 @@ export default class DappWeb extends Component {
 
   componentWillUnmount(){
       //结束页面前，资源释放操作
-    this.refs.refWebview.stopLoading();
+    if(this.refs.refWebview)
+    {
+        this.refs.refWebview.stopLoading();
+    }
   }
 
   _onLoad() {
@@ -110,8 +113,10 @@ export default class DappWeb extends Component {
     //
     pressRefalsh(){
         this.moreOption();
-        // this._refWebview.reload();
-        this.refs.refWebview.reload();
+        if(this.refs.refWebview)
+        {
+            this.refs.refWebview.reload();
+        }
     }
 
     //
@@ -248,13 +253,20 @@ _handleActions() {
     });
 }
 
+  sendMessageToWebview(strinfo)
+  {
+    if(this.refs.refWebview)
+    {
+        this.refs.refWebview.postMessage(strinfo);
+    }
+  }
   callbackToWebview(retResult)
   {
     var obj_result = new Object();
     obj_result.scatter = this.state.name;
     obj_result.key = this.state.key;
     obj_result.data = retResult;
-    this.refs.refWebview.postMessage(JSON.stringify(obj_result));
+    this.sendMessageToWebview(JSON.stringify(obj_result));
   }
   onMessage = (e) =>{
       try {
@@ -308,10 +320,10 @@ _handleActions() {
                 if(resp){
                     var respabi = {abi:resp.abi};
                     var obj_data = {fc:respabi};
-                    this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:obj_data}));
+                    this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:obj_data}));
                 }else{
                     EasyToast.show('合约获取失败');
-                    // this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{fc:null}}));
+                    this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
                 }      
             } catch (error) {
                   EasyToast.show(error.message);
@@ -334,11 +346,11 @@ _handleActions() {
                     var errmsg = ((resp.data && resp.data.msg) ? resp.data.msg : "");
                     EasyToast.show(errmsg);
                 }
-                this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:tmp_balance}));
+                this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:tmp_balance}));
                 
             } catch (error) {
                 EasyToast.show(error.message);
-                this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:""}));
+                this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             }
         }
       })
@@ -351,10 +363,10 @@ _handleActions() {
     }
     this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: account_name},callback: (resp) => {
         if(resp){
-            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:resp}));
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp}));
         }else{
             EasyToast.show('账户获取失败');
-            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         }
     } });
   }
@@ -369,7 +381,7 @@ _handleActions() {
         || result.params.actions[0].authorization == null || result.params.actions[0].authorization.length < 1)
     {
         EasyToast.show('actions,authorization参数非法');
-        this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{result:""}}));
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         return ;
     }
 
@@ -377,7 +389,7 @@ _handleActions() {
         try {
          if (walletArr == undefined || walletArr == null || walletArr.length < 1) {
             EasyToast.show("get walletList error");
-            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{result:""}}));
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
           }else{
             for(var i = 0;i < walletArr.length;i++)
             {
@@ -391,7 +403,7 @@ _handleActions() {
             if(i >= walletArr.length)
             {
               EasyToast.show("actor is not exist or not actived");
-              this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{result:""}}));
+              this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             }else{
               this._setModalVisible_Tx();
               var actions_detail = "";
@@ -413,7 +425,7 @@ _handleActions() {
           }
         } catch (error) {
             EasyToast.show(error.message);
-            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{result:""}}));
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         }
 
       }
@@ -431,7 +443,7 @@ _handleActions() {
         try {
             if (walletArr == undefined || walletArr == null || walletArr.length < 1) {
                 EasyToast.show("get walletList error");
-                this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{result:""}}));
+                this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
               }else{
                 for(var i = 0;i < walletArr.length;i++)
                 {
@@ -445,7 +457,7 @@ _handleActions() {
                 if(i >= walletArr.length)
                 {
                   EasyToast.show("from account is not exist or not actived");
-                  this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{result:""}}));
+                  this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
                 }else{
                   this._setModalVisible();
                   var tmp_amount = result.params.amount.replace(" EOS","");
@@ -467,7 +479,7 @@ _handleActions() {
             }
         } catch (error) {
             EasyToast.show(error.message);
-            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:{result:""}}));
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         }
 
       }
@@ -517,10 +529,10 @@ _handleActions() {
             } else {
               rows = [];  
             }
-            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:rows}));
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:rows}));
           } catch (error) {
             console.log("getEosTableRows error: %s",error.message);
-            this.refs.refWebview.postMessage(JSON.stringify({key:result.key,scatter:result.scatter,data:[]}));
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:[]}));
           }
         }
       });
