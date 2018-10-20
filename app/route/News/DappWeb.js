@@ -129,7 +129,11 @@ export default class DappWeb extends Component {
         });
     }
     inputPwd = (isTransfer) => {
-       
+        if(isTransfer){
+            this._setModalVisible();
+        }else{
+            this._setModalVisible_Tx();
+        }
         const view =
             <View style={styles.passout}>
                 <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
