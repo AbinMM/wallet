@@ -273,6 +273,10 @@ _handleActions() {
         let result = JSON.parse(e.nativeEvent.data);
         switch(result.scatter)
         {
+            case 'getKeyAccounts':
+                this.dapp_getKeyAccounts(result);
+            break;
+
             case 'contract':
                 this.dapp_getContract(result);
                 break;
@@ -305,9 +309,7 @@ _handleActions() {
                     // });
                 });
                 break;    
-            case 'getKeyAccounts':
-                this.dapp_getKeyAccounts(result);
-                break;
+          
             default:
                 break;
         }
@@ -315,6 +317,22 @@ _handleActions() {
           
       }
   }
+  dapp_getKeyAccounts(result){
+    var publicKey = "";
+    if(result.params.account.publicKey)
+    {
+        publicKey = result.params.account.publicKey;
+    }
+    this.props.dispatch({ type: 'wallet/getAccountsByPuk', payload: { public_key: publicKey},callback: (resp) => {
+        if(resp && resp.code == '0'){
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp.data}));
+        }else{
+            EasyToast.show('账户获取失败');
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        }
+    } });
+  }
+
   dapp_getContract(result){
     this.props.dispatch({
         type: 'wallet/getContract', payload: {account_name:result.params.account }, callback: (resp) => {
@@ -487,24 +505,6 @@ _handleActions() {
       }
     });
   }
-
-  dapp_getKeyAccounts(result){
-    var publicKey = "";
-    if(result.params.account.publicKey)
-    {
-        publicKey = result.params.account.publicKey;
-    }
-
-    this.props.dispatch({ type: 'wallet/getAccountsByPuk', payload: { public_key: publicKey},callback: (resp) => {
-        if(resp){
-            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp}));
-        }else{
-            EasyToast.show('账户获取失败');
-            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
-        }
-    } });
-  }
-
 
     onNavigationStateChange = (navState) => {
         this.setState({
