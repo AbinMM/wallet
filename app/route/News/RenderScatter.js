@@ -353,8 +353,8 @@ export default function RenderScatter(props) {
                                                             "document.removeEventListener('message',this);"+
                                                             "var obj = JSON.parse(msg.data);"+
                                                             "if(obj.scatter=='transaction' && obj.key===key){"+
-                                                                "alert('bbb'+JSON.stringify(obj.data));"+
                                                                 "if(obj.data){" +
+                                                                    "alert('bbb'+JSON.stringify(obj.data));"+
                                                                     "resolve(obj.data);"+
                                                                 "}else{"+
                                                                     "reject({});"+
