@@ -211,11 +211,20 @@ export default function RenderScatter(props) {
                 getKeyAccounts:function(publicKey){
                     alert('getKeyAccounts');
                     return new Promise((resolve, reject) => {
-                        if(iden){
-                            resolve(iden);
-                        }else{
-                            reject({});
-                        }
+                        var key = new Date().getTime();
+                        window.postMessage(JSON.stringify({key,scatter:"getKeyAccounts",params:{publicKey}}));
+                        document.addEventListener("message",function(msg){
+                            document.removeEventListener("message",this);
+                            var obj = eval("(" + msg.data + ")");
+                            if(obj.scatter==="getKeyAccounts" && obj.key===key){     
+                                if(obj.data)
+                                {
+                                    resolve(obj.data);
+                                }else{
+                                    reject({});
+                                }
+                            }
+                        });
                     })
                 },
                 getCurrencyBalance:function(contract,name,coin){

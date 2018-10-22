@@ -305,7 +305,9 @@ _handleActions() {
                     // });
                 });
                 break;    
-    
+            case 'getKeyAccounts':
+                this.dapp_getKeyAccounts(result);
+                break;
             default:
                 break;
         }
@@ -485,6 +487,24 @@ _handleActions() {
       }
     });
   }
+
+  dapp_getKeyAccounts(result){
+    var publicKey = "";
+    if(result.params.account.publicKey)
+    {
+        publicKey = result.params.account.publicKey;
+    }
+
+    this.props.dispatch({ type: 'wallet/getAccountsByPuk', payload: { public_key: publicKey},callback: (resp) => {
+        if(resp){
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp}));
+        }else{
+            EasyToast.show('账户获取失败');
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        }
+    } });
+  }
+
 
     onNavigationStateChange = (navState) => {
         this.setState({
