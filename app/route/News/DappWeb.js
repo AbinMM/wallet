@@ -50,6 +50,7 @@ export default class DappWeb extends Component {
       transformY: new Animated.Value(200),
       transformY1: new Animated.Value(-1000),
       optionShow:false,
+      closeIcon:false,
     }
     let noop = () => { }
     this.__onLoad = this.props.onLoad || noop
@@ -131,7 +132,6 @@ export default class DappWeb extends Component {
         DeviceEventEmitter.emit('dappShare', this.props.navigation.state.params.url);
     }
 
-    // 显示/隐藏 modal  
     _setModalVisible() {
         let isShow = this.state.show;
         this.setState({
@@ -516,7 +516,8 @@ _handleActions() {
 
     onNavigationStateChange = (navState) => {
         this.setState({
-            backButtonEnabled: navState.canGoBack
+            backButtonEnabled: navState.canGoBack,
+            closeIcon: navState.canGoBack,
         });
     };
     // 显示/隐藏 右上角的更多选项 modal  
@@ -569,7 +570,7 @@ _handleActions() {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
-        <Header {...this.props} onPressLeft={true} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
+        <Header {...this.props} onPressLeft={true} onDappBackFalg={this.state.closeIcon} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
         onPressRight={this.moreOption.bind(this)} />
         
         <WebView
