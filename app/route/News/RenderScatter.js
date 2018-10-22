@@ -158,14 +158,23 @@ export default function RenderScatter(props) {
         },
         eos:(e,t,r,n) =>{
             return {
-                getInfo:function(publicKey){
+                getInfo:function(){
                     alert('getInfo');
                     return new Promise((resolve, reject) => {
-                        if(iden){
-                            resolve(iden);
-                        }else{
-                            reject({});
-                        }
+                        var key = new Date().getTime();
+                        window.postMessage(JSON.stringify({key,scatter:"getInfo",params:{}}));
+                        document.addEventListener("message",function(msg){
+                            document.removeEventListener("message",this);
+                            var obj = eval("(" + msg.data + ")");
+                            if(obj.scatter==="getInfo" && obj.key===key){     
+                                if(obj.data)
+                                {
+                                    resolve(obj.data);
+                                }else{
+                                    reject({});
+                                }
+                            }
+                        });
                     })
                 },
                 delegatebw:function(account){

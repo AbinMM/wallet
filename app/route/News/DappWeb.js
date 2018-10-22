@@ -273,9 +273,13 @@ _handleActions() {
         let result = JSON.parse(e.nativeEvent.data);
         switch(result.scatter)
         {
+            case 'getInfo':
+                this.dapp_getInfo(result);
+                break;
+
             case 'getKeyAccounts':
                 this.dapp_getKeyAccounts(result);
-            break;
+                break;
 
             case 'contract':
                 this.dapp_getContract(result);
@@ -316,6 +320,10 @@ _handleActions() {
       } catch (error) {
           
       }
+  }
+  dapp_getInfo(result){
+    this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,
+        data:{chain_id:"aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"}}));
   }
   dapp_getKeyAccounts(result){
     var publicKey = "";
