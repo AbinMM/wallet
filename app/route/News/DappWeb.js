@@ -578,7 +578,7 @@ _handleActions() {
             source={{uri:this.props.navigation.state.params.url}}
             domStorageEnabled={true}
             javaScriptEnabled={true}
-            scalesPageToFit={false}
+            scalesPageToFit={Platform.OS === 'ios'? true : false}
             injectedJavaScript = {RenderScatter(this.props)}
             style={[styles.webview_style,{backgroundColor: UColor.btnColor}]}
             onLoad={this._onLoad.bind(this)}
