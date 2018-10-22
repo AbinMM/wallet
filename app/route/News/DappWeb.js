@@ -326,7 +326,7 @@ _handleActions() {
                     this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
                 }      
             } catch (error) {
-                  EasyToast.show(error.message);
+                  EasyToast.show("dapp_getContract:" + error.message);
             }
         }
       })
@@ -344,12 +344,12 @@ _handleActions() {
                     }
                 } else {
                     var errmsg = ((resp.data && resp.data.msg) ? resp.data.msg : "");
-                    EasyToast.show(errmsg);
+                    EasyToast.show("dapp_getCurrencyBalance:" +errmsg);
                 }
                 this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:tmp_balance}));
                 
             } catch (error) {
-                EasyToast.show(error.message);
+                EasyToast.show("dapp_getCurrencyBalance:" +error.message);
                 this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             }
         }
@@ -424,7 +424,7 @@ _handleActions() {
             }
           }
         } catch (error) {
-            EasyToast.show(error.message);
+            EasyToast.show("dapp_transaction:" +error.message);
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         }
 
@@ -478,7 +478,7 @@ _handleActions() {
                 }
             }
         } catch (error) {
-            EasyToast.show(error.message);
+            EasyToast.show("dapp_transfer:" +error.message);
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         }
 
