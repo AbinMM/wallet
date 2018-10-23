@@ -171,45 +171,45 @@ function eosTokenTransfer(methodName,params,password, callback)
         });
     })
     .then((rdata)=>{
-          var plaintext_privateKey = rdata; 
-          var permission = (is_activePrivate == true) ? "active" : "owner";
-          Eos.transaction({
-            actions: [
-                {
-                    account: obj_param.contract,
-                    name: "transfer", 
-                    authorization: [{
-                    actor: obj_param.from,
-                    permission: permission,
-                    }], 
-                    data: {
-                        from: obj_param.from,
-                        to: obj_param.to,
-                        quantity: formatEosQua(obj_param.amount + " " + obj_param.tokenName,obj_param.precision),
-                        memo: obj_param.memo,
-                    }
-                },
-            ]
-        }, plaintext_privateKey, (r) => {
-          try {
-            if(r && r.isSuccess)
-            {
-              g_props.dispatch({type: 'wallet/pushTransaction', payload: { from: obj_param.from, to: obj_param.to, amount: formatEosQua(obj_param.amount + " " + obj_param.tokenName,obj_param.precision), memo: obj_param.memo, data: "push"}});
-              res.result = true;
-              res.data.transactionId = r.data.transaction_id ? r.data.transaction_id : "";
-              console.log("transfer ok");
-            }else{
-              var errmsg = ((r.data && r.data.msg) ? r.data.msg : "");
-              console.log("transfer %s",errmsg);
-              res.result = false;
-              res.msg = errmsg;
-            }
-            if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
-          } catch (error) {
-            console.log("eosTokenTransfer error: %s",error.message);
-            if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
+        var plaintext_privateKey = rdata; 
+        var permission = (is_activePrivate == true) ? "active" : "owner";
+        Eos.transaction({
+          actions: [
+              {
+                  account: obj_param.contract,
+                  name: "transfer", 
+                  authorization: [{
+                  actor: obj_param.from,
+                  permission: permission,
+                  }], 
+                  data: {
+                      from: obj_param.from,
+                      to: obj_param.to,
+                      quantity: formatEosQua(obj_param.amount + " " + obj_param.tokenName,obj_param.precision),
+                      memo: obj_param.memo,
+                  }
+              },
+          ]
+      }, plaintext_privateKey, (r) => {
+        try {
+          if(r && r.isSuccess)
+          {
+            g_props.dispatch({type: 'wallet/pushTransaction', payload: { from: obj_param.from, to: obj_param.to, amount: formatEosQua(obj_param.amount + " " + obj_param.tokenName,obj_param.precision), memo: obj_param.memo, data: "push"}});
+            res.result = true;
+            res.data.transactionId = r.data.transaction_id ? r.data.transaction_id : "";
+            console.log("transfer ok");
+          }else{
+            var errmsg = ((r.data && r.data.msg) ? r.data.msg : "");
+            console.log("transfer %s",errmsg);
+            res.result = false;
+            res.msg = errmsg;
           }
-        });
+          if (callback)  callbackToSDK(methodName,callback,JSON.stringify(res));
+        } catch (error) {
+          console.log("eosTokenTransfer error: %s",error.message);
+          if (callback)  callbackToSDK(methodName,callback,getErrorMsg(error.message));
+        }
+      });
     })
     .catch((error)=>{
         console.log("eosTokenTransfer error: %s",error.message);
@@ -995,7 +995,7 @@ export const sdkListenMessage = (props) =>
               if(obj.callback && (g_CallToRN.callback == obj.callback))
               {
                 //同一个方法，同一个回调函数，重复消息拒绝掉
-                IosSDKModule.iosDebugInfo("相同消息");
+                // IosSDKModule.iosDebugInfo("相同消息");
                 return;
               }
           }
@@ -1003,7 +1003,7 @@ export const sdkListenMessage = (props) =>
           g_CallToRN.callback = obj.callback;
           callMessage(obj.methodName,obj.params,obj.password,obj.device_id,obj.callback);
         } catch (error) {
-          IosSDKModule.iosDebugInfo("错误信息:"+error.message);
+          // IosSDKModule.iosDebugInfo("错误信息:"+error.message);
           console.log("event CallToRN error: %s",error.message);
         }
 

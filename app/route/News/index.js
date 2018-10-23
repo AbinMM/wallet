@@ -311,7 +311,10 @@ class News extends React.Component {
 
   openDAPP() {
     this. _setModalVisible_DAPP();
-    sdkOpenDapp(this.state.selecturl,this.state.selecttitle,this.state.theme);
+    const { navigate } = this.props.navigation;
+    
+    // sdkOpenDapp(this.state.selecturl,this.state.selecttitle,this.state.theme);
+    navigate('DappWeb', { title: this.state.selecttitle, url: this.state.selecturl });
   }
 
   onPressTool(data) {
@@ -331,7 +334,7 @@ class News extends React.Component {
     }else if(data.name == this.state.holdallList[2].name){
       navigate('FreeMortgage');
     }else if(data.name == this.state.holdallList[3].name){
-      this. _setModalVisible();
+      this._setModalVisible();
     }else{
       EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
     }

@@ -17,20 +17,28 @@ class Header extends BaseComponent {
 
     static propTypes = {
         onPressLeft: PropTypes.bool,
+        onPressRightFun: PropTypes.func,
         title: PropTypes.string.isRequired,
         onPressRight: PropTypes.func,
         avatar: PropTypes.number,
         subName: PropTypes.string,
         backgroundColor: PropTypes.string,
+        onDappBackFalg:PropTypes.bool,//DAPP返回
     }
 
     render(){
-        let {backgroundColor, onPressLeft, title, onPressRight, avatar, subName,} = this.props
+        let {backgroundColor, onPressLeft, onPressRightFun,title, onPressRight, avatar, subName,onDappBackFalg,} = this.props
         return (
         <View style={[styles.header,{backgroundColor: backgroundColor ? backgroundColor: UColor.titletop}]}>
-            <TouchableOpacity style={styles.Leftout} onPress={() => {onPressLeft ? this.props.navigation.goBack() : undefined}}>
-                {onPressLeft &&<Ionicons style={{color:UColor.btnColor}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
-            </TouchableOpacity>
+            <View style={styles.Leftout} >
+                <TouchableOpacity style={styles.LeftBack} onPress={onPressLeft ? (onPressRightFun==undefined?() => {this.props.navigation.goBack()}:onPressRightFun) : () => {undefined}}>
+                    {onPressLeft &&<Ionicons style={{color:UColor.btnColor}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.LeftClose} onPress={onDappBackFalg ? () => {this.props.navigation.goBack()}:() => {undefined}}>
+                    {onDappBackFalg &&<Ionicons style={{color:UColor.btnColor}} name="md-close" size={ScreenUtil.setSpText(30)}/>}
+                </TouchableOpacity>
+            </View>
+
             <Text style={[styles.titletext,{color:UColor.btnColor}]} ellipsizeMode='middle' numberOfLines={1}>{title}</Text>
             <TouchableOpacity style={styles.Rightout} onPress={onPressRight}>
                 {avatar?<Image source={avatar} style={styles.Rightimg} resizeMode={'contain'} />:null}
@@ -46,12 +54,23 @@ const styles = StyleSheet.create({
         zIndex: 999,
         flexDirection:"row",
         alignItems:"center",
-        paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(25) : ScreenUtil.autoheight(20),
-        height: ScreenUtil.autoheight(65),
+        paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(44) : ScreenUtil.autoheight(20),
+        height: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(89):ScreenUtil.autoheight(65),
     },
     Leftout: {
         flex: 1.5, 
         paddingLeft:ScreenUtil.autowidth(10), 
+        alignItems:"flex-start",
+        flexDirection:"row",
+    },
+    LeftBack: {
+        // flex: 1, 
+        paddingLeft:ScreenUtil.autowidth(0), 
+        alignItems:"flex-start",
+    },
+    LeftClose: {
+        // flex: 1, 
+        paddingLeft:ScreenUtil.autowidth(25), 
         alignItems:"flex-start",
     },
     titletext: {

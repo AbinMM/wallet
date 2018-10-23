@@ -49,7 +49,9 @@ class Dappsearch extends BaseComponent {
             EasyToast.show('请输入DAPP网址');
             return;
         }else{
-            sdkOpenDapp(labelname,'CustomDapp',this.state.theme);
+            const { navigate } = this.props.navigation;
+            // sdkOpenDapp(labelname,'CustomDapp',this.state.theme);
+            navigate('DappWeb', { title: 'CustomDapp', url: labelname });
         }
     }
 
@@ -64,10 +66,10 @@ class Dappsearch extends BaseComponent {
                 <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
                     <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
                         <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
-                        <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} placeholderTextColor={UColor.arrow} 
-                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholder="输入DAPP网址" 
+                        <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} keyboardType="default"
+                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} autoCorrect={true}
                             underlineColorAndroid="transparent" onChangeText={(labelname) => this.setState({ labelname })}
-                             autoCorrect={true} returnKeyType="go" keyboardType="default"  />
+                            placeholderTextColor={UColor.inputtip}  placeholder="输入DAPP网址"  returnKeyType="go" />
                     </View>    
                     <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>  
                         <Image source={UImage.goto} style={styles.cancelimg} resizeMode='stretch'/>
@@ -76,7 +78,7 @@ class Dappsearch extends BaseComponent {
                 <View style={styles.btnout}>
                   <View style={styles.manualout}>
                       <Text style={[styles.prompttext,{color: UColor.arrow}]}>注意：</Text>
-                      <Text style={[styles.prompttext,{color: UColor.arrow}]}>手动搜索页面,视为第三方应用,您在此应用上的所有行为应遵守该应用的用户协议和隐私政策,EosToken不承担应有责任。</Text>
+                      <Text style={[styles.prompttext,{color: UColor.arrow}]}>您所访问的页面将进入第三方Dapp,您在第三方Dapp上的所有行为应遵守该Dapp的用户协议和隐私政策,由该第三方Dapp直接并单独向您承担责任,EosToken不承担任何责任。</Text>
                   </View>
                   <View style={styles.logout}>
                       <Image source={UImage.bottom_log} style={styles.logimg}/>

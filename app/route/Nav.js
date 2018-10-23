@@ -38,6 +38,7 @@ import ProblemFeedback from './Login/ProblemFeedback'
 import SignIn from './Login/SignIn'
 
 import News from './News'
+import DappWeb from './News/DappWeb'
 import Dappsearch from './News/Dappsearch'
 import OCTactivity from './News/OCTactivity'
 
@@ -268,6 +269,9 @@ const Nav = StackNavigator(
     Dappsearch: {
       screen: Dappsearch
     },
+    DappWeb: {
+      screen: DappWeb
+    },
     OCTactivity: {
       screen: OCTactivity
     },
@@ -403,6 +407,7 @@ class Route extends React.Component {
     APtransformY1: new Animated.Value(-1000),
     rAPtransformY: new Animated.Value(200),
     rAPtransformY1: new Animated.Value(-1000),
+    showDappShare:false,
   }
 
   constructor(props) {
@@ -601,6 +606,30 @@ class Route extends React.Component {
       }, 300);
     });
 
+    DeviceEventEmitter.addListener('dappShare', (news) => {
+      this.setState({news, showDappShare: true });
+      this.state.vtransformY = new Animated.Value(200);
+      this.state.vtransformY1 = new Animated.Value(-1000);
+      setTimeout(() => {
+        Animated.parallel([
+          Animated.timing(this.state.vtransformY,
+            {
+              toValue: 0,
+              duration: 300,
+              easing: Easing.linear,
+            }
+          ),
+          Animated.timing(this.state.vtransformY1,
+            {
+              toValue: 0,
+              duration: 300,
+              easing: Easing.linear,
+            }
+          ),
+        ]).start();
+      }, 300);
+    });
+
     DeviceEventEmitter.addListener('turninShare', (news) => {
       this.setState({showTurninShare: true });
       var result = JSON.parse(news);// 转成JSON对象
@@ -744,6 +773,64 @@ class Route extends React.Component {
     // }
 
   }
+
+  //分享DAPP 链接
+  shareDappAction = (e) => {
+    var th = this;
+    if (e == 1) {
+      // this.refs.viewShot.capture().then(uri => {
+        WeChat.isWXAppInstalled()
+          .then((isInstalled) => {
+            th.setState({ showDappShare: false });
+            if (isInstalled) {
+              WeChat.shareToSession({ 
+                type: 'news', 
+                webpageUrl: this.state.news,
+                title: ''+this.state.news,
+                description: 'eos dapp',
+              }).then((resp) => {
+                // EasyToast.show(JSON.stringify(resp));
+                if(resp && resp.errCode == 0){ // 分享成功
+                  // th.shareSuccess();
+                  EasyToast.show('分享成功');
+                  // this.setState({ showDappShare: false }); 
+                }
+              })
+                .catch((error) => {
+                  EasyToast.show(error.message);
+                });
+            } else {
+              EasyToast.show('没有安装微信软件，请您安装微信之后再试');
+            }
+          });
+      // });
+    } else if (e == 2) {
+      // this.refs.viewShot.capture().then(uri => {
+        WeChat.isWXAppInstalled()
+          .then((isInstalled) => {
+            th.setState({ showDappShare: false });
+            if (isInstalled) {
+              WeChat.shareToTimeline({ 
+              type: 'news', 
+              webpageUrl: this.state.news ,
+              title: 'DAPP分享:'+this.state.news,
+            }).then((resp) => {
+                // EasyToast.show(JSON.stringify(resp));
+                if(resp && resp.errCode == 0){ // 分享成功
+                  th.shareSuccess();
+                }
+              }).catch((error) => {
+                  EasyToast.show(error.message);
+                });
+            } else {
+              EasyToast.show('没有安装微信软件，请您安装微信之后再试');
+            }
+          });
+      // });
+    } 
+  }
+
+  
 
   shareSuccess(){
     // 增加积分
@@ -1078,6 +1165,77 @@ class Route extends React.Component {
           </View>
         ) : null
       }    
+   
+      {this.state.showDappShare ? (
+        <View style={{ position: 'absolute', zIndex: 100000, top: 0, left: 0, width: ScreenWidth, height: ScreenHeight, backgroundColor: UColor.mask }}>
+            {/* <Animated.View style={{
+              height: ScreenHeight - 180, transform: [
+                { translateX: 0 },
+                { translateY: this.state.vtransformY1 },
+              ]
+            }}>
+              <ScrollView style={{ marginTop: 50 }}>
+                <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                  <ViewShot ref="viewShot" style={{ left: 20, width: ScreenWidth - 40 }} options={{ format: "jpg", quality: 0.9 }}>
+                    <View style={{ backgroundColor: UColor.fontColor, width: '100%', height: '100%' }}>
+                      <View style={{backgroundColor:UColor.navigation}}>
+                        <Image source={UImage.turninhead} resizeMode="stretch" style={{ width: ScreenWidth - 40, height:(ScreenWidth - 40)*0.3167 }} />
+                        <View style={{ flexDirection: 'row', justifyContent: 'center',alignItems: 'center',}}>
+                          <Text style={{fontSize: 30, color: UColor.btnColor, padding: 10, textAlign: 'center',}}>{this.state.turninamount}</Text>
+                          <Text style={{fontSize: 22, color: UColor.baseline,}}>{this.state.turninsymbol}</Text>
+                        </View>
+                        <View style={{ justifyContent: 'center', alignSelf: 'center', paddingHorizontal: 30, paddingVertical:20, backgroundColor:UColor.btnColor }}>
+                          <QRCode size={150}  logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(30)} logoBorderRadius={5}
+                          value={this.state.news }/>
+                          <Text style={{ color: UColor.startup, fontSize: 19, textAlign: 'center', marginTop: 20 }}>打开DAPP链接</Text>
+                        </View>
+                        <Text style={{ color:UColor.baseline, fontSize: 16, textAlign: 'left', marginTop: 5, paddingHorizontal: 30, paddingTop: 10, paddingBottom: 30,}}>DAPP链接: <Text style={{color: UColor.btnColor, fontSize: 15, }}>{this.state.news}</Text></Text>
+                      </View>
+                    </View>
+                  </ViewShot>
+                </View>
+              </ScrollView>
+            </Animated.View> */}
+            <View style={{ height: 170, marginTop: ScreenHeight - 180 }}>
+              <Animated.View style={{
+                height: 170, flex: 1, backgroundColor: UColor.riceWhite, transform: [
+                  { translateX: 0 },
+                  { translateY: this.state.vtransformY },
+                ]
+              }}>
+                <View style={{ height: 125 }}>
+                  <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
+                  <View style={{ flexDirection: "row" }}>
+                    {/* <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareDappAction(4) }}>
+                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
+                        <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
+                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
+                      </View>
+                    </Button> */}
+                    <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareDappAction(1) }}>
+                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
+                        <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
+                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
+                      </View>
+                    </Button>
+                    <Button  style={{ flex: 1, }} onPress={() => { this.shareDappAction(2) }}>
+                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
+                        <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
+                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
+                      </View>
+                    </Button>
+                  </View>
+                </View>
+                <Button onPress={() => { this.setState({ showDappShare: false }) }}>
+                  <View style={{ height: 45, backgroundColor: UColor.btnColor, flexDirection: "row" }}>
+                    <Text style={{ color: UColor.blackColor, fontSize: 15, width: "100%", textAlign: "center", alignSelf: 'center' }}>取消</Text>
+                  </View>
+                </Button>
+              </Animated.View>
+            </View>
+          </View>
+        ) : null}   
+
 
 
       {this.state.showTurninShare ? (

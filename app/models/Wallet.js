@@ -544,6 +544,16 @@ export default {
                 if (callback) callback({ code: 500, msg: "网络异常" });                
             }
         },
+        *getContract({payload, callback},{call,put}){
+            try{
+                const resp = yield call(Request.requestO, Constants.EosNode + '/v1/chain/get_abi', 'post', payload);
+                // alert('getContract: '+JSON.stringify(resp));
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback(null);                
+            }
+        },
         *dappfindAll({ payload, callback }, { call, put }) {
             try{
                 const resp = yield call(Request.request, dappfindAll, 'post', payload);
