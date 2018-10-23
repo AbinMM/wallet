@@ -25,7 +25,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         forgetIdentity:function(){
             return new Promise((resolve, reject) => {
@@ -34,7 +36,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         getVersion:function(id){
             alert('getVersion');
@@ -44,7 +48,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         getPublicKey:function(id){
             alert('getPublicKey');
@@ -54,7 +60,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         linkAccount:function(id){
             alert('linkAccount');
@@ -64,7 +72,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         hasAccountFor:function(id){
             alert('hasAccountFor');
@@ -74,7 +84,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         getOrRequestIdentity:function(id){
             alert('getOrRequestIdentity');
@@ -84,7 +96,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         identityFromPermissions:function(id){
             alert('identityFromPermissions');
@@ -94,7 +108,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         requestTransfer:function(id){
             alert('requestTransfer');
@@ -104,7 +120,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         requestSignature:function(id){
             alert('requestSignature');
@@ -114,7 +132,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         createTransaction:function(id){
             alert('createTransaction');
@@ -124,7 +144,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         requestArbitrarySignature:function(id){
             alert('requestArbitrarySignature');
@@ -134,7 +156,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         requestAddNetwork:function(id){
             alert('requestAddNetwork');
@@ -144,7 +168,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         authenticate:function(id){
             alert('authenticate');
@@ -154,7 +180,9 @@ export default function RenderScatter(props) {
                 }else{
                     reject({});
                 }
-            })
+            }).catch((error)=>{
+                
+            });
         },
         eos:(e,t,r,n) =>{
             return {
@@ -175,7 +203,9 @@ export default function RenderScatter(props) {
                                 }
                             }
                         });
-                    })
+                    }).catch((error)=>{
+                
+                    });
                 },
                 delegatebw:function(account){
                     alert('delegatebw');
@@ -185,7 +215,9 @@ export default function RenderScatter(props) {
                         }else{
                             reject({});
                         }
-                    })
+                    }).catch((error)=>{
+                
+                    });
                 },
                 undelegatebw:function(account){
                     alert('undelegatebw');
@@ -195,7 +227,9 @@ export default function RenderScatter(props) {
                         }else{
                             reject({});
                         }
-                    })
+                    }).catch((error)=>{
+                
+                    });
                 },
                 buyrambytes:function(account){
                     alert('buyrambytes');
@@ -205,7 +239,9 @@ export default function RenderScatter(props) {
                         }else{
                             reject({});
                         }
-                    })
+                    }).catch((error)=>{
+                
+                    });
                 },
                 sellram:function(account){
                     alert('sellram');
@@ -215,7 +251,9 @@ export default function RenderScatter(props) {
                         }else{
                             reject({});
                         }
-                    })
+                    }).catch((error)=>{
+                
+                    });
                 },
                 getKeyAccounts:function(publicKey){
                     alert('getKeyAccounts');
@@ -234,7 +272,9 @@ export default function RenderScatter(props) {
                                 }
                             }
                         });
-                    })
+                    }).catch((error)=>{
+                
+                    });
                 },
                 getCurrencyBalance:function(contract,name,coin){
                     return new Promise((resolve, reject) => {
@@ -252,7 +292,9 @@ export default function RenderScatter(props) {
                                 }
                             }
                         });
-                    })
+                    }).catch((error)=>{
+                
+                    });
                 },
                 getAccount:function(account){
                     return new Promise((resolve, reject) => {
@@ -270,7 +312,9 @@ export default function RenderScatter(props) {
                                 }
                             }
                         });
-                    })
+                    }).catch((error)=>{
+                
+                    });
                 },
                 getTableRows:function(obj_param){
                     return new Promise((resolve, reject) => {
@@ -288,10 +332,11 @@ export default function RenderScatter(props) {
                                 }
                             }
                         });
-                    })
+                    }).catch((error)=>{
+                
+                    });
                 },
                 transfer:function(from,to,amount,memo){
-                    alert('transfer');
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
                         window.postMessage(JSON.stringify({key,scatter:"transfer",params:{from,to,amount,memo}}));
@@ -307,10 +352,11 @@ export default function RenderScatter(props) {
                                 }
                             }
                         });
-                    })
+                    }).catch((error)=>{
+                
+                    });
                 },
                 transaction:function(actions){
-                    alert('transaction');
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
                         window.postMessage(JSON.stringify({key,scatter:"transaction",params:{...actions}}));
@@ -326,7 +372,9 @@ export default function RenderScatter(props) {
                                 }
                             }
                         });
-                    })
+                    }).catch((error)=>{
+                
+                    });
                 },
                 contract:function(name){
                     return new Promise((resolve, reject) => {
@@ -345,6 +393,7 @@ export default function RenderScatter(props) {
                                         var action = obj.data.fc.abi.actions[i];
                                         var fc = new Function(
                                             "return new Promise((resolve, reject) => {"+
+                                              "try{"+
                                                 "var contract='"+name+"';"+
                                                 "var name='"+action.name+"';"+
                                                 "var structs=JSON.parse('"+sts+"');"+
@@ -393,7 +442,6 @@ export default function RenderScatter(props) {
                                                             "var obj = JSON.parse(msg.data);"+
                                                             "if(obj.scatter=='transaction' && obj.key===key){"+
                                                                 "if(obj.data){" +
-                                                                    "alert('bbb'+JSON.stringify(obj.data));"+
                                                                     "resolve(obj.data);"+
                                                                 "}else{"+
                                                                     "reject({});"+
@@ -402,7 +450,9 @@ export default function RenderScatter(props) {
                                                         "})"+
                                                     "}"+
                                                 "}"+
-                                            "})"
+                                            "}catch(error){"+
+                                            "}"+    
+                                          "})"
                                         );
                                         resultContract[action.name]=fc;
                                     }
@@ -413,7 +463,9 @@ export default function RenderScatter(props) {
                                 }
                             }
                         });
-                    })
+                    }).catch((error)=>{
+                
+                    });
                 }
             }
         }
