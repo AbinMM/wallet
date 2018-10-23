@@ -35,7 +35,6 @@ import Forget from './Login/Forget'
 import Helpcenter from './Login/Helpcenter'
 import ProblemFeedback from './Login/ProblemFeedback'
 import SignIn from './Login/SignIn'
-import CustomService from './Login/CustomService'
 
 import News from './News'
 import DappWeb from './News/DappWeb'
@@ -225,9 +224,6 @@ const Nav = StackNavigator(
     },
     ProblemFeedback: {
       screen: ProblemFeedback
-    },
-    CustomService: {
-      screen: CustomService
     },
     Share: {
       screen: Share
