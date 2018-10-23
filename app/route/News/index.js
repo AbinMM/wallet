@@ -231,10 +231,17 @@ class News extends React.Component {
         navigate('OCTactivity',{ periodstext:this.state.periodstext, periodsseq:this.state.periodsseq, startTime: moment().format('YYYY-MM-DD ' + '00:00:00'),});
         return;
       }
-      if((banner.url.indexOf("http://") != 0) && (banner.url.indexOf("https://") != 0)){
-        navigate(banner.url, {}); // app内部的js跳转
+
+      if(banner.url.indexOf("ext_viewer:") == 0){
+        Linking.openURL(banner.url.substring("ext_viewer:".length)); // 外部浏览器打开
         return;
       }
+
+      if((banner.url.indexOf("app:") == 0)){
+        navigate(banner.url.substring("app:".length), {}); // app内部的js跳转
+        return;
+      }
+      
       navigate('Web', { title: banner.title, url: url });
     }
   }
