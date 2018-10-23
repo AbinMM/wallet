@@ -584,7 +584,6 @@ _handleActions() {
             onLoad={this._onLoad.bind(this)}
             onLoadStart={this._onLoadStart.bind(this)}
             onError={this._onError.bind(this)}
-            renderError={this._renderError.bind(this)}
             onMessage={(e)=>{this.onMessage(e)}}
             onNavigationStateChange={this.onNavigationStateChange}
           >
