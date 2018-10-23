@@ -72,16 +72,16 @@ export default class DappWeb extends Component {
   onNavigationStateChange = (navState) => {
     this.setState({
         backButtonEnabled: navState.canGoBack,
-        closeIcon: navState.canGoBack,
+        // closeIcon: navState.canGoBack,
     });
 };
 // 显示/隐藏 右上角的更多选项 modal  
 onRightFun() {
-    if (this.state.backButtonEnabled) {
+    // if (this.state.backButtonEnabled) {
         this.refs['refWebview'].goBack();
-    } else {//否则返回到上一个页面
-        this.props.navigation.goBack();
-    }
+    // } else {//否则返回到上一个页面
+    //     this.props.navigation.goBack();
+    // }
 }
 // 监听原生返回键事件
 addBackAndroidListener(navigator) {
@@ -569,7 +569,7 @@ _handleActions() {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
-        <Header {...this.props} onPressLeft={true} onDappBackFalg={this.state.closeIcon} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
+        <Header {...this.props} onPressLeft={true} onDappBackFalg={true} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
         onPressRight={this.moreOption.bind(this)} />
         
         <WebView
