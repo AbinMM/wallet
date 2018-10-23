@@ -64,13 +64,13 @@ const styles = StyleSheet.create({
         flexDirection:"row",
     },
     LeftBack: {
-        // flex: 1, 
-        paddingLeft:ScreenUtil.autowidth(0), 
+        flex: 1, 
+        paddingLeft:ScreenUtil.autowidth(5), 
         alignItems:"flex-start",
     },
     LeftClose: {
-        // flex: 1, 
-        paddingLeft:ScreenUtil.autowidth(25), 
+        flex: 1, 
+        paddingLeft:ScreenUtil.autowidth(5), 
         alignItems:"flex-start",
     },
     titletext: {
