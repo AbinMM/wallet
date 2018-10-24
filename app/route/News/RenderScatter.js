@@ -314,7 +314,19 @@ export default function RenderScatter(props) {
                 getAccount:function(account){
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
-                        window.postMessage(JSON.stringify({key,scatter:"getAccount",params:{account}}));
+                        var tmp_account = '';
+
+                        var param_type = typeof(account);
+                        if(param_type === 'object'){
+                            if(account.account_name){
+                                tmp_account = account.account_name;
+                            }else if(account.account){
+                                tmp_account = account.account;
+                            }
+                        }else{
+                            tmp_account = account;
+                        }
+                        window.postMessage(JSON.stringify({key,scatter:"getAccount",params:{account:tmp_account}}));
                         document.addEventListener("message",function(msg){
                             document.removeEventListener("message",this);
                             var obj = eval("(" + msg.data + ")");

@@ -439,13 +439,13 @@ _handleActions() {
       })
   }
   dapp_getAccount(result){
-    if(result.params.account.account_name == null || result.params.account.account_name == '')
+    if(result.params.account == null || result.params.account == '')
     {
         EasyToast.show('getAccount参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         return ;
     }
-    this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: result.params.account.account_name},callback: (resp) => {
+    this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: result.params.account},callback: (resp) => {
         if(resp){
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp}));
         }else{
