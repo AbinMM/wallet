@@ -62,7 +62,6 @@ export default class Tab extends Component {
             {/*设置中间按钮凸出样式  使用绝对定位*/}
             <TouchableOpacity
                 key={"centerView"}
-
                 style={[styles.tabItem,{position:'absolute',bottom:0,left:(ScreenWidth-ScreenWidth/5)/2,right:ScreenWidth-ScreenWidth/5,height:ScreenUtil.autoheight(70)}]}
                 onPress={() => jumpToIndex(2)}>
                 <View style={styles.tabItem}>

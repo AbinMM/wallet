@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { DeviceEventEmitter, Dimensions, TouchableOpacity, ListView, StyleSheet, Image, View, RefreshControl, Text, } from 'react-native';
+import { DeviceEventEmitter, Dimensions, TouchableOpacity, ListView, StyleSheet, Image, View, RefreshControl, Text, ImageBackground} from 'react-native';
 import moment from 'moment';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
@@ -14,7 +14,7 @@ const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
 const BTN_SELECTED_STATE_ARRAY = ['isTransfer','isDelegatebw', 'isMemory', 'isExchange']; 
-const logOption = ['转账','抵押记录','内存交易','ET交易'];
+const logOption = ['转账','抵押','内存','ET交易'];
 @connect(({ wallet, assets}) => ({ ...wallet, ...assets }))
 class AssetInfo extends BaseComponent {
     static navigationOptions = ({ navigation }) => {
@@ -177,7 +177,7 @@ class AssetInfo extends BaseComponent {
     ownOthersButton(style, selectedSate, stateType, buttonTitle) {  
         return(  
             <TouchableOpacity style={[style, selectedSate ? {borderBottomWidth: 2,borderBottomColor: UColor.tintColor} : {}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
-                <Text style={[styles.tabText, selectedSate ? {color: UColor.fontColor} : {color: UColor.arrow}]}>{buttonTitle}</Text>  
+                <Text style={[styles.tabText, selectedSate ? {color: UColor.tintColor} : {color: UColor.fontColor}]}>{buttonTitle}</Text>  
             </TouchableOpacity>  
         );  
     }  
@@ -217,17 +217,23 @@ class AssetInfo extends BaseComponent {
     render() {
         const c = this.props.navigation.state.params.asset;
         return (
-            <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-                <Header {...this.props} onPressLeft={true} title={c.asset.name} avatar={UImage.pool_explain} onPressRight={this._rightTopClick.bind(this,this.props.navigation.state.params.asset.asset.name)}/>  
+            <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
+                <Header {...this.props} onPressLeft={true} title={c.asset.name} avatar={UImage.pool_explain} onPressRight={this._rightTopClick.bind(this,this.props.navigation.state.params.asset.asset.name)} imgWidth={ScreenUtil.autowidth(21)} imgHeight={ScreenUtil.autowidth(21)}/>  
                 <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
-                    <Text style={[styles.headbalance,{color: UColor.fontColor}]}>{this.state.balance==""? "0.0000" :this.state.balance.replace(c.asset.name, "")} {c.asset.name}</Text>
-                    <Text style={[styles.headmarket,{color: UColor.lightgray}]}>≈ {(this.state.balance == null || c.asset.value == null) ? "0.00" : (this.state.balance.replace(c.asset.name, "") * c.asset.value).toFixed(2)} ￥</Text>
+                    <ImageBackground style={[styles.bgtopout,ScreenUtil.isIphoneX()?{minHeight:(ScreenWidth-ScreenUtil.autowidth(60))*0.3974}:{height:(ScreenWidth-ScreenUtil.autowidth(60))*0.3974}]} source={UImage.home_bg} resizeMode="stretch">
+                        <Text style={[styles.headbalance,{color: UColor.fontColor}]}>{this.state.balance==""? "0.0000" :this.state.balance.replace(c.asset.name, "")} {c.asset.name}</Text>
+                        <Text style={[styles.headmarket,{color: UColor.lightgray}]}>≈ {(this.state.balance == null || c.asset.value == null) ? "0.00" : (this.state.balance.replace(c.asset.name, "") * c.asset.value).toFixed(2)} ￥</Text>
+                    </ImageBackground>
                 </View>
+                <View style={{paddingHorizontal: ScreenUtil.autowidth(15), paddingVertical: ScreenUtil.autowidth(10),}}>
+                    <Text style={[styles.latelytext,{color: UColor.arrow}]}>交易记录</Text>
+                </View>
+
                 <View style={styles.btn}>
-                    <View style={[styles.OwnOthers]}>  
+                    <View style={[styles.OwnOthers,{backgroundColor: UColor.mainColor}]}>  
                         {this.ownOthersButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', logOption[0])}  
-                        {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isDelegatebw, 'isDelegatebw', logOption[1])}  
                         {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isMemory, 'isMemory', logOption[2])}  
+                        {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isDelegatebw, 'isDelegatebw', logOption[1])}  
                         {this.ownOthersButton(styles.tabbutton, this.state.isExchange, 'isExchange', logOption[3])}
                     </View>
                     {/* <Button onPress={this._openDetails.bind(this)}> 
@@ -310,21 +316,21 @@ class AssetInfo extends BaseComponent {
                         </Button>   */}
                         <Button onPress={this._openDetails.bind(this, rowData)}> 
                             <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
-                                <View style={{alignItems: 'center',justifyContent: 'center',marginRight: ScreenUtil.autowidth(15)}}>
+                                {/* <View style={{alignItems: 'center',justifyContent: 'center',marginRight: ScreenUtil.autowidth(15)}}>
                                     <Image source={rowData.type=='转出'?UImage.turn_out:UImage.shift_to} style={styles.shiftturn} />
-                                </View>
+                                </View> */}
                                 <View style={styles.top}>
                                     <View style={styles.timequantity}>
-                                        <Text style={[styles.timetext,{color: UColor.arrow}]}>{this.transferTimeZone(rowData.blockTime)}</Text>
                                         <Text style={[styles.quantity,{color: UColor.fontColor}]}>{rowData.type=='转出'? rowData.to : rowData.from}</Text>
+                                        <Text style={[styles.timetext,{color: UColor.arrow}]}>{this.transferTimeZone(rowData.blockTime)}</Text>
                                     </View>
                                     <View style={styles.typedescription}>
                                         <Text style={[styles.typeto,{color:rowData.type=='转出'?UColor.warningRed:UColor.fallColor}]}>{(rowData.type=='转出'?'-':'+')+rowData.quantity.replace(c.asset.name, "")}</Text>
                                     </View>
                                 </View>
-                                <View style={styles.Ionicout}>
+                                {/* <View style={styles.Ionicout}>
                                     <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
-                                </View>
+                                </View> */}
                             </View>
                         </Button>  
                     </View>)}                
@@ -333,14 +339,14 @@ class AssetInfo extends BaseComponent {
                 <View style={[styles.footer,{backgroundColor: UColor.secdColor}]}>
                     <Button onPress={this.turnInAsset.bind(this, c)} style={{ flex: 1 }}>
                         <View style={[styles.shiftshiftturnout,{backgroundColor: UColor.mainColor,marginRight: 0.5,}]}>
-                            <Image source={UImage.shift_to} style={styles.shiftturn} />
-                            <Text style={[styles.shifttoturnout,{color: UColor.fallColor}]}>转入</Text>
+                            <Image source={UImage.shift_to} style={styles.shiftimg} />
+                            <Text style={[styles.shifttoturnout,{color: UColor.tintColor}]}>转入</Text>
                         </View>
                     </Button>
                     <Button onPress={this.turnOutAsset.bind(this, c)} style={{ flex: 1 }}>
                         <View style={[styles.shiftshiftturnout,{backgroundColor: UColor.mainColor,marginLeft: 0.5}]}>
-                            <Image source={UImage.turn_out} style={styles.shiftturn} />
-                            <Text style={[styles.shifttoturnout,{color: UColor.warningRed}]}>转出</Text>
+                            <Image source={UImage.turn_out} style={styles.turnimg} />
+                            <Text style={[styles.shifttoturnout,{color: UColor.tintColor}]}>转出</Text>
                         </View>
                     </Button>
                 </View>
@@ -353,12 +359,16 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
     },
+    bgtopout: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: ScreenUtil.autowidth(24),
+        width: ScreenWidth-ScreenUtil.autowidth(60),
+    },
     header: {
-        borderRadius: 5,
         alignItems: "center",
         justifyContent: "center",
-        margin: ScreenUtil.autowidth(5),
-        height: ScreenUtil.autoheight(110),
+        paddingVertical: ScreenUtil.autowidth(20),
     },
     headbalance: {
         fontSize: ScreenUtil.setSpText(20), 
@@ -373,6 +383,12 @@ const styles = StyleSheet.create({
     btn: {
         flex: 1,
         paddingBottom: ScreenUtil.autoheight(50),
+    },
+
+    latelytext: {
+        fontSize: ScreenUtil.setSpText(14),
+        
+       
     },
 
     tabbutton: {  
@@ -398,8 +414,8 @@ const styles = StyleSheet.create({
   
     OwnOthers: {
         flexDirection: 'row',
-        marginHorizontal: ScreenUtil.autowidth(10),
-        marginVertical: ScreenUtil.autoheight(10),
+        // marginHorizontal: ScreenUtil.autowidth(10),
+        // marginVertical: ScreenUtil.autoheight(10),
     },
 
 
@@ -414,11 +430,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
     row: {
-        borderRadius: 5,
+        //borderRadius: 5,
         flexDirection: "row",
-        paddingVertical: ScreenUtil.autoheight(5),
-        marginHorizontal: ScreenUtil.autowidth(5),
-        marginVertical: ScreenUtil.autowidth(0.5),
+        paddingVertical: ScreenUtil.autoheight(10),
+        //marginHorizontal: ScreenUtil.autowidth(5),
+        marginTop: ScreenUtil.autowidth(0.5),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },
     top: {
@@ -431,12 +447,12 @@ const styles = StyleSheet.create({
         flex: 4,
         flexDirection: "column",
         alignItems: 'flex-start',
-        justifyContent: "space-around",
-        height: ScreenUtil.autoheight(50),
+        justifyContent: "space-between",
+        height: ScreenUtil.autoheight(40),
     },
     timetext: {
         textAlign: 'left',
-        fontSize: ScreenUtil.setSpText(14),
+        fontSize: ScreenUtil.setSpText(12),
     },
     quantity: {
         textAlign: 'left',
@@ -444,7 +460,7 @@ const styles = StyleSheet.create({
     },
     description: {
         textAlign: 'center',
-        fontSize: ScreenUtil.setSpText(14),
+        fontSize: ScreenUtil.setSpText(16),
         marginTop: ScreenUtil.autoheight(3),
     },
     unconfirmedout: { 
@@ -467,7 +483,7 @@ const styles = StyleSheet.create({
     },
     typeto: {
         textAlign: 'center',
-        fontSize: ScreenUtil.setSpText(14),
+        fontSize: ScreenUtil.setSpText(16),
     },
     Ionicout: {
         alignItems: 'flex-end',
@@ -489,9 +505,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
     },
-    shiftturn: {
-        width: ScreenUtil.autowidth(30), 
-        height: ScreenUtil.autowidth(30),
+    shiftimg: {
+        width: ScreenUtil.autowidth(19), 
+        height: ScreenUtil.autowidth(19),
+    },
+    turnimg: {
+        width: ScreenUtil.autowidth(16), 
+        height: ScreenUtil.autowidth(19),
     },
     shifttoturnout: {
         fontSize: ScreenUtil.setSpText(18),

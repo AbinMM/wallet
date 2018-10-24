@@ -43,7 +43,7 @@ export default {
   fontColor: '#292F40', //字体颜色 UColor.fontColor
   btnColor: '#ffffff', //按钮字体颜色 UColor.btnColor
   riceWhite: '#ECECF0', //米白色 UColor.riceWhite
-  arrow: '#75859f', //深字体色 UColor.arrow
+  arrow: '#808080', //深字体色 UColor.arrow
   startup: '#21232E', //启动也背景色 UColor.startup
   inash: '#4D607E', // 列表底色 UColor.inash
   //lightgray: '#4c515b', //浅字体色 UColor.lightgray
@@ -60,7 +60,7 @@ export default {
   mainsecd: "#EDEDED",
   tintfont: "#65CAFF",
   titletop: '#2279C5', //顶部标题背景色 UColor.navigation
-  secdfont: "#FFFFFF",
+  secdfont: "#F6F5FA",
   mainfont: "#FFFFFF",
   tintstart: '#65CAFF',
   fonttint: "#FFFFFF",

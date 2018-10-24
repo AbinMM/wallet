@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import { StyleSheet, Dimensions, View, Text, Image, TouchableOpacity, } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import LinearGradient from 'react-native-linear-gradient'
 import ScreenUtil from '../utils/ScreenUtil'
 import UColor from '../utils/Colors'
 import BaseComponent from "../components/BaseComponent";
@@ -22,14 +23,17 @@ class Header extends BaseComponent {
         onPressRight: PropTypes.func,
         avatar: PropTypes.number,
         subName: PropTypes.string,
-        backgroundColor: PropTypes.string,
+        backgroundColors: PropTypes.array,
+        imgWidth: PropTypes.number,
+        imgHeight: PropTypes.number,
         onDappBackFalg:PropTypes.bool,//DAPP返回
     }
 
     render(){
-        let {backgroundColor, onPressLeft, onPressRightFun,title, onPressRight, avatar, subName,onDappBackFalg,} = this.props
+        let {backgroundColors, onPressLeft, onPressRightFun, title, onPressRight, avatar, subName, imgWidth, imgHeight, onDappBackFalg, } = this.props
         return (
-        <View style={[styles.header,{backgroundColor: backgroundColor ? backgroundColor: UColor.titletop}]}>
+        // <View style={[styles.header,{backgroundColor: backgroundColor ? backgroundColor: UColor.titletop}]}>
+        <LinearGradient colors={backgroundColors?backgroundColors:['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={styles.header} >
             <View style={styles.Leftout} >
                 <TouchableOpacity style={styles.LeftBack} onPress={onPressLeft ? (onPressRightFun==undefined?() => {this.props.navigation.goBack()}:onPressRightFun) : () => {undefined}}>
                     {onPressLeft &&<Ionicons style={{color:UColor.btnColor}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
@@ -38,13 +42,13 @@ class Header extends BaseComponent {
                     {onDappBackFalg &&<Ionicons style={{color:UColor.btnColor}} name="md-close" size={ScreenUtil.setSpText(30)}/>}
                 </TouchableOpacity>
             </View>
-
             <Text style={[styles.titletext,{color:UColor.btnColor}]} ellipsizeMode='middle' numberOfLines={1}>{title}</Text>
             <TouchableOpacity style={styles.Rightout} onPress={onPressRight}>
-                {avatar?<Image source={avatar} style={styles.Rightimg} resizeMode={'contain'} />:null}
+                {avatar?<Image source={avatar} style={{width:imgWidth?imgWidth:ScreenUtil.autowidth(28), height: imgHeight?imgHeight:ScreenUtil.autowidth(28)}} resizeMode={'contain'} />:null}
                 {subName?<Text style={[styles.Righttext,{color: UColor.btnColor}]}>{subName}</Text>:null}
             </TouchableOpacity>
-        </View>
+        </LinearGradient>
+        // </View>
         )
     }
 }

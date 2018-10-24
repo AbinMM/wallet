@@ -29,11 +29,11 @@ class createWallet extends BaseComponent {
       walletPassword: "",
       reWalletPassword: "",
       passwordNote: "",
-      isChecked: this.props.isChecked || true,
+      isChecked: this.props.isChecked || false,
       integral: 0,
-      weak: UColor.arrow,
-      medium: UColor.arrow,
-      strong: UColor.arrow,
+      weak: false,
+      medium: false,
+      strong: false,
       CreateButton:  UColor.mainColor,
       errorcode: '',
       errormsg: '',
@@ -227,33 +227,33 @@ class createWallet extends BaseComponent {
     let string = this.state.walletPassword;
     if(string.length >=8) {
       if(/[a-zA-Z]+/.test(string) && /[0-9]+/.test(string) && /\W+\D+/.test(string)) {
-        this.state.strong = UColor.tintColor;
-        this.state.medium = UColor.arrow;
-        this.state.weak = UColor.arrow;
+        this.state.strong = true;
+        this.state.medium = false;
+        this.state.weak = false;
       }else if(/[a-zA-Z]+/.test(string) || /[0-9]+/.test(string) || /\W+\D+/.test(string)) {
         if(/[a-zA-Z]+/.test(string) && /[0-9]+/.test(string)) {
-          this.state.strong = UColor.arrow;
-          this.state.medium = UColor.tintColor;
-          this.state.weak = UColor.arrow;
+          this.state.strong = false;
+          this.state.medium = true;
+          this.state.weak = false;
         }else if(/\[a-zA-Z]+/.test(string) && /\W+\D+/.test(string)) {
-          this.state.strong = UColor.arrow;
-          this.state.medium = UColor.tintColor;
-          this.state.weak = UColor.arrow;
+          this.state.strong = false;
+          this.state.medium = true;
+          this.state.weak = false;
         }else if(/[0-9]+/.test(string) && /\W+\D+/.test(string)) {
-          this.state.strong = UColor.arrow;
-          this.state.medium = UColor.tintColor;
-          this.state.weak = UColor.arrow;
+          this.state.strong = false;
+          this.state.medium = true;
+          this.state.weak = false;
         }else{
-          this.state.strong = UColor.arrow;
-          this.state.medium = UColor.arrow;
-          this.state.weak = UColor.tintColor;
+          this.state.strong = false;
+          this.state.medium = false;
+          this.state.weak = true;
         }
       }
-     }else{
-      this.state.strong = UColor.arrow;
-      this.state.medium = UColor.arrow;
-      this.state.weak = UColor.arrow;
-     }
+    }else{
+      this.state.strong = false;
+      this.state.medium = false;
+      this.state.weak = false;
+    }
     if(this.state.walletName != "" && this.state.walletPassword != "" && this.state.reWalletPassword != ""){
       this.state.CreateButton = UColor.tintColor;
     }else{
@@ -297,42 +297,52 @@ class createWallet extends BaseComponent {
   }
 
   render() {
-    return <View style={[styles.container,{ backgroundColor: UColor.secdColor,}]}>  
+    return <View style={[styles.container,{ backgroundColor: UColor.secdfont,}]}>  
     <Header {...this.props} onPressLeft={true} title="创建钱包" />  
     <ScrollView  keyboardShouldPersistTaps="always">
       <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
           <View style={[styles.significantout,{backgroundColor: UColor.mainColor,borderColor: UColor.riseColor}]}>
-            <View style={{flexDirection: 'row',alignItems: 'center',}}>
+            {/* <View style={{flexDirection: 'row',alignItems: 'center',}}>
               <Image source={UImage.warning} style={styles.imgBtn} />
               <Text style={[styles.statementtext,{color: UColor.riseColor}]} >重要声明</Text>
-            </View>
-            <Text style={[styles.significanttext,{color: UColor.riseColor}]} >密码用于保护私钥和交易授权，建议设置高强度密码；EosToken不存储密码，也无法帮您找回，请务必牢记。</Text>
+            </View> */}
+            <Text style={[styles.significanttext,{color: UColor.riseColor}]} >• 密码用于保护私钥和交易授权，建议设置高强度密码；</Text>
+            <Text style={[styles.significanttext,{color: UColor.riseColor}]} >• EosToken不存储密码，也无法帮您找回，请务必牢记。</Text>
           </View>
-          <View style={{backgroundColor: UColor.mainColor,}}>
-            <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]} >
+          <View >
+            <View style={[styles.inptout,{borderBottomColor: UColor.secdColor}]} >
               <Text style={[styles.inptitle,{color: UColor.fontColor}]}>账号名称</Text>
+            </View>
+            <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]} >
               <View style={{flexDirection: 'row',justifyContent: 'center',alignItems: 'center',}}>
                 <TextInput ref={(ref) => this._raccount = ref} value={this.state.walletName} returnKeyType="next" 
                   selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
                   placeholder="输入a-z小写字母和1-5数字组合字符" underlineColorAndroid="transparent" onChange={this.intensity()} 
                   keyboardType="default" maxLength={12} onChangeText={(walletName) => this.setState({ walletName:this.chkAccount(walletName) })} />
                 <Button onPress={() => this.random()}>
-                  <View style={{width: ScreenUtil.autowidth(60), height: ScreenUtil.autoheight(35),justifyContent: 'center',alignItems: 'center',borderRadius: 3, backgroundColor: UColor.tintColor,}}>
-                    <Text style={[styles.createWallet,{color: UColor.btnColor}]}>随机</Text>
+                  <View style={{width: ScreenUtil.autowidth(60), height: ScreenUtil.autoheight(35),justifyContent: 'center',alignItems: 'center',}}>
+                    <Text style={[styles.createWallet,{color: UColor.tintColor}]}>随机</Text>
                   </View>
                 </Button>
               </View>
             </View>
-            <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]} >
-                <View style={{flexDirection: 'row',}}>
-                  <Text style={[styles.inptitle,{color: UColor.fontColor}]}>设置密码</Text>
-                  <View style={{flexDirection: 'row',}}>
-                      <Text style={{color:this.state.weak, fontSize: ScreenUtil.setSpText(15), padding: ScreenUtil.autowidth(5),}}>弱</Text>
-                      <Text style={{color:this.state.medium, fontSize: ScreenUtil.setSpText(15), padding: ScreenUtil.autowidth(5),}}>中</Text>
-                      <Text style={{color:this.state.strong, fontSize: ScreenUtil.setSpText(15), padding: ScreenUtil.autowidth(5),}}>强</Text>
-                  </View>
+
+            <View style={[styles.inptout,{flexDirection: 'row',borderBottomColor: UColor.secdColor}]}>
+              <Text style={[styles.inptitle,{color: UColor.fontColor}]}>设置密码</Text>
+              <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center'}}>
+                <View style={[styles.Strengthout,this.state.weak&&{backgroundColor: '#CCCCCC'}]}>
+                  <Text style={[styles.Strengthtext,{color:this.state.weak?UColor.btnColor:UColor.arrow}]}>弱</Text>
                 </View>
+                <View style={[styles.Strengthout,this.state.medium&&{backgroundColor: '#CCCCCC'}]}>
+                  <Text style={[styles.Strengthtext,{color:this.state.medium?UColor.btnColor:UColor.arrow}]}>中</Text>
+                </View>
+                <View style={[styles.Strengthout,this.state.strong&&{backgroundColor: '#CCCCCC'}]}>
+                  <Text style={[styles.Strengthtext,{color:this.state.strong?UColor.btnColor:UColor.arrow}]}>强</Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]} >
                 <TextInput ref={(ref) => this._lpass = ref} value={this.state.walletPassword}  returnKeyType="next" editable={true}
                     selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}  
                     onChangeText={(walletPassword) => this.setState({walletPassword})} onChange={this.intensity()} autoFocus={false}
@@ -340,13 +350,17 @@ class createWallet extends BaseComponent {
                     maxLength={Constants.PWD_MAX_LENGTH}/>
             </View>
             <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]} >
-              <Text style={[styles.inptitle,{color: UColor.fontColor}]}>确认密码</Text>
               <TextInput ref={(ref) => this._lrpass = ref} value={this.state.reWalletPassword} returnKeyType="next"
                 selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                 placeholder="重复密码" underlineColorAndroid="transparent" secureTextEntry={true} onChange={this.intensity()} 
                 onChangeText={(reWalletPassword) => this.setState({ reWalletPassword })}  autoFocus={false} editable={true}
                 maxLength={Constants.PWD_MAX_LENGTH}/>
             </View>
+
+            <View style={[styles.inptout,{borderBottomColor: UColor.secdColor}]} >
+              <Text style={[styles.inptitle,{color: UColor.fontColor}]}>设置密码提示</Text>
+            </View>
+
             <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor}]} >
               <TextInput ref={(ref) => this._lnote = ref} value={this.state.passwordNote} selectionColor={UColor.tintColor} maxLength={40}
                 returnKeyType="go" placeholderTextColor={UColor.inputtip} placeholder="密码提示(可不填)"  style={[styles.inpt,{color: UColor.arrow}]} 
@@ -355,12 +369,13 @@ class createWallet extends BaseComponent {
           </View>
           <View style={styles.clauseout}>
             <TouchableHighlight  onPress={() => this.checkClick()} activeOpacity={0.5} underlayColor={UColor.secdColor}>
-              <Image source={this.state.isChecked ? UImage.aab1 : UImage.aab2} style={styles.clauseimg} />
+              <View style={[{width: ScreenUtil.autowidth(10), height: ScreenUtil.autowidth(10),margin: ScreenUtil.autowidth(10), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5},this.state.isChecked&&{backgroundColor:UColor.tintColor}]}/>
+              {/* <Image source={this.state.isChecked ? UImage.aab1 : UImage.aab2} style={styles.clauseimg} /> */}
             </TouchableHighlight>
             <Text style={[styles.welcome,{color: UColor.arrow}]} >我已经仔细阅读并同意 <Text onPress={() => this.prot()} style={[styles.clausetext,{color: UColor.tintColor}]}>服务及隐私条款</Text></Text>
           </View>
         </KeyboardAvoidingView>
-        <Button onPress={() => this.checkAccountAndCreateWallet()}>
+        <Button onPress={() => this.checkAccountAndCreateWallet()} style={{margin: ScreenUtil.autowidth(20)}}>
           <View style={styles.createWalletout} backgroundColor = {this.state.CreateButton}>
             <Text style={[styles.createWallet,{color: UColor.btnColor}]}>创建钱包</Text>
           </View>
@@ -385,13 +400,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   significantout: {
-    borderWidth: 1,
-    borderRadius: 5,
-    alignItems: 'center', 
     flexDirection: "column",
-    padding: ScreenUtil.autowidth(5),
-    marginVertical: ScreenUtil.autoheight(16),
-    marginHorizontal: ScreenUtil.autowidth(20),
+    paddingVertical: ScreenUtil.autowidth(5),
+    paddingHorizontal: ScreenUtil.autowidth(15),
   },
   imgBtn: {
     width: ScreenUtil.autowidth(25),
@@ -410,42 +421,48 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingHorizontal: ScreenUtil.autowidth(15),
   },
+  Strengthout: {
+    borderRadius: 5,
+    paddingHorizontal: ScreenUtil.autowidth(8),
+    paddingVertical: ScreenUtil.autowidth(4),
+  },
+  Strengthtext: {
+    fontSize: ScreenUtil.setSpText(15), 
+  },
   inptitle: {
     flex: 1,
-    fontSize: ScreenUtil.setSpText(15),
+    fontSize: ScreenUtil.setSpText(16),
     paddingLeft: ScreenUtil.autowidth(5),
-    lineHeight: ScreenUtil.autoheight(30),
+    lineHeight: ScreenUtil.autoheight(50),
   },
   inpt: {
     flex: 1,
-    height: ScreenUtil.autoheight(50),
-    fontSize: ScreenUtil.setSpText(15),
+    height: ScreenUtil.autoheight(60),
+    fontSize: ScreenUtil.setSpText(16),
     paddingLeft: ScreenUtil.autowidth(2),
   },
   clauseout: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: ScreenUtil.autoheight(20),
+    marginTop: ScreenUtil.autowidth(10),
+    marginHorizontal: ScreenUtil.autowidth(10),
   },
   clauseimg: { 
     width: ScreenUtil.autowidth(20), 
     height: ScreenUtil.autowidth(20),
-    marginHorizontal: ScreenUtil.autowidth(10), 
+    marginRight: ScreenUtil.autowidth(10), 
   },
   welcome: {
-    fontSize: ScreenUtil.setSpText(14),
+    fontSize: ScreenUtil.setSpText(12),
+    lineHeight: ScreenUtil.autoheight(30),
   },
   clausetext: {
-    fontSize: ScreenUtil.setSpText(14),
+    fontSize: ScreenUtil.setSpText(12),
   },
   createWalletout: {
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
     height: ScreenUtil.autoheight(45),
-    marginHorizontal: ScreenUtil.autowidth(20),
-    marginVertical: ScreenUtil.autoheight(20),
   },
   createWallet: {
     fontSize: ScreenUtil.setSpText(15),

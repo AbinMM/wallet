@@ -31,7 +31,7 @@ class Ram extends BaseComponent {
         header:null,  
         tabBarLabel: '交易所',
         tabBarIcon: ({ focused}) => (
-            <Image resizeMode='stretch' source={focused ? UImage.tab_5_h : UImage.tab_5} style={{width: ScreenUtil.autowidth(40), height: ScreenUtil.autowidth(40)}}/>
+            <Image resizeMode='stretch' source={focused ? UImage.tab_5_h : UImage.tab_5} style={{width: ScreenUtil.autowidth(21), height: ScreenUtil.autowidth(21)}}/>
         ),
     };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackNavigator, TabNavigator } from 'react-navigation';
-import { CameraRoll, Image, View, BackHandler, Text, Platform, DeviceEventEmitter, BackAndroid, AppState, Linking, Dimensions, ScrollView, Animated, Easing, NetInfo, } from 'react-native';
+import { CameraRoll, Image, View, BackHandler, Text, Platform, DeviceEventEmitter, BackAndroid, AppState, Linking, Dimensions, ScrollView, Animated, Easing, NetInfo, StyleSheet, } from 'react-native';
 import moment from 'moment';
 import { connect } from 'react-redux'
 import QRCode from 'react-native-qrcode-svg';
@@ -110,7 +110,7 @@ var TabContainer = TabNavigator(
     lazy: true,
     tabBarPosition: 'bottom', // 显示在底端，android 默认是显示在页面顶端的
     swipeEnabled: false, // 是否可以左右滑动切换tab
-    tabBarComponent:props => <Homepage {...props}/>,//用作渲染tab bar的组件
+    //tabBarComponent:props => <Homepage {...props}/>,//用作渲染tab bar的组件
     animationEnabled: false, // 切换页面时是否有动画效果
     tabBarOptions: {
       activeTintColor: UColor.tintColor, // 文字和图片选中颜色
@@ -118,8 +118,8 @@ var TabContainer = TabNavigator(
       showIcon: true, // android 默认不显示 icon, 需要设置为 true 才会显示
       showLabel: true,
       style: { // TabBar 
-        height: 49,
-        backgroundColor: UColor.secdColor, 
+        height: 50,
+        backgroundColor: UColor.btnColor, // tab背景色
         borderBottomWidth: 0,
       },
       labelStyle: { // 文字
@@ -630,7 +630,7 @@ class Route extends React.Component {
         this.setState({turninamount:""});
       }
 
-      this.state.vtransformY = new Animated.Value(200);
+      this.state.vtransformY = new Animated.Value(500);
       this.state.vtransformY1 = new Animated.Value(-1000);
       setTimeout(() => {
         Animated.parallel([
@@ -1034,7 +1034,7 @@ class Route extends React.Component {
           </Animated.View>
           <View style={{ height: 170, marginTop: 10 }}>
             <Animated.View style={{
-              height: 170, flex: 1, backgroundColor: UColor.riceWhite, transform: [
+              height: 170, flex: 1, backgroundColor: UColor.secdfont, transform: [
                 { translateX: 0 },
                 { translateY: this.state.transformY },
               ]
@@ -1042,37 +1042,37 @@ class Route extends React.Component {
               <View style={{ height: 125 }}>
                 <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
                 <View style={{ flexDirection: "row" }}>
-                  <Button onPress={() => { this.shareAction(1) }} style={{ flex: 1, justifyContent: 'center' }}>
-                    <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                      <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                      <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
+                  <Button onPress={() => { this.shareAction(2) }} style={{ flex: 1, justifyContent: 'center' }}>
+                    <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                      <Image source={UImage.share_wx} style={styles.shareimg} />
+                      <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微信</Text>
                     </View>
                   </Button>
-                  <Button onPress={() => { this.shareAction(2) }} style={{ flex: 1, justifyContent: 'center' }}>
-                    <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                      <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                      <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
+                  <Button onPress={() => { this.shareAction(1) }} style={{ flex: 1, justifyContent: 'center' }}>
+                    <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                      <Image source={UImage.share_qq} style={styles.shareimg} />
+                      <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
                     </View>
                   </Button>
                   <Button onPress={() => { this.shareAction(3) }} style={{ flex: 1, }}>
-                    <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                      <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                      <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
+                    <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                      <Image source={UImage.share_pyq} style={styles.shareimg} />
+                      <Text style={[styles.sharetext,{color: UColor.arrow,}]}>朋友圈</Text>
                     </View>
                   </Button>
                   {/* <Button onPress={() => { this.shareAction(4) }} style={{ width: '25%' }}>
-                    <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                      <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                      <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微博</Text>
+                    <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                      <Image source={UImage.share_pyq} style={styles.shareimg} />
+                      <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微博</Text>
                     </View>
                   </Button> */}
                 </View>
               </View>
               <Button onPress={() => { this.setState({ showShare: false }) }}>
-                <View style={{ height: 45, backgroundColor: UColor.btnColor, flexDirection: "row" }}>
-                  <Text style={{ color: UColor.blackColor, fontSize: 15, width: "100%", textAlign: "center", alignSelf: 'center' }}>取消</Text>
-                </View>
-              </Button>
+                  <View style={[styles.cancelout,{backgroundColor: UColor.btnColor}]}>
+                    <Text style={[styles.canceltext,{color: UColor.blackColor}]}>取消</Text>
+                  </View>
+                </Button>
             </Animated.View>
           </View>
         </View>
@@ -1116,31 +1116,31 @@ class Route extends React.Component {
                 ]
               }}>
                 <View style={{ height: 125 }}>
-                  <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
+                  <Text style={[styles.sharetitle,{color: UColor.blackColor}]}>分享到</Text>
                   <View style={{ flexDirection: "row" }}>
                     <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_qq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
                       </View>
                     </Button>
                     <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_wx} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微信</Text>
                       </View>
                     </Button>
                     <Button  style={{ flex: 1, }} onPress={() => { this.shareAction(3) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_pyq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>朋友圈</Text>
                       </View>
                     </Button>
                   </View>
                 </View>
                 <Button onPress={() => { this.setState({ showVoteShare: false }) }}>
-                  <View style={{ height: 45, backgroundColor: UColor.btnColor, flexDirection: "row" }}>
-                    <Text style={{ color: UColor.blackColor, fontSize: 15, width: "100%", textAlign: "center", alignSelf: 'center' }}>取消</Text>
+                  <View style={[styles.cancelout,{backgroundColor: UColor.btnColor}]}>
+                    <Text style={[styles.canceltext,{color: UColor.blackColor}]}>取消</Text>
                   </View>
                 </Button>
               </Animated.View>
@@ -1187,31 +1187,31 @@ class Route extends React.Component {
                 ]
               }}>
                 <View style={{ height: 125 }}>
-                  <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
+                  <Text style={[styles.sharetitle,{color: UColor.blackColor}]}>分享到</Text>
                   <View style={{ flexDirection: "row" }}>
                     {/* <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareDappAction(4) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_qq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
                       </View>
                     </Button> */}
                     <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareDappAction(1) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_wx} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微信</Text>
                       </View>
                     </Button>
                     <Button  style={{ flex: 1, }} onPress={() => { this.shareDappAction(2) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_pyq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>朋友圈</Text>
                       </View>
                     </Button>
                   </View>
                 </View>
                 <Button onPress={() => { this.setState({ showDappShare: false }) }}>
-                  <View style={{ height: 45, backgroundColor: UColor.btnColor, flexDirection: "row" }}>
-                    <Text style={{ color: UColor.blackColor, fontSize: 15, width: "100%", textAlign: "center", alignSelf: 'center' }}>取消</Text>
+                  <View style={[styles.cancelout,{backgroundColor: UColor.btnColor}]}>
+                    <Text style={[styles.canceltext,{color: UColor.blackColor}]}>取消</Text>
                   </View>
                 </Button>
               </Animated.View>
@@ -1220,10 +1220,10 @@ class Route extends React.Component {
         ) : null}   
 
 
-
+      {/*  收款分享 */}
       {this.state.showTurninShare ? (
-        <View style={{ position: 'absolute', zIndex: 100000, top: 0, left: 0, width: ScreenWidth, height: ScreenHeight, backgroundColor: UColor.mask }}>
-            <Animated.View style={{
+        <View style={{ position: 'absolute', zIndex: 100000, top: 0, left: 0, width: ScreenWidth, height: ScreenHeight, backgroundColor: UColor.mask,justifyContent: 'flex-end', }}>
+            {/* <Animated.View style={{
               height: ScreenHeight - 180, transform: [
                 { translateX: 0 },
                 { translateY: this.state.vtransformY1 },
@@ -1242,48 +1242,67 @@ class Route extends React.Component {
                         <View style={{ justifyContent: 'center', alignSelf: 'center', paddingHorizontal: 30, paddingVertical:20, backgroundColor:UColor.btnColor }}>
                           <QRCode size={150}  logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(30)} logoBorderRadius={5}
                           value={this.state.turninsymbol.toLowerCase() +':' + this.state.turnintoaccount + '?amount=' + ((this.state.turninamount == "")?'0':this.state.turninamount) + '&token=' + this.state.turninsymbol.toUpperCase()}/>
-                          <Text style={{ color: UColor.startup, fontSize: 19, textAlign: 'center', marginTop: 20 }}>扫码向他支付</Text>
                         </View>
+                        <Text style={{ color: UColor.startup, fontSize: 19, textAlign: 'center', marginTop: 20 }}>扫码向他支付</Text>
                         <Text style={{ color:UColor.baseline, fontSize: 16, textAlign: 'left', marginTop: 5, paddingHorizontal: 30, paddingTop: 10, paddingBottom: 30,}}>收款账号: <Text style={{color: UColor.btnColor, fontSize: 15, }}>{this.state.turnintoaccount}</Text></Text>
                       </View>
                     </View>
                   </ViewShot>
                 </View>
               </ScrollView>
-            </Animated.View>
-            <View style={{ height: 170, marginTop: 10 }}>
+            </Animated.View> */}
+            <View style={{ height: ScreenUtil.autowidth(336), marginTop: ScreenUtil.autowidth(10) }}>
               <Animated.View style={{
-                height: 170, flex: 1, backgroundColor: UColor.riceWhite, transform: [
+                height: ScreenUtil.autowidth(336), flex: 1, backgroundColor: UColor.riceWhite, transform: [
                   { translateX: 0 },
                   { translateY: this.state.vtransformY },
                 ]
               }}>
-                <View style={{ height: 125 }}>
-                  <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
+                <View style={{ height: ScreenUtil.autowidth(290) }}>
+                  <Text style={{ fontSize: ScreenUtil.setSpText(18), color: UColor.blackColor, marginVertical: ScreenUtil.autowidth(10), width: ScreenWidth, textAlign: "center" }}>分享</Text>
+                  <View style={{ flexDirection: 'column', justifyContent: 'center',alignItems: 'center',  }}>
+                    <ViewShot ref="viewShot" style={{ width: ScreenUtil.autowidth(130) }} options={{ format: "jpg", quality: 0.9 }}>
+                      <View style={{ backgroundColor: UColor.fontColor,}}>
+                        <View style={{flexDirection: 'row',backgroundColor: UColor.btnColor,justifyContent: 'center', alignItems: 'center',}}>
+                          <Image source={UImage.etlogo} resizeMode="stretch" style={{ width: ScreenUtil.autowidth(23), height: ScreenUtil.autowidth(23), marginRight: ScreenUtil.autowidth(9), }} />
+                          <Text style={{ color: UColor.blackColor, fontSize: ScreenUtil.setSpText(10), textAlign: 'center', lineHeight: ScreenUtil.autowidth(30),}}>EosToken</Text>
+                        </View>
+                        <View style={{backgroundColor:UColor.tintColor, justifyContent: 'center' }}>
+                          <Text style={{color: UColor.btnColor, fontSize: ScreenUtil.setSpText(10), textAlign: 'center', lineHeight: ScreenUtil.autowidth(20),}}>{this.state.turnintoaccount}</Text>
+                          <View style={{ justifyContent: 'center', alignSelf: 'center', padding: ScreenUtil.autowidth(10), backgroundColor:UColor.btnColor }}>
+                            <QRCode size={ScreenUtil.autowidth(69)}  logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(16)} logoBorderRadius={5}
+                            value={this.state.turninsymbol.toLowerCase() +':' + this.state.turnintoaccount + '?amount=' + ((this.state.turninamount == "")?'0':this.state.turninamount) + '&token=' + this.state.turninsymbol.toUpperCase()}/>
+                          </View>
+                          <Text style={{ color: UColor.btnColor, fontSize: ScreenUtil.setSpText(10), textAlign: 'center', lineHeight: ScreenUtil.autowidth(20),}}>扫描二维码向他付款</Text>
+                        </View>
+                      </View>
+                    </ViewShot>
+                  </View>
+                 
                   <View style={{ flexDirection: "row" }}>
                     <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_qq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
                       </View>
                     </Button>
                     <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_wx} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微信</Text>
                       </View>
                     </Button>
-                    <Button  style={{ flex: 1, }} onPress={() => { this.shareAction(3) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
+                    <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(3) }}>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_pyq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>朋友圈</Text>
                       </View>
                     </Button>
                   </View>
                 </View>
                 <Button onPress={() => { this.setState({ showTurninShare: false }) }}>
-                  <View style={{ height: 45, backgroundColor: UColor.btnColor, flexDirection: "row" }}>
-                    <Text style={{ color: UColor.blackColor, fontSize: 15, width: "100%", textAlign: "center", alignSelf: 'center' }}>取消</Text>
+                  <View style={[styles.cancelout,{backgroundColor: UColor.btnColor}]}>
+                    <Text style={[styles.canceltext,{color: UColor.blackColor}]}>取消</Text>
                   </View>
                 </Button>
               </Animated.View>
@@ -1338,31 +1357,31 @@ class Route extends React.Component {
                 ]
               }}>
                 <View style={{ height: 125 }}>
-                  <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
+                  <Text style={[styles.sharetitle,{color: UColor.blackColor}]}>分享到</Text>
                   <View style={{ flexDirection: "row" }}>
                     <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_qq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
                       </View>
                     </Button>
                     <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_wx} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微信</Text>
                       </View>
                     </Button>
                     <Button  style={{ flex: 1, }} onPress={() => { this.shareAction(3) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_pyq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>朋友圈</Text>
                       </View>
                     </Button>
                   </View>
                 </View>
                 <Button onPress={() => { this.setState({ showActivationPay: false }) }}>
-                  <View style={{ height: 45, backgroundColor: UColor.btnColor, flexDirection: "row" }}>
-                    <Text style={{ color: UColor.blackColor, fontSize: 15, width: "100%", textAlign: "center", alignSelf: 'center' }}>取消</Text>
+                  <View style={[styles.cancelout,{backgroundColor: UColor.btnColor}]}>
+                    <Text style={[styles.canceltext,{color: UColor.blackColor}]}>取消</Text>
                   </View>
                 </Button>
               </Animated.View>
@@ -1433,31 +1452,31 @@ class Route extends React.Component {
                 ]
               }}>
                 <View style={{ height: 125 }}>
-                  <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
+                  <Text style={[styles.sharetitle,{color: UColor.blackColor}]}>分享到</Text>
                   <View style={{ flexDirection: "row" }}>
                     <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_qq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>QQ</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_qq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
                       </View>
                     </Button>
                     <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_wx} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>微信</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_wx} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微信</Text>
                       </View>
                     </Button>
                     <Button  style={{ flex: 1, }} onPress={() => { this.shareAction(3) }}>
-                      <View style={{ alignSelf: 'center', width: '100%', padding: 10 }}>
-                        <Image source={UImage.share_pyq} style={{ width: 50, height: 50, alignSelf: 'center', margin: 5 }} />
-                        <Text style={{ color: UColor.arrow, fontSize: 11, textAlign: 'center' }}>朋友圈</Text>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_pyq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>朋友圈</Text>
                       </View>
                     </Button>
                   </View>
                 </View>
                 <Button onPress={() => { this.setState({ showReturnActivationPay: false }) }}>
-                  <View style={{ height: 45, backgroundColor: UColor.btnColor, flexDirection: "row" }}>
-                    <Text style={{ color: UColor.blackColor, fontSize: 15, width: "100%", textAlign: "center", alignSelf: 'center' }}>取消</Text>
+                  <View style={[styles.cancelout,{backgroundColor: UColor.btnColor}]}>
+                    <Text style={[styles.canceltext,{color: UColor.blackColor}]}>取消</Text>
                   </View>
                 </Button>
               </Animated.View>
@@ -1467,6 +1486,39 @@ class Route extends React.Component {
     </View>)
   }
 }
+
+const styles = StyleSheet.create({
+  sharetitle: {
+    width: ScreenWidth, 
+    textAlign: "center",
+    marginTop: ScreenUtil.autowidth(10), 
+  },
+  shareimg: {
+    alignSelf: 'center',
+    width: ScreenUtil.autowidth(50), 
+    height: ScreenUtil.autowidth(50), 
+    marginTop: ScreenUtil.autowidth(10), 
+    marginBottom: ScreenUtil.autowidth(5), 
+  },
+  sharetext: {
+    textAlign: 'center',
+    fontSize: ScreenUtil.setSpText(16), 
+  },
+
+  cancelout: {
+    width: ScreenWidth, 
+    alignSelf: 'center' ,
+    justifyContent: 'center',
+    height: ScreenUtil.autowidth(45), 
+  },
+  canceltext: {
+    textAlign: "center", 
+    fontSize: ScreenUtil.setSpText(18), 
+  },
+
+})
+
+
 let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };
 Route = codePush(codePushOptions)(Route);
 

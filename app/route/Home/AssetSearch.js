@@ -190,7 +190,7 @@ class AssetSearch extends BaseComponent {
   }
     render() {
         return (
-            <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+            <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
             <Header {...this.props} onPressLeft={true} title="资产搜索" />
                 <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
                     <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >

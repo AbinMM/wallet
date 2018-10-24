@@ -121,19 +121,19 @@ class AddAssets extends BaseComponent {
   
   render() {
     return (
-      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-          <Header {...this.props} onPressLeft={true} title="添加资产" avatar={UImage.Magnifier} onPressRight={this._rightTopClick.bind()}/> 
+      <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
+          <Header {...this.props} onPressLeft={true} title="添加资产" avatar={UImage.Magnifier} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(17)} imgHeight={ScreenUtil.autowidth(18)}/> 
           <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} 
             dataSource={this.state.dataSource.cloneWithRows(this.props.assetsList == null ? [] : this.props.assetsList)} 
             renderRow={(rowData, sectionID, rowID) => (      
             <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
                 <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
-                  <View style={{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(10),}}>
+                  <View style={{borderRadius: 25,backgroundColor: UColor.secdColor,marginRight: ScreenUtil.autowidth(10),}}>
                     <Image source={rowData.icon==null ? UImage.eos : { uri: rowData.icon }} style={styles.logimg}/>
                   </View>
                   <View style={styles.scrollView}>
                     <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>{rowData.name}</Text>
-                    <Text style={[styles.quantity,{color: UColor.arrow}]}>合约账户 : {rowData.contractAccount == null ? "" : rowData.contractAccount}</Text>
+                    <Text style={[styles.quantity,{color: UColor.arrow}]}>{rowData.contractAccount == null ? "" : rowData.contractAccount}</Text>
                   </View>
                   <View style={styles.listInfoRight}>
                     <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontrice}
@@ -175,8 +175,8 @@ const styles = StyleSheet.create({
       borderRadius: 10, 
       overflow:"hidden", 
       resizeMode: "cover", 
-      width: ScreenUtil.autowidth(28), 
-      height: ScreenUtil.autowidth(28), 
+      width: ScreenUtil.autowidth(40), 
+      height: ScreenUtil.autowidth(40), 
     },
     scrollView: {
       flex: 1,

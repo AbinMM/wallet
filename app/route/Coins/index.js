@@ -29,7 +29,7 @@ class Coins extends React.Component {
     tabBarLabel: '行情',
     tabBarIcon: ({ focused}) => (
       <Image resizeMode='stretch'
-          source={focused ? UImage.tab_2_h : UImage.tab_2} style={{width: ScreenUtil.autowidth(20), height: ScreenUtil.autowidth(20),}}
+          source={focused ? UImage.tab_2_h : UImage.tab_2} style={{width: ScreenUtil.autowidth(21), height: ScreenUtil.autowidth(17),}}
       />
     ),
   }; 
