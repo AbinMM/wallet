@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import {  StyleSheet, Image, View, Text, TextInput, TouchableOpacity  } from 'react-native';
+import {  StyleSheet, Image, View, Text, TextInput, TouchableOpacity,Platform  } from 'react-native';
 import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
 import Header from '../../components/Header'
@@ -51,6 +51,15 @@ class Dappsearch extends BaseComponent {
         }else{
             const { navigate } = this.props.navigation;
             // sdkOpenDapp(labelname,'CustomDapp',this.state.theme);
+            
+            if (Platform.OS == 'ios') {
+                var fdStart = labelname.indexOf("https://betdice.one");
+                if(fdStart == 0)
+                {
+                    EasyToast.show('暂不支持');
+                    return ;
+                }
+            }
             navigate('DappWeb', { title: 'CustomDapp', url: labelname });
         }
     }

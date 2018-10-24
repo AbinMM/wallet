@@ -321,6 +321,15 @@ class News extends React.Component {
     const { navigate } = this.props.navigation;
     
     // sdkOpenDapp(this.state.selecturl,this.state.selecttitle,this.state.theme);
+
+    if (Platform.OS == 'ios') {
+      var fdStart = this.state.selecturl.indexOf("https://betdice.one");
+      if(fdStart == 0)
+      {
+          EasyToast.show('暂不支持');
+          return ;
+      }
+    }
     navigate('DappWeb', { title: this.state.selecttitle, url: this.state.selecturl });
   }
 
