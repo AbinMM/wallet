@@ -22,9 +22,9 @@ class Community extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
-        wechat: 'EOS-TOKEN',
+        wechat: 'eostokenim',
         public: 'EosToken钱包',
-        qq: '3090679927',
+        qq: '780342531',
         telegraph: 't.me/eostokens',
         source: 'github.com/eostoken/wallet',
     }
@@ -83,7 +83,7 @@ class Community extends BaseComponent {
               </TouchableHighlight>
               <TouchableHighlight onPress={this.prot.bind(this, 'qq')} style={{flex: 1, marginLeft: ScreenUtil.autowidth(2.5),}} underlayColor={UColor.secdColor}>
                 <ImageBackground style={styles.wechatqq} source={UImage.cmy_qq} resizeMode="stretch">          
-                  <Text style={[styles.textname,{color:UColor.btnColor}]}>官方QQ</Text>
+                  <Text style={[styles.textname,{color:UColor.btnColor}]}>官方QQ群</Text>
                   <Text style={[styles.textlinktwo,{color: UColor.tintnavigation}]}>{this.state.qq}</Text>           
                 </ImageBackground>  
               </TouchableHighlight>      

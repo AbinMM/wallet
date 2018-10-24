@@ -19,7 +19,7 @@ class AssistantQrcode extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
-      WeChat: 'EOS-TOKEN'
+      WeChat: 'eostokenim'
     }
   }
 
@@ -44,7 +44,7 @@ class AssistantQrcode extends BaseComponent {
         </View>
         <View style={styles.codeout}>
             <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
-                <QRCode size={170} value={"https://u.wechat.com/IFNmi5QiQirtoO-MrzB55EE"}/>
+                <QRCode size={170} value={"https://u.wechat.com/MBXDXiX7G3BgYDyUw6-Xq2k"}/>
             </View>
         </View>
         <Text style={[styles.prompttext,{color: UColor.fontColor}]}>微信扫一扫，添加好友</Text>

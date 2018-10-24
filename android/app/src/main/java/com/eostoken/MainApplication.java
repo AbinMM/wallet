@@ -70,27 +70,27 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
-                    new MainReactPackage(),
-            new WeChatPackage(),
-            new RNViewShotPackage(),
-            new VectorIconsPackage(),
-            new UpgradeReactPackage(),
-            new UdpSocketsModule(),
-            new TcpSocketsModule(),
-            new SvgPackage(),
-            new SplashScreenReactPackage(),
-            new RCTCapturePackage(),
-            new RandomBytesPackage(),
-            new RNOSModule(),
-            new LinearGradientPackage(),
-            new RNGestureHandlerPackage(),
-            new RNDeviceInfo(),
-            new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG),
-            new LinearGradientPackage(),
-            new OpenSettingsPackage(), /* setting add */
-                    new DplusReactPackage(),
-                    new SDKPackage(),
-                    new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
+                new MainReactPackage(),
+                new WeChatPackage(),
+                new RNViewShotPackage(),
+                new VectorIconsPackage(),
+                new UpgradeReactPackage(),
+                new UdpSocketsModule(),
+                new TcpSocketsModule(),
+                new SvgPackage(),
+                new SplashScreenReactPackage(),
+                new RCTCapturePackage(),
+                new RandomBytesPackage(),
+                new RNOSModule(),
+                new LinearGradientPackage(),
+                new RNGestureHandlerPackage(),
+                new RNDeviceInfo(),
+                new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG),
+                new LinearGradientPackage(),
+                new OpenSettingsPackage(), /* setting add */
+                new DplusReactPackage(),
+                new SDKPackage(),
+                new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
             );
         }
 

@@ -51,6 +51,7 @@ export default class DappWeb extends Component {
       transformY1: new Animated.Value(-1000),
       optionShow:false,
       closeIcon:false,
+      backButtonEnabled:false,
     }
     let noop = () => { }
     this.__onLoad = this.props.onLoad || noop
@@ -67,6 +68,37 @@ export default class DappWeb extends Component {
         this.refs.refWebview.stopLoading();
     }
   }
+
+
+  onNavigationStateChange = (navState) => {
+    this.setState({
+        backButtonEnabled: navState.canGoBack,
+        // closeIcon: navState.canGoBack,
+    });
+};
+// 显示/隐藏 右上角的更多选项 modal  
+onRightFun() {
+    // if (this.state.backButtonEnabled) {
+        this.refs['refWebview'].goBack();
+    // } else {//否则返回到上一个页面
+    //     this.props.navigation.goBack();
+    // }
+}
+// 监听原生返回键事件
+addBackAndroidListener(navigator) {
+    if (Platform.OS === 'android') {
+        BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+    }
+}
+
+onBackAndroid = () => {
+    if (this.state.backButtonEnabled) {
+        this.refs['refWebview'].goBack();
+        return true;
+    }else{
+        return false;
+    }
+};
 
   _onLoad() {
     Animated.timing(this.state.progress, {
@@ -514,38 +546,6 @@ _handleActions() {
     });
   }
 
-    onNavigationStateChange = (navState) => {
-        this.setState({
-            backButtonEnabled: navState.canGoBack,
-            closeIcon: navState.canGoBack,
-        });
-    };
-    // 显示/隐藏 右上角的更多选项 modal  
-    onRightFun() {
-        // this.props.navigation.goBack();
-        // this.refs['refWebview'].goBack();
-        //  官网中描述:backButtonEnabled: false,表示webView中没有返回事件，为true则表示该webView有回退事件
-        if (this.state.backButtonEnabled) {
-            this.refs['refWebview'].goBack();
-        } else {//否则返回到上一个页面
-            this.props.navigation.goBack();
-        }
-    }
-    // 监听原生返回键事件
-    addBackAndroidListener(navigator) {
-        if (Platform.OS === 'android') {
-            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
-        }
-    }
-
-    onBackAndroid = () => {
-        if (this.state.backButtonEnabled) {
-            this.refs['refWebview'].goBack();
-            return true;
-        } else {
-            return false;
-        }
-    };
 
   dapp_getTableRows(result)
   {
@@ -570,7 +570,7 @@ _handleActions() {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
-        <Header {...this.props} onPressLeft={true} onDappBackFalg={this.state.closeIcon} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
+        <Header {...this.props} onPressLeft={true} onDappBackFalg={true} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
         onPressRight={this.moreOption.bind(this)} />
         
         <WebView

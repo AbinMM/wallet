@@ -257,6 +257,17 @@ class News extends React.Component {
         }
         return;
       }
+
+      if(banner.url.indexOf("ext_viewer:") == 0){
+        Linking.openURL(banner.url.substring("ext_viewer:".length)); // 外部浏览器打开
+        return;
+      }
+
+      if((banner.url.indexOf("app:") == 0)){
+        navigate(banner.url.substring("app:".length), {}); // app内部的js跳转
+        return;
+      }
+      
       navigate('Web', { title: banner.title, url: url });
     }
   }
@@ -337,9 +348,6 @@ class News extends React.Component {
     
     // sdkOpenDapp(this.state.selecturl,this.state.selecttitle,this.state.theme);
     navigate('DappWeb', { title: this.state.selecttitle, url: this.state.selecturl });
-
-        // var url = "http://gme.eostoken1.com/";
-    // navigate('DappWeb', { title: this.state.selecttitle, url:  url});
   }
 
   onPressTool(data) {
@@ -359,7 +367,7 @@ class News extends React.Component {
     }else if(data.name == this.state.holdallList[2].name){
       navigate('FreeMortgage');
     }else if(data.name == this.state.holdallList[3].name){
-      this. _setModalVisible();
+      this._setModalVisible();
     }else{
       EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
     }
