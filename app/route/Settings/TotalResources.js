@@ -13,6 +13,7 @@ import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import {formatEosQua} from '../../utils/FormatUtil';
 import { EasyShowLD } from '../../components/EasyShow'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient';
 import BaseComponent from "../../components/BaseComponent";
 import CountDownReact from '../../components/CountDownReact'
@@ -40,9 +41,9 @@ class Resources extends BaseComponent {
   constructor(props) { 
     super(props);
     this.state = {
-        isMemory: this.props.navigation.state.params.Memory,
-        isCalculation: this.props.navigation.state.params.Calculation,
-        isNetwork: this.props.navigation.state.params.Network,
+        isMemory: true,
+        isCalculation: false,
+        isNetwork: false,
         isOwn: true,
         isOthers: false,
         isLease: true,
@@ -68,6 +69,17 @@ class Resources extends BaseComponent {
         delegateb: "",
         undelegateb: "",
         init: true,
+        ram_available: '0.00',
+        ram_AlreadyUsed: '0.00',
+        ram_Percentage: '0%',
+        cpu_available: '0.00',
+        cpu_AlreadyUsed: '0.00',
+        cpu_Percentage: '0%',
+        net_available: '0.00',
+        net_AlreadyUsed: '0.00',
+        net_Percentage: '0%',
+
+
     };
   }
 
@@ -88,7 +100,8 @@ class Resources extends BaseComponent {
         this.props.dispatch({
             type: 'wallet/getDefaultWallet',
             callback: (data) => {
-                this.getAccountInfo();
+                this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: this.props.navigation.state.params.account_name} });
+                //alert(JSON.stringify(this.props.Resources));
             }
         });
         this.props.dispatch({
@@ -139,18 +152,35 @@ class Resources extends BaseComponent {
   getAccountInfo(){
     if(this.state.init){
         this.setState({init: false});
-            EasyShowLD.loadingShow();
+            //EasyShowLD.loadingShow();
         }
 
     this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: this.props.navigation.state.params.account_name},callback: (data) => {
-      try {
-        EasyShowLD.loadingClose();
-        this.setState({ 
-            ram_available:((data.total_resources.ram_bytes - data.ram_usage) / 1024).toFixed(2)});
-            this.getInitialization(); 
-      } catch (error) {
+        
+       //this.props.Resources.net_limit.max 网络总共 
+       //this.props.Resources.net_limit.available/1024  网络可用
+       //this.props.Resources.net_limit.used/1024 网络已用
+       //(this.props.Resources.net_limit.used/this.props.Resources.net_limit.max)*10000/100 + '%' 已用百分比
+
+       //this.props.Resources.cpu_limit.max 计算总共 
+       //this.props.Resources.cpu_limit.available/1000  计算可用
+       //this.props.Resources.cpu_limit.used/1000 计算已用
+       //this.props.Resources.cpu_limit.used/this.props.Resources.cpu_limit.max 已用百分比
+       
+       //this.props.Resources.total_resources.ram_bytes 内存总共 
+       //(this.props.Resources.total_resources.ram_bytes-this.props.Resources.ram_usage)/1024  内存可用
+       //this.props.Resources.ram_usage/1024 内存已用
+       //this.props.Resources.ram_usage/this.props.Resources.total_resources.ram_bytes 已用百分比
+    //   try {
+    //     EasyShowLD.loadingClose();
+    //     this.setState({ 
+    //         ram_available:((data.total_resources.ram_bytes - data.ram_usage) / 1024).toFixed(2)
+    //     });
+    //     this.getInitialization(); 
+       
+    //   } catch (error) {
           
-      }
+    //   }
     } });
     this.props.dispatch({
         type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.navigation.state.params.account_name , symbol: 'EOS' }, callback: (data) => {
@@ -1052,15 +1082,91 @@ class Resources extends BaseComponent {
         navigate('BarCode', {isTurnOut:true,coinType:"EOS"});
     }
 
+
+    onPress(key, data = {}) {
+        const { navigate } = this.props.navigation;
+        if (key == 'Memory') {
+            navigate('Resources', {account_name: this.props.navigation.state.params.account_name, Memory: true, Calculation: false, Network: false });
+        }else if (key == 'Calculation') {
+            navigate('Resources', {account_name: this.props.navigation.state.params.account_name, Memory: false, Calculation: true, Network: false });
+        }else if (key == 'Network') {
+            navigate('Resources', {account_name: this.props.navigation.state.params.account_name, Memory: false, Calculation: false, Network: true });
+        }
+    }
+
     render() {
         const c = this.props.navigation.state.params.coinType;
-        return (
-            <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+        return (<View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
                 <Header {...this.props} onPressLeft={true} title="资源管理" subName="抵押记录" onPressRight={this.recordMortgage.bind()}/> 
-                <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
+                <ScrollView >
+                    <View style={{paddingTop: ScreenUtil.autowidth(10),}}>
+                        <View style={{marginHorizontal: ScreenUtil.autowidth(15), marginVertical: ScreenUtil.autowidth(10), backgroundColor: UColor.baseline, borderRadius: 5,}}>
+                            <TouchableOpacity onPress={this.onPress.bind(this, 'Memory')} style={{backgroundColor: UColor.mainColor, paddingHorizontal: ScreenUtil.autowidth(20), paddingVertical: ScreenUtil.autowidth(30), marginBottom: ScreenUtil.autowidth(5), borderRadius: 5, }}>
+                                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                                    <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(16),}}>内存资源(RAM)</Text>
+                                    <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={18} />
+                                </View>
+                                <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10, marginVertical: ScreenUtil.autowidth(25),}}>
+                                    <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={((this.props.Resources.total_resources.ram_bytes-this.props.Resources.ram_usage)/this.props.Resources.total_resources.ram_bytes)*10000/100 + '%'}/>
+                                </View>
+                                <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.fontColor}}>已用{(this.props.Resources.total_resources.ram_bytes-this.props.Resources.ram_usage)/1024}</Text>
+                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.arrow}}>可用{this.props.Resources.ram_usage/1024}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{marginHorizontal: ScreenUtil.autowidth(15), marginVertical: ScreenUtil.autowidth(10), backgroundColor: UColor.baseline, borderRadius: 5,}}>
+                            <TouchableOpacity onPress={this.onPress.bind(this, 'Calculation')} style={{backgroundColor: UColor.mainColor, paddingHorizontal: ScreenUtil.autowidth(20), paddingVertical: ScreenUtil.autowidth(30), marginBottom: ScreenUtil.autowidth(5), borderRadius: 5, }}>
+                                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                                    <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(16),}}>计算资源(CPU)</Text>
+                                    <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={18} />
+                                </View>
+                                <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10, marginVertical: ScreenUtil.autowidth(25),}}>
+                                    <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={(this.props.Resources.cpu_limit.used/this.props.Resources.cpu_limit.max)*10000/100 + '%'}/>
+                                </View>
+                                <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.fontColor}}>已用{this.props.Resources.cpu_limit.used/1000}</Text>
+                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.arrow}}>可用{this.props.Resources.cpu_limit.available/1000}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{marginHorizontal: ScreenUtil.autowidth(15), marginVertical: ScreenUtil.autowidth(10), backgroundColor: UColor.baseline, borderRadius: 5,}}>
+                            <TouchableOpacity onPress={this.onPress.bind(this, 'Network')} style={{backgroundColor: UColor.mainColor, paddingHorizontal: ScreenUtil.autowidth(20), paddingVertical: ScreenUtil.autowidth(30), marginBottom: ScreenUtil.autowidth(5), borderRadius: 5, }}>
+                                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                                    <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(16),}}>网络资源(NET)</Text>
+                                    <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={18} />
+                                </View>
+                                <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10, marginVertical: ScreenUtil.autowidth(25),}}>
+                                    <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={(this.props.Resources.net_limit.used/this.props.Resources.net_limit.max)*10000/100 + '%'}/>
+                                </View>
+                                <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.fontColor}}>已用{this.props.Resources.net_limit.used/1024}</Text>
+                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.arrow}}>可用{this.props.Resources.net_limit.available/1024}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <Button style={{alignItems: 'center', }}>
+                            <View style={{borderBottomColor: UColor.tintColor, borderBottomWidth: 1,}}>
+                                <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.tintColor,borderBottomColor: UColor.tintColor, borderBottomWidth: 1,}}>什么是一键抵押？</Text>
+                            </View>
+                        </Button>
+                        <Button onPress={() => this.checkAccountAndCreateWallet()} style={{marginHorizontal: ScreenUtil.autowidth(15), marginVertical: ScreenUtil.autoheight(22),}}>
+                            <View style={[styles.createWalletout,{backgroundColor: UColor.tintColor,}]} >
+                                <Text style={[styles.createWallet,{color: UColor.btnColor}]}>一键抵押</Text>
+                            </View>
+                        </Button>
+                    </View>
+                </ScrollView>
+                {/* <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
                     <ScrollView keyboardShouldPersistTaps="always">
                         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-                            {/* <View style={[styles.tetleout,{backgroundColor: UColor.mainColor}]}>
+                            <View style={[styles.tetleout,{backgroundColor: UColor.mainColor}]}>
                                 <Text style={[styles.tetletext,{color: UColor.arrow}]}>{this.state.tetletext}</Text>
                                 <ImageBackground source={UImage.line_bg} resizeMode="cover" style={styles.linebgout}>
                                     <ImageBackground source={UImage.strip_bg} resizeMode="cover"  style={styles.stripbgout}>
@@ -1110,7 +1216,7 @@ class Resources extends BaseComponent {
                                 {this.resourceButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isMemory, 'isMemory', '内存资源')}  
                                 {this.resourceButton([styles.calculationtab,{borderTopColor: UColor.tintColor,borderBottomColor: UColor.tintColor}], this.state.isCalculation, 'isCalculation', '计算资源')}  
                                 {this.resourceButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isNetwork, 'isNetwork', '网络资源')}  
-                            </View>  */}
+                            </View> 
                             <View style={{backgroundColor: UColor.mainColor,}}>
                                 {this.state.isMemory?<View style={styles.wterout}>
                                 <View style={styles.OwnOthers}>  
@@ -1233,12 +1339,26 @@ class Resources extends BaseComponent {
                             </View>}
                         </TouchableOpacity>
                     </ScrollView>  
-                </KeyboardAvoidingView>
+                </KeyboardAvoidingView> */}
             </View>
         )
     }
 }
 const styles = StyleSheet.create({
+
+    createWalletout: {
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: ScreenUtil.autoheight(50),
+    },
+    createWallet: {
+        fontSize: ScreenUtil.setSpText(18),
+    },
+
+
+
+
     passoutsource: {
         flexDirection: 'column', 
         alignItems: 'center'
