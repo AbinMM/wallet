@@ -207,7 +207,7 @@ export default function RenderScatter(props) {
                 
                     });
                 },
-                delegatebw:function(account){
+                delegatebw:function(account1,account2,net,cpu,number,obj_auth){
                     alert('delegatebw');
                     return new Promise((resolve, reject) => {
                         if(iden){
@@ -219,7 +219,7 @@ export default function RenderScatter(props) {
                 
                     });
                 },
-                undelegatebw:function(account){
+                undelegatebw:function(account1,account2,net,cpu,obj_auth){
                     alert('undelegatebw');
                     return new Promise((resolve, reject) => {
                         if(iden){
@@ -231,7 +231,7 @@ export default function RenderScatter(props) {
                 
                     });
                 },
-                buyrambytes:function(account){
+                buyrambytes:function(account1,account2,bytes,obj_auth){
                     alert('buyrambytes');
                     return new Promise((resolve, reject) => {
                         if(iden){
@@ -243,7 +243,7 @@ export default function RenderScatter(props) {
                 
                     });
                 },
-                sellram:function(account){
+                sellram:function(account,bytes,obj_auth){
                     alert('sellram');
                     return new Promise((resolve, reject) => {
                         if(iden){
@@ -279,7 +279,22 @@ export default function RenderScatter(props) {
                 getCurrencyBalance:function(contract,name,coin){
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
-                        window.postMessage(JSON.stringify({key,scatter:"getCurrencyBalance",params:{contract,name,coin}}));
+                        var tmp_contract = '';
+                        var tmp_name = '';
+                        var tmp_coin = '';
+
+                        var param_type = typeof(contract);
+                        if(param_type === 'object')
+                        {
+                            tmp_contract = contract.contract ? contract.contract : '';
+                            tmp_name = contract.name ? contract.name : '';
+                            tmp_coin = contract.coin ? contract.coin : '';
+                        }else{
+                            tmp_contract = contract;
+                            tmp_name = name;
+                            tmp_coin = coin;
+                        }
+                        window.postMessage(JSON.stringify({key,scatter:"getCurrencyBalance",params:{contract:tmp_contract,name:tmp_name,coin:tmp_coin}}));
                         document.addEventListener("message",function(msg){
                             document.removeEventListener("message",this);
                             var obj = eval("(" + msg.data + ")");
@@ -339,7 +354,29 @@ export default function RenderScatter(props) {
                 transfer:function(from,to,amount,memo){
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
-                        window.postMessage(JSON.stringify({key,scatter:"transfer",params:{from,to,amount,memo}}));
+                        var tmp_from = '';
+                        var tmp_to = '';
+                        var tmp_amount = '';
+                        var tmp_memo = '';
+
+                        var param_type = typeof(from);
+                        if(param_type === 'object')
+                        {
+                            tmp_from = from.from ? from.from : '';
+                            tmp_to = from.to ? from.to : '';
+                            if(from.quantity){
+                                tmp_amount = from.quantity;
+                            }else if(from.amount){
+                                tmp_amount = from.amount;
+                            }
+                            tmp_memo = from.memo ? from.memo : '';
+                        }else{
+                            tmp_from = fom;
+                            tmp_to = to;
+                            tmp_amount = amount;
+                            tmp_memo = memo;
+                        }
+                        window.postMessage(JSON.stringify({key,scatter:"transfer",params:{from:tmp_from,to:tmp_to,amount:tmp_amount,memo:tmp_memo}}));
                         document.addEventListener("message",function(msg){
                             document.removeEventListener("message",this);
                             var obj = eval("(" + msg.data + ")");
@@ -379,7 +416,7 @@ export default function RenderScatter(props) {
                 contract:function(name){
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
-                        window.postMessage(JSON.stringify({key,scatter:"contract",params:{account:name}}));
+                        window.postMessage(JSON.stringify({key,scatter:"contract",params:{contract:name}}));
                         document.addEventListener("message",function(msg){
                             document.removeEventListener("message",this);
                             var obj = eval("(" + msg.data + ")");
@@ -402,21 +439,20 @@ export default function RenderScatter(props) {
                                                     "var st=structs[j];"+
                                                     "if(st.name==name){"+
                                                         "var paramTypeObject = false;"+
-                                                        "if(arguments.length==2){"+
-                                                            "var number=0;"+
-                                                            "for(var g=0;g<st.fields.length;g++){"+
-                                                                "var tmp_field=st.fields[g];"+
-                                                                "var tmp_paramname=tmp_field.name;"+
-                                                                "for(var jjj in arguments[0]){"+
-                                                                    "if(tmp_paramname==jjj){"+
-                                                                        "number=number+1;"+
-                                                                        "break;"+
-                                                                    "}"+
+                                                       
+                                                        "var number=0;"+
+                                                        "for(var g=0;g<st.fields.length;g++){"+
+                                                            "var tmp_field=st.fields[g];"+
+                                                            "var tmp_paramname=tmp_field.name;"+
+                                                            "for(var jjj in arguments[0]){"+
+                                                                "if(tmp_paramname==jjj){"+
+                                                                    "number=number+1;"+
+                                                                    "break;"+
                                                                 "}"+
                                                             "}"+
-                                                            "if(number==st.fields.length){"+
-                                                                "paramTypeObject=true;"+
-                                                            "}"+
+                                                        "}"+
+                                                        "if(number==st.fields.length){"+
+                                                            "paramTypeObject=true;"+
                                                         "}"+
 
                                                         "var tx={'account':contract,'name':name,authorization:[{'actor':ide.accounts[0].name,'permission':ide.accounts[0].authority}],data:{}};"+

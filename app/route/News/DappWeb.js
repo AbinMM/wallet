@@ -126,6 +126,12 @@ onBackAndroid = () => {
     this.setState({ error: true })
     this.__onError()
   }
+  _onLoadEnd(){
+    // EasyToast.show("_onLoadEnd!");
+  }
+  _renderError(){
+    // EasyToast.show("_renderError!");
+  }
 
   _btnCancelModal(){
     this._setModalVisible();
@@ -358,12 +364,14 @@ _handleActions() {
         data:{chain_id:"aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"}}));
   }
   dapp_getKeyAccounts(result){
-    var publicKey = "";
-    if(result.params.account.publicKey)
+    if(result.params.publicKey == null || result.params.publicKey == '')
     {
-        publicKey = result.params.account.publicKey;
+        EasyToast.show('getKeyAccounts参数非法');
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        return ;
     }
-    this.props.dispatch({ type: 'wallet/getAccountsByPuk', payload: { public_key: publicKey},callback: (resp) => {
+
+    this.props.dispatch({ type: 'wallet/getAccountsByPuk', payload: { public_key: result.params.publicKey},callback: (resp) => {
         if(resp && resp.code == '0'){
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp.data}));
         }else{
@@ -374,8 +382,14 @@ _handleActions() {
   }
 
   dapp_getContract(result){
+    if(result.params.contract == null || result.params.contract == '')
+    {
+        EasyToast.show('getContract参数非法');
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        return ;
+    }
     this.props.dispatch({
-        type: 'wallet/getContract', payload: {account_name:result.params.account }, callback: (resp) => {
+        type: 'wallet/getContract', payload: {account_name:result.params.contract }, callback: (resp) => {
             try {
                 if(resp){
                     var respabi = {abi:resp.abi};
@@ -392,6 +406,15 @@ _handleActions() {
       })
   }
   dapp_getCurrencyBalance(result){
+    if(result.params.contract == null || result.params.contract == ''
+       || result.params.name == null || result.params.name == ''
+       || result.params.coin == null || result.params.coin == '')
+    {
+        EasyToast.show('getCurrencyBalance参数非法');
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        return ;
+    }
+
     this.props.dispatch({
         type: 'wallet/getBalance', payload: { contract: result.params.contract, account: result.params.name, symbol: result.params.coin }, callback: (resp) => {
           try {
@@ -416,12 +439,13 @@ _handleActions() {
       })
   }
   dapp_getAccount(result){
-    var account_name = "";
-    if(result.params.account.account_name)
+    if(result.params.account.account_name == null || result.params.account.account_name == '')
     {
-        account_name = result.params.account.account_name;
+        EasyToast.show('getAccount参数非法');
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        return ;
     }
-    this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: account_name},callback: (resp) => {
+    this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: result.params.account.account_name},callback: (resp) => {
         if(resp){
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp}));
         }else{
@@ -499,6 +523,16 @@ _handleActions() {
         name: '',
         key: '',
     });
+    if(result.params.from == null || result.params.from == '' 
+         || result.params.to == null || result.params.to == '' 
+         || result.params.amount == null || result.params.amount == '' 
+         || result.params.memo == null)
+    {
+        EasyToast.show('transfer参数非法');
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        return ;
+    }
+
     this.props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{ 
         try {
             if (walletArr == undefined || walletArr == null || walletArr.length < 1) {
@@ -546,7 +580,6 @@ _handleActions() {
     });
   }
 
-
   dapp_getTableRows(result)
   {
     this.props.dispatch({
@@ -585,6 +618,8 @@ _handleActions() {
             onLoad={this._onLoad.bind(this)}
             onLoadStart={this._onLoadStart.bind(this)}
             onError={this._onError.bind(this)}
+            onLoadEnd={this._onLoadEnd.bind(this)}
+            renderError={this._renderError.bind(this)}
             onMessage={(e)=>{this.onMessage(e)}}
             onNavigationStateChange={this.onNavigationStateChange}
           >
