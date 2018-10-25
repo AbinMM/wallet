@@ -938,6 +938,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         borderBottomWidth: 2,
         height: ScreenUtil.autoheight(70), 
+        marginBottom:ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(20):0,
       },
     headbtn: {
         flex: 1, 
