@@ -786,7 +786,7 @@ const styles = StyleSheet.create({
     },
     webview_style: {
       flex: 1,
-      bottom:ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(20):0,
+      marginBottom:ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(20):0,
     },
     progress: {
       position: "absolute",
