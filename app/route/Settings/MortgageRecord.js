@@ -230,7 +230,7 @@ class MortgageRecord extends React.Component {
   }
 
   render() {
-    return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+    return (<View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
      <Header {...this.props} onPressLeft={true} title="抵押记录" />
       <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
           <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
@@ -255,25 +255,17 @@ class MortgageRecord extends React.Component {
       <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true} 
         dataSource={this.state.dataSource.cloneWithRows(this.state.delegateLoglist == null ? [] : this.state.delegateLoglist)} 
         renderRow={(rowData, sectionID, rowID) => (   
-            <View style={[styles.outsource,{backgroundColor: UColor.mainColor}]}>
+          <Button onPress={this._setModalVisible.bind(this,rowData)} style={{flex: 1,}}>
+            <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
               <View style={styles.leftout}>
-                <Button onPress={this._setModalVisible.bind(this,rowData)} style={{flex: 1,}}>
-                    <View>
-                        <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.tintColor,}}>一键赎回</Text>
-                    </View>
-                </Button> 
-                <View style={{flex: 1,justifyContent: 'space-between',}}>
-                  <Text style={[styles.fromtotext,{color: UColor.fontColor}]} onLongPress={this.copyaccount.bind(this,rowData)}>{rowData.to}</Text>
-                  <Text style={[styles.Receivercpu,{color: UColor.arrow}]}>Receiver</Text>
-                </View>
+                <Text style={[styles.fromtotext,{color: UColor.fontColor}]} onLongPress={this.copyaccount.bind(this,rowData)}>{rowData.to}</Text>
               </View>
               <View style={styles.rightout}>
-                  <Text style={[styles.fromtotext,{color: UColor.fontColor}]}>{rowData.net_weight}</Text>
-                  <Text style={[styles.payernet,{color: UColor.arrow}]}>Net bandwidth</Text>
-                  <Text style={[styles.fromtotext,{color: UColor.fontColor}]}>{rowData.cpu_weight}</Text>
-                  <Text style={[styles.Receivercpu,{color: UColor.arrow}]}>CPU bandwidth</Text>
+                <Text style={[styles.payernet,{color: UColor.arrow}]}>{"[NET] " +rowData.net_weight}</Text>
+                <Text style={[styles.payernet,{color: UColor.arrow}]}>{"[CPU] " +rowData.cpu_weight}</Text>
               </View>
             </View>
+          </Button>
         )}                   
       />  
     </View>
@@ -331,23 +323,23 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: "center",
       margin: ScreenUtil.autowidth(5),
-      height: ScreenUtil.autoheight(110),
+      height: ScreenUtil.autoheight(60),
       paddingHorizontal: ScreenUtil.autowidth(20),
     },
     copytext: {
       fontSize: ScreenUtil.setSpText(16), 
     },
     outsource: {
-      borderRadius: 5,
       flexDirection: "row",
-      margin: ScreenUtil.autowidth(5),
-      height: ScreenUtil.autoheight(90),
+      marginBottom: 0.5,
+      height: ScreenUtil.autoheight(60),
       paddingVertical: ScreenUtil.autoheight(10),
       paddingHorizontal: ScreenUtil.autowidth(20),
     },
     leftout:{
       flex: 1, 
       alignItems: "flex-start",
+      justifyContent: 'center',
     },
     rightout: {
       flex: 1, 
@@ -355,12 +347,9 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
     },
     fromtotext: {
-      fontSize: ScreenUtil.setSpText(12),
+      fontSize: ScreenUtil.setSpText(16),
     },
     payernet: {
-      fontSize: ScreenUtil.setSpText(12),
-    },
-    Receivercpu: {
       fontSize: ScreenUtil.setSpText(12),
     },
     warningout: {

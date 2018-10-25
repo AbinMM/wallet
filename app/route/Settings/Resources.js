@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import {DeviceEventEmitter,StyleSheet,Image,ScrollView,View,Text, TextInput,Platform,Dimensions,ImageBackground,TouchableOpacity,KeyboardAvoidingView,BVLinearGradient} from 'react-native';
+import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import moment from 'moment';
 import Echarts from 'native-echarts'
 import UImage from '../../utils/Img'
@@ -40,33 +41,31 @@ class Resources extends BaseComponent {
   constructor(props) { 
     super(props);
     this.state = {
-        isMemory: this.props.navigation.state.params.Memory,
-        isCalculation: this.props.navigation.state.params.Calculation,
-        isNetwork: this.props.navigation.state.params.Network,
-        isOwn: true,
-        isOthers: false,
-        isLease: true,
-        isTransfer: false,
+        headtitle: this.props.navigation.state.params.Memory ? '内存资源' : this.props.navigation.state.params.Calculation ? '计算资源' : '网络资源', //头部标题
+        index: 0,
+        routes: [
+            { key: '1', title: this.props.navigation.state.params.Memory ? '购买' : '抵押' }, 
+            { key: '2', title:  this.props.navigation.state.params.Memory ? '出售' : '赎回' }
+        ],
+        headings: [
+            {title: this.props.navigation.state.params.Memory ? '购买内存' : this.props.navigation.state.params.Calculation ? '计算抵押' : '网络抵押',},
+            {title: this.props.navigation.state.params.Memory ? '出售内存' : this.props.navigation.state.params.Calculation ? '计算赎回' : '网络赎回',}
+        ], 
+        isMemory: this.props.navigation.state.params.Memory, //内存
+        isCalculation: this.props.navigation.state.params.Calculation, //计算
+        isNetwork: this.props.navigation.state.params.Network, //网络
+        isOwn: true, // 自己
+        isOthers: false, // 他人
+        isLease: true, // 租赁
+        isTransfer: false, // 过户
         LeaseTransfer: 0,
-        tetletext: '内存概况',
-        column_One: '100%',
-        column_Two: '100%',
-        column_Three: '100%',
-        ContrastOne: '0.00/0.00',
-        ContrastTwo: '0.00/0.00',
-        ContrastThree: '0.00/0.00',
-        percentageOne: '占用（0%）',
-        percentageTwo: '可用（0%）',
-        percentageThree: '全网（0%）',
         currency_surplus: '0.00',
-        ram_available:'0',
+        ram_available: '0',
         Currentprice: '0',
-        password: "",
-        buyRamAmount: "",
-        sellRamBytes: "",
-        receiver: "",
-        delegateb: "",
-        undelegateb: "",
+        password: "", 
+        buyRamAmount: "", //购买数量，抵押数量
+        sellRamBytes: "", //出售数量，赎回数量
+        receiver: this.props.navigation.state.params.account_name, //账户（默认自己）
         init: true,
     };
   }
@@ -75,9 +74,7 @@ class Resources extends BaseComponent {
     try {
         // EasyShowLD.loadingShow();
         this.props.dispatch({ type: 'vote/getGlobalInfo', payload: {},});
-        this.props.dispatch({
-            type: 'vote/getqueryRamPrice',
-            payload: {},
+        this.props.dispatch({ type: 'vote/getqueryRamPrice', payload: {}, 
             callback: (data) => {
                 if(data == null || data == ''){
                     return;
@@ -85,17 +82,11 @@ class Resources extends BaseComponent {
                 this.setState({Currentprice: data});
             }
         });
-        this.props.dispatch({
-            type: 'wallet/getDefaultWallet',
-            callback: (data) => {
+        this.props.dispatch({ type: 'wallet/getDefaultWallet', callback: (data) => {
                 this.getAccountInfo();
             }
         });
-        this.props.dispatch({
-            type: 'wallet/info',
-            payload: {
-                address: "1111"
-            },
+        this.props.dispatch({ type: 'wallet/info', payload: { address: "1111"},
             callback: () => {
                 this.getBalance();
             }
@@ -104,12 +95,7 @@ class Resources extends BaseComponent {
             this.getBalance();
         });
         DeviceEventEmitter.addListener('updateDefaultWallet', (data) => {
-            this.props.dispatch({
-                type: 'wallet/info',
-                payload: {
-                    address: "1111"
-                }
-            });
+            this.props.dispatch({ type: 'wallet/info', payload: { address: "1111"} });
             this.getBalance();
         });
         DeviceEventEmitter.addListener('eos_balance', (data) => {
@@ -139,15 +125,14 @@ class Resources extends BaseComponent {
   getAccountInfo(){
     if(this.state.init){
         this.setState({init: false});
-            EasyShowLD.loadingShow();
-        }
-
+        EasyShowLD.loadingShow();
+    }
     this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: this.props.navigation.state.params.account_name},callback: (data) => {
       try {
         EasyShowLD.loadingClose();
         this.setState({ 
             ram_available:((data.total_resources.ram_bytes - data.ram_usage) / 1024).toFixed(2)});
-            this.getInitialization(); 
+           
       } catch (error) {
           
       }
@@ -158,16 +143,7 @@ class Resources extends BaseComponent {
     }});
   } 
 
-  getInitialization() {
-    if(this.state.isMemory){
-        this.goPage('isMemory');
-      }else if(this.state.isCalculation){
-        this.goPage('isCalculation');
-      }else if(this.state.isNetwork){
-        this.goPage('isNetwork');
-      }else{
-      }   
-  }
+ 
 
   getBalance() { 
     if (this.props.navigation.state.params != null && this.props.navigation.state.params.account_name != null) {
@@ -196,109 +172,16 @@ class Resources extends BaseComponent {
       }
   }
 
-    goPage(current) {
-        try {
-            if (current == 'isMemory'){
-                this.setState({ 
-                    tetletext: '内存概况',
-                    column_One: (100-this.props.Resources.display_data.ram_usage_percent.replace("%", "")) + '%',
-                    column_Two: (100-this.props.Resources.display_data.ram_left_percent.replace("%", "")) + '%',
-                    column_Three: (100-this.props.globaldata.used_Percentage) + '%',
-                    ContrastOne: this.props.Resources.display_data.ram_usage + '/' + this.props.Resources.display_data.ram_bytes,
-                    ContrastTwo: this.props.Resources.display_data.ram_left + '/' + this.props.Resources.display_data.ram_bytes,
-                    ContrastThree: this.props.globaldata.used + 'GB/' + this.props.globaldata.total + 'GB',
-                    percentageOne: '已用(' + this.props.Resources.display_data.ram_usage_percent + ')',
-                    percentageTwo: '剩余(' + this.props.Resources.display_data.ram_left_percent + ')',
-                    percentageThree: '全网(' + this.props.globaldata.used_Percentage + '%)',
-                })
-            }else if (current == 'isCalculation'){
-                this.setState({ 
-                    tetletext: '计算概况',
-                    column_One: (100-this.props.Resources.display_data.cpu_limit_available_percent.replace("%", "")) + '%',
-                    column_Two: (100-this.props.Resources.display_data.self_delegated_bandwidth_cpu_weight_percent.replace("%", "")) + '%',
-                    column_Three: ((this.props.Resources.refund_request&&this.props.Resources.refund_request.cpu_amount!="0.0000 EOS")?this.falseAlarm(this.props.Resources.display_data.refund_request_cpu_left_second_percent):'100%'),
-                    ContrastOne: this.props.Resources.display_data.cpu_limit_available + '/' + this.props.Resources.display_data.cpu_limit_max,
-                    ContrastTwo: (this.props.Resources.self_delegated_bandwidth?Math.floor(this.props.Resources.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100)/100:'0') + '/' + Math.floor(this.props.Resources.total_resources.cpu_weight.replace("EOS", "")*100)/100,
-                    ContrastThree: ((this.props.Resources.refund_request&&this.props.Resources.refund_request.cpu_amount!="0.0000 EOS")?this.transferTimeZone(this.props.Resources.refund_request.request_time.replace("T", " ")):'00:00:00'),
-                    percentageOne: '剩余(ms)',
-                    percentageTwo: '抵押(EOS)',
-                    percentageThree: '赎回中('+ (this.props.Resources.refund_request ? Math.floor(this.props.Resources.refund_request.cpu_amount.replace("EOS", "")*100)/100 + 'EOS' : '0.00 EOS') + ')',
-                })
-            }else if (current == 'isNetwork'){
-                this.setState({ 
-                    tetletext: '网络概况',
-                    column_One: (100-this.props.Resources.display_data.net_limit_available_percent.replace("%", "")) + '%',
-                    column_Two: (100-this.props.Resources.display_data.self_delegated_bandwidth_net_weight_percent.replace("%", "")) + '%',
-                    column_Three: ((this.props.Resources.refund_request&&this.props.Resources.refund_request.net_amount!="0.0000 EOS")?this.falseAlarm(this.props.Resources.display_data.refund_request_net_left_second_percent):'100%'),
-                    ContrastOne: this.props.Resources.display_data.net_limit_available + '/' + this.props.Resources.display_data.net_limit_max,
-                    ContrastTwo: (this.props.Resources.self_delegated_bandwidth?Math.floor(this.props.Resources.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100:'0') + '/' + Math.floor(this.props.Resources.total_resources.net_weight.replace("EOS", "")*100)/100,
-                    ContrastThree: ((this.props.Resources.refund_request&&this.props.Resources.refund_request.net_amount!="0.0000 EOS")?this.transferTimeZone(this.props.Resources.refund_request.request_time.replace("T", " ")):'00:00:00'),
-                    percentageOne: '剩余(kb)',
-                    percentageTwo: '抵押(EOS)',
-                    percentageThree: '赎回中('+ (this.props.Resources.refund_request ? Math.floor(this.props.Resources.refund_request.net_amount.replace("EOS", "")*100)/100 + 'EOS' : '0.00 EOS') + ')',
-                })
-            }
-        } catch (error) {
-            
-        }
-        // else if (current == 'isBuyForOther'){
-        //     this.setState({ 
-        //         tetletext: '内存交易',
-        //         column_One: '0%',
-        //         column_Two: '0%',
-        //         column_Three: '0%',
-        //         ContrastOne: '0.00/0.00',
-        //         ContrastTwo: '0.00/0.00',
-        //         ContrastThree: '0.00/0.00',
-        //         percentageOne: '',
-        //         percentageTwo: '',
-        //         percentageThree: '',
-        //     })
-        // } 
-        // EasyShowLD.loadingClose();
-    }
-
-     // 更新"内存，计算，网络，内存交易"按钮的状态  
-     _updateBtnState(currentPressed, array) { 
-        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {  
-            return;  
-        }  
-        let newState = {...this.state};  
-        for (let type of array) {  
-            if (currentPressed == type) {  
-                newState[type] ? {} : newState[type] = !newState[type];  
-                this.setState(newState);  
-            } else {  
-                newState[type] ? newState[type] = !newState[type] : {};  
-                this.setState(newState);  
-            }  
-        } 
-        this.goPage(currentPressed);
-        this.Initialization();
-    }  
-
     Initialization() {
         this.setState({
             buyRamAmount: "",
             sellRamBytes: "",
             receiver: "",
-            delegateb: "",
-            undelegateb: "",
             LeaseTransfer: 0,
         })
     }
 
-    // 返回内存，计算，网络，内存交易  
-    resourceButton(style, selectedSate, stateType, buttonTitle) {  
-        let BTN_SELECTED_STATE_ARRAY = ['isMemory', 'isCalculation','isNetwork', ];  
-        return(  
-            <TouchableOpacity style={[style, selectedSate ? {backgroundColor: UColor.tintColor} : {backgroundColor: UColor.mainColor,}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
-                <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.tintColor}]}>{buttonTitle}</Text>  
-            </TouchableOpacity>  
-        );  
-    }  
-
-     // 更新"自己,他人,租赁,过户"按钮的状态  
+     // 更新"租赁,过户"按钮的状态  
      _updateSelectedState(currentPressed, array) {  
         if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {  
             return;  
@@ -316,31 +199,20 @@ class Resources extends BaseComponent {
         this.Initialization();
     }  
 
-    // 返回自己,他人
-    ownOthersButton(style, selectedSate, stateType, buttonTitle) {    
-        let BTN_SELECTED_STATE_ARRAY = ['isOwn', 'isOthers'];  
-        return(  
-          <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'center',alignItems: 'center', flex: 1,}} onPress={ () => {this._updateSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
-              <Text style={{fontSize: 16,color: UColor.fontColor}}>{buttonTitle}</Text>  
-              <View style={{width: 10, height: 10, marginHorizontal: 8, borderRadius: 3, backgroundColor: UColor.riceWhite, alignItems: 'center', justifyContent: 'center',}}>
-                  {selectedSate ?<View style={{width: 8, height: 8, borderRadius: 10, backgroundColor: UColor.tintColor }}/>:null}
-              </View>
-          </TouchableOpacity>  
-        );  
-    }  
     // 返回租赁,过户
     leaseTransferButton(style, selectedSate, stateType, buttonTitle) {    
         let BTN_SELECTED_STATE_ARRAY = ['isLease','isTransfer'];  
         return(  
           <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'center',alignItems: 'center', flex: 1,}} onPress={ () => {this._updateSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
-              <Text style={{fontSize: 16,color: UColor.fontColor}}>{buttonTitle}</Text>  
-              <View style={{width: 10, height: 10, marginHorizontal: 8, borderRadius: 3, backgroundColor: UColor.riceWhite, alignItems: 'center', justifyContent: 'center',}}>
-                  {selectedSate ?<View style={{width: 8, height: 8, borderRadius: 10, backgroundColor: UColor.tintColor }}/>:null}
+              <View style={{width: 10, height: 10, marginHorizontal: 8, borderRadius: 10, backgroundColor: UColor.mainColor, alignItems: 'center', justifyContent: 'center',borderColor: UColor.arrow,borderWidth: 1,}}>
+                  {selectedSate ?<View style={{width: 10, height: 10, borderRadius: 10, backgroundColor: UColor.tintColor, borderColor: UColor.tintColor, borderWidth: 1, }}/>:null}
               </View>
+              <Text style={{fontSize: 16,color: UColor.fontColor}}>{buttonTitle}</Text>  
           </TouchableOpacity>  
         );  
     }  
-
+    
+    //检验输入的账户格式
     chkAccount(obj) {
         var charmap = '.12345abcdefghijklmnopqrstuvwxyz';
         for(var i = 0 ; i < obj.length;i++){
@@ -356,13 +228,17 @@ class Resources extends BaseComponent {
                 EasyToast.show('请输入正确的账号');
             }
         }
-        if (obj == this.props.defaultWallet.account) {
-            EasyToast.show('接收账号和自己账号不能相同，请重输');
-            obj = "";
+        if (this.state.isMemory && obj == this.props.defaultWallet.account) {
+            this.setState({ isOthers: false })
+            // EasyToast.show('接收账号和自己账号不能相同，请重输');
+            // obj = "";
+        }else{
+            this.setState({ isOthers: true })
         }
         return obj;
     }
 
+    //检验输入的数量
     chkPrice(obj) {
         obj = obj.replace(/[^\d.]/g, "");  //清除 "数字"和 "."以外的字符
         obj = obj.replace(/^\./g, "");  //验证第一个字符是否为数字
@@ -389,10 +265,10 @@ class Resources extends BaseComponent {
 
     //转换时间
     transferTimeZone(date){
-        // //转换时间
         let timezone = moment(date).add(72,'hours').format('YYYY-MM-DDTHH:mm:ss');
         return  timezone;
     }
+
     //时间百分比防出错
     falseAlarm(timePercentage){
         let Percentage = timePercentage.replace("%", "")
@@ -406,7 +282,8 @@ class Resources extends BaseComponent {
         }
         return newtimePercentage
     }
-
+     
+    //验证输入的数量
     chkAmountIsZero(amount,errInfo){
         var tmp;
         try {
@@ -429,6 +306,10 @@ class Resources extends BaseComponent {
         }
         if(this.state.buyRamAmount == ""){
             EasyToast.show('请输入购买金额');
+            return;
+        }
+        if(this.state.receiver == ""){
+            EasyToast.show('请输入接受账户');
             return;
         }
         if(this.chkAmountIsZero(this.state.buyRamAmount,'请输入购买金额')){
@@ -471,9 +352,9 @@ class Resources extends BaseComponent {
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
                     EasyShowLD.loadingShow();
-                    if(this.state.isOwn){
-                        this.state.receiver = this.props.defaultWallet.account;
-                    }
+                    // if(this.state.isOwn){
+                    //     this.state.receiver = this.props.defaultWallet.account;
+                    // }
                     Eos.transaction({
                         actions: [
                             {
@@ -495,6 +376,7 @@ class Resources extends BaseComponent {
                         if(r.isSuccess){
                             this.getAccountInfo();
                             EasyToast.show("购买成功");
+                            this.props.navigation.goBack();
                         }else{
                             if(r.data){
                                 if(r.data.code){
@@ -542,6 +424,7 @@ class Resources extends BaseComponent {
             // EasyShowLD.dialogClose();
         }, () => { EasyShowLD.dialogClose() });
     };
+
     // 出售内存
     sellram = (rowData) => {
         if(!this.props.defaultWallet){
@@ -613,6 +496,7 @@ class Resources extends BaseComponent {
                         if(r.isSuccess){
                             this.getAccountInfo();
                             EasyToast.show("出售成功");
+                            this.props.navigation.goBack();
                         }else{
                             if(r.data){
                                 if(r.data.code){
@@ -668,12 +552,16 @@ class Resources extends BaseComponent {
             EasyToast.show('请先创建钱包');
             return;
         }
-        if ((this.state.delegateb == "")) {
+        if ((this.state.buyRamAmount == "")) {
             EasyToast.show('请输入抵押的EOS数量');
             return;
         }
-        if(this.chkAmountIsZero(this.state.delegateb,'请输入抵押的EOS数量')){
-            this.setState({ delegateb: "" })
+        if(this.state.receiver == ""){
+            EasyToast.show('请输入接受账户');
+            return;
+        }
+        if(this.chkAmountIsZero(this.state.buyRamAmount,'请输入抵押的EOS数量')){
+            this.setState({ buyRamAmount: "" })
             return ;
         }
         this. dismissKeyboardClick();
@@ -683,7 +571,7 @@ class Resources extends BaseComponent {
                 selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
                 style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
                 placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-                <Text style={[styles.inptpasstext,{color: UColor.lightgray}]}>提示：抵押 {this.state.delegateb} EOS</Text>
+                <Text style={[styles.inptpasstext,{color: UColor.lightgray}]}>提示：抵押 {this.state.buyRamAmount} EOS</Text>
         </View>
         EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
             if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
@@ -712,9 +600,9 @@ class Resources extends BaseComponent {
                 }
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                    if(this.state.isOwn){
-                        this.state.receiver = this.props.defaultWallet.account;
-                    }
+                    // if(this.state.isOwn){
+                    //     this.state.receiver = this.props.defaultWallet.account;
+                    // }
                     if(this.state.isOthers && this.state.isTransfer){
                         this.state.LeaseTransfer = 1;
                     }
@@ -734,7 +622,7 @@ class Resources extends BaseComponent {
                                         from: this.props.defaultWallet.account,
                                         receiver: this.state.receiver,
                                         stake_net_quantity: formatEosQua("0 EOS"),
-                                        stake_cpu_quantity: formatEosQua(this.state.delegateb + " EOS"),
+                                        stake_cpu_quantity: formatEosQua(this.state.buyRamAmount + " EOS"),
                                         transfer: this.state.LeaseTransfer,
                                     }
                                 },
@@ -744,6 +632,7 @@ class Resources extends BaseComponent {
                             if(r.isSuccess){
                                 this.getAccountInfo();
                                 EasyToast.show("抵押成功");
+                                this.props.navigation.goBack();
                             }else{
                                 if(r.data){
                                     if(r.data.code){
@@ -794,7 +683,7 @@ class Resources extends BaseComponent {
                                     data: {
                                         from: this.props.defaultWallet.account,
                                         receiver: this.state.receiver,
-                                        stake_net_quantity: formatEosQua(this.state.delegateb + " EOS"),
+                                        stake_net_quantity: formatEosQua(this.state.buyRamAmount + " EOS"),
                                         stake_cpu_quantity: formatEosQua("0 EOS"),
                                         transfer: this.state.LeaseTransfer,
                                     }
@@ -805,6 +694,7 @@ class Resources extends BaseComponent {
                             if(r.isSuccess){
                                 this.getAccountInfo();
                                 EasyToast.show("抵押成功");
+                                this.props.navigation.goBack();
                             }else{
                                 if(r.data){
                                     if(r.data.code){
@@ -853,18 +743,23 @@ class Resources extends BaseComponent {
             // EasyShowLD.dialogClose();
         }, () => { EasyShowLD.dialogClose() }); 
     };
+
     //赎回
     undelegateb = () => { 
         if(!this.props.defaultWallet){
             EasyToast.show('请先创建钱包');
             return;
         }
-        if ((this.state.undelegateb == "")) {
+        if ((this.state.sellRamBytes == "")) {
             EasyToast.show('请输入赎回的EOS数量');
             return;
         }
-        if(this.chkAmountIsZero(this.state.undelegateb,'请输入赎回的EOS数量')){
-            this.setState({ undelegateb: "" })
+        if(this.state.receiver == ""){
+            EasyToast.show('请输入接受账户');
+            return;
+        }
+        if(this.chkAmountIsZero(this.state.sellRamBytes,'请输入赎回的EOS数量')){
+            this.setState({ sellRamBytes: "" })
             return ;
         }
         this. dismissKeyboardClick();
@@ -874,7 +769,7 @@ class Resources extends BaseComponent {
                     selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
                     style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
                     placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-                <Text style={[styles.inptpasstext,{color: UColor.lightgray}]}>提示：赎回 {this.state.undelegateb} EOS</Text>
+                <Text style={[styles.inptpasstext,{color: UColor.lightgray}]}>提示：赎回 {this.state.sellRamBytes} EOS</Text>
             </View>
     
             EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
@@ -903,11 +798,12 @@ class Resources extends BaseComponent {
                     return;
                 }
                 if (plaintext_privateKey.indexOf('eostoken') != -1) {
+                  
                     plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                    if(this.state.isOwn){
-                        this.state.receiver = this.props.defaultWallet.account;
-                    }
-                    EasyShowLD.loadingShow();
+                    // if(this.state.isOwn){
+                    //     this.state.receiver = this.props.defaultWallet.account;
+                    // }
+                    //EasyShowLD.loadingShow();
                     // 解除抵押
                     if(this.state.isCalculation){
                         Eos.transaction({
@@ -923,7 +819,7 @@ class Resources extends BaseComponent {
                                         from: this.props.defaultWallet.account,
                                         receiver: this.state.receiver,
                                         unstake_net_quantity: formatEosQua("0 EOS"),
-                                        unstake_cpu_quantity: formatEosQua(this.state.undelegateb + " EOS"),
+                                        unstake_cpu_quantity: formatEosQua(this.state.sellRamBytes + " EOS"),
                                     }
                                 },
                             ]
@@ -932,6 +828,7 @@ class Resources extends BaseComponent {
                             if(r.isSuccess){
                                 this.getAccountInfo();
                                 EasyToast.show("赎回成功");
+                                this.props.navigation.goBack();
                             }else{    
                                 if(r.data){
                                     if(r.data.code){
@@ -981,7 +878,7 @@ class Resources extends BaseComponent {
                                     data: {
                                         from: this.props.defaultWallet.account,
                                         receiver: this.state.receiver,
-                                        unstake_net_quantity: formatEosQua(this.state.undelegateb + " EOS"),
+                                        unstake_net_quantity: formatEosQua(this.state.sellRamBytes + " EOS"),
                                         unstake_cpu_quantity: formatEosQua("0 EOS"),
                                     }
                                 },
@@ -991,6 +888,7 @@ class Resources extends BaseComponent {
                             if(r.isSuccess){
                                 this.getAccountInfo();
                                 EasyToast.show("赎回成功");
+                                this.props.navigation.goBack();
                             }else{
                                 if(r.data){
                                     if(r.data.code){
@@ -1039,28 +937,177 @@ class Resources extends BaseComponent {
             // EasyShowLD.dialogClose();
         }, () => { EasyShowLD.dialogClose() });
     };
+
+    //赎回遇到问题
     redemption = () => { 
         const { navigate } = this.props.navigation;
         navigate('undelegated', {});
     }
+
+
+    //键盘收回
     dismissKeyboardClick() {
         dismissKeyboard();
     }
-
+    
+    //扫一扫
     scan() {
         const { navigate } = this.props.navigation;
         navigate('BarCode', {isTurnOut:true,coinType:"EOS"});
     }
+    
+    //购买内存/计算网络抵押
+    purchaseMortgage() {
+        if(this.state.isMemory) {
+            this.buyram();
+        }else{
+            this.delegateb();
+        }
+    }
+    
+    //出售内存/计算网络赎回
+    sellRedeem() {
+        if(this.state.isMemory) {
+            this.sellram();
+        }else{
+            this.undelegateb();
+        }
+    }
+
+    //切换tab
+    _handleIndexChange = index => {
+        this.setState({ index });
+    };
+
+    //渲染页面
+    renderScene = ({ route }) => {
+        if (route.key == '1') {
+            return (
+            <View style={[styles.inptoutsource,{flex: 1,}]}>
+                <View style={{flex: 1 }}>
+                    <View style={[styles.outsource,]}>
+                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.headings[0].title}</Text>
+                        <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.arrow,}}>≈{(this.state.currency_surplus == null || this.state.Currentprice == null || this.state.currency_surplus == '' || this.state.currency_surplus == '' || this.state.Currentprice == '0') ? '0.000' : (this.state.currency_surplus/this.state.Currentprice).toFixed(3)}kb</Text>
+                    </View>
+                    <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
+                        <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount} returnKeyType="go" 
+                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
+                        placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
+                        onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkPrice(buyRamAmount)})} 
+                        />
+                        
+                    </View>
+                    <View style={[styles.outsource,]}>
+                        <Text style={{flex: 1, fontSize:ScreenUtil.setSpText(12), color: UColor.startup, textAlign: 'left'}}>余额：{this.state.currency_surplus}EOS</Text>
+                        <Text style={{flex: 1, fontSize:ScreenUtil.setSpText(12), color: UColor.startup, textAlign: 'right'}}>当前价格：{(this.state.currency_surplus == null || this.state.Currentprice == null || this.state.currency_surplus == '' || this.state.currency_surplus == '' || this.state.Currentprice == '0') ? '0.000' : (this.state.currency_surplus/this.state.Currentprice).toFixed(3)}kb</Text>
+                    </View>
+                    <View style={[styles.outsource,]}>
+                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户(不填默认自己)</Text>
+                    </View>
+                    <View style={[styles.outsource,{backgroundColor: UColor.mainColor}]}>
+                        <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"
+                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={12}
+                            placeholder="输入接收账号" underlineColorAndroid="transparent" keyboardType="default" 
+                            onChangeText={(receiver) => this.setState({ receiver: this.chkAccount(receiver)})} 
+                        />
+                        <Button onPress={() => this.scan()}>
+                            <View style={styles.botnimg}>
+                                <Image source={UImage.scan} style={{width: 26, height: 26, }} />
+                            </View>
+                        </Button> 
+                    </View>
+                    {(!this.state.isMemory && this.state.isOthers) &&
+                        <View style={[styles.LeaseTransfer,{height: ScreenUtil.autowidth(60)}]}>  
+                            {this.leaseTransferButton(styles.tabbutton, this.state.isLease, 'isLease', '租赁')}  
+                            {this.leaseTransferButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', '过户')}  
+                        </View>
+                    }
+                </View>
+                <Button onPress={this.purchaseMortgage.bind(this)} style={{marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(86),}}>
+                    <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
+                        <Text style={[styles.botText,{color: UColor.btnColor}]}>{this.state.routes[0].title}</Text>
+                    </View>
+                </Button> 
+            </View>
+          )  
+        }else {
+            return (
+            <View style={[styles.inptoutsource,{flex: 1,}]}>
+                <View style={{flex: 1,}} >
+                    <View style={[styles.outsource,]}>
+                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.headings[1].title}</Text>
+                    </View>
+                    <View style={[styles.outsource,{backgroundColor: UColor.mainColor}]}>
+                        <TextInput ref={(ref) => this._rrpass = ref} value={this.state.sellRamBytes} returnKeyType="go" 
+                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
+                        placeholder={this.state.isMemory?"输入出售的数量(KB)":"输入EOS数量"} underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
+                        onChangeText={(sellRamBytes) => this.setState({ sellRamBytes: this.chkPrice(sellRamBytes)})}
+                        />
+                    </View>
+                    <View style={[styles.outsource,]}>
+                        <Text style={{flex: 1, fontSize:ScreenUtil.setSpText(12), color: UColor.startup, textAlign: 'left'}}>余额：{this.state.currency_surplus}EOS</Text>
+                        <Text style={{flex: 1, fontSize:ScreenUtil.setSpText(12), color: UColor.startup, textAlign: 'right'}}>当前价格：{(this.state.ram_available*this.state.Currentprice).toFixed(3)}EOS/kb</Text>
+                    </View>
+                    {!this.state.isMemory&&<View>
+                    <View style={[styles.outsource,]}>
+                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>取回账户(不填默认自己)</Text>
+                    </View>
+                    <View style={[styles.outsource,{backgroundColor: UColor.mainColor}]}>
+                        <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"  keyboardType="default" 
+                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholder={this.state.receiver}
+                            placeholderTextColor={UColor.inputtip} maxLength={12}   underlineColorAndroid="transparent"   
+                            onChangeText={(receiver) => this.setState({ receiver: this.chkAccount(receiver)})} 
+                        />
+                      
+                        <Button onPress={() => this.scan()}>
+                            <View style={styles.botnimg}>
+                                <Image source={UImage.scan} style={{width: 26, height: 26, }} />
+                            </View>
+                        </Button> 
+                    </View>
+                    </View>}
+                </View>
+                <Button onPress={this.sellRedeem.bind(this)} style={{marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(86),}}>
+                    <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
+                        <Text style={[styles.botText,{color: UColor.btnColor}]}>{this.state.routes[1].title}</Text>
+                    </View>
+                </Button> 
+            </View>)
+
+        }
+    }
+
+   
+
+
 
     render() {
         const c = this.props.navigation.state.params.coinType;
         return (
-            <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-                <Header {...this.props} onPressLeft={true} title="资源管理" subName="抵押记录" onPressRight={this.recordMortgage.bind()}/> 
-                <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
+            <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
+                {this.state.isMemory ?
+                <Header {...this.props} onPressLeft={true} title={this.state.headtitle}  />
+                :
+                <Header {...this.props} onPressLeft={true} title={this.state.headtitle}  onPressRight={this.recordMortgage.bind()}  
+                    avatar={UImage.Mortgage_record} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)}  /> 
+                }
+                <TabViewAnimated
+                    lazy={true}
+                    navigationState={this.state}
+                    renderScene={this.renderScene.bind(this)}
+                    renderHeader={(props) => <TabBar onTabPress={this._handleTabItemPress} 
+                    labelStyle={{ fontSize: ScreenUtil.setSpText(15), margin: 0, marginVertical: ScreenUtil.autowidth(5), color: UColor.tintColor, }} 
+                    indicatorStyle={{ backgroundColor: UColor.tintColor, width: ScreenUtil.autowidth(20), marginHorizontal: (ScreenWidth -  ScreenUtil.autowidth(40))/4 }} 
+                    style={{ backgroundColor: UColor.mainColor, }} 
+                    tabStyle={{ width: ScreenWidth / 2, padding: 0, marginVertical: ScreenUtil.autowidth(10), borderLeftWidth: 0.5, borderRightWidth: 0.5, borderColor: UColor.riceWhite, }} 
+                    scrollEnabled={true} {...props} />}
+                    onIndexChange={this._handleIndexChange}
+                    initialLayout={{ height: 0, width: ScreenWidth }}
+                />
+                {/* <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
                     <ScrollView keyboardShouldPersistTaps="always">
                         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-                            {/* <View style={[styles.tetleout,{backgroundColor: UColor.mainColor}]}>
+                            <View style={[styles.tetleout,{backgroundColor: UColor.mainColor}]}>
                                 <Text style={[styles.tetletext,{color: UColor.arrow}]}>{this.state.tetletext}</Text>
                                 <ImageBackground source={UImage.line_bg} resizeMode="cover" style={styles.linebgout}>
                                     <ImageBackground source={UImage.strip_bg} resizeMode="cover"  style={styles.stripbgout}>
@@ -1110,8 +1157,9 @@ class Resources extends BaseComponent {
                                 {this.resourceButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isMemory, 'isMemory', '内存资源')}  
                                 {this.resourceButton([styles.calculationtab,{borderTopColor: UColor.tintColor,borderBottomColor: UColor.tintColor}], this.state.isCalculation, 'isCalculation', '计算资源')}  
                                 {this.resourceButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isNetwork, 'isNetwork', '网络资源')}  
-                            </View>  */}
-                            <View style={{backgroundColor: UColor.mainColor,}}>
+                            </View> 
+                           
+                            <View >
                                 {this.state.isMemory?<View style={styles.wterout}>
                                 <View style={styles.OwnOthers}>  
                                         {this.ownOthersButton(styles.tabbutton, this.state.isOwn, 'isOwn', '自己')}  
@@ -1150,10 +1198,14 @@ class Resources extends BaseComponent {
                                             <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>购买内存（{this.state.currency_surplus}EOS）</Text>
                                             <Text style={{fontSize:12, color: UColor.arrow,}}>≈{(this.state.currency_surplus == null || this.state.Currentprice == null || this.state.currency_surplus == '' || this.state.currency_surplus == '' || this.state.Currentprice == '0') ? '0.000' : (this.state.currency_surplus/this.state.Currentprice).toFixed(3)}kb</Text>
                                         </View>
-                                        <View style={[styles.outsource,{borderBottomColor: UColor.secdColor}]}>
+                                        <View style={[styles.outsource,]}>
+                                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>购买内存</Text>
+                                            <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.arrow,}}>≈{(this.state.currency_surplus == null || this.state.Currentprice == null || this.state.currency_surplus == '' || this.state.currency_surplus == '' || this.state.Currentprice == '0') ? '0.000' : (this.state.currency_surplus/this.state.Currentprice).toFixed(3)}kb</Text>
+                                        </View>
+                                        <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
                                             <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount} returnKeyType="go" 
                                             selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
-                                            placeholder="输入购买的额度(EOS)" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
+                                            placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
                                             onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkPrice(buyRamAmount)})}
                                             />
                                             <Button onPress={this.buyram.bind(this)}>
@@ -1161,6 +1213,10 @@ class Resources extends BaseComponent {
                                                     <Text style={[styles.botText,{color: UColor.btnColor}]}>购买</Text>
                                                 </View>
                                             </Button> 
+                                        </View>
+                                        <View style={[styles.outsource,]}>
+                                            <Text style={{flex: 1, fontSize:ScreenUtil.setSpText(12), color: UColor.startup, textAlign: 'left'}}>余额：{this.state.currency_surplus}EOS</Text>
+                                            <Text style={{flex: 1, fontSize:ScreenUtil.setSpText(12), color: UColor.startup, textAlign: 'right'}}>当前价格：{(this.state.currency_surplus == null || this.state.Currentprice == null || this.state.currency_surplus == '' || this.state.currency_surplus == '' || this.state.Currentprice == '0') ? '0.000' : (this.state.currency_surplus/this.state.Currentprice).toFixed(3)}kb</Text>
                                         </View>
                                     </View>
                                     {this.state.isOthers ? null:<View style={styles.inptoutsource}>
@@ -1233,7 +1289,7 @@ class Resources extends BaseComponent {
                             </View>}
                         </TouchableOpacity>
                     </ScrollView>  
-                </KeyboardAvoidingView>
+                </KeyboardAvoidingView> */}
             </View>
         )
     }
@@ -1317,12 +1373,13 @@ const styles = StyleSheet.create({
     inptoutsource: {
         justifyContent: 'center',
         paddingBottom: ScreenUtil.autoheight(10),
-        paddingHorizontal: ScreenUtil.autowidth(20),
+        //paddingHorizontal: ScreenUtil.autowidth(20),
     },
     outsource: {
         flexDirection: 'row',  
         alignItems: 'center',
-        borderBottomWidth: 0.5,
+        height: ScreenUtil.autowidth(60),
+        paddingHorizontal: ScreenUtil.autowidth(15),
     },
     inpt: {
         flex: 1, 
@@ -1331,7 +1388,8 @@ const styles = StyleSheet.create({
         paddingLeft: ScreenUtil.autowidth(10), 
     },
     inptTitle: {
-        fontSize: ScreenUtil.setSpText(14),  
+        flex: 1,
+        fontSize: ScreenUtil.setSpText(16),  
         lineHeight: ScreenUtil.autoheight(25),
     },
     inptTitlered: {
@@ -1346,15 +1404,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
     botn: {
-        borderRadius: 3, 
+        borderRadius: 5,
         alignItems: 'center',
-        justifyContent: 'center', 
-        width: ScreenUtil.autowidth(70), 
-        height: ScreenUtil.autoheight(32),  
-        marginLeft: ScreenUtil.autowidth(10), 
+        justifyContent: 'center',
+        height: ScreenUtil.autoheight(50),
     },
     botText: {
-        fontSize: ScreenUtil.setSpText(17), 
+        fontSize: ScreenUtil.setSpText(18), 
     },
     basc: {
         flex: 1,

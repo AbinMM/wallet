@@ -22,7 +22,6 @@ export default {
   down: require('../img/day/down.png'),
   fav: require('../img/day/fav.png'),
   free_mortgage: require('../img/day/free_mortgage.png'),
-  
   home_bg: require('../img/day/home_bg.png'),
   integral_bg: require('../img/day/integral_bg.png'),
   line_bg: require('../img/day/line_bg.png'),
@@ -30,6 +29,7 @@ export default {
   logo: require('../img/day/logo1.png'),
   more_h: require('../img/day/more_h.png'),
   more: require('../img/day/more.png'),
+  
   my_activity: require('../img/day/my_activity.png'),
   my_activityh: require('../img/day/my_activityh.png'),
   my_community: require('../img/day/my_community.png'),
@@ -191,6 +191,7 @@ export default {
   ManualSearch: require('../img/ManualSearch.png'),
   Memory:require('../img/Memory.png'),
   MessagePush:require('../img/MessagePush.png'),
+  Mortgage_record: require('../img/Mortgage_record.png'),
   mustread: require('../img/mustread.png'),
   network:require('../img/network.png'),
   point_empty:require('../img/point_empty.png'),
