@@ -46,7 +46,6 @@ export default class DappWeb extends Component {
       password:'',
       progress: new Animated.Value(10),
       error: false,
-      news: this.props.navigation.state.params.news,
       transformY: new Animated.Value(200),
       transformY1: new Animated.Value(-1000),
       optionShow:false,
