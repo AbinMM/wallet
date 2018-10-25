@@ -14,6 +14,9 @@ import Button from '../../components/Button'
 import Header from '../../components/Header'
 import Constants from '../../utils/Constants'
 import {formatEosQua} from '../../utils/FormatUtil';
+
+import CustomWebView from './CustomWebView.android';
+
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 
@@ -605,6 +608,29 @@ _handleActions() {
         <Header {...this.props} onPressLeft={true} onDappBackFalg={true} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
         onPressRight={this.moreOption.bind(this)} />
         
+        {
+            Platform.OS === 'android' &&   
+        <CustomWebView
+            ref="refWebview"
+            // ref={(ref) => this._refWebview = ref}
+            source={{uri:this.props.navigation.state.params.url}}
+            domStorageEnabled={true}
+            javaScriptEnabled={true}
+            scalesPageToFit={Platform.OS === 'ios'? true : false}
+            injectedJavaScript = {RenderScatter(this.props)}
+            style={[styles.webview_style,{backgroundColor: UColor.btnColor}]}
+            onLoad={this._onLoad.bind(this)}
+            onLoadStart={this._onLoadStart.bind(this)}
+            onError={this._onError.bind(this)}
+            onLoadEnd={this._onLoadEnd.bind(this)}
+            renderError={this._renderError.bind(this)}
+            onMessage={(e)=>{this.onMessage(e)}}
+            onNavigationStateChange={this.onNavigationStateChange}
+          >
+        </CustomWebView>
+        }
+        {
+            Platform.OS === 'ios' &&   
         <WebView
             ref="refWebview"
             // ref={(ref) => this._refWebview = ref}
@@ -623,6 +649,7 @@ _handleActions() {
             onNavigationStateChange={this.onNavigationStateChange}
           >
         </WebView>
+        }
         <View style={[styles.infoPage,{backgroundColor: UColor.secdColor},this.state.error ? styles.showInfo : {}]}>
           <Text style={{ color: UColor.mainColor }}>{"加载失败"}</Text>
         </View>
