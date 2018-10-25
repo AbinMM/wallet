@@ -314,35 +314,35 @@ _handleActions() {
         switch(result.scatter)
         {
             case 'getInfo':
-                this.dapp_getInfo(result);
+                this.eos_getInfo(result);
                 break;
 
             case 'getKeyAccounts':
-                this.dapp_getKeyAccounts(result);
+                this.eos_getKeyAccounts(result);
                 break;
 
             case 'contract':
-                this.dapp_getContract(result);
+                this.eos_getContract(result);
                 break;
     
             case 'getCurrencyBalance':
-                this.dapp_getCurrencyBalance(result);
+                this.eos_getCurrencyBalance(result);
                 break;
             
             case 'getAccount':
-                this.dapp_getAccount(result);
+                this.eos_getAccount(result);
                 break;
     
             case 'transaction':
-                this.dapp_transaction(result);
+                this.eos_transaction(result);
                 break;
     
             case 'transfer':
-                this.dapp_transfer(result);
+                this.eos_transfer(result);
                 break;
     
             case 'getTableRows':
-                this.dapp_getTableRows(result);
+                this.eos_getTableRows(result);
                 break;
     
             case 'noaccount':
@@ -353,6 +353,10 @@ _handleActions() {
                     // });
                 });
                 break;    
+
+            case 'getArbitrarySignature':    
+                this.scatter_getArbitrarySignature(result);
+                break;
           
             default:
                 break;
@@ -361,11 +365,11 @@ _handleActions() {
           
       }
   }
-  dapp_getInfo(result){
+  eos_getInfo(result){
     this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,
         data:{chain_id:"aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"}}));
   }
-  dapp_getKeyAccounts(result){
+  eos_getKeyAccounts(result){
     if(result.params.publicKey == null || result.params.publicKey == '')
     {
         EasyToast.show('getKeyAccounts参数非法');
@@ -383,7 +387,7 @@ _handleActions() {
     } });
   }
 
-  dapp_getContract(result){
+  eos_getContract(result){
     if(result.params.contract == null || result.params.contract == '')
     {
         EasyToast.show('getContract参数非法');
@@ -402,12 +406,12 @@ _handleActions() {
                     this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
                 }      
             } catch (error) {
-                  EasyToast.show("dapp_getContract:" + error.message);
+                  EasyToast.show("eos_getContract:" + error.message);
             }
         }
       })
   }
-  dapp_getCurrencyBalance(result){
+  eos_getCurrencyBalance(result){
     if(result.params.contract == null || result.params.contract == ''
        || result.params.name == null || result.params.name == ''
        || result.params.coin == null || result.params.coin == '')
@@ -429,18 +433,18 @@ _handleActions() {
                     }
                 } else {
                     var errmsg = ((resp.data && resp.data.msg) ? resp.data.msg : "");
-                    EasyToast.show("dapp_getCurrencyBalance:" +errmsg);
+                    EasyToast.show("eos_getCurrencyBalance:" +errmsg);
                 }
                 this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:tmp_balance}));
                 
             } catch (error) {
-                EasyToast.show("dapp_getCurrencyBalance:" +error.message);
+                EasyToast.show("eos_getCurrencyBalance:" +error.message);
                 this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             }
         }
       })
   }
-  dapp_getAccount(result){
+  eos_getAccount(result){
     if(result.params.account == null || result.params.account == '')
     {
         EasyToast.show('getAccount参数非法');
@@ -456,7 +460,7 @@ _handleActions() {
         }
     } });
   }
-  dapp_transaction(result){
+  eos_transaction(result){
     this.setState({
         walletArr: null,
         transactionInfo:{fromAccount:"",op_type:"",actions:"",params:{}},
@@ -510,7 +514,7 @@ _handleActions() {
             }
           }
         } catch (error) {
-            EasyToast.show("dapp_transaction:" +error.message);
+            EasyToast.show("eos_transaction:" +error.message);
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         }
 
@@ -518,7 +522,7 @@ _handleActions() {
     });
   }
 
-  dapp_transfer(result) {
+  eos_transfer(result) {
     this.setState({
         walletArr: null,
         tranferInfo:{fromAccount:'',toAccount:'',amount: '',memo: ''},
@@ -574,7 +578,7 @@ _handleActions() {
                 }
             }
         } catch (error) {
-            EasyToast.show("dapp_transfer:" +error.message);
+            EasyToast.show("eos_transfer:" +error.message);
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         }
 
@@ -582,7 +586,7 @@ _handleActions() {
     });
   }
 
-  dapp_getTableRows(result)
+  eos_getTableRows(result)
   {
     this.props.dispatch({
         type: 'wallet/getEosTableRows', payload: result.params.obj_param, callback: (resp) => {
@@ -601,7 +605,48 @@ _handleActions() {
         }
       });
   }
+  scatter_getArbitrarySignature(result)
+  {
+    this.setState({
+        walletArr: null,
+        tranferInfo:{fromAccount:'',toAccount:'',amount: '',memo: ''},
+        name: '',
+        key: '',
+    });
+    
+    if(result.params.publicKey == null || result.params.publicKey == '' 
+         || result.params.data == null || result.params.data == '' 
+         || result.params.whatfor == null
+         || result.params.isHash == null)
+    {
+        EasyToast.show('getArbitrarySignature参数非法');
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        return ;
+    }
+    var privateKey = '';
+    if(this.props.defaultWallet.activePublic == result.params.publicKey){
+        privateKey = this.props.defaultWallet.activePrivate;
+    }else if(this.props.defaultWallet.ownerPublic == result.params.publicKey){
+        privateKey = this.props.defaultWallet.ownerPrivate;
+    }else{
+        EasyToast.show('getArbitrarySignature参数非法');
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        return ;
+    }
+    this.inputPwd(true);
+    this.setState({
+        walletArr: this.props.defaultWallet,
+        // tranferInfo:{
+        //     fromAccount:result.params.from,
+        //     toAccount:result.params.to,
+        //     amount: tmp_amount,
+        //     memo: result.params.memo,
+        // },
+        name: result.scatter,
+        key: result.key,
+    });
 
+  }
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>

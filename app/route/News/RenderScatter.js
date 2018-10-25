@@ -40,6 +40,18 @@ export default function RenderScatter(props) {
                 
             });
         },
+        suggestNetwork:function(){
+            alert('getVersion');
+            return new Promise((resolve, reject) => {
+                if(iden){
+                    resolve(iden);
+                }else{
+                    reject({});
+                }
+            }).catch((error)=>{
+                
+            });
+        },
         getVersion:function(id){
             alert('getVersion');
             return new Promise((resolve, reject) => {
@@ -134,6 +146,28 @@ export default function RenderScatter(props) {
                 }
             }).catch((error)=>{
                 
+            });
+        },
+   
+        getArbitrarySignature:function(publicKey, data, whatfor, isHash){
+            alert('getArbitrarySignature publicKey:'+publicKey+' data:'+data+' whatfor:'+whatfor+' isHash:'+isHash);
+            return new Promise((resolve, reject) => {
+                var key = new Date().getTime();
+                window.postMessage(JSON.stringify({key,scatter:"getArbitrarySignature",params:{publicKey, data, whatfor, isHash}}));
+                document.addEventListener("message",function(msg){
+                    document.removeEventListener("message",this);
+                    var obj = eval("(" + msg.data + ")");
+                    if(obj.scatter==="getArbitrarySignature" && obj.key===key){     
+                        if(obj.data)
+                        {
+                            resolve(obj.data);
+                        }else{
+                            reject({});
+                        }
+                    }
+                });
+            }).catch((error)=>{
+        
             });
         },
         createTransaction:function(id){
@@ -277,6 +311,7 @@ export default function RenderScatter(props) {
                     });
                 },
                 getCurrencyBalance:function(contract,name,coin){
+                    alert('getCurrencyBalance');
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
                         var tmp_contract = '';
@@ -312,6 +347,7 @@ export default function RenderScatter(props) {
                     });
                 },
                 getAccount:function(account){
+                    alert('getAccount');
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
                         var tmp_account = '';
@@ -364,6 +400,7 @@ export default function RenderScatter(props) {
                     });
                 },
                 transfer:function(from,to,amount,memo){
+                    alert('transfer');
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
                         var tmp_from = '';
@@ -406,6 +443,7 @@ export default function RenderScatter(props) {
                     });
                 },
                 transaction:function(actions){
+                    alert('transaction');
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
                         window.postMessage(JSON.stringify({key,scatter:"transaction",params:{...actions}}));
@@ -426,6 +464,7 @@ export default function RenderScatter(props) {
                     });
                 },
                 contract:function(name){
+                    alert('contract');
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
                         window.postMessage(JSON.stringify({key,scatter:"contract",params:{contract:name}}));
@@ -484,6 +523,7 @@ export default function RenderScatter(props) {
                                                             "tx.data[field.name]=paramvalue;"+
                                                         "}"+
                                                         "var key = new Date().getTime();"+
+                                                        "alert('new Date');"+
                                                         "window.postMessage(JSON.stringify({key,scatter:'transaction',params:{actions:[tx]}}));"+    
                                                         "document.addEventListener('message',function(msg){"+
                                                             "document.removeEventListener('message',this);"+
