@@ -52,14 +52,14 @@ class Dappsearch extends BaseComponent {
             const { navigate } = this.props.navigation;
             // sdkOpenDapp(labelname,'CustomDapp',this.state.theme);
             
-            if (Platform.OS == 'ios') {
-                var fdStart = labelname.indexOf("https://betdice.one");
-                if(fdStart == 0)
-                {
-                    EasyToast.show('暂不支持');
-                    return ;
-                }
-            }
+            // if (Platform.OS == 'ios') {
+            //     var fdStart = labelname.indexOf("https://betdice.one");
+            //     if(fdStart == 0)
+            //     {
+            //         EasyToast.show('暂不支持');
+            //         return ;
+            //     }
+            // }
             navigate('DappWeb', { title: 'CustomDapp', url: labelname });
         }
     }
