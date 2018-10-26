@@ -52,9 +52,9 @@ class AssetInfo extends BaseComponent {
         });
     }
 
-    _rightTopClick = (tradename) =>{
+    _rightTopClick = () =>{
         const { navigate } = this.props.navigation;
-        navigate('Detailsofmoney', {tradename:tradename});
+        navigate('Detailsofmoney', {tradename:this.props.navigation.state.params.asset.asset.name,contract_account:this.props.navigation.state.params.asset.asset.contractAccount});
     }
 
     componentDidMount() {
@@ -218,7 +218,7 @@ class AssetInfo extends BaseComponent {
         const c = this.props.navigation.state.params.asset;
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-                <Header {...this.props} onPressLeft={true} title={c.asset.name} avatar={UImage.pool_explain} onPressRight={this._rightTopClick.bind(this,this.props.navigation.state.params.asset.asset.name)} imgWidth={ScreenUtil.autowidth(21)} imgHeight={ScreenUtil.autowidth(21)}/>  
+                <Header {...this.props} onPressLeft={true} title={c.asset.name} avatar={UImage.pool_explain} onPressRight={this._rightTopClick.bind(this)} imgWidth={ScreenUtil.autowidth(21)} imgHeight={ScreenUtil.autowidth(21)}/>  
                 <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
                     <ImageBackground style={[styles.bgtopout,ScreenUtil.isIphoneX()?{minHeight:(ScreenWidth-ScreenUtil.autowidth(60))*0.3974}:{height:(ScreenWidth-ScreenUtil.autowidth(60))*0.3974}]} source={UImage.home_bg} resizeMode="stretch">
                         <Text style={[styles.headbalance,{color: UColor.fontColor}]}>{this.state.balance==""? "0.0000" :this.state.balance.replace(c.asset.name, "")} {c.asset.name}</Text>

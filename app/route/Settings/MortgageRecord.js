@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, Clipboard, TouchableOpacity, TextInput, } from 'react-native';
+import { Dimensions, DeviceEventEmitter, ListView, StyleSheet, Image, View, Text, Clipboard, TouchableOpacity, TextInput,Modal } from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import { Eos } from "react-native-eosjs"
@@ -229,6 +229,32 @@ class MortgageRecord extends React.Component {
     EasyToast.show('账号复制成功');
   }
 
+  chkPrice(obj) {
+    obj = obj.replace(/[^\d.]/g, "");  //清除 "数字"和 "."以外的字符
+    obj = obj.replace(/^\./g, "");  //验证第一个字符是否为数字
+    obj = obj.replace(/\.{2,}/g, "."); //只保留第一个小数点，清除多余的
+    obj = obj
+    .replace(".", "$#$")
+    .replace(/\./g, "")
+    .replace("$#$", ".");
+    obj = obj.replace(/^(\-)*(\d+)\.(\d\d\d\d).*$/,'$1$2.$3'); //只能输入四个小数
+    var max = 9999999999.9999;  // 100亿 -1
+    var min = 0.0000;
+    var value = 0.0000;
+    try {
+    value = parseFloat(obj);
+    } catch (error) {
+    value = 0.0000;
+    }
+    if(value < min|| value > max){
+    EasyToast.show("输入错误");
+    obj = "";
+    }
+    return obj;
+  }
+
+  
+
   render() {
     return (<View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
      <Header {...this.props} onPressLeft={true} title="抵押记录" />
@@ -250,7 +276,8 @@ class MortgageRecord extends React.Component {
           <TouchableOpacity   onPress={this._empty.bind(this)}>  
               <Text style={[styles.canceltext,{color: UColor.fontColor}]}>清空</Text>
           </TouchableOpacity>  
-      </View>   
+      </View>  
+
       {this.state.show && <View style={[styles.nothave,{backgroundColor: UColor.mainColor}]}><Text style={[styles.copytext,{color: UColor.fontColor}]}>还没有抵押记录哟~</Text></View>}       
       <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true} 
         dataSource={this.state.dataSource.cloneWithRows(this.state.delegateLoglist == null ? [] : this.state.delegateLoglist)} 
@@ -267,7 +294,45 @@ class MortgageRecord extends React.Component {
             </View>
           </Button>
         )}                   
-      />  
+      /> 
+
+      <Modal animationType={'slide'} transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
+        <TouchableOpacity style={[styles.modalStyle,{backgroundColor: UColor.mask}]} activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
+            <View style={{ width: ScreenWidth-ScreenUtil.autowidth(96), backgroundColor: UColor.btnColor, }}>
+                <View style={styles.outsource}>
+                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>抵押账户：</Text>
+                    <Text style={[styles.inptTitle,{color: UColor.arrow}]}>{this.props.navigation.state.params.account_name}</Text>
+                </View>
+                <View style={styles.outsource}>
+                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>计算资源：</Text>
+                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.cpu_delegateb} returnKeyType="go" 
+                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow,borderBottomColor: UColor.arrow,}]}  
+                    underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15} placeholderTextColor={UColor.inputtip}
+                    onChangeText={(cpu_delegateb) => this.setState({ cpu_delegateb: this.chkPrice(cpu_delegateb)})}
+                    />
+                </View>
+                <View style={styles.outsource}>
+                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>网络资源：</Text>
+                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.net_delegateb} returnKeyType="go" 
+                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow,borderBottomColor: UColor.arrow,}]}  
+                    underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15} placeholderTextColor={UColor.inputtip}
+                    onChangeText={(net_delegateb) => this.setState({ net_delegateb: this.chkPrice(net_delegateb)})}
+                    />
+                </View>
+                <View style={{height: ScreenUtil.autowidth(20),  alignItems: 'center', justifyContent: 'center', paddingHorizontal: ScreenUtil.autowidth(25)}}>
+                    <Text style={{fontSize: ScreenUtil.setSpText(12),color: UColor.showy}}>{this.state.errortext}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-end',}}>
+                    <Button onPress={() => { this._setModalVisible() }}>
+                        <Text style={[styles.btntext,{color: UColor.tintColor}]}>取消</Text>
+                    </Button>
+                    <Button onPress={() => { this.delegateb() }}>
+                        <Text style={[styles.btntext,{color: UColor.tintColor}]}>确认</Text>
+                    </Button>
+                </View>
+            </View>
+        </TouchableOpacity>
+      </Modal> 
     </View>
     );
   }
@@ -333,8 +398,8 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       marginBottom: 0.5,
       height: ScreenUtil.autoheight(60),
-      paddingVertical: ScreenUtil.autoheight(10),
-      paddingHorizontal: ScreenUtil.autowidth(20),
+      paddingVertical: ScreenUtil.autoheight(15),
+      paddingHorizontal: ScreenUtil.autowidth(17),
     },
     leftout:{
       flex: 1, 

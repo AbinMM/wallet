@@ -42,11 +42,12 @@ class Resources extends BaseComponent {
     constructor(props) { 
         super(props);
         this.state = {
+            show: false, //弹框
+            balance: '0', //EOS余额
             password: "", //密码
             errortext: "", //提示语
             cpu_delegateb: "", //抵押cpu
             net_delegateb: "", //抵押net
-            show: false, //弹框
             ram_available: '0.00', //内存可用
             ram_AlreadyUsed: '0.00', //内存已用
             ram_Percentage: '0%', //内存已用百分比
@@ -94,14 +95,30 @@ class Resources extends BaseComponent {
                                         net_AlreadyUsed: Math.floor(data.net_limit.used/1024*100)/100,
                                         net_Percentage: (data.net_limit.used/data.net_limit.max)*10000/100 + '%',
                                     })
-                    
                                 }
                             } catch (e) {
                             
                             }
                         }
                     });
-                
+                    this.props.dispatch({ type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.navigation.state.params.account_name, symbol: 'EOS' }, 
+                        callback: (data) => {
+                            //alert(JSON.stringify(data));
+                            if (data && data.code == '0') {
+                                if (data.data == "") {
+                                    this.setState({
+                                        balance: '0',
+                                    })
+                                } else {
+                                    this.setState({ 
+                                      balance: data.data.replace("EOS", ""), 
+                                    })
+                                }
+                            } else {
+                                EasyToast.show('获取余额失败：' + data.msg);
+                            }
+                        }
+                    })
                 }
             });
         } catch (error) {
@@ -109,7 +126,7 @@ class Resources extends BaseComponent {
         }
     }
 
-    chkPrice(obj) {
+    cpu_chkPrice(obj) {
         obj = obj.replace(/[^\d.]/g, "");  //清除 "数字"和 "."以外的字符
         obj = obj.replace(/^\./g, "");  //验证第一个字符是否为数字
         obj = obj.replace(/\.{2,}/g, "."); //只保留第一个小数点，清除多余的
@@ -118,7 +135,7 @@ class Resources extends BaseComponent {
         .replace(/\./g, "")
         .replace("$#$", ".");
         obj = obj.replace(/^(\-)*(\d+)\.(\d\d\d\d).*$/,'$1$2.$3'); //只能输入四个小数
-        var max = 9999999999.9999;  // 100亿 -1
+        var max = this.state.balance;  // 100亿 -1
         var min = 0.0000;
         var value = 0.0000;
         try {
@@ -126,9 +143,53 @@ class Resources extends BaseComponent {
         } catch (error) {
         value = 0.0000;
         }
-        if(value < min|| value > max){
-        EasyToast.show("输入错误");
-        obj = "";
+        if(value < min){
+            this.setState({ errortext: '输入错误' });
+            setTimeout(() => {
+                this.setState({ errortext: '' });
+            }, 2000);
+            obj = "";
+        }else if(value > max){
+            this.setState({ errortext: 'EOS余额不足' });
+            setTimeout(() => {
+                this.setState({ errortext: '' });
+            }, 2000);
+            obj = "";
+        }
+        return obj;
+    }
+
+    net_chkPrice(obj) {
+        obj = obj.replace(/[^\d.]/g, "");  //清除 "数字"和 "."以外的字符
+        obj = obj.replace(/^\./g, "");  //验证第一个字符是否为数字
+        obj = obj.replace(/\.{2,}/g, "."); //只保留第一个小数点，清除多余的
+        obj = obj
+        .replace(".", "$#$")
+        .replace(/\./g, "")
+        .replace("$#$", ".");
+        obj = obj.replace(/^(\-)*(\d+)\.(\d\d\d\d).*$/,'$1$2.$3'); //只能输入四个小数
+        var max = this.state.balance - this.state.cpu_delegateb;  // 100亿 -1
+        var min = 0.0000;
+        var value = 0.0000;
+        try {
+            value = parseFloat(obj);
+        } catch (error) {
+            value = 0.0000;
+        }
+        if(value < min){
+            this.setState({ errortext: '输入错误' });
+            setTimeout(() => {
+                this.setState({ errortext: '' });
+            }, 2000);
+            obj = "";
+            return obj;
+        }else if(value > max){
+            this.setState({ errortext: 'EOS余额不足' });
+            setTimeout(() => {
+                this.setState({ errortext: '' });
+            }, 2000);
+            obj = "";
+            return obj;
         }
         return obj;
     }
@@ -156,7 +217,7 @@ class Resources extends BaseComponent {
             }, 2000);
             return;
         }
-        if (this.state.cpu_delegateb == "" || this.state.net_delegateb == "") {
+        if (this.state.cpu_delegateb == "" && this.state.net_delegateb == "") {
             this.setState({ errortext: '请输入抵押的EOS数量' });
             setTimeout(() => {
                 this.setState({ errortext: '' });
@@ -234,6 +295,7 @@ class Resources extends BaseComponent {
                         EasyShowLD.loadingClose();
                         if(r.isSuccess){
                             EasyToast.show("抵押成功");
+                            this.onRefresh();
                         }else{
                             if(r.data){
                                 if(r.data.code){
@@ -385,7 +447,7 @@ class Resources extends BaseComponent {
                                 <TextInput ref={(ref) => this._rrpass = ref} value={this.state.cpu_delegateb} returnKeyType="go" 
                                 selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow,borderBottomColor: UColor.arrow,}]}  
                                 underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15} placeholderTextColor={UColor.inputtip}
-                                onChangeText={(cpu_delegateb) => this.setState({ cpu_delegateb: this.chkPrice(cpu_delegateb)})}
+                                onChangeText={(cpu_delegateb) => this.setState({ cpu_delegateb: this.cpu_chkPrice(cpu_delegateb)})}
                                 />
                             </View>
                             <View style={styles.outsource}>
@@ -393,7 +455,7 @@ class Resources extends BaseComponent {
                                 <TextInput ref={(ref) => this._rrpass = ref} value={this.state.net_delegateb} returnKeyType="go" 
                                 selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow,borderBottomColor: UColor.arrow,}]}  
                                 underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15} placeholderTextColor={UColor.inputtip}
-                                onChangeText={(net_delegateb) => this.setState({ net_delegateb: this.chkPrice(net_delegateb)})}
+                                onChangeText={(net_delegateb) => this.setState({ net_delegateb: this.net_chkPrice(net_delegateb)})}
                                 />
                             </View>
                             <View style={{height: ScreenUtil.autowidth(20),  alignItems: 'center', justifyContent: 'center', paddingHorizontal: ScreenUtil.autowidth(25)}}>

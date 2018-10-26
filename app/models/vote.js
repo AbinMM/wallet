@@ -104,16 +104,23 @@ export default {
      *getGlobalInfo({payload,callback},{call,put}) {
         try{
             const resp = yield call(Request.request, getGlobalInfo, 'post', payload);
-            let total = (resp.data.rows[0].max_ram_size / 1024 / 1024 / 1024).toFixed(2);
-            let used = (resp.data.rows[0].total_ram_bytes_reserved / 1024 / 1024 / 1024).toFixed(2);
-            let used_Percentage= (((resp.data.rows[0].total_ram_bytes_reserved / 1024 / 1024 / 1024).toFixed(2) / (resp.data.rows[0].max_ram_size / 1024 / 1024 / 1024).toFixed(2)) * 10000 / 100).toFixed()
+           
             if(resp && resp.code=='0'){    
-                yield put({ type: 'updateGlobal', payload: { total:total,used:used,used_Percentage:used_Percentage } });
+                let total = (resp.data.rows[0].max_ram_size / 1024 / 1024 / 1024).toFixed(2); //最大RAM大小
+                let reserved = (resp.data.rows[0].total_ram_bytes_reserved / 1024 / 1024 / 1024).toFixed(2); //保留的总内存字节数
+                let used = (total-reserved).toFixed(2); //使用的总内存字节数
+                let used_Percentage= ((used / total) * 10000 / 100).toFixed(2) //使用百分比
+                yield put({ type: 'updateGlobal', payload: {  
+                    total:total,
+                    reserved:reserved, 
+                    used:used, 
+                    used_Percentage:used_Percentage } 
+                });
                 
             }else{
                 EasyToast.show(resp.msg);
             }
-            // if (callback) callback({total:total,used:used,used_Percentage:used_Percentage});
+            if (callback) callback({resp});
         } catch (error) {
             EasyToast.show('网络繁忙,请稍后!');
         }
