@@ -370,6 +370,10 @@ _setModalVisible_Auth() {
                 this.scatter_getArbitrarySignature(result);
                 break;
           
+            case 'requestTransfer':
+                this.scatter_requestTransfer(result);
+                break;
+
             case 'linkAccount':
                 this.scatter_linkAccount(result);
                 break;
@@ -576,7 +580,6 @@ _setModalVisible_Auth() {
                   EasyToast.show("from account is not exist or not actived");
                   this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
                 }else{
-                  this._setModalVisible();
                   var tmp_amount = result.params.amount.replace(" EOS","");
                   tmp_amount = tmp_amount.replace("EOS","");
                   tmp_amount = tmp_amount.replace(" eos","");
@@ -592,6 +595,7 @@ _setModalVisible_Auth() {
                       name: result.scatter,
                       key: result.key,
                   });
+                  this._setModalVisible();
                 }
             }
         } catch (error) {
@@ -756,31 +760,78 @@ _setModalVisible_Auth() {
         // EasyShowLD.dialogClose();
     }, () => { EasyShowLD.dialogClose(); this.callbackToWebview("");});
 }
-
-scatter_linkAccount(result)
-  {
-    if(result.params.publicKey == null || result.params.publicKey == '' 
-         || result.params.network == null)
-    {
-        EasyToast.show('getArbitrarySignature参数非法');
-        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
-        return ;
-    }
-    if(result.params.network)
-    {
-        if((result.params.network.blockchain != 'eos') || (result.params.network.chainId != Constants.EosChainId)){
-            EasyToast.show('getArbitrarySignature参数非法');
+scatter_requestTransfer(result)
+{
+    try {
+        if(result.params.network == null || result.params.to == null || result.params.to == ''
+            || result.params.amount == null || result.params.amount == ''
+            || result.params.tokenDetails == null
+            || result.params.tokenDetails.contract == null
+            || result.params.tokenDetails.symbol == null
+            || result.params.tokenDetails.memo == null)
+        {
+            EasyToast.show('requestTransfer参数非法');
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             return ;
         }
+        if((result.params.network.blockchain != 'eos') || (result.params.network.chainId != Constants.EosChainId)){
+            EasyToast.show('requestTransfer参数非法');
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+            return ;
+        }
+
+        if(result.params.tokenDetails.contract != 'eosio.token' || result.params.tokenDetails.symbol != 'EOS')
+        {
+            EasyToast.show('requestTransfer参数非法');
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+            return ;
+        }
+        var tmp_amount = result.params.amount.replace(" EOS","");
+        tmp_amount = tmp_amount.replace("EOS","");
+        tmp_amount = tmp_amount.replace(" eos","");
+        tmp_amount = tmp_amount.replace("eos","");
+        this.setState({
+            walletArr: this.props.defaultWallet,
+            tranferInfo:{
+                fromAccount:this.props.defaultWallet.account,
+                toAccount:result.params.to,
+                amount: tmp_amount,
+                memo: result.params.tokenDetails.memo,
+            },
+            name: result.scatter,
+            key: result.key,
+        });
+    } catch (error) {
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
     }
 
-    if(this.props.defaultWallet.activePublic == result.params.publicKey
-        || this.props.defaultWallet.ownerPublic == result.params.publicKey){
-        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:true}));
-    }else{
+}
+scatter_linkAccount(result)
+  {
+      try {
+        if(result.params.publicKey == null || result.params.publicKey == '' 
+            || result.params.network == null)
+        {
+            EasyToast.show('linkAccount参数非法');
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+            return ;
+        }
+        if((result.params.network.blockchain != 'eos') || (result.params.network.chainId != Constants.EosChainId)){
+            EasyToast.show('linkAccount参数非法');
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+            return ;
+        }
+
+        if(this.props.defaultWallet.activePublic == result.params.publicKey
+            || this.props.defaultWallet.ownerPublic == result.params.publicKey){
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:true}));
+        }else{
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:false}));
+        }
+      } catch (error) {
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:false}));
-    }
+      }
+
   }
 
   render() {
