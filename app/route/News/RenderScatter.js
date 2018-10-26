@@ -17,6 +17,11 @@ export default function RenderScatter(props) {
         }]
     };
     var pubKey={publicKey:"${account.publicKey}"}
+    const var networkInfo={
+        blockchain:"eos",
+        chainId: "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
+    }
+
     window.scatter={
         identity:iden,
         getIdentity:function(id){
@@ -44,7 +49,7 @@ export default function RenderScatter(props) {
         suggestNetwork:function(network){
             alert('suggestNetwork'+JSON.stringify(network));
             return new Promise((resolve, reject) => {
-                if(network.blockchain === 'eos'){
+                if((network.blockchain === networkInfo.blockchain) && (network.chainId===networkInfo.chainId)){
                     resolve({result:true});
                 }else{
                     reject({result:false});
