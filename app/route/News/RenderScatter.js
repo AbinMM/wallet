@@ -16,6 +16,7 @@ export default function RenderScatter(props) {
             authority:"${account.perm_name}"
         }]
     };
+    var pubKey={publicKey:"${account.publicKey}"}
     window.scatter={
         identity:iden,
         getIdentity:function(id){
@@ -40,13 +41,13 @@ export default function RenderScatter(props) {
                 
             });
         },
-        suggestNetwork:function(){
-            alert('getVersion');
+        suggestNetwork:function(network){
+            alert('suggestNetwork'+JSON.stringify(network));
             return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
+                if(network.blockchain === 'eos'){
+                    resolve({result:true});
                 }else{
-                    reject({});
+                    reject({result:false});
                 }
             }).catch((error)=>{
                 
@@ -64,11 +65,11 @@ export default function RenderScatter(props) {
                 
             });
         },
-        getPublicKey:function(id){
-            alert('getPublicKey');
+        getPublicKey:function(blockchain){
+            alert('getPublicKey'+JSON.stringify(blockchain));
             return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
+                if(pubKey){
+                    resolve(pubKey);
                 }else{
                     reject({});
                 }
