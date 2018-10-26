@@ -21,6 +21,7 @@ export default function RenderScatter(props) {
         blockchain:"eos",
         chainId: "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
     };
+    var scatterVersion={"version": "9.5.0"};
 
     window.scatter={
         identity:iden,
@@ -61,8 +62,8 @@ export default function RenderScatter(props) {
         getVersion:function(id){
             alert('getVersion');
             return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
+                if(scatterVersion){
+                    resolve(scatterVersion);
                 }else{
                     reject({});
                 }
