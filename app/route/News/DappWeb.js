@@ -16,7 +16,6 @@ import Constants from '../../utils/Constants'
 import {formatEosQua} from '../../utils/FormatUtil';
 
 import CustomWebView from './CustomWebView.android';
-import Constants from '../../utils/Constants'
 
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
@@ -776,17 +775,12 @@ scatter_linkAccount(result)
         }
     }
 
-    // var privateKey = '';
-    // if(this.props.defaultWallet.activePublic == result.params.publicKey){
-    //     privateKey = this.props.defaultWallet.activePrivate;
-    // }else if(this.props.defaultWallet.ownerPublic == result.params.publicKey){
-    //     privateKey = this.props.defaultWallet.ownerPrivate;
-    // }else{
-    //     EasyToast.show('getArbitrarySignature参数非法');
-    //     this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
-    //     return ;
-    // }
-
+    if(this.props.defaultWallet.activePublic == result.params.publicKey
+        || this.props.defaultWallet.ownerPublic == result.params.publicKey){
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:true}));
+    }else{
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:false}));
+    }
   }
 
   render() {
