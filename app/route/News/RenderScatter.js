@@ -106,10 +106,10 @@ export default function RenderScatter(props) {
         hasAccountFor:function(id){
             alert('hasAccountFor');
             return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
+                if((id.blockchain === networkInfo.blockchain) && (id.chainId===networkInfo.chainId)){
+                    resolve({result:true});
                 }else{
-                    reject({});
+                    reject({result:false});
                 }
             }).catch((error)=>{
                 
