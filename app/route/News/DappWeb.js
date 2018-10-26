@@ -16,6 +16,7 @@ import Constants from '../../utils/Constants'
 import {formatEosQua} from '../../utils/FormatUtil';
 
 import CustomWebView from './CustomWebView.android';
+import Constants from '../../utils/Constants'
 
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
@@ -370,6 +371,10 @@ _setModalVisible_Auth() {
                 this.scatter_getArbitrarySignature(result);
                 break;
           
+            case 'linkAccount':
+                this.scatter_linkAccount(result);
+                break;
+
             default:
                 break;
         }
@@ -379,7 +384,8 @@ _setModalVisible_Auth() {
   }
   eos_getInfo(result){
     this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,
-        data:{chain_id:"aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"}}));
+        data:{chain_id:Constants.EosChainId}}));
+
   }
   eos_getKeyAccounts(result){
     if(result.params.publicKey == null || result.params.publicKey == '')
@@ -751,6 +757,37 @@ _setModalVisible_Auth() {
         // EasyShowLD.dialogClose();
     }, () => { EasyShowLD.dialogClose(); this.callbackToWebview("");});
 }
+
+scatter_linkAccount(result)
+  {
+    if(result.params.publicKey == null || result.params.publicKey == '' 
+         || result.params.network == null)
+    {
+        EasyToast.show('getArbitrarySignature参数非法');
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        return ;
+    }
+    if(result.params.network)
+    {
+        if((result.params.network.blockchain != 'eos') || (result.params.network.chainId != Constants.EosChainId)){
+            EasyToast.show('getArbitrarySignature参数非法');
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+            return ;
+        }
+    }
+
+    // var privateKey = '';
+    // if(this.props.defaultWallet.activePublic == result.params.publicKey){
+    //     privateKey = this.props.defaultWallet.activePrivate;
+    // }else if(this.props.defaultWallet.ownerPublic == result.params.publicKey){
+    //     privateKey = this.props.defaultWallet.ownerPrivate;
+    // }else{
+    //     EasyToast.show('getArbitrarySignature参数非法');
+    //     this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+    //     return ;
+    // }
+
+  }
 
   render() {
     return (

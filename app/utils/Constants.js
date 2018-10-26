@@ -9,4 +9,5 @@ export default {
     PWD_MAX_LENGTH:18, //密码最大长度
     isNetWorkOffline:false,
     EosNode:'http://47.52.250.41:8001',
+    EosChainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
  };

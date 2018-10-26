@@ -77,16 +77,24 @@ export default function RenderScatter(props) {
                 
             });
         },
-        linkAccount:function(id){
-            alert('linkAccount');
+        linkAccount:function(publicKey, network){
             return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
-                }else{
-                    reject({});
-                }
+                var key = new Date().getTime();
+                window.postMessage(JSON.stringify({key,scatter:"linkAccount",params:{publicKey, network}}));
+                document.addEventListener("message",function(msg){
+                    document.removeEventListener("message",this);
+                    var obj = eval("(" + msg.data + ")");
+                    if(obj.scatter==="linkAccount" && obj.key===key){     
+                        if(obj.data)
+                        {
+                            resolve(obj.data);
+                        }else{
+                            reject(false);
+                        }
+                    }
+                });
             }).catch((error)=>{
-                
+        
             });
         },
         hasAccountFor:function(id){
