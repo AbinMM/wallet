@@ -38,12 +38,14 @@ export default class DappWeb extends Component {
       
     this.props.navigation.setParams({ onPress: this.share });
     this.state = {
-      showTx: false,
-      showActions: false,  
-      show: false,
+      showAuth: false,   //授权
+      showTx: false,     //transaction
+      showActions: false,   //actions
+      show: false,      //转账
       walletArr:null,
       tranferInfo:{fromAccount:"",toAccount:"","amount":"",memo:""},
       transactionInfo:{fromAccount:"",op_type:"",actions:"",params:{}},
+      scatterAuth:{privateKey:"",data:"",whatfor:"",isHash:false},
       name: '',
       key: '', 
       password:'',
@@ -141,6 +143,10 @@ onBackAndroid = () => {
   }
   _btnCancelModalTx(){
     this._setModalVisible_Tx();
+    this.callbackToWebview("");
+  }
+  _btnCancelModalAuth(){
+    this._setModalVisible_Auth();
     this.callbackToWebview("");
   }
         // 显示/隐藏 右上角的更多选项 modal  
@@ -249,10 +255,10 @@ onBackAndroid = () => {
                     }, plaintext_privateKey, (r) => {
                         EasyShowLD.loadingClose();
 
-                        // var transaction_id = "";
+                        var resp_data = "";
                         if(r && r.isSuccess){
                             this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.state.tranferInfo.fromAccount, to: this.state.tranferInfo.toAccount, amount: this.state.tranferInfo.amount + " EOS", memo: this.state.tranferInfo.memo, data: "push"}});
-                            // transaction_id = r.data.transaction_id ? r.data.transaction_id : "";
+                            resp_data = r.data;
                         }else{
                             if(r && r.data){
                                 if(r.data.msg){
@@ -264,7 +270,7 @@ onBackAndroid = () => {
                                 EasyToast.show("交易失败");
                             }
                         }
-                        this.callbackToWebview(r.data);
+                        this.callbackToWebview(resp_data);
                     });
                 } else {
                     EasyShowLD.loadingClose();
@@ -290,6 +296,12 @@ _handleActions() {
     let showActions = this.state.showActions;
     this.setState({
         showActions: !showActions,
+    });
+}
+_setModalVisible_Auth() {
+    let isShowAuth = this.state.showAuth;
+    this.setState({
+        showAuth: !isShowAuth,
     });
 }
 
@@ -609,9 +621,14 @@ _handleActions() {
   {
     this.setState({
         walletArr: null,
-        tranferInfo:{fromAccount:'',toAccount:'',amount: '',memo: ''},
-        name: '',
-        key: '',
+        scatterAuth:{
+            publicKey:'',
+            data:'',
+            whatfor: '',
+            isHash: false,
+        },
+        name: result.scatter,
+        key: result.key,
     });
     
     if(result.params.publicKey == null || result.params.publicKey == '' 
@@ -623,6 +640,12 @@ _handleActions() {
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         return ;
     }
+
+    if(result.params.isHash && result.params.data.length != 32){
+        EasyToast.show('getArbitrarySignature参数data,不是hash');
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        return ;   
+    }
     var privateKey = '';
     if(this.props.defaultWallet.activePublic == result.params.publicKey){
         privateKey = this.props.defaultWallet.activePrivate;
@@ -633,20 +656,102 @@ _handleActions() {
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         return ;
     }
-    this.inputPwd(true);
     this.setState({
         walletArr: this.props.defaultWallet,
-        // tranferInfo:{
-        //     fromAccount:result.params.from,
-        //     toAccount:result.params.to,
-        //     amount: tmp_amount,
-        //     memo: result.params.memo,
-        // },
+        scatterAuth:{
+            privateKey:privateKey,
+            data:result.params.data,
+            whatfor: result.params.whatfor,
+            isHash: result.params.isHash,
+        },
         name: result.scatter,
         key: result.key,
     });
-
+    this._setModalVisible_Auth();
   }
+
+  inputPwd_getArbitrarySignature = () => {
+ 
+    this._setModalVisible_Auth();
+    const view =
+        <View style={styles.passout}>
+            <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
+                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
+                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
+                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
+        </View>
+        EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
+        if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
+            EasyToast.show('密码长度至少4位,请重输');
+            return;
+        }
+        var privateKey = this.state.scatterAuth.privateKey;
+
+        try {
+            var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.state.walletArr.salt);
+            var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
+
+            if (plaintext_privateKey.indexOf('eostoken') != -1) {
+                // EasyShowLD.loadingShow();
+                plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
+                // if(!this.state.scatterAuth.isHash)
+                {
+                    Eos.sign(this.state.scatterAuth.data, plaintext_privateKey, (r) => {
+                        EasyShowLD.loadingClose();
+
+                        var resp_data = "";
+                        if(r && r.isSuccess){
+                            resp_data = r.data;
+                        }else{
+                            if(r && r.data){
+                                if(r.data.msg){
+                                    EasyToast.show(r.data.msg);
+                                }else{
+                                    EasyToast.show("交易失败");
+                                }
+                            }else{
+                                EasyToast.show("交易失败");
+                            }
+                        }
+                        this.callbackToWebview(resp_data);
+                    });
+                }
+                // else{
+                //     // hashsign
+                //     Eos.signHash(this.state.scatterAuth.data, plaintext_privateKey, (r) => {
+                //         EasyShowLD.loadingClose();
+
+                //         var resp_data = "";
+                //         if(r && r.isSuccess){
+                //             resp_data = r.data;
+                //         }else{
+                //             if(r && r.data){
+                //                 if(r.data.msg){
+                //                     EasyToast.show(r.data.msg);
+                //                 }else{
+                //                     EasyToast.show("交易失败");
+                //                 }
+                //             }else{
+                //                 EasyToast.show("交易失败");
+                //             }
+                //         }
+                //         this.callbackToWebview(resp_data);
+                //     });
+                // }
+            } else {
+                EasyShowLD.loadingClose();
+                EasyToast.show('密码错误');
+                this.callbackToWebview("");
+            }
+        } catch (error) {
+            EasyShowLD.loadingClose();
+            EasyToast.show('密码错误');
+            this.callbackToWebview("");
+        }
+        // EasyShowLD.dialogClose();
+    }, () => { EasyShowLD.dialogClose(); this.callbackToWebview("");});
+}
+
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
@@ -766,6 +871,34 @@ _handleActions() {
                             </View>}
                             
                             <Button onPress={() => { this.inputPwd(false) }}>
+                                <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
+                                    <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
+                                </View>
+                            </Button>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </Modal>
+            <Modal animationType={'slide'} transparent={true} visible={this.state.showAuth} onShow={() => { }} onRequestClose={() => {}} >
+                <TouchableOpacity style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
+                    <View style={{ width: ScreenWidth,backgroundColor: UColor.btnColor,}}>
+                        <View style={styles.subView}>
+                            <Text style={styles.buttontext}/>
+                            <Text style={[styles.titleText,{color: UColor.blackColor}]}>授权</Text>
+                            <Button  onPress={this._btnCancelModalAuth.bind(this)} style={styles.buttonView}>
+                                <Text style={[styles.buttontext,{color: UColor.baseline}]}>×</Text>
+                            </Button>
+                        </View>
+                        <View >
+                            <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
+                                <Text style={[styles.explainText,{color: UColor.startup}]}>账户：</Text>
+                                <Text style={[styles.contentText,{color: UColor.startup}]}>{this.props.defaultWallet.account ? this.props.defaultWallet.account : ''}</Text>
+                            </View>
+                            <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]}>
+                                <Text style={[styles.explainText,{color: UColor.startup}]}>Memo：</Text>
+                                <Text style={[styles.contentText,{color: UColor.startup}]}>{this.state.scatterAuth.whatfor ? this.state.scatterAuth.whatfor : '获取您的钱包账户信任'}</Text>
+                            </View>
+                            <Button onPress={() => { this.inputPwd_getArbitrarySignature() }}>
                                 <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
                                     <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
                                 </View>
