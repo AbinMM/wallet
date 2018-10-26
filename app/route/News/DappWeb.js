@@ -366,6 +366,10 @@ _setModalVisible_Auth() {
                 });
                 break;    
 
+            case 'authenticate':
+                this.scatter_authenticate(result);    
+                break;
+
             case 'getArbitrarySignature':    
                 this.scatter_getArbitrarySignature(result);
                 break;
@@ -626,20 +630,32 @@ _setModalVisible_Auth() {
         }
       });
   }
+  scatter_authenticate(result){
+    {
+        if(result.params.random == null || result.params.random.length != 12) 
+        {
+            EasyToast.show('authenticate参数非法');
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+            return ;
+        }
+    
+        this.setState({
+            walletArr: this.props.defaultWallet,
+            scatterAuth:{
+                privateKey:this.props.defaultWallet.activePrivate,
+                data:result.params.random,
+                whatfor: '',
+                isHash: false,
+            },
+            name: result.scatter,
+            key: result.key,
+        });
+        this._setModalVisible_Auth();
+      }
+  }
+  
   scatter_getArbitrarySignature(result)
   {
-    this.setState({
-        walletArr: null,
-        scatterAuth:{
-            publicKey:'',
-            data:'',
-            whatfor: '',
-            isHash: false,
-        },
-        name: result.scatter,
-        key: result.key,
-    });
-    
     if(result.params.publicKey == null || result.params.publicKey == '' 
          || result.params.data == null || result.params.data == '' 
          || result.params.whatfor == null

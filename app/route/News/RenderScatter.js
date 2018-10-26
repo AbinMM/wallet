@@ -16,12 +16,6 @@ export default function RenderScatter(props) {
             authority:"${account.perm_name}"
         }]
     };
-    var pubKey={publicKey:"${account.publicKey}"};
-    var networkInfo={
-        blockchain:"eos",
-        chainId: "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
-    };
-    var scatterVersion={"version": "9.5.0"};
 
     window.scatter={
         identity:iden,
@@ -47,35 +41,71 @@ export default function RenderScatter(props) {
                 
             });
         },
-        suggestNetwork:function(network){
-            alert('suggestNetwork'+JSON.stringify(network));
+        authenticate:function(random){
             return new Promise((resolve, reject) => {
-                if((network.blockchain === networkInfo.blockchain) && (network.chainId===networkInfo.chainId)){
-                    resolve({result:true});
-                }else{
-                    reject({result:false});
-                }
+                var key = new Date().getTime();
+                window.postMessage(JSON.stringify({key,scatter:"authenticate",params:{random}}));
+                document.addEventListener("message",function(msg){
+                    document.removeEventListener("message",this);
+                    var obj = eval("(" + msg.data + ")");
+                    if(obj.scatter==="authenticate" && obj.key===key){     
+                        if(obj.data)
+                        {
+                            resolve(obj.data);
+                        }else{
+                            reject({});
+                        }
+                    }
+                });
             }).catch((error)=>{
-                
+        
             });
         },
-        getVersion:function(id){
-            alert('getVersion');
+        getArbitrarySignature:function(publicKey, data, whatfor, isHash){
             return new Promise((resolve, reject) => {
-                if(scatterVersion){
-                    resolve(scatterVersion);
-                }else{
-                    reject({});
-                }
+                var key = new Date().getTime();
+                window.postMessage(JSON.stringify({key,scatter:"getArbitrarySignature",params:{publicKey, data, whatfor, isHash}}));
+                document.addEventListener("message",function(msg){
+                    document.removeEventListener("message",this);
+                    var obj = eval("(" + msg.data + ")");
+                    if(obj.scatter==="getArbitrarySignature" && obj.key===key){     
+                        if(obj.data)
+                        {
+                            resolve(obj.data);
+                        }else{
+                            reject({});
+                        }
+                    }
+                });
             }).catch((error)=>{
-                
+        
+            });
+        },
+        requestTransfer:function(network, to, amount, tokenDetails){
+            return new Promise((resolve, reject) => {
+                var key = new Date().getTime();
+                window.postMessage(JSON.stringify({key,scatter:"requestTransfer",params:{network, to, amount, tokenDetails}}));
+                document.addEventListener("message",function(msg){
+                    document.removeEventListener("message",this);
+                    var obj = eval("(" + msg.data + ")");
+                    if(obj.scatter==="requestTransfer" && obj.key===key){     
+                        if(obj.data)
+                        {
+                            resolve(obj.data);
+                        }else{
+                            reject(false);
+                        }
+                    }
+                });
+            }).catch((error)=>{
+        
             });
         },
         getPublicKey:function(blockchain){
             alert('getPublicKey'+JSON.stringify(blockchain));
             return new Promise((resolve, reject) => {
-                if(pubKey){
-                    resolve(pubKey);
+                if(iden){
+                    resolve(iden.publicKey);
                 }else{
                     reject({});
                 }
@@ -101,131 +131,6 @@ export default function RenderScatter(props) {
                 });
             }).catch((error)=>{
         
-            });
-        },
-        hasAccountFor:function(id){
-            alert('hasAccountFor');
-            return new Promise((resolve, reject) => {
-                if((id.blockchain === networkInfo.blockchain) && (id.chainId===networkInfo.chainId)){
-                    resolve({result:true});
-                }else{
-                    reject({result:false});
-                }
-            }).catch((error)=>{
-                
-            });
-        },
-        identityFromPermissions:function(id){
-            alert('identityFromPermissions');
-            return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
-                }else{
-                    reject({});
-                }
-            }).catch((error)=>{
-                
-            });
-        },
-        requestTransfer:function(network, to, amount, tokenDetails){
-            return new Promise((resolve, reject) => {
-                var key = new Date().getTime();
-                window.postMessage(JSON.stringify({key,scatter:"requestTransfer",params:{network, to, amount, tokenDetails}}));
-                document.addEventListener("message",function(msg){
-                    document.removeEventListener("message",this);
-                    var obj = eval("(" + msg.data + ")");
-                    if(obj.scatter==="requestTransfer" && obj.key===key){     
-                        if(obj.data)
-                        {
-                            resolve(obj.data);
-                        }else{
-                            reject(false);
-                        }
-                    }
-                });
-            }).catch((error)=>{
-        
-            });
-        },
-        requestSignature:function(id){
-            alert('requestSignature');
-            return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
-                }else{
-                    reject({});
-                }
-            }).catch((error)=>{
-                
-            });
-        },
-   
-        getArbitrarySignature:function(publicKey, data, whatfor, isHash){
-            return new Promise((resolve, reject) => {
-                var key = new Date().getTime();
-                window.postMessage(JSON.stringify({key,scatter:"getArbitrarySignature",params:{publicKey, data, whatfor, isHash}}));
-                document.addEventListener("message",function(msg){
-                    document.removeEventListener("message",this);
-                    var obj = eval("(" + msg.data + ")");
-                    if(obj.scatter==="getArbitrarySignature" && obj.key===key){     
-                        if(obj.data)
-                        {
-                            resolve(obj.data);
-                        }else{
-                            reject({});
-                        }
-                    }
-                });
-            }).catch((error)=>{
-        
-            });
-        },
-        createTransaction:function(id){
-            alert('createTransaction');
-            return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
-                }else{
-                    reject({});
-                }
-            }).catch((error)=>{
-                
-            });
-        },
-        requestArbitrarySignature:function(id){
-            alert('requestArbitrarySignature');
-            return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
-                }else{
-                    reject({});
-                }
-            }).catch((error)=>{
-                
-            });
-        },
-        requestAddNetwork:function(id){
-            alert('requestAddNetwork');
-            return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
-                }else{
-                    reject({});
-                }
-            }).catch((error)=>{
-                
-            });
-        },
-        authenticate:function(id){
-            alert('authenticate');
-            return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
-                }else{
-                    reject({});
-                }
-            }).catch((error)=>{
-                
             });
         },
         eos:(e,t,r,n) =>{
