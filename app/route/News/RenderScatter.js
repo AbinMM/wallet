@@ -27,7 +27,7 @@ export default function RenderScatter(props) {
         identity:iden,
         getIdentity:function(id){
             return new Promise((resolve, reject) => {
-                if((id.accounts[0].blockchain === networkInfo.blockchain) && (id.accounts[0].chainId===networkInfo.chainId)){
+                if(iden){
                     resolve(iden);
                 }else{
                     reject({});
