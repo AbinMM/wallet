@@ -102,7 +102,6 @@ export default function RenderScatter(props) {
             });
         },
         getPublicKey:function(blockchain){
-            alert('getPublicKey'+JSON.stringify(blockchain));
             return new Promise((resolve, reject) => {
                 if(iden){
                     resolve(iden.publicKey);
@@ -136,7 +135,6 @@ export default function RenderScatter(props) {
         eos:(e,t,r,n) =>{
             return {
                 getInfo:function(){
-                    alert('getInfo');
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
                         window.postMessage(JSON.stringify({key,scatter:"getInfo",params:{}}));
@@ -205,7 +203,6 @@ export default function RenderScatter(props) {
                     });
                 },
                 getKeyAccounts:function(publicKey){
-                    alert('getKeyAccounts');
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
                         window.postMessage(JSON.stringify({key,scatter:"getKeyAccounts",params:{publicKey}}));

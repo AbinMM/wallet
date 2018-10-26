@@ -31,12 +31,6 @@ export default class DappWeb extends Component {
 
   constructor(props) {
     super(props)
-    this.props.dispatch({
-        type: "wallet/getDefaultWallet",
-        callback: data => {}
-      });
-      
-    this.props.navigation.setParams({ onPress: this.share });
     this.state = {
       showAuth: false,   //授权
       showTx: false,     //transaction
@@ -48,6 +42,8 @@ export default class DappWeb extends Component {
       scatterAuth:{privateKey:"",data:"",whatfor:"",isHash:false},
       name: '',
       key: '', 
+      authTempOwner: [],
+      authTempActive: [],
       password:'',
       progress: new Animated.Value(10),
       error: false,
@@ -57,6 +53,26 @@ export default class DappWeb extends Component {
       closeIcon:false,
       backButtonEnabled:false,
     }
+    this.props.dispatch({type: "wallet/getDefaultWallet",callback: data => {
+        if(data && data.defaultWallet && data.defaultWallet.account){
+            this.props.dispatch({ type: 'vote/getAuthInfo', payload: { page:1,username: data.defaultWallet.account},callback: (resp) => {
+                if(resp && resp.code == '0'){
+                    var authTempOwner=resp.data.permissions[1].required_auth.keys
+                    var authTempActive=resp.data.permissions[0].required_auth.keys
+                
+                    this.setState({
+                        authTempOwner: authTempOwner,
+                        authTempActive: authTempActive,
+                    });
+                }
+            } });
+        }
+
+        }
+    });
+
+    this.props.navigation.setParams({ onPress: this.share });
+
     let noop = () => { }
     this.__onLoad = this.props.onLoad || noop
     this.__onLoadStart = this.props.onLoadStart || noop
@@ -64,6 +80,32 @@ export default class DappWeb extends Component {
     // 添加返回键监听(对Android原生返回键的处理)
     this.addBackAndroidListener(this.props.navigation);
   }
+   //根据公钥获取对应的私钥 
+   getPrivateKeyByPublicKey(publicKey)
+   {
+       if(this.props.defaultWallet.activePublic == publicKey){
+           return this.props.defaultWallet.activePrivate;
+       }
+
+       if(this.props.defaultWallet.ownerPublic == publicKey)
+       {
+           return this.props.defaultWallet.ownerPrivate;
+       }
+
+        //查询是否为授权账户的公钥
+        for(var i=0;i<this.state.authTempActive.length;i++){
+            if(this.state.authTempActive[i].key == publicKey){
+               return  this.props.defaultWallet.activePrivate;
+            }
+        }
+        for(var i=0;i<this.state.authTempOwner.length;i++){
+            if(this.state.authTempOwner[i].key == publicKey){
+                return this.props.defaultWallet.ownerPrivate;
+            }
+        }
+
+        return '';
+   }
 
   componentWillUnmount(){
       //结束页面前，资源释放操作
@@ -208,6 +250,7 @@ onBackAndroid = () => {
             //关闭订单详情
             if(isTransfer){
                 // this._setModalVisible();
+                permission = 'active';  //transfer 用 active
                 actions = [
                     {
                         account: "eosio.token",
@@ -225,7 +268,6 @@ onBackAndroid = () => {
                     },
                 ];
                 privateKey = this.state.walletArr.activePrivate;
-                permission = 'active';  //transfer 用 active
             }else{
                 // this._setModalVisible_Tx();
                 actions = this.state.transactionInfo.params.actions;
@@ -671,16 +713,15 @@ _setModalVisible_Auth() {
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         return ;   
     }
-    var privateKey = '';
-    if(this.props.defaultWallet.activePublic == result.params.publicKey){
-        privateKey = this.props.defaultWallet.activePrivate;
-    }else if(this.props.defaultWallet.ownerPublic == result.params.publicKey){
-        privateKey = this.props.defaultWallet.ownerPrivate;
-    }else{
-        EasyToast.show('getArbitrarySignature参数非法');
+
+    var privateKey = this.getPrivateKeyByPublicKey(result.params.publicKey);
+    if(privateKey == '')
+    {
+        EasyToast.show('公钥不匹配');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
         return ;
     }
+
     this.setState({
         walletArr: this.props.defaultWallet,
         scatterAuth:{
@@ -817,6 +858,7 @@ scatter_requestTransfer(result)
             name: result.scatter,
             key: result.key,
         });
+        this._setModalVisible();
     } catch (error) {
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
     }
@@ -838,9 +880,9 @@ scatter_linkAccount(result)
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             return ;
         }
-
-        if(this.props.defaultWallet.activePublic == result.params.publicKey
-            || this.props.defaultWallet.ownerPublic == result.params.publicKey){
+        
+        var privateKey = this.getPrivateKeyByPublicKey(result.params.publicKey);
+        if(privateKey != ''){
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:true}));
         }else{
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:false}));
