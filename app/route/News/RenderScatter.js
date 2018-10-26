@@ -139,24 +139,16 @@ export default function RenderScatter(props) {
                 
             });
         },
-        requestTransfer:function(network, to, amount, tokenDetails){
+        requestTransfer:function(id){
+            alert('requestTransfer');
             return new Promise((resolve, reject) => {
-                var key = new Date().getTime();
-                window.postMessage(JSON.stringify({key,scatter:"requestTransfer",params:{network, to, amount, tokenDetails}}));
-                document.addEventListener("message",function(msg){
-                    document.removeEventListener("message",this);
-                    var obj = eval("(" + msg.data + ")");
-                    if(obj.scatter==="requestTransfer" && obj.key===key){     
-                        if(obj.data)
-                        {
-                            resolve(obj.data);
-                        }else{
-                            reject(false);
-                        }
-                    }
-                });
+                if(iden){
+                    resolve(iden);
+                }else{
+                    reject({});
+                }
             }).catch((error)=>{
-        
+                
             });
         },
         requestSignature:function(id){
