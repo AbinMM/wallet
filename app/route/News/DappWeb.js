@@ -832,14 +832,14 @@ scatter_requestTransfer(result)
             return ;
         }
         if((result.params.network.blockchain != 'eos') || (result.params.network.chainId != Constants.EosChainId)){
-            EasyToast.show('requestTransfer参数非法');
+            EasyToast.show('blockchain,chainid,参数非法');
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             return ;
         }
 
         if(result.params.tokenDetails.contract != 'eosio.token' || result.params.tokenDetails.symbol != 'EOS')
         {
-            EasyToast.show('requestTransfer参数非法');
+            EasyToast.show('contract,symbol参数非法');
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             return ;
         }
@@ -876,7 +876,7 @@ scatter_linkAccount(result)
             return ;
         }
         if((result.params.network.blockchain != 'eos') || (result.params.network.chainId != Constants.EosChainId)){
-            EasyToast.show('linkAccount参数非法');
+            EasyToast.show('network参数非法');
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             return ;
         }
