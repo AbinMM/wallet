@@ -31,6 +31,7 @@ class ImportEosKey extends BaseComponent {
       walletpwd: '',
       activePk: '',
       ownerPk: '',
+      passwordNote: "",
       isChecked: this.props.isChecked || false,
       weak: false,
       medium: false,
@@ -436,14 +437,14 @@ class ImportEosKey extends BaseComponent {
         result.password = this.state.walletpwd;
         result.name = account_names[i].name;
         result.account = account_names[i].name;
+        result.passwordNote = this.state.passwordNote;
         result.isactived = true;
         result.isBackups = true; // 导入私钥的情况不需要再提示未备份
         result.salt = salt;
         walletList[index] = result;
         index += 1;
       }
-      if(walletList.length < 1)
-      {
+      if(walletList.length < 1){
         //未选择，直接退出
         return ;
       }
@@ -579,8 +580,8 @@ class ImportEosKey extends BaseComponent {
               </View>      */}
               
                 {this.state.isSenior==true &&<View >
-                  <View style={[styles.inptout,{borderTopColor: UColor.secdColor}]}>
-                    <Text style={[styles.inptitle,{color: UColor.fontColor}]}>owner私钥</Text>
+                  <View style={[styles.inptout,]}>
+                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(56),color: UColor.fontColor}]}>owner私钥</Text>
                   </View>
                   <View style={[styles.biginptout,{backgroundColor: UColor.mainColor}]} >
                     <TextInput ref={(ref) => this._lphone = ref} value={this.state.ownerPk} returnKeyType="next" editable={true}
@@ -590,8 +591,8 @@ class ImportEosKey extends BaseComponent {
                       placeholder="请输入或复制您的owner私钥" underlineColorAndroid="transparent"  multiline={true}  />
                   </View>
                 </View>}
-                <View style={[styles.inptout,{borderTopColor: UColor.secdColor}]}>
-                  <Text style={[styles.inptitle,{color: UColor.fontColor}]}>active私钥</Text>
+                <View style={[styles.inptout,]}>
+                  <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(56),color: UColor.fontColor}]}>active私钥</Text>
                 </View>
                 <View style={[styles.biginptout,{backgroundColor: UColor.mainColor}]} >
                   <TextInput ref={(ref) => this._lphone = ref} value={this.state.activePk} returnKeyType="next" editable={true}
@@ -602,58 +603,62 @@ class ImportEosKey extends BaseComponent {
                 </View>
 
               
-              <View style={[styles.inptout,{flexDirection: 'row',borderTopColor: UColor.secdColor}]}>
-                <Text style={[styles.inptitle,{color: UColor.fontColor}]}>设置密码</Text>
+              <View style={[styles.inptout,{flexDirection: 'row',}]}>
+                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(58),color: UColor.fontColor}]}>设置密码</Text>
                 <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center'}}>
-                  <View style={[styles.Strengthout,this.state.weak&&{backgroundColor: '#CCCCCC'}]}>
+                  <View style={[styles.Strengthout,this.state.weak&&{backgroundColor: UColor.baseline}]}>
                     <Text style={[styles.Strengthtext,{color:this.state.weak?UColor.btnColor:UColor.arrow}]}>弱</Text>
                   </View>
-                  <View style={[styles.Strengthout,this.state.medium&&{backgroundColor: '#CCCCCC'}]}>
+                  <View style={[styles.Strengthout,this.state.medium&&{backgroundColor: UColor.baseline}]}>
                     <Text style={[styles.Strengthtext,{color:this.state.medium?UColor.btnColor:UColor.arrow}]}>中</Text>
                   </View>
-                  <View style={[styles.Strengthout,this.state.strong&&{backgroundColor: '#CCCCCC'}]}>
+                  <View style={[styles.Strengthout,this.state.strong&&{backgroundColor: UColor.baseline}]}>
                     <Text style={[styles.Strengthtext,{color:this.state.strong?UColor.btnColor:UColor.arrow}]}>强</Text>
                   </View>
                 </View>
               </View>
-              <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderTopColor: UColor.secdColor}]}>
+              <View style={[styles.inptout,{backgroundColor: UColor.mainColor, marginBottom: 1,}]}>
                   <TextInput ref={(ref) => this._lpass = ref} value={this.state.walletpwd}  returnKeyType="next" editable={true}
                     selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} autoFocus={false} maxLength={Constants.PWD_MAX_LENGTH}
                     onChangeText={(password) => this.setState({walletpwd: password })} underlineColorAndroid="transparent"
                     placeholder="输入密码至少8位,建议大小写字母与数字混合" secureTextEntry={true} onChange={this.intensity()} />
               </View>
-              <View style={[styles.inptout,{backgroundColor: UColor.mainColor,borderTopColor: UColor.secdColor}]} >
+              <View style={[styles.inptout,{backgroundColor: UColor.mainColor,}]} >
                   <TextInput ref={(ref) => this._lpass = ref} value={this.state.reWalletpwd} returnKeyType="next" editable={true} 
                       selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
                       placeholder="重复密码" underlineColorAndroid="transparent"  autoFocus={false} onChange={this.intensity()}
                       onChangeText={(reWalletpwd) => this.setState({ reWalletpwd })} />  
               </View>
-              <View style={{flexDirection: 'row',marginTop: ScreenUtil.autowidth(10),marginHorizontal: ScreenUtil.autowidth(10),}}>
-                <View style={styles.readout}>
-                  <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
-                    <View style={[{width: ScreenUtil.autowidth(10), height: ScreenUtil.autowidth(10),margin: ScreenUtil.autowidth(10), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5},this.state.isChecked&&{backgroundColor:UColor.tintColor}]}/>
-                      {/* <Image source={this.state.isChecked?UImage.aab1:UImage.aab2} style={styles.readoutimg}/> */}
-                  </TouchableHighlight>
-                  <Text style={[styles.readtext,{color: UColor.arrow}]} >我已经仔细阅读并同意 <Text onPress={() => this.prot(this,'clause')} style={[styles.servicetext,{color: UColor.tintColor}]}>服务及隐私条款</Text></Text> 
-                </View> 
-                <Text style={[styles.privatekeytext,{color: UColor.tintColor}]}  onPress={() => this.prot(this,'howImportPrivatekey')}>如何导入私钥？</Text>
+              <View style={[styles.inptout,]} >
+                  <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(60),color: UColor.fontColor}]}>设置密码提示</Text>
+              </View>
+              <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]} >
+                  <TextInput ref={(ref) => this._lnote = ref} value={this.state.passwordNote} selectionColor={UColor.tintColor} maxLength={40}
+                    returnKeyType="go" placeholderTextColor={UColor.inputtip} placeholder="密码提示信息(可不填)"  style={[styles.inpt,{color: UColor.arrow}]} 
+                    underlineColorAndroid="transparent" onChangeText={(passwordNote) => this.setState({ passwordNote })}  />
               </View>
               
-              <Button onPress={() => this.importPriKey()} style={{marginTop: ScreenUtil.autoheight(20), marginHorizontal: ScreenUtil.autowidth(20),}}>
+              <View style={{flexDirection: 'row',marginTop: ScreenUtil.autowidth(5),marginHorizontal: ScreenUtil.autowidth(10),}}>
+                <View style={styles.readout}>
+                  <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
+                    <View style={[{width: ScreenUtil.autowidth(10), height: ScreenUtil.autowidth(10),margin: ScreenUtil.autowidth(10), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
+                  </TouchableHighlight>
+                  <Text style={[styles.readtext,{color: UColor.arrow}]} >我已经阅读并同意 <Text onPress={() => this.prot(this,'clause')} style={[styles.servicetext,{color: UColor.tintColor}]}>服务及隐私条款</Text></Text> 
+                </View> 
+                {!this.state.isSenior && <Text style={[styles.privatekeytext,{color: UColor.tintColor}]}  onPress={() => this.prot(this,'howImportPrivatekey')}>如何导入私钥？</Text>}
+              </View>
+              
+              <Button onPress={() => this.importPriKey()} style={{marginVertical: ScreenUtil.autowidth(10), marginHorizontal: ScreenUtil.autowidth(20),}}>
                 <View style={styles.importPriout} backgroundColor={this.state.CreateButton}>
-                  <Text style={[styles.importPritext,{color: UColor.btnColor}]}>开始导入</Text>
+                  <Text style={[styles.importPritext,{color: UColor.btnColor}]}>导入钱包</Text>
                 </View>
               </Button>
-              <Button onPress={() => this.createWallet()} style={{marginTop: ScreenUtil.autoheight(20), marginHorizontal: ScreenUtil.autowidth(20),}}>
+              {!this.state.isSenior &&
+              <Button onPress={() => this.createWallet()} style={{marginHorizontal: ScreenUtil.autowidth(20),}}>
                 <View style={styles.importPriout}>
                   <Text style={[styles.importPritext,{color: UColor.tintColor}]}>创建钱包</Text>
                 </View>
-              </Button>
-              {/* {this.state.isSenior!=true &&
-              <View style={styles.logout}>
-                  <Image source={UImage.bottom_log} style={styles.logimg}/>
-                  <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
-              </View>} */}
+              </Button>}
             </View>
         </TouchableOpacity>
         <Modal style={styles.touchableout} animationType={'slide'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
@@ -734,38 +739,36 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headout: {
-    paddingTop: ScreenUtil.autoheight(10),
-    marginBottom: ScreenUtil.autoheight(5),
-    paddingBottom: ScreenUtil.autoheight(15),
+    paddingTop: ScreenUtil.autowidth(10),
+    marginBottom: ScreenUtil.autowidth(5),
+    paddingBottom: ScreenUtil.autowidth(15),
     paddingHorizontal: ScreenUtil.autowidth(25),
   },
   headtitle: {
     fontSize: ScreenUtil.setSpText(15),
-    lineHeight: ScreenUtil.autoheight(25),
+    lineHeight: ScreenUtil.autowidth(25),
   },
-  // biginptout: {
-  //   paddingBottom: ScreenUtil.autoheight(10), 
-  //   paddingHorizontal: ScreenUtil.autowidth(15),
-  // },
+  biginptout: {
+    paddingVertical: ScreenUtil.autowidth(10), 
+    paddingHorizontal: ScreenUtil.autowidth(18),
+  },
   inptout: {
-    borderTopWidth: 1,
     paddingHorizontal: ScreenUtil.autowidth(15),
   },
   inptitle: {
     flex: 1,
-    fontSize: ScreenUtil.setSpText(15),
-    lineHeight: ScreenUtil.autoheight(50),
+    fontSize: ScreenUtil.setSpText(16),
+    
   },
   inpt: {
-    height: ScreenUtil.autoheight(50),
+    height: ScreenUtil.autowidth(60),
     fontSize: ScreenUtil.setSpText(16),
   },
   inptgo: {
     textAlignVertical: 'top', 
-    height: ScreenUtil.autoheight(65), 
+    height: ScreenUtil.autowidth(65), 
     fontSize: ScreenUtil.setSpText(16),
-    lineHeight: ScreenUtil.autoheight(25),
-    paddingHorizontal: ScreenUtil.autowidth(10),
+    lineHeight: ScreenUtil.autowidth(32),
   },
   Strengthout: {
     borderRadius: 5,
@@ -786,7 +789,7 @@ const styles = StyleSheet.create({
   },
   readtext: {
     fontSize: ScreenUtil.setSpText(12),
-    lineHeight: ScreenUtil.autoheight(30),
+    lineHeight: ScreenUtil.autowidth(30),
   },
   servicetext: {
     fontSize: ScreenUtil.setSpText(12),
@@ -795,17 +798,17 @@ const styles = StyleSheet.create({
     borderRadius: 5, 
     alignItems: 'center', 
     justifyContent: 'center', 
-    height: ScreenUtil.autoheight(45), 
+    height: ScreenUtil.autowidth(50), 
     
   },
   importPritext: {
-    fontSize: ScreenUtil.setSpText(15),
+    fontSize: ScreenUtil.setSpText(16),
   },
 
   privatekeytext: { 
     textAlign: 'center',
     fontSize: ScreenUtil.setSpText(12), 
-    lineHeight: ScreenUtil.autoheight(30),
+    lineHeight: ScreenUtil.autowidth(30),
   },
   pupuo: {
     flex: 1,
@@ -826,15 +829,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: 'center',
-    height: ScreenUtil.autoheight(30),
-    marginVertical: ScreenUtil.autoheight(15),
+    height: ScreenUtil.autowidth(30),
+    marginVertical: ScreenUtil.autowidth(15),
   },
   buttonView: {
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    height: ScreenUtil.autoheight(50),
-    marginVertical: ScreenUtil.autoheight(10),
+    height: ScreenUtil.autowidth(50),
+    marginVertical: ScreenUtil.autowidth(10),
   },
   buttoncols: {
     fontSize: ScreenUtil.setSpText(16),
@@ -853,7 +856,7 @@ const styles = StyleSheet.create({
   contentText: {
     textAlign: 'left',
     fontSize: ScreenUtil.setSpText(14),
-    marginVertical: ScreenUtil.autoheight(20),
+    marginVertical: ScreenUtil.autowidth(20),
   },
   prompttext: {
     fontSize: ScreenUtil.setSpText(14),
@@ -872,7 +875,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    paddingBottom: ScreenUtil.autoheight(20),
+    paddingBottom: ScreenUtil.autowidth(20),
   },
   logimg: {
     width: ScreenUtil.autowidth(50), 
@@ -880,7 +883,7 @@ const styles = StyleSheet.create({
   },
   logtext: {
     fontSize: ScreenUtil.setSpText(14),
-    lineHeight: ScreenUtil.autoheight(30),
+    lineHeight: ScreenUtil.autowidth(30),
   },
   businesmodal: {
     flex: 1,
@@ -897,8 +900,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 0.5,
     justifyContent: 'center',
-    height: ScreenUtil.autoheight(40),
-    marginVertical: ScreenUtil.autoheight(2),
+    height: ScreenUtil.autowidth(40),
+    marginVertical: ScreenUtil.autowidth(2),
     marginHorizontal: ScreenUtil.autowidth(5),
     paddingHorizontal: ScreenUtil.autowidth(20),
   },
@@ -916,8 +919,8 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    height: ScreenUtil.autoheight(50),
-    marginVertical: ScreenUtil.autoheight(10),
+    height: ScreenUtil.autowidth(50),
+    marginVertical: ScreenUtil.autowidth(10),
   },
   buttonEnter: {
     fontSize: ScreenUtil.setSpText(16),

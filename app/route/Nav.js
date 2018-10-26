@@ -51,7 +51,6 @@ import MortgageRecord from './Settings/MortgageRecord'
 import Nodevoting from './Settings/Nodevoting'
 import Resources from './Settings/Resources'
 import Set from './Settings/Set'
-import TotalResources from './Settings/TotalResources'
 import undelegated from './Settings/undelegated' 
 import WithdrawMoney from './Settings/WithdrawMoney'
 
@@ -243,9 +242,6 @@ const Nav = StackNavigator(
     },
     Set: {
       screen: Set
-    },
-    TotalResources: {
-      screen: TotalResources
     },
     Dappsearch: {
       screen: Dappsearch

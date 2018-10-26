@@ -29,7 +29,6 @@ export default {
   logo: require('../img/day/logo1.png'),
   more_h: require('../img/day/more_h.png'),
   more: require('../img/day/more.png'),
-  
   my_activity: require('../img/day/my_activity.png'),
   my_activityh: require('../img/day/my_activityh.png'),
   my_community: require('../img/day/my_community.png'),

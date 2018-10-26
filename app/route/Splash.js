@@ -44,7 +44,7 @@ class Splash extends React.Component {
           UColor.secdColor= '#EDEDED'; //副色调 UColor.secdColor 
           UColor.tintColor= '#4CA6FF'; //字体浅色调 UColor.tintColor
           UColor.blueDeep= '#3baaff'; //蓝背景色 UColor.blueDeep
-          UColor.fontColor= '#292F40'; //字体颜色 UColor.fontColor
+          UColor.fontColor= '#1A1A1A'; //字体颜色 UColor.fontColor
           UColor.btnColor= '#ffffff'; //按钮字体颜色 UColor.btnColor
           UColor.riceWhite= '#ECECF0'; //米白色 UColor.riceWhite
           UColor.arrow= '#808080'; //深字体色 UColor.arrow
@@ -54,7 +54,7 @@ class Splash extends React.Component {
           UColor.showy= '#ff6565'; //显眼色调 UColor.showy 
           UColor.baseline= '#cccccc'; //底色调 UColor.baseline
           UColor.blackColor= '#000000'; //纯黑色 UColor.blackColor
-          UColor.riseColor= '#F25C49'; //涨卖收色 UColor.riseColor
+          UColor.riseColor= '#FF4B51'; //涨卖收色 UColor.riseColor
           UColor.fallColor= '#25B36B'; //跌买出色 UColor.fallColor
           UColor.navigation= '#2279C5'; //顶部标题背景色 UColor.navigation
           UColor.receivables= "#4CA6FF";
@@ -158,7 +158,7 @@ class Splash extends React.Component {
           UColor.showy= '#ff6565'; //显眼色调 UColor.showy 
           UColor.baseline= '#cccccc'; //底色调 UColor.baseline
           UColor.blackColor= '#000000'; //纯黑色 UColor.blackColor
-          UColor.riseColor= '#F25C49'; //涨卖收色 UColor.riseColor
+          UColor.riseColor= '#FF4B51'; //涨卖收色 UColor.riseColor
           UColor.fallColor= '#25B36B'; //跌买出色 UColor.fallColor
           UColor.navigation= '#43536D'; //顶部标题背景色 UColor.navigation
           UColor.receivables= '#43536D';

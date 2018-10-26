@@ -127,7 +127,7 @@ class AddAssets extends BaseComponent {
             dataSource={this.state.dataSource.cloneWithRows(this.props.assetsList == null ? [] : this.props.assetsList)} 
             renderRow={(rowData, sectionID, rowID) => (      
             <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
-                <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
+                <View style={[styles.listInfo,]}>
                   <View style={{borderRadius: 25,backgroundColor: UColor.secdColor,marginRight: ScreenUtil.autowidth(10),}}>
                     <Image source={rowData.icon==null ? UImage.eos : { uri: rowData.icon }} style={styles.logimg}/>
                   </View>
@@ -160,15 +160,16 @@ const styles = StyleSheet.create({
     },
 
     listItem: {
+      marginBottom: 1,
       flexDirection: "column",
       alignItems: "flex-start",
       justifyContent: "flex-start",
     },
     listInfo: {
-      borderTopWidth:1,
       flexDirection: "row",
       alignItems: "center",
       height: ScreenUtil.autoheight(60),
+    
       paddingHorizontal: ScreenUtil.autowidth(16),
     },
     logimg: {

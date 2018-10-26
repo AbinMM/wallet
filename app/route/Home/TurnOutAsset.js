@@ -366,7 +366,7 @@ class TurnOutAsset extends BaseComponent {
                             <View style={[styles.outsource,{}]}>
                                 {/* <View style={[styles.inptoutsource,{borderBottomColor:UColor.mainsecd}]}> */}
                                 <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{color: UColor.fontColor}]}>收款账户</Text>
+                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>收款账户</Text>
                                     <View style={styles.scanning}>
                                         <Button onPress={() => this._rightTopClick()}>                                  
                                             <Image source={UImage.scan} style={styles.scanningimg} />                                 
@@ -381,13 +381,13 @@ class TurnOutAsset extends BaseComponent {
                                     />
                                     <View style={styles.scanning}>
                                         <Button onPress={() => this.openAddressBook()}>                                  
-                                            <Image source={UImage.al} style={styles.scanningimg} />                                 
+                                            <Image source={UImage.al} style={styles.alningimg} />                                 
                                         </Button>
                                     </View>
                                 </View>
 
                                 <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{color: UColor.fontColor}]}>转账金额</Text>
+                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(56),color: UColor.fontColor}]}>转账金额</Text>
                                 </View>
                                 <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
                                     <View style={{paddingRight: ScreenUtil.autowidth(20),borderRightColor: UColor.secdColor,borderRightWidth: 1,}} >
@@ -413,7 +413,7 @@ class TurnOutAsset extends BaseComponent {
                                 </View>
 
                                 <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{color: UColor.fontColor}]}>备注</Text>
+                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>备注</Text>
                                 </View>
                                 <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
                                     <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
@@ -629,6 +629,11 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autowidth(19),
         margin: ScreenUtil.autowidth(20),
     },
+    alningimg: {
+        width: ScreenUtil.autowidth(17),
+        height: ScreenUtil.autowidth(17),
+        margin: ScreenUtil.autowidth(20),
+    },
     tokenText: {
         fontSize: ScreenUtil.setSpText(15),
         marginRight: ScreenUtil.autowidth(5),
@@ -640,8 +645,8 @@ const styles = StyleSheet.create({
     },
     inptitle: {
         flex: 1,
-        lineHeight: ScreenUtil.autowidth(60),
-        fontSize: ScreenUtil.setSpText(14),
+        
+        fontSize: ScreenUtil.setSpText(16),
     },
     textinpt: {
         flex: 1,
@@ -649,18 +654,18 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(16),
     },
     btnnextstep: {
-        height: ScreenUtil.autoheight(85),
-        marginTop: ScreenUtil.autoheight(30),
+        marginTop: ScreenUtil.autoheight(44),
+        marginBottom: ScreenUtil.autowidth(25),
+        marginHorizontal: ScreenUtil.autowidth(16),
     },
     nextstep: {
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        margin: ScreenUtil.autowidth(20),
-        height: ScreenUtil.autoheight(45),
+        height: ScreenUtil.autoheight(50),
     },
     nextsteptext: {
-        fontSize: ScreenUtil.setSpText(15),
+        fontSize: ScreenUtil.setSpText(18),
     },
     warningout: {
         borderWidth: 1,
