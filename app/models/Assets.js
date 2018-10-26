@@ -89,6 +89,17 @@ export default {
                 yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
             }
         }else{
+            var manualClose = yield call(store.get, 'myAssets_manual_close_' + payload.accountName);
+            if(manualClose == null){
+                manualClose = [];
+            }
+            for(var i = 0; i < manualClose.length; i++){
+                for(var j = 0; j < myAssets.length; j++){
+                    if(myAssets[j].asset.name == manualClose[i].asset.name){ // 已经在资产列表中
+                        myAssets.splice(j, 1);
+                    }
+                }
+            }
             var currentAccount = yield call(store.get, 'current_account');
             if(payload && payload.isInit && currentAccount == payload.accountName){
                 yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
@@ -135,6 +146,20 @@ export default {
         try{
             // alert("------ " + JSON.stringify(payload));
             var myAssets = yield call(store.get, 'myAssets217_' + payload.accountName);
+            if(myAssets == null){
+                myAssets = [];
+            }
+            var manualClose = yield call(store.get, 'myAssets_manual_close_' + payload.accountName);
+            if(manualClose == null){
+                manualClose = [];
+            }
+            for(var i = 0; i < manualClose.length; i++){
+                for(var j = 0; j < myAssets.length; j++){
+                    if(myAssets[j].asset.name == manualClose[i].asset.name){ // 已经在资产列表中
+                        myAssets.splice(j, 1);
+                    }
+                }
+            }
             var isBalanceChange = false;
             for(let i in myAssets){
                 let item = myAssets[i];
@@ -191,12 +216,30 @@ export default {
         if (myAssets == null) {
             var  myAssets = [];
         }
+
+        // 手动关闭的资产列表更新
+        var manualClose = yield call(store.get, 'myAssets_manual_close_' + payload.accountName);
+        if (manualClose == null) {
+            manualClose = [];
+        }
+        if(payload.value){
+            for(var t = 0; t < manualClose.length; t++){
+                if(manualClose[t].asset.name == payload.asset.name){
+                    manualClose.splice(t, 1);
+                }
+            }
+            yield call(store.save, 'myAssets_manual_close_' + payload.accountName, manualClose);
+        }
         for (var i = 0; i < myAssets.length; i++) {
             if (myAssets[i].asset.name == payload.asset.name) {
                 if(payload.value){ // 添加资产,  但资产已存在
                     if(callback) callback(myAssets);
                     return;
                 }else{ // 删除资产
+                    // 手动关闭的资产，刷新资产列表时即使有此项资产也不再显示
+                    manualClose[manualClose.length] = myAssets[i];
+                    yield call(store.save, 'myAssets_manual_close_' + payload.accountName, manualClose);
+
                     myAssets.splice(i, 1);
                     yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
                     // alert("delMyAsset" +JSON.stringify(myAssets));
@@ -239,13 +282,25 @@ export default {
                 // const resp = {"msg":"success","data":["EOS","MSP","ADD","EETH"], "code":"0"};
                 const resp = yield call(Request.request, fetchAssetsByAccount + payload.accountName, "get");
                 if(resp && resp.code == '0' && resp.data){
-                    for(var i = 0; i < resp.data.length; i++){
-                        for(var j = 0; j < myAssets.length; j++){
+                    var i = 0;
+                    var j = 0;
+
+                    for(i = 0; i < resp.data.length; i++){
+                        for(j = 0; j < myAssets.length; j++){
                             if(myAssets[j].asset.name == resp.data[i]){ // 已经在资产列表中
                                 break;
                             }
                         }
                         if(j == myAssets.length){ // 列表还没有该资产
+                            var k = 0;
+                            for(k = 0; k < manualClose.length; k++){
+                                if(resp.data[i] == manualClose[k].asset.name){
+                                    break;
+                                }
+                            }
+                            if(k != manualClose.length){ // 资产在手动关闭的列表中，则不要加入新的资产列表中
+                                continue;
+                            }
                             resp1 = yield call(Request.request, listAssets, 'post', {code: resp.data[i]});
                             if(resp1 && resp1.code == '0' && resp1.data && resp1.data.length == 1){
                                 var eosInfo = {

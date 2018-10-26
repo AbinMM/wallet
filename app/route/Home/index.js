@@ -244,13 +244,15 @@ class Home extends React.Component {
     }
   }
 
-  getAssetBalance(){
+  getAssetBalance(callback){
     if(this.props.defaultWallet == null || this.props.defaultWallet.name == null || this.props.myAssets == null){
       return;
     }
 
     this.props.dispatch({ type: 'assets/getBalance', payload: { accountName: this.props.defaultWallet.name, myAssets: this.props.myAssets}, callback: () => {
       // EasyShowLD.loadingClose();
+      if(callback) callback();
+
     }});
   }
 
