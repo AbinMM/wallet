@@ -16,17 +16,17 @@ export default function RenderScatter(props) {
             authority:"${account.perm_name}"
         }]
     };
-    var pubKey={publicKey:"${account.publicKey}"}
-    const var networkInfo={
+    var pubKey={publicKey:"${account.publicKey}"};
+    var networkInfo={
         blockchain:"eos",
         chainId: "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
-    }
+    };
 
     window.scatter={
         identity:iden,
         getIdentity:function(id){
             return new Promise((resolve, reject) => {
-                if(iden){
+                if((id.accounts[0].blockchain === networkInfo.blockchain) && (id.accounts[0].chainId===networkInfo.chainId)){
                     resolve(iden);
                 }else{
                     reject({});
