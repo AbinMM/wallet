@@ -115,18 +115,6 @@ export default function RenderScatter(props) {
                 
             });
         },
-        getOrRequestIdentity:function(id){
-            alert('getOrRequestIdentity');
-            return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
-                }else{
-                    reject({});
-                }
-            }).catch((error)=>{
-                
-            });
-        },
         identityFromPermissions:function(id){
             alert('identityFromPermissions');
             return new Promise((resolve, reject) => {
@@ -139,16 +127,24 @@ export default function RenderScatter(props) {
                 
             });
         },
-        requestTransfer:function(id){
-            alert('requestTransfer');
+        requestTransfer:function(network, to, amount, tokenDetails){
             return new Promise((resolve, reject) => {
-                if(iden){
-                    resolve(iden);
-                }else{
-                    reject({});
-                }
+                var key = new Date().getTime();
+                window.postMessage(JSON.stringify({key,scatter:"requestTransfer",params:{network, to, amount, tokenDetails}}));
+                document.addEventListener("message",function(msg){
+                    document.removeEventListener("message",this);
+                    var obj = eval("(" + msg.data + ")");
+                    if(obj.scatter==="requestTransfer" && obj.key===key){     
+                        if(obj.data)
+                        {
+                            resolve(obj.data);
+                        }else{
+                            reject(false);
+                        }
+                    }
+                });
             }).catch((error)=>{
-                
+        
             });
         },
         requestSignature:function(id){
