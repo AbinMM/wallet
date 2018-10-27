@@ -151,6 +151,7 @@ class Home extends React.Component {
     this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: (this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name},callback: (resources) => {
       if(resources != null){
         this.setState({
+          assetRefreshing: false,
           mortgage: resources.self_delegated_bandwidth ? Math.floor(resources.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100 + resources.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100 : '0',
           allowance: resources.display_data ? resources.display_data.ram_left.replace("kb", "") : '0',
         })
@@ -562,7 +563,6 @@ class Home extends React.Component {
   }
 
   openSystemSetting(){
-    // console.log("go to set net!")
     if (Platform.OS == 'ios') {
       Linking.openURL('app-settings:')
         .catch(err => console.log('error', err))
@@ -571,11 +571,97 @@ class Home extends React.Component {
         console.log('call back data', data)
       })
     }
+  }
 
+  _renderHeader() {
+    return(<View style={{flex: 1, alignItems: 'center',backgroundColor: UColor.secdfont}}>
+      <LinearGradient style={{width: ScreenWidth, height: ScreenUtil.autoheight(90)}} colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} />
+      {/* <View style={{flexDirection: "row"}}>
+        <View style={[styles.resourceout,{borderRightColor: UColor.tintColor,borderRightWidth: 0.5}]}>
+          <Text style={[styles.ratiotext,{color: UColor.btnColor}]} numberOfLines={1}>{this.state.mortgage}</Text>
+          <Text style={[styles.recordtext,{color: UColor.arrow}]}>已抵押资源(EOS)</Text>
+        </View>
+        <View style={[styles.resourceout,{borderLeftColor: UColor.tintColor,borderLeftWidth: 0.5}]}>
+          <Text style={[styles.ratiotext,{color: UColor.btnColor}]} numberOfLines={1}>{this.state.allowance}</Text>
+          <Text style={[styles.recordtext,{color: UColor.arrow}]}>RAM余量(KB)</Text>
+        </View>
+      </View> */}
+    
+      <View style={[styles.head,{backgroundColor:UColor.mainColor}]}>
+        <Button onPress={this.onPress.bind(this, 'addAssets')} style={styles.headbtn}>
+          <View style={styles.headbtnout}>
+            <Image source={UImage.add_h} style={styles.imgBtn} />
+            <Text style={[styles.headbtntext,{color: UColor.arrow}]}>资产</Text>
+          </View>
+        </Button>
+        <Button onPress={this.onPress.bind(this, 'transfer')} style={styles.headbtn}>
+          <View style={styles.headbtnout}>
+            <Image source={UImage.transfer_h} style={styles.imgBtn} />
+            <Text style={[styles.headbtntext,{color: UColor.arrow}]}>转账</Text>
+          </View>
+        </Button>
+        <Button onPress={this.onPress.bind(this, 'Receivables')} style={styles.headbtn}>
+          <View style={styles.headbtnout}>
+            <Image source={UImage.qr_h} style={styles.imgBtn} />
+            <Text style={[styles.headbtntext,{color: UColor.arrow}]}>收币</Text>
+          </View>
+        </Button>
+        <Button  onPress={this.onPress.bind(this, 'Resources')}  style={styles.headbtn}>
+          <View style={styles.headbtnout}>
+            <Image source={UImage.resources_h} style={styles.imgBtn} />
+            <Text style={[styles.headbtntext,{color: UColor.arrow}]}>资源</Text>
+          </View>
+        </Button>
+        <Button  onPress={this.onPress.bind(this, 'functionsMore')}  style={styles.headbtn}>
+          <View style={styles.headbtnout}>
+            <Image source={UImage.more_h} style={styles.imgBtn} />
+            <Text style={[styles.headbtntext,{color: UColor.arrow}]}>更多</Text>
+          </View>
+        </Button>
+      </View>
+    
+      <ImageBackground style={[styles.addto,ScreenUtil.isIphoneX()?{minHeight:(ScreenWidth-ScreenUtil.autowidth(20))*0.5174}:{height:(ScreenWidth-ScreenUtil.autowidth(20))*0.5174}]} source={UImage.home_bg} resizeMode="stretch">
+        <View style={styles.addout}>
+          <Image source={UImage.tab_5_h} style={{width: ScreenUtil.autowidth(40), height: ScreenUtil.autowidth(40), marginRight: ScreenUtil.autowidth(10),}} />
+          <TouchableOpacity onPress={this.copyname.bind(this,this.props.defaultWallet)}>
+            <Text style={[styles.accountText,{color: UColor.arrow}]}>{(this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name}</Text>
+          </TouchableOpacity>
+          {(this.props.defaultWallet != null && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) 
+          ? 
+          <View style={[styles.backoractivestyle,{borderColor: UColor.showy}]}>
+            <Text style={[styles.notactived,{color:UColor.showy}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未激活</Text>
+          </View>
+          :
+          ((this.props.defaultWallet == null || this.props.defaultWallet.name == null || (this.props.defaultWallet != null &&this.props.defaultWallet.isBackups)) 
+            ? null :  
+            <View style={[styles.backoractivestyle11,{borderColor: UColor.tintColor}]}>
+              <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未备份</Text>
+            </View>) }   
+        </View>
+        <View style={{flexDirection: "row",}}>
+          <View style={styles.addtoouttop}>
+            <Text style={[styles.addtoouttext,{color: UColor.fontColor}]}>总资产(￥)</Text>
+            <TouchableOpacity onPress={this.onPressReveal.bind(this,this.state.isEye)}>
+              <Image source={this.state.isEye ? UImage.reveal : UImage.reveal_h} style={this.state.isEye ? styles.imgTeOy : styles.imgoney}/>
+            </TouchableOpacity>
+          </View>
+          {/* <View style={{backgroundColor: '#FF8A92', borderBottomLeftRadius: 25, borderTopLeftRadius: 25,}}>
+            <Text style={{fontSize: ScreenUtil.setSpText(33),color: UColor.btnColor, marginHorizontal: ScreenUtil.autowidth(20),}}>-5%</Text>
+          </View> */}
+          <View style={[styles.incdocupout,(this.state.increase>=0 || this.state.totalBalance == "0.00")?{borderColor: UColor.fallColor,backgroundColor: UColor.fallColor}:{borderColor: UColor.riseColor,backgroundColor: UColor.riseColor}]}>
+            <Text style={[styles.cupcdo,{color: UColor.btnColor}]}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
+          </View>
+        </View>
+        <View style={styles.addtoout} >
+          <Text style={{fontSize: ScreenUtil.setSpText(35), color: UColor.fontColor, fontWeight: 'bold'}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : "" + this.adjustTotalBalance(this.state.totalBalance)) : '****'}</Text>
+          <Text style={[styles.addtotext,{color: UColor.fontColor}]}>( 已抵押 </Text>
+          <Text style={[styles.addtotext,{color: UColor.fontColor}]}>{this.state.mortgage} EOS )</Text>
+        </View>
+      </ImageBackground>
+    </View>)
   }
 
   render() {
-
     if(this.props.guide){
       return (
         <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
@@ -601,7 +687,8 @@ class Home extends React.Component {
       )
     }else{
       return (
-        <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
+        <View style={[styles.container,]}>
+          <LinearGradient style={{position:"absolute",top:0,left:0,width:"100%",height:ScreenUtil.autowidth(300)}} colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}}/>
           <LinearGradient style={[styles.topbtn]} colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
             <Button onPress={() => this.setState({ modal: !this.state.modal })}>
               <Image source={UImage.wallet_h} style={{margin: ScreenUtil.autowidth(10),width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(13),}} />
@@ -611,129 +698,39 @@ class Home extends React.Component {
               <Image source={UImage.add_plus} style={{margin: ScreenUtil.autowidth(10),width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18),}} />
             </Button>
           </LinearGradient>
-
           {Constants.isNetWorkOffline && <Button onPress={this.openSystemSetting.bind(this)}>
                 <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
                     <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
                     <Ionicons style={[styles.systemSettingArrow,{color: UColor.btnColor}]} name="ios-arrow-forward-outline" size={20} />
                 </View>
           </Button>}
-
-          <View style={{backgroundColor: UColor.secdfont}}>
-          {/* <ImageBackground style={[styles.bgtopout,ScreenUtil.isIphoneX()?{minHeight:ScreenWidth*0.54}:{height:ScreenWidth*0.54}]} source={UImage.home_bg} resizeMode="stretch"> */}
-            <View style={{alignItems: 'center',}}>
-              <LinearGradient style={{width: ScreenWidth, height: ScreenUtil.autoheight(90)}} colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} />
-              {/* <View style={{flexDirection: "row"}}>
-                <View style={[styles.resourceout,{borderRightColor: UColor.tintColor,borderRightWidth: 0.5}]}>
-                  <Text style={[styles.ratiotext,{color: UColor.btnColor}]} numberOfLines={1}>{this.state.mortgage}</Text>
-                  <Text style={[styles.recordtext,{color: UColor.arrow}]}>已抵押资源(EOS)</Text>
-                </View>
-                <View style={[styles.resourceout,{borderLeftColor: UColor.tintColor,borderLeftWidth: 0.5}]}>
-                  <Text style={[styles.ratiotext,{color: UColor.btnColor}]} numberOfLines={1}>{this.state.allowance}</Text>
-                  <Text style={[styles.recordtext,{color: UColor.arrow}]}>RAM余量(KB)</Text>
-                </View>
-              </View> */}
-              
-              <View style={[styles.head,{backgroundColor:UColor.mainColor}]}>
-                <Button onPress={this.onPress.bind(this, 'addAssets')} style={styles.headbtn}>
-                  <View style={styles.headbtnout}>
-                    <Image source={UImage.add_h} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>资产</Text>
-                  </View>
-                </Button>
-                <Button onPress={this.onPress.bind(this, 'transfer')} style={styles.headbtn}>
-                  <View style={styles.headbtnout}>
-                    <Image source={UImage.transfer_h} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>转账</Text>
-                  </View>
-                </Button>
-                <Button onPress={this.onPress.bind(this, 'Receivables')} style={styles.headbtn}>
-                  <View style={styles.headbtnout}>
-                    <Image source={UImage.qr_h} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>收币</Text>
-                  </View>
-                </Button>
-                <Button  onPress={this.onPress.bind(this, 'Resources')}  style={styles.headbtn}>
-                  <View style={styles.headbtnout}>
-                    <Image source={UImage.resources_h} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>资源</Text>
-                  </View>
-                </Button>
-                {/* <Button  onPress={this.onPress.bind(this, 'functionsMore')}  style={styles.headbtn}>
-                  <View style={styles.headbtnout}>
-                    <Image source={UImage.more_h} style={styles.imgBtn} />
-                    <Text style={[styles.headbtntext,{color: UColor.arrow}]}>更多</Text>
-                  </View>
-                </Button> */}
-              </View>
-              
-              <ImageBackground style={[styles.addto,ScreenUtil.isIphoneX()?{minHeight:(ScreenWidth-ScreenUtil.autowidth(20))*0.5174}:{height:(ScreenWidth-ScreenUtil.autowidth(20))*0.5174}]} source={UImage.home_bg} resizeMode="stretch">
-                <View style={styles.addout}>
-                  <Image source={UImage.tab_5_h} style={{width: ScreenUtil.autowidth(40), height: ScreenUtil.autowidth(40), marginRight: ScreenUtil.autowidth(10),}} />
-                  <TouchableOpacity onPress={this.copyname.bind(this,this.props.defaultWallet)}>
-                    <Text style={[styles.accountText,{color: UColor.arrow}]}>{(this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name}</Text>
-                  </TouchableOpacity>
-                  {(this.props.defaultWallet != null && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) 
-                  ? 
-                  <View style={[styles.backoractivestyle,{borderColor: UColor.showy}]}>
-                    <Text style={[styles.notactived,{color:UColor.showy}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未激活</Text>
-                  </View>
-                  :
-                  ((this.props.defaultWallet == null || this.props.defaultWallet.name == null || (this.props.defaultWallet != null &&this.props.defaultWallet.isBackups)) 
-                    ? null :  
-                    <View style={[styles.backoractivestyle11,{borderColor: UColor.tintColor}]}>
-                      <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未备份</Text>
-                    </View>) }   
-                </View>
-                <View style={{flexDirection: "row",}}>
-                  <View style={styles.addtoouttop}>
-                    <Text style={[styles.addtoouttext,{color: UColor.fontColor}]}>总资产(￥)</Text>
-                    <TouchableOpacity onPress={this.onPressReveal.bind(this,this.state.isEye)}>
-                      <Image source={this.state.isEye ? UImage.reveal : UImage.reveal_h} style={this.state.isEye ? styles.imgTeOy : styles.imgoney}/>
-                    </TouchableOpacity>
-                  </View>
-                  {/* <View style={{backgroundColor: '#FF8A92', borderBottomLeftRadius: 25, borderTopLeftRadius: 25,}}>
-                    <Text style={{fontSize: ScreenUtil.setSpText(33),color: UColor.btnColor, marginHorizontal: ScreenUtil.autowidth(20),}}>-5%</Text>
-                  </View> */}
-                  <View style={[styles.incdocupout,(this.state.increase>=0 || this.state.totalBalance == "0.00")?{borderColor: UColor.fallColor,backgroundColor: UColor.fallColor}:{borderColor: UColor.riseColor,backgroundColor: UColor.riseColor}]}>
-                    <Text style={[styles.cupcdo,{color: UColor.btnColor}]}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
-                  </View>
-                </View>
-                <View style={styles.addtoout} >
-                  <Text style={{fontSize: ScreenUtil.setSpText(35), color: UColor.fontColor, fontWeight: 'bold'}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : "" + this.adjustTotalBalance(this.state.totalBalance)) : '****'}</Text>
-                  <Text style={[styles.addtotext,{color: UColor.fontColor}]}>( 已抵押 </Text>
-                  <Text style={[styles.addtotext,{color: UColor.fontColor}]}>{this.state.mortgage} EOS )</Text>
-                </View>
-              </ImageBackground>
-            </View>  
-          
-            <ListView initialListSize={1} enableEmptySections={true} 
-              refreshControl={<RefreshControl refreshing={this.state.assetRefreshing} onRefresh={() => this.onRefresh()}
-              tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
-              dataSource={this.state.dataSource.cloneWithRows(this.props.myAssets == null ? [] : this.props.myAssets)} 
-              renderRow={(rowData, sectionID, rowID) => (      
-                <View style={{marginBottom: 1 }}>
-                  <Button onPress={this.assetInfo.bind(this, rowData)}>
-                    <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
-                      <View style={styles.lefts}>
-                        <View style={{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(16)}}> 
-                          <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
-                        </View>
-                        <Text style={[styles.lefttext,{color: UColor.fontColor}]}>{rowData.asset.name}</Text>
+          <ListView initialListSize={1} enableEmptySections={true}  
+            refreshControl={<RefreshControl refreshing={this.state.assetRefreshing} onRefresh={() => this.onRefresh()}
+            tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
+            renderHeader={()=>{return this._renderHeader()}}
+            dataSource={this.state.dataSource.cloneWithRows(this.props.myAssets == null ? [] : this.props.myAssets)} 
+            renderRow={(rowData, sectionID, rowID) => (      
+              <View style={{borderBottomColor: UColor.secdfont, borderBottomWidth: 1,}}>
+                <Button onPress={this.assetInfo.bind(this, rowData)}>
+                  <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
+                    <View style={styles.lefts}>
+                      <View style={{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(16)}}> 
+                        <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
                       </View>
-                      <View style={styles.rights}>
-                        <View style={styles.rightout}>
-                            <Text style={[styles.rightbalance,{color: UColor.fontColor}]}>{this.state.isEye ? (rowData.balance==null || rowData.balance=="" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.0000" : rowData.balance.replace(rowData.asset.name, "") : '****'}</Text>
-                            <Text style={[styles.rightmarket,{color:  UColor.arrow}]}>{(rowData.balance==null || rowData.balance=="" || rowData.asset.value == null || rowData.asset.value == "" || rowData.asset.value == 0 || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? " " : this.state.isEye ? "≈（￥）" + (rowData.balance.replace(rowData.asset.name, "")*rowData.asset.value).toFixed(2) : '****'}</Text>
-                        </View>
+                      <Text style={[styles.lefttext,{color: UColor.fontColor}]}>{rowData.asset.name}</Text>
+                    </View>
+                    <View style={styles.rights}>
+                      <View style={styles.rightout}>
+                          <Text style={[styles.rightbalance,{color: UColor.fontColor}]}>{this.state.isEye ? (rowData.balance==null || rowData.balance=="" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.0000" : rowData.balance.replace(rowData.asset.name, "") : '****'}</Text>
+                          <Text style={[styles.rightmarket,{color:  UColor.arrow}]}>{(rowData.balance==null || rowData.balance=="" || rowData.asset.value == null || rowData.asset.value == "" || rowData.asset.value == 0 || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? " " : this.state.isEye ? "≈（￥）" + (rowData.balance.replace(rowData.asset.name, "")*rowData.asset.value).toFixed(2) : '****'}</Text>
                       </View>
                     </View>
-                  </Button>
-                </View>
-              )}                
-            />  
-          </View>
-         
+                  </View>
+                </Button>
+              </View>
+            )}                
+          />  
+
           <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.isTipShow()} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
               <View style={{ width: ScreenWidth-20, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
@@ -758,7 +755,7 @@ class Home extends React.Component {
 
           <Modal style={styles.touchableouts} animationType={'none'} transparent={true} onRequestClose={() => { this.onRequestClose() }} visible={this.state.modal}>
             <TouchableOpacity onPress={() => this.setState({ modal: false })} style={[styles.touchable,]} activeOpacity={1.0}>
-            <View style={{flex: 1, marginTop: ScreenUtil.autoheight(60),alignItems: 'center', justifyContent: 'flex-start',backgroundColor: UColor.mask }}>
+            <View style={{flex: 1, marginTop:Platform.OS==='android'?ScreenUtil.autoheight(37):ScreenUtil.autoheight(60),alignItems: 'center', justifyContent: 'flex-start',backgroundColor: UColor.mask }}>
               <TouchableOpacity  activeOpacity={1.0}>
                 <View style={[styles.touchableout,{backgroundColor:UColor.mainColor}]}>
                   <ListView initialListSize={5} style={[styles.touchablelist,]}
@@ -798,7 +795,7 @@ class Home extends React.Component {
 
           <Modal style={styles.touchableouts} animationType={'none'} transparent={true} onRequestClose={() => { this.onRequestClose() }} visible={this.state.listmodal}>
             <TouchableOpacity onPress={() => this.setState({ listmodal: false })} style={[styles.touchable,]} activeOpacity={1.0}>
-              <TouchableOpacity  activeOpacity={1.0} style={{marginTop: ScreenUtil.autoheight(60),marginRight:ScreenUtil.autowidth(15), alignItems: 'flex-start',backgroundColor:UColor.mainColor,borderRadius: 3,borderWidth: 1,borderColor:UColor.secdColor}}>
+              <TouchableOpacity  activeOpacity={1.0} style={{marginTop:Platform.OS === 'android'?ScreenUtil.autoheight(37): ScreenUtil.autoheight(60),marginRight:ScreenUtil.autowidth(15), alignItems: 'flex-start',backgroundColor:UColor.mainColor,borderRadius: 3,borderWidth: 1,borderColor:UColor.secdColor}}>
                   <Button onPress={() => this.scan()} >
                     <View style={[styles.establishout,{borderTopColor: UColor.secdColor}]}>
                       <Image source={UImage.scan} style={{width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18)}} />
