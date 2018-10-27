@@ -277,7 +277,11 @@ export default {
      *fetchMyAssetsFromNet({payload, callback},{call,put}) {
         if(payload && payload.accountName){
             var myAssets = yield call(store.get, 'myAssets217_' + payload.accountName);
-
+            var manualClose = yield call(store.get, 'myAssets_manual_close_' + payload.accountName);
+            if (manualClose == null) {
+                manualClose = [];
+            }
+            
             try{
                 // const resp = {"msg":"success","data":["EOS","MSP","ADD","EETH"], "code":"0"};
                 const resp = yield call(Request.request, fetchAssetsByAccount + payload.accountName, "get");
