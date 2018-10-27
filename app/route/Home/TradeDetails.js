@@ -179,7 +179,7 @@ class TradeDetails extends BaseComponent {
             <Text style={[styles.blocktext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'to')} onLongPress={this.copyaccount.bind(this, 'to')}>{this.state.trade.to}</Text>
           </View>
           <View style={{width:ScreenWidth, flexDirection: "row",alignItems: 'flex-start',justifyContent: 'center',borderTopWidth: 1,borderTopColor: UColor.secdfont,}}>
-            <Text style={[styles.contwotext,{color: UColor.arrow}]}>备注(Meno)</Text>
+            <Text style={[styles.contwotext,{color: UColor.arrow}]}>备注(Memo)</Text>
             <Text style={[styles.blocktext,{paddingRight: ScreenUtil.autowidth(15),color: UColor.startup}]} numberOfLines={2} >{this.state.trade.memo}</Text>
           </View>
         </View>

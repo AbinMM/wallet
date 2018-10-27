@@ -32,7 +32,7 @@ var ScreenUtil = {
     },
     /*高度适配，例如我的设计稿某个样式高度是50pt，那么使用就是：ScreenUtil.autoheight(50)*/
     autoheight: function (value) {
-        return (this.isIphoneX()?this.heightRadioIpx:this.heightRadio) * value;
+        return (this.isIphoneX()?this.widthRadioIpx:this.widthRadio) * value;
     },
     get: function (url, successCallback, failCallback) {
         fetch(url).then((response) => response.text())

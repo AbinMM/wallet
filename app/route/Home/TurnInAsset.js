@@ -239,8 +239,9 @@ const styles = StyleSheet.create({
   inpt: {
     flex: 1,
     textAlign: "left",
-    height: ScreenUtil.autoheight(36),
-    fontSize: ScreenUtil.setSpText(15),
+    //height: ScreenUtil.autoheight(36),
+    //lineHeight: ScreenUtil.autoheight(36),
+    fontSize: ScreenUtil.setSpText(16),
     paddingLeft: ScreenUtil.autowidth(15),
   },
   btnnextstep: {
@@ -252,7 +253,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     height: ScreenUtil.autoheight(50),
-   
   },
   nextsteptext: {
     fontSize: ScreenUtil.setSpText(15),

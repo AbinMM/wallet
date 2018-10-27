@@ -768,7 +768,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top', 
     height: ScreenUtil.autowidth(65), 
     fontSize: ScreenUtil.setSpText(16),
-    lineHeight: ScreenUtil.autowidth(32),
+    lineHeight: ScreenUtil.autowidth(25),
   },
   Strengthout: {
     borderRadius: 5,

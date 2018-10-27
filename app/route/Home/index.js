@@ -612,12 +612,12 @@ class Home extends React.Component {
             <Text style={[styles.headbtntext,{color: UColor.arrow}]}>资源</Text>
           </View>
         </Button>
-        <Button  onPress={this.onPress.bind(this, 'functionsMore')}  style={styles.headbtn}>
+        {/* <Button  onPress={this.onPress.bind(this, 'functionsMore')}  style={styles.headbtn}>
           <View style={styles.headbtnout}>
             <Image source={UImage.more_h} style={styles.imgBtn} />
             <Text style={[styles.headbtntext,{color: UColor.arrow}]}>更多</Text>
           </View>
-        </Button>
+        </Button> */}
       </View>
     
       <ImageBackground style={[styles.addto,ScreenUtil.isIphoneX()?{minHeight:(ScreenWidth-ScreenUtil.autowidth(20))*0.5174}:{height:(ScreenWidth-ScreenUtil.autowidth(20))*0.5174}]} source={UImage.home_bg} resizeMode="stretch">
@@ -759,11 +759,11 @@ class Home extends React.Component {
               <TouchableOpacity  activeOpacity={1.0}>
                 <View style={[styles.touchableout,{backgroundColor:UColor.mainColor}]}>
                   <ListView initialListSize={5} style={[styles.touchablelist,]}
-                    renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 1, backgroundColor: UColor.secdColor }} />}
+                    renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 1, backgroundColor: UColor.secdfont }} />}
                     enableEmptySections={true} dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
                     renderRow={(rowData) => (
-                      <Button onPress={this.changeWallet.bind(this, rowData)}>
-                        <View style={[styles.walletlist,{borderBottomColor: UColor.mainColor}]} backgroundColor={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account) && UColor.secdColor}>
+                      <Button onPress={this.changeWallet.bind(this, rowData)} >
+                        <View style={[styles.walletlist]} backgroundColor={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account) && UColor.secdfont}>
                           <View style={styles.topout}>
                             <Text style={[styles.outname,{color: UColor.tintColor}]}>{rowData.name}</Text>
                             {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ? 
@@ -797,27 +797,27 @@ class Home extends React.Component {
             <TouchableOpacity onPress={() => this.setState({ listmodal: false })} style={[styles.touchable,]} activeOpacity={1.0}>
               <TouchableOpacity  activeOpacity={1.0} style={{marginTop:Platform.OS === 'android'?ScreenUtil.autoheight(37): ScreenUtil.autoheight(60),marginRight:ScreenUtil.autowidth(15), alignItems: 'flex-start',backgroundColor:UColor.mainColor,borderRadius: 3,borderWidth: 1,borderColor:UColor.secdColor}}>
                   <Button onPress={() => this.scan()} >
-                    <View style={[styles.establishout,{borderTopColor: UColor.secdColor}]}>
+                    <View style={[styles.establishout,{borderTopColor: UColor.secdfont}]}>
                       <Image source={UImage.scan} style={{width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18)}} />
-                      <Text style={[styles.establishtext,{color: UColor.lightgray}]}>扫一扫</Text>
+                      <Text style={[styles.establishtext,{color: UColor.tintColor}]}>扫一扫</Text>
                     </View>
                   </Button>
                   <Button onPress={this.onPress.bind(this, 'addAssets')} >
-                    <View style={[styles.establishout,{borderTopColor: UColor.secdColor}]}>
+                    <View style={[styles.establishout,{borderTopColor: UColor.secdfont}]}>
                       <Image source={UImage.xin_add} style={{width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18)}} />
-                      <Text style={[styles.establishtext,{color: UColor.lightgray}]}>添加资产</Text>
+                      <Text style={[styles.establishtext,{color: UColor.tintColor}]}>添加资产</Text>
                     </View>
                   </Button>
                   <Button onPress={() => this.createWallet()} >
-                    <View style={[styles.establishout,{borderTopColor: UColor.secdColor}]}>
+                    <View style={[styles.establishout,{borderTopColor: UColor.secdfont}]}>
                       <Image source={UImage.xin_qr} style={{width: ScreenUtil.autowidth(17),height: ScreenUtil.autowidth(18)}} />
-                      <Text style={[styles.establishtext,{color: UColor.lightgray}]}>创建钱包</Text>
+                      <Text style={[styles.establishtext,{color: UColor.tintColor}]}>创建钱包</Text>
                     </View>
                   </Button>
                   <Button onPress={() => this.importWallet()} >
-                    <View style={[styles.establishout,{borderTopColor: UColor.secdColor}]}>
+                    <View style={[styles.establishout,{borderTopColor: UColor.secdfont}]}>
                       <Image source={UImage.xin_import} style={{width: ScreenUtil.autowidth(16),height: ScreenUtil.autowidth(15)}} />
-                      <Text style={[styles.establishtext,{color: UColor.lightgray}]}>导入钱包</Text>
+                      <Text style={[styles.establishtext,{color: UColor.tintColor}]}>导入钱包</Text>
                     </View>
                   </Button>
               </TouchableOpacity>
@@ -1023,7 +1023,7 @@ const styles = StyleSheet.create({
 
   walletlist: {
     width: '100%',
-    borderBottomWidth: 1, 
+    
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: 'center',
