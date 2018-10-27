@@ -13,26 +13,14 @@
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		0B59998CFC08404C9C4A3898 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 830E2706EED14E3298ED5E30 /* Zocial.ttf */; };
-		0C5ACA1B215093200042EE63 /* IosSDKModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5ACA16215093200042EE63 /* IosSDKModule.m */; };
-		0C5ACA1C215093200042EE63 /* DappsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5ACA17215093200042EE63 /* DappsViewController.m */; };
-		0C5ACA1D215093200042EE63 /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C5ACA1A215093200042EE63 /* View.xib */; };
-		0C5ACA272153C5E60042EE63 /* BottomDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5ACA232153C5E60042EE63 /* BottomDetailView.m */; };
-		0C5ACA282153C5E60042EE63 /* UMS_shake_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C5ACA242153C5E60042EE63 /* UMS_shake_close.png */; };
-		0C5ACA292153C5E60042EE63 /* UMS_shake_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C5ACA252153C5E60042EE63 /* UMS_shake_close@2x.png */; };
-		0C5ACA2A2153C5E60042EE63 /* EncryptAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5ACA262153C5E60042EE63 /* EncryptAlertView.m */; };
-		0C5ACA2D215485680042EE63 /* MyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5ACA2C215485680042EE63 /* MyButton.m */; };
 		0C709E0721780C8D001D8A7D /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C709E0621780C8C001D8A7D /* libsqlite3.0.tbd */; };
 		0C709E0921780CA5001D8A7D /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C709E0821780CA5001D8A7D /* libc++.tbd */; };
-		0C73A7D92154CEDA0031A465 /* BottomActionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C73A7D82154CEDA0031A465 /* BottomActionsView.m */; };
-		0C73A84A2155D9350031A465 /* XLPaymentLoadingHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C73A8112155D9350031A465 /* XLPaymentLoadingHUD.m */; };
-		0C73A84B2155D9350031A465 /* XLPaymentSuccessHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C73A8122155D9350031A465 /* XLPaymentSuccessHUD.m */; };
 		0CD4DB10A6CF444BA9A3ABD0 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A0F888F2AB8149E6A9276D9D /* SimpleLineIcons.ttf */; };
 		0F15118864544AB0A18205FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1AEF070A3FC4B9C90227E4B /* Foundation.framework */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
@@ -519,7 +507,6 @@
 
 /* Begin PBXFileReference section */
 		002101C37C6B45698E66D71E /* libRCTBarcode.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTBarcode.a; sourceTree = "<group>"; };
-		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
 		00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGeolocation.xcodeproj; path = "../node_modules/react-native/Libraries/Geolocation/RCTGeolocation.xcodeproj"; sourceTree = "<group>"; };
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
@@ -528,27 +515,8 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* eostokenTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = eostokenTests.m; sourceTree = "<group>"; };
 		03494E2E6FB64387A180FD34 /* RNViewShot.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNViewShot.xcodeproj; path = "../node_modules/react-native-view-shot/ios/RNViewShot.xcodeproj"; sourceTree = "<group>"; };
-		0C5ACA16215093200042EE63 /* IosSDKModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IosSDKModule.m; sourceTree = "<group>"; };
-		0C5ACA17215093200042EE63 /* DappsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DappsViewController.m; sourceTree = "<group>"; };
-		0C5ACA18215093200042EE63 /* IosSDKModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IosSDKModule.h; sourceTree = "<group>"; };
-		0C5ACA19215093200042EE63 /* DappsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DappsViewController.h; sourceTree = "<group>"; };
-		0C5ACA1A215093200042EE63 /* View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
-		0C5ACA212153C5E60042EE63 /* EncryptAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptAlertView.h; sourceTree = "<group>"; };
-		0C5ACA222153C5E60042EE63 /* BottomDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BottomDetailView.h; sourceTree = "<group>"; };
-		0C5ACA232153C5E60042EE63 /* BottomDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BottomDetailView.m; sourceTree = "<group>"; };
-		0C5ACA242153C5E60042EE63 /* UMS_shake_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UMS_shake_close.png; sourceTree = "<group>"; };
-		0C5ACA252153C5E60042EE63 /* UMS_shake_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UMS_shake_close@2x.png"; sourceTree = "<group>"; };
-		0C5ACA262153C5E60042EE63 /* EncryptAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptAlertView.m; sourceTree = "<group>"; };
-		0C5ACA2B215485680042EE63 /* MyButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyButton.h; sourceTree = "<group>"; };
-		0C5ACA2C215485680042EE63 /* MyButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyButton.m; sourceTree = "<group>"; };
 		0C709E0621780C8C001D8A7D /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		0C709E0821780CA5001D8A7D /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
-		0C73A7A02154CED90031A465 /* BottomActionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BottomActionsView.h; sourceTree = "<group>"; };
-		0C73A7D82154CEDA0031A465 /* BottomActionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BottomActionsView.m; sourceTree = "<group>"; };
-		0C73A80F2155D9350031A465 /* XLPaymentSuccessHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XLPaymentSuccessHUD.h; sourceTree = "<group>"; };
-		0C73A8102155D9350031A465 /* XLPaymentLoadingHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XLPaymentLoadingHUD.h; sourceTree = "<group>"; };
-		0C73A8112155D9350031A465 /* XLPaymentLoadingHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XLPaymentLoadingHUD.m; sourceTree = "<group>"; };
-		0C73A8122155D9350031A465 /* XLPaymentSuccessHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XLPaymentSuccessHUD.m; sourceTree = "<group>"; };
 		0DDD327C57D1416F9DDE6E4A /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		0E1D82B115C3401DB085B345 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		118D4FD77A6044DD8F757EC1 /* RCTWeChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = RCTWeChatTests.xctest; sourceTree = "<group>"; };
@@ -558,7 +526,6 @@
 		13B07F961A680F5B00A75B9A /* eostoken.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eostoken.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = eostoken/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = eostoken/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = eostoken/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = eostoken/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = eostoken/main.m; sourceTree = "<group>"; };
@@ -791,39 +758,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0C5ACA15215093200042EE63 /* SDK */ = {
-			isa = PBXGroup;
-			children = (
-				0C73A7A02154CED90031A465 /* BottomActionsView.h */,
-				0C73A7D82154CEDA0031A465 /* BottomActionsView.m */,
-				0C5ACA222153C5E60042EE63 /* BottomDetailView.h */,
-				0C5ACA232153C5E60042EE63 /* BottomDetailView.m */,
-				0C5ACA212153C5E60042EE63 /* EncryptAlertView.h */,
-				0C5ACA262153C5E60042EE63 /* EncryptAlertView.m */,
-				0C5ACA242153C5E60042EE63 /* UMS_shake_close.png */,
-				0C5ACA252153C5E60042EE63 /* UMS_shake_close@2x.png */,
-				0C5ACA16215093200042EE63 /* IosSDKModule.m */,
-				0C5ACA17215093200042EE63 /* DappsViewController.m */,
-				0C5ACA18215093200042EE63 /* IosSDKModule.h */,
-				0C5ACA19215093200042EE63 /* DappsViewController.h */,
-				0C5ACA1A215093200042EE63 /* View.xib */,
-				0C5ACA2B215485680042EE63 /* MyButton.h */,
-				0C5ACA2C215485680042EE63 /* MyButton.m */,
-			);
-			path = SDK;
-			sourceTree = "<group>";
-		};
-		0C73A80E2155D9350031A465 /* XLPaymentHUD */ = {
-			isa = PBXGroup;
-			children = (
-				0C73A80F2155D9350031A465 /* XLPaymentSuccessHUD.h */,
-				0C73A8102155D9350031A465 /* XLPaymentLoadingHUD.h */,
-				0C73A8112155D9350031A465 /* XLPaymentLoadingHUD.m */,
-				0C73A8122155D9350031A465 /* XLPaymentSuccessHUD.m */,
-			);
-			path = XLPaymentHUD;
-			sourceTree = "<group>";
-		};
 		0C966C2320BBB1C0000D1DAA /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -874,12 +808,10 @@
 			isa = PBXGroup;
 			children = (
 				ABAF04332060D93700CF642B /* eostoken.entitlements */,
-				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = eostoken;
@@ -996,8 +928,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				0C73A80E2155D9350031A465 /* XLPaymentHUD */,
-				0C5ACA15215093200042EE63 /* SDK */,
 				ABC6FB6C206E1D9800918A81 /* umeng */,
 				AB57E8C7206A5007005A9652 /* Fonts */,
 				13B07FAE1A68108700A75B9A /* eostoken */,
@@ -1797,7 +1727,6 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				AB57E8DB206A5007005A9652 /* EvilIcons.ttf in Resources */,
 				AB57E8D8206A5007005A9652 /* Ionicons.ttf in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				AB57E8D4206A5007005A9652 /* Feather.ttf in Resources */,
 				AB57E8D7206A5007005A9652 /* Foundation.ttf in Resources */,
 				67704FF271864657BF63F9AD /* Entypo.ttf in Resources */,
@@ -1805,9 +1734,7 @@
 				AB57E8DD206A5007005A9652 /* MaterialIcons.ttf in Resources */,
 				AB57E8D5206A5007005A9652 /* Entypo.ttf in Resources */,
 				F98B16032E9E4F0F9050DBBB /* Feather.ttf in Resources */,
-				0C5ACA1D215093200042EE63 /* View.xib in Resources */,
 				152AEEC63A374EF3BF3B0184 /* FontAwesome.ttf in Resources */,
-				0C5ACA282153C5E60042EE63 /* UMS_shake_close.png in Resources */,
 				5A592CEA02E34C8DAAA7D07E /* Foundation.ttf in Resources */,
 				AB57E8D9206A5007005A9652 /* FontAwesome.ttf in Resources */,
 				33B6AE3402694501B8BCE0ED /* Ionicons.ttf in Resources */,
@@ -1815,7 +1742,6 @@
 				70BE240E0B4A4BE0806D0D7D /* MaterialCommunityIcons.ttf in Resources */,
 				2364967A3BBE48AB9C65C670 /* MaterialIcons.ttf in Resources */,
 				AB57E8D3206A5007005A9652 /* Octicons.ttf in Resources */,
-				0C5ACA292153C5E60042EE63 /* UMS_shake_close@2x.png in Resources */,
 				AB57E8D6206A5007005A9652 /* MaterialCommunityIcons.ttf in Resources */,
 				9B2D0DF8D17C424EA6361342 /* Octicons.ttf in Resources */,
 				AB57E8DC206A5007005A9652 /* SimpleLineIcons.ttf in Resources */,
@@ -1848,34 +1774,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C73A84A2155D9350031A465 /* XLPaymentLoadingHUD.m in Sources */,
-				0C5ACA2D215485680042EE63 /* MyButton.m in Sources */,
-				0C73A7D92154CEDA0031A465 /* BottomActionsView.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				ABC6FBA8206E1E0300918A81 /* RNUMConfigure.m in Sources */,
 				ABC6FBA5206E1DF200918A81 /* UMAnalyticsModule.m in Sources */,
-				0C5ACA1B215093200042EE63 /* IosSDKModule.m in Sources */,
-				0C73A84B2155D9350031A465 /* XLPaymentSuccessHUD.m in Sources */,
-				0C5ACA2A2153C5E60042EE63 /* EncryptAlertView.m in Sources */,
-				0C5ACA272153C5E60042EE63 /* BottomDetailView.m in Sources */,
-				0C5ACA1C215093200042EE63 /* DappsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				13B07FB21A68108700A75B9A /* Base */,
-			);
-			name = LaunchScreen.xib;
-			path = eostoken;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {

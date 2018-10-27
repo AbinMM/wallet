@@ -109,17 +109,9 @@
 //  }
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 
-  
-  
-  
   UIViewController *rootViewController = [UIViewController new];
-  rootViewController.navigationItem.backBarButtonItem= [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
   rootViewController.view = rootView;
-  
-  _navController = [[UINavigationController alloc]initWithRootViewController:rootViewController];
-  _navController.navigationBarHidden = YES;
-  
-  self.window.rootViewController = _navController;
+  self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [SplashScreen show];
   return YES;
