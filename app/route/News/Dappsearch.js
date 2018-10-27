@@ -9,9 +9,7 @@ import { EasyToast } from '../../components/Toast';
 import BaseComponent from "../../components/BaseComponent";
 var dismissKeyboard = require('dismissKeyboard');
 
-import {sdkOpenDapp,sdkListenMessage,sdkRemoveListener} from '../News/DappSDK';
 
-let g_props;
 @connect(({wallet, assets,vote}) => ({...wallet, ...assets, ...vote}))
 class Dappsearch extends BaseComponent {
 
@@ -27,19 +25,16 @@ class Dappsearch extends BaseComponent {
             labelname: '',
             theme: this.props.navigation.state.params.theme,
         }
-
-        g_props = props;    
     }
 
     componentDidMount() {
-        sdkListenMessage(g_props);
+
     }
 
     componentWillUnmount(){
         //结束页面前，资源释放操作
         super.componentWillUnmount();
 
-        sdkRemoveListener();
     }
 
     //前往
@@ -50,16 +45,6 @@ class Dappsearch extends BaseComponent {
             return;
         }else{
             const { navigate } = this.props.navigation;
-            // sdkOpenDapp(labelname,'CustomDapp',this.state.theme);
-            
-            // if (Platform.OS == 'ios') {
-            //     var fdStart = labelname.indexOf("https://betdice.one");
-            //     if(fdStart == 0)
-            //     {
-            //         EasyToast.show('暂不支持');
-            //         return ;
-            //     }
-            // }
             navigate('DappWeb', { title: 'CustomDapp', url: labelname });
         }
     }

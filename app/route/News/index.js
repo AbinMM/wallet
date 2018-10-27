@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { BackHandler, ImageBackground, Dimensions,NativeModules, Image, Modal, ScrollView, DeviceEventEmitter, 
-         InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, WebView, FlatList, Platform,
-         Clipboard, TouchableHighlight, Linking, TouchableOpacity } from 'react-native';
+         InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, WebView, Platform,
+         TouchableHighlight, Linking, TouchableOpacity } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
-import {sdkOpenDapp,sdkListenMessage,sdkRemoveListener} from '../News/DappSDK';
 
 import moment from 'moment';
 import UImage from '../../utils/Img'
@@ -28,7 +27,6 @@ var ScreenHeight = Dimensions.get('window').height;
 var cangoback = false;
 var ITEM_HEIGHT = 100;
 
-let g_props;
 @connect(({ banner, newsType, news, wallet, vote, common,}) => ({ ...banner, ...newsType, ...news, ...wallet , ...vote, ...common,}))
 class News extends React.Component {
 
@@ -69,7 +67,6 @@ class News extends React.Component {
       SysteminfoUrl: '',
       SysteminfoModal: false,
     };
-    g_props = props;    
   }
 
   //组件加载完成
@@ -132,9 +129,6 @@ class News extends React.Component {
       }
     }});
    
-
-    sdkListenMessage(g_props);
-
     this.onRefreshing();
 
     this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
@@ -155,7 +149,6 @@ class News extends React.Component {
   }
 
   componentWillUnmount() {
-    sdkRemoveListener();
   }
 
   onBackAndroid = () => {

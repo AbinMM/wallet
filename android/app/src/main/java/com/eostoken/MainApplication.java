@@ -52,7 +52,6 @@ import com.theweflex.react.WeChatPackage;
 import com.umeng.commonsdk.UMConfigure;
 import com.reactnativecomponent.barcode.RCTCapturePackage;
 import com.eostoken.opensettings.*; 
-import com.eostoken.sdk.*; 
 import com.eostoken.webview.*; 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -90,7 +89,6 @@ public class MainApplication extends Application implements ReactApplication {
                 new LinearGradientPackage(),
                 new OpenSettingsPackage(), /* setting add */
                 new DplusReactPackage(),
-                new SDKPackage(),
                 new ReactWebViewPackage(),  //WebView
                 new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
             );
