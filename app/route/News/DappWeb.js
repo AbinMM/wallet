@@ -50,7 +50,6 @@ export default class DappWeb extends Component {
       transformY: new Animated.Value(200),
       transformY1: new Animated.Value(-1000),
       optionShow:false,
-      closeIcon:false,
       backButtonEnabled:false,
     }
     this.props.dispatch({type: "wallet/getDefaultWallet",callback: data => {
@@ -119,13 +118,16 @@ export default class DappWeb extends Component {
   onNavigationStateChange = (navState) => {
     this.setState({
         backButtonEnabled: navState.canGoBack,
-        // closeIcon: navState.canGoBack,
     });
 };
 // 显示/隐藏 右上角的更多选项 modal  
 onRightFun() {
     // if (this.state.backButtonEnabled) {
-        this.refs['refWebview'].goBack();
+        try {
+            this.refs['refWebview'].goBack();
+        } catch (error) {
+            
+        }
     // } else {//否则返回到上一个页面
     //     this.props.navigation.goBack();
     // }
@@ -139,7 +141,10 @@ addBackAndroidListener(navigator) {
 
 onBackAndroid = () => {
     if (this.state.backButtonEnabled) {
-        this.refs['refWebview'].goBack();
+        try {
+            this.refs['refWebview'].goBack();
+        } catch (error) {
+        }
         return true;
     }else{
         return false;
