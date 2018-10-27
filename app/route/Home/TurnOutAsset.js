@@ -471,13 +471,12 @@ class TurnOutAsset extends BaseComponent {
                                         <Text style={[styles.explainText,{color: UColor.startup}]}>备注：</Text> 
                                         <Text style={[styles.contentText,{color: UColor.arrow}]} numberOfLines={1}>{this.state.memo}</Text> 
                                     </View>
-                                    <View style={[styles.warningoutShow,{borderColor: UColor.showy}]}>
-                                        {/* <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                                            <Image source={UImage.warning_h} style={styles.imgBtn} /> */}
-                                        <Text style={[styles.headtext,{color: UColor.showy}]} >温馨提示:</Text>
-                                        {/* </View> */}
-                                        <Text style={[styles.headtitle,{color: UColor.showy}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
-                                    </View>
+                                    { this.state.memo == '' &&
+                                        <View style={[styles.warningoutShow,{borderColor: UColor.showy}]}>
+                                            <Text style={[styles.headtext,{color: UColor.showy}]} >温馨提示:</Text>
+                                            <Text style={[styles.headtitle,{color: UColor.showy}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
+                                        </View>
+                                    }
                                     <Button onPress={() => { this.inputPwd() }}>
                                         <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
                                             <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
