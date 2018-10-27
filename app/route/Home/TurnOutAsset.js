@@ -644,7 +644,6 @@ const styles = StyleSheet.create({
     },
     inptitle: {
         flex: 1,
-        
         fontSize: ScreenUtil.setSpText(16),
     },
     textinpt: {

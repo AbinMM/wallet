@@ -198,7 +198,7 @@ class Coins extends React.Component {
     return (
       <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
       <ImageBackground source={UImage.coinsbg1} resizeMode="stretch" style={[{width:ScreenWidth}, ScreenUtil.isIphoneX()?{minHeight:ScreenWidth*0.1546}:{height:ScreenWidth*0.1546}]}>
-        <Header {...this.props} backgroundColor={UColor.transport} onPressLeft={false} title="行情" />
+        <Header {...this.props} backgroundColors={[UColor.transport, UColor.transport]} onPressLeft={false} title="行情" />
       </ImageBackground>
         <TabViewAnimated
         lazy={true}

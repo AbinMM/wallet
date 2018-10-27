@@ -43,8 +43,7 @@ export default {
      *getaccountinfo({payload,callback},{call,put}) {
         var accountInfo = yield call(store.get, 'accountInfo');
 
-        if(payload && payload.username && accountInfo && accountInfo.account_name)
-        {
+        if(payload && payload.username && accountInfo && accountInfo.account_name){
             if(payload.username != accountInfo.account_name){
                 accountInfo = null; //输入参数与缓存不一样，不能用缓存
             }
@@ -116,11 +115,17 @@ export default {
                     used:used, 
                     used_Percentage:used_Percentage } 
                 });
-                
+                let updateGlobal = {
+                    total:total,
+                    reserved:reserved, 
+                    used:used, 
+                    used_Percentage:used_Percentage
+                }
+                if (callback) callback(updateGlobal);
             }else{
                 EasyToast.show(resp.msg);
             }
-            if (callback) callback({resp});
+            
         } catch (error) {
             EasyToast.show('网络繁忙,请稍后!');
         }

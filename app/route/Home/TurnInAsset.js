@@ -239,8 +239,8 @@ const styles = StyleSheet.create({
   inpt: {
     flex: 1,
     textAlign: "left",
-    //height: ScreenUtil.autoheight(36),
-    //lineHeight: ScreenUtil.autoheight(36),
+    paddingVertical: 0,
+    lineHeight: ScreenUtil.autoheight(36),
     fontSize: ScreenUtil.setSpText(16),
     paddingLeft: ScreenUtil.autowidth(15),
   },

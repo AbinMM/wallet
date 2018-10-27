@@ -114,7 +114,7 @@ var TabContainer = TabNavigator(
     animationEnabled: false, // 切换页面时是否有动画效果
     tabBarOptions: {
       activeTintColor: UColor.tintColor, // 文字和图片选中颜色
-      inactiveTintColor: UColor.lightgray, // 文字和图片未选中颜色
+      inactiveTintColor: '#727272', // 文字和图片未选中颜色
       showIcon: true, // android 默认不显示 icon, 需要设置为 true 才会显示
       showLabel: true,
       style: { // TabBar 

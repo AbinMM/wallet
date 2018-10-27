@@ -76,7 +76,7 @@ class Resources extends BaseComponent {
         balance: '0', //EOS余额
         password: "", //密码
         errortext: "", //提示语
-        logRefreshing: false, //下拉刷新
+        //logRefreshing: false, //下拉刷新
         cpu_delegateb: "", //抵押cpu
         net_delegateb: "", //抵押net
 
@@ -104,47 +104,63 @@ class Resources extends BaseComponent {
 
     componentDidMount() {
         try {
+           
             //取全网的内存数据
-            this.props.dispatch({ type: 'vote/getGlobalInfo', payload: {}, });
+            this.props.dispatch({ type: 'vote/getGlobalInfo', payload: {},
+                callback: (updateGlibal) => {
+                    if(updateGlibal != null || updateGlibal != ''){
+                        this.setState({
+                            total_ram_used: updateGlibal.used + 'GB', //使用的总内存字节数 
+                            total_ram_reserved: updateGlibal.reserved + 'GB', //保留的总内存字节数
+                            total_ram_used_Percentage: updateGlibal.used_Percentage + '%', //使用百分比
+                        })
+                    }
+                }
+            });
+
             //取内存价格EOS/kb
             this.props.dispatch({ type: 'vote/getqueryRamPrice',  payload: {},
                 callback: (data) => {
-                    if(data == null || data == ''){
-                        return;
+                    if(data != null || data != ''){
+                        this.setState({Currentprice: data});
                     }
-                    this.setState({Currentprice: data});
                 }
             });
+
             //获取账户信息
             this.props.dispatch({ type: 'wallet/getDefaultWallet',
                 callback: (data) => {
-                    this.getAccountInfo(data);
-                }
-            });
-            this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" },
-                callback: () => {
-                    this.getBalance();
-                }
-            });
-            DeviceEventEmitter.addListener('wallet_info', () => {
-                this.getBalance();
-            });
-            DeviceEventEmitter.addListener('updateDefaultWallet', (data) => {
-                this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" } });
-                this.getBalance();
-            });
-            DeviceEventEmitter.addListener('eos_balance', (data) => {
-                this.setEosBalance(data);
-            });
-            DeviceEventEmitter.addListener('scan_result', (data) => {
-                try {
-                    if (data.toaccount) {
-                        this.setState({ receiver: data.toaccount });
+                    if(data != null || data != ''){
+                       
+                        this.getAccountInfo();
+                        this.setState({receiver:  this.props.defaultWallet.account});
                     }
-                } catch (error) {
-                    EasyShowLD.loadingClose();
                 }
             });
+            // this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" },
+            //     callback: () => {
+            //         this.getBalance();
+            //     }
+            // });
+            // DeviceEventEmitter.addListener('wallet_info', () => {
+            //     this.getBalance();
+            // });
+            // DeviceEventEmitter.addListener('updateDefaultWallet', (data) => {
+            //     this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" } });
+            //     this.getBalance();
+            // });
+            // DeviceEventEmitter.addListener('eos_balance', (data) => {
+            //     this.setEosBalance(data);
+            // });
+            // DeviceEventEmitter.addListener('scan_result', (data) => {
+            //     try {
+            //         if (data.toaccount) {
+            //             this.setState({ receiver: data.toaccount });
+            //         }
+            //     } catch (error) {
+            //         EasyShowLD.loadingClose();
+            //     }
+            // });
             
         } catch (error) {
             EasyShowLD.loadingClose();
@@ -158,81 +174,46 @@ class Resources extends BaseComponent {
 
     getAccountInfo(){
         EasyShowLD.loadingShow();
-        if(this.state.init){ 
-            this.setState({init: false}) 
-        }
-        try {
-            this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page: 1, username: this.props.defaultWallet.account},
-                callback: (data) => {
-                    if(data != null){
-                        this.setState({ 
-                            logRefreshing: false,
-
-                            receiver: this.props.defaultWallet.account,
-
-                            total_ram_used: this.props.globaldata.used + 'GB',
-                            total_ram_reserved: this.props.globaldata.reserved + 'GB',
-                            total_ram_used_Percentage: this.props.globaldata.used_Percentage + '%',
-
-                            ram_available: Math.floor(data.ram_usage/1024*100)/100 + 'kb',
-                            ram_AlreadyUsed: Math.floor((data.total_resources.ram_bytes-data.ram_usage)/1024*100)/100 + 'kb',
-                            ram_Percentage: ((data.total_resources.ram_bytes-data.ram_usage)/data.total_resources.ram_bytes)*10000/100 + '%',
-
-                            cpu_available: Math.floor(data.cpu_limit.available/1024*100)/100 + 'ms',
-                            cpu_AlreadyUsed: Math.floor(data.cpu_limit.used/1024*100)/100 + 'ms',
-                            cpu_Percentage: (data.cpu_limit.used/data.cpu_limit.max)*10000/100 + '%',
-                            
-                            net_available: Math.floor(data.net_limit.available/1024*100)/100 + 'kb',
-                            net_AlreadyUsed: Math.floor(data.net_limit.used/1024*100)/100 + 'kb',
-                            net_Percentage: (data.net_limit.used/data.net_limit.max)*10000/100 + '%',
-
-                            cpu_redeem: Math.floor(this.props.Resources.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100)/100,
-                            net_redeem: Math.floor(this.props.Resources.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100,
-                            //and_redeem: Math.floor(parseFloat(this.props.Resources.refund_request.cpu_amount)+parseFloat(this.props.Resources.refund_request.net_amount)*100)/100,
-                            and_redeem: this.props.Resources.refund_request.cpu_amount.replace("EOS", "") + this.props.Resources.refund_request.net_amount.replace("EOS", "")
-                        })
-                        
-                    }
-                    //EOS价格
-                    this.props.dispatch({
-                        type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account , symbol: 'EOS' }, 
-                        callback: (data) => {
-                            EasyShowLD.loadingClose();
-                            this.setState({ 
-                                logRefreshing: false,
-                                currency_surplus:data && data.data?data.data.replace('EOS', "") :'0',
-                            });
-                        }
-                    });
-                } 
-            });
-        } catch (error) {
-            EasyShowLD.loadingClose();     
-        }
-    } 
-
-    //获取余额
-    getBalance() { 
-        this.props.dispatch({ type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account, symbol: 'EOS' }, 
+        this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page: 1, username: this.props.defaultWallet.account},
             callback: (data) => {
-                this.setEosBalance(data);
+                try {
+                    if(data != null && data.display_data != null){
+                        this.setState({ 
+                            ram_available: data.display_data.ram_left ,
+                            ram_AlreadyUsed: data.display_data.ram_usage,
+                            ram_Percentage:  data.display_data.ram_usage_percent, //ram_left_percent
+
+                            cpu_available: data.display_data.cpu_limit_available,
+                            cpu_AlreadyUsed: Math.floor((data.display_data.cpu_limit_max - data.display_data.cpu_limit_available)*100)/100,
+                            cpu_Percentage: (100-data.display_data.cpu_limit_available_percent.replace("%", "")) + '%',
+                            
+                            net_available: data.display_data.net_limit_available,
+                            net_AlreadyUsed:  Math.floor((data.display_data.net_limit_max - data.display_data.net_limit_available)*100)/100,
+                            net_Percentage: (100-data.display_data.net_limit_available_percent.replace("%", "")) + '%',
+
+                            cpu_redeem: Math.floor(data.refund_request.cpu_amount.replace("EOS", "")*100)/100 ,
+                            net_redeem: Math.floor(data.refund_request.net_amount.replace("EOS", "")*100)/100 ,
+                            and_redeem: Math.floor((parseFloat(this.props.Resources.refund_request.cpu_amount.replace(" EOS", "")) + parseFloat(this.props.Resources.refund_request.net_amount.replace(" EOS", "")))*100)/100
+                        })
+                    }
+                } catch (error) {
+                    EasyShowLD.loadingClose();
+                }
+                EasyShowLD.loadingClose();
             }
         })
-    }
 
-    setEosBalance(data){
-        if (data && data.code == '0') {
-            if (data.data == "") {
-              this.setState({
-                balance: '0',
-              })
-            } else {
-              this.setState({ balance: data.data.replace("EOS", ""), })
+        //EOS余额
+        this.props.dispatch({ type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account , symbol: 'EOS' }, 
+            callback: (data) => {
+                this.setState({ 
+                    balance: data && data.data?data.data.replace('EOS', "") :'0',
+                });
             }
-        } else {
-            EasyToast.show('获取余额失败：' + data.msg);
-        }
-    }
+        });
+       
+    } 
+
 
     // 返回 抵押 赎回
     resourceButton(style, selectedSate, stateType, buttonTitle) {  
@@ -494,7 +475,6 @@ class Resources extends BaseComponent {
                     }, plaintext_privateKey, (r) => {
                         EasyShowLD.loadingClose();
                         if(r.isSuccess){
-                            this.getBalance();
                             this.getAccountInfo();
                             EasyToast.show("购买成功");
                         }else{
@@ -502,7 +482,7 @@ class Resources extends BaseComponent {
                                 if(r.data.code){
                                     var errcode = r.data.code;
                                     if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
+                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{ 
                                         if(resp.code == 608){ 
                                             //弹出提示框,可申请免费抵押功能
                                             const view =
@@ -607,7 +587,6 @@ class Resources extends BaseComponent {
                     }, plaintext_privateKey, (r) => {
                         EasyShowLD.loadingClose();
                         if(r.isSuccess){
-                            this.getBalance();
                             this.getAccountInfo();
                             EasyToast.show("出售成功");
                         }else{
@@ -615,7 +594,7 @@ class Resources extends BaseComponent {
                                 if(r.data.code){
                                     var errcode = r.data.code;
                                     if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},
+                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},
                                             callback:(resp)=>{ 
                                                 if(resp.code == 608){ 
                                                     //弹出提示框,可申请免费抵押功能
@@ -741,7 +720,6 @@ class Resources extends BaseComponent {
                     }, plaintext_privateKey, (r) => {
                         EasyShowLD.loadingClose();
                         if(r.isSuccess){
-                            this.getBalance();
                             this.getAccountInfo();
                             EasyToast.show("抵押成功");
                         }else{
@@ -749,7 +727,7 @@ class Resources extends BaseComponent {
                                 if(r.data.code){
                                     var errcode = r.data.code;
                                     if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},
+                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},
                                             callback:(resp)=>{ 
                                                 if(resp.code == 608){ 
                                                     //弹出提示框,可申请免费抵押功能
@@ -871,7 +849,6 @@ class Resources extends BaseComponent {
                     }, plaintext_privateKey, (r) => {
                         EasyShowLD.loadingClose();
                         if(r.isSuccess){
-                            this.getBalance();
                             this.getAccountInfo();
                             EasyToast.show("赎回成功");
                         }else{    
@@ -879,7 +856,7 @@ class Resources extends BaseComponent {
                                 if(r.data.code){
                                     var errcode = r.data.code;
                                     if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001) {
-                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},
+                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},
                                             callback:(resp)=>{ 
                                                 if(resp.code == 608){ 
                                                     //弹出提示框,可申请免费抵押功能
@@ -1003,15 +980,15 @@ class Resources extends BaseComponent {
                         {this.resourceButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isRedeem, 'isRedeem', '赎回')}  
                     </View> 
                     <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor,}]}>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(30), alignItems: 'center'}}>
                             <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>计算{this.state.isMortgage ? "抵押" : "赎回"}</Text>
                             {this.state.isRedeem ?
                                 <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>可赎回：{this.state.cpu_redeem} EOS</Text>
                                 :
-                                <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>当前价格：{(this.state.currency_surplus == null || this.state.Currentprice == null || this.state.currency_surplus == '' || this.state.currency_surplus == '' || this.state.Currentprice == '0') ? '0.000' : (this.state.currency_surplus/this.state.Currentprice).toFixed(3)}kb</Text>
+                                <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}></Text>
                             }
                         </View>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(35), alignItems: 'center', }}>
                             <TextInput ref={(ref) => this._rrpass = ref} value={this.state.delegateb} returnKeyType="go" 
                             selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
                             placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
@@ -1020,15 +997,15 @@ class Resources extends BaseComponent {
                         </View>
                     </View>
                     <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor,}]}>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(30), alignItems: 'center'}}>
                             <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>网络{this.state.isRedeem ? "赎回" : "抵押"}</Text>
                             {this.state.isRedeem ?
                                 <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>可赎回：{this.state.net_redeem} EOS</Text>
                                 :
-                                <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>当前价格：{(this.state.currency_surplus == null || this.state.Currentprice == null || this.state.currency_surplus == '' || this.state.currency_surplus == '' || this.state.Currentprice == '0') ? '0.000' : (this.state.currency_surplus/this.state.Currentprice).toFixed(3)}kb</Text>
+                                <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}></Text>
                             }
                         </View>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(35), alignItems: 'center', }}>
                             <TextInput ref={(ref) => this._rrpass = ref} value={this.state.undelegateb} returnKeyType="go" 
                             selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
                             placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
@@ -1037,10 +1014,10 @@ class Resources extends BaseComponent {
                         </View>
                     </View>
                     <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor}]}>
-                        <View style={{flexDirection: 'row', }}>
+                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(30), alignItems: 'center'}}>
                             <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户(不填默认自己)</Text>
                         </View>
-                        <View style={{flexDirection: 'row', }}>
+                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(35), alignItems: 'center', }}>
                             <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"
                                 selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={12}
                                 placeholder={this.state.receiver} underlineColorAndroid="transparent" keyboardType="default" 
@@ -1121,12 +1098,12 @@ class Resources extends BaseComponent {
                         {this.ownOthersButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isBuy, 'isBuy', '购买')}  
                         {this.ownOthersButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '出售')}  
                     </View> 
-                    <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor,}]}>
-                        <View style={{flexDirection: 'row'}}>
+                    <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor, }]}>
+                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(30), alignItems: 'center'}}>
                             <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.isBuy ? "购买" : "出售" }内存</Text>
                             <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>当前价格：{this.state.Currentprice} EOS/kb</Text>
                         </View>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(35), alignItems: 'center', }}>
                             <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount} returnKeyType="go" 
                             selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
                             placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
@@ -1136,10 +1113,10 @@ class Resources extends BaseComponent {
                     </View>
                     {this.state.isBuy&&
                     <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor}]}>
-                        <View style={{flexDirection: 'row', }}>
+                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(30), alignItems: 'center'}}>
                             <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户(不填默认自己)</Text>
                         </View>
-                        <View style={{flexDirection: 'row', }}>
+                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(35), alignItems: 'center',}}>
                             <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"
                                 selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={12}
                                 placeholder={this.state.receiver} underlineColorAndroid="transparent" keyboardType="default" 
@@ -1147,7 +1124,7 @@ class Resources extends BaseComponent {
                             />
                             <Button onPress={() => this.openAddressBook()}>
                                 <View style={styles.botnimg}>
-                                    <Image source={UImage.al} style={{width: ScreenUtil.autowidth(15), height: ScreenUtil.autowidth(17), }} />
+                                    <Image source={UImage.al} style={{width: ScreenUtil.autowidth(17), height: ScreenUtil.autowidth(17), }} />
                                 </View>
                             </Button> 
                         </View>
@@ -1168,7 +1145,6 @@ class Resources extends BaseComponent {
     }
 
     render() {
-        const c = this.props.navigation.state.params.coinType;
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
                 <Header {...this.props} onPressLeft={true} title="资源管理"  onPressRight={this.recordMortgage.bind()}  
@@ -1256,25 +1232,22 @@ const styles = StyleSheet.create({
     },
     inptoutsource: {
         justifyContent: 'center',
-        //paddingBottom: ScreenUtil.autoheight(10),
-        //paddingHorizontal: ScreenUtil.autowidth(20),
     },
     outsource: {
+        marginTop: 1,
         flexDirection: 'row',  
         alignItems: 'center',
         height: ScreenUtil.autowidth(65),
         paddingHorizontal: ScreenUtil.autowidth(15),
-        marginTop: 1,
     },
     inpt: {
         flex: 1,
-        height: ScreenUtil.autoheight(35), 
-        fontSize: ScreenUtil.setSpText(14), 
+        paddingVertical: 0,
+        fontSize: ScreenUtil.setSpText(16), 
     },
     inptTitle: {
         flex: 1,
         fontSize: ScreenUtil.setSpText(16),  
-        lineHeight: ScreenUtil.autoheight(30),
     },
     inptTitlered: {
         fontSize: ScreenUtil.setSpText(14), 
@@ -1283,7 +1256,6 @@ const styles = StyleSheet.create({
     botnimg: {
         alignItems: 'flex-end',
         justifyContent: 'center', 
-        width: ScreenUtil.autowidth(86), 
         height: ScreenUtil.autoheight(38), 
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
