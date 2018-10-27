@@ -68,6 +68,10 @@ class Dappsearch extends BaseComponent {
         dismissKeyboard();
     }
 
+    getBlur() {
+        this._raccount.focus();
+    }
+
     render() {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
@@ -78,6 +82,7 @@ class Dappsearch extends BaseComponent {
                         <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} keyboardType="default"
                             selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} autoCorrect={true}
                             underlineColorAndroid="transparent" onChangeText={(labelname) => this.setState({ labelname })}
+                            onBlur={() => this.getBlur()}
                             placeholderTextColor={UColor.inputtip}  placeholder="输入DAPP网址"  returnKeyType="go" />
                     </View>    
                     <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>  
