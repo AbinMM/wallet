@@ -259,7 +259,7 @@ class TurnOutAsset extends BaseComponent {
                                     }
                                 }
                                 if(r.data.msg){
-                                    EasyToast.show("1" + r.data.msg);
+                                    EasyToast.show(r.data.msg);
                                 }else{
                                     EasyToast.show("交易失败");
                                 }
