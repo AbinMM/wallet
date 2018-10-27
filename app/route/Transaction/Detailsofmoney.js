@@ -6,6 +6,7 @@ import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
+import { EasyToast } from '../../components/Toast';
 import BaseComponent from "../../components/BaseComponent";
 var dismissKeyboard = require('dismissKeyboard');
 const ScreenWidth = Dimensions.get('window').width;
@@ -23,7 +24,19 @@ class Detailsofmoney extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {
-            coinInfodata: {},
+            coinInfodata: {
+                recommendLevel:'',
+                marketValueDesc:'',
+                totalDesc:'',
+                projectCreative:'',
+                investmentValue:'',
+                site:'',
+                crowdfundingPrice:'',
+                crowdfundingDate:'',
+                whitePaperUrl:'',
+                blockQueryUrl:'',
+                intr:'',
+            },
         };
     }
 
@@ -77,15 +90,26 @@ class Detailsofmoney extends BaseComponent {
     }
 
     prot(key, data = {}) {
-        const { navigate } = this.props.navigation;
-        if (key == 'site') {
-            Linking.openURL(this.state.coinInfodata.site);
-        }else if (key == 'whitePaper') {
-            Linking.openURL(this.state.coinInfodata.whitePaperUrl);
-        }else if (key == 'blockQuery') {
-            Linking.openURL(this.state.coinInfodata.blockQueryUrl);
-        }else if (key == 'dm') {
-            navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Disclaimer.html" });
+        try {
+            const { navigate } = this.props.navigation;
+            if (key == 'site') {
+                if(this.state.coinInfodata.site && this.state.coinInfodata.site != '')
+                {
+                   Linking.openURL(this.state.coinInfodata.site);
+                }
+            }else if (key == 'whitePaper') {
+                if(this.state.coinInfodata.whitePaperUrl && this.state.coinInfodata.whitePaperUrl != ''){
+                   Linking.openURL(this.state.coinInfodata.whitePaperUrl);
+                }
+            }else if (key == 'blockQuery') {
+                if(this.state.coinInfodata.blockQueryUrl && this.state.coinInfodata.blockQueryUrl != ''){
+                   Linking.openURL(this.state.coinInfodata.blockQueryUrl);
+                }
+            }else if (key == 'dm') {
+                navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Disclaimer.html" });
+            }
+        } catch (error) {
+            
         }
     }
 
