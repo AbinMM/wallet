@@ -31,7 +31,7 @@ class Detailsofmoney extends BaseComponent {
     componentDidMount() {
         //alert(JSON.stringify(this.props.navigation.state.params.contract_account));
         this.props.dispatch({ type: 'transaction/getCoinInfo', payload:{ coinname: this.props.navigation.state.params.tradename,},callback: (data) => {
-            alert(JSON.stringify(data));
+            // alert(JSON.stringify(data));
             if (data != null && data.code == 0) {
                 this.setState({coinInfodata: data.data});
             }else{
