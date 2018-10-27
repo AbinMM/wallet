@@ -89,17 +89,6 @@ export default {
                 yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
             }
         }else{
-            var manualClose = yield call(store.get, 'myAssets_manual_close_' + payload.accountName);
-            if(manualClose == null){
-                manualClose = [];
-            }
-            for(var i = 0; i < manualClose.length; i++){
-                for(var j = 0; j < myAssets.length; j++){
-                    if(myAssets[j].asset.name == manualClose[i].asset.name){ // 已经在资产列表中
-                        myAssets.splice(j, 1);
-                    }
-                }
-            }
             var currentAccount = yield call(store.get, 'current_account');
             if(payload && payload.isInit && currentAccount == payload.accountName){
                 yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
@@ -128,6 +117,18 @@ export default {
         // alert("myAssetInfo" +JSON.stringify(myAssets));
         // 
 
+        var manualClose = yield call(store.get, 'myAssets_manual_close_' + payload.accountName);
+        if(manualClose == null){
+            manualClose = [];
+        }
+        for(var i = 0; i < manualClose.length; i++){
+            for(var j = 0; j < myAssets.length; j++){
+                if(myAssets[j].asset.name == manualClose[i].asset.name){ // 已经在资产列表中
+                    myAssets.splice(j, 1);
+                }
+            }
+        }
+        
         var currentAccount = yield call(store.get, 'current_account');
         if((currentAccount == payload.accountName)){
             yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
@@ -149,17 +150,7 @@ export default {
             if(myAssets == null){
                 myAssets = [];
             }
-            var manualClose = yield call(store.get, 'myAssets_manual_close_' + payload.accountName);
-            if(manualClose == null){
-                manualClose = [];
-            }
-            for(var i = 0; i < manualClose.length; i++){
-                for(var j = 0; j < myAssets.length; j++){
-                    if(myAssets[j].asset.name == manualClose[i].asset.name){ // 已经在资产列表中
-                        myAssets.splice(j, 1);
-                    }
-                }
-            }
+
             var isBalanceChange = false;
             for(let i in myAssets){
                 let item = myAssets[i];
@@ -174,6 +165,18 @@ export default {
                     if(resp.data != item.balance){
                         isBalanceChange = true;
                         item.balance = resp.data;
+                    }
+                }
+            }
+
+            var manualClose = yield call(store.get, 'myAssets_manual_close_' + payload.accountName);
+            if(manualClose == null){
+                manualClose = [];
+            }
+            for(var i = 0; i < manualClose.length; i++){
+                for(var j = 0; j < myAssets.length; j++){
+                    if(myAssets[j].asset.name == manualClose[i].asset.name){ // 已经在资产列表中
+                        myAssets.splice(j, 1);
                     }
                 }
             }

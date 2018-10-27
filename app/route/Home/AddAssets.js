@@ -31,7 +31,7 @@ class AddAssets extends BaseComponent {
   componentDidMount() {
     try {
       EasyShowLD.loadingShow();
-      DeviceEventEmitter.emit('stopBalanceTimer', "");
+      // DeviceEventEmitter.emit('stopBalanceTimer', "");
       this.props.dispatch({ type: 'assets/list', payload: { page: 1}, callback: () => {
         EasyShowLD.loadingClose();
       } });
@@ -56,8 +56,8 @@ class AddAssets extends BaseComponent {
   }
 
   componentWillUnmount(){
-    DeviceEventEmitter.emit('updateMyAssets', '');
-    DeviceEventEmitter.emit('startBalanceTimer', "");
+    // DeviceEventEmitter.emit('updateMyAssets', '');
+    // DeviceEventEmitter.emit('startBalanceTimer', "");
     //结束页面前，资源释放操作
     super.componentWillUnmount();
   }

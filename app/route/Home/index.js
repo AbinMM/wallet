@@ -121,9 +121,9 @@ class Home extends React.Component {
       this.calTotalBalance();
     });
 
-    DeviceEventEmitter.addListener('updateMyAssets', (data) => {
-      this.getAssetBalance();
-    });
+    // DeviceEventEmitter.addListener('updateMyAssets', (data) => {
+      // this.getAssetBalance();
+    // });
 
     DeviceEventEmitter.addListener('updateMyAssetsBalance', (data) => {
       this.calTotalBalance();
@@ -135,8 +135,8 @@ class Home extends React.Component {
 
     DeviceEventEmitter.addListener('refreshWalletInfo', (data) => {
       this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
-        this.getDefaultWalletEosBalance(); // 默认钱包余额
-        this.getAllWalletEosBalance();
+        // this.getDefaultWalletEosBalance(); // 默认钱包余额
+        // this.getAllWalletEosBalance();
         this.getMyAssetsInfo(); 
         this.getIncrease();
       } });
@@ -169,8 +169,7 @@ class Home extends React.Component {
     }
     this.props.dispatch({ type: 'assets/myAssetInfo', payload: { page: 1, isInit: true, accountName: this.props.defaultWallet.name}, callback: (myAssets) => {
       this.props.dispatch({ type: 'assets/fetchMyAssetsFromNet', payload: { accountName: this.props.defaultWallet.name}, callback: () => {
-        if(getAssetsInfoCallback) getAssetsInfoCallback();
-        this.getAssetBalance();    
+        this.getAssetBalance(getAssetsInfoCallback);    
       }});
     }});
   }
@@ -528,12 +527,15 @@ class Home extends React.Component {
     // }});
 
     // 默认钱包余额
-    this.getDefaultWalletEosBalance(); 
+    // this.getDefaultWalletEosBalance(); 
 
     //获取资源详情
     this.getResourcesinfo((this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name);
     
-    this.getMyAssetsInfo(() => {this.setState({assetRefreshing: false})});
+    // this.getMyAssetsInfo(() => {this.setState({assetRefreshing: false})});
+    this.props.dispatch({ type: 'assets/fetchMyAssetsFromNet', payload: { accountName: this.props.defaultWallet.name}, callback: () => {
+      this.getAssetBalance(() => {this.setState({assetRefreshing: false})});    
+    }});
   }
 
   isTipShow() {

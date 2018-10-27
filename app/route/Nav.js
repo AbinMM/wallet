@@ -652,14 +652,6 @@ class Route extends React.Component {
       }, 300);
     });
 
-    DeviceEventEmitter.addListener('startBalanceTimer', () => {
-      this.startTimer();
-    });
-
-    DeviceEventEmitter.addListener('stopBalanceTimer', () => {
-      this.stopTimer();
-    });
-
     // NetInfo.addEventListener('change', this.handleConnectivityChange);
 
     NetInfo.isConnected.fetch().then(isConnected => {
