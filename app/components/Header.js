@@ -27,10 +27,11 @@ class Header extends BaseComponent {
         imgWidth: PropTypes.number,
         imgHeight: PropTypes.number,
         onDappBackFalg:PropTypes.bool,//DAPP返回
+        onLeftCloseFun: PropTypes.func,
     }
 
     render(){
-        let {backgroundColors, onPressLeft, onPressRightFun, title, onPressRight, avatar, subName, imgWidth, imgHeight, onDappBackFalg, } = this.props
+        let {backgroundColors, onPressLeft, onPressRightFun, title, onPressRight, avatar, subName, imgWidth, imgHeight, onDappBackFalg,onLeftCloseFun, } = this.props
         return (
         // <View style={[styles.header,{backgroundColor: backgroundColor ? backgroundColor: UColor.titletop}]}>
         <LinearGradient colors={backgroundColors?backgroundColors:['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={styles.header} >
@@ -38,7 +39,7 @@ class Header extends BaseComponent {
                 <TouchableOpacity style={styles.LeftBack} onPress={onPressLeft ? (onPressRightFun==undefined?() => {this.props.navigation.goBack()}:onPressRightFun) : () => {undefined}}>
                     {onPressLeft &&<Ionicons style={{color:UColor.btnColor}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.LeftClose} onPress={onDappBackFalg ? () => {this.props.navigation.goBack()}:() => {undefined}}>
+                <TouchableOpacity style={styles.LeftClose} onPress={onDappBackFalg ? (onLeftCloseFun==undefined?() => {this.props.navigation.goBack()}:onLeftCloseFun) : () => {undefined}}>
                     {onDappBackFalg &&<Ionicons style={{color:UColor.btnColor}} name="md-close" size={ScreenUtil.setSpText(30)}/>}
                 </TouchableOpacity>
             </View>

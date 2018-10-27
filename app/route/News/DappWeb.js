@@ -132,6 +132,14 @@ onRightFun() {
     //     this.props.navigation.goBack();
     // }
 }
+
+onLeftCloseFun() {
+
+    this.setState({
+        backButtonEnabled: false,
+    });
+    this.props.navigation.goBack();
+}
 // 监听原生返回键事件
 addBackAndroidListener(navigator) {
     if (Platform.OS === 'android') {
@@ -902,7 +910,7 @@ scatter_linkAccount(result)
     return (
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
         <Header {...this.props} onPressLeft={true} onDappBackFalg={true} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
-        onPressRight={this.moreOption.bind(this)} />
+        onPressRight={this.moreOption.bind(this)} onLeftCloseFun={this.onLeftCloseFun.bind(this)} />
         
         {
             Platform.OS === 'android' &&   
