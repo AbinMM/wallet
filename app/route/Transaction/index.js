@@ -1129,7 +1129,7 @@ class Transaction extends BaseComponent {
             </Button>
             <Text style={[styles.headerTitleText,{color: UColor.btnColor}]}>{this.state.tradename + "/EOS"}</Text>
             <Button onPress={this._rightTopClick.bind(this,this.state.tradename)}>
-                <Image source={UImage.pool_explain} style={styles.imgBtn} />
+                <Image source={UImage.pool_explain} style={{margin: ScreenUtil.autowidth(5), width: ScreenUtil.autowidth(21), height: ScreenUtil.autowidth(21),}} />
             </Button>
         </View> 
     </ImageBackground>
