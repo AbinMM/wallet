@@ -40,7 +40,7 @@ export default class App extends BaseComponent {
     }
     
     _errExit(){
-        EasyToast.show(a + '无效的' + this.state.coinType + '二维码');
+        EasyToast.show('无效的' + this.state.coinType + '二维码');
         this.props.navigation.goBack();
         return;
     }
@@ -70,7 +70,6 @@ export default class App extends BaseComponent {
 
     _onBarCodeRead = (e) => {
         var strQRcode = JSON.stringify(e.nativeEvent.data.code);
-        //alert(strQRcode);
         let coinType = strQRcode.match(/token=(\S*)"/)[1]
         this._stopScan();
         try {
@@ -100,7 +99,7 @@ export default class App extends BaseComponent {
                 }
                 var account = strcoins.substring(index,point);
                 if(account == undefined || account == null || account == ""){
-                    return this._errExit(5);
+                    return this._errExit();
                 }
 
                 index = point + 1; //"?"
