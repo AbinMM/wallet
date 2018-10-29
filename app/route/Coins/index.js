@@ -174,7 +174,7 @@ class Coins extends React.Component {
           <Button onPress={this.onPress.bind(this,rowData)}>
             <View style={[styles.row,{backgroundColor:UColor.mainColor}]}>
               <View style={[styles.eoslogout,{backgroundColor: UColor.titletop}]}>
-                <Image source={{uri:rowData.img}} style={{width: ScreenUtil.autowidth(25),height: ScreenUtil.autowidth(25)}} />
+                <Image source={{uri:rowData.img}} style={{width: ScreenUtil.autowidth(25),height: ScreenUtil.autowidth(25),}} />
               </View>
               <View style={{flex:1,flexDirection:"column",alignItems:'flex-start',}}>
                 <Text style={{fontSize:ScreenUtil.setSpText(18),color:UColor.fontColor}}>{rowData.name}</Text>

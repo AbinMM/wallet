@@ -75,6 +75,7 @@ class Splash extends React.Component {
           UColor.tintnavigation= '#2279C5';
           UColor.fontrice= "#EDEDED";
           UColor.inputtip= "#b2b2b2"; //输入框字体颜色
+          UColor.Navigation= ['#4CA6FF', '#7CBEFF'],
           UImage.aab1= require('../img/day/aab1.png');
           UImage.aab2= require('../img/day/aab2.png');
           UImage.account_manage= require('../img/day/account_manage.png');
@@ -179,6 +180,7 @@ class Splash extends React.Component {
           UColor.tintnavigation= "#4CA6FF";
           UColor.fontrice= "#FFFFFF";
           UColor.inputtip= "#8696B0";//输入框字体颜色
+          UColor.Navigation= ['#43536D', '#4e5e7d'],
           UImage.aab1= require('../img/aab1.png');
           UImage.aab2= require('../img/aab2.png');
           UImage.account_manage= require('../img/account_manage.png');

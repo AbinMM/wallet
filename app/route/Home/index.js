@@ -572,7 +572,7 @@ class Home extends React.Component {
 
   _renderHeader() {
     return(<View style={{flex: 1, alignItems: 'center',backgroundColor: UColor.secdfont}}>
-      <LinearGradient style={{width: ScreenWidth, height: ScreenUtil.autoheight(90)}} colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} />
+      <LinearGradient style={{width: ScreenWidth, height: ScreenUtil.autoheight(90)}} colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} />
       {/* <View style={{flexDirection: "row"}}>
         <View style={[styles.resourceout,{borderRightColor: UColor.tintColor,borderRightWidth: 0.5}]}>
           <Text style={[styles.ratiotext,{color: UColor.btnColor}]} numberOfLines={1}>{this.state.mortgage}</Text>
@@ -662,7 +662,7 @@ class Home extends React.Component {
     if(this.props.guide){
       return (
         <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-          <LinearGradient colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={{width: ScreenWidth,height: ScreenHeight, paddingBottom: ScreenUtil.autowidth(15),}} >
+          <LinearGradient colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={{width: ScreenWidth,height: ScreenHeight, paddingBottom: ScreenUtil.autowidth(15),}} >
             <View style={{flex:3, alignItems: 'center', justifyContent: 'center',}}>
               <Image source={UImage.guide} style={styles.imgTop} resizeMode="stretch"/>
             </View>
@@ -684,8 +684,8 @@ class Home extends React.Component {
     }else{
       return (
         <View style={[styles.container,]}>
-          <LinearGradient style={{position:"absolute",top:0,left:0,width:"100%",height:ScreenUtil.autowidth(300)}} colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}}/>
-          <LinearGradient style={[styles.topbtn,]}  paddingTop = {Constants.FitPhone} colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
+          <LinearGradient style={{position:"absolute",top:0,left:0,width:"100%",height:ScreenUtil.autowidth(300)}} colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}}/>
+          <LinearGradient style={[styles.topbtn,]}  paddingTop = {Constants.FitPhone} colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
             <Button onPress={() => this.setState({ modal: !this.state.modal })}>
               <Image source={UImage.wallet_h} style={{margin: ScreenUtil.autowidth(10),width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(13),}} />
             </Button>
@@ -710,7 +710,7 @@ class Home extends React.Component {
                 <Button onPress={this.assetInfo.bind(this, rowData)}>
                   <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
                     <View style={styles.lefts}>
-                      <View style={{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(16)}}> 
+                      <View style={[styles.leftimg,{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(16)}]}> 
                         <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
                       </View>
                       <Text style={[styles.lefttext,{color: UColor.fontColor}]}>{rowData.asset.name}</Text>
@@ -1153,6 +1153,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftimg: {
+    borderRadius: 25,
     width: ScreenUtil.autowidth(40), 
     height: ScreenUtil.autowidth(40),
   },
