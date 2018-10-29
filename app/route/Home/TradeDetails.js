@@ -192,11 +192,11 @@ class TradeDetails extends BaseComponent {
               <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'transactionId')}>{this.state.trade.transactionId.substring(0, 6) +"..."+ this.state.trade.transactionId.substr(this.state.trade.transactionId.length-6) }</Text>
             </View>
             <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}> 
-              <Text style={[styles.context,{color: UColor.arrow}]}>区块高度</Text>
-              {(this.state.trade.blockNum == null || this.state.trade.blockNum == "") ? 
-              <Text style={[styles.showytext,{color: UColor.showy}]}>未确认</Text>
+              <Text style={[styles.context,{color: UColor.arrow}]}>是否确认</Text>
+              {this.state.accepted? 
+                <Text style={[styles.tintext,{color: UColor.startup}]}>已确认</Text>
               :
-              <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'blockNum')}>{this.state.trade.blockNum}</Text>
+                <Text style={[styles.showytext,{color: UColor.showy}]}>未确认</Text>
               }
             </View>
             <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
