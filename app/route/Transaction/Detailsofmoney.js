@@ -65,6 +65,8 @@ class Detailsofmoney extends BaseComponent {
                 if(this.state.coinInfodata.whitePaperUrl && this.state.coinInfodata.whitePaperUrl != ''){
                    Linking.openURL(this.state.coinInfodata.whitePaperUrl);
                 }
+            }else if (key == 'feedback') {
+                navigate('Web', { title: "ET官方客服", url: "https://static.meiqia.com/dist/standalone.html?_=t&eid=126524" });
             }else if (key == 'dm') {
                 navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Disclaimer.html" });
             }
@@ -133,7 +135,7 @@ class Detailsofmoney extends BaseComponent {
                     <Text style={[styles.synopsiscenter,{color:UColor.arrow}]}>{this.state.coinInfodata.intr}</Text>
                 </View>
                 <View style={[styles.separateout]}>
-                    <Text style={[styles.separatetext,{color:UColor.tintColor}]}>勘误</Text>
+                    <Text style={[styles.separatetext,{color:UColor.tintColor}]} onPress={this.prot.bind(this, "feedback")} >问题反馈</Text>
                     <Text style={[styles.separatetext,{color:UColor.tintColor}]} onPress={this.prot.bind(this, "dm")} >免责声明</Text>
                 </View>
             </ScrollView>
