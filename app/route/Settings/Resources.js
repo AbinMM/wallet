@@ -173,10 +173,10 @@ class Resources extends BaseComponent {
     }
 
     getAccountInfo(){
-        EasyShowLD.loadingShow();
-        this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page: 1, username: this.props.defaultWallet.account},
-            callback: (data) => {
-                try {
+        try {
+            EasyShowLD.loadingShow();
+            this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page: 1, username: this.props.defaultWallet.account},
+                callback: (data) => {
                     if(data != null && data.display_data != null){
                         this.setState({ 
                             ram_available: data.display_data.ram_left ,
@@ -191,26 +191,31 @@ class Resources extends BaseComponent {
                             net_AlreadyUsed:  Math.floor((data.display_data.net_limit_max - data.display_data.net_limit_available)*100)/100,
                             net_Percentage: (100-data.display_data.net_limit_available_percent.replace("%", "")) + '%',
 
-                            cpu_redeem: Math.floor(data.refund_request.cpu_amount.replace("EOS", "")*100)/100 ,
-                            net_redeem: Math.floor(data.refund_request.net_amount.replace("EOS", "")*100)/100 ,
-                            and_redeem: Math.floor((parseFloat(this.props.Resources.refund_request.cpu_amount.replace(" EOS", "")) + parseFloat(this.props.Resources.refund_request.net_amount.replace(" EOS", "")))*100)/100
-                        })
+                        });
+
+                        if(data.refund_request){
+                            this.setState({
+                                cpu_redeem: Math.floor(data.refund_request.cpu_amount.replace("EOS", "")*100)/100 ,
+                                net_redeem: Math.floor(data.refund_request.net_amount.replace("EOS", "")*100)/100 ,
+                                and_redeem: Math.floor((parseFloat(this.props.Resources.refund_request.cpu_amount.replace(" EOS", "")) + parseFloat(this.props.Resources.refund_request.net_amount.replace(" EOS", "")))*100)/100
+                            });
+                        }
                     }
-                } catch (error) {
                     EasyShowLD.loadingClose();
                 }
-                EasyShowLD.loadingClose();
-            }
-        })
-
-        //EOS余额
-        this.props.dispatch({ type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account , symbol: 'EOS' }, 
-            callback: (data) => {
-                this.setState({ 
-                    balance: data && data.data?data.data.replace('EOS', "") :'0',
-                });
-            }
-        });
+            })
+    
+            //EOS余额
+            this.props.dispatch({ type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account , symbol: 'EOS' }, 
+                callback: (data) => {
+                    this.setState({ 
+                        balance: data && data.data?data.data.replace('EOS', "") :'0',
+                    });
+                }
+            });
+        } catch (error) {
+            EasyShowLD.loadingClose();
+        }
        
     } 
 
