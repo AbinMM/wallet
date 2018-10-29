@@ -25,7 +25,7 @@ class Detailsofmoney extends BaseComponent {
             coinInfodata: {
                 marketValueDesc:'',  //当前市值
                 total:'',   //发行总量
-                marke:0,            //流通量
+                marke:'',            //流通量
                 issueDate: 0, //发行时间
                 site:'',    //官方网站
                 crowdfundingPrice:'', //募资成本
@@ -41,7 +41,18 @@ class Detailsofmoney extends BaseComponent {
     componentDidMount() {
         this.props.dispatch({ type: 'transaction/getCoinInfo', payload:{ coinname: this.props.navigation.state.params.tradename,},callback: (data) => {
             if (data != null && data.code == 0) {
-                this.setState({coinInfodata: data.data});
+                this.setState({coinInfodata: {
+                        marketValueDesc: data.data.marketValueDesc ? data.data.marketValueDesc : '',  //当前市值
+                        total:data.data.total ? data.data.total : '',   //发行总量
+                        marke:data.data.marke ? data.data.marke : '',            //流通量
+                        issueDate: data.data.issueDate ? data.data.issueDate : 0, //发行时间
+                        site:data.data.site ? data.data.site : '',    //官方网站
+                        crowdfundingPrice:data.data.crowdfundingPrice ? data.data.crowdfundingPrice : '', //募资成本
+                        crowdfundingDate:data.data.crowdfundingDate ? data.data.crowdfundingDate : '',  //募资时间
+                        whitePaperUrl:data.data.whitePaperUrl ? data.data.whitePaperUrl : '',   //白皮书
+                        contractAccount:data.data.contractAccount ? data.data.contractAccount : '', //合约账户   
+                        intr:data.data.intr ? data.data.intr :'', //项目简介
+                    }});
             }else{
                 EasyToast.show('获取币详情失败');
             }
@@ -77,6 +88,9 @@ class Detailsofmoney extends BaseComponent {
         }
     }
     transferTimeZone(blockTime){
+        if(blockTime <= 0){
+            return "";
+        }
         var timezone;
         try {
             timezone = moment(blockTime).add(8,'hours').format('YYYY-MM-DD');
