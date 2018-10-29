@@ -1,11 +1,12 @@
 
 import React from 'react';
-import { Dimensions, Animated,View} from 'react-native';
+import { Dimensions, Animated, View, NativeModules, Platform} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import NavigationUtil from '../utils/NavigationUtil';
 import UImage from '../utils/Img'
 import UColor from '../utils/Colors'
 import Constants from '../utils/Constants';
+import ScreenUtil from '../utils/ScreenUtil'
 import { connect } from 'react-redux'
 import JPush from '../utils/JPush'
 const ScreenWidth = Dimensions.get('window').width;
@@ -35,6 +36,9 @@ class Splash extends React.Component {
         NavigationUtil.reset(th.props.navigation, 'Boot');
       }
     }});
+
+    this.Fitphone();
+
     this.props.dispatch({type:'login/getthemeSwitching',callback:(theme)=>{
       if(!theme.theme){  
         //白色版
@@ -246,6 +250,25 @@ class Splash extends React.Component {
           UImage.warning= require('../img/warning.png');
       }
     }});
+  }
+
+
+  Fitphone(){
+    if (Platform.OS == 'ios') {
+      if(ScreenUtil.isIphoneX()){
+        Constants.FitPhone = ScreenUtil.autoheight(44)
+      }else{
+        Constants.FitPhone = ScreenUtil.autoheight(20)
+      } 
+    }else{
+      NativeModules.UtilModule.isNotchScreen((b) =>{
+        if(b){
+          Constants.FitPhone = ScreenUtil.autoheight(35)
+        }else{
+          Constants.FitPhone = ScreenUtil.autoheight(20)
+        }
+      })
+    }
   }
 
   render() {

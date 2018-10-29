@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, DeviceEventEmitter, ListView,NativeModules, StyleSheet, Image, View, Text, Platform, Modal, Animated, TouchableOpacity, Easing, Clipboard, ImageBackground, ScrollView, RefreshControl,Linking, } from 'react-native';
+import { Dimensions, DeviceEventEmitter, NativeModules, ListView, StyleSheet, Image, View, Text, Platform, Modal, Animated, TouchableOpacity, Easing, Clipboard, ImageBackground, ScrollView, RefreshControl,Linking, } from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import { Eos } from "react-native-eosjs";
@@ -573,6 +573,7 @@ class Home extends React.Component {
     }
   }
 
+
   _renderHeader() {
     return(<View style={{flex: 1, alignItems: 'center',backgroundColor: UColor.secdfont}}>
       <LinearGradient style={{width: ScreenWidth, height: ScreenUtil.autoheight(90)}} colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} />
@@ -689,11 +690,11 @@ class Home extends React.Component {
       return (
         <View style={[styles.container,]}>
           <LinearGradient style={{position:"absolute",top:0,left:0,width:"100%",height:ScreenUtil.autowidth(300)}} colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}}/>
-          <LinearGradient style={[styles.topbtn]} colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
+          <LinearGradient style={[styles.topbtn,]}  paddingTop = {Constants.FitPhone} colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
             <Button onPress={() => this.setState({ modal: !this.state.modal })}>
               <Image source={UImage.wallet_h} style={{margin: ScreenUtil.autowidth(10),width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(13),}} />
             </Button>
-            <Text style={[styles.toptext,{color: UColor.btnColor}]}>EOS资产</Text>
+            <Text style={[styles.toptext,{color: UColor.btnColor}]}>钱包</Text>
             <Button onPress={() => this.setState({ listmodal: !this.state.listmodal })}>
               <Image source={UImage.add_plus} style={{margin: ScreenUtil.autowidth(10),width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18),}} />
             </Button>
@@ -885,7 +886,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: "space-between",
     paddingHorizontal: ScreenUtil.autowidth(10),
-    paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(44) : ScreenUtil.autoheight(20),
+    
   },
   toptext: {
     textAlign: "center",

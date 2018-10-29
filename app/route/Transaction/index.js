@@ -1123,7 +1123,7 @@ class Transaction extends BaseComponent {
         </View>
     </TouchableOpacity>
     <ImageBackground source={UImage.transactionA} resizeMode="stretch"  style={{width:ScreenWidth,minHeight:ScreenWidth*0.164,zIndex: 999,}}>
-        <View style={styles.headerTitle}>  
+        <View style={styles.headerTitle} paddingTop = {Constants.FitPhone} >  
             <Button onPress={this._leftTopClick.bind()}>
                 <Image source={this.state.modal ? UImage.tx_slide0 : UImage.tx_slide1} style={styles.imgBtn} />
             </Button>
@@ -1631,7 +1631,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: "space-between",
         paddingHorizontal: ScreenUtil.autowidth(10),
-        paddingTop: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(44) : ScreenUtil.autoheight(20),
+        
     },
     headerTitleText: {
         textAlign: "center",

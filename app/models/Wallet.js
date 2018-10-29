@@ -403,6 +403,7 @@ export default {
         *getBalance({ payload, callback }, { call, put }) {
             try {
                 const resp = yield call(Request.request, getBalance, 'post', payload);
+                //alert(JSON.stringify(resp));
                 if (callback) callback(resp);
                 const walletArr = yield call(store.get, 'walletArr');
                 for(var i = 0; i < walletArr.length; i++){
