@@ -10,6 +10,7 @@ import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from '../../components/EasyShow'
+import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -274,7 +275,7 @@ class Setting extends React.Component {
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
       <ScrollView  keyboardShouldPersistTaps="always">
-        <ImageBackground source={UImage.signln_bg} resizeMode="stretch" style={styles.linebgout}>
+        <LinearGradient colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={styles.linebgout}>
           <Button onPress={this.goProfile.bind(this)} style={{flex: 1,}}>
             <View style={styles.userHead} >
               <View style={styles.headout}>
@@ -290,7 +291,7 @@ class Setting extends React.Component {
               </View>
             </View>
           </Button>
-        </ImageBackground>
+        </LinearGradient>
         {Constants.isNetWorkOffline &&
         <Button onPress={this.openSystemSetting.bind(this)}>
           <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
@@ -363,7 +364,7 @@ const styles = StyleSheet.create({
   },
   linebgout: {
     width: ScreenWidth,
-    height: ScreenWidth * 0.354,
+    height: ScreenUtil.autoheight(110),
   },
   userHead: {
     flex: 1,
@@ -382,12 +383,12 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
-    width: ScreenUtil.autowidth(70),
-    height: ScreenUtil.autowidth(70),
+    width: ScreenUtil.autowidth(60),
+    height: ScreenUtil.autowidth(60),
   },
   headimg: {
-    width: ScreenUtil.autowidth(55),
-    height: ScreenUtil.autowidth(55),
+    width: ScreenUtil.autowidth(40),
+    height: ScreenUtil.autowidth(40),
   },
   headtext: {
     fontSize: ScreenUtil.setSpText(15),

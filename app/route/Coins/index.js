@@ -10,6 +10,7 @@ import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import LinearGradient from 'react-native-linear-gradient'
 import {formatterNumber,formatterUnit} from '../../utils/FormatUtil'
 import { EasyToast } from '../../components/Toast';
 const ScreenWidth = Dimensions.get('window').width;
@@ -197,21 +198,19 @@ class Coins extends React.Component {
   render() {
     return (
       <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-      <ImageBackground source={UImage.coinsbg1} resizeMode="stretch" style={[{width:ScreenWidth}, ScreenUtil.isIphoneX()?{minHeight:ScreenWidth*0.1546}:{height:ScreenWidth*0.1546}]}>
-        <Header {...this.props} backgroundColors={[UColor.transport, UColor.transport]} onPressLeft={false} title="行情" />
-      </ImageBackground>
+      <Header {...this.props} onPressLeft={false} title="行情" /> 
         <TabViewAnimated
         lazy={true}
         navigationState={this.state}
         renderScene={this.renderScene.bind(this)}
-        renderHeader={(props)=> <ImageBackground source={UImage.coinsbg2} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1013,}}>
+        renderHeader={(props)=> <LinearGradient colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={{width:ScreenWidth,height:ScreenWidth*0.1013,}}>
         <TabBar onTabPress={this._handleTabItemPress} 
         labelStyle={[styles.labelStyle,{color:UColor.btnColor}]} 
         indicatorStyle={[styles.indicatorStyle,{backgroundColor: UColor.fonttint}]} 
         style={{alignItems: 'center',justifyContent: 'center',backgroundColor:UColor.transport}} 
         tabStyle={{width: ScreenWidth / 4,padding:0,margin:0,}} 
         scrollEnabled={true} {...props}/>
-        </ImageBackground>}
+        </LinearGradient>}
         onIndexChange={this._handleIndexChange}
         initialLayout={{height:0,width:ScreenWidth}}
         />

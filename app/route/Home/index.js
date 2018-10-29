@@ -686,12 +686,12 @@ class Home extends React.Component {
         <View style={[styles.container,]}>
           <LinearGradient style={{position:"absolute",top:0,left:0,width:"100%",height:ScreenUtil.autowidth(300)}} colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}}/>
           <LinearGradient style={[styles.topbtn,]}  paddingTop = {Constants.FitPhone} colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
-            <Button onPress={() => this.setState({ modal: !this.state.modal })}>
-              <Image source={UImage.wallet_h} style={{margin: ScreenUtil.autowidth(10),width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(13),}} />
+            <Button onPress={() => this.setState({ modal: !this.state.modal })} style={{flex:1, alignItems: 'flex-start',}}>
+              <Image source={UImage.wallet_h} style={{marginHorizontal: ScreenUtil.autowidth(20),marginVertical:ScreenUtil.autowidth(12.5),width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(13),}} />
             </Button>
             <Text style={[styles.toptext,{color: UColor.btnColor}]}>钱包</Text>
-            <Button onPress={() => this.setState({ listmodal: !this.state.listmodal })}>
-              <Image source={UImage.add_plus} style={{margin: ScreenUtil.autowidth(10),width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18),}} />
+            <Button onPress={() => this.setState({ listmodal: !this.state.listmodal })} style={{flex:1, alignItems: 'flex-end',}}>
+              <Image source={UImage.add_plus} style={{marginHorizontal: ScreenUtil.autowidth(20),marginVertical:ScreenUtil.autowidth(10), width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18),}} />
             </Button>
           </LinearGradient>
           {Constants.isNetWorkOffline && <Button onPress={this.openSystemSetting.bind(this)}>
@@ -880,8 +880,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: "space-between",
-    paddingHorizontal: ScreenUtil.autowidth(10),
-    
   },
   toptext: {
     textAlign: "center",
@@ -1190,7 +1188,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: ScreenUtil.autowidth(10),
   },
   cupcdo:{
-    fontSize: ScreenUtil.setSpText(30),
+    fontSize: ScreenUtil.setSpText(14),
   },
   imgTop: {
     width: ScreenUtil.autowidth(121),
