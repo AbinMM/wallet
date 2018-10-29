@@ -51,10 +51,8 @@ export default class DappWeb extends Component {
       transformY1: new Animated.Value(-1000),
       optionShow:false,
       backButtonEnabled:false,
-      showWriteList:false,   //显示白名单 
-      isTransFerWrite:false,//记录一下这个状态
+
       writePsw:'',//白名单的密码，local
-      writePswSure:'',//白名单确定
       isWriteListRemote:this.props.navigation.state.params.isWriteList,//白名单标志 isWhitelist:"y"  isWhitelist:"n"
       isWriteListLocal:false,//白名单标志 isWhitelist:"y"  isWhitelist:"n"
     }
@@ -368,6 +366,31 @@ justInputPassword(isTransfer){
 }, () => { EasyShowLD.dialogClose(); this.callbackToWebview("");}); 
 }
 
+writeListInputPassword(isTransfer){
+    const view =
+    <View style={styles.passout}>
+        <Text style={[styles.contextTextWrite,{color: UColor.blackColor}]}>白名单授权仅在DApp运行期间一定时间内有效，退出DApp，或者退出App都会导致授权失败，下次使用白名单需要输入密码以启用白名单</Text>
+        <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
+            selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
+            style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
+            placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
+            {/* {this.state.isWriteListLocal==true &&
+             <Text style={[styles.contextTextWrite,{color: UColor.blackColor}]}>白名单已授权</Text>} */}
+    </View>
+    EasyShowLD.dialogShowWL("输入密码启用白名单", view, "确认", "取消", () => {
+        this.props.dispatch({ type: 'writeList/saveWriteList', payload: { dappUrl: this.props.navigation.state.params.url, isWriteListFlag: true }, callback: (data) => {
+            // EasyShowLD.loadingClose();
+            this.setState({
+                isWriteListLocal:true,
+            });
+            this.getSureInputPassword(isTransfer,this.state.password);
+        } });
+}, () => { 
+    this.justInputPassword(isTransfer);
+}); 
+}
+
+
 //输入密码
     inputPwd = (isTransfer) => {
         if(isTransfer){
@@ -375,6 +398,9 @@ justInputPassword(isTransfer){
         }else{
             this._setModalVisible_Tx();
         }
+
+        
+        // this.writeListInputPassword(isTransfer);
 
         if(this.state.isWriteListRemote==true){
             if(this.state.isWriteListLocal==true){//已经加入白名单
@@ -384,10 +410,7 @@ justInputPassword(isTransfer){
                     this.getSureInputPassword(isTransfer,this.state.writePsw);
                 }
             }else{
-                this.setState({
-                    showWriteList: true,
-                    isTransFerWrite:isTransfer,
-                });
+                this.writeListInputPassword(isTransfer);
             }
         }else{
             if(this.state.isWriteListLocal==true){//已经加入白名单,但远程需删掉的
@@ -402,37 +425,6 @@ justInputPassword(isTransfer){
 
     }
 
-//显示白名单
-_setModalWriteList() {
-    let isShow = this.state.showWriteList;
-    this.setState({
-        showWriteList: !isShow,
-    });
-}
-
-//确定按键-加入白名单
-sureAddToWritelist=()=>{
-    this.setState({
-        showWriteList: false,
-    });
-    // EasyShowLD.loadingShow();
-    this.props.dispatch({ type: 'writeList/saveWriteList', payload: { dappUrl: this.props.navigation.state.params.url, isWriteListFlag: true }, callback: (data) => {
-        // EasyShowLD.loadingClose();
-        this.setState({
-            isWriteListLocal:true,
-        });
-        this.getSureInputPassword(this.state.isTransFerWrite,this.state.writePswSure);
-    } });
-
-}
-
-//取消按键-不加入白名单 
-cannelAddToWritelist=()=>{
-    this.setState({
-        showWriteList: false,
-    });
-    this.justInputPassword(this.state.isTransFerWrite);
-}
 
 
 // 显示/隐藏 modal  
@@ -1156,39 +1148,6 @@ scatter_linkAccount(result)
                     </View>
                 </TouchableOpacity>
             </Modal>
-
-            <Modal animationType={'slide'} transparent={true} visible={this.state.showWriteList} onShow={() => { }} onRequestClose={() => {}} >
-                <TouchableOpacity style={[styles.modalStyleWrite,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
-                    <View style={{ width: ScreenWidth,backgroundColor: UColor.btnColor,}}>
-                        <View style={styles.subViewWrite}>
-
-                            <Text style={[styles.titleTextWrite,{color: UColor.blackColor}]}>输入密码启用白名单</Text>
-                            <Text style={[styles.contextTextWrite,{color: UColor.blackColor}]}>白名单授权仅在DApp运行期间一定时间内有效，退出DApp，或者退出App都会导致授权失败，下次使用白名单需要输入密码以启用白名单</Text>
-                            <View style={styles.passout}>
-                            <TextInput autoFocus={true} onChangeText={(wPassword) => this.setState({ writePswSure:wPassword })} returnKeyType="go" 
-                                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
-                                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-                                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-                            </View>
-                            <View style={styles.buttonWrite} >
-                                <Button onPress={() => { this.cannelAddToWritelist() }}>
-                                    <View style={[styles.btnoutsource,{backgroundColor: UColor.btnColor}]}>
-                                        <Text style={[styles.btntext,{color: UColor.blackColor}]}>取消</Text>
-                                    </View>
-                                </Button>
-                                <Button onPress={() => { this.sureAddToWritelist() }}>
-                                <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
-                                    <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
-                                </View>
-                            </Button>
-                            </View>
-
-                        </View>
-
-                    </View>
-                </TouchableOpacity>
-            </Modal>
-
         </View>
         <Animated.View style={[styles.progress, {backgroundColor: UColor.fallColor, width: this.state.progress }]}></Animated.View>
      
@@ -1438,11 +1397,11 @@ const styles = StyleSheet.create({
     }, 
     contextTextWrite:{   
         fontWeight:'normal',  
-        textAlign:'center',  
+        textAlign:'left',  
         fontSize: ScreenUtil.setSpText(10),  
-        marginTop: ScreenUtil.autoheight(10), 
-        marginBottom: ScreenUtil.autoheight(10),  
-        marginHorizontal: ScreenUtil.autoheight(63), 
+        marginTop: ScreenUtil.autoheight(5), 
+        marginBottom: ScreenUtil.autoheight(5),  
+        marginHorizontal: ScreenUtil.autoheight(10), 
     }, 
     buttonWrite: {
         alignItems: 'center',

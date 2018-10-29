@@ -8,8 +8,9 @@ const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 const prs = 0;
 const tk = null;
-const LoadingShow=true;
-const DailogShow=false;
+const LoadingShow=1;
+const DailogShow=0;
+const DailogShowWL=2;
 
 export class EasyShowLD {
     
@@ -29,6 +30,7 @@ export class EasyShowLD {
       this.map["LoadingDialog"].setState({
         "modalVisible": true,
         "loadingDialogFlag": DailogShow,
+        "writelistFlag": false,
         title,
         content,
         okLable,
@@ -37,6 +39,21 @@ export class EasyShowLD {
         cancelHandler
       });
     }
+
+    static dialogShowWL(title, content, okLable, disLabel, okHandler,cancelHandler) {
+      clearTimeout(this.handle);
+      this.map["LoadingDialog"].setState({
+        "modalVisible": true,
+        "loadingDialogFlag": DailogShowWL,
+        title,
+        content,
+        okLable,
+        disLabel,
+        okHandler,
+        cancelHandler,
+      });
+    }
+
 
     static dialogClose() {
         clearTimeout(this.handle);
@@ -188,10 +205,10 @@ export class LoadingDialog extends React.Component {
                           {this.state.disLabel?(
                             <TouchableHighlight
                               testID="dialog-cancel-button"
-                              style={[styles.disactionContainer,{backgroundColor: UColor.showy}]}
+                              style={[styles.disactionContainer,{backgroundColor:UColor.showy }]}
                               underlayColor={UColor.arrow}
                               onPress={this.state.cancelHandler}>
-                              <Text style={[material.button, { color: UColor.btnColor }]}>{this.state.disLabel}</Text>
+                              <Text style={[material.button, { color:UColor.btnColor}]}>{this.state.disLabel}</Text>
                             </TouchableHighlight>
                           ):null
                         }
@@ -216,6 +233,55 @@ export class LoadingDialog extends React.Component {
                 </KeyboardAvoidingView>
               </View>
             </TouchableWithoutFeedback>}
+
+            {this.state.loadingDialogFlag==DailogShowWL &&
+            <TouchableWithoutFeedback>
+              <View style={[styles.backgroundOverlay,{backgroundColor: UColor.mask}]}>
+                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
+                  <View style={[styles.modalContainer,styles.modalContainerPadding,{backgroundColor:UColor.btnColor}]}>
+                    <TouchableWithoutFeedback>
+                      <View>
+                        <View style={styles.titleContainer}>
+                            <Text style={[material.title,{color:UColor.startup}]}>{this.state.title}</Text>
+                        </View>
+                        <View style={[styles.contentContainer,styles.contentContainerPadding]}>
+                          {
+                            (typeof(this.state.content)=='string')?<Text style={styles.contentext}>{this.state.content}</Text>:this.state.content
+                          }
+                        </View>
+                        <View style={styles.actionsContainer}>
+                          {this.state.disLabel?(
+                            <TouchableHighlight
+                              testID="dialog-cancel-button"
+                              style={[styles.disactionContainer,{backgroundColor:UColor.mainColor }]}
+                              underlayColor={UColor.arrow}
+                              onPress={this.state.cancelHandler}>
+                              <Text style={[material.button, { color:UColor.arrow}]}>{this.state.disLabel}</Text>
+                            </TouchableHighlight>
+                          ):null
+                        }
+                        {this.state.okHandler?(
+                            <TouchableHighlight
+                              testID="dialog-ok-button"
+                              style={[styles.okactionContainer,{backgroundColor: UColor.tintColor}]}
+                              underlayColor={UColor.arrow}
+                              onPress={this.state.okHandler}>
+                              <Text style={[material.button, { color: UColor.btnColor }]}>{this.state.okLable}</Text>
+                            </TouchableHighlight>
+                          ):null
+                        }
+                        {this.state.showProgress?<ProgressBar
+                            style={{marginTop:47,width:ScreenWidth-32}}
+                            progress={this.state.progress}
+                          />:null}
+                        </View>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </View>
+                </KeyboardAvoidingView>
+              </View>
+            </TouchableWithoutFeedback>}
+
           </Modal>
         </View>
         )
