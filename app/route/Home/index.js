@@ -1153,7 +1153,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftimg: {
-    borderRadius: 25,
     width: ScreenUtil.autowidth(40), 
     height: ScreenUtil.autowidth(40),
   },
