@@ -158,19 +158,23 @@ class AssetInfo extends BaseComponent {
         }}); 
     }
 
-    onRefresh(){
+    doRefresh(logType){
         if(this.props.defaultWallet == null || this.props.defaultWallet.name == null || this.props.myAssets == null){
-          return;
-        }
-        this.getBalance();
-        if(this.state.logRefreshing){
             return;
-        }
-        this.setState({logRefreshing: true});
-        this.props.dispatch({ type: 'assets/getTradeDetails', payload: { account_name : this.props.defaultWallet.name, contract_account : this.state.asset.asset.contractAccount,  code : this.state.asset.asset.name, last_id: "-1", countPerPage: 10, type: this.state.logType}, callback: (resp) => {
-            this.processResult();
-            this.setState({logRefreshing: false});
-        }}); 
+          }
+          this.getBalance();
+          if(this.state.logRefreshing){
+              return;
+          }
+          this.setState({logRefreshing: true});
+          this.props.dispatch({ type: 'assets/getTradeDetails', payload: { account_name : this.props.defaultWallet.name, contract_account : this.state.asset.asset.contractAccount,  code : this.state.asset.asset.name, last_id: "-1", countPerPage: 10, type: logType}, callback: (resp) => {
+              this.processResult();
+              this.setState({logRefreshing: false});
+          }}); 
+    }
+
+    onRefresh(){
+        this.doRefresh(this.state.logType);
     }
 
     // 返回转账，抵押记录，内存交易，ET交易  
@@ -183,8 +187,11 @@ class AssetInfo extends BaseComponent {
     }  
 
     changeLogType(type){
-        this.onRefresh();
+       this.doRefresh(type);
     }
+
+
+
 
      // 更新"转账，抵押记录，内存交易，ET交易"按钮的状态  
      _updateBtnState(currentPressed, array) {  
@@ -201,17 +208,21 @@ class AssetInfo extends BaseComponent {
                 this.setState(newState);  
             }  
         }  
-
+        let action = "transfer";
         if(currentPressed == BTN_SELECTED_STATE_ARRAY[0]){ // 转账
-            this.state.logType = "transfer"
+            this.setState({logType:"transfer"})
+            action="transfer";
         }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[1]){
-            this.state.logType = "delegatebw";
+            this.setState({logType:"delegatebw"})
+            action="delegatebw";
         }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[2]){
-            this.state.logType = "ram";
+            this.setState({logType:"ram"})
+            action="ram";
         }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[3]){
-            this.state.logType = "ET";
+            this.setState({logType:"ET"})
+            action="ET";
         }
-        this.changeLogType();
+        this.changeLogType(action);
     }  
 
     render() {
