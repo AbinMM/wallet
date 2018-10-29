@@ -224,7 +224,6 @@ const styles = StyleSheet.create({
   },
   inptoutsource: {
     flexDirection: "row",
-    //borderBottomWidth: 1,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: ScreenUtil.autoheight(12),
@@ -240,7 +239,6 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "left",
     paddingVertical: 0,
-    lineHeight: ScreenUtil.autoheight(36),
     fontSize: ScreenUtil.setSpText(16),
     paddingLeft: ScreenUtil.autowidth(15),
   },
