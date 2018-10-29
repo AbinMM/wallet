@@ -65,6 +65,8 @@ class Detailsofmoney extends BaseComponent {
                 if(this.state.coinInfodata.whitePaperUrl && this.state.coinInfodata.whitePaperUrl != ''){
                    Linking.openURL(this.state.coinInfodata.whitePaperUrl);
                 }
+            }else if (key == 'contractAccount') {
+                   Linking.openURL("https://eoseco.com/accounts/" + this.state.coinInfodata.contractAccount);
             }else if (key == 'feedback') {
                 navigate('Web', { title: "ET官方客服", url: "https://static.meiqia.com/dist/standalone.html?_=t&eid=126524" });
             }else if (key == 'dm') {
@@ -127,7 +129,7 @@ class Detailsofmoney extends BaseComponent {
                     </View>
                     <View style={[styles.outsource,{borderBottomColor: UColor.transport,}]}>
                         <Text style={[styles.nametext,{color:UColor.fontColor}]}>合约账户</Text>
-                        <Text style={[styles.recordtext,{color:UColor.tintColor}]} numberOfLines={1} >{this.state.coinInfodata.contractAccount}</Text>
+                        <Text style={[styles.recordtext,{color:UColor.tintColor}]} numberOfLines={1} onPress={this.prot.bind(this, 'contractAccount')}>{this.state.coinInfodata.contractAccount}</Text>
                     </View>
                 </View>
                 <View style={[styles.synopsisout]}>
