@@ -208,21 +208,21 @@ class Tradingpool extends BaseComponent {
 
     _rightTopClick = () =>{
         const { navigate } = this.props.navigation;
-        navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Bancorpool.html" });
+        navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/Bancorpool.html" });
     }
 
     goPage(key, data = {}) {
         const { navigate } = this.props.navigation;
         if (key == 'dm') {
-            navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Disclaimer.html" });
+            navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/Disclaimer.html" });
         }else if (key == 'zz') {
-            navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/TheVillage.html" });
+            navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/TheVillage.html" });
         }else if (key == 'tczz') {
             this.turnInAsset();
-            navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/TheVillage.html" });
+            navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/TheVillage.html" });
         }else if (key == 'tccz') {
             this.turnOutAsset();
-            navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/WithdrawingTheVillage.html" });
+            navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/WithdrawingTheVillage.html" });
         }
 
     }
@@ -549,7 +549,7 @@ class Tradingpool extends BaseComponent {
 
     prot = () => {
         const { navigate } = this.props.navigation;
-        navigate('Web', { title: "服务及隐私条款", url: "http://static.eostoken.im/html/reg.html" });
+        navigate('Web', { title: "服务及隐私条款", url: "http://news.eostoken.im/html/reg.html" });
     }
 
     chkInputSellET(obj) {

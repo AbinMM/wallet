@@ -214,7 +214,7 @@ class createWallet extends BaseComponent {
 
   prot = () => {
     const { navigate } = this.props.navigation;
-    navigate('Web', { title: "服务及隐私条款", url: "http://static.eostoken.im/html/reg.html" });
+    navigate('Web', { title: "服务及隐私条款", url: "http://news.eostoken.im/html/reg.html" });
   }
 
 

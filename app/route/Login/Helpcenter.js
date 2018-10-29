@@ -43,37 +43,37 @@ class Helpcenter extends BaseComponent {
   goPage(key, data = {}) {
     const { navigate } = this.props.navigation;
     if (key == "commonproblem"){
-      navigate('Web', { title: "EOS常见问题", url: "http://static.eostoken.im/html/20180802/1533189528050.html" });
+      navigate('Web', { title: "EOS常见问题", url: "http://news.eostoken.im/html/20180802/1533189528050.html" });
     } else if (key == "wallet") {
-      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Wallet.html" });
+      navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/Wallet.html" });
     } else if (key == 'ks') {
-      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Keystore.html" });
+      navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/Keystore.html" });
     } else if (key == 'mw') {
-      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/MemorizingWords.html" });
+      navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/MemorizingWords.html" });
     } else if (key == 'iw') {
-      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/ImportWallet.html" });
+      navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/ImportWallet.html" });
     }else if (key == 'atw') {
-      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/AddToWallet.html" });
+      navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/AddToWallet.html" });
     }else if (key == 'bw') {
-      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/BackupsWallet.html" });
+      navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/BackupsWallet.html" });
     }else if (key == 'ta') {
-      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/TransferAccounts.html" });
+      navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/TransferAccounts.html" });
     }else if (key == 'vote') {
-      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/VoteCourse.html" });
+      navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/VoteCourse.html" });
     }else if (key == 'bp') {
-      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Bancorpool.html" });
+      navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/Bancorpool.html" });
     }else if (key == 'dm') {
-      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Disclaimer.html" });
+      navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/Disclaimer.html" });
     }else if (key == 'zz') {
-      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/TheVillage.html" });
+      navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/TheVillage.html" });
     }else if (key == 'cz') {
-      navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/WithdrawingTheVillage.html" });
+      navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/WithdrawingTheVillage.html" });
     }else if (key == 'pf'){
       navigate('ProblemFeedback', {});
     }else if (key == 'NoviceMustRead') {
-      navigate('Web', { title: "新手必读", url: "http://static.eostoken.im/html/NoviceMustRead.html" });
+      navigate('Web', { title: "新手必读", url: "http://news.eostoken.im/html/NoviceMustRead.html" });
     }else if (key == 'Troubleshooting') {
-      navigate('Web', { title: "疑难解答", url: "http://static.eostoken.im/html/Troubleshooting.html" });
+      navigate('Web', { title: "疑难解答", url: "http://news.eostoken.im/html/Troubleshooting.html" });
     }else{
       EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
     }

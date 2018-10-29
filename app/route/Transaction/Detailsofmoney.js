@@ -68,7 +68,7 @@ class Detailsofmoney extends BaseComponent {
             }else if (key == 'feedback') {
                 navigate('Web', { title: "ET官方客服", url: "https://static.meiqia.com/dist/standalone.html?_=t&eid=126524" });
             }else if (key == 'dm') {
-                navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Disclaimer.html" });
+                navigate('Web', { title: "帮助中心", url: "http://news.eostoken.im/html/Disclaimer.html" });
             }
         } catch (error) {
             

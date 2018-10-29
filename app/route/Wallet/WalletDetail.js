@@ -403,7 +403,7 @@ class WalletDetail extends BaseComponent {
     const { navigate } = this.props.navigation;
     if (key == 'Explain') {
       EasyShowLD.dialogClose()
-    navigate('Web', { title: "积分说明", url: "http://static.eostoken.im/html/20180703/1530587725565.html" });
+    navigate('Web', { title: "积分说明", url: "http://news.eostoken.im/html/20180703/1530587725565.html" });
     }else  if (key == 'EOS-TOKEN') {
       EasyShowLD.dialogClose()
       navigate('AssistantQrcode', key);

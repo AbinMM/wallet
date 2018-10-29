@@ -39,7 +39,7 @@ class TurnOutAsset extends BaseComponent {
             name: '', // 代币名称
             tokenvalue: '', // 代币兑换比率
             password:'',  //密码
-            tokenicon: "http://static.eostoken.im/images/20180319/1521432637907.png", // 代币图标
+            tokenicon: "http://news.eostoken.im/images/20180319/1521432637907.png", // 代币图标
             contractAccount: "eosio.token", // 契约帐户
             precisionNumber: '0', // 代币经度
             Choicesymbol: this.props.navigation.state.params.Choicesymbol, // 是否具有选择代币功能

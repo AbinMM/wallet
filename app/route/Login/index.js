@@ -269,7 +269,7 @@ class Login extends BaseComponent {
 
   prot = () => {
     const { navigate } = this.props.navigation;
-    navigate('Web', { title: "注册协议", url: "http://static.eostoken.im/html/reg.html" });
+    navigate('Web', { title: "注册协议", url: "http://news.eostoken.im/html/reg.html" });
   }
 
   forget = () => {

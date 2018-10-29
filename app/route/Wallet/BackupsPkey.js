@@ -129,7 +129,7 @@ class BackupsPkey extends BaseComponent {
           Clipboard.setString(this.state.ownerPk);
           EasyToast.show('Owner私钥已复制成功');
         }else  if(key == 'problem') {
-          navigate('Web', { title: "什么是私钥", url: "http://static.eostoken.im/html/Keystore.html" });   
+          navigate('Web', { title: "什么是私钥", url: "http://news.eostoken.im/html/Keystore.html" });   
         }
     }
 

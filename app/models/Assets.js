@@ -60,7 +60,7 @@ export default {
             var myAssets = [];
             // 单独获取eos信息
             var eosInfoDefault = {
-                asset: {name : "EOS", icon: "http://static.eostoken.im/images/20180319/1521432637907.png", contractAccount: "eosio.token", value: "0.00"},
+                asset: {name : "EOS", icon: "http://news.eostoken.im/images/20180319/1521432637907.png", contractAccount: "eosio.token", value: "0.00"},
                 value: true,
                 balance: '0.0000',
             }

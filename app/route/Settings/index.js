@@ -201,7 +201,7 @@ class Setting extends React.Component {
               if(integral.code == 605){
                 const view = <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>您当前的积分还不符合领取条件,请继续努力！</Text>
                 EasyShowLD.dialogShow("温馨提示", view, "查看", "关闭", () => {
-                  navigate('Web', { title: "活动奖励领取条件", url: "http://static.eostoken.im/html/20180827/1535368470588.html" });
+                  navigate('Web', { title: "活动奖励领取条件", url: "http://news.eostoken.im/html/20180827/1535368470588.html" });
                   EasyShowLD.dialogClose()
                 }, () => { EasyShowLD.dialogClose() });
               }else if(integral.code == 607){
@@ -209,7 +209,7 @@ class Setting extends React.Component {
                 // EasyShowLD.dialogShow("温馨提示",view,"知道了",null,()=>{EasyShowLD.dialogClose()}); 
                 const view = <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>首批奖励领取已圆满结束，期待您的下次参与！</Text>
                 EasyShowLD.dialogShow("温馨提示", view, "查看", "好的", () => {
-                  navigate('Web', { title: "活动结束公告", url: "http://static.eostoken.im/html/20180831/1535698529506.html" });
+                  navigate('Web', { title: "活动结束公告", url: "http://news.eostoken.im/html/20180831/1535698529506.html" });
                   EasyShowLD.dialogClose()
                 }, () => { EasyShowLD.dialogClose() });
               }else if(integral.code == 0){         

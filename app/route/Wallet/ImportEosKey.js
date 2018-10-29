@@ -70,13 +70,13 @@ class ImportEosKey extends BaseComponent {
   prot(data = {}, key){
     const { navigate } = this.props.navigation;
     if (key == 'clause') {
-    navigate('Web', { title: "服务及隐私条款", url: "http://static.eostoken.im/html/reg.html" });
+    navigate('Web', { title: "服务及隐私条款", url: "http://news.eostoken.im/html/reg.html" });
     }else  if (key == 'Memorizingwords') {
-    navigate('Web', { title: "什么是助记词", url: "http://static.eostoken.im/html/MemorizingWords.html" });
+    navigate('Web', { title: "什么是助记词", url: "http://news.eostoken.im/html/MemorizingWords.html" });
     }else  if (key == 'privatekey') {
-    navigate('Web', { title: "什么是私钥", url: "http://static.eostoken.im/html/Keystore.html" });
+    navigate('Web', { title: "什么是私钥", url: "http://news.eostoken.im/html/Keystore.html" });
     }else  if (key == 'howImportPrivatekey') {
-    navigate('Web', { title: "如何导入私钥", url: "http://static.eostoken.im/html/20181017/1539763702729.html" });
+    navigate('Web', { title: "如何导入私钥", url: "http://news.eostoken.im/html/20181017/1539763702729.html" });
     }
   }
 
