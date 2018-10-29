@@ -40,7 +40,8 @@ class Home extends React.Component {
       show: false,
       invalidWalletList: [],
       totalBalance: '0.00',
-      increase: 0,
+      adjustTotalBalance: '0.00',
+      increase:0,
       Invalid: false,
       arr1: 0,
       isChecked: true,
@@ -192,6 +193,7 @@ class Home extends React.Component {
         sum = sum + total;
     }
     this.setState({totalBalance: sum.toFixed(2)});
+    this.setState({adjustTotalBalance: this.adjustTotalBalance(sum.toFixed(2))});
   }
 
   adjustTotalBalance(obj){
@@ -655,7 +657,7 @@ class Home extends React.Component {
           </View>
         </View>
         <View style={styles.addtoout} >
-          <Text style={{fontSize: ScreenUtil.setSpText(35), color: UColor.fontColor, fontWeight: 'bold'}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : "" + this.adjustTotalBalance(this.state.totalBalance)) : '****'}</Text>
+          <Text style={{fontSize: ScreenUtil.setSpText(35), color: UColor.fontColor, fontWeight: 'bold'}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : "" + this.state.adjustTotalBalance) : '****'}</Text>
           <Text style={[styles.addtotext,{color: UColor.fontColor}]}>( 已抵押 </Text>
           <Text style={[styles.addtotext,{color: UColor.fontColor}]}>{this.state.mortgage} EOS )</Text>
         </View>

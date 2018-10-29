@@ -160,7 +160,7 @@ export default {
                 var accountName = yield call(store.get, 'current_account');
                 if(accountName == null || payload.accountName != accountName){ // 切换用户后
                     isBalanceChange = true;
-                    item.balance = '0.0000';
+                    // item.balance = '0.0000';
                 }
                 const resp = yield call(Request.request, getBalance, 'post', {contract: item.asset.contractAccount, account: payload.accountName, symbol: item.asset.name});
                 // alert("------ " + JSON.stringify(resp));
@@ -407,7 +407,7 @@ export default {
             let assets = action.payload.myAssets;
             var myAssets = [];
             if(!assets || assets.length == 0){
-                return { ...state, myAssets, updateTime:Date.parse(new Date())};
+                return { ...state, assets, updateTime:Date.parse(new Date())};
             }
             if(assets.length == 1){
                 myAssets.push(assets[0]);
@@ -423,7 +423,7 @@ export default {
                 break;
             }
             if(eos.length == 0){ // 此处没有eos资产应该出现了异常了
-                return { ...state, myAssets, updateTime:Date.parse(new Date())};
+                return { ...state, assets, updateTime:Date.parse(new Date())};
             }
             if(assets.length != 0){
                 assets = assets.sort(function(a, b){
