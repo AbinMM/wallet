@@ -198,10 +198,15 @@ class Resources extends BaseComponent {
 
                         });
 
+                        if(data.self_delegated_bandwidth){
+                            this.setState({
+                                cpu_redeem: Math.floor(data.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100)/100 ,
+                                net_redeem: Math.floor(data.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100 ,
+                            });
+                        }
+
                         if(data.refund_request){
                             this.setState({
-                                cpu_redeem: Math.floor(data.refund_request.cpu_amount.replace("EOS", "")*100)/100 ,
-                                net_redeem: Math.floor(data.refund_request.net_amount.replace("EOS", "")*100)/100 ,
                                 and_redeem: Math.floor((parseFloat(this.props.Resources.refund_request.cpu_amount.replace(" EOS", "")) + parseFloat(this.props.Resources.refund_request.net_amount.replace(" EOS", "")))*100)/100
                             });
                         }
