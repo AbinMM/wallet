@@ -706,7 +706,7 @@ class Home extends React.Component {
             renderHeader={()=>{return this._renderHeader()}}
             dataSource={this.state.dataSource.cloneWithRows(this.props.myAssets == null ? [] : this.props.myAssets)} 
             renderRow={(rowData, sectionID, rowID) => (      
-              <View style={{borderBottomColor: UColor.secdfont, borderBottomWidth: 1,}}>
+              <View style={{borderBottomColor: UColor.secdfont, borderBottomWidth: 1.5,}}>
                 <Button onPress={this.assetInfo.bind(this, rowData)}>
                   <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
                     <View style={styles.lefts}>
