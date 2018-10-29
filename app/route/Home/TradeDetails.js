@@ -193,7 +193,7 @@ class TradeDetails extends BaseComponent {
             </View>
             <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}> 
               <Text style={[styles.context,{color: UColor.arrow}]}>是否确认</Text>
-              {this.state.accepted? 
+              {this.state.trade.accepted? 
                 <Text style={[styles.tintext,{color: UColor.startup}]}>已确认</Text>
               :
                 <Text style={[styles.showytext,{color: UColor.showy}]}>未确认</Text>
