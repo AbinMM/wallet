@@ -20,7 +20,7 @@ import CustomWebView from './CustomWebView.android';
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 
-@connect(({ wallet }) => ({ ...wallet }))
+@connect(({ wallet,writeList }) => ({ ...wallet,writeList }))
 export default class DappWeb extends Component {
 
   static navigationOptions = ({ navigation, navigationOptions }) => {
@@ -51,7 +51,12 @@ export default class DappWeb extends Component {
       transformY1: new Animated.Value(-1000),
       optionShow:false,
       backButtonEnabled:false,
-      writePsw:'',//白名单的密码
+      showWriteList:false,   //显示白名单 
+      isTransFerWrite:false,//记录一下这个状态
+      writePsw:'',//白名单的密码，local
+      writePswSure:'',//白名单确定
+      isWriteListRemote:this.props.navigation.state.params.isWriteList,//白名单标志 isWhitelist:"y"  isWhitelist:"n"
+      isWriteListLocal:false,//白名单标志 isWhitelist:"y"  isWhitelist:"n"
     }
     this.props.dispatch({type: "wallet/getDefaultWallet",callback: data => {
         if(data && data.defaultWallet && data.defaultWallet.account){
@@ -79,6 +84,16 @@ export default class DappWeb extends Component {
     this.__onError = this.props.onError || noop
     // 添加返回键监听(对Android原生返回键的处理)
     this.addBackAndroidListener(this.props.navigation);
+
+    
+    this.props.dispatch({ type: 'writeList/findWriteList', payload: { dappUrl: this.props.navigation.state.params.url }, callback: (data) => {
+        if(data==true){
+            this.setState({
+                isWriteListLocal:true,
+            });
+        }
+    } });
+
   }
    //根据公钥获取对应的私钥 
    getPrivateKeyByPublicKey(publicKey)
@@ -309,9 +324,9 @@ onBackAndroid = () => {
                     if(r && r.isSuccess){
                         this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.state.tranferInfo.fromAccount, to: this.state.tranferInfo.toAccount, amount: this.state.tranferInfo.amount + " EOS", memo: this.state.tranferInfo.memo, data: "push"}});
                         resp_data = r.data;
-                        // this.setState({
-                        //     writePsw:iPassword,
-                        // });
+                        this.setState({
+                            writePsw:iPassword,
+                        });
                     }else{
                         if(r && r.data){
                             if(r.data.msg){
@@ -337,6 +352,21 @@ onBackAndroid = () => {
         }
     }
 
+justInputPassword(isTransfer){
+    const view =
+    <View style={styles.passout}>
+        <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
+            selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
+            style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
+            placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
+            {this.state.isWriteListLocal==true &&
+             <Text style={[styles.contextTextWrite,{color: UColor.blackColor}]}>白名单已授权</Text>}
+    </View>
+    EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
+        this.getSureInputPassword(isTransfer,this.state.password);
+        EasyShowLD.dialogClose();
+}, () => { EasyShowLD.dialogClose(); this.callbackToWebview("");}); 
+}
 
 //输入密码
     inputPwd = (isTransfer) => {
@@ -345,23 +375,66 @@ onBackAndroid = () => {
         }else{
             this._setModalVisible_Tx();
         }
-        if(this.state.writePsw.length<8){
-                const view =
-                <View style={styles.passout}>
-                    <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                        selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
-                        style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-                        placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-                </View>
-                EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
-                    this.getSureInputPassword(isTransfer,this.state.password);
-                    EasyShowLD.dialogClose();
-            }, () => { EasyShowLD.dialogClose(); this.callbackToWebview("");}); 
+
+        if(this.state.isWriteListRemote==true){
+            if(this.state.isWriteListLocal==true){//已经加入白名单
+                if(this.state.writePsw.length<8){
+                    this.justInputPassword(isTransfer);
+                }else{
+                    this.getSureInputPassword(isTransfer,this.state.writePsw);
+                }
+            }else{
+                this.setState({
+                    showWriteList: true,
+                    isTransFerWrite:isTransfer,
+                });
+            }
         }else{
-            this.getSureInputPassword(isTransfer,this.state.writePsw);
+            if(this.state.isWriteListLocal==true){//已经加入白名单,但远程需删掉的
+                this.props.dispatch({ type: 'writeList/saveWriteList', payload: { dappUrl: this.props.navigation.state.params.url, isWriteListFlag: false }, callback: (data) => {
+                    this.setState({
+                        isWriteListLocal:false,
+                    });
+                } });
+            }
+            this.justInputPassword(isTransfer);
         }
 
     }
+
+//显示白名单
+_setModalWriteList() {
+    let isShow = this.state.showWriteList;
+    this.setState({
+        showWriteList: !isShow,
+    });
+}
+
+//确定按键-加入白名单
+sureAddToWritelist=()=>{
+    this.setState({
+        showWriteList: false,
+    });
+    // EasyShowLD.loadingShow();
+    this.props.dispatch({ type: 'writeList/saveWriteList', payload: { dappUrl: this.props.navigation.state.params.url, isWriteListFlag: true }, callback: (data) => {
+        // EasyShowLD.loadingClose();
+        this.setState({
+            isWriteListLocal:true,
+        });
+        this.getSureInputPassword(this.state.isTransFerWrite,this.state.writePswSure);
+    } });
+
+}
+
+//取消按键-不加入白名单 
+cannelAddToWritelist=()=>{
+    this.setState({
+        showWriteList: false,
+    });
+    this.justInputPassword(this.state.isTransFerWrite);
+}
+
+
 // 显示/隐藏 modal  
 _setModalVisible_Tx() {
     let isShow = this.state.showTx;
@@ -1083,6 +1156,39 @@ scatter_linkAccount(result)
                     </View>
                 </TouchableOpacity>
             </Modal>
+
+            <Modal animationType={'slide'} transparent={true} visible={this.state.showWriteList} onShow={() => { }} onRequestClose={() => {}} >
+                <TouchableOpacity style={[styles.modalStyleWrite,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
+                    <View style={{ width: ScreenWidth,backgroundColor: UColor.btnColor,}}>
+                        <View style={styles.subViewWrite}>
+
+                            <Text style={[styles.titleTextWrite,{color: UColor.blackColor}]}>输入密码启用白名单</Text>
+                            <Text style={[styles.contextTextWrite,{color: UColor.blackColor}]}>白名单授权仅在DApp运行期间一定时间内有效，退出DApp，或者退出App都会导致授权失败，下次使用白名单需要输入密码以启用白名单</Text>
+                            <View style={styles.passout}>
+                            <TextInput autoFocus={true} onChangeText={(wPassword) => this.setState({ writePswSure:wPassword })} returnKeyType="go" 
+                                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
+                                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
+                                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
+                            </View>
+                            <View style={styles.buttonWrite} >
+                                <Button onPress={() => { this.cannelAddToWritelist() }}>
+                                    <View style={[styles.btnoutsource,{backgroundColor: UColor.btnColor}]}>
+                                        <Text style={[styles.btntext,{color: UColor.blackColor}]}>取消</Text>
+                                    </View>
+                                </Button>
+                                <Button onPress={() => { this.sureAddToWritelist() }}>
+                                <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
+                                    <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
+                                </View>
+                            </Button>
+                            </View>
+
+                        </View>
+
+                    </View>
+                </TouchableOpacity>
+            </Modal>
+
         </View>
         <Animated.View style={[styles.progress, {backgroundColor: UColor.fallColor, width: this.state.progress }]}></Animated.View>
      
@@ -1309,4 +1415,41 @@ const styles = StyleSheet.create({
     headbtntext: {
         fontSize: ScreenUtil.setSpText(12),
     },
+
+    modalStyleWrite: {
+        flex: 1, 
+        alignItems: 'center',
+        justifyContent: 'center', 
+    },
+    subViewWrite: {
+        borderRadius: 10,  
+        width:ScreenWidth-20,
+        alignSelf: 'stretch',  
+        justifyContent:'center',
+        marginHorizontal: ScreenUtil.autowidth(10),  
+    },
+    titleTextWrite:{   
+        fontWeight:'bold',  
+        textAlign:'center',  
+        fontSize: ScreenUtil.setSpText(18),  
+        marginTop: ScreenUtil.autoheight(10), 
+        marginBottom: ScreenUtil.autoheight(10),  
+    }, 
+    contextTextWrite:{   
+        fontWeight:'normal',  
+        textAlign:'center',  
+        fontSize: ScreenUtil.setSpText(10),  
+        marginTop: ScreenUtil.autoheight(10), 
+        marginBottom: ScreenUtil.autoheight(10),  
+        marginHorizontal: ScreenUtil.autoheight(63), 
+    }, 
+    buttonWrite: {
+        alignItems: 'center',
+        flexDirection: "row",
+        // borderBottomWidth: 0.5,
+        justifyContent: 'center',
+        // height:  ScreenUtil.autoheight(50),
+        // marginHorizontal: ScreenUtil.autowidth(20),
+    },
+
   })

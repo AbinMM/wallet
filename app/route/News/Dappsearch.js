@@ -54,7 +54,7 @@ class Dappsearch extends BaseComponent {
     }
 
     getBlur() {
-        this._raccount.focus();
+        // this._raccount.focus();
     }
 
     render() {

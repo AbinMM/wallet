@@ -11,6 +11,7 @@ import Invite from './Invite'
 import vote from './vote'
 import Transaction from './Transaction'
 import addressBook from './AddressBook'
+import writeList from './WriteList'
 const models = [
     Assets,
     Banner,
@@ -25,5 +26,6 @@ const models = [
     vote,
     Transaction,
     addressBook,
+    writeList,
 ]
 export default models;

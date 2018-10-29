@@ -53,6 +53,7 @@ class News extends React.Component {
       logRefreshing: false,
       selecttitle:"",
       selecturl:"",
+      isWriteListFlag:false,
       dappList: [],
       holdallList: [
         {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
@@ -310,7 +311,8 @@ class News extends React.Component {
     this.setState({
       dappPromp: true,
       selecttitle:data.name,
-      selecturl: data.url
+      selecturl: data.url,
+      isWriteListFlag:(data.isWhitelist=='y'?true:false),//白名单标志 isWhitelist:"y"  isWhitelist:"n"
     });
   }
 
@@ -340,7 +342,7 @@ class News extends React.Component {
     const { navigate } = this.props.navigation;
     
     // sdkOpenDapp(this.state.selecturl,this.state.selecttitle,this.state.theme);
-    navigate('DappWeb', { title: this.state.selecttitle, url: this.state.selecturl });
+    navigate('DappWeb', { title: this.state.selecttitle, url: this.state.selecturl ,isWriteList:this.state.isWriteListFlag});
   }
 
   onPressTool(data) {
