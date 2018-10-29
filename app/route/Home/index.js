@@ -412,11 +412,6 @@ class Home extends React.Component {
       try {
         this.setState({assetRefreshing: true});
         this.props.dispatch({ type: 'wallet/changeWallet', payload: { data }, callback: () => {
-          // this.props.dispatch({ type: 'assets/clearBalance', payload: {accountName: this.props.defaultWallet.name}, callback: () => {
-          //   this.props.dispatch({ type: 'assets/getBalance', payload: { accountName: this.props.defaultWallet.name, myAssets: this.props.myAssets}, callback: () => {
-          //     this.setState({assetRefreshing: false});
-          //   }});
-          // }});
           this.props.dispatch({ type: 'assets/setCurrentAccount', payload: { accountName: data.account }, callback: () => {
             this.getMyAssetsInfo(() => {
               this.setState({assetRefreshing: false});

@@ -154,7 +154,7 @@ export default {
             var isBalanceChange = false;
             for(let i in myAssets){
                 let item = myAssets[i];
-                var accountName = yield call(store.get, 'accountName');
+                var accountName = yield call(store.get, 'current_account');
                 if(accountName == null || payload.accountName != accountName){ // 切换用户后
                     isBalanceChange = true;
                     item.balance = '0.0000';
@@ -182,7 +182,6 @@ export default {
             }
 
             if(isBalanceChange){
-                    yield call(store.save, 'accountName', payload.accountName);
                     yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
 
                     var currentAccount = yield call(store.get, 'current_account');
@@ -199,19 +198,6 @@ export default {
         }catch(e){
             EasyToast.show('网络繁忙,请稍后!');
         }
-    },
-    *clearBalance({payload, callback}, {call, put}){
-        var myAssets = yield call(store.get, 'myAssets217_' + payload.accountName);
-        for(let i in myAssets){
-            let item = myAssets[i];
-            item.balance = '0.0000';
-        }
-        yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
-        var currentAccount = yield call(store.get, 'current_account');
-        if(currentAccount == payload.accountName){
-            yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
-        }
-        if(callback) callback();
     },
     *addMyAsset({payload, callback},{call,put}){
         var myAssets = yield call(store.get, 'myAssets217_' + payload.accountName);
@@ -409,27 +395,47 @@ export default {
             return {...state,...action.payload};
         },
         updateMyAssets(state, action) {
-            let myAssets = action.payload.myAssets;
-            if(myAssets == undefined || myAssets == null || myAssets.length == 0){
+            let assets = action.payload.myAssets;
+            var myAssets = [];
+            if(!assets || assets.length == 0){
                 return;
             }
-            for(var i = 0; i < myAssets.length; i++){
-                if(myAssets[i].asset.name != "EOS"){
+            var eos = [];
+            for(var i = 0; i < assets.length; i++){
+                if(assets[i].asset.name != "EOS"){
                     continue;
                 }
-
-                var temp = myAssets[i];
-                myAssets[i] = myAssets[0];
-                myAssets[0] = temp;
-
+                eos.push(assets[i]);
+                assets.splice(i, 1);
                 break;
             }
-            // if(myAssets.length > 1){
-            //     var tempA = [];
-            //     tempA.push(myAssets[0]); // EOS为第一个元素，不进行排列
-            //     myAssets.shift(); // 移除第一个元素，即EOS
-            //     myAssets.sort(compare("balance")); // 根据余额进行排列
-            //     myAssets = tempA.concat(myAssets); // EOS重新放在第一个元素
+            if(eos.length == 0){ // 此处没有eos资产应该出现了异常了
+                return; 
+            }
+            if(assets.length > 2){
+
+                assets = assets.sort(function(a, b){
+                    if(a.asset.name.toString().toLowerCase() < b.asset.name.toString().toLowerCase()){
+                        return -1;
+                    }else{
+                        return 1; //按编码从小到大排列
+                    }
+                }); 
+                myAssets = eos.concat(assets); // EOS重新放在第一个元素
+            }
+
+            // 此处代码是为了防止出现第一个资产不为EOS的情况, 经常上面的处理，第一个应该是EOS了
+            // if(myAssets[0].asset.name != "EOS"){
+            //     for(var i = 0; i < myAssets.length; i++){
+            //         if(myAssets[i].asset.name != "EOS"){
+            //             continue;
+            //         }
+    
+            //         var temp = myAssets[i];
+            //         myAssets[i] = myAssets[0];
+            //         myAssets[0] = temp;
+            //         break;
+            //     }
             // }
 
             return { ...state, myAssets, updateTime:Date.parse(new Date())};
