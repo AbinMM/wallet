@@ -325,7 +325,7 @@ class News extends React.Component {
   } 
 
   // 显示/隐藏 modal  
-  _setModalVisible() {  
+  _setModalVisibleTokenissue() {  
     let isTokenissue = this.state.Tokenissue;  
     this.setState({  
         Tokenissue:!isTokenissue,  
@@ -333,7 +333,7 @@ class News extends React.Component {
   } 
 
   openTokenissue() {
-    this._setModalVisible();
+    this._setModalVisibleTokenissue();
     const { navigate } = this.props.navigation;
     navigate('Web', { title: '莫与一键发币', url: "https://coincreate.github.io/EOS_coincreate/coincreate.html" });
   }
@@ -363,7 +363,7 @@ class News extends React.Component {
     }else if(data.name == this.state.holdallList[2].name){
       navigate('FreeMortgage');
     }else if(data.name == this.state.holdallList[3].name){
-      this._setModalVisible();
+      this._setModalVisibleTokenissue();
     }else{
       EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
     }
@@ -507,7 +507,7 @@ class News extends React.Component {
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
               <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
                 <View style={styles.subViewBackup}> 
-                  <Button onPress={this._setModalVisible.bind(this) } style={styles.buttonView2}>
+                  <Button onPress={this._setModalVisibleTokenissue.bind(this) } style={styles.buttonView2}>
                       <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={35} />
                   </Button>
                 </View>
