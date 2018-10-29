@@ -203,7 +203,7 @@ class Coins extends React.Component {
         lazy={true}
         navigationState={this.state}
         renderScene={this.renderScene.bind(this)}
-        renderHeader={(props)=> <LinearGradient colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[{width:ScreenWidth}, ScreenUtil.isIphoneX()?{minHeight:ScreenWidth*0.1013}:{height:ScreenWidth*0.1013}]}>
+        renderHeader={(props)=> <LinearGradient colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[{width:ScreenWidth,height:ScreenWidth*0.1013 }]}>
         <TabBar onTabPress={this._handleTabItemPress} 
         labelStyle={[styles.labelStyle,{color:UColor.btnColor}]} 
         indicatorStyle={[styles.indicatorStyle,{backgroundColor: UColor.fonttint}]} 
