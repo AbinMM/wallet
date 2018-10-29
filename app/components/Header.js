@@ -35,7 +35,7 @@ class Header extends BaseComponent {
         let {backgroundColors, onPressLeft, onPressRightFun, title, onPressRight, avatar, subName, imgWidth, imgHeight, onDappBackFalg,onLeftCloseFun, } = this.props
         return (
         // <View style={[styles.header,{backgroundColor: backgroundColor ? backgroundColor: UColor.titletop}]}>
-        <LinearGradient colors={backgroundColors?backgroundColors:UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={styles.header} paddingTop={Constants.FitPhone}>
+        <LinearGradient colors={backgroundColors?backgroundColors:UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.header,{maxHeight: ScreenUtil.autoheight(45) + Constants.FitPhone,}]} paddingTop={Constants.FitPhone}>
             <View style={styles.Leftout} >
                 <TouchableOpacity style={styles.LeftBack} onPress={onPressLeft ? (onPressRightFun==undefined?() => {this.props.navigation.goBack()}:onPressRightFun) : () => {undefined}}>
                     {onPressLeft &&<Ionicons style={{color:UColor.btnColor}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
         zIndex: 999,
         flexDirection:"row",
         alignItems:"center",
-        maxHeight: ScreenUtil.autoheight(89),
     },
     Leftout: {
         flex: 1.5, 

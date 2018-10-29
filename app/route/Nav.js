@@ -374,6 +374,7 @@ class Route extends React.Component {
     turnintoaccount: '',
     turninamount: '',
     turninsymbol: '',
+    turnincontractAccount: '',
     showShare: false,
     showVoteShare:false,
     showTurninShare:false,
@@ -627,9 +628,14 @@ class Route extends React.Component {
       if(result.symbol){
         this.setState({turninsymbol:result.symbol});
       }else{
-        this.setState({turninamount:""});
+        this.setState({turninsymbol:""});
       }
-
+      if(result.contractAccount){
+        this.setState({turnincontractAccount:result.contractAccount});
+      }else{
+        this.setState({turnincontractAccount:""});
+      }
+     
       this.state.vtransformY = new Animated.Value(500);
       this.state.vtransformY1 = new Animated.Value(-1000);
       setTimeout(() => {
@@ -1263,8 +1269,8 @@ class Route extends React.Component {
                           <Text style={{color: UColor.btnColor, fontSize: ScreenUtil.setSpText(10), textAlign: 'center', lineHeight: ScreenUtil.autowidth(20),}}>{this.state.turnintoaccount}</Text>
                           <View style={{ justifyContent: 'center', alignSelf: 'center', padding: ScreenUtil.autowidth(10), backgroundColor:UColor.btnColor }}>
                             <QRCode size={ScreenUtil.autowidth(69)}  logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(16)} logoBorderRadius={5}
-                            value={this.state.turninsymbol.toLowerCase() +':' + this.state.turnintoaccount + '?amount=' + ((this.state.turninamount == "")?'0':this.state.turninamount) + '&token=' + this.state.turninsymbol.toUpperCase()}/>
-                          </View>
+                            value={this.state.turninsymbol.toLowerCase() +':' + this.state.turnintoaccount + '?amount=' + ((this.state.turninamount == "")?'0':this.state.turninamount) + '&contractAccount=' + this.state.turnincontractAccount + '&token=' + this.state.turninsymbol.toUpperCase()}/>
+                          </View> 
                           <Text style={{ color: UColor.btnColor, fontSize: ScreenUtil.setSpText(10), textAlign: 'center', lineHeight: ScreenUtil.autowidth(20),}}>扫描二维码向他付款</Text>
                         </View>
                       </View>

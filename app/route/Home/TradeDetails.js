@@ -171,11 +171,11 @@ class TradeDetails extends BaseComponent {
         
         <View style={[styles.tradehint,]}>
           <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
-            <Text style={[styles.contwotext,{color: UColor.arrow}]}>收款账户</Text>
+            <Text style={[styles.contwotext,{color: UColor.arrow}]}>付款账户</Text>
             <Text style={[styles.blocktext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'from')} onLongPress={this.copyaccount.bind(this, 'from')}>{this.state.trade.from}</Text>
           </View>
           <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
-            <Text style={[styles.contwotext,{color: UColor.arrow}]}>付款账户</Text>
+            <Text style={[styles.contwotext,{color: UColor.arrow}]}>收款账户</Text>
             <Text style={[styles.blocktext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'to')} onLongPress={this.copyaccount.bind(this, 'to')}>{this.state.trade.to}</Text>
           </View>
           <View style={{height: ScreenUtil.autowidth(88), paddingVertical: ScreenUtil.autowidth(11), marginTop: 1,flexDirection: "row", alignItems: 'flex-start', justifyContent: 'center', backgroundColor: UColor.mainColor}}>

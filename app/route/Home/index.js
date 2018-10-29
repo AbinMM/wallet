@@ -650,7 +650,7 @@ class Home extends React.Component {
           {/* <View style={{backgroundColor: '#FF8A92', borderBottomLeftRadius: 25, borderTopLeftRadius: 25,}}>
             <Text style={{fontSize: ScreenUtil.setSpText(33),color: UColor.btnColor, marginHorizontal: ScreenUtil.autowidth(20),}}>-5%</Text>
           </View> */}
-          <View style={[styles.incdocupout,(this.state.increase>=0 || this.state.totalBalance == "0.00")?{borderColor: UColor.fallColor,backgroundColor: UColor.fallColor}:{borderColor: UColor.riseColor,backgroundColor: UColor.riseColor}]}>
+          <View style={[styles.incdocupout,(this.state.increase>=0 && this.state.totalBalance == "0.00")?{borderColor: UColor.fallColor,backgroundColor: UColor.fallColor}:{borderColor: UColor.riseColor,backgroundColor: UColor.riseColor}]}>
             <Text style={[styles.cupcdo,{color: UColor.btnColor}]}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
           </View>
         </View>
