@@ -161,6 +161,11 @@ class Resources extends BaseComponent {
             //         EasyShowLD.loadingClose();
             //     }
             // });
+
+            //选择联系人返回的参数
+            DeviceEventEmitter.addListener('transfer_scan_result', (data) => {
+                this.setState({receiver:data.toaccount});
+            });
             
         } catch (error) {
             EasyShowLD.loadingClose();
