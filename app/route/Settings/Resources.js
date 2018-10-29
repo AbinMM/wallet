@@ -1020,7 +1020,7 @@ class Resources extends BaseComponent {
                     </View>
                     <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor}]}>
                         <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(30), alignItems: 'center'}}>
-                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户(不填默认自己)</Text>
+                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
                         </View>
                         <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(35), alignItems: 'center', }}>
                             <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"
@@ -1119,7 +1119,7 @@ class Resources extends BaseComponent {
                     {this.state.isBuy&&
                     <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor}]}>
                         <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(30), alignItems: 'center'}}>
-                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户(不填默认自己)</Text>
+                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
                         </View>
                         <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(35), alignItems: 'center',}}>
                             <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"
