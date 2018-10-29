@@ -86,7 +86,7 @@ class Detailsofmoney extends BaseComponent {
     render() {
         return (
         <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-            <Header {...this.props} onPressLeft={true} title={this.props.navigation.state.params.tradename} />   
+            <Header {...this.props} onPressLeft={true} title={this.props.navigation.state.params.tradename + '概况'} />   
             <ScrollView>
                 <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
