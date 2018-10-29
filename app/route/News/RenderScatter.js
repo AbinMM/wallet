@@ -329,7 +329,7 @@ export default function RenderScatter(props) {
                             }
                             tmp_memo = from.memo ? from.memo : '';
                         }else{
-                            tmp_from = fom;
+                            tmp_from = from;
                             tmp_to = to;
                             tmp_amount = amount;
                             tmp_memo = memo;
