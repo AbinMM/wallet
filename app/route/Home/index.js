@@ -202,6 +202,7 @@ class Home extends React.Component {
     if(dispassert == null){
       return this.state.totalBalance;
     }
+    dispassert = dispassert === 'NaN' ? '0.00' : dispassert;
     return dispassert;
   }
 
