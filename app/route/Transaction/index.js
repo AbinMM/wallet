@@ -1213,13 +1213,13 @@ class Transaction extends BaseComponent {
                     </View>
                 </Button> 
             </View>
-            <View style={styles.timetabout}>
+            {/* <View style={styles.timetabout}>
                 <Button onPress={this.tradingpoolClick.bind(this)}>
                     <View style={[styles.tradingview,{backgroundColor:UColor.tintColor}]} >
                         <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>坐庄</Text>
                     </View>
                 </Button> 
-            </View>
+            </View> */}
          </View> 
         {this.state.showMore &&       
         <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
