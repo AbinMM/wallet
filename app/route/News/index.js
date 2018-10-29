@@ -673,7 +673,7 @@ class News extends React.Component {
         {this.state.routes && <TabViewAnimated 
             lazy={true} navigationState={this.state}
             renderScene={this.renderScene.bind(this)}
-            renderHeader={(props) => <LinearGradient colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[{width:ScreenWidth,height:ScreenUtil.isIphoneX() ? ScreenWidth*0.1946:ScreenWidth*0.1546,}]}>
+            renderHeader={(props) => <LinearGradient colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[{width:ScreenWidth,height:ScreenUtil.autoheight(45) + Constants.FitPhone}]}>
             <TabBar onTabPress={this._handleTabItemPress} 
             labelStyle={[styles.labelStyle,{color:UColor.btnColor}]} 
             indicatorStyle={[styles.indicatorStyle,{width: ScreenWidth / this.state.routes.length - ScreenUtil.autowidth(40),backgroundColor: UColor.fonttint}]} 
