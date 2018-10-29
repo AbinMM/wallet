@@ -38,7 +38,7 @@ class AddAssets extends BaseComponent {
 
       this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
         if(this.props.defaultWallet && this.props.defaultWallet.name){
-          this.props.dispatch({ type: 'assets/myAssetInfo', payload: { accountName: this.props.defaultWallet.name}});
+          this.props.dispatch({ type: 'assets/getMyAssetList', payload: { accountName: this.props.defaultWallet.name}});
         }
       }});
 
@@ -56,7 +56,7 @@ class AddAssets extends BaseComponent {
   }
 
   componentWillUnmount(){
-    // DeviceEventEmitter.emit('updateMyAssets', '');
+    DeviceEventEmitter.emit('updateMyAssets', '');
     // DeviceEventEmitter.emit('startBalanceTimer', "");
     //结束页面前，资源释放操作
     super.componentWillUnmount();

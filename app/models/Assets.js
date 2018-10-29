@@ -146,6 +146,7 @@ export default {
     *getBalance({payload, callback}, {call, put}){
         try{
             // alert("------ " + JSON.stringify(payload));
+
             var myAssets = yield call(store.get, 'myAssets217_' + payload.accountName);
             if(myAssets == null){
                 myAssets = [];
@@ -383,6 +384,12 @@ export default {
             //alert(JSON.stringify(myAssetstoken));
             if(callback) callback(myAssetstoken);
         }
+      },
+      *getMyAssetList({ payload,callback }, { call, put }) {
+        if(payload && payload.accountName){
+            var myAssets = yield call(store.get, 'myAssets217_' + payload.accountName);
+            yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+        }
       }
     },
 
@@ -400,6 +407,10 @@ export default {
             if(!assets || assets.length == 0){
                 return;
             }
+            if(assets.length == 1){
+                myAssets.push(assets[0]);
+                return { ...state, myAssets, updateTime:Date.parse(new Date())};     
+            }
             var eos = [];
             for(var i = 0; i < assets.length; i++){
                 if(assets[i].asset.name != "EOS"){
@@ -412,8 +423,7 @@ export default {
             if(eos.length == 0){ // 此处没有eos资产应该出现了异常了
                 return; 
             }
-            if(assets.length > 2){
-
+            if(assets.length != 0){
                 assets = assets.sort(function(a, b){
                     if(a.asset.name.toString().toLowerCase() < b.asset.name.toString().toLowerCase()){
                         return -1;
@@ -422,6 +432,8 @@ export default {
                     }
                 }); 
                 myAssets = eos.concat(assets); // EOS重新放在第一个元素
+            }else{
+
             }
 
             // 此处代码是为了防止出现第一个资产不为EOS的情况, 经常上面的处理，第一个应该是EOS了

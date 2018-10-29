@@ -67,7 +67,7 @@ class Home extends React.Component {
       });
       this.getAllWalletEosBalance();
       this.getIncrease();
-      this.getMyAssetsInfo();
+      this.getMyAssetsInfo(() => {}, true);
       this.getResourcesinfo();
     }});
     this.props.dispatch({ type: 'wallet/walletList' });
@@ -89,17 +89,17 @@ class Home extends React.Component {
         easing: Easing.linear,
       },
     ).start();               //开始
-    DeviceEventEmitter.addListener('wallet_info', (data) => {
-      this.getDefaultWalletEosBalance();
-      this.getAllWalletEosBalance();
-      this.getMyAssetsInfo();    
-    });
+    // DeviceEventEmitter.addListener('wallet_info', (data) => {
+    //   this.getDefaultWalletEosBalance();
+    //   this.getAllWalletEosBalance();
+    //   this.getMyAssetsInfo();    
+    // });
     DeviceEventEmitter.addListener('updateDefaultWallet', (data) => {
       this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
         this.props.dispatch({ type: 'assets/setCurrentAccount', payload: { accountName: (this.props.defaultWallet ? this.props.defaultWallet.name : "") }});
         this.getDefaultWalletEosBalance(); // 默认钱包余额
         this.getAllWalletEosBalance();
-        this.getMyAssetsInfo();
+        this.getMyAssetsInfo(() => {}, true);
       } });
     });
 
@@ -121,9 +121,9 @@ class Home extends React.Component {
       this.calTotalBalance();
     });
 
-    // DeviceEventEmitter.addListener('updateMyAssets', (data) => {
-      // this.getAssetBalance();
-    // });
+    DeviceEventEmitter.addListener('updateMyAssets', (data) => {
+      this.getAssetBalance();
+    });
 
     DeviceEventEmitter.addListener('updateMyAssetsBalance', (data) => {
       this.calTotalBalance();
@@ -164,11 +164,11 @@ class Home extends React.Component {
     this.setState({listmodal: false,})
   }
 
-  getMyAssetsInfo(getAssetsInfoCallback){
+  getMyAssetsInfo(getAssetsInfoCallback, init = false){
     if (this.props.defaultWallet == null || this.props.defaultWallet.name == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
       return;
     }
-    this.props.dispatch({ type: 'assets/myAssetInfo', payload: { page: 1, isInit: true, accountName: this.props.defaultWallet.name}, callback: (myAssets) => {
+    this.props.dispatch({ type: 'assets/myAssetInfo', payload: { page: 1, isInit: init, accountName: this.props.defaultWallet.name}, callback: (myAssets) => {
       this.props.dispatch({ type: 'assets/fetchMyAssetsFromNet', payload: { accountName: this.props.defaultWallet.name}, callback: () => {
         this.getAssetBalance(getAssetsInfoCallback);    
       }});
@@ -415,7 +415,7 @@ class Home extends React.Component {
           this.props.dispatch({ type: 'assets/setCurrentAccount', payload: { accountName: data.account }, callback: () => {
             this.getMyAssetsInfo(() => {
               this.setState({assetRefreshing: false});
-            });
+            }, true);
           }});
         }});
         // this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: data.account },callback: (resources) => {
