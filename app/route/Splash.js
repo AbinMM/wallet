@@ -40,7 +40,7 @@ class Splash extends React.Component {
     this.Fitphone();
 
     this.props.dispatch({type:'login/getthemeSwitching',callback:(theme)=>{
-      if(!theme.theme){  
+      if(true){  
         //白色版
           UColor.transport= 'rgba(0, 0, 0, 0.0)';
           UColor.mask= 'rgba(0, 0, 0, 0.4)'; //遮罩色 UColor.mask
