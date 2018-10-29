@@ -8,9 +8,7 @@ import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
 import { EasyToast } from '../../components/Toast';
 import BaseComponent from "../../components/BaseComponent";
-var dismissKeyboard = require('dismissKeyboard');
-const ScreenWidth = Dimensions.get('window').width;
-const ScreenHeight = Dimensions.get('window').height;
+import moment from 'moment';
 
 @connect(({transaction}) => ({...transaction}))
 class Detailsofmoney extends BaseComponent {
@@ -25,26 +23,23 @@ class Detailsofmoney extends BaseComponent {
         super(props);
         this.state = {
             coinInfodata: {
-                recommendLevel:'',
-                marketValueDesc:'',
-                totalDesc:'',
-                projectCreative:'',
-                investmentValue:'',
-                site:'',
-                crowdfundingPrice:'',
-                crowdfundingDate:'',
-                whitePaperUrl:'',
-                blockQueryUrl:'',
-                intr:'',
+                marketValueDesc:'',  //当前市值
+                total:'',   //发行总量
+                marke:0,            //流通量
+                issueDate: 0, //发行时间
+                site:'',    //官方网站
+                crowdfundingPrice:'', //募资成本
+                crowdfundingDate:'',  //募资时间
+                whitePaperUrl:'',   //白皮书
+                contractAccount:'', //合约账户   
+                intr:'', //项目简介
             },
         };
     }
 
     //组件加载完成
     componentDidMount() {
-        //alert(JSON.stringify(this.props.navigation.state.params.contract_account));
         this.props.dispatch({ type: 'transaction/getCoinInfo', payload:{ coinname: this.props.navigation.state.params.tradename,},callback: (data) => {
-            // alert(JSON.stringify(data));
             if (data != null && data.code == 0) {
                 this.setState({coinInfodata: data.data});
             }else{
@@ -56,37 +51,6 @@ class Detailsofmoney extends BaseComponent {
     componentWillUnmount(){
         //结束页面前，资源释放操作
         super.componentWillUnmount();
-    }
-
-    renderStars = (stars) => {
-        const total = 5;
-        let full, half, empty;
-        full = parseInt(stars/2) -1;
-        if(stars%2 === 1){
-            full++;
-            half = 1;
-            empty = total - full - half;
-        }else{
-            full++;
-            half = 0;
-            empty = total - full;
-        }
-        const results = [];
-        let i;
-        for(i = 0; i < full; i++){
-            results.push(<Image key={i} source={UImage.starfull} style={styles.starsimg} />)
-        }
-        if(half){
-            results.push(<Image key={i} source={UImage.starhalf} style={styles.starsimg} />)
-        }
-        for (let j = 0; j < empty; j++){
-            results.push(<Image key={i+j+1} source={UImage.starempty} style={styles.starsimg} />)
-        }
-        return (
-            <View style={{flexDirection: 'row',}}>
-                {results}
-            </View>
-        );
     }
 
     prot(key, data = {}) {
@@ -101,10 +65,6 @@ class Detailsofmoney extends BaseComponent {
                 if(this.state.coinInfodata.whitePaperUrl && this.state.coinInfodata.whitePaperUrl != ''){
                    Linking.openURL(this.state.coinInfodata.whitePaperUrl);
                 }
-            }else if (key == 'blockQuery') {
-                if(this.state.coinInfodata.blockQueryUrl && this.state.coinInfodata.blockQueryUrl != ''){
-                   Linking.openURL(this.state.coinInfodata.blockQueryUrl);
-                }
             }else if (key == 'dm') {
                 navigate('Web', { title: "帮助中心", url: "http://static.eostoken.im/html/Disclaimer.html" });
             }
@@ -112,7 +72,15 @@ class Detailsofmoney extends BaseComponent {
             
         }
     }
-
+    transferTimeZone(blockTime){
+        var timezone;
+        try {
+            timezone = moment(blockTime).add(8,'hours').format('YYYY-MM-DD');
+        } catch (error) {
+            timezone = blockTime;
+        }
+        return timezone;
+    }
     render() {
         return (
         <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
@@ -124,26 +92,20 @@ class Detailsofmoney extends BaseComponent {
                         <Text style={[styles.recordtext,{color:UColor.arrow}]}>分布式底层平台</Text>
                     </View>
                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>推荐指数</Text>
-                        <View style={{flex: 2, justifyContent: 'flex-start'}}>
-                            {this.renderStars(this.state.coinInfodata.recommendLevel)}
-                        </View>
-                    </View>
-                    <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
                         <Text style={[styles.nametext,{color:UColor.fontColor}]}>当前市值</Text>
                         <Text style={[styles.recordtext,{color:UColor.arrow}]} numberOfLines={1}>{this.state.coinInfodata.marketValueDesc}</Text>
                     </View>
                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
                         <Text style={[styles.nametext,{color:UColor.fontColor}]}>发行总量</Text>
-                        <Text style={[styles.recordtext,{color:UColor.arrow}]} numberOfLines={1}>{this.state.coinInfodata.totalDesc}</Text>
+                        <Text style={[styles.recordtext,{color:UColor.arrow}]} numberOfLines={1}>{this.state.coinInfodata.total}</Text>
                     </View>
                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>项目创新</Text>
-                        <Text style={[styles.recordtext,{color:UColor.arrow}]}>{this.state.coinInfodata.projectCreative}</Text>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>流通量</Text>
+                        <Text style={[styles.recordtext,{color:UColor.arrow}]} numberOfLines={1}>{this.state.coinInfodata.marke}</Text>
                     </View>
                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>投资价值</Text>
-                        <Text style={[styles.recordtext,{color:UColor.arrow}]}>{this.state.coinInfodata.investmentValue}</Text>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>发行时间</Text>
+                        <Text style={[styles.recordtext,{color:UColor.arrow}]} numberOfLines={1}>{this.transferTimeZone(this.state.coinInfodata.issueDate)}</Text>
                     </View>
                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
                         <Text style={[styles.nametext,{color:UColor.fontColor}]}>官方网站</Text>
@@ -162,8 +124,8 @@ class Detailsofmoney extends BaseComponent {
                         <Text style={[styles.recordtext,{color:UColor.tintColor}]} numberOfLines={1} onPress={this.prot.bind(this, 'whitePaper')}>查看</Text>
                     </View>
                     <View style={[styles.outsource,{borderBottomColor: UColor.transport,}]}>
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>区块信息</Text>
-                        <Text style={[styles.recordtext,{color:UColor.tintColor}]} numberOfLines={1} onPress={this.prot.bind(this, 'blockQuery')}>{this.state.coinInfodata.blockQueryUrl}</Text>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>合约账户</Text>
+                        <Text style={[styles.recordtext,{color:UColor.tintColor}]} numberOfLines={1} >{this.state.coinInfodata.contractAccount}</Text>
                     </View>
                 </View>
                 <View style={[styles.synopsisout]}>
@@ -227,9 +189,10 @@ const styles = StyleSheet.create({
     },
     separateout: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end',
         marginTop: ScreenUtil.autoheight(6),
+        marginRight: ScreenUtil.autoheight(6),
     },
     separatetext: {
         fontSize: ScreenUtil.setSpText(14),
