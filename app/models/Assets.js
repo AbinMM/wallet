@@ -136,9 +136,9 @@ export default {
             yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
             yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
         }
-        if(isPriceChange){
-            DeviceEventEmitter.emit('updateMyAssetsPrice', myAssets);
-        }
+        // if(isPriceChange){
+        //     DeviceEventEmitter.emit('updateMyAssetsPrice', myAssets);
+        // }
 
         if(callback){
             callback(myAssets);
@@ -192,7 +192,7 @@ export default {
                         yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
                     }
 
-                DeviceEventEmitter.emit('updateMyAssetsBalance', payload);
+                // DeviceEventEmitter.emit('updateMyAssetsBalance', payload);
             }
 
             if(callback){
