@@ -31,7 +31,7 @@ export default {
 
             for (var i = 0; i < writeList.length; i++) {
                 if (writeList[i].dappUrl == payload.dappUrl) {
-                    EasyToast.show('dappUrl已存在！');
+                    // EasyToast.show('dappUrl已存在！');
                     if(callback) callback(writeList);
                     return ;
                 }
@@ -57,7 +57,7 @@ export default {
 
             for (var i = 0; i < writeList.length; i++) {
                 if (writeList[i].dappUrl == payload.dappUrl) {
-                    EasyToast.show('dappUrl已找到！');
+                    // EasyToast.show('dappUrl已找到！');
                     if(callback) callback(writeList[i].dappWriteList);
                     return;
                 }
