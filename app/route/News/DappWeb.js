@@ -357,8 +357,8 @@ justInputPassword(isTransfer){
             selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
             style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
             placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-            {this.state.isWriteListLocal==true &&
-             <Text style={[styles.contextTextWrite,{color: UColor.blackColor}]}>白名单已授权</Text>}
+            {/* {this.state.isWriteListLocal==true &&
+             <Text style={[styles.contextTextWrite,{color: UColor.blackColor}]}>白名单已授权</Text>} */}
     </View>
     EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
         this.getSureInputPassword(isTransfer,this.state.password);
@@ -402,26 +402,28 @@ writeListInputPassword(isTransfer){
         
         // this.writeListInputPassword(isTransfer);
 
-        if(this.state.isWriteListRemote==true){
-            if(this.state.isWriteListLocal==true){//已经加入白名单
-                if(this.state.writePsw.length<8){
-                    this.justInputPassword(isTransfer);
-                }else{
-                    this.getSureInputPassword(isTransfer,this.state.writePsw);
-                }
-            }else{
-                this.writeListInputPassword(isTransfer);
-            }
-        }else{
-            if(this.state.isWriteListLocal==true){//已经加入白名单,但远程需删掉的
-                this.props.dispatch({ type: 'writeList/saveWriteList', payload: { dappUrl: this.props.navigation.state.params.url, isWriteListFlag: false }, callback: (data) => {
-                    this.setState({
-                        isWriteListLocal:false,
-                    });
-                } });
-            }
-            this.justInputPassword(isTransfer);
-        }
+        // if(this.state.isWriteListRemote==true){
+        //     if(this.state.isWriteListLocal==true){//已经加入白名单
+        //         if(this.state.writePsw.length<8){
+        //             this.justInputPassword(isTransfer);
+        //         }else{
+        //             this.getSureInputPassword(isTransfer,this.state.writePsw);
+        //         }
+        //     }else{
+        //         this.writeListInputPassword(isTransfer);
+        //     }
+        // }else{
+        //     if(this.state.isWriteListLocal==true){//已经加入白名单,但远程需删掉的
+        //         this.props.dispatch({ type: 'writeList/saveWriteList', payload: { dappUrl: this.props.navigation.state.params.url, isWriteListFlag: false }, callback: (data) => {
+        //             this.setState({
+        //                 isWriteListLocal:false,
+        //             });
+        //         } });
+        //     }
+        //     this.justInputPassword(isTransfer);
+        // }
+
+        this.justInputPassword(isTransfer);
 
     }
 
