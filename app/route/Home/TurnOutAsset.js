@@ -20,7 +20,7 @@ var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 var dismissKeyboard = require('dismissKeyboard');
 
-@connect(({ wallet, assets }) => ({ ...wallet, ...assets }))
+@connect(({ wallet, assets,addressBook }) => ({ ...wallet, ...assets,...addressBook }))
 class TurnOutAsset extends BaseComponent {
     static navigationOptions = {
         headerTitle: '转出' ,
@@ -227,6 +227,7 @@ class TurnOutAsset extends BaseComponent {
                     }, plaintext_privateKey, (r) => {
                         EasyShowLD.loadingClose();
                         if(r && r.isSuccess){
+                            this.props.dispatch({ type: 'addressBook/saveAddress', payload: { address: this.state.toAccount, labelName: this.state.toAccount } });
                             this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.props.defaultWallet.account, to: this.state.toAccount, amount: this.state.amount + " " + this.state.name, memo: this.state.memo, data: "push"}});
                             AnalyticsUtil.onEvent('Turn_out');
                             EasyToast.show('交易成功');
