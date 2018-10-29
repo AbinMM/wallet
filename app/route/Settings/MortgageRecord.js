@@ -288,8 +288,8 @@ class MortgageRecord extends React.Component {
                 <Text style={[styles.fromtotext,{color: UColor.fontColor}]} onLongPress={this.copyaccount.bind(this,rowData)}>{rowData.to}</Text>
               </View>
               <View style={styles.rightout}>
-                <Text style={[styles.payernet,{color: UColor.arrow}]}>{"[NET] " +rowData.net_weight}</Text>
                 <Text style={[styles.payernet,{color: UColor.arrow}]}>{"[CPU] " +rowData.cpu_weight}</Text>
+                <Text style={[styles.payernet,{color: UColor.arrow}]}>{"[NET] " +rowData.net_weight}</Text>
               </View>
             </View>
           </Button>
