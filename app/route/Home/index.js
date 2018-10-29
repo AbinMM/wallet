@@ -666,11 +666,10 @@ class Home extends React.Component {
     if(this.props.guide){
       return (
         <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-          <LinearGradient colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={{width: ScreenWidth,height: ScreenHeight}} >
+          <LinearGradient colors={['#4CA6FF', '#7CBEFF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={{width: ScreenWidth,height: ScreenHeight, paddingBottom: ScreenUtil.autowidth(15),}} >
             <View style={{flex:3, alignItems: 'center', justifyContent: 'center',}}>
               <Image source={UImage.guide} style={styles.imgTop} resizeMode="stretch"/>
             </View>
-            
             <View style={styles.btnestablish}>
               <Button onPress={() => this.Establish()}>
                 <View style={[styles.btnimport,{backgroundColor: UColor.btnColor, borderColor: UColor.btnColor}]}>
@@ -896,7 +895,6 @@ const styles = StyleSheet.create({
   },
   bgtopout: {
     width:ScreenWidth,
-    
   },
 
   bgout: {
