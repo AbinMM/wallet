@@ -66,6 +66,7 @@ export default {
             }
             myAssets[0] = eosInfoDefault;
             var currentAccount = yield call(store.get, 'current_account');
+            yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
             if(payload && payload.isInit && currentAccount == payload.accountName){
                 yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
             }
@@ -83,7 +84,8 @@ export default {
             } catch (error) {
 
             }
-
+            
+            yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
             var currentAccount = yield call(store.get, 'current_account');
             if(currentAccount == payload.accountName){
                 yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
@@ -405,7 +407,7 @@ export default {
             let assets = action.payload.myAssets;
             var myAssets = [];
             if(!assets || assets.length == 0){
-                return;
+                return { ...state, myAssets, updateTime:Date.parse(new Date())};
             }
             if(assets.length == 1){
                 myAssets.push(assets[0]);
@@ -421,7 +423,7 @@ export default {
                 break;
             }
             if(eos.length == 0){ // 此处没有eos资产应该出现了异常了
-                return; 
+                return { ...state, myAssets, updateTime:Date.parse(new Date())};
             }
             if(assets.length != 0){
                 assets = assets.sort(function(a, b){
