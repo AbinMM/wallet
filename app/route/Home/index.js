@@ -122,16 +122,19 @@ class Home extends React.Component {
     });
 
     DeviceEventEmitter.addListener('updateMyAssets', (data) => {
+      if(this.props.defaultWallet && this.props.defaultWallet.name){
+        this.props.dispatch({ type: 'assets/getMyAssetList', payload: { accountName: this.props.defaultWallet.name}});
+      }
       this.getAssetBalance();
     });
 
-    DeviceEventEmitter.addListener('updateMyAssetsBalance', (data) => {
-      this.calTotalBalance();
-    });
+    // DeviceEventEmitter.addListener('updateMyAssetsBalance', (data) => {
+    //   this.calTotalBalance();
+    // });
 
-    DeviceEventEmitter.addListener('updateMyAssetsPrice', (data) => {
-      this.calTotalBalance();
-    });
+    // DeviceEventEmitter.addListener('updateMyAssetsPrice', (data) => {
+    //   this.calTotalBalance();
+    // });
 
     DeviceEventEmitter.addListener('refreshWalletInfo', (data) => {
       this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
@@ -169,6 +172,7 @@ class Home extends React.Component {
       return;
     }
     this.props.dispatch({ type: 'assets/myAssetInfo', payload: { page: 1, isInit: init, accountName: this.props.defaultWallet.name}, callback: (myAssets) => {
+      this.calTotalBalance();
       this.props.dispatch({ type: 'assets/fetchMyAssetsFromNet', payload: { accountName: this.props.defaultWallet.name}, callback: () => {
         this.getAssetBalance(getAssetsInfoCallback);    
       }});
@@ -252,6 +256,7 @@ class Home extends React.Component {
 
     this.props.dispatch({ type: 'assets/getBalance', payload: { accountName: this.props.defaultWallet.name, myAssets: this.props.myAssets}, callback: () => {
       // EasyShowLD.loadingClose();
+      this.calTotalBalance();
       if(callback) callback();
 
     }});
