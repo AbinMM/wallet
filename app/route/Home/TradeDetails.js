@@ -169,59 +169,59 @@ class TradeDetails extends BaseComponent {
           }
         </View>
         
-        <View style={[styles.tradehint,{backgroundColor: UColor.mainColor}]}>
-          <View style={[styles.conouttext,{borderTopColor: UColor.secdfont}]}>
+        <View style={[styles.tradehint,]}>
+          <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
             <Text style={[styles.contwotext,{color: UColor.arrow}]}>收款账户</Text>
             <Text style={[styles.blocktext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'from')} onLongPress={this.copyaccount.bind(this, 'from')}>{this.state.trade.from}</Text>
           </View>
-          <View style={[styles.conouttext,{borderTopColor: UColor.secdfont}]}>
+          <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
             <Text style={[styles.contwotext,{color: UColor.arrow}]}>付款账户</Text>
             <Text style={[styles.blocktext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'to')} onLongPress={this.copyaccount.bind(this, 'to')}>{this.state.trade.to}</Text>
           </View>
-          <View style={{width:ScreenWidth, flexDirection: "row",alignItems: 'flex-start',justifyContent: 'center',borderTopWidth: 1,borderTopColor: UColor.secdfont,}}>
+          <View style={{height: ScreenUtil.autowidth(88), paddingVertical: ScreenUtil.autowidth(11), marginTop: 1,flexDirection: "row", alignItems: 'flex-start', justifyContent: 'center', backgroundColor: UColor.mainColor}}>
             <Text style={[styles.contwotext,{color: UColor.arrow}]}>备注(Memo)</Text>
-            <Text style={[styles.blocktext,{paddingRight: ScreenUtil.autowidth(15),color: UColor.startup}]} numberOfLines={2} >{this.state.trade.memo}</Text>
+            <Text style={[styles.blocktext,{lineHeight: ScreenUtil.autowidth(22), paddingRight: ScreenUtil.autowidth(15),color: UColor.arrow}]} numberOfLines={3} >{this.state.trade.memo}</Text>
           </View>
         </View>
 
-        <View style={{backgroundColor: UColor.mainColor}}>
-          <View style={{flexDirection: "row", }}>
-            <View style={styles.conout}>
-              <View style={[styles.conouttext,{borderTopColor: UColor.secdfont}]}>
-                <Text style={[styles.context,{color: UColor.arrow}]}>交易号</Text> 
-                <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'transactionId')}>{this.state.trade.transactionId.substring(0, 6) +"..."+ this.state.trade.transactionId.substr(this.state.trade.transactionId.length-6) }</Text>
-              </View>
-              <View style={[styles.conouttext,{borderTopColor: UColor.secdfont}]}> 
-                <Text style={[styles.context,{color: UColor.arrow}]}>区块高度</Text>
-                {(this.state.trade.blockNum == null || this.state.trade.blockNum == "") ? 
-                <Text style={[styles.showytext,{color: UColor.showy}]}>未确认</Text>
-                :
-                <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'blockNum')}>{this.state.trade.blockNum}</Text>
-                }
-              </View>
-              <View style={[styles.conouttext,{borderTopColor: UColor.secdfont}]}>
-                <Text style={[styles.context,{color: UColor.arrow}]}>交易时间</Text>
-                <Text style={[styles.tintext,{color: UColor.startup}]}>{moment(this.state.trade.blockTime).add(8,'hours').format('YYYY-MM-DD HH:mm')}</Text>
-              </View>
+        
+        <View style={{flexDirection: "row", }}>
+          <View style={styles.conout}>
+            <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
+              <Text style={[styles.context,{color: UColor.arrow}]}>交易号</Text> 
+              <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'transactionId')}>{this.state.trade.transactionId.substring(0, 6) +"..."+ this.state.trade.transactionId.substr(this.state.trade.transactionId.length-6) }</Text>
             </View>
-          
-            <View style={styles.codeout}>
-              <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
-                <QRCode size={ScreenUtil.setSpText(80)}  value={UrlHead + this.state.trade.transactionId } 
-                  logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(20)} logoBorderRadius={5}/>
-              </View>
-              <Button onPress={this.copy.bind(this,this.state.trade)}>
-                <View style={{backgroundColor: UColor.tintColor,borderRadius: 5,}}>
-                  <Text style={{ fontSize: ScreenUtil.setSpText(12),color: UColor.btnColor,paddingHorizontal: ScreenUtil.autowidth(15),paddingVertical: ScreenUtil.autoheight(5),}}>复制链接</Text>
-                </View>
-              </Button>
+            <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}> 
+              <Text style={[styles.context,{color: UColor.arrow}]}>区块高度</Text>
+              {(this.state.trade.blockNum == null || this.state.trade.blockNum == "") ? 
+              <Text style={[styles.showytext,{color: UColor.showy}]}>未确认</Text>
+              :
+              <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'blockNum')}>{this.state.trade.blockNum}</Text>
+              }
+            </View>
+            <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
+              <Text style={[styles.context,{color: UColor.arrow}]}>交易时间</Text>
+              <Text style={[styles.tintext,{color: UColor.startup}]}>{moment(this.state.trade.blockTime).add(8,'hours').format('YYYY-MM-DD HH:mm')}</Text>
             </View>
           </View>
-          <View style={[styles.conouttext,{borderTopColor: UColor.secdfont}]}>
-            <Text style={[styles.contwotext,{color: UColor.arrow}]}>提示</Text>
-            <Text style={[styles.blocktext,{color: UColor.startup}]}>扫码可获取区块交易状态</Text>
+        
+          <View style={[styles.codeout,{backgroundColor: UColor.mainColor}]}>
+            <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
+              <QRCode size={ScreenUtil.setSpText(80)}  value={UrlHead + this.state.trade.transactionId } 
+                logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(20)} logoBorderRadius={5}/>
+            </View>
+            <Button onPress={this.copy.bind(this,this.state.trade)}>
+              <View style={{backgroundColor: UColor.tintColor,borderRadius: 5,}}>
+                <Text style={{ fontSize: ScreenUtil.setSpText(12),color: UColor.btnColor,paddingHorizontal: ScreenUtil.autowidth(15),paddingVertical: ScreenUtil.autoheight(5),}}>复制链接</Text>
+              </View>
+            </Button>
           </View>
         </View>
+        <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
+          <Text style={[styles.contwotext,{color: UColor.arrow}]}>提示</Text>
+          <Text style={[styles.blocktext,{color: UColor.startup}]}>扫码可获取区块交易状态</Text>
+        </View>
+        
 
         {/* <View style={styles.logout}>
             <Image source={UImage.bottom_log} style={styles.logimg}/>
@@ -273,10 +273,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   conouttext: {
+    marginTop: 1,
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: 'center',
-    borderTopWidth: 1,
     height: ScreenUtil.autowidth(44),
   },
   context: {
@@ -291,7 +291,6 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontSize: ScreenUtil.setSpText(16),
     paddingLeft: ScreenUtil.autowidth(15),
-    lineHeight: ScreenUtil.autowidth(44),
   },
   tradehint: {
     marginVertical: ScreenUtil.autowidth(20),
@@ -299,7 +298,7 @@ const styles = StyleSheet.create({
   blocktext: {
     flex: 7,
     fontSize: ScreenUtil.setSpText(14),
-    lineHeight: ScreenUtil.autowidth(44),
+    
   },
   showytext: {
     flex: 4,
