@@ -1047,7 +1047,7 @@ class Resources extends BaseComponent {
                             {this.leaseTransferButton(styles.tabbutton, this.state.isLease, 'isLease', '租赁')}  
                             {this.leaseTransferButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', '过户')}  
                         </View>}
-                        <Text style={{flex: 1, fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, textAlign: 'right'}}>余额：{this.state.currency_surplus}EOS</Text>
+                        <Text style={{flex: 1, fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, textAlign: 'right'}}>余额：{this.state.balance}EOS</Text>
                     </View>
                     
                 </View>
@@ -1140,7 +1140,7 @@ class Resources extends BaseComponent {
                         </View>
                     </View>}
                     <View style={{flexDirection: 'row', paddingHorizontal: ScreenUtil.autowidth(18), paddingVertical: ScreenUtil.autowidth(10),}}>
-                        <Text style={{flex: 1, fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, textAlign: 'left'}}>余额：{this.state.currency_surplus}EOS</Text>
+                        <Text style={{flex: 1, fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, textAlign: 'left'}}>余额：{this.state.balance}EOS</Text>
                     </View>
                 </View>
                 <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
