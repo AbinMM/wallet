@@ -13,6 +13,7 @@ import {formatEosQua} from '../../utils/FormatUtil';
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from '../../components/EasyShow'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import LinearGradient from 'react-native-linear-gradient'
 import BaseComponent from "../../components/BaseComponent";
 import { SegmentedControls } from 'react-native-radio-buttons';
 var AES = require("crypto-js/aes");
@@ -1122,7 +1123,7 @@ class Transaction extends BaseComponent {
             <Text style={[styles.paneltext,{color: UColor.btnColor}]}>交易面板</Text>
         </View>
     </TouchableOpacity>
-    <ImageBackground source={UImage.transactionA} resizeMode="stretch"  style={{width:ScreenWidth,minHeight:ScreenWidth*0.164,zIndex: 999,}}>
+    <LinearGradient colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={{width:ScreenWidth,height: ScreenUtil.autoheight(45) + Constants.FitPhone,zIndex: 999,}}>
         <View style={styles.headerTitle} paddingTop = {Constants.FitPhone} >  
             <Button onPress={this._leftTopClick.bind()}>
                 <Image source={this.state.modal ? UImage.tx_slide0 : UImage.tx_slide1} style={styles.imgBtn} />
@@ -1132,7 +1133,7 @@ class Transaction extends BaseComponent {
                 <Image source={UImage.pool_explain} style={{margin: ScreenUtil.autowidth(5), width: ScreenUtil.autowidth(21), height: ScreenUtil.autowidth(21),}} />
             </Button>
         </View> 
-    </ImageBackground>
+    </LinearGradient>
     {Constants.isNetWorkOffline &&
     <Button onPress={this.openSystemSetting.bind(this)}>
         <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
@@ -1140,34 +1141,35 @@ class Transaction extends BaseComponent {
             <Ionicons style={{marginRight: ScreenUtil.autowidth(5),color: UColor.btnColor}} name="ios-arrow-forward-outline" size={20} />
         </View>
     </Button>}
-    <ImageBackground source={UImage.transactionB} resizeMode="stretch"  style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
+    <LinearGradient colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={{width:ScreenWidth,height:ScreenWidth*0.1733}}>
         <View style={styles.header}>
             <View style={styles.leftout}>
                 <View style={styles.nameout}>
-                    <Text style={[styles.nametext,{color: UColor.arrow}]}>CNY</Text>
-                    <Text style={[styles.nametext,{color: UColor.arrow}]}>开盘</Text>
-                    <Text style={[styles.nametext,{color: UColor.arrow}]}>交易量</Text>
+                    <Text style={[styles.nametext,{color: UColor.btnColor}]}>CNY</Text>
+                    <Text style={[styles.nametext,{color: UColor.btnColor}]}>开盘</Text>
+                    <Text style={[styles.nametext,{color: UColor.btnColor}]}>交易量</Text>
                 </View>
                 <View style={styles.recordout}>
-                    <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price_rmb,8) : '0'}</Text>
-                    <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.open,8) : '0'} EOS</Text>
-                    <Text style={[styles.recordtext,{color: UColor.btnColor}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.today_volum,8) : '0'} {this.state.tradename}</Text>
+                    <Text style={[styles.recordtext,{color: '#C2E1FF'}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price_rmb,8) : '0'}</Text>
+                    <Text style={[styles.recordtext,{color: '#C2E1FF'}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.open,8) : '0'} EOS</Text>
+                    <Text style={[styles.recordtext,{color: '#C2E1FF'}]}>{this.props.etinfo ? this.precisionTransfer(this.props.etinfo.today_volum,8) : '0'} {this.state.tradename}</Text>
                 </View>
             </View>
             <View style={styles.rightout}>
                 <View style={styles.presentprice}>
-                    <Text style={[styles.present,{color: UColor.btnColor}]}> {this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price,8) : '0'}</Text>
-                    <Text style={[styles.toptext,{color: UColor.arrow}]}>价格</Text>
+                    <Text style={[styles.present,{color: '#C2E1FF'}]}> {this.props.etinfo ? this.precisionTransfer(this.props.etinfo.price,8) : '0'}</Text>
+                    <Text style={[styles.toptext,{color: UColor.btnColor}]}>价格</Text>
                 </View>
                 <View style={styles.titleout}>
-                    <Text style={[styles.cupcdo,{color: (this.props.etinfo && this.props.etinfo.increase>=0)?UColor.riseColor:UColor.fallColor}]}> 
+                    {/* <Text style={[styles.cupcdo,{color: (this.props.etinfo && this.props.etinfo.increase>=0)?UColor.fallColor:UColor.showy}]}>  */}
+                    <Text style={[styles.cupcdo,{color: '#C2E1FF'}]}>
                         {this.props.etinfo ? (this.props.etinfo.increase > 0 ? '+' + (this.props.etinfo.increase * 100).toFixed(2) : 
                         (this.props.etinfo.increase * 100).toFixed(2)): '0.00'}%</Text>
-                    <Text style={[styles.Increasetext,{color:UColor.arrow}]}>涨幅</Text>
+                    <Text style={[styles.Increasetext,{color:UColor.btnColor}]}>涨幅</Text>
                 </View>
             </View>
         </View>
-    </ImageBackground>
+    </LinearGradient>
     <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
         <ScrollView {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} 
             scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"
