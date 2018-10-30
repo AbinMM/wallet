@@ -1055,7 +1055,7 @@ class Resources extends BaseComponent {
                             </View>
                     
                             <View style={styles.basc}>
-                                {this.state.isOthers &&
+                                {(this.state.isOthers &&  this.state.isMortgage) &&
                                 <View style={[styles.LeaseTransfer,]}>  
                                     {this.leaseTransferButton(styles.tabbutton, this.state.isLease, 'isLease', '租赁')}  
                                     {this.leaseTransferButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', '过户')}  
