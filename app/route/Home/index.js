@@ -124,9 +124,10 @@ class Home extends React.Component {
 
     DeviceEventEmitter.addListener('updateMyAssets', (data) => {
       if(this.props.defaultWallet && this.props.defaultWallet.name){
-        this.props.dispatch({ type: 'assets/getMyAssetList', payload: { accountName: this.props.defaultWallet.name}});
+        this.props.dispatch({ type: 'assets/getMyAssetList', payload: { accountName: this.props.defaultWallet.name}, callback:()=>{
+          this.getAssetBalance();
+        }});
       }
-      this.getAssetBalance();
     });
 
     // DeviceEventEmitter.addListener('updateMyAssetsBalance', (data) => {

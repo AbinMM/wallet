@@ -116,8 +116,6 @@ export default {
 
         }
 
-        // alert("myAssetInfo" +JSON.stringify(myAssets));
-        // 
 
         var manualClose = yield call(store.get, 'myAssets_manual_close_' + payload.accountName);
         if(manualClose == null){
@@ -394,6 +392,7 @@ export default {
         if(payload && payload.accountName){
             var myAssets = yield call(store.get, 'myAssets217_' + payload.accountName);
             yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+            if(callback) callback();
         }
       }
     },
