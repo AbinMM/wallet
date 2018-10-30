@@ -306,7 +306,6 @@ class Resources extends BaseComponent {
                 this.setState(newState);  
             }  
         }  
-        this.Initialization();
     }  
     
     //初始化输入框
