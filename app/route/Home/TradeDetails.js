@@ -107,19 +107,21 @@ class TradeDetails extends BaseComponent {
 
   prot(key, data = {}) {
     if (key == 'transactionId') {
-      // Linking.openURL(UrlHead + 'tx/' + this.state.trade.transactionId);
       Linking.openURL(UrlHead + this.state.trade.transactionId);
     }else  if (key == 'from') {
-      // Linking.openURL(UrlHead + 'account/' + this.state.trade.from);
+      if(this.state.trade.from == null || this.state.trade.from == ""){
+        return;
+      }
       Linking.openURL(UrlHead + this.state.trade.from);
     }else  if (key == 'to') {
-      // Linking.openURL(UrlHead  + 'account/' + this.state.trade.to);
+      if(this.state.trade.to == null || this.state.trade.to == ""){
+        return;
+      }
       Linking.openURL(UrlHead + this.state.trade.to);
     }else  if (key == 'blockNum') {
       if(this.state.trade.blockNum == null || this.state.trade.blockNum == ""){
         return;
       }
-      // Linking.openURL(UrlHead  + 'block/' + this.state.trade.blockNum);
       Linking.openURL(UrlHead + this.state.trade.blockNum);
     }
   }
