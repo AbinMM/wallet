@@ -127,7 +127,7 @@ class WalletManage extends BaseComponent {
 
   render() {
     return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>  
-      <Header {...this.props} onPressLeft={true} title="钱包管理" onPressRight={this._rightTopClick.bind()} avatar={this.state.isEye ? UImage.reveal_wallet : UImage.reveal_h_wallet}/>
+      <Header {...this.props} onPressLeft={true} title="钱包管理" onPressRight={this._rightTopClick.bind()} avatar={this.state.isEye ? UImage.reveal_h_wallet : UImage.reveal_wallet} imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(12)}/>
       <View style={{paddingBottom: 50}}>
         <ListView initialListSize={10} style={{ marginBottom: ScreenUtil.autoheight(50), backgroundColor: UColor.secdColor, }} enableEmptySections={true}
           renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 0.5, backgroundColor: UColor.secdColor }} />}

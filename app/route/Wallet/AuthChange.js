@@ -314,7 +314,7 @@ class AuthChange extends BaseComponent {
     render() {
         return (
         <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-            <Header {...this.props} onPressLeft={true} title="Active权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scan}/>
+            <Header {...this.props} onPressLeft={true} title="Active权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scangray} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)}/>
             <View style={[styles.significantout,{backgroundColor: UColor.secdColor,borderColor: UColor.riseColor}]}>
                 <View style={{flexDirection: 'row',alignItems: 'center',}}>
                     <Image source={UImage.warning} style={styles.imgBtnWarning} />

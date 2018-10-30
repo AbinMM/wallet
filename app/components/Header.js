@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     },
     Rightout: {
         flex: 1.5, 
-        paddingRight: ScreenUtil.autowidth(10),  
+        paddingRight: ScreenUtil.autowidth(20),  
         alignItems:"flex-end",
     },
     Rightimg: {

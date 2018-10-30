@@ -204,6 +204,8 @@ export default {
   reveal:require('../img/reveal.png'),
   reveal_h_wallet:require('../img/reveal_h_wallet.png'),
   reveal_wallet:require('../img/reveal_wallet.png'),
+  scangray: require('../img/scangray.png'),
+  scanning: require('../img/scanning.png'),
   share_banner:require('../img/share_banner.png'),
   share_bottom:require('../img/share_bottom.png'),
   share_bright:require('../img/share_bright.png'),

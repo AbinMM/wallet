@@ -390,7 +390,7 @@ class TurnOutAsset extends BaseComponent {
                                     <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>收款账户</Text>
                                     <View style={styles.scanning}>
                                         <Button onPress={() => this._rightTopClick()}>                                  
-                                            <Image source={UImage.scan} style={styles.scanningimg} />                                 
+                                            <Image source={UImage.scanning} style={styles.scanningimg} />                                 
                                         </Button>
                                     </View>
                                 </View>
