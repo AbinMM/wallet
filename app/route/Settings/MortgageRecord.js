@@ -295,44 +295,6 @@ class MortgageRecord extends React.Component {
           </Button>
         )}                   
       /> 
-
-      <Modal animationType={'slide'} transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
-        <TouchableOpacity style={[styles.modalStyle,{backgroundColor: UColor.mask}]} activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-            <View style={{ width: ScreenWidth-ScreenUtil.autowidth(96), backgroundColor: UColor.btnColor, }}>
-                <View style={styles.outsource}>
-                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>抵押账户：</Text>
-                    <Text style={[styles.inptTitle,{color: UColor.arrow}]}>{this.props.navigation.state.params.account_name}</Text>
-                </View>
-                <View style={styles.outsource}>
-                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>计算资源：</Text>
-                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.cpu_delegateb} returnKeyType="go" 
-                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow,borderBottomColor: UColor.arrow,}]}  
-                    underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15} placeholderTextColor={UColor.inputtip}
-                    onChangeText={(cpu_delegateb) => this.setState({ cpu_delegateb: this.chkPrice(cpu_delegateb)})}
-                    />
-                </View>
-                <View style={styles.outsource}>
-                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>网络资源：</Text>
-                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.net_delegateb} returnKeyType="go" 
-                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow,borderBottomColor: UColor.arrow,}]}  
-                    underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15} placeholderTextColor={UColor.inputtip}
-                    onChangeText={(net_delegateb) => this.setState({ net_delegateb: this.chkPrice(net_delegateb)})}
-                    />
-                </View>
-                <View style={{height: ScreenUtil.autowidth(20),  alignItems: 'center', justifyContent: 'center', paddingHorizontal: ScreenUtil.autowidth(25)}}>
-                    <Text style={{fontSize: ScreenUtil.setSpText(12),color: UColor.showy}}>{this.state.errortext}</Text>
-                </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-end',}}>
-                    <Button onPress={() => { this._setModalVisible() }}>
-                        <Text style={[styles.btntext,{color: UColor.tintColor}]}>取消</Text>
-                    </Button>
-                    <Button onPress={() => { this.delegateb() }}>
-                        <Text style={[styles.btntext,{color: UColor.tintColor}]}>确认</Text>
-                    </Button>
-                </View>
-            </View>
-        </TouchableOpacity>
-      </Modal> 
     </View>
     );
   }
