@@ -53,11 +53,11 @@ export default {
         }
      },
      *myAssetInfo({payload, callback},{call,put}){
-        var isPriceChange = false; // 价格是否改变
+        // var isPriceChange = false; // 价格是否改变
         var myAssets = yield call(store.get, 'myAssets217_' + payload.accountName);
 
         if(myAssets == null || myAssets.length == 0){ // 未有资产信息时默认取eos的
-            var myAssets = [];
+            myAssets = [];
             // 单独获取eos信息
             var eosInfoDefault = {
                 asset: {name : "EOS", icon: "http://news.eostoken.im/images/20180319/1521432637907.png", contractAccount: "eosio.token", value: "0.00"},
@@ -73,7 +73,7 @@ export default {
             var resp;
             try {
                 resp = yield call(Request.request, listAssets, 'post', {code: 'EOS'});
-                if(respresp.code == '0' && resp.data && resp.data.length == 1){
+                if(resp && resp.code == '0' && resp.data && resp.data.length == 1){
                     var eosInfo = {
                         asset: resp.data[0],
                         value: true,
@@ -104,9 +104,9 @@ export default {
                             value: true,
                             balance: myAssets[i].balance,
                         }
-                        if(resp.data[0].value != myAssets[i].asset.value){
-                            isPriceChange = true;
-                        }
+                        // if(resp.data[0].value != myAssets[i].asset.value){
+                        //     isPriceChange = true;
+                        // }
                         myAssets[i] = assetInfo;
                     }
                 }
@@ -130,10 +130,11 @@ export default {
                 }
             }
         }
-        
+
+        yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
+
         var currentAccount = yield call(store.get, 'current_account');
         if((currentAccount == payload.accountName)){
-            yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
             yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
         }
         // if(isPriceChange){
@@ -269,6 +270,8 @@ export default {
      *fetchMyAssetsFromNet({payload, callback},{call,put}) {
         if(payload && payload.accountName){
             var myAssets = yield call(store.get, 'myAssets217_' + payload.accountName);
+            // alert(JSON.stringify(myAssets))
+
             var manualClose = yield call(store.get, 'myAssets_manual_close_' + payload.accountName);
             if (manualClose == null) {
                 manualClose = [];
