@@ -520,6 +520,10 @@ _setModalVisible_Auth() {
             case 'authenticate':
                 this.scatter_authenticate(result);    
                 break;
+            
+            case 'suggestNetwork':
+                this.scatter_suggestNetwork(result);  
+                break;
 
             case 'getArbitrarySignature':    
                 this.scatter_getArbitrarySignature(result);
@@ -804,7 +808,26 @@ _setModalVisible_Auth() {
         this._setModalVisible_Auth();
       }
   }
-  
+  scatter_suggestNetwork(result)
+  {
+      try {
+          if(result.params.network == null) 
+          {
+              EasyToast.show('suggestNetwork参数非法');
+              this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:false}));
+              return ;
+          }
+      
+          if((result.params.network.blockchain != 'eos') || (result.params.network.chainId != Constants.EosChainId)){
+              EasyToast.show('network参数非法');
+              this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:false}));
+              return ;
+          }
+          this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:true}));
+      } catch (error) {
+          this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:false}));
+      }
+}
   scatter_getArbitrarySignature(result)
   {
     if(result.params.publicKey == null || result.params.publicKey == '' 

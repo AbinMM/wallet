@@ -101,6 +101,28 @@ export default function RenderScatter(props) {
         
             });
         },
+
+        suggestNetwork:function(network){
+            return new Promise((resolve, reject) => {
+                var key = new Date().getTime();
+                window.postMessage(JSON.stringify({key,scatter:"suggestNetwork",params:{network}}));
+                document.addEventListener("message",function(msg){
+                    document.removeEventListener("message",this);
+                    var obj = eval("(" + msg.data + ")");
+                    if(obj.scatter==="suggestNetwork" && obj.key===key){     
+                        if(obj.data)
+                        {
+                            resolve(obj.data);
+                        }else{
+                            reject(false);
+                        }
+                    }
+                });
+            }).catch((error)=>{
+        
+            });
+        },
+
         getPublicKey:function(blockchain){
             return new Promise((resolve, reject) => {
                 if(iden){
