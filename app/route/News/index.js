@@ -480,13 +480,14 @@ class News extends React.Component {
           </View>
           <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.dappPromp} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
-              <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
+              <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, }}>
                 <View style={styles.subViewBackup}> 
                   <Button onPress={this._setModalVisible_DAPP.bind(this) } style={styles.buttonView2}>
                     <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={35} />
                   </Button>
                 </View>
-                <Text style={styles.contentText}>您接下来访问的页面将跳转至第三方应用DAPP {this.state.selecttitle}</Text>
+                <Text style={styles.contentText}>您接下来访问的页面将跳转至第三方</Text>
+                <Text style={styles.contentText}>应用DAPP {this.state.selecttitle}</Text>
                 <View style={[styles.warningout,{borderColor: UColor.showy}]}>
                     <View style={{flexDirection: 'row',alignItems: 'center',}}>
                       <Image source={UImage.warning_h} style={styles.imgBtnBackup} />
@@ -505,7 +506,7 @@ class News extends React.Component {
           </Modal>
           <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.Tokenissue} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
-              <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
+              <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, }}>
                 <View style={styles.subViewBackup}> 
                   <Button onPress={this._setModalVisibleTokenissue.bind(this) } style={styles.buttonView2}>
                       <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={35} />
