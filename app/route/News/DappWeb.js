@@ -139,6 +139,7 @@ onRightFun() {
     // if (this.state.backButtonEnabled) {
         try {
             this.refs['refWebview'].goBack();
+
         } catch (error) {
             
         }
@@ -148,12 +149,18 @@ onRightFun() {
 }
 
 onLeftCloseFun() {
-
-    this.setState({
-        backButtonEnabled: false,
-        writePsw:'',
-    });
-    this.props.navigation.goBack();
+    try {
+        this.setState({
+            backButtonEnabled: false,
+            writePsw:'',
+        });
+        this.props.navigation.goBack();
+        if (this.props.navigation.state.params.callback) {
+            this.props.navigation.state.params.callback()
+        }
+    } catch (error) {
+        
+    }
 }
 // 监听原生返回键事件
 addBackAndroidListener(navigator) {

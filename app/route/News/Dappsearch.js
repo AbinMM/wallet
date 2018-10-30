@@ -36,7 +36,7 @@ class Dappsearch extends BaseComponent {
         super.componentWillUnmount();
 
     }
-
+    
     //前往
     _query =(labelname) => {
         this.dismissKeyboardClick();
@@ -45,7 +45,7 @@ class Dappsearch extends BaseComponent {
             return;
         }else{
             const { navigate } = this.props.navigation;
-            navigate('DappWeb', { title: 'CustomDapp', url: labelname });
+            navigate('DappWeb', { title: 'CustomDapp', url: labelname ,callback:(()=>{this._raccount.focus();})});
         }
     }
 
@@ -53,9 +53,6 @@ class Dappsearch extends BaseComponent {
         dismissKeyboard();
     }
 
-    getBlur() {
-        // this._raccount.focus();
-    }
 
     render() {
         return (
@@ -67,7 +64,6 @@ class Dappsearch extends BaseComponent {
                         <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} keyboardType="default"
                             selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} autoCorrect={true}
                             underlineColorAndroid="transparent" onChangeText={(labelname) => this.setState({ labelname })}
-                            onBlur={() => this.getBlur()}
                             placeholderTextColor={UColor.inputtip}  placeholder="输入DAPP网址"  returnKeyType="go" />
                     </View>    
                     <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>  
