@@ -1243,8 +1243,8 @@ const styles = StyleSheet.create({
       position: "absolute",
       height: 5,
       left: 0,
-    //   top: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(87):ScreenUtil.autoheight(63),
-    top: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(77):ScreenUtil.autoheight(53),
+      top: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(87):ScreenUtil.autoheight(63),
+    // top: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(77):ScreenUtil.autoheight(53),
       overflow: "hidden",
     },
     infoPage: {
