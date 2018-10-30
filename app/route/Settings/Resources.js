@@ -164,7 +164,17 @@ class Resources extends BaseComponent {
 
             //选择联系人返回的参数
             DeviceEventEmitter.addListener('transfer_scan_result', (data) => {
-                this.setState({receiver:data.toaccount});
+                if(data.toaccount !=  this.props.defaultWallet.account){
+                    this.setState({
+                        receiver:data.toaccount,
+                        isOthers: true,
+                    });
+                }else{
+                    this.setState({
+                        receiver:data.toaccount,
+                        isOthers: false,
+                    });
+                }
             });
             
         } catch (error) {
@@ -308,6 +318,7 @@ class Resources extends BaseComponent {
             delegateb: "",
             undelegateb: "",
             LeaseTransfer: 0,
+            isOthers: false,
         })
     }
     
@@ -327,10 +338,9 @@ class Resources extends BaseComponent {
                 EasyToast.show('请输入正确的账号');
             }
         }
-        if (this.state.routes.key == '1' && obj == this.props.defaultWallet.account) {
+        this.setState({ receiver:obj });
+        if (this.state.index == 0 && obj == this.props.defaultWallet.account) {
             this.setState({ isOthers: false })
-            // EasyToast.show('接收账号和自己账号不能相同，请重输');
-            // obj = "";
         }else{
             this.setState({ isOthers: true })
         }
@@ -942,219 +952,223 @@ class Resources extends BaseComponent {
     renderScene = ({ route }) => {
         if (route.key == '1') {
             return (<View style={[styles.inptoutsource,{flex: 1,}]}>
-                <View>
-                    <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(1), }}>
-                        <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
-                            <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>计算资源</Text>
-                        </View>
-                        <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
-                            <View style={{flexDirection: 'row', alignItems: 'center', }}>
-                                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.cpu_AlreadyUsed}</Text>
+                <ScrollView  keyboardShouldPersistTaps="always">
+                    <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
+                        <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
+                            <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(1), }}>
+                                <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>计算资源</Text>
                                 </View>
-                                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.cpu_available}</Text>
-                                </View>
-                            </View>
-                            <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
-                                <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.cpu_Percentage}/>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(1), }}>
-                        <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
-                            <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>网络资源</Text>
-                        </View>
-                        <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
-                            <View style={{flexDirection: 'row', alignItems: 'center', }}>
-                                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.net_AlreadyUsed}</Text>
-                                </View>
-                                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.net_available}</Text>
+                                <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                            <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
+                                            <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.cpu_AlreadyUsed}ms</Text>
+                                        </View>
+                                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                            <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
+                                            <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.cpu_available}ms</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
+                                        <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.cpu_Percentage}/>
+                                    </View>
                                 </View>
                             </View>
-                            <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
-                                <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.net_Percentage}/>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={{height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(15), flexDirection:'row', alignItems: 'center', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(10), }}>
-                        <Text style={{flex: 1, textAlign: 'left', fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,}}>赎回中</Text>
-                        <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(16), color: UColor.arrow,}}>{this.state.and_redeem} EOS</Text>
-                    </View>
-                </View>
-
-                <View >
-                    <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>  
-                        {this.resourceButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isMortgage, 'isMortgage', '抵押')}  
-                        {this.resourceButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isRedeem, 'isRedeem', '赎回')}  
-                    </View> 
-                    <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor,}]}>
-                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(30), alignItems: 'center'}}>
-                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>计算{this.state.isMortgage ? "抵押" : "赎回"}</Text>
-                            {this.state.isRedeem ?
-                                <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>可赎回：{this.state.cpu_redeem} EOS</Text>
-                                :
-                                <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}></Text>
-                            }
-                        </View>
-                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(35), alignItems: 'center', }}>
-                            <TextInput ref={(ref) => this._rrpass = ref} value={this.state.delegateb} returnKeyType="go" 
-                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
-                            placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
-                            onChangeText={(delegateb) => this.setState({ delegateb: this.chkPrice(delegateb)})} 
-                            />
-                        </View>
-                    </View>
-                    <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor,}]}>
-                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(30), alignItems: 'center'}}>
-                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>网络{this.state.isRedeem ? "赎回" : "抵押"}</Text>
-                            {this.state.isRedeem ?
-                                <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>可赎回：{this.state.net_redeem} EOS</Text>
-                                :
-                                <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}></Text>
-                            }
-                        </View>
-                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(35), alignItems: 'center', }}>
-                            <TextInput ref={(ref) => this._rrpass = ref} value={this.state.undelegateb} returnKeyType="go" 
-                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
-                            placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
-                            onChangeText={(undelegateb) => this.setState({ undelegateb: this.chkPrice(undelegateb)})} 
-                            />
-                        </View>
-                    </View>
-                    <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor}]}>
-                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(30), alignItems: 'center'}}>
-                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
-                        </View>
-                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(35), alignItems: 'center', }}>
-                            <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"
-                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={12}
-                                placeholder={this.state.receiver} underlineColorAndroid="transparent" keyboardType="default" 
-                                onChangeText={(receiver) => this.setState({ receiver: this.chkAccount(receiver)})} 
-                            />
-                            <Button onPress={() => this.openAddressBook()}>
-                                <View style={styles.botnimg}>
-                                    <Image source={UImage.al} style={{width: ScreenUtil.autowidth(17), height: ScreenUtil.autowidth(17), }} />
+                            <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(1), }}>
+                                <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>网络资源</Text>
                                 </View>
-                            </Button> 
-                        </View>
-                    </View>
+                                <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                            <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
+                                            <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.net_AlreadyUsed}kb</Text>
+                                        </View>
+                                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                            <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
+                                            <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.net_available}kb</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
+                                        <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.net_Percentage}/>
+                                    </View>
+                                </View>
+                            </View>
+                            <View style={{height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(15), flexDirection:'row', alignItems: 'center', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(10), }}>
+                                <Text style={{flex: 1, textAlign: 'left', fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,}}>赎回中</Text>
+                                <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(16), color: UColor.arrow,}}>{this.state.and_redeem} EOS</Text>
+                            </View>
+                            <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>  
+                                {this.resourceButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isMortgage, 'isMortgage', '抵押')}  
+                                {this.resourceButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isRedeem, 'isRedeem', '赎回')}  
+                            </View> 
+                            <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor,}]}>
+                                <View style={styles.inptTitleout}>
+                                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>计算{this.state.isMortgage ? "抵押" : "赎回"}</Text>
+                                    {this.state.isRedeem ?
+                                        <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>可赎回：{this.state.cpu_redeem} EOS</Text>
+                                        :
+                                        <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}></Text>
+                                    }
+                                </View>
+                                <View style={styles.inptout}>
+                                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.delegateb} returnKeyType="go" 
+                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
+                                    placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
+                                    onChangeText={(delegateb) => this.setState({ delegateb: this.chkPrice(delegateb)})} 
+                                    />
+                                </View>
+                            </View>
+                            <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor,}]}>
+                                <View style={styles.inptTitleout}>
+                                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>网络{this.state.isRedeem ? "赎回" : "抵押"}</Text>
+                                    {this.state.isRedeem ?
+                                        <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>可赎回：{this.state.net_redeem} EOS</Text>
+                                        :
+                                        <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}></Text>
+                                    }
+                                </View>
+                                <View style={styles.inptout}>
+                                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.undelegateb} returnKeyType="go" 
+                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
+                                    placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
+                                    onChangeText={(undelegateb) => this.setState({ undelegateb: this.chkPrice(undelegateb)})} 
+                                    />
+                                </View>
+                            </View>
+                            <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor}]}>
+                                <View style={styles.inptTitleout}>
+                                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
+                                </View>
+                                <View style={styles.inptout}>
+                                    <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"  keyboardType="default"  
+                                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
+                                        placeholder={this.state.receiver} underlineColorAndroid="transparent" maxLength={12} 
+                                        onChangeText={(receiver) => this.chkAccount(receiver)}  
+                                    />
+                                    <Button onPress={() => this.openAddressBook()}>
+                                        <View style={styles.botnout}>
+                                            <Image source={UImage.al} style={styles.botnimg} />
+                                        </View>
+                                    </Button> 
+                                </View>
+                            </View>
                     
-                    <View style={{flexDirection: 'row', paddingHorizontal: ScreenUtil.autowidth(18), paddingVertical: ScreenUtil.autowidth(10),}}>
-                        {this.state.isOthers &&
-                        <View style={[styles.LeaseTransfer,]}>  
-                            {this.leaseTransferButton(styles.tabbutton, this.state.isLease, 'isLease', '租赁')}  
-                            {this.leaseTransferButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', '过户')}  
-                        </View>}
-                        <Text style={{flex: 1, fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, textAlign: 'right'}}>余额：{this.state.balance}EOS</Text>
-                    </View>
-                    
-                </View>
-                <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
-                    <Button onPress={this.purchaseMortgage.bind(this)} >
-                        <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
-                            <Text style={[styles.botText,{color: UColor.btnColor}]}>{this.state.isMortgage ? "抵押" : "赎回"}</Text>
-                        </View>
-                    </Button>
-                </View>
+                            <View style={styles.basc}>
+                                {this.state.isOthers &&
+                                <View style={[styles.LeaseTransfer,]}>  
+                                    {this.leaseTransferButton(styles.tabbutton, this.state.isLease, 'isLease', '租赁')}  
+                                    {this.leaseTransferButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', '过户')}  
+                                </View>}
+                                <Text style={[styles.basctext,{color: UColor.fontColor}]}>余额：{this.state.balance}EOS</Text>
+                            </View>
+                
+                            <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
+                                <Button onPress={this.purchaseMortgage.bind(this)} >
+                                    <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
+                                        <Text style={[styles.botText,{color: UColor.btnColor}]}>{this.state.isMortgage ? "抵押" : "赎回"}</Text>
+                                    </View>
+                                </Button>
+                            </View>
+                        </KeyboardAvoidingView>
+                    </TouchableOpacity>
+                </ScrollView>
             </View>)  
         }else {
             return (<View style={[styles.inptoutsource,{flex: 1,}]}>
-                <View>
-                    <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(1), }}>
-                        <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
-                            <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>内存资源</Text>
-                        </View>
-                        <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
-                            <View style={{flexDirection: 'row', alignItems: 'center', }}>
-                                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.ram_AlreadyUsed}</Text>
+                 <ScrollView  keyboardShouldPersistTaps="always">
+                    <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
+                        <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
+                            <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(1), }}>
+                                <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>内存资源</Text>
                                 </View>
-                                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.ram_available}</Text>
-                                </View>
-                            </View>
-                            <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
-                                <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.ram_Percentage}/>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(10), }}>
-                        <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
-                            <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>全网内存</Text>
-                        </View>
-                        <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
-                            <View style={{flexDirection: 'row', alignItems: 'center', }}>
-                                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.total_ram_used}</Text>
-                                </View>
-                                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                    <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.total_ram_reserved}</Text>
+                                <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                            <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
+                                            <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.ram_AlreadyUsed}</Text>
+                                        </View>
+                                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                            <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
+                                            <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.ram_available}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
+                                        <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.ram_Percentage}/>
+                                    </View>
                                 </View>
                             </View>
-                            <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
-                                <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.total_ram_used_Percentage}/>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-                <View  >
-                    <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>  
-                        {this.ownOthersButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isBuy, 'isBuy', '购买')}  
-                        {this.ownOthersButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '出售')}  
-                    </View> 
-                    <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor, }]}>
-                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(30), alignItems: 'center'}}>
-                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.isBuy ? "购买" : "出售" }内存</Text>
-                            <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>当前价格：{this.state.Currentprice} EOS/kb</Text>
-                        </View>
-                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(35), alignItems: 'center', }}>
-                            <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount} returnKeyType="go" 
-                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
-                            placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
-                            onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkPrice(buyRamAmount)})} 
-                            />
-                        </View>
-                    </View>
-                    {this.state.isBuy&&
-                    <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor}]}>
-                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(30), alignItems: 'center'}}>
-                            <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
-                        </View>
-                        <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(35), alignItems: 'center',}}>
-                            <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"
-                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={12}
-                                placeholder={this.state.receiver} underlineColorAndroid="transparent" keyboardType="default" 
-                                onChangeText={(receiver) => this.setState({ receiver: this.chkAccount(receiver)})} 
-                            />
-                            <Button onPress={() => this.openAddressBook()}>
-                                <View style={styles.botnimg}>
-                                    <Image source={UImage.al} style={{width: ScreenUtil.autowidth(17), height: ScreenUtil.autowidth(17), }} />
+                            <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(10), }}>
+                                <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>全网内存</Text>
                                 </View>
-                            </Button> 
-                        </View>
-                    </View>}
-                    <View style={{flexDirection: 'row', paddingHorizontal: ScreenUtil.autowidth(18), paddingVertical: ScreenUtil.autowidth(10),}}>
-                        <Text style={{flex: 1, fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, textAlign: 'left'}}>余额：{this.state.balance}EOS</Text>
-                    </View>
-                </View>
-                <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
-                    <Button onPress={this.sellRedeem.bind(this)} >
-                        <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
-                            <Text style={[styles.botText,{color: UColor.btnColor}]}>{this.state.isSell ? "出售" : "购买"}</Text>
-                        </View>
-                    </Button> 
-                </View>
+                                <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                            <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
+                                            <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.total_ram_used}</Text>
+                                        </View>
+                                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                            <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
+                                            <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.total_ram_reserved}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
+                                        <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.total_ram_used_Percentage}/>
+                                    </View>
+                                </View>
+                            </View>
+                            <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>  
+                                {this.ownOthersButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isBuy, 'isBuy', '购买')}  
+                                {this.ownOthersButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '出售')}  
+                            </View> 
+                            <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor, }]}>
+                                <View style={styles.inptTitleout}>
+                                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.isBuy ? "购买" : "出售" }内存</Text>
+                                    <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>当前价格：{this.state.Currentprice} EOS/kb</Text>
+                                </View>
+                                <View style={styles.inptout}>
+                                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount} returnKeyType="go" 
+                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
+                                    placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
+                                    onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkPrice(buyRamAmount)})} 
+                                    />
+                                </View>
+                            </View>
+                            {this.state.isBuy&&
+                            <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor}]}>
+                                <View style={styles.inptTitleout}>
+                                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
+                                </View>
+                                <View style={styles.inptout}>
+                                    <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go" 
+                                        selectionColor={UColor.tintColor}  placeholderTextColor={UColor.inputtip} maxLength={12}
+                                        placeholder={this.state.receiver} underlineColorAndroid="transparent" keyboardType="default" 
+                                        onChangeText={(receiver) => this.chkAccount(receiver)} style={[styles.inpt,{color: UColor.arrow}]}
+                                    />
+                                    <Button onPress={() => this.openAddressBook()}>
+                                        <View style={styles.botnout}>
+                                            <Image source={UImage.al} style={styles.botnimg} />
+                                        </View>
+                                    </Button> 
+                                </View>
+                            </View>}
+                            <View style={styles.basc}>
+                                <Text style={[styles.basctext,{color: UColor.fontColor}]}>余额：{this.state.balance}EOS</Text>
+                            </View>
+               
+                            <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
+                                <Button onPress={this.sellRedeem.bind(this)} >
+                                    <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
+                                        <Text style={[styles.botText,{color: UColor.btnColor}]}>{this.state.isSell ? "出售" : "购买"}</Text>
+                                    </View>
+                                </Button> 
+                            </View>
+                        </KeyboardAvoidingView>
+                    </TouchableOpacity>
+                </ScrollView>
             </View>)
         }
     }
@@ -1199,6 +1213,7 @@ const styles = StyleSheet.create({
         marginTop: ScreenUtil.autoheight(5),
         lineHeight: ScreenUtil.autoheight(25),
     },
+
     tabbutton: {  
         alignItems: 'flex-start',   
         justifyContent: 'flex-start', 
@@ -1226,6 +1241,7 @@ const styles = StyleSheet.create({
     tabText: {  
         fontSize: ScreenUtil.setSpText(18),
     }, 
+
     container: {
         flex: 1,
         flexDirection:'column',
@@ -1255,10 +1271,20 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autowidth(65),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },
+    inptout: {
+        flexDirection: 'row', 
+        alignItems: 'center',
+        height: ScreenUtil.autoheight(35), 
+    },
     inpt: {
         flex: 1,
         paddingVertical: 0,
         fontSize: ScreenUtil.setSpText(16), 
+    },
+    inptTitleout: {
+        flexDirection: 'row', 
+        alignItems: 'center',
+        height: ScreenUtil.autoheight(30), 
     },
     inptTitle: {
         flex: 1,
@@ -1268,11 +1294,15 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(14), 
         lineHeight: ScreenUtil.autoheight(35),
     },
-    botnimg: {
+    botnout: {
         alignItems: 'flex-end',
         justifyContent: 'center', 
         height: ScreenUtil.autoheight(38), 
         paddingHorizontal: ScreenUtil.autowidth(10),
+    },
+    botnimg:{
+        width: ScreenUtil.autowidth(17), 
+        height: ScreenUtil.autowidth(17),
     },
     botn: {
         borderRadius: 5,
@@ -1283,21 +1313,25 @@ const styles = StyleSheet.create({
     botText: {
         fontSize: ScreenUtil.setSpText(18), 
     },
+
     basc: {
-        flex: 1,
-        padding: ScreenUtil.autoheight(10),
+        flexDirection: 'row', 
+        paddingHorizontal: ScreenUtil.autowidth(18), 
+        paddingVertical: ScreenUtil.autowidth(10),
     },
-    basctextright :{
-        textAlign: 'right',
-        borderBottomWidth: 1,
-        flexDirection: 'row',  
-        fontSize: ScreenUtil.setSpText(14), 
-        lineHeight: ScreenUtil.autoheight(20),
-    },
+    // basctextright :{
+    //     textAlign: 'right',
+    //     borderBottomWidth: 1,
+    //     flexDirection: 'row',  
+    //     fontSize: ScreenUtil.setSpText(14), 
+    //     lineHeight: ScreenUtil.autoheight(20),
+    // },
     basctext :{
-        fontSize: ScreenUtil.setSpText(12), 
-        lineHeight: ScreenUtil.autoheight(25),
+        flex: 1, 
+        textAlign: 'left', 
+        fontSize:ScreenUtil.setSpText(12),
     },
+
     tetleout: {
         paddingBottom: ScreenUtil.autoheight(10),
         paddingHorizontal: ScreenUtil.autowidth(15),
