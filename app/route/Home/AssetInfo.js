@@ -336,7 +336,7 @@ class AssetInfo extends BaseComponent {
                                         <Text style={[styles.timetext,{color: UColor.arrow}]}>{this.transferTimeZone(rowData.blockTime)}</Text>
                                     </View>
                                     <View style={styles.typedescription}>
-                                        <Text style={[styles.typeto,{color:rowData.type=='转出'?UColor.warningRed:UColor.fallColor}]}>{(rowData.type=='转出'?'-':'+')+rowData.quantity.replace(c.asset.name, "")}</Text>
+                                        <Text style={[styles.typeto,{color:rowData.type=='转出'?UColor.warningRed:UColor.fallColor}]}>{(rowData.type=='转出'?'-':'+') +  Math.floor(rowData.quantity.replace(c.asset.name, "")*10000)/10000}</Text>
                                     </View>
                                 </View>
                                 {/* <View style={styles.Ionicout}>
