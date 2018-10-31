@@ -106,7 +106,8 @@ class Setting extends React.Component {
       navigate('Community', {});
     }else if (key == 'Helpcenter') {
       // navigate('Helpcenter', {});
-      navigate('Web', { title: "ET官方客服", url: "https://static.meiqia.com/dist/standalone.html?_=t&eid=126524" });
+      //navigate('Web', { title: "ET官方客服", url: "https://static.meiqia.com/dist/standalone.html?_=t&eid=126524" });
+      Linking.openURL( "https://static.meiqia.com/dist/standalone.html?_=t&eid=126524");
     }else if (key == 'activity') {
       navigate('Activity', {});
     } else{
