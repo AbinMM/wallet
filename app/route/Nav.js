@@ -1116,16 +1116,16 @@ class Route extends React.Component {
                 <View style={{ height: 125 }}>
                   <Text style={[styles.sharetitle,{color: UColor.blackColor}]}>分享到</Text>
                   <View style={{ flexDirection: "row" }}>
-                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
-                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
-                        <Image source={UImage.share_qq} style={styles.shareimg} />
-                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
-                      </View>
-                    </Button>
                     <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
                       <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
                         <Image source={UImage.share_wx} style={styles.shareimg} />
                         <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微信</Text>
+                      </View>
+                    </Button>
+                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_qq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
                       </View>
                     </Button>
                     <Button  style={{ flex: 1, }} onPress={() => { this.shareAction(3) }}>
@@ -1278,16 +1278,16 @@ class Route extends React.Component {
                   </View>
                  
                   <View style={{ flexDirection: "row" }}>
-                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
-                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
-                        <Image source={UImage.share_qq} style={styles.shareimg} />
-                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
-                      </View>
-                    </Button>
                     <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
                       <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
                         <Image source={UImage.share_wx} style={styles.shareimg} />
                         <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微信</Text>
+                      </View>
+                    </Button>
+                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_qq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
                       </View>
                     </Button>
                     <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(3) }}>
@@ -1357,16 +1357,16 @@ class Route extends React.Component {
                 <View style={{ height: 125 }}>
                   <Text style={[styles.sharetitle,{color: UColor.blackColor}]}>分享到</Text>
                   <View style={{ flexDirection: "row" }}>
-                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
-                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
-                        <Image source={UImage.share_qq} style={styles.shareimg} />
-                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
-                      </View>
-                    </Button>
                     <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
                       <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
                         <Image source={UImage.share_wx} style={styles.shareimg} />
                         <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微信</Text>
+                      </View>
+                    </Button>
+                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_qq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
                       </View>
                     </Button>
                     <Button  style={{ flex: 1, }} onPress={() => { this.shareAction(3) }}>
@@ -1452,16 +1452,16 @@ class Route extends React.Component {
                 <View style={{ height: 125 }}>
                   <Text style={[styles.sharetitle,{color: UColor.blackColor}]}>分享到</Text>
                   <View style={{ flexDirection: "row" }}>
-                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
-                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
-                        <Image source={UImage.share_qq} style={styles.shareimg} />
-                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
-                      </View>
-                    </Button>
                     <Button  style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(2) }}>
                       <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
                         <Image source={UImage.share_wx} style={styles.shareimg} />
                         <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微信</Text>
+                      </View>
+                    </Button>
+                    <Button style={{ flex: 1, justifyContent: 'center' }} onPress={() => { this.shareAction(1) }}>
+                      <View style={{ alignSelf: 'center', width: ScreenWidth, }}>
+                        <Image source={UImage.share_qq} style={styles.shareimg} />
+                        <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
                       </View>
                     </Button>
                     <Button  style={{ flex: 1, }} onPress={() => { this.shareAction(3) }}>
