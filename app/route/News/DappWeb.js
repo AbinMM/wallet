@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Platform,BackHandler,DeviceEventEmitter,Clipboard,InteractionManager,Text,View,WebView,Animated,TextInput,Dimensions,StyleSheet,Modal,TouchableOpacity,Image} from 'react-native'
+import {Platform,BackHandler,DeviceEventEmitter,Clipboard,InteractionManager,Text,View,WebView,Animated,TextInput,Dimensions,StyleSheet,Modal,TouchableHighlight,TouchableOpacity,Image} from 'react-native'
 import UColor from '../../utils/Colors'
 import { EasyShowLD } from '../../components/EasyShow'
 import { EasyToast } from '../../components/Toast';
@@ -55,6 +55,7 @@ export default class DappWeb extends Component {
       writePsw:'',//白名单的密码，local
       isWriteListRemote:this.props.navigation.state.params.isWriteList,//白名单标志 isWhitelist:"y"  isWhitelist:"n"
       isWriteListLocal:false,//白名单标志 isWhitelist:"y"  isWhitelist:"n"
+      isChecked: this.props.isChecked || false,
     }
     this.props.dispatch({type: "wallet/getDefaultWallet",callback: data => {
         if(data && data.defaultWallet && data.defaultWallet.account){
@@ -91,7 +92,6 @@ export default class DappWeb extends Component {
             });
         }
     } });
-
   }
    //根据公钥获取对应的私钥 
    getPrivateKeyByPublicKey(publicKey)
@@ -329,9 +329,24 @@ onBackAndroid = () => {
                     if(r && r.isSuccess){
                         this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.state.tranferInfo.fromAccount, to: this.state.tranferInfo.toAccount, amount: this.state.tranferInfo.amount + " EOS", memo: this.state.tranferInfo.memo, data: "push"}});
                         resp_data = r.data;
-                        this.setState({
-                            writePsw:iPassword,
-                        });
+                        if(this.state.isWriteListRemote==true){
+                            if(this.state.isWriteListLocal==false){
+                                if(this.state.isChecked){
+                                    this.props.dispatch({ type: 'writeList/saveWriteList', payload: { dappUrl: this.props.navigation.state.params.url, isWriteListFlag: true }, callback: (data) => {
+                                        this.setState({
+                                            isWriteListLocal:true,
+                                            writePsw:iPassword,
+                                        });
+                                    } });
+                                }
+                            }else{
+                                if(this.state.writePsw.length<8){
+                                    this.setState({
+                                        writePsw:iPassword,
+                                    });
+                                }
+                            }
+                        }
                     }else{
                         if(r && r.data){
                             if(r.data.msg){
@@ -373,30 +388,6 @@ justInputPassword(isTransfer){
 }, () => { EasyShowLD.dialogClose(); this.callbackToWebview("");}); 
 }
 
-writeListInputPassword(isTransfer){
-    const view =
-    <View style={styles.passout}>
-        <Text style={[styles.contextTextWrite,{color: UColor.blackColor}]}>白名单授权仅在DApp运行期间一定时间内有效，退出DApp，或者退出App都会导致授权失败，下次使用白名单需要输入密码以启用白名单</Text>
-        <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-            selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
-            style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-            placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-            {/* {this.state.isWriteListLocal==true &&
-             <Text style={[styles.contextTextWrite,{color: UColor.blackColor}]}>白名单已授权</Text>} */}
-    </View>
-    EasyShowLD.dialogShowWL("输入密码启用白名单", view, "确认", "取消", () => {
-        this.props.dispatch({ type: 'writeList/saveWriteList', payload: { dappUrl: this.props.navigation.state.params.url, isWriteListFlag: true }, callback: (data) => {
-            // EasyShowLD.loadingClose();
-            this.setState({
-                isWriteListLocal:true,
-            });
-            this.getSureInputPassword(isTransfer,this.state.password);
-        } });
-}, () => { 
-    this.justInputPassword(isTransfer);
-}); 
-}
-
 
 //输入密码
     inputPwd = (isTransfer) => {
@@ -406,31 +397,12 @@ writeListInputPassword(isTransfer){
             this._setModalVisible_Tx();
         }
 
-        
-        // this.writeListInputPassword(isTransfer);
-
-        // if(this.state.isWriteListRemote==true){
-        //     if(this.state.isWriteListLocal==true){//已经加入白名单
-        //         if(this.state.writePsw.length<8){
-        //             this.justInputPassword(isTransfer);
-        //         }else{
-        //             this.getSureInputPassword(isTransfer,this.state.writePsw);
-        //         }
-        //     }else{
-        //         this.writeListInputPassword(isTransfer);
-        //     }
-        // }else{
-        //     if(this.state.isWriteListLocal==true){//已经加入白名单,但远程需删掉的
-        //         this.props.dispatch({ type: 'writeList/saveWriteList', payload: { dappUrl: this.props.navigation.state.params.url, isWriteListFlag: false }, callback: (data) => {
-        //             this.setState({
-        //                 isWriteListLocal:false,
-        //             });
-        //         } });
-        //     }
-        //     this.justInputPassword(isTransfer);
-        // }
-
-        this.justInputPassword(isTransfer);
+ 
+        if(this.state.writePsw.length<8){
+            this.justInputPassword(isTransfer);
+        }else{
+            this.getSureInputPassword(isTransfer,this.state.writePsw);
+        }
 
     }
 
@@ -1025,6 +997,11 @@ scatter_linkAccount(result)
 
   }
 
+  checkClick() {
+    this.setState({
+      isChecked: !this.state.isChecked
+    });
+  }
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
@@ -1105,6 +1082,24 @@ scatter_linkAccount(result)
                                 <Text style={[styles.contentText,{color: UColor.startup}]} numberOfLines={1}>{this.state.tranferInfo.memo}</Text> 
                             </View>
                             
+                            {(this.state.isWriteListRemote==true)&&(this.state.isWriteListLocal==false) &&
+                                <View style={{flexDirection: 'row',marginTop: ScreenUtil.autowidth(5),marginHorizontal: ScreenUtil.autowidth(10),}}>
+                                    <View style={styles.readout}>
+                                        <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
+                                        <View style={[{width: ScreenUtil.autowidth(10), height: ScreenUtil.autowidth(10),margin: ScreenUtil.autowidth(10), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
+                                        </TouchableHighlight>
+                                        <Text style={[styles.readtext,{color: UColor.arrow}]} >您可以将操作列入白名单，下次就不必在此授权。选择单选按钮意味着您允许此操作的属性可以更改，仅当其他属性发生变化才不会被列入白名单 </Text> 
+                                    </View> 
+                                    
+                                </View>}
+
+                            {(this.state.isWriteListRemote==true)&&(this.state.isWriteListLocal==true) && (this.state.writePsw.length>7) &&
+                                <View style={{flexDirection: 'row',marginTop: ScreenUtil.autowidth(5),marginHorizontal: ScreenUtil.autowidth(10),}}>
+                                    <View style={styles.readout}>
+                                        <Text style={[styles.readtext,{color: UColor.showy}]} >已经授权白名单，无需输入密码 </Text> 
+                                    </View> 
+                                </View>}
+
                             <Button onPress={() => { this.inputPwd(true) }}>
                                 <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
                                     <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
@@ -1142,6 +1137,24 @@ scatter_linkAccount(result)
                             <View >
                                 <Text style={[styles.actionsdetail,{color: UColor.startup}]}>{this.state.transactionInfo.actions}</Text>
                             </View>}
+                            
+                            {(this.state.isWriteListRemote==true)&&(this.state.isWriteListLocal==false) &&
+                                <View style={{flexDirection: 'row',marginTop: ScreenUtil.autowidth(5),marginHorizontal: ScreenUtil.autowidth(10),}}>
+                                    <View style={styles.readout}>
+                                        <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
+                                        <View style={[{width: ScreenUtil.autowidth(10), height: ScreenUtil.autowidth(10),margin: ScreenUtil.autowidth(10), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
+                                        </TouchableHighlight>
+                                        <Text style={[styles.readtext,{color: UColor.arrow}]} >您可以将操作列入白名单，下次就不必在此授权。选择单选按钮意味着您允许此操作的属性可以更改，仅当其他属性发生变化才不会被列入白名单 </Text> 
+                                    </View> 
+                                    
+                                </View>}
+
+                            {(this.state.isWriteListRemote==true)&&(this.state.isWriteListLocal==true) && (this.state.writePsw.length>7) &&
+                                <View style={{flexDirection: 'row',marginTop: ScreenUtil.autowidth(5),marginHorizontal: ScreenUtil.autowidth(10),}}>
+                                    <View style={styles.readout}>
+                                        <Text style={[styles.readtext,{color: UColor.showy}]} >已经授权白名单，无需输入密码 </Text> 
+                                    </View> 
+                                </View>}
                             
                             <Button onPress={() => { this.inputPwd(false) }}>
                                 <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
@@ -1444,4 +1457,23 @@ const styles = StyleSheet.create({
         // marginHorizontal: ScreenUtil.autowidth(20),
     },
 
+    readout: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginHorizontal: ScreenUtil.autowidth(20),
+        marginRight:ScreenUtil.autowidth(20),
+      },
+      readoutimg: {
+        width: ScreenUtil.autowidth(20),
+        height: ScreenUtil.autowidth(20),
+        marginRight: ScreenUtil.autowidth(10),
+      },
+      readtext: {
+        fontSize: ScreenUtil.setSpText(12),
+        lineHeight: ScreenUtil.autowidth(30),
+      },
+      servicetext: {
+        fontSize: ScreenUtil.setSpText(12),
+      },
   })
