@@ -31,7 +31,10 @@ class TradeDetails extends BaseComponent {
     if(this.props.navigation.state.params.trade){
       paramtrade = this.props.navigation.state.params.trade;
       paramtrade.disptype = 0;
+      paramtrade.receivertitle = "收款账户";
     }else if(this.props.navigation.state.params.transaction){
+      //来自转账界面
+      paramtrade.receivertitle = "收款账户";
       paramtrade.disptype = 1;
       paramtrade.type = this.props.navigation.state.params.transaction.action_name;
       paramtrade.quantity = this.props.navigation.state.params.transaction.eos_qty;
@@ -39,12 +42,15 @@ class TradeDetails extends BaseComponent {
       paramtrade.description = "";
       paramtrade.bytes = "";
       paramtrade.memo = "";
+      paramtrade.accepted = this.props.navigation.state.params.transaction.accepted
       paramtrade.blockTime = this.props.navigation.state.params.transaction.record_date;
       paramtrade.transactionId = this.props.navigation.state.params.transaction.trx_id;
       paramtrade.from = this.props.navigation.state.params.transaction.account;
       paramtrade.to = "";
       paramtrade.blockNum = this.props.navigation.state.params.transaction.block_num;
     }else if(this.props.navigation.state.params.ramtransaction){
+      //来自交易所界面
+      paramtrade.receivertitle = "接受账户";
       paramtrade.disptype = 2;
       paramtrade.type = this.props.navigation.state.params.ramtransaction.action_name;
       paramtrade.quantity = this.props.navigation.state.params.ramtransaction.eos_qty;
@@ -52,6 +58,7 @@ class TradeDetails extends BaseComponent {
       paramtrade.description = "";
       paramtrade.bytes = "";
       paramtrade.memo = "";
+      paramtrade.accepted = this.props.navigation.state.params.ramtransaction.accepted
       paramtrade.blockTime = this.props.navigation.state.params.ramtransaction.record_date;
       paramtrade.transactionId = this.props.navigation.state.params.ramtransaction.trx_id;
       paramtrade.from = this.props.navigation.state.params.ramtransaction.payer;
@@ -60,6 +67,7 @@ class TradeDetails extends BaseComponent {
     }
     else{
       //防止出错，正常情况，不应该到这里
+      paramtrade.receivertitle = "收款账户";
       paramtrade.disptype = 0;
       paramtrade.type = "";
       paramtrade.quantity = "";
@@ -67,6 +75,7 @@ class TradeDetails extends BaseComponent {
       paramtrade.description = "";
       paramtrade.bytes = "";
       paramtrade.memo = "";
+      paramtrade.accepted = true,
       paramtrade.blockTime = "";
       paramtrade.transactionId = "";
       paramtrade.from = "";
@@ -97,7 +106,7 @@ class TradeDetails extends BaseComponent {
   }
 
   componentDidMount() {
-        //alert('trade: '+JSON.stringify(this.props.navigation.state.params.trade));
+    //alert('trade: '+JSON.stringify(this.props.navigation.state.params.transaction));
   }
 
   componentWillUnmount(){
@@ -180,7 +189,7 @@ class TradeDetails extends BaseComponent {
             </View>
           </View>
           <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
-            <Text style={[styles.contwotext,{color: UColor.arrow}]}>收款账户</Text>
+            <Text style={[styles.contwotext,{color: UColor.arrow}]}>{this.state.trade.receivertitle}</Text>
             <View style={{flex: 7,flexDirection: 'row'}}>
               <Text style={[styles.blocktext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'to')} onLongPress={this.copyaccount.bind(this, 'to')}>{this.state.trade.to}</Text>
               <View style={{flex: 1}}/>
@@ -201,11 +210,7 @@ class TradeDetails extends BaseComponent {
             </View>
             <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}> 
               <Text style={[styles.context,{color: UColor.arrow}]}>是否确认</Text>
-              {this.state.trade.accepted? 
-                <Text style={[styles.tintext,{flex: 4,color: UColor.startup}]}>已确认</Text>
-              :
-                <Text style={[styles.showytext,{flex: 4,color: UColor.showy}]}>未确认</Text>
-              }
+              <Text style={[styles.tintext,{flex: 4,color: this.state.trade.accepted ? UColor.startup : UColor.showy}]}>{this.state.trade.accepted ? "已确认" : "未确认"}</Text>
             </View>
             <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
               <Text style={[styles.context,{color: UColor.arrow}]}>交易时间</Text>
