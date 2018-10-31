@@ -593,8 +593,8 @@ _setModalVisible_Auth() {
   }
   eos_getCurrencyBalance(result){
     if(result.params.contract == null || result.params.contract == ''
-       || result.params.name == null || result.params.name == ''
-       || result.params.coin == null || result.params.coin == '')
+       || result.params.account == null || result.params.account == ''
+       || result.params.symbol == null || result.params.symbol == '')
     {
         EasyToast.show('getCurrencyBalance参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -602,7 +602,7 @@ _setModalVisible_Auth() {
     }
 
     this.props.dispatch({
-        type: 'wallet/getBalance', payload: { contract: result.params.contract, account: result.params.name, symbol: result.params.coin }, callback: (resp) => {
+        type: 'wallet/getBalance', payload: { contract: result.params.contract, account: result.params.account, symbol: result.params.symbol }, callback: (resp) => {
           try {
                 var tmp_balance = "";
                 if (resp && resp.code == '0') {
