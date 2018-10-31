@@ -335,7 +335,7 @@ class News extends React.Component {
   openTokenissue() {
     this._setModalVisibleTokenissue();
     const { navigate } = this.props.navigation;
-    navigate('Web', { title: '莫与一键发币', url: "https://coincreate.github.io/EOS_coincreate/coincreate.html" });
+    navigate('Web', { title: '莫与一键发币', url: "https://coincreate.github.io/EOS_coincreate/coincreate_scatter.html" });
   }
 
   openDAPP() {
