@@ -653,7 +653,7 @@ class Home extends React.Component {
           {/* <View style={{backgroundColor: '#FF8A92', borderBottomLeftRadius: 25, borderTopLeftRadius: 25,}}>
             <Text style={{fontSize: ScreenUtil.setSpText(33),color: UColor.btnColor, marginHorizontal: ScreenUtil.autowidth(20),}}>-5%</Text>
           </View> */}
-          <View style={[styles.incdocupout,(this.state.increase>=0 && this.state.totalBalance == "0.00")?{borderColor: UColor.fallColor,backgroundColor: UColor.fallColor}:{borderColor: UColor.riseColor,backgroundColor: UColor.riseColor}]}>
+          <View style={[styles.incdocupout,{backgroundColor:this.state.increase>0 ? UColor.fallColor : UColor.riseColor}]}>
             <Text style={[styles.cupcdo,{color: UColor.btnColor}]}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
           </View>
         </View>
@@ -695,11 +695,11 @@ class Home extends React.Component {
           <LinearGradient style={{position:"absolute",top:0,left:0,width:"100%",height:ScreenUtil.autowidth(300)}} colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}}/>
           <LinearGradient style={[styles.topbtn,]}  paddingTop = {Constants.FitPhone} colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
             <Button onPress={() => this.setState({ modal: !this.state.modal })} style={{flex:1, alignItems: 'flex-start',}}>
-              <Image source={UImage.wallet_h} style={{marginHorizontal: ScreenUtil.autowidth(20),marginVertical:ScreenUtil.autowidth(12.5),width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(13),}} />
+              <Image source={UImage.wallet_h} style={{marginLeft: ScreenUtil.autowidth(20), marginRight: ScreenUtil.autowidth(50), marginVertical:ScreenUtil.autowidth(12.5),width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(13),}} />
             </Button>
             <Text style={[styles.toptext,{color: UColor.btnColor}]}>钱包</Text>
             <Button onPress={() => this.setState({ listmodal: !this.state.listmodal })} style={{flex:1, alignItems: 'flex-end',}}>
-              <Image source={UImage.add_plus} style={{marginHorizontal: ScreenUtil.autowidth(20),marginVertical:ScreenUtil.autowidth(10), width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18),}} />
+              <Image source={UImage.add_plus} style={{marginRight: ScreenUtil.autowidth(20), marginLeft: ScreenUtil.autowidth(50), marginVertical:ScreenUtil.autowidth(10), width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18),}} />
             </Button>
           </LinearGradient>
           {Constants.isNetWorkOffline && <Button onPress={this.openSystemSetting.bind(this)}>

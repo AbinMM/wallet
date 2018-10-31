@@ -303,7 +303,6 @@ class MortgageRecord extends React.Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      paddingTop: 1,
       flexDirection: "column",
     },
     header: {
