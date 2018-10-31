@@ -491,7 +491,7 @@ export default function RenderScatter(props) {
         event.initEvent("scatterLoaded", true, true);
         event.eventType = 'scatterLoaded';
         document.dispatchEvent(event);
-    },1000)
+    },1500)
   `
   }else{
     return ``
