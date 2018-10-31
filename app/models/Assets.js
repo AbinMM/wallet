@@ -406,7 +406,9 @@ export default {
             return {...state,...action.payload};
         },
         updateMyAssets(state, action) {
-            let assets = action.payload.myAssets;
+            // let assets = action.payload.myAssets;
+            let assets = new Array();
+            assets = assets.concat(action.payload.myAssets);
             var myAssets = [];
             if(!assets || assets.length == 0){
                 return { ...state, assets, updateTime:Date.parse(new Date())};

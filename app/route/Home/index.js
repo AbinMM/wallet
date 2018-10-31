@@ -519,6 +519,11 @@ class Home extends React.Component {
     }});
   }
 
+  onClickWalletList(){
+    this.setState({ modal: false });
+    this.getAllWalletEosBalance();
+  }
+  
   onRefresh(){
     if(this.props.defaultWallet == null || this.props.defaultWallet.name == null || this.props.myAssets == null){
       return;
@@ -758,7 +763,7 @@ class Home extends React.Component {
           </Modal>
 
           <Modal style={styles.touchableouts} animationType={'none'} transparent={true} onRequestClose={() => { this.onRequestClose() }} visible={this.state.modal}>
-            <TouchableOpacity onPress={() => this.setState({ modal: false })} style={[styles.touchable,]} activeOpacity={1.0}>
+            <TouchableOpacity onPress={this.onClickWalletList.bind(this)} style={[styles.touchable,]} activeOpacity={1.0}>
             <View style={{flex: 1, marginTop:Platform.OS==='android'?ScreenUtil.autoheight(37):ScreenUtil.autoheight(60),alignItems: 'center', justifyContent: 'flex-start',backgroundColor: UColor.mask }}>
               <TouchableOpacity  activeOpacity={1.0}>
                 <View style={[styles.touchableout,{backgroundColor:UColor.mainColor}]}>
