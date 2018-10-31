@@ -182,7 +182,7 @@ class Home extends React.Component {
   }
 
   calTotalBalance(){
-    if(this.props.myAssets == null){
+    if(!this.props.myAssets){
       return;
     }
     var sum = 0;
@@ -193,6 +193,7 @@ class Home extends React.Component {
         var total = this.props.myAssets[i].balance.replace(this.props.myAssets[i].asset.name, "") * this.props.myAssets[i].asset.value;
         sum = sum + total;
     }
+
     this.setState({totalBalance: sum.toFixed(2)});
     this.setState({adjustTotalBalance: this.adjustTotalBalance(sum.toFixed(2))});
   }
@@ -525,7 +526,7 @@ class Home extends React.Component {
   }
   
   onRefresh(){
-    if(this.props.defaultWallet == null || this.props.defaultWallet.name == null || this.props.myAssets == null){
+    if(this.props.defaultWallet == null || this.props.defaultWallet.name == null){
       return;
     }
 
