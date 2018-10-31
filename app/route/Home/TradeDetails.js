@@ -42,7 +42,6 @@ class TradeDetails extends BaseComponent {
       paramtrade.description = "";
       paramtrade.bytes = "";
       paramtrade.memo = "";
-      paramtrade.accepted = this.props.navigation.state.params.transaction.accepted
       paramtrade.blockTime = this.props.navigation.state.params.transaction.record_date;
       paramtrade.transactionId = this.props.navigation.state.params.transaction.trx_id;
       paramtrade.from = this.props.navigation.state.params.transaction.account;
@@ -58,7 +57,6 @@ class TradeDetails extends BaseComponent {
       paramtrade.description = "";
       paramtrade.bytes = "";
       paramtrade.memo = "";
-      paramtrade.accepted = this.props.navigation.state.params.ramtransaction.accepted
       paramtrade.blockTime = this.props.navigation.state.params.ramtransaction.record_date;
       paramtrade.transactionId = this.props.navigation.state.params.ramtransaction.trx_id;
       paramtrade.from = this.props.navigation.state.params.ramtransaction.payer;
@@ -75,7 +73,6 @@ class TradeDetails extends BaseComponent {
       paramtrade.description = "";
       paramtrade.bytes = "";
       paramtrade.memo = "";
-      paramtrade.accepted = true,
       paramtrade.blockTime = "";
       paramtrade.transactionId = "";
       paramtrade.from = "";
@@ -85,7 +82,7 @@ class TradeDetails extends BaseComponent {
     WeChat.registerApp('wxc5eefa670a40cc46');
     this.props.navigation.setParams({ onPress: this._rightTopClick });
     this.state = {
-       trade: paramtrade,
+      trade: paramtrade,
     };
   }
 
@@ -106,7 +103,7 @@ class TradeDetails extends BaseComponent {
   }
 
   componentDidMount() {
-    //alert('trade: '+JSON.stringify(this.props.navigation.state.params.transaction));
+    //alert('trade: '+JSON.stringify(this.props.navigation.state.params));
   }
 
   componentWillUnmount(){
@@ -210,7 +207,7 @@ class TradeDetails extends BaseComponent {
             </View>
             <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}> 
               <Text style={[styles.context,{color: UColor.arrow}]}>是否确认</Text>
-              <Text style={[styles.tintext,{flex: 4,color: this.state.trade.accepted ? UColor.startup : UColor.showy}]}>{this.state.trade.accepted ? "已确认" : "未确认"}</Text>
+              <Text style={[styles.tintext,{flex: 4,color: (this.state.trade.blockNum != null || this.state.trade.blockNum != "") ? UColor.startup : UColor.showy}]}>{(this.state.trade.blockNum != null || this.state.trade.blockNum != "") ? "已确认" : "未确认"}</Text>
             </View>
             <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
               <Text style={[styles.context,{color: UColor.arrow}]}>交易时间</Text>
