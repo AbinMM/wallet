@@ -522,7 +522,7 @@ _setModalVisible_Auth() {
 
   }
   eos_getKeyAccounts(result){
-    if(result.params.publicKey == null || result.params.publicKey == '')
+    if(!result.params.publicKey || result.params.publicKey == '')
     {
         EasyToast.show('getKeyAccounts参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -540,7 +540,7 @@ _setModalVisible_Auth() {
   }
 
   eos_getContract(result){
-    if(result.params.contract == null || result.params.contract == '')
+    if(!result.params.contract || result.params.contract == '')
     {
         EasyToast.show('getContract参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -564,9 +564,9 @@ _setModalVisible_Auth() {
       })
   }
   eos_getCurrencyBalance(result){
-    if(result.params.contract == null || result.params.contract == ''
-       || result.params.account == null || result.params.account == ''
-       || result.params.symbol == null || result.params.symbol == '')
+    if(!result.params.contract || result.params.contract == ''
+       || !result.params.account || result.params.account == ''
+       || !result.params.symbol || result.params.symbol == '')
     {
         EasyToast.show('getCurrencyBalance参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -603,7 +603,7 @@ _setModalVisible_Auth() {
       })
   }
   eos_getAccount(result){
-    if(result.params.account == null || result.params.account == '')
+    if(!result.params.account || result.params.account == '')
     {
         EasyToast.show('getAccount参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -625,8 +625,8 @@ _setModalVisible_Auth() {
         name: '',
         key: '',
     });
-    if(result.params.actions == null || result.params.actions.length < 1
-        || result.params.actions[0].authorization == null || result.params.actions[0].authorization.length < 1)
+    if(!result.params.actions || result.params.actions.length < 1
+        || !result.params.actions[0].authorization || result.params.actions[0].authorization.length < 1)
     {
         EasyToast.show('actions,authorization参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -635,7 +635,7 @@ _setModalVisible_Auth() {
 
     this.props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{ 
         try {
-         if (walletArr == undefined || walletArr == null || walletArr.length < 1) {
+         if (!walletArr || walletArr.length < 1) {
             EasyToast.show("get walletList error");
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
           }else{
@@ -687,10 +687,10 @@ _setModalVisible_Auth() {
         name: '',
         key: '',
     });
-    if(result.params.from == null || result.params.from == '' 
-         || result.params.to == null || result.params.to == '' 
-         || result.params.amount == null || result.params.amount == '' 
-         || result.params.memo == null)
+    if(!result.params.from || result.params.from == '' 
+         || !result.params.to || result.params.to == '' 
+         || !result.params.amount || result.params.amount == '' 
+         || !result.params.memo)
     {
         EasyToast.show('transfer参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -699,7 +699,7 @@ _setModalVisible_Auth() {
 
     this.props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{ 
         try {
-            if (walletArr == undefined || walletArr == null || walletArr.length < 1) {
+            if (!walletArr || walletArr.length < 1) {
                 EasyToast.show("get walletList error");
                 this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
               }else{
@@ -765,7 +765,7 @@ _setModalVisible_Auth() {
   }
   scatter_authenticate(result){
     {
-        if(result.params.random == null || result.params.random.length != 12) 
+        if(!result.params.random || result.params.random.length != 12) 
         {
             EasyToast.show('authenticate参数非法');
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -789,7 +789,7 @@ _setModalVisible_Auth() {
   scatter_suggestNetwork(result)
   {
       try {
-          if(result.params.network == null) 
+          if(!result.params.network) 
           {
               EasyToast.show('suggestNetwork参数非法');
               this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:false}));
@@ -808,10 +808,9 @@ _setModalVisible_Auth() {
 }
   scatter_getArbitrarySignature(result)
   {
-    if(result.params.publicKey == null || result.params.publicKey == '' 
-         || result.params.data == null || result.params.data == '' 
-         || result.params.whatfor == null
-         || result.params.isHash == null)
+    if(!result.params.publicKey || result.params.publicKey == '' 
+         || !result.params.data || result.params.data == '' 
+         || !result.params.whatfor || !result.params.isHash)
     {
         EasyToast.show('getArbitrarySignature参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -930,12 +929,12 @@ _setModalVisible_Auth() {
 scatter_requestTransfer(result)
 {
     try {
-        if(result.params.network == null || result.params.to == null || result.params.to == ''
-            || result.params.amount == null || result.params.amount == ''
-            || result.params.tokenDetails == null
-            || result.params.tokenDetails.contract == null
-            || result.params.tokenDetails.symbol == null
-            || result.params.tokenDetails.memo == null)
+        if(!result.params.network || !result.params.to || result.params.to == ''
+            || !result.params.amount || result.params.amount == ''
+            || !result.params.tokenDetails 
+            || !result.params.tokenDetails.contract
+            || !result.params.tokenDetails.symbol
+            || !result.params.tokenDetails.memo)
         {
             EasyToast.show('requestTransfer参数非法');
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -978,8 +977,8 @@ scatter_requestTransfer(result)
 scatter_linkAccount(result)
   {
       try {
-        if(result.params.publicKey == null || result.params.publicKey == '' 
-            || result.params.network == null)
+        if(!result.params.publicKey || result.params.publicKey == '' 
+            || !result.params.network)
         {
             EasyToast.show('linkAccount参数非法');
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
