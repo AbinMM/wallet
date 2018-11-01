@@ -345,8 +345,9 @@ export default {
         }, 
         *getDefaultWallet({ payload, callback }, { call, put }) {
             var defaultWallet = yield call(store.get, 'defaultWallet');
-            if (callback) callback({ defaultWallet });
             yield put({ type: 'updateDefaultWallet', payload: { defaultWallet: defaultWallet } });
+            if (callback) callback({ defaultWallet });
+
         }, 
         *changeWallet({ payload, callback }, { call, put }) {
             yield call(store.save, 'defaultWallet', payload.data);

@@ -29,7 +29,7 @@ class AssetInfo extends BaseComponent {
      constructor(props) {
         super(props);
         this.state = {
-            balance: this.props.navigation.state.params.asset.balance,
+            balance: "0.0000",
             dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
             type: '',
             asset: this.props.navigation.state.params.asset,
@@ -62,7 +62,10 @@ class AssetInfo extends BaseComponent {
             this.setState({logRefreshing: true});
             //加载地址数据
             // EasyShowLD.loadingShow();
-            this.props.dispatch({ type: 'wallet/getDefaultWallet' });
+            this.props.dispatch({ type: 'wallet/getDefaultWallet' , payload: {}, callback: () => {
+                this.getBalance();
+            }});
+
             this.props.dispatch({ type: 'assets/getTradeDetails', payload: { account_name : this.props.defaultWallet.name, contract_account : this.state.asset.asset.contractAccount,  code : this.state.asset.asset.name, last_id: "-1", countPerPage: 10, type: this.state.logType}, callback: (resp) => {
                 this.setState({logRefreshing: false});
                 this.processResult();
@@ -111,22 +114,30 @@ class AssetInfo extends BaseComponent {
     }
 
     getBalance() {
-        this.props.dispatch({
-            type: 'wallet/getBalance', payload: { contract: this.props.navigation.state.params.asset.asset.contractAccount, account: this.props.defaultWallet.name, symbol: this.props.navigation.state.params.asset.asset.name }, callback: (data) => {
-              if (data.code == '0') {
-                if (data.data == "") {
-                  this.setState({
-                    balance: '0.0000 ' + this.props.navigation.state.params.asset.asset.name,
-                  })
-                } else {
-                    this.setState({ balance: data.data });
-                }
-              } else {
-                // EasyToast.show('获取余额失败：' + data.msg);
-              }
-              EasyShowLD.loadingClose();
+        try {
+            if(!this.props.defaultWallet || !this.props.defaultWallet.name){
+                return;
             }
-        })
+            this.props.dispatch({
+                type: 'wallet/getBalance', payload: { contract: this.props.navigation.state.params.asset.asset.contractAccount, account: this.props.defaultWallet.name, symbol: this.props.navigation.state.params.asset.asset.name }, callback: (data) => {
+                  if (data && data.code == '0') {
+                    if (data.data == "") {
+                      this.setState({
+                        balance: '0.0000 ' + this.props.navigation.state.params.asset.asset.name,
+                      })
+                    } else {
+                        this.setState({ balance: data.data });
+                    }
+                  } else {
+                    // EasyToast.show('获取余额失败：' + data.msg);
+                  }
+                  EasyShowLD.loadingClose();
+                }
+            });
+        } catch (error) {
+
+        }
+
     }
 
     _openDetails(trade) {  

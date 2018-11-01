@@ -576,7 +576,7 @@ _setModalVisible_Auth() {
     this.props.dispatch({
         type: 'wallet/getBalance', payload: { contract: result.params.contract, account: result.params.account, symbol: result.params.symbol }, callback: (resp) => {
           try {
-                var tmp_balance = "";
+                var tmp_balance = "0.0000";
                 if (resp && resp.code == '0') {
                     if (resp.data == "") {
                         tmp_balance = '0.0000';
@@ -587,8 +587,14 @@ _setModalVisible_Auth() {
                     var errmsg = ((resp.data && resp.data.msg) ? resp.data.msg : "");
                     EasyToast.show("eos_getCurrencyBalance:" +errmsg);
                 }
-                this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:tmp_balance}));
-                
+                var unit = ' ' + result.params.symbol;
+                if(tmp_balance.indexOf(unit) < 0)
+                {
+                    tmp_balance = tmp_balance + unit;
+                }
+                var array = new Array();
+                array[0] = tmp_balance;
+                 this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:array}));
             } catch (error) {
                 EasyToast.show("eos_getCurrencyBalance:" +error.message);
                 this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -743,16 +749,16 @@ _setModalVisible_Auth() {
     this.props.dispatch({
         type: 'wallet/getEosTableRows', payload: result.params.obj_param, callback: (resp) => {
           try {
-            var rows;
+            var obj = new Object();
             if (resp && resp.code == '0') {
-              rows = resp.data.rows;
+                obj = resp.data;
             } else {
-              rows = [];  
+                obj = null;  
             }
-            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:rows}));
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:obj}));
           } catch (error) {
             console.log("getEosTableRows error: %s",error.message);
-            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:[]}));
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
           }
         }
       });
