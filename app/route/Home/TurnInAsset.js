@@ -168,7 +168,7 @@ class TurnInAsset extends BaseComponent {
                 <Text style={[styles.prompttext,{color: UColor.fontColor}]}>扫描二维码向我付款</Text>
               </View>
               <Button onPress={this.copy.bind()} style={styles.btnnextstep}>
-                <View style={[styles.nextstep,{backgroundColor: UColor.tintColor}]}>
+                <View style={[styles.nextstep,{backgroundColor: '#6DA0F8'}]}>
                   <Text style={[styles.nextsteptext,{color: UColor.btnColor}]}>复制账户</Text>
                 </View>
               </Button>
