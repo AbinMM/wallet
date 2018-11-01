@@ -845,18 +845,6 @@ class Ram extends BaseComponent {
             sellRamBytes: '0',  
         });  
     }  
-
-    openSystemSetting(){
-        // console.log("go to set net!")
-        if (Platform.OS == 'ios') {
-        Linking.openURL('app-settings:')
-            .catch(err => console.log('error', err))
-        } else {
-        NativeModules.OpenSettings.openNetworkSettings(data => {
-            console.log('call back data', data)
-        })
-        }
-    }
   
     onMoveLineView() {
         this.setState({scrollEnabled: false});
@@ -887,7 +875,7 @@ class Ram extends BaseComponent {
         return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
         <Header {...this.props} onPressLeft={this.props.navigation.state.params ? this.props.navigation.state.params.returnkey : false} title="内存交易"  backgroundColors={UColor.Navigation} />
         {Constants.isNetWorkOffline &&
-            <Button onPress={this.openSystemSetting.bind(this)}>
+            <Button onPress={() => {NativeUtil.openSystemSetting();}}>
                 <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
                     <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
                     <Ionicons style={{marginRight: ScreenUtil.autowidth(5),color: UColor.btnColor}} name="ios-arrow-forward-outline" size={20} />

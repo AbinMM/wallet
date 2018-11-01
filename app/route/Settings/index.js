@@ -8,6 +8,7 @@ import Button from '../../components/Button'
 import Header from '../../components/Header'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
+import NativeUtil from '../../utils/NativeUtil'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from '../../components/EasyShow'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
@@ -159,17 +160,6 @@ class Setting extends React.Component {
     }
   }
 
-  openSystemSetting(){
-    if (Platform.OS == 'ios') {
-      Linking.openURL('app-settings:')
-        .catch(err => console.log('error', err))
-    } else {
-      NativeModules.OpenSettings.openNetworkSettings(data => {
-        console.log('call back data', data)
-      })
-    }
-  }
-
   selectpoint(){
     if(this.props.defaultWallet != null && this.props.defaultWallet.name != null && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
       EasyToast.show("当前主网账号未激活，请重新导入EOS账号。");
@@ -270,7 +260,7 @@ class Setting extends React.Component {
       <ScrollView  keyboardShouldPersistTaps="always">
         <Header {...this.props} onPressLeft={false} title="我的" />
         {Constants.isNetWorkOffline &&
-        <Button onPress={this.openSystemSetting.bind(this)}>
+        <Button onPress={() => {NativeUtil.openSystemSetting();}}>
           <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
               <Text style={[styles.systemSettingText,{color: UColor.fontColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
               <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />

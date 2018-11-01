@@ -1086,18 +1086,6 @@ class Transaction extends BaseComponent {
     
     }  
 
-    openSystemSetting(){
-        // console.log("go to set net!")
-        if (Platform.OS == 'ios') {
-        Linking.openURL('app-settings:')
-            .catch(err => console.log('error', err))
-        } else {
-        NativeModules.OpenSettings.openNetworkSettings(data => {
-            console.log('call back data', data)
-        })
-        }
-    }
-
     onMoveLineView() {
         this.setState({scrollEnabled: false});
         return true;
@@ -1135,7 +1123,7 @@ class Transaction extends BaseComponent {
         </View> 
     </LinearGradient>
     {Constants.isNetWorkOffline &&
-    <Button onPress={this.openSystemSetting.bind(this)}>
+    <Button onPress={() => {NativeUtil.openSystemSetting();}}>
         <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
             <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
             <Ionicons style={{marginRight: ScreenUtil.autowidth(5),color: UColor.btnColor}} name="ios-arrow-forward-outline" size={20} />

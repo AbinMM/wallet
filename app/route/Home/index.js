@@ -7,6 +7,7 @@ import { Eos } from "react-native-eosjs";
 import Button from '../../components/Button'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
+import NativeUtil from '../../utils/NativeUtil'
 import { EasyToast } from "../../components/Toast"
 import { EasyShowLD } from '../../components/EasyShow'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
@@ -575,17 +576,6 @@ class Home extends React.Component {
     this._disableTipVisible();
   }
 
-  openSystemSetting(){
-    if (Platform.OS == 'ios') {
-      Linking.openURL('app-settings:')
-        .catch(err => console.log('error', err))
-    } else {
-      NativeModules.OpenSettings.openNetworkSettings(data => {
-        console.log('call back data', data)
-      })
-    }
-  }
-
   onScroll = (e) => {
     let {x, y} = e.nativeEvent.contentOffset;
     artle(x + ' ' + y);
@@ -775,7 +765,7 @@ class Home extends React.Component {
     }else{
       return (
         <View style={[styles.container,]}>
-          {Constants.isNetWorkOffline && <Button onPress={this.openSystemSetting.bind(this)}>
+          {Constants.isNetWorkOffline && <Button onPress={() => {NativeUtil.openSystemSetting();}}>
                 <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
                     <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
                     <Ionicons style={[styles.systemSettingArrow,{color: UColor.btnColor}]} name="ios-arrow-forward-outline" size={20} />

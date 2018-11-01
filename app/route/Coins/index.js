@@ -9,6 +9,7 @@ import Constants from '../../utils/Constants'
 import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
+import NativeUtil from '../../utils/NativeUtil'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient'
 import {formatterNumber,formatterUnit} from '../../utils/FormatUtil'
@@ -128,18 +129,6 @@ class Coins extends React.Component {
     this.setState({index});
   }
 
-  openSystemSetting(){
-    // console.log("go to set net!")
-    if (Platform.OS == 'ios') {
-      Linking.openURL('app-settings:')
-        .catch(err => console.log('error', err))
-    } else {
-      NativeModules.OpenSettings.openNetworkSettings(data => {
-        console.log('call back data', data)
-      })
-    }
-  }
-
   //渲染页面
   renderScene = ({route}) => {
     if(route.key==''){
@@ -153,7 +142,7 @@ class Coins extends React.Component {
         enableEmptySections={true}
         renderHeader = {()=><View>  
           {Constants.isNetWorkOffline &&
-            <Button onPress={this.openSystemSetting.bind(this)}>
+            <Button onPress={NativeUtil.openSystemSetting.bind(this)}>
               <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
                 <Text style={[styles.systemSettingText,{color: UColor.fontColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
                   <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />

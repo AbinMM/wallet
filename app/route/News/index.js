@@ -238,53 +238,8 @@ class News extends React.Component {
     cangoback = e.canGoBack;
   }
 
-
-  openSystemSetting(){
-    // console.log("go to set net!")
-    if (Platform.OS == 'ios') {
-      Linking.openURL('app-settings:')
-        .catch(err => console.log('error', err))
-    } else {
-      NativeModules.OpenSettings.openNetworkSettings(data => {
-        console.log('call back data', data)
-      })
-    }
-  } 
-
-  onAddto = (dappdata) =>{
-    const c = this.props.navigation.state.params.coins;
-    if(this.props.coinSelf && this.props.coinSelf[c.name.toLowerCase()]==1){
-      this.props.dispatch({type:'news/doCoinSelf',payload:{action:"rem",name:dappdata.name.toLowerCase()},callback:function(){
-        DeviceEventEmitter.emit('coinSlefChange',"");
-      }});
-      this.props.navigation.setParams({img:UImage.fav,onPress:this.onPress});
-      EasyToast.show("已取消自选")
-    }else{
-      this.props.dispatch({type:'news/doCoinSelf',payload:{action:"add",name:dappdata.name.toLowerCase()},callback:function(){
-        DeviceEventEmitter.emit('coinSlefChange',"");
-      }});
-      this.props.navigation.setParams({img:UImage.fav_h,onPress:this.onPress});
-      EasyToast.show("已加入自选")
-    }
-  }
-
   onRefreshing() {
-    try {
-      this.setState({logRefreshing: true});
-      this.props.dispatch({ type: 'wallet/dappfindAllCategory', });
-      this.props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
-          if (resp && resp.code == '0') {
-            if(resp.data && resp.data.length > 0){
-              this.setState({dappList : resp.data,logRefreshing: false});
-            }
-          } else {
-            this.setState({logRefreshing: false});
-            console.log("dappfindAllRecommend error");
-          }
-      } });
-    } catch (error) {
-      console.log("dappfindAllRecommend error: %s",error.message);
-    }
+
   }
 
   //渲染页面
@@ -315,7 +270,7 @@ class News extends React.Component {
         onEndReached={() => this.onEndReached(route.key)}
         // renderHeader = {()=><View style={{ height: this.state.h }}>
         // {/* {Constants.isNetWorkOffline &&
-        //   <Button onPress={this.openSystemSetting.bind(this)}>
+        //   <Button onPress={() => {NativeUtil.openSystemSetting();}}>
         //     <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
         //         <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
         //         <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />

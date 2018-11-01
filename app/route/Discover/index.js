@@ -74,7 +74,7 @@ class Discover extends React.Component {
         onEndReached={() => this.onEndReached(route.key)}
         renderHeader = {()=><View style={{ height: this.state.h }}>
         {/* {Constants.isNetWorkOffline &&
-          <Button onPress={this.openSystemSetting.bind(this)}>
+          <Button onPress={() => {NativeUtil.openSystemSetting();}}>
             <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
                 <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
                 <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
