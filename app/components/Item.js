@@ -59,14 +59,14 @@ export default class Item extends Component {
     font = font||"Ionicons"
  
     return (
-      <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginTop: first?ScreenUtil.autoheight(15):0}]}>
+      <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginTop: first?ScreenUtil.autoheight(10):0}]}>
         {icon?(<Icon name={icon} size={iconSize||ScreenUtil.setSpText(20)} style={{width: ScreenUtil.autowidth(22), marginRight:ScreenUtil.autowidth(5), textAlign:"center"}} color={color || UColor.blueDeep} />):null}
         <View style={[styles.listInfo, {borderTopColor: UColor.secdColor,borderTopWidth: !first?0.5:0}]}>
-          {avatar?(<Image source={avatar} style={{width: ScreenUtil.autowidth(28), height: ScreenUtil.autowidth(28)*0.9464, resizeMode: "cover", overflow:"hidden",marginRight:ScreenUtil.autowidth(10),}}/>):null}
-          <View style={{flex: 1}}><Text style={{color:UColor.fontColor, fontSize:ScreenUtil.autowidth(16)}}>{name}</Text></View>
+          {avatar?(<Image source={avatar} style={{width: ScreenUtil.autowidth(17), height: ScreenUtil.autowidth(17), resizeMode: "cover", overflow:"hidden",marginRight:ScreenUtil.autowidth(10),}}/>):null}
+          <View style={{flex: 1}}><Text style={{color: '#080808', fontSize:ScreenUtil.autowidth(16)}}>{name}</Text></View>
           <View style={styles.listInfoRight}>
-            {subName?(<Text style={{color:UColor.arrow, fontSize:ScreenUtil.autowidth(15)}}>{subName}</Text>):null}            
-            {disable?null:(<Font.Ionicons style={{marginLeft: ScreenUtil.autowidth(10)}} name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(16)} color={UColor.arrow} />)}
+            {subName?(<Text style={{color:UColor.arrow, fontSize:ScreenUtil.autowidth(16)}}>{subName}</Text>):null}            
+            {disable?null:(<Font.Ionicons style={{marginLeft: ScreenUtil.autowidth(10)}} name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(20)} color='#999999' />)}
             {!swt?null:( 
             <Switch 
               tintColor={UColor.secdColor}

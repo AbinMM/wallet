@@ -10,6 +10,7 @@ import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from '../../components/EasyShow'
+import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 const ScreenWidth = Dimensions.get('window').width;
@@ -37,17 +38,18 @@ class Setting extends React.Component {
       show: false,
       walletName: '',
       status: false,
+      Sign_in: false,
     };
-    // this.config = [
-    //   { avatar:UImage.my_wallet, name: "钱包管理", onPress: this.goPage.bind(this, "WalletManage") },
-    //   { avatar:UImage.account_manage,  name: "通讯录", onPress: this.goPage.bind(this, "AccountManage") },
-    //   { avatar:UImage.my_share,  name: "邀请注册", onPress: this.goPage.bind(this, "share") },
-    //   // { avatar:UImage.my_recovery, name: "密钥恢复", onPress: this.goPage.bind(this, "Test1") },
-    //   { avatar:UImage.my_community, name: "ET社区", onPress: this.goPage.bind(this, "Community") },
-    //   { avatar:UImage.my_help, name: "帮助中心", onPress: this.goPage.bind(this, "Helpcenter") },
-    //   { avatar: this.state.status ? UImage.my_recovery : UImage.my_help, name: "活动中心", onPress: this.goPage.bind(this, "activity") },
-    //   { avatar:UImage.my_system, name: "系统设置",  onPress: this.goPage.bind(this, "set") },
-    // ];
+    this.config = [
+      { avatar: this.state.status ? UImage.my_activityh : UImage.my_activity, first: true, name: "活动中心", onPress: this.goPage.bind(this, "activity") },
+      { avatar:UImage.my_wallet, name: "钱包管理", onPress: this.goPage.bind(this, "WalletManage") },
+      { avatar:UImage.account_manage, first: true, name: "通讯录", onPress: this.goPage.bind(this, "AccountManage") },
+      { avatar:UImage.my_share, first: true, name: "邀请注册", onPress: this.goPage.bind(this, "share") },
+      { avatar:UImage.my_help, name: "帮助中心", onPress: this.goPage.bind(this, "Helpcenter") },
+      { avatar:UImage.my_system, name: "系统设置",  onPress: this.goPage.bind(this, "set") },
+      // { avatar:UImage.my_community, name: "ET社区", onPress: this.goPage.bind(this, "Community") },
+      { avatar:UImage.my_aboutus, name: "关于我们", onPress: this.goPage.bind(this, "Community") },
+    ];
   }
 
   //组件加载完成
@@ -64,6 +66,11 @@ class Setting extends React.Component {
         }
       }
     } })
+    
+    //获取签到状态
+    this.props.dispatch({ type: 'login/isSigned', payload:{name: this.state.phone},callback: (data) => { 
+      this.setState({Sign_in: data.data});
+    } });
 
     DeviceEventEmitter.addListener('nativeCallRn', (msg) => {
       title = "React Native界面,收到数据：" + msg;
@@ -126,34 +133,19 @@ class Setting extends React.Component {
     })
   }
 
-  // _renderListItem() {
-  //   return this.config.map((item, i) => {
-  //     return (<Item key={i} {...item} />)
-  //   })
-  // }
-
   _renderListItem() {
-
-    return (
-      <View>
-        <Item avatar={UImage.my_wallet} name= "钱包管理" onPress={this.goPage.bind(this, "WalletManage")}/>
-        <Item avatar={UImage.account_manage} name= "通讯录" onPress={this.goPage.bind(this, "AccountManage")}/>
-        <Item avatar={UImage.my_share} name= "邀请注册" onPress={this.goPage.bind(this, "share")}/>
-        {/* <Item avatar={UImage.my_recovery} name= "密钥恢复" onPress={this.goPage.bind(this, "Test1")}/> */}
-        <Item avatar={UImage.my_community} name= "ET社区" onPress={this.goPage.bind(this, "Community")}/>
-        <Item avatar={UImage.my_help} name= "帮助中心" onPress={this.goPage.bind(this, "Helpcenter")}/>
-        <Item avatar={this.state.status ? UImage.my_activityh : UImage.my_activity}  name="活动中心" onPress={this.goPage.bind(this, "activity")} />
-        <Item avatar={UImage.my_system} name= "系统设置" onPress={this.goPage.bind(this, "set")}/>
-      </View>
-    )
+    return this.config.map((item, i) => {
+      return (<Item key={i} {...item} />)
+    })
   }
 
   goProfile() {
-    if (this.props.loginUser) {
-      return;
-    }
-    const { navigate } = this.props.navigation;
-    navigate('Login', {});
+    if(this.props.loginUser){
+      return
+    }else{
+      const { navigate } = this.props.navigation;
+      navigate('Login', {});
+    } 
   }
 
   signIn() {
@@ -273,25 +265,9 @@ class Setting extends React.Component {
   }  
 
   render() {
-    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+    return <View style={[styles.container,{backgroundColor: '#F7F8F9'}]}>
       <ScrollView  keyboardShouldPersistTaps="always">
-        <LinearGradient colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={styles.linebgout}>
-          <Button onPress={this.goProfile.bind(this)} style={{flex: 1,}}>
-            <View style={styles.userHead} >
-              <View style={styles.headout}>
-                <View style={[styles.headimgout, {backgroundColor:UColor.mainColor}]}> 
-                  <Image source={UImage.logo} style={styles.headimg}/>
-                </View>
-                <Text style={[styles.headtext,{color: UColor.btnColor}]}>{(this.props.loginUser) ? this.props.loginUser.nickname : "登陆"}</Text>
-              </View>
-              <View style={styles.signedout}>
-                  <Button onPress={this.signIn.bind(this)} style={styles.signedbtn}>
-                    <Image source={UImage.signed} style={styles.signedimg}/>
-                  </Button>
-              </View>
-            </View>
-          </Button>
-        </LinearGradient>
+        <Header {...this.props} onPressLeft={false} title="我的" />
         {Constants.isNetWorkOffline &&
         <Button onPress={this.openSystemSetting.bind(this)}>
           <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
@@ -299,7 +275,27 @@ class Setting extends React.Component {
               <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
           </View>
         </Button>}
-        <View style={[styles.eosbtnout,{backgroundColor: UColor.mainColor}]}>
+        
+      
+        <View style={[styles.userHead,{backgroundColor: UColor.mainColor}]} >
+          <TouchableOpacity style={styles.headout} onPress={this.goProfile.bind(this)}>
+            <View style={[styles.headimgout, {backgroundColor:'#F7F8F9'}]}> 
+              {this.props.loginUser ?
+              <Image source={UImage.logo} style={styles.headimg}/>
+              :
+              <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#1A1A1A'}}>登陆</Text>
+               }
+              
+            </View>
+            <Text style={[styles.headtext,{color: '#1A1A1A'}]}>{(this.props.loginUser) ? this.props.loginUser.nickname : ""}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.signedout,{backgroundColor: this.state.Sign_in ? '#E6E6E6':'#6DA0F8'}]} onPress={this.signIn.bind(this)} >
+            <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#FFFFFF', textAlign: 'center'}}>签到</Text>
+          </TouchableOpacity>
+        </View>
+        
+        
+        {/* <View style={[styles.eosbtnout,{backgroundColor: UColor.mainColor}]}>
           <View style={styles.eosout}>
             <Text style={[styles.eosbtntext,{color: UColor.arrow}]}>活动奖励</Text>
             <Text style={[styles.eostext,{color: UColor.fontColor}]}>{(this.props.loginUser) ? this.props.loginUser.eost : "0"} EOS</Text>
@@ -311,17 +307,17 @@ class Setting extends React.Component {
               </Button>
             }
           </View>
-        </View>
+        </View> */}
         
         <View>
           {this._renderListItem()}
         </View>
         
-        <View style={styles.footer}>
+        {/* <View style={styles.footer}>
           <Text style={[styles.foottext,{color: UColor.arrow}]}>© 2018 eostoken all rights reserved </Text>
-          {/* <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text> */}
+          <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text>
           <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V2.3.8.1</Text>
-        </View>
+        </View> */}
       
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
           <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
@@ -362,17 +358,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
-  linebgout: {
-    width: ScreenWidth,
-    height: ScreenUtil.autoheight(110),
-  },
   userHead: {
-    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: ScreenUtil.autoheight(20),
-    paddingHorizontal: ScreenUtil.autowidth(20),
+    width: ScreenWidth,
+    height: ScreenUtil.autoheight(75),
+    paddingVertical: ScreenUtil.autoheight(8),
+    paddingHorizontal: ScreenUtil.autowidth(16),
   },
   headout: {
     flex: 1,
@@ -396,15 +389,13 @@ const styles = StyleSheet.create({
     marginHorizontal: ScreenUtil.autowidth(15),
   },
   signedout: {
-    alignSelf: 'center',
-    justifyContent: "flex-end",
-    width: ScreenUtil.autowidth(70),
-  },
-  signedbtn: {
     borderRadius: 5,
-    paddingVertical: ScreenUtil.autoheight(5),
-    paddingHorizontal: ScreenUtil.autowidth(15),
+    alignSelf: 'center',
+    justifyContent: "center",
+    width: ScreenUtil.autowidth(60),
+    height: ScreenUtil.autoheight(30),
   },
+ 
   signedimg: {
     width: ScreenUtil.autowidth(40),
     height: ScreenUtil.autowidth(49)

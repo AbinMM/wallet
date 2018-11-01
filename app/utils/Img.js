@@ -29,14 +29,9 @@ export default {
   logo: require('../img/day/logo1.png'),
   more_h: require('../img/day/more_h.png'),
   more: require('../img/day/more.png'),
-  my_activity: require('../img/day/my_activity.png'),
   my_activityh: require('../img/day/my_activityh.png'),
   my_community: require('../img/day/my_community.png'),
-  my_help: require('../img/day/my_help.png'),
   my_recovery: require('../img/day/my_recovery.png'),
-  my_share: require('../img/day/my_share.png'),
-  my_system: require('../img/day/my_system.png'),
-  my_wallet: require('../img/day/my_wallet.png'),
   navigation: require('../img/day/navigation.png'),
   pool_bg: require('../img/day/pool_bg.png'),
   privatekey: require('../img/day/privatekey.png'),
@@ -70,6 +65,18 @@ export default {
   votec_bj: require('../img/day/votec_bj.png'),
   warning: require('../img/day/warning.png'),
   
+
+
+
+  //新版图片
+  my_aboutus: require('../img/newimg/my_aboutus.png'),
+  my_activity: require('../img/newimg/my_activity.png'),
+  my_help: require('../img/newimg/my_help.png'),
+  my_share: require('../img/newimg/my_share.png'),
+  my_system: require('../img/newimg/my_system.png'),
+  my_wallet: require('../img/newimg/my_wallet.png'),
+  transfer: require('../img/newimg/transfer.png'),
+  receipt: require('../img/newimg/receipt.png'),
   //黑色版图
   // aab1: require('../img/aab1.png'),
   // aab2: require('../img/aab2.png'),

@@ -17,8 +17,8 @@ const App = () => (
 
     <Toast />
     <LoadingDialog />
-    {Platform.OS === 'ios' && <StatusBar barStyle="light-content" backgroundColor={Colors.secdColor} />}
-    {Platform.OS === 'android' && <StatusBar barStyle="light-content" backgroundColor={Colors.transport} translucent={true} />}
+    {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" backgroundColor={Colors.secdColor} />}
+    {Platform.OS === 'android' && <StatusBar barStyle="dark-content" backgroundColor={Colors.transport} translucent={true} />}
     <Route/>
   </View>
 );
