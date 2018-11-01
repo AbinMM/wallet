@@ -50,6 +50,7 @@ class Home extends React.Component {
       mortgage: '0',
       allowance: '0',
       listmodal: false,
+      fadeOpacity: new Animated.Value(0),
     };
   }
 
@@ -780,7 +781,100 @@ class Home extends React.Component {
                     <Ionicons style={[styles.systemSettingArrow,{color: UColor.btnColor}]} name="ios-arrow-forward-outline" size={20} />
                 </View>
           </Button>}
+          <Animated.View style={{zIndex:999,position:"absolute",top:0,left:0,width:'100%',opacity: this.state.fadeOpacity}}>
+          <View style={{backgroundColor: UColor.mainColor}}>
+          <View style={{borderBottomRightRadius: 15, borderBottomLeftRadius: 15,overflow: 'hidden', justifyContent: 'center',}}>
+            <LinearGradient style={{width: ScreenWidth, height: ScreenUtil.autowidth(215), paddingBottom: ScreenUtil.autowidth(35),}}  paddingTop = {Constants.FitPhone} colors={['#6C9EF8','#5F5DE6']} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
+              <View style={[styles.topbtn,]}>
+                <TouchableOpacity onPress={() => this.setState({ modal: !this.state.modal })} style={{flex: 1, height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(20),alignItems: 'flex-start',justifyContent: 'center', }}>
+                  <View style={{flexDirection: 'row',}}>
+                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#FFFFFF', marginRight: ScreenUtil.autowidth(5),}}>{this.props.defaultWallet.account}</Text>
+                    <Ionicons color={'#FFFFFF'} name={this.state.modal ? "ios-arrow-down-outline" : "ios-arrow-forward-outline"} size={20} />
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.setState({ listmodal: !this.state.listmodal })} style={{flex: 1, height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(20), alignItems:'flex-end', justifyContent: 'center', }}>
+                  {/* <Image source={UImage.add_plus} style={{width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18),}} /> */}
+                  <Ionicons color={'#FFFFFF'} name={"ios-add-outline"} size={36} />
+                </TouchableOpacity>
+              </View>
+              <View style={{flex: 1,  alignItems: 'center',justifyContent: 'space-around'}}>
+                <Text style={{fontSize: ScreenUtil.setSpText(44), color: '#FEFEFE', fontWeight: 'bold'}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : "" + this.state.adjustTotalBalance) : '****'}</Text>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={[styles.cupcdo,{color: UColor.btnColor}]}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
+                  <TouchableOpacity onPress={this.onPressReveal.bind(this,this.state.isEye)}>
+                    <Image source={this.state.isEye ? UImage.reveal : UImage.reveal_h} style={this.state.isEye ? styles.imgTeOy : styles.imgoney}/>
+                  </TouchableOpacity>
+                </View>
+                {(this.props.defaultWallet && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) 
+                ? 
+                <View style={[styles.backoractivestyle,{borderColor: '#FEFEFE'}]}>
+                  <Text style={[styles.notactived,{color: '#FEFEFE'}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未激活</Text>
+                </View>
+                :
+                ((!this.props.defaultWallet || !this.props.defaultWallet.name || (this.props.defaultWallet &&this.props.defaultWallet.isBackups)) 
+                  ? 
+                  <Text style={styles.stopoutBackups} />
+                  :  
+                  <View style={[styles.backoractivestyle11,{borderColor: '#FEFEFE'}]}>
+                    <Text style={[styles.stopoutBackups,{color: '#FEFEFE'}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未备份</Text>
+                  </View>) }   
+              </View>
+            </LinearGradient>
+          </View>
+          <View style={{paddingHorizontal: ScreenUtil.autowidth(16), paddingTop: ScreenUtil.autowidth(28)}}>
+            <View style={{height: ScreenUtil.autowidth(49), flexDirection: 'row', alignItems: 'center', borderBottomColor: '#F7F8F9', borderBottomWidth: 0.5,}}>
+              <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#080808',fontWeight: "100"}}>已抵押资源(CPU+NET)</Text>
+              <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(18), color: '#1A1A1A'}}>{this.state.mortgage}</Text>
+              <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#080808',fontWeight: "100"}}> EOS</Text>
+            </View>
+            <View style={{height: ScreenUtil.autowidth(49), flexDirection: 'row', alignItems: 'center',}}>
+              <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#080808',fontWeight: "100"}}>内存(RAM)</Text>
+              <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(18), color: '#1A1A1A'}}>{this.state.allowance}</Text>
+              <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#080808',fontWeight: "100"}}> KB</Text>
+            </View>
+          </View>
+          <View onScroll={this.onScroll} style={{ top: ScreenUtil.autowidth(190),position: "absolute",flexDirection: 'row',width: ScreenWidth-ScreenUtil.autowidth(32), borderRadius: 25,
+            height: ScreenUtil.autowidth(49),marginHorizontal: ScreenUtil.autowidth(16), paddingVertical:ScreenUtil.autowidth(12), backgroundColor: UColor.mainColor,
+            shadowColor: '#6B96F5',shadowOffset:{h: 10,w: 10},shadowRadius: 5,shadowOpacity: 0.5,elevation: 5,}}>
+            <TouchableOpacity onPress={this.onPress.bind(this, 'transfer')} style={[styles.headbtn,{borderRightWidth: 0.5, borderRightColor: '#F7F8F9'}]}>
+              <View style={styles.headbtnout}>
+                <Image source={UImage.transfer} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
+                <Text style={{fontSize: ScreenUtil.setSpText(16),color: '#1A1A1A'}}>转账</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.onPress.bind(this, 'Receivables')} style={[styles.headbtn,{borderLeftWidth: 0.5, borderLeftColor: '#F7F8F9'}]}>
+              <View style={styles.headbtnout}>
+                <Image source={UImage.receipt} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
+                <Text style={{fontSize: ScreenUtil.setSpText(16),color: '#1A1A1A'}}>收款</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+          </Animated.View>
           <ListView initialListSize={1} enableEmptySections={true}  style={{backgroundColor: UColor.secdfont}}
+              onScroll={(event)=>{
+                this.scroll=true;
+                if(event.nativeEvent.contentOffset.y>190){
+                  if(this.state.fadeOpacity>0){
+                    return;
+                  }
+                  Animated.timing(this.state.fadeOpacity, {
+                      toValue: 1,
+                      duration: 300,
+                      easing: Easing.linear,// 线性的渐变函数
+                  }).start();
+                }else{
+                  if(this.state.fadeOpacity>=1){
+                    return;
+                  }
+                  Animated.timing(this.state.fadeOpacity, {
+                    toValue: 0,
+                    duration: 300,
+                    easing: Easing.linear,// 线性的渐变函数
+                  }).start();
+                }``
+              }
+            }
             refreshControl={<RefreshControl refreshing={this.state.assetRefreshing} onRefresh={() => this.onRefresh()}
             tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
             renderHeader={()=>{return this._renderHeader()}}
