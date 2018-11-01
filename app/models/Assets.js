@@ -161,14 +161,20 @@ export default {
                     isBalanceChange = true;
                     // item.balance = '0.0000';
                 }
-                const resp = yield call(Request.request, getBalance, 'post', {contract: item.asset.contractAccount, account: payload.accountName, symbol: item.asset.name});
-                // alert("------ " + JSON.stringify(resp));
-                if(resp && resp.code=='0' && resp.data != null){
-                    if(resp.data != item.balance){
-                        isBalanceChange = true;
-                        item.balance = resp.data;
-                    }
+
+                try {
+                    const resp = yield call(Request.requestO, "http://47.52.250.41:8001/v1/chain/get_currency_balance", 'post', {code: item.asset.contractAccount, account: payload.accountName, symbol: item.asset.name});
+                    // alert("------ " + JSON.stringify(resp));
+                    // if(resp && resp.code=='0' && resp.data != null){
+                    //     if(resp.data != item.balance){
+                            isBalanceChange = true;
+                            item.balance = resp[0];
+                        // }
+                
+                } catch (error) {
+                    
                 }
+
             }
 
             var manualClose = yield call(store.get, 'myAssets_manual_close_' + payload.accountName);
@@ -268,6 +274,9 @@ export default {
      *fetchMyAssetsFromNet({payload, callback},{call,put}) {
         if(payload && payload.accountName){
             var myAssets = yield call(store.get, 'myAssets217_' + payload.accountName);
+            if(!myAssets){
+                myAssets = [];
+            }
             // alert(JSON.stringify(myAssets))
 
             var manualClose = yield call(store.get, 'myAssets_manual_close_' + payload.accountName);
@@ -320,6 +329,48 @@ export default {
                 
             } catch (error) {
 
+            }
+
+            var hasEos = false;
+            for(var t = 0; t < myAssets.length; t++){
+                if(myAssets[t].asset.name == 'EOS'){
+                    hasEos = true;
+                    break;
+                }
+            }
+            // 没有资产信息或者eos信息，则出现异常了，此处处理是为了能防错，防止资产页面一个资产都没有显示出来
+            if(!hasEos || myAssets.length == 0){
+                var eosInfoDefault = {
+                    asset: {name : "EOS", icon: "http://news.eostoken.im/images/20180319/1521432637907.png", contractAccount: "eosio.token", value: "0.00"},
+                    value: true,
+                    balance: '0.0000',
+                }
+                myAssets[myAssets.length] = eosInfoDefault;
+                var currentAccount = yield call(store.get, 'current_account');
+                yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
+                if(payload && currentAccount == payload.accountName){
+                    yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+                }
+                var resp;
+                try {
+                    resp = yield call(Request.request, listAssets, 'post', {code: 'EOS'});
+                    if(resp && resp.code == '0' && resp.data && resp.data.length == 1){
+                        var eosInfo = {
+                            asset: resp.data[0],
+                            value: true,
+                            balance: '0.0000',
+                        }
+                        myAssets[myAssets.length] = eosInfo;
+                    }
+                } catch (error) {
+
+                }
+                
+                yield call(store.save, 'myAssets217_' + payload.accountName, myAssets);
+                var currentAccount = yield call(store.get, 'current_account');
+                if(currentAccount == payload.accountName){
+                    yield put({ type: 'updateMyAssets', payload: {myAssets: myAssets} });
+                }
             }
 
             if(callback) callback();
