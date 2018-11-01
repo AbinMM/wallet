@@ -521,8 +521,10 @@ class Home extends React.Component {
   }
 
   onClickWalletList(){
-    this.setState({ modal: false });
-    this.getAllWalletEosBalance();
+    if(!this.state.modal){
+      this.getAllWalletEosBalance();
+    }
+    this.setState({ modal: !this.state.modal })
   }
   
   onRefresh(){
@@ -700,7 +702,7 @@ class Home extends React.Component {
         <View style={[styles.container,]}>
           <LinearGradient style={{position:"absolute",top:0,left:0,width:"100%",height:ScreenUtil.autowidth(300)}} colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}}/>
           <LinearGradient style={[styles.topbtn,]}  paddingTop = {Constants.FitPhone} colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
-            <Button onPress={() => this.setState({ modal: !this.state.modal })} style={{flex:1, alignItems: 'flex-start',}}>
+            <Button onPress={this.onClickWalletList.bind(this)} style={{flex:1, alignItems: 'flex-start',}}>
               <Image source={UImage.wallet_h} style={{marginLeft: ScreenUtil.autowidth(20), marginRight: ScreenUtil.autowidth(50), marginVertical:ScreenUtil.autowidth(12.5),width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(13),}} />
             </Button>
             <Text style={[styles.toptext,{color: UColor.btnColor}]}>钱包</Text>
@@ -764,7 +766,7 @@ class Home extends React.Component {
           </Modal>
 
           <Modal style={styles.touchableouts} animationType={'none'} transparent={true} onRequestClose={() => { this.onRequestClose() }} visible={this.state.modal}>
-            <TouchableOpacity onPress={this.onClickWalletList.bind(this)} style={[styles.touchable,]} activeOpacity={1.0}>
+            <TouchableOpacity onPress={() => this.setState({ modal: false })} style={[styles.touchable,]} activeOpacity={1.0}>
             <View style={{flex: 1, marginTop:Platform.OS==='android'?ScreenUtil.autoheight(37):ScreenUtil.autoheight(60),alignItems: 'center', justifyContent: 'flex-start',backgroundColor: UColor.mask }}>
               <TouchableOpacity  activeOpacity={1.0}>
                 <View style={[styles.touchableout,{backgroundColor:UColor.mainColor}]}>
