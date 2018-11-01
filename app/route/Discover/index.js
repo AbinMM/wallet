@@ -29,10 +29,10 @@ var cangoback = false;
 var ITEM_HEIGHT = 100;
 
 @connect(({ banner, newsType, news, wallet, vote, common,}) => ({ ...banner, ...newsType, ...news, ...wallet , ...vote, ...common,}))
-class News extends React.Component {
+class Discover extends React.Component {
 
   static navigationOptions = {
-    tabBarLabel: '资讯',
+    tabBarLabel: '发现',
     tabBarIcon: ({ focused}) => (
       <Image resizeMode='stretch'
           source={focused ? UImage.tab_3_h : UImage.tab_3} style={{width: ScreenUtil.autowidth(18), height: ScreenUtil.autowidth(21),}}
@@ -895,4 +895,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default News;
+export default Discover;

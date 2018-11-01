@@ -36,9 +36,11 @@ import Helpcenter from './Login/Helpcenter'
 import ProblemFeedback from './Login/ProblemFeedback'
 import SignIn from './Login/SignIn'
 
+import Discover from './Discover'
+import DappWeb from './Discover/DappWeb'
+import Dappsearch from './Discover/Dappsearch'
+
 import News from './News'
-import DappWeb from './News/DappWeb'
-import Dappsearch from './News/Dappsearch'
 import OCTactivity from './News/OCTactivity'
 
 import Settings from './Settings'
@@ -100,8 +102,9 @@ var WeChat = require('react-native-wechat');
 var TabContainer = TabNavigator(
   {
     Home: { screen: Home },
-    Coins: { screen: Coins },
-    Transaction: { screen: (Transaction) },
+    Discover: { screen: Discover },
+    // Coins: { screen: Coins },
+    // Transaction: { screen: (Transaction) },
     News: { screen: News },
     Settings: { screen: Settings }
   },
@@ -149,6 +152,9 @@ const Nav = StackNavigator(
         headerLeft: null,
         headerRight: null,
       }
+    },
+    Discover: {
+      screen: Discover
     },
     Web: {
       screen: Web
