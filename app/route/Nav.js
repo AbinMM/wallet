@@ -24,7 +24,6 @@ import AssetInfo from './Home/AssetInfo'
 import AssetSearch from './Home/AssetSearch'
 import ChoiceToken from './Home/ChoiceToken'
 import FreeMortgage from './Home/FreeMortgage'
-import FunctionsMore from './Home/FunctionsMore'
 import TradeDetails from './Home/TradeDetails'
 import TurnInAsset from './Home/TurnInAsset'
 import TurnOutAsset from './Home/TurnOutAsset'
@@ -46,7 +45,6 @@ import OCTactivity from './Activity/OCTactivity'
 import Settings from './Settings'
 import Activity from './Settings/Activity'
 import AgentInfo from './Settings/AgentInfo'
-import Bvote from './Settings/Bvote'
 import Community from './Settings/Community'
 import Imvote from './Settings/Imvote'
 import MortgageRecord from './Settings/MortgageRecord'
@@ -234,9 +232,6 @@ const Nav = StackNavigator(
     Share: {
       screen: Share
     },
-    Bvote: {
-      screen: Bvote
-    },
     Resources: {
       screen: Resources
     },
@@ -281,9 +276,6 @@ const Nav = StackNavigator(
     },
     ChoiceToken: {
       screen: ChoiceToken
-    },
-    FunctionsMore: {
-      screen:FunctionsMore
     },
     AssetInfo: {
       screen: AssetInfo

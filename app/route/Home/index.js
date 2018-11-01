@@ -318,15 +318,6 @@ class Home extends React.Component {
           EasyShowLD.dialogClose()
         }, () => { EasyShowLD.dialogClose() });
       }
-    }else if (key == 'functionsMore') {
-      if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) {
-        EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
-          this.createWallet();
-          EasyShowLD.dialogClose()
-        }, () => { EasyShowLD.dialogClose() });  
-        return;
-      }
-      navigate('FunctionsMore', {coins:this.props.myAssets[0], balance: this.state.balance,account_name:(this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name});
     }else if (key == 'transfer') {
       if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) {
         EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
