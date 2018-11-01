@@ -592,7 +592,7 @@ class Home extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.setState({ listmodal: !this.state.listmodal })} style={{flex: 1, height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(20), alignItems:'flex-end', justifyContent: 'center', }}>
                   {/* <Image source={UImage.add_plus} style={{width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18),}} /> */}
-                  <Ionicons color={'#FFFFFF'} name={this.state.listmodal ? "ios-remove-outline" : "ios-add-outline"} size={30} />
+                  <Ionicons color={'#FFFFFF'} name={"ios-add-outline"} size={36} />
                 </TouchableOpacity>
               </View>
               <View style={{flex: 1,  alignItems: 'center',justifyContent: 'space-around'}}>
@@ -635,13 +635,13 @@ class Home extends React.Component {
             height: ScreenUtil.autowidth(49),marginHorizontal: ScreenUtil.autowidth(16), paddingVertical:ScreenUtil.autowidth(12), borderColor: '#808080', borderWidth: 0.5, backgroundColor: UColor.mainColor}}>
             <Button onPress={this.onPress.bind(this, 'transfer')} style={[styles.headbtn,{borderRightWidth: 0.5, borderRightColor: '#F7F8F9'}]}>
               <View style={styles.headbtnout}>
-                <Image source={UImage.transfer_h} style={{width: ScreenUtil.autowidth(17),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
+                <Image source={UImage.transfer} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
                 <Text style={{fontSize: ScreenUtil.setSpText(16),color: '#1A1A1A'}}>转账</Text>
               </View>
             </Button>
             <Button onPress={this.onPress.bind(this, 'Receivables')} style={[styles.headbtn,{borderLeftWidth: 0.5, borderLeftColor: '#F7F8F9'}]}>
               <View style={styles.headbtnout}>
-                <Image source={UImage.qr_h} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
+                <Image source={UImage.receipt} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
                 <Text style={{fontSize: ScreenUtil.setSpText(16),color: '#1A1A1A'}}>收币</Text>
               </View>
             </Button>
