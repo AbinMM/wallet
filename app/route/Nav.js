@@ -675,15 +675,6 @@ class Route extends React.Component {
     var th = this;
     if (e == 1) {
       this.refs.viewShot.capture().then(uri => {
-        CameraRoll.saveToCameraRoll(uri);
-        EasyToast.show("图片已保存到您的相册,打开QQ并选择图片发送吧");
-        setTimeout(() => {
-          Linking.openURL('mqqwpa://');
-          th.setState({ showShare: false });
-        }, 2000);
-      });
-    } else if (e == 2) {
-      this.refs.viewShot.capture().then(uri => {
         WeChat.isWXAppInstalled()
           .then((isInstalled) => {
             th.setState({ showShare: false });
@@ -696,6 +687,15 @@ class Route extends React.Component {
               EasyToast.show('没有安装微信软件，请您安装微信之后再试');
             }
           });
+      });
+    } else if (e == 2) {
+      this.refs.viewShot.capture().then(uri => {
+        CameraRoll.saveToCameraRoll(uri);
+        EasyToast.show("图片已保存到您的相册,打开QQ并选择图片发送吧");
+        setTimeout(() => {
+          Linking.openURL('mqqwpa://');
+          th.setState({ showShare: false });
+        }, 2000);
       });
     } else if (e == 3) {
       this.refs.viewShot.capture().then(uri => {
