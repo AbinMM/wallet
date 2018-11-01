@@ -48,20 +48,10 @@ class News extends React.Component {
       h: ScreenWidth * 0.436,
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
       routes: [{ key: '', title: '' }],
-      theme: false,    //白色版
-      dappPromp: false,
-      Tokenissue: false,
       logRefreshing: false,
       selecttitle:"",
       selecturl:"",
       isWriteListFlag:false,
-      dappList: [],
-      holdallList: [
-        {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
-        {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
-        {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
-        {icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},
-      ],
       periodstext: '', //当前进行第几期活动
       periodsseq: '', //当前进行第几期下标
       WHratio: '',
@@ -86,19 +76,8 @@ class News extends React.Component {
           this.setState({ SysteminfoModal: false, })
         }
       }
-    })
+    });
 
-    this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
-      this.props.dispatch({ type: 'wallet/walletList', payload: {}, callback: (walletArr) => {
-        if(walletArr == null || walletArr.length == 0){
-          this.props.dispatch({ type: 'wallet/updateGuideState', payload: {guide: true}});
-          return;
-        }else{
-          this.props.dispatch({ type: 'wallet/updateGuideState', payload: {guide: false}});
-        }
-      }
-      });
-    } });
     //页面加载先去获取一次ET快讯
     this.props.dispatch({ type: 'news/list', payload: { type: '12', page: 1, newsRefresh: false } });
     //切换tab完成后执行,不影响ui流畅度
@@ -237,36 +216,6 @@ class News extends React.Component {
     AnalyticsUtil.onEvent('Forward');
   }
 
-  bannerPress = (banner) => {
-    if (banner && banner.url && banner.url != "") {
-      const { navigate } = this.props.navigation;
-      let url = banner.url.replace(/^\s+|\s+$/g, "");
-      if(banner.url == "octactivity"){
-        navigate('OCTactivity',{ periodstext:this.state.periodstext, periodsseq:this.state.periodsseq,});
-        return;
-      }
-      // if((banner.url.indexOf("http://") != 0) && (banner.url.indexOf("https://") != 0)){
-      //   try {
-      //     navigate(banner.url, {}); // app内部的js跳转
-      //   } catch (error) {
-      //   }
-      //   return;
-      // }
-
-      if(banner.url.indexOf("ext_viewer:") == 0){
-        Linking.openURL(banner.url.substring("ext_viewer:".length)); // 外部浏览器打开
-        return;
-      }
-
-      if((banner.url.indexOf("app:") == 0)){
-        navigate(banner.url.substring("app:".length), {}); // app内部的js跳转
-        return;
-      }
-      
-      navigate('Web', { title: banner.title, url: url });
-    }
-  }
-
   //切换tab
   _handleIndexChange = index => {
     if (pages[index] <= 0) {
@@ -300,75 +249,7 @@ class News extends React.Component {
         console.log('call back data', data)
       })
     }
-  }
-
-  onPressDapp(data) {
-    if(this.props.defaultWallet == null || this.props.defaultWallet.name == null 
-          || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
-      EasyToast.show("请先导入已激活账号!");
-      return;
-    }
-
-    this.setState({
-      dappPromp: true,
-      selecttitle:data.name,
-      selecturl: data.url,
-      isWriteListFlag:(data.isWhitelist=='y'?true:false),//白名单标志 isWhitelist:"y"  isWhitelist:"n"
-    });
-  }
-
-  _setModalVisible_DAPP() {  
-    let dappPromp = this.state.dappPromp;  
-    this.setState({  
-        dappPromp:!dappPromp,  
-    });  
   } 
-
-  // 显示/隐藏 modal  
-  _setModalVisibleTokenissue() {  
-    let isTokenissue = this.state.Tokenissue;  
-    this.setState({  
-        Tokenissue:!isTokenissue,  
-    });  
-  } 
-
-  openTokenissue() {
-    this._setModalVisibleTokenissue();
-    const { navigate } = this.props.navigation;
-    navigate('Web', { title: '莫与一键发币', url: "https://coincreate.github.io/EOS_coincreate/coincreate_scatter.html" });
-  }
-
-  openDAPP() {
-    this._setModalVisible_DAPP();
-    const { navigate } = this.props.navigation;
-    
-    // sdkOpenDapp(this.state.selecturl,this.state.selecttitle,this.state.theme);
-    navigate('DappWeb', { title: this.state.selecttitle, url: this.state.selecturl ,isWriteList:this.state.isWriteListFlag});
-  }
-
-  onPressTool(data) {
-    const { navigate } = this.props.navigation;
-    if(data.name == this.state.holdallList[1].name){
-      navigate('Web', { title: 'eospark', url: "https://eospark.com" });
-      return ;
-    }
-
-    if(this.props.defaultWallet == null || this.props.defaultWallet.name == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
-      EasyToast.show("请先导入已激活账号!");
-      return;
-    }
-  
-    if(data.name == this.state.holdallList[0].name){
-      navigate('Dappsearch', {theme:this.state.theme});
-    }else if(data.name == this.state.holdallList[2].name){
-      navigate('FreeMortgage');
-    }else if(data.name == this.state.holdallList[3].name){
-      // this._setModalVisibleTokenissue();
-      navigate('Nodevoting', {account_name: this.props.defaultWallet.name});
-    }else{
-      EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
-    }
-  }
 
   onAddto = (dappdata) =>{
     const c = this.props.navigation.state.params.coins;
@@ -411,136 +292,6 @@ class News extends React.Component {
     if (route.key == '') {
       return (<View></View>)
     }
-    if (route.title == 'DAPP') {   
-      return (<View>
-        <ScrollView  keyboardShouldPersistTaps="always"
-          refreshControl={<RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} 
-          tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor} style={{backgroundColor: UColor.transport}}/>}
-        >
-        {Constants.isNetWorkOffline &&
-          <Button onPress={this.openSystemSetting.bind(this)}>
-            <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
-                <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
-                <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
-            </View>
-          </Button>}
-          <View style={{ height: this.state.h }}>
-            <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth}>
-              {this.renderSwipeView()}
-            </Carousel>
-          </View>
-          <View style={{backgroundColor: UColor.mainColor}}>
-            {/* <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(10),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
-              <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,paddingLeft: ScreenUtil.autoheight(12) }}>常用DAPP</Text>
-            </View>
-            <ListView  enableEmptySections={true}  contentContainerStyle={[styles.selflist,{borderBottomColor:UColor.secdColor}]}
-              dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
-              renderRow={(rowData) => (  
-                <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.selfDAPP}>
-                    <View style={styles.selfbtnout}>
-                      <Image source={{uri:rowData.icon}} style={styles.selfBtnDAPP} />
-                      <Text style={[styles.headbtntext,{color: UColor.fontColor}]} >{rowData.name}</Text>
-                    </View>
-                </Button>
-              )}                
-            />  */}
-            <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(15),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
-              <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,fontWeight:'bold',paddingLeft: ScreenUtil.autoheight(12) }}>工具箱</Text>
-            </View> 
-            <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
-              dataSource={this.state.dataSource.cloneWithRows(this.state.holdallList == null ? [] : this.state.holdallList)} 
-              renderRow={(rowData) => (  
-                <Button  onPress={this.onPressTool.bind(this, rowData)}  style={styles.headDAPP}>
-                  <View style={styles.headbtnout}>
-                    <Image source={rowData.icon} style={styles.imgBtnDAPP} />
-                    <View style={{flex: 1}}>
-                      <Text style={[styles.headbtntext,{color: UColor.fontColor}]}>{rowData.name}</Text>
-                      <Text style={[styles.descriptiontext,{color: UColor.lightgray}]} numberOfLines={1}>{rowData.description}</Text>
-                    </View>
-                  </View>
-                </Button>
-              )}                
-            /> 
-            <View style={{marginHorizontal: ScreenUtil.autowidth(5),marginVertical:ScreenUtil.autoheight(15),borderLeftWidth: ScreenUtil.autoheight(3),borderLeftColor: UColor.tintColor,}}>  
-              <Text style={{fontSize: ScreenUtil.setSpText(18),color:UColor.fontColor,fontWeight:'bold',paddingLeft: ScreenUtil.autoheight(12) }}>游戏娱乐</Text>
-            </View>
-            <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
-              dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
-              renderRow={(rowData) => (  
-                <Button  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headDAPP}>
-                  <View style={styles.headbtnout}>
-                    <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} />
-                    <View style={{flex: 1}}>
-                      <Text style={[styles.headbtntext,{color: UColor.fontColor}]}>{rowData.name}</Text>
-                      <Text style={[styles.descriptiontext,{color: UColor.lightgray}]} numberOfLines={1}>{rowData.description}</Text>
-                    </View>
-                  </View>
-                </Button>
-              )}                
-            /> 
-          </View>
-          <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.dappPromp} onRequestClose={()=>{}}>
-            <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
-              <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, }}>
-                <View style={styles.subViewBackup}> 
-                  <Button onPress={this._setModalVisible_DAPP.bind(this) } style={styles.buttonView2}>
-                    <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={35} />
-                  </Button>
-                </View>
-                <Text style={styles.contentText}>您接下来访问的页面将跳转至第三方</Text>
-                <Text style={styles.contentText}>应用DAPP {this.state.selecttitle}</Text>
-                <View style={[styles.warningout,{borderColor: UColor.showy}]}>
-                    <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                      <Image source={UImage.warning_h} style={styles.imgBtnBackup} />
-                      <Text style={[styles.headtext,{color: UColor.riseColor}]} >免责声明</Text>
-                    </View>
-                    <Text style={[styles.headtitle,{color: UColor.showy}]}>注意：您接下来访问的页面将跳转至第三方应用DAPP {this.state.selecttitle}。您在此应用上的所有行为应遵守该应用的用户协议和隐私政策，
-                      并由DAPP {this.state.selecttitle}向您承担应有责任。</Text>
-                </View>
-                <Button onPress={this.openDAPP.bind(this)}>
-                    <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
-                      <Text style={[styles.deletetext,{color: UColor.btnColor}]}>我已阅读并同意</Text>
-                    </View>
-                </Button>  
-              </View> 
-            </TouchableOpacity>
-          </Modal>
-          <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.Tokenissue} onRequestClose={()=>{}}>
-            <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
-              <View style={{ width: ScreenWidth-30, backgroundColor: UColor.btnColor, borderRadius: 5, }}>
-                <View style={styles.subViewBackup}> 
-                  <Button onPress={this._setModalVisibleTokenissue.bind(this) } style={styles.buttonView2}>
-                      <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={35} />
-                  </Button>
-                </View>
-                <Text style={styles.contentText}>使用说明</Text>
-                <View style={[styles.warningout,{borderColor: UColor.showy}]}>
-                    <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                        <Image source={UImage.warning_h} style={styles.imgBtnBackup} />
-                        <Text style={[styles.headtext,{color: UColor.riseColor}]} >免责声明</Text>
-                    </View>
-                    <Text style={[styles.headtitle,{color: UColor.showy}]}>本功能由第三方平台提供，不属于EosToken官方出品，《用户协议》和《应用风险》由该平台单独向您承担责任！</Text>
-                </View>
-                <View style={{ width: ScreenWidth-70,marginHorizontal: ScreenUtil.autowidth(20), marginVertical: ScreenUtil.autoheight(10),}}>
-                    <Text style={[styles.centertext,{color: UColor.arrow}]}>3分钟，3EOS！最方便，最便宜的EOS自助发币DAPP。</Text>
-                    <Text style={[styles.centertext,{color: UColor.arrow}]}>开发：清华大学计算机专业博士生莫与独立编写。</Text>
-                    <Text style={[styles.centertext,{color: UColor.arrow}]}>功能：帮助大家自助地发行基于EOS代币。价格比大家自己发币便宜了13倍！</Text>
-                    <Text style={[styles.centertext,{color: UColor.arrow}]}>流程：</Text>
-                    <Text style={[styles.centertext,{color: UColor.arrow}]}>1.根据指导生成自己代币的MEMO。</Text>
-                    <Text style={[styles.centertext,{color: UColor.arrow}]}>2.给指定合约账号转账3EOS，并备注之前生成的MEMO。</Text>
-                    <Text style={[styles.centertext,{color: UColor.arrow}]}>3.在eostoken钱包中添加代币（添加公众号“深入浅出EOS”回复“eostoken”获取教程）</Text>
-                </View>
-                <Button onPress={this.openTokenissue.bind(this)} style={{}}>
-                    <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
-                        <Text style={[styles.deletetext,{color: UColor.btnColor}]}>我已阅读并同意</Text>
-                    </View>
-                </Button>  
-              </View> 
-            </TouchableOpacity>
-          </Modal>
-        </ScrollView>
-      </View>)
-    }
     if (route.type == 1) {
       let url = route.url ? route.url.replace(/^\s+|\s+$/g, "") : "";
       const w = (<WebView
@@ -562,25 +313,25 @@ class News extends React.Component {
       <ListView initialListSize={5}  style={{ backgroundColor: UColor.secdColor }} enableEmptySections={true} onEndReachedThreshold={20}
         renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 1, backgroundColor: UColor.secdColor }} />}
         onEndReached={() => this.onEndReached(route.key)}
-        renderHeader = {()=><View style={{ height: this.state.h }}>
-        {/* {Constants.isNetWorkOffline &&
-          <Button onPress={this.openSystemSetting.bind(this)}>
-            <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
-                <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
-                <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
-            </View>
-          </Button>} */}
-          {/* <Swiper height={this.state.h} loop={true} autoplay={true} horizontal={true} autoplayTimeout={5} 
-            paginationStyle={{ bottom: ScreenUtil.autoheight(10) }}
-            dotStyle={{ backgroundColor: 'rgba(255,255,255,.2)', width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}
-            activeDotStyle={{ backgroundColor: UColor.tintColor, width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}>
-            {this.renderSwipeView()}
-          </Swiper> */}
-          <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth}>
-            {this.renderSwipeView()}
-          </Carousel>
-        </View>
-        }
+        // renderHeader = {()=><View style={{ height: this.state.h }}>
+        // {/* {Constants.isNetWorkOffline &&
+        //   <Button onPress={this.openSystemSetting.bind(this)}>
+        //     <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
+        //         <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
+        //         <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
+        //     </View>
+        //   </Button>} */}
+        //   {/* <Swiper height={this.state.h} loop={true} autoplay={true} horizontal={true} autoplayTimeout={5} 
+        //     paginationStyle={{ bottom: ScreenUtil.autoheight(10) }}
+        //     dotStyle={{ backgroundColor: 'rgba(255,255,255,.2)', width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}
+        //     activeDotStyle={{ backgroundColor: UColor.tintColor, width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}>
+        //     {this.renderSwipeView()}
+        //   </Swiper> */}
+        //   <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth}>
+        //     {this.renderSwipeView()}
+        //   </Carousel>
+        // </View>
+        // }
         refreshControl={<RefreshControl refreshing={this.props.newsRefresh} onRefresh={() => this.onRefresh(route.key, true)}
           tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
         dataSource={this.state.dataSource.cloneWithRows(this.props.newsData[route.key] == null ? [] : this.props.newsData[route.key])}
