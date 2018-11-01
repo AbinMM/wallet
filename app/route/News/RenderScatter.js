@@ -16,10 +16,40 @@ export default function RenderScatter(props) {
             authority:"${account.perm_name}"
         }]
     };
+    var timerScatterNumber=0;
+    var timerScatter;
+
+    function sendScatterEvent(e){
+        var event = document.createEvent('HTMLEvents');
+        event.initEvent(e,true, true);
+        event.eventType = e;
+        document.dispatchEvent(event);
+    }
+
+    timerScatter = setInterval(function(){
+        if(timerScatterNumber < 100)
+        {
+            sendScatterEvent("scatterLoaded");
+            timerScatterNumber++;
+        }else{
+            if(timerScatter)
+            {
+                clearInterval(timerScatter);
+            }
+        }
+    },500);
+
+    document.addEventListener("scatterTimer",()=>{
+        if(timerScatter)
+        {
+            clearInterval(timerScatter);
+        }
+    });
 
     window.scatter={
         identity:iden,
         getIdentity:function(id){
+            sendScatterEvent("scatterTimer");
             return new Promise((resolve, reject) => {
                 if(iden){
                     resolve(iden);
@@ -31,6 +61,7 @@ export default function RenderScatter(props) {
             });
         },
         forgetIdentity:function(){
+            sendScatterEvent("scatterTimer");
             return new Promise((resolve, reject) => {
                 if(iden){
                     resolve(iden);
@@ -103,6 +134,7 @@ export default function RenderScatter(props) {
         },
 
         suggestNetwork:function(network){
+            sendScatterEvent("scatterTimer");
             return new Promise((resolve, reject) => {
                 var key = new Date().getTime();
                 window.postMessage(JSON.stringify({key,scatter:"suggestNetwork",params:{network}}));
@@ -244,25 +276,25 @@ export default function RenderScatter(props) {
                 
                     });
                 },
-                getCurrencyBalance:function(contract,name,coin){
+                getCurrencyBalance:function(code,account,symbol){
                     return new Promise((resolve, reject) => {
                         var key = new Date().getTime();
-                        var tmp_contract = '';
-                        var tmp_name = '';
-                        var tmp_coin = '';
+                        var tmp_code = '';
+                        var tmp_account = '';
+                        var tmp_symbol = '';
 
-                        var param_type = typeof(contract);
+                        var param_type = typeof(code);
                         if(param_type === 'object')
                         {
-                            tmp_contract = contract.contract ? contract.contract : '';
-                            tmp_name = contract.name ? contract.name : '';
-                            tmp_coin = contract.coin ? contract.coin : '';
+                            tmp_code = code.code ? code.code : '';
+                            tmp_account = code.account ? code.account : '';
+                            tmp_symbol = code.symbol ? code.symbol : '';
                         }else{
-                            tmp_contract = contract;
-                            tmp_name = name;
-                            tmp_coin = coin;
+                            tmp_code = code;
+                            tmp_account = account;
+                            tmp_symbol = symbol;
                         }
-                        window.postMessage(JSON.stringify({key,scatter:"getCurrencyBalance",params:{contract:tmp_contract,name:tmp_name,coin:tmp_coin}}));
+                        window.postMessage(JSON.stringify({key,scatter:"getCurrencyBalance",params:{contract:tmp_code,account:tmp_account,symbol:tmp_symbol}}));
                         document.addEventListener("message",function(msg){
                             document.removeEventListener("message",this);
                             var obj = eval("(" + msg.data + ")");
@@ -486,12 +518,7 @@ export default function RenderScatter(props) {
             }
         }
     };
-    setTimeout(function(){
-        var event = document.createEvent('HTMLEvents');
-        event.initEvent("scatterLoaded", true, true);
-        event.eventType = 'scatterLoaded';
-        document.dispatchEvent(event);
-    },1000)
+   
   `
   }else{
     return ``

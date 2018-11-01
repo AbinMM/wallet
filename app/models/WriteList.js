@@ -4,6 +4,7 @@ import { EasyToast } from '../components/Toast';
 import store from 'react-native-simple-store';
 import * as CryptoJS from 'crypto-js';
 import { DeviceEventEmitter } from 'react-native';
+import { ok } from 'assert';
 
 
 export default {
@@ -69,13 +70,19 @@ export default {
         
         *delWriteList({ payload ,callback}, { call, put }) {          
             var writeList = yield call(store.get, 'writeList');
-            for (var i = payload.keyArr.length; i > 0 ; i--) {
-                writeList.splice(payload.keyArr[i-1], 1);
-                yield call(store.save, 'writeList', writeList);
-                yield put({ type: 'update', payload: { data: writeList, ...payload } });
-                // EasyToast.show('删除成功，点击完成刷新');
+            for (var i = 0; i < writeList.length; i++) {
+                if (writeList[i].dappUrl == payload.dappUrl) {
+                    writeList.splice(payload.dappUrl, 1);
+                    yield call(store.save, 'writeList', writeList);
+                    yield put({ type: 'update', payload: { data: writeList, ...payload } });
+                    if(callback) callback(writeList);
+                    return ;
+                }
             }
-            if(callback) callback("ok");
+
+            // EasyToast.show('删除成功，点击完成刷新');
+            
+            if(callback) callback(false);
             return;
         }
     },

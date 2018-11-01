@@ -60,7 +60,7 @@ class News extends React.Component {
         {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
         {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
         {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
-        {icon: UImage.Currency_my,name:'一键发币',description:'帮助大家自助地发行基于EOS代币。价格比大家自己发币便宜了13倍！'},
+        {icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},
       ],
       periodstext: '', //当前进行第几期活动
       periodsseq: '', //当前进行第几期下标
@@ -335,7 +335,7 @@ class News extends React.Component {
   openTokenissue() {
     this._setModalVisibleTokenissue();
     const { navigate } = this.props.navigation;
-    navigate('Web', { title: '莫与一键发币', url: "https://coincreate.github.io/EOS_coincreate/coincreate.html" });
+    navigate('Web', { title: '莫与一键发币', url: "https://coincreate.github.io/EOS_coincreate/coincreate_scatter.html" });
   }
 
   openDAPP() {
@@ -363,7 +363,8 @@ class News extends React.Component {
     }else if(data.name == this.state.holdallList[2].name){
       navigate('FreeMortgage');
     }else if(data.name == this.state.holdallList[3].name){
-      this._setModalVisibleTokenissue();
+      // this._setModalVisibleTokenissue();
+      navigate('Nodevoting', {account_name: this.props.defaultWallet.name});
     }else{
       EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
     }

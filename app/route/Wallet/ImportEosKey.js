@@ -638,10 +638,10 @@ class ImportEosKey extends BaseComponent {
                     underlineColorAndroid="transparent" onChangeText={(passwordNote) => this.setState({ passwordNote })}  />
               </View>
               
-              <View style={{flexDirection: 'row',marginTop: ScreenUtil.autowidth(5),marginHorizontal: ScreenUtil.autowidth(10),}}>
+              <View style={{flexDirection: 'row'}}>
                 <View style={styles.readout}>
                   <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
-                    <View style={[{width: ScreenUtil.autowidth(10), height: ScreenUtil.autowidth(10),margin: ScreenUtil.autowidth(10), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
+                    <View style={[{width: ScreenUtil.autowidth(10), height: ScreenUtil.autowidth(10),marginLeft: ScreenUtil.autowidth(20), margin: ScreenUtil.autowidth(15), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
                   </TouchableHighlight>
                   <Text style={[styles.readtext,{color: UColor.arrow}]} >我已经阅读并同意 <Text onPress={() => this.prot(this,'clause')} style={[styles.servicetext,{color: UColor.tintColor}]}>服务及隐私条款</Text></Text> 
                 </View> 
@@ -789,7 +789,7 @@ const styles = StyleSheet.create({
   },
   readtext: {
     fontSize: ScreenUtil.setSpText(12),
-    lineHeight: ScreenUtil.autowidth(30),
+    lineHeight: ScreenUtil.autowidth(40),
   },
   servicetext: {
     fontSize: ScreenUtil.setSpText(12),
@@ -807,8 +807,9 @@ const styles = StyleSheet.create({
 
   privatekeytext: { 
     textAlign: 'center',
+    paddingRight: ScreenUtil.autowidth(10),
     fontSize: ScreenUtil.setSpText(12), 
-    lineHeight: ScreenUtil.autowidth(30),
+    lineHeight: ScreenUtil.autowidth(40),
   },
   pupuo: {
     flex: 1,

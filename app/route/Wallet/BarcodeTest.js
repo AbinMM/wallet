@@ -70,10 +70,6 @@ export default class App extends BaseComponent {
 
     _onBarCodeRead = (e) => {
         var strQRcode = JSON.stringify(e.nativeEvent.data.code);
-        if(strQRcode.indexOf("token=") == -1){
-            return this._errExit();
-        }
-        let coinType = strQRcode.match(/token=(\S*)"/)[1]
         this._stopScan();
         try {
             var strcoins = e.nativeEvent.data.code;
@@ -89,7 +85,11 @@ export default class App extends BaseComponent {
             }catch(e){
 
             }
-           
+
+            if(strQRcode.indexOf("token=") == -1){
+                return this._errExit();
+            }
+            let coinType = strQRcode.match(/token=(\S*)"/)[1]
             var lowerCointType = coinType.toLowerCase();
             var upperCointType = coinType.toUpperCase();
             var length = strcoins.length;

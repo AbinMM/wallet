@@ -281,5 +281,5 @@ export default {
   copy_dapp:require('../img/copy_dapp.png'),
   refresh_dapp:require('../img/refresh_dapp.png'),
   dapp_set:require('../img/dapp_set.png'),
-  
+  icon_vote: require('../img/icon_vote.png'),
 }
