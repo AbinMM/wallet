@@ -342,7 +342,6 @@ class News extends React.Component {
     this._setModalVisible_DAPP();
     const { navigate } = this.props.navigation;
     
-    // sdkOpenDapp(this.state.selecturl,this.state.selecttitle,this.state.theme);
     navigate('DappWeb', { title: this.state.selecttitle, url: this.state.selecturl ,isWriteList:this.state.isWriteListFlag});
   }
 
