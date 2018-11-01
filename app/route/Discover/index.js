@@ -46,13 +46,23 @@ class Discover extends React.Component {
     this.state = {
       refresh: false,
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
-
+      dappList:[],
     };
   }
 
   //组件加载完成
   componentDidMount() {
-
+    this.props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
+      if (resp && resp.code == '0') {
+        if(resp.data && resp.data.length > 0){
+          this.setState({dappList : resp.data});
+        }
+      } else {
+        // this.setState({logRefreshing: false});
+        console.log("dappfindAllRecommend error");
+      }
+  } });
+  
   }
 
   componentWillUnmount() {

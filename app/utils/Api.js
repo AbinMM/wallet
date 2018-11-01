@@ -90,7 +90,7 @@ export const getEosTransactionRecord = rootaddr + '/eosrpc/getEosTransactionReco
 export const getEosTableRows = rootaddr + '/eosrpc/getEosTableRows';
 
 export const dappfindAll = rootaddr + '/dapp/findAll';
-export const dappfindAllRecommend = rootaddr + '/dapp/findAllRecommend';
+export const dappfindAllRecommend = rootaddr + '/dapp/findAllRecommendNew';
 export const dappfindAllCategory = rootaddr + '/dapp/findAllCategory';
 
 export const atcgetInfo = rootaddr + '/act/getInfo';
