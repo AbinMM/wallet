@@ -585,6 +585,11 @@ class Home extends React.Component {
     }
   }
 
+  onScroll = (e) => {
+    let {x, y} = e.nativeEvent.contentOffset;
+    artle(x + ' ' + y);
+  }
+
 
   _renderHeader() {
     return(<View style={{flex: 1, alignItems: 'center',backgroundColor: UColor.secdfont}}>
@@ -639,20 +644,21 @@ class Home extends React.Component {
               <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#080808',fontWeight: "100"}}> KB</Text>
             </View>
           </View>
-          <View style={{ top: ScreenUtil.autowidth(190),position: "absolute",flexDirection: 'row',width: ScreenWidth-ScreenUtil.autowidth(32), borderRadius: 25,
-            height: ScreenUtil.autowidth(49),marginHorizontal: ScreenUtil.autowidth(16), paddingVertical:ScreenUtil.autowidth(12), borderColor: '#808080', borderWidth: 0.5, backgroundColor: UColor.mainColor}}>
-            <Button onPress={this.onPress.bind(this, 'transfer')} style={[styles.headbtn,{borderRightWidth: 0.5, borderRightColor: '#F7F8F9'}]}>
+          <View onScroll={this.onScroll} style={{ top: ScreenUtil.autowidth(190),position: "absolute",flexDirection: 'row',width: ScreenWidth-ScreenUtil.autowidth(32), borderRadius: 25,
+            height: ScreenUtil.autowidth(49),marginHorizontal: ScreenUtil.autowidth(16), paddingVertical:ScreenUtil.autowidth(12), backgroundColor: UColor.mainColor,
+            shadowColor: '#6B96F5',shadowOffset:{h: 10,w: 10},shadowRadius: 5,shadowOpacity: 0.5,elevation: 5,}}>
+            <TouchableOpacity onPress={this.onPress.bind(this, 'transfer')} style={[styles.headbtn,{borderRightWidth: 0.5, borderRightColor: '#F7F8F9'}]}>
               <View style={styles.headbtnout}>
                 <Image source={UImage.transfer} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
                 <Text style={{fontSize: ScreenUtil.setSpText(16),color: '#1A1A1A'}}>转账</Text>
               </View>
-            </Button>
-            <Button onPress={this.onPress.bind(this, 'Receivables')} style={[styles.headbtn,{borderLeftWidth: 0.5, borderLeftColor: '#F7F8F9'}]}>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.onPress.bind(this, 'Receivables')} style={[styles.headbtn,{borderLeftWidth: 0.5, borderLeftColor: '#F7F8F9'}]}>
               <View style={styles.headbtnout}>
                 <Image source={UImage.receipt} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
-                <Text style={{fontSize: ScreenUtil.setSpText(16),color: '#1A1A1A'}}>收币</Text>
+                <Text style={{fontSize: ScreenUtil.setSpText(16),color: '#1A1A1A'}}>收款</Text>
               </View>
-            </Button>
+            </TouchableOpacity>
           </View>
         </View>
        
