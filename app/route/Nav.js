@@ -41,7 +41,7 @@ import DappWeb from './Discover/DappWeb'
 import Dappsearch from './Discover/Dappsearch'
 
 import News from './News'
-import OCTactivity from './News/OCTactivity'
+import OCTactivity from './Activity/OCTactivity'
 
 import Settings from './Settings'
 import Activity from './Settings/Activity'
