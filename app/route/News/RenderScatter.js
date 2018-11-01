@@ -16,10 +16,40 @@ export default function RenderScatter(props) {
             authority:"${account.perm_name}"
         }]
     };
+    var timerScatterNumber=0;
+    var timerScatter;
+
+    function sendScatterEvent(e){
+        var event = document.createEvent('HTMLEvents');
+        event.initEvent(e,true, true);
+        event.eventType = e;
+        document.dispatchEvent(event);
+    }
+
+    timerScatter = setInterval(function(){
+        if(timerScatterNumber < 100)
+        {
+            sendScatterEvent("scatterLoaded");
+            timerScatterNumber++;
+        }else{
+            if(timerScatter)
+            {
+                clearInterval(timerScatter);
+            }
+        }
+    },500);
+
+    document.addEventListener("scatterTimer",()=>{
+        if(timerScatter)
+        {
+            clearInterval(timerScatter);
+        }
+    });
 
     window.scatter={
         identity:iden,
         getIdentity:function(id){
+            sendScatterEvent("scatterTimer");
             return new Promise((resolve, reject) => {
                 if(iden){
                     resolve(iden);
@@ -31,6 +61,7 @@ export default function RenderScatter(props) {
             });
         },
         forgetIdentity:function(){
+            sendScatterEvent("scatterTimer");
             return new Promise((resolve, reject) => {
                 if(iden){
                     resolve(iden);
@@ -103,6 +134,7 @@ export default function RenderScatter(props) {
         },
 
         suggestNetwork:function(network){
+            sendScatterEvent("scatterTimer");
             return new Promise((resolve, reject) => {
                 var key = new Date().getTime();
                 window.postMessage(JSON.stringify({key,scatter:"suggestNetwork",params:{network}}));
@@ -486,12 +518,7 @@ export default function RenderScatter(props) {
             }
         }
     };
-    setTimeout(function(){
-        var event = document.createEvent('HTMLEvents');
-        event.initEvent("scatterLoaded", true, true);
-        event.eventType = 'scatterLoaded';
-        document.dispatchEvent(event);
-    },1500)
+   
   `
   }else{
     return ``
