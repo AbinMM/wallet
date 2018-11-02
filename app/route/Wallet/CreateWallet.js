@@ -300,15 +300,16 @@ class createWallet extends BaseComponent {
   render() {
     return <View style={[styles.container,{ backgroundColor: UColor.secdfont,}]}>  
     <Header {...this.props} onPressLeft={true} title="创建钱包" />  
+    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "padding" : null} style={styles.tab}>
     <ScrollView  keyboardShouldPersistTaps="always">
-      <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-        <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
+      <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex: 1,}}>
+        <View style={[styles.header,{backgroundColor: UColor.secdfont}]}>
           <View style={[styles.significantout,{backgroundColor: UColor.mainColor}]}>
             <Text style={[styles.significanttext,{color: UColor.riseColor}]} >• 密码用于保护私钥和交易授权，建议设置高强度密码；</Text>
             <Text style={[styles.significanttext,{color: UColor.riseColor}]} >• EosToken不存储密码，也无法帮您找回，请务必牢记。</Text>
           </View>
           <View >
-            <View style={[styles.inptout,{ height: ScreenUtil.autowidth(53),}]} >
+            <View style={styles.inptout} >
               <Text style={[styles.inptitle,{color: UColor.fontColor}]}>账号名称</Text>
             </View>
             <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]} >
@@ -329,13 +330,13 @@ class createWallet extends BaseComponent {
               <Text style={[styles.inptitle,{color: UColor.fontColor}]}>设置密码</Text>
               <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center'}}>
                 <View style={[styles.Strengthout,this.state.weak&&{backgroundColor: UColor.baseline}]}>
-                  <Text style={[styles.Strengthtext,{color:this.state.weak?UColor.btnColor:UColor.arrow}]}>弱</Text>
+                  <Text style={[styles.Strengthtext,{color:this.state.weak?UColor.btnColor:UColor.arrow}]}>低</Text>
                 </View>
                 <View style={[styles.Strengthout,this.state.medium&&{backgroundColor: UColor.baseline}]}>
                   <Text style={[styles.Strengthtext,{color:this.state.medium?UColor.btnColor:UColor.arrow}]}>中</Text>
                 </View>
                 <View style={[styles.Strengthout,this.state.strong&&{backgroundColor: UColor.baseline}]}>
-                  <Text style={[styles.Strengthtext,{color:this.state.strong?UColor.btnColor:UColor.arrow}]}>强</Text>
+                  <Text style={[styles.Strengthtext,{color:this.state.strong?UColor.btnColor:UColor.arrow}]}>高</Text>
                 </View>
               </View>
             </View>
@@ -365,20 +366,22 @@ class createWallet extends BaseComponent {
           </View>
           <View style={styles.clauseout}>
             <TouchableHighlight  onPress={() => this.checkClick()} activeOpacity={0.5} underlayColor={UColor.secdColor}>
-              <View style={[{width: ScreenUtil.autowidth(10), height: ScreenUtil.autowidth(10),margin: ScreenUtil.autowidth(10), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
+              <View style={[{width: ScreenUtil.autowidth(12), height: ScreenUtil.autowidth(12),marginLeft: ScreenUtil.autowidth(5),marginTop: ScreenUtil.autowidth(13), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
             </TouchableHighlight>
-            <Text style={[styles.welcome,{color: UColor.arrow}]} >我已经仔细阅读并同意 <Text onPress={() => this.prot()} style={[styles.clausetext,{color: UColor.tintColor}]}>服务及隐私条款</Text></Text>
+            <Text style={[styles.welcome,{color: UColor.arrow}]} > 我已经仔细阅读并同意 <Text onPress={() => this.prot()} style={[styles.clausetext,{color: UColor.arrow}]}>【服务及隐私条款】</Text></Text>
           </View>
-        </KeyboardAvoidingView>
-        <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(16), marginBottom: ScreenUtil.autowidth(38),}}>
+        
+        <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(16), marginTop: ScreenUtil.autowidth(24),}}>
           <Button onPress={() => this.checkAccountAndCreateWallet()} >
             <View style={styles.createWalletout} backgroundColor = {this.state.CreateButton}>
               <Text style={[styles.createWallet,{color: UColor.btnColor}]}>创建钱包</Text>
             </View>
           </Button>
         </View>
+        </View>
       </TouchableOpacity>
     </ScrollView>
+    </KeyboardAvoidingView>
   </View>
   }
 }
@@ -388,6 +391,9 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(12),
     lineHeight: ScreenUtil.autoheight(20),
     marginBottom: ScreenUtil.autoheight(15),
+  },
+  header: { 
+    flex: 1,
   },
   Becarefultext: {
      fontSize: ScreenUtil.setSpText(12),
@@ -412,24 +418,24 @@ const styles = StyleSheet.create({
   },
   significanttext: {
     fontSize: ScreenUtil.setSpText(12), 
-    lineHeight: ScreenUtil.autoheight(20),
+    lineHeight: ScreenUtil.autoheight(18),
   },
   inptout: {
     paddingHorizontal: ScreenUtil.autowidth(15),
   },
   Strengthout: {
-    borderRadius: 5,
+    borderRadius: 4,
     paddingHorizontal: ScreenUtil.autowidth(8),
-    paddingVertical: ScreenUtil.autowidth(4),
+    paddingVertical: ScreenUtil.autowidth(6),
   },
   Strengthtext: {
     fontSize: ScreenUtil.setSpText(15), 
   },
   inptitle: {
     flex: 1,
-    fontSize: ScreenUtil.setSpText(16),
+    fontSize: ScreenUtil.setSpText(15),
     paddingLeft: ScreenUtil.autowidth(5),
-    lineHeight: ScreenUtil.autoheight(60),
+    lineHeight: ScreenUtil.autoheight(55),
   },
   inpt: {
     flex: 1,
@@ -450,7 +456,7 @@ const styles = StyleSheet.create({
   },
   welcome: {
     fontSize: ScreenUtil.setSpText(12),
-    lineHeight: ScreenUtil.autoheight(30),
+    lineHeight: ScreenUtil.autoheight(40),
   },
   clausetext: {
     fontSize: ScreenUtil.setSpText(12),
@@ -463,6 +469,9 @@ const styles = StyleSheet.create({
   },
   createWallet: {
     fontSize: ScreenUtil.setSpText(15),
+  },
+  tab: {
+    flex: 1,
   },
 });
 
