@@ -63,9 +63,7 @@ class News extends React.Component {
   static navigationOptions = {
     tabBarLabel: '资讯',
     tabBarIcon: ({ focused}) => (
-      <Image resizeMode='stretch'
-          source={focused ? UImage.tab_3_h : UImage.tab_3} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22),}}
-      />
+      <Image resizeMode='contain' source={focused ? UImage.tab_3_h : UImage.tab_3} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22)}}/>
     ),
     header: null,
   };
@@ -73,7 +71,7 @@ class News extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      index: 0,
+      index: 1,
       h: ScreenWidth * 0.436,
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
       routes: [{ key: '', title: '' }],

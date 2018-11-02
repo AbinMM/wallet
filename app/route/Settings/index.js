@@ -26,9 +26,7 @@ class Setting extends React.Component {
     header:null,   
     tabBarLabel: '我的',
     tabBarIcon: ({ focused}) => (
-      <Image resizeMode='stretch'
-          source={focused ? UImage.tab_4_h : UImage.tab_4} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22), }}
-      />
+      <Image resizeMode='contain' source={focused ? UImage.tab_4_h : UImage.tab_4} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22)}}/>
     ),
   };
 

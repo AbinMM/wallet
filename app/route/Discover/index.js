@@ -34,9 +34,7 @@ class Discover extends React.Component {
   static navigationOptions = {
     tabBarLabel: '发现',
     tabBarIcon: ({ focused}) => (
-      <Image resizeMode='stretch'
-          source={focused ? UImage.tab_2_h : UImage.tab_2} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22),}}
-      />
+      <Image resizeMode='contain' source={focused ? UImage.tab_2_h : UImage.tab_2} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22)}}/>
     ),
     header: null,
   };
@@ -44,8 +42,6 @@ class Discover extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      
-      refresh: false,
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
       mydapplist: [],
       hotdappList:[],

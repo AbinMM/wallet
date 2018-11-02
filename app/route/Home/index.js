@@ -23,9 +23,7 @@ class Home extends React.Component {
   static navigationOptions = {
     tabBarLabel: '钱包',
     tabBarIcon: ({ focused}) => (
-      <Image resizeMode='stretch'
-          source={focused ? UImage.tab_1_h : UImage.tab_1} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22),}}
-      />
+      <Image resizeMode='contain' source={focused ? UImage.tab_1_h : UImage.tab_1} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22)}}/>
     ),
     header: null,
   };
