@@ -31,11 +31,6 @@ class Ram extends BaseComponent {
         title: "资源管理",
         header:null, 
     };
-     
-    recordMortgage = () =>{  
-        const { navigate } = this.props.navigation;
-        navigate('MortgageRecord', {account_name: this.props.defaultWallet.account});
-    }  
 
   // 构造函数  
   constructor(props) { 

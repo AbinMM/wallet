@@ -30,6 +30,7 @@ import TurnOutAsset from './Home/TurnOutAsset'
 import Resources from './Home/Resources'
 import CpuNet from './Home/CpuNet'
 import Ram from './Home/Ram'
+import DelegatebwRecord from './Home/DelegatebwRecord'
 
 import Login from './Login'
 import AssistantQrcode from './Login/AssistantQrcode'
@@ -50,7 +51,6 @@ import Activity from './Settings/Activity'
 import AgentInfo from './Settings/AgentInfo'
 import Community from './Settings/Community'
 import Imvote from './Settings/Imvote'
-import MortgageRecord from './Settings/MortgageRecord'
 import Nodevoting from './Settings/Nodevoting'
 import Set from './Settings/Set'
 import undelegated from './Settings/undelegated'
@@ -207,8 +207,8 @@ const Nav = StackNavigator(
     ModifyPassword: {
       screen: ModifyPassword
     },
-    MortgageRecord: {
-      screen: MortgageRecord
+    DelegatebwRecord: {
+      screen: DelegatebwRecord
     },
     BarCode: {
       screen : BarCode

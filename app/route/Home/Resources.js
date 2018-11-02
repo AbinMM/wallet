@@ -32,9 +32,9 @@ class Resources extends BaseComponent {
         header:null, 
     };
      
-    recordMortgage = () =>{  
+    recordDelegatebw = () =>{  
         const { navigate } = this.props.navigation;
-        navigate('MortgageRecord', {account_name: this.props.defaultWallet.account});
+        navigate('DelegatebwRecord', {account_name: this.props.defaultWallet.account});
     }  
 
   // 构造函数  
@@ -1174,7 +1174,7 @@ class Resources extends BaseComponent {
     render() {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-                <Header {...this.props} onPressLeft={true} title="资源管理"  onPressRight={this.recordMortgage.bind()}  
+                <Header {...this.props} onPressLeft={true} title="资源管理"  onPressRight={this.recordDelegatebw.bind()}  
                 avatar={UImage.delegatebw_record} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)} /> 
                 <TabViewAnimated lazy={true} navigationState={this.state} renderScene={this.renderScene.bind(this)}
                     renderHeader={(props) => <TabBar onTabPress={this._handleTabItemPress} 

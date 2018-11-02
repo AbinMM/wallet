@@ -33,9 +33,9 @@ class CpuNet extends BaseComponent {
         header:null, 
     };
      
-    recordMortgage = () =>{  
+    recordDelegatebw = () =>{  
         const { navigate } = this.props.navigation;
-        navigate('MortgageRecord', {account_name: this.props.defaultWallet.account});
+        navigate('DelegatebwRecord', {account_name: this.props.defaultWallet.account});
     }  
 
   // 构造函数  
@@ -138,7 +138,6 @@ class CpuNet extends BaseComponent {
             EasyShowLD.loadingShow();
             this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page: 1, username: this.props.defaultWallet.account},
                 callback: (data) => {
-                    alert(JSON.stringify(data))
                     if(data != null){
                         if(data.display_data){
                             this.setState({ 
@@ -643,7 +642,7 @@ class CpuNet extends BaseComponent {
     render() {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-                <Header {...this.props} onPressLeft={true} title="CPU+NET"  onPressRight={this.recordMortgage.bind()}  
+                <Header {...this.props} onPressLeft={true} title="CPU+NET"  onPressRight={this.recordDelegatebw.bind()}  
                 avatar={UImage.delegatebw_record} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)} /> 
 
                 <View style={[styles.inptoutsource,{flex: 1,}]}>
