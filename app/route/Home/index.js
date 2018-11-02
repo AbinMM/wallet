@@ -24,7 +24,7 @@ class Home extends React.Component {
     tabBarLabel: '钱包',
     tabBarIcon: ({ focused}) => (
       <Image resizeMode='stretch'
-          source={focused ? UImage.tab_1_h : UImage.tab_1} style={{width: ScreenUtil.autowidth(20), height: ScreenUtil.autowidth(21),}}
+          source={focused ? UImage.tab_1_h : UImage.tab_1} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22),}}
       />
     ),
     header: null,
@@ -579,6 +579,30 @@ class Home extends React.Component {
     }
   }
 
+  _onScroll(event) {
+    if(event.nativeEvent.contentOffset.y>180){
+      if(this.state.fadeOpacity>0){
+        return;
+      }
+      this.setState({zIndex: 999})
+      Animated.timing(this.state.fadeOpacity, {
+          toValue: 1,
+          duration: 300,
+          easing: Easing.linear,// 线性的渐变函数
+      }).start();
+    }else{
+      if(this.state.fadeOpacity>=1){
+        return;
+      }
+      this.setState({zIndex: 0})
+      Animated.timing(this.state.fadeOpacity, {
+        toValue: 0,
+        duration: 300,
+        easing: Easing.linear,// 线性的渐变函数
+      }).start();
+    }
+  }
+
   _renderHeader() {
     return(<View style={{flex: 1, alignItems: 'center',backgroundColor: UColor.secdfont}}>
       <View style={{backgroundColor: UColor.mainColor}}>
@@ -633,7 +657,7 @@ class Home extends React.Component {
         </View>
         <View onScroll={this.onScroll} style={{ top: ScreenUtil.autowidth(190),position: "absolute",flexDirection: 'row',width: ScreenWidth-ScreenUtil.autowidth(32), borderRadius: 25,
           height: ScreenUtil.autowidth(49),marginHorizontal: ScreenUtil.autowidth(16), paddingVertical:ScreenUtil.autowidth(12), backgroundColor: UColor.mainColor,
-          shadowColor: '#6f7bff',shadowOffset:{h: 8,w: 8},shadowRadius: 5,shadowOpacity: 0.16,elevation: 5,}}>
+          shadowColor: '#6f7bff',shadowOffset:{height: 3,width: 0},shadowRadius: 5,shadowOpacity: 0.16,elevation: 5,}}>
           <TouchableOpacity onPress={this.onPress.bind(this, 'transfer')} style={[styles.headbtn,{borderRightWidth: 0.5, borderRightColor: '#F7F8F9'}]}>
             <View style={styles.headbtnout}>
               <Image source={UImage.transfer} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
@@ -648,6 +672,37 @@ class Home extends React.Component {
           </TouchableOpacity>
         </View>
       </View>
+    </View>)
+  }
+
+  _renderFooter() {
+    return(<View style={{marginBottom: ScreenUtil.autowidth(10), backgroundColor: UColor.mainColor,marginHorizontal: ScreenUtil.autowidth(16)}}>
+      <Button onPress={this.onPress.bind(this, 'addAssets')} >
+        <View style={{alignItems: 'center',justifyContent: 'center', height: ScreenUtil.autoheight(64),}}>
+          <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#6DA0F8'}}>添加新资产</Text>
+        </View>
+      </Button>
+    </View>)
+  }
+
+  _renderRow = (rowData, sectionID, rowID) => {
+    return(<View style={[{borderBottomColor: UColor.secdfont, borderBottomWidth: 1.5, marginHorizontal: ScreenUtil.autowidth(16),borderTopRightRadius: 5, borderTopLeftRadius: 5,overflow: 'hidden',},rowID == 0 && {marginTop: ScreenUtil.autowidth(10)}]}>
+        <Button onPress={this.assetInfo.bind(this, rowData)}>
+          <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
+            <View style={styles.lefts}>
+              <View style={[styles.leftimg,{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(16)}]}> 
+                <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
+              </View>
+              <Text style={[styles.lefttext,{color: UColor.fontColor}]}>{rowData.asset.name}</Text>
+            </View>
+            <View style={styles.rights}>
+              <View style={styles.rightout}>
+                  <Text style={[styles.rightbalance,{color: '#1A1A1A'}]}>{this.state.isEye ? (rowData.balance==null || rowData.balance=="" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.0000" : rowData.balance.replace(rowData.asset.name, "") : '****'}</Text>
+                  <Text style={[styles.rightmarket,{color:  '#808080'}]}>{(rowData.balance==null || rowData.balance=="" || rowData.asset.value == null || rowData.asset.value == "" || rowData.asset.value == 0 || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? " " : this.state.isEye ? "≈" + (rowData.balance.replace(rowData.asset.name, "")*rowData.asset.value).toFixed(2) + "￥" : '****'}</Text>
+              </View>
+            </View>
+          </View>
+        </Button>
     </View>)
   }
 
@@ -689,7 +744,7 @@ class Home extends React.Component {
             </View>
             <View  style={{top: Constants.FitPhone,position: "absolute",flexDirection: 'row',width: ScreenWidth-ScreenUtil.autowidth(32), borderRadius: 25,
               height: ScreenUtil.autowidth(49),marginHorizontal: ScreenUtil.autowidth(16), paddingVertical:ScreenUtil.autowidth(12), backgroundColor: UColor.mainColor,
-              shadowColor: '#6f7bff',shadowOffset:{h: 8,w: 8},shadowRadius: 5,shadowOpacity: 0.16,elevation: 5,}}>
+              shadowColor: '#6f7bff',shadowOffset:{height: 3,width: 0},shadowRadius: 5,shadowOpacity: 0.16,elevation: 5,}}>
               <TouchableOpacity onPress={this.onPress.bind(this, 'transfer')} style={[styles.headbtn,{borderRightWidth: 0.5, borderRightColor: '#F7F8F9'}]}>
                 <View style={styles.headbtnout}>
                   <Image source={UImage.transfer} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
@@ -704,62 +759,13 @@ class Home extends React.Component {
               </TouchableOpacity>
             </View>
           </Animated.View>
-          <ListView initialListSize={1} enableEmptySections={true}  style={{backgroundColor: '#F7F8F9'}}
-              onScroll={(event)=>{
-                if(event.nativeEvent.contentOffset.y>180){
-                  if(this.state.fadeOpacity>0){
-                    return;
-                  }
-                  this.setState({zIndex: 999})
-                  Animated.timing(this.state.fadeOpacity, {
-                      toValue: 1,
-                      duration: 300,
-                      easing: Easing.linear,// 线性的渐变函数
-                  }).start();
-                }else{
-                  if(this.state.fadeOpacity>=1){
-                    return;
-                  }
-                  this.setState({zIndex: 0})
-                  Animated.timing(this.state.fadeOpacity, {
-                    toValue: 0,
-                    duration: 300,
-                    easing: Easing.linear,// 线性的渐变函数
-                  }).start();
-                }
-              }
-            }
+          <ListView  style={{backgroundColor: '#F7F8F9'}}
             refreshControl={<RefreshControl refreshing={this.state.assetRefreshing} onRefresh={() => this.onRefresh()}
             tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
-            renderHeader={()=>{return this._renderHeader()}}
-            renderFooter={()=>(<View style={{marginBottom: ScreenUtil.autowidth(10), backgroundColor: UColor.mainColor,marginHorizontal: ScreenUtil.autowidth(16)}}>
-              <Button onPress={this.onPress.bind(this, 'addAssets')} >
-                <View style={{alignItems: 'center',justifyContent: 'center', height: ScreenUtil.autoheight(64),}}>
-                  <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#6DA0F8'}}>添加新资产</Text>
-                </View>
-              </Button>
-            </View>)}
+            onScroll={(event) => this._onScroll(event)}  enableEmptySections={true} initialListSize={1}
+            renderHeader={() => this._renderHeader()}  renderFooter={()=> this._renderFooter()}
             dataSource={this.state.dataSource.cloneWithRows(this.props.myAssets == null ? [] : this.props.myAssets)} 
-            renderRow={(rowData, sectionID, rowID) => (      
-              <View style={[{borderBottomColor: UColor.secdfont, borderBottomWidth: 1.5, marginHorizontal: ScreenUtil.autowidth(16),borderTopRightRadius: 5, borderTopLeftRadius: 5,overflow: 'hidden',},rowID == 0 && {marginTop: ScreenUtil.autowidth(10)}]}>
-                <Button onPress={this.assetInfo.bind(this, rowData)}>
-                  <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
-                    <View style={styles.lefts}>
-                      <View style={[styles.leftimg,{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(16)}]}> 
-                        <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
-                      </View>
-                      <Text style={[styles.lefttext,{color: UColor.fontColor}]}>{rowData.asset.name}</Text>
-                    </View>
-                    <View style={styles.rights}>
-                      <View style={styles.rightout}>
-                          <Text style={[styles.rightbalance,{color: '#1A1A1A'}]}>{this.state.isEye ? (rowData.balance==null || rowData.balance=="" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.0000" : rowData.balance.replace(rowData.asset.name, "") : '****'}</Text>
-                          <Text style={[styles.rightmarket,{color:  '#808080'}]}>{(rowData.balance==null || rowData.balance=="" || rowData.asset.value == null || rowData.asset.value == "" || rowData.asset.value == 0 || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? " " : this.state.isEye ? "≈" + (rowData.balance.replace(rowData.asset.name, "")*rowData.asset.value).toFixed(2) + "￥" : '****'}</Text>
-                      </View>
-                    </View>
-                  </View>
-                </Button>
-              </View>
-            )}                
+            renderRow={(rowData, sectionID, rowID) => this._renderRow(rowData, sectionID, rowID)}                
           />  
 
           <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.isTipShow()} onRequestClose={()=>{}}>

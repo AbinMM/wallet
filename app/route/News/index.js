@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { BackHandler, ImageBackground, Dimensions,NativeModules, Image, Modal, ScrollView, DeviceEventEmitter, 
-         InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, WebView, Platform,
+         InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, WebView, Platform,SectionList,
          TouchableHighlight, Linking, TouchableOpacity } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
@@ -19,7 +19,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Carousel from 'react-native-banner-carousel';
 require('moment/locale/zh-cn');
 
-
 const pages = [];
 let loadMoreTime = 0;
 let currentLoadMoreTypeId;
@@ -27,6 +26,36 @@ var ScreenWidth = Dimensions.get('window').width;
 var ScreenHeight = Dimensions.get('window').height;
 var cangoback = false;
 var ITEM_HEIGHT = 100;
+var sections = [
+  { key: 1540411105000, data: [
+    { title: "阿童木", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000}, 
+    { title: "阿玛尼", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000}, 
+    { title: "爱多多", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000}
+  ] },
+  { key: 1540521205000, data: [
+    { title: "表哥", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "贝贝", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "表弟", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "表姐", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "表叔", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }
+  ] },
+  { key: 1540631305000, data: [
+    { title: "成吉思汗", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "超市快递", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }
+  ] },
+  { key: 1540741405000, data: [
+    { title: "成吉思汗", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "超市快递", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }
+  ] },
+  { key: 1540851505000, data: [
+    { title: "王磊", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "王者荣耀", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "往事不能回味", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 },
+    { title: "王小磊", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "王中磊", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "王大磊", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }
+  ] },
+];
 
 @connect(({ banner, newsType, news, wallet, vote, common,}) => ({ ...banner, ...newsType, ...news, ...wallet , ...vote, ...common,}))
 class News extends React.Component {
@@ -35,7 +64,7 @@ class News extends React.Component {
     tabBarLabel: '资讯',
     tabBarIcon: ({ focused}) => (
       <Image resizeMode='stretch'
-          source={focused ? UImage.tab_3_h : UImage.tab_3} style={{width: ScreenUtil.autowidth(18), height: ScreenUtil.autowidth(21),}}
+          source={focused ? UImage.tab_3_h : UImage.tab_3} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22),}}
       />
     ),
     header: null,
@@ -181,6 +210,7 @@ class News extends React.Component {
     if (index >= 0) {
       pages[index] = 1;
     }
+    //alert(JSON.stringify(this.props.newsData[12][0]) ) 
   };
 
   //点击新闻
@@ -238,8 +268,53 @@ class News extends React.Component {
     cangoback = e.canGoBack;
   }
 
-  onRefreshing() {
 
+  openSystemSetting(){
+    // console.log("go to set net!")
+    if (Platform.OS == 'ios') {
+      Linking.openURL('app-settings:')
+        .catch(err => console.log('error', err))
+    } else {
+      NativeModules.OpenSettings.openNetworkSettings(data => {
+        console.log('call back data', data)
+      })
+    }
+  } 
+
+  onAddto = (dappdata) =>{
+    const c = this.props.navigation.state.params.coins;
+    if(this.props.coinSelf && this.props.coinSelf[c.name.toLowerCase()]==1){
+      this.props.dispatch({type:'news/doCoinSelf',payload:{action:"rem",name:dappdata.name.toLowerCase()},callback:function(){
+        DeviceEventEmitter.emit('coinSlefChange',"");
+      }});
+      this.props.navigation.setParams({img:UImage.fav,onPress:this.onPress});
+      EasyToast.show("已取消自选")
+    }else{
+      this.props.dispatch({type:'news/doCoinSelf',payload:{action:"add",name:dappdata.name.toLowerCase()},callback:function(){
+        DeviceEventEmitter.emit('coinSlefChange',"");
+      }});
+      this.props.navigation.setParams({img:UImage.fav_h,onPress:this.onPress});
+      EasyToast.show("已加入自选")
+    }
+  }
+
+  onRefreshing() {
+    try {
+      this.setState({logRefreshing: true});
+      this.props.dispatch({ type: 'wallet/dappfindAllCategory', });
+      this.props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
+          if (resp && resp.code == '0') {
+            if(resp.data && resp.data.length > 0){
+              this.setState({dappList : resp.data,logRefreshing: false});
+            }
+          } else {
+            this.setState({logRefreshing: false});
+            console.log("dappfindAllRecommend error");
+          }
+      } });
+    } catch (error) {
+      console.log("dappfindAllRecommend error: %s",error.message);
+    }
   }
 
   //渲染页面
@@ -265,68 +340,123 @@ class News extends React.Component {
       return w;
     }
     const v = (
-      <ListView initialListSize={5}  style={{ backgroundColor: UColor.secdColor }} enableEmptySections={true} onEndReachedThreshold={20}
-        renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 1, backgroundColor: UColor.secdColor }} />}
-        onEndReached={() => this.onEndReached(route.key)}
-        // renderHeader = {()=><View style={{ height: this.state.h }}>
-        // {/* {Constants.isNetWorkOffline &&
-        //   <Button onPress={() => {NativeUtil.openSystemSetting();}}>
-        //     <View style={[styles.systemSettingTip,{backgroundColor: UColor.showy}]}>
-        //         <Text style={[styles.systemSettingText,{color: UColor.btnColor}]}> 您当前网络不可用，请检查系统网络设置是否正常。</Text>
-        //         <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
-        //     </View>
-        //   </Button>} */}
-        //   {/* <Swiper height={this.state.h} loop={true} autoplay={true} horizontal={true} autoplayTimeout={5} 
-        //     paginationStyle={{ bottom: ScreenUtil.autoheight(10) }}
-        //     dotStyle={{ backgroundColor: 'rgba(255,255,255,.2)', width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}
-        //     activeDotStyle={{ backgroundColor: UColor.tintColor, width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6) }}>
-        //     {this.renderSwipeView()}
-        //   </Swiper> */}
-        //   <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth}>
-        //     {this.renderSwipeView()}
-        //   </Carousel>
-        // </View>
-        // }
-        refreshControl={<RefreshControl refreshing={this.props.newsRefresh} onRefresh={() => this.onRefresh(route.key, true)}
-          tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
-        dataSource={this.state.dataSource.cloneWithRows(this.props.newsData[route.key] == null ? [] : this.props.newsData[route.key])}
-        renderRow={(rowData) => (
-          <TouchableHighlight onPress={() => { this.onPress(rowData) }} onLongPress={this.onShare.bind(this, rowData)} activeOpacity={0.5} underlayColor={UColor.secdColor}>
-            <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
-              <Text style={{ fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,fontWeight: "bold"}}>{rowData.title}</Text>
-              {route.type == 2 && <Text numberOfLines={rowData.row} style={[styles.journalism,{color: UColor.lightgray}]} >{rowData.content}</Text>}
-              {route.type == 2 && rowData.row == 3 && <Text style={[styles.moretext,{color: UColor.tintColor}]}>展开更多</Text>}
-              {route.type != 2 && <Text style={[styles.journalism,{color: UColor.lightgray}]}>{rowData.content}</Text>}
-              <View style={styles.rowFooter}>
-                <Text style={[styles.pastTime,{color: UColor.lightgray}]}>{moment(rowData.createdate).fromNow()}</Text>
-                <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end" }}>
-                  <Button onPress={this.onUp.bind(this, rowData)}>
-                    <View style={styles.spotout}>
-                      <Image style={styles.updownimg} source={rowData.isUp ? UImage.up_h : UImage.up} />
-                      <Text style={[styles.updowntext,{color: rowData.isUp ? UColor.tintColor : UColor.lightgray}]}>{rowData.up}</Text>
-                    </View>
-                  </Button>
-                  <Button onPress={this.onDown.bind(this, rowData)}>
-                    <View style={styles.spotout}>
-                      <Image style={styles.updownimg} source={rowData.isDown ? UImage.down_h : UImage.down} />
-                      <Text style={[styles.updowntext,{color: rowData.isDown ? UColor.tintColor : UColor.lightgray}]}>{rowData.down}</Text>
-                    </View>
-                  </Button>
-                  <Button onPress={this.onShare.bind(this, rowData)}>
-                    <View style={styles.spotout}>
-                      <Image style={{width:ScreenUtil.autowidth(22),height:ScreenUtil.autowidth(22)}} source={UImage.share_bright} />
-                    </View>
-                  </Button>
-                </View>
-              </View>
-            </View>
-          </TouchableHighlight>
-        )} 
-      />
+      // <ListView initialListSize={5}  style={{ backgroundColor: UColor.secdColor }} enableEmptySections={true} onEndReachedThreshold={20}
+      //   renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 30, backgroundColor: UColor.secdColor }} />}
+      //   onEndReached={() => this.onEndReached(route.key)}
+      //   refreshControl={<RefreshControl refreshing={this.props.newsRefresh} onRefresh={() => this.onRefresh(route.key, true)}
+      //     tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
+      //   renderSectionHeader={this.renderSectionHeader.bind(this)}
+      //   dataSource={this.state.dataSource.cloneWithRows(this.props.newsData[route.key] == null ? [] : this.props.newsData[route.key])}
+      //   renderRow={(rowData) => (
+      //     <TouchableHighlight onPress={() => { this.onPress(rowData) }} onLongPress={this.onShare.bind(this, rowData)} activeOpacity={0.5} underlayColor={UColor.secdColor} >
+      //       <View style={{flexDirection: 'row',backgroundColor: UColor.mainColor,paddingHorizontal: ScreenUtil.autowidth(15),}}>
+      //         <View style={{paddingRight: ScreenUtil.autowidth(10), flexDirection: 'column',alignItems: 'center',}}>
+      //           <View style={{width: 1,height: ScreenUtil.autoheight(17),backgroundColor: '#F7F8F9'}}/>
+      //           <View style={{width: ScreenUtil.autowidth(6), height: 6, borderRadius: 25, backgroundColor: '#6DA0F8',borderColor: '#B4D0FF',borderWidth: 1,}}/>
+      //           <View style={{flex: 1, width: 1,backgroundColor: '#F7F8F9'}}/>
+      //         </View>
+      //         <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
+      //           <Text style={{ fontSize: ScreenUtil.setSpText(16), color: '#1A1A1A', lineHeight: ScreenUtil.autoheight(21), }}>{rowData.title}</Text>
+      //           {route.type == 2 && <Text numberOfLines={rowData.row} style={[styles.journalism,{color: '#808080'}]} >{rowData.content}</Text>}
+      //           {route.type == 2 && rowData.row == 3 && <Text style={[styles.moretext,{color: UColor.tintColor}]}>展开更多</Text>}
+      //           {route.type != 2 && <Text style={[styles.journalism,{color: '#808080'}]}>{rowData.content}</Text>}
+      //           <View style={styles.rowFooter}>
+      //             <Text style={[styles.pastTime,{color: '#1A1A1A'}]}>{moment(rowData.createdate).format('HH:mm')}</Text>
+      //             <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end" }}>
+      //               <Button onPress={this.onUp.bind(this, rowData)}>
+      //                 <View style={styles.spotout}>
+      //                   <Image style={styles.updownimg} source={rowData.isUp ? UImage.up_h : UImage.up} />
+      //                   <Text style={[styles.updowntext,{color: '#6DA0F8'}]}>{rowData.up}</Text>
+      //                 </View>
+      //               </Button>
+      //               <Button onPress={this.onDown.bind(this, rowData)}>
+      //                 <View style={styles.spotout}>
+      //                   <Image style={styles.updownimg} source={rowData.isDown ? UImage.down_h : UImage.down} />
+      //                   <Text style={[styles.updowntext,{color: '#6DA0F8'}]}>{rowData.down}</Text>
+      //                 </View>
+      //               </Button>
+      //               <Button onPress={this.onShare.bind(this, rowData)}>
+      //                 <View style={styles.spotout}>
+      //                   <Image style={{width:ScreenUtil.autowidth(16),height:ScreenUtil.autowidth(16)}} source={UImage.share_bright} />
+      //                 </View>
+      //               </Button>
+      //             </View>
+      //           </View>
+      //         </View>
+      //       </View>
+      //     </TouchableHighlight>
+      //   )} 
+      // />
+      <SectionList
+      //   onEndReached={() => this.onEndReached(route.key)}
+      //   refreshControl={<RefreshControl refreshing={this.props.newsRefresh} onRefresh={() => this.onRefresh(route.key, true)}
+      //      tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
+          sections={sections}
+          renderSectionHeader={this._sectionComp}
+          renderItem={this._renderItem}
+          keyExtractor = {this._extraUniqueKey} 
+          extraData={this.state}
+          // ItemSeparatorComponent={() => <View><Text></Text></View>}
+        />
     );
     return (v);
   }
+ 
+  _sectionComp = (info) => {
+    var txt = info.section.key;
+    return (<View style={{height: ScreenUtil.autoheight(30),backgroundColor: '#F7F8F9',justifyContent: 'center',paddingHorizontal: ScreenUtil.autowidth(15), }}>
+      <Text style={{color: '#1A1A1A', fontSize: ScreenUtil.setSpText(16) }}>{moment(txt).format('YYYY-MM-DD')}</Text>
+    </View>)
+  }
 
+  _renderItem = (info) => {
+    var rowData = info.item;
+    return ( 
+      <TouchableHighlight onPress={() => { this.onPress(rowData) }} onLongPress={this.onShare.bind(this, rowData)} activeOpacity={0.5} underlayColor={UColor.secdColor} >
+        <View style={{flexDirection: 'row',backgroundColor: UColor.mainColor,paddingHorizontal: ScreenUtil.autowidth(15),}}>
+          <View style={{paddingRight: ScreenUtil.autowidth(10), flexDirection: 'column',alignItems: 'center',}}>
+            <View style={{width: 1,height: ScreenUtil.autoheight(17),backgroundColor: '#F7F8F9'}}/>
+            <View style={{width: ScreenUtil.autowidth(6), height: 6, borderRadius: 25, backgroundColor: '#6DA0F8',borderColor: '#B4D0FF',borderWidth: 1,}}/>
+            <View style={{flex: 1, width: 1,backgroundColor: '#F7F8F9'}}/>
+          </View>
+          <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
+            <Text style={{ fontSize: ScreenUtil.setSpText(16), color: '#1A1A1A', lineHeight: ScreenUtil.autoheight(21), }}>{rowData.title}</Text>
+
+            <Text numberOfLines={rowData.row} style={[styles.journalism,{color: '#808080'}]} >{rowData.content}</Text>
+          
+            <View style={styles.rowFooter}>
+              <Text style={[styles.pastTime,{color: '#1A1A1A'}]}>{moment(rowData.createdate).format('HH:mm')}</Text>
+              <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end" }}>
+                <Button onPress={this.onUp.bind(this, rowData)}>
+                  <View style={styles.spotout}>
+                    <Image style={styles.updownimg} source={rowData.isUp ? UImage.up_h : UImage.up} />
+                    <Text style={[styles.updowntext,{color: '#6DA0F8'}]}>{rowData.up}</Text>
+                  </View>
+                </Button>
+                <Button onPress={this.onDown.bind(this, rowData)}>
+                  <View style={styles.spotout}>
+                    <Image style={styles.updownimg} source={rowData.isDown ? UImage.down_h : UImage.down} />
+                    <Text style={[styles.updowntext,{color: '#6DA0F8'}]}>{rowData.down}</Text>
+                  </View>
+                </Button>
+                <Button onPress={this.onShare.bind(this, rowData)}>
+                  <View style={styles.spotout}>
+                    <Image style={{width:ScreenUtil.autowidth(16),height:ScreenUtil.autowidth(16)}} source={UImage.share_bright} />
+                  </View>
+                </Button>
+              </View>
+            </View>
+          </View>
+        </View>
+      </TouchableHighlight>
+    )
+  }
+
+  _extraUniqueKey(item ,index){
+    return "index"+index+item;
+  }
+
+ 
   renderSwipeView() {
     if (this.props.banners != null) {
       return this.props.banners.map((item, i) => {
@@ -377,18 +507,18 @@ class News extends React.Component {
 
   render() {
     return (
-      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+      <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
         {this.state.routes && <TabViewAnimated 
             lazy={true} navigationState={this.state}
             renderScene={this.renderScene.bind(this)}
-            renderHeader={(props) => <LinearGradient colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[{width:ScreenWidth,height: ScreenUtil.autoheight(45) + Constants.FitPhone,}]}>
+            renderHeader={(props) => <View style={[{width:ScreenWidth,height: ScreenUtil.autoheight(45) + Constants.FitPhone,backgroundColor: '#FFFFFF'}]}>
             <TabBar onTabPress={this._handleTabItemPress} 
-            labelStyle={[styles.labelStyle,{color:UColor.btnColor}]} 
-            indicatorStyle={[styles.indicatorStyle,{width: ScreenWidth / this.state.routes.length - ScreenUtil.autowidth(40),backgroundColor: UColor.fonttint}]} 
+            labelStyle={[styles.labelStyle,{color:'#080808'}]} 
+            indicatorStyle={{width: ScreenUtil.autowidth(20),backgroundColor: '#080808',marginHorizontal: (ScreenWidth/this.state.routes.length -  ScreenUtil.autowidth(20))/2}} 
             style={[{paddingTop: Constants.FitPhone,alignItems: 'center',justifyContent: 'center',backgroundColor:UColor.transport}]} 
             tabStyle={{ width: ScreenWidth / this.state.routes.length, padding: 0, margin: 0 }} 
             scrollEnabled={true} {...props} />
-            </LinearGradient>}
+            </View>}
             onIndexChange={this._handleIndexChange}
             initialLayout={{ height: 0, width: ScreenWidth }}
           />
@@ -411,6 +541,37 @@ class News extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  outerViewStyle: {
+    //占满窗口
+    flex: 1,
+},
+
+headerViewStyle: {
+    height: 64,
+    backgroundColor: 'blue',
+    justifyContent: 'center',
+    alignItems: 'center'
+},
+
+rowStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomColor: 'grey',
+    borderBottomWidth: 1 
+},
+
+rowImageStyle: {
+    width: 70,
+    height: 70,
+},
+
+sectionHeaderViewStyle: {
+    backgroundColor: 'red',
+    height: 30,
+    justifyContent: 'center'
+},
+
   selflist:{ 
     flexWrap:'wrap', 
     flexDirection:'row', 
@@ -520,10 +681,7 @@ const styles = StyleSheet.create({
     margin: 0, 
     fontSize: ScreenUtil.setSpText(15), 
   },
-  indicatorStyle: {
-    marginLeft: ScreenUtil.autowidth(20),
-    marginBottom: ScreenUtil.autoheight(1),
-  },
+ 
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -532,7 +690,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     paddingTop: ScreenUtil.autoheight(10),
-    paddingHorizontal: ScreenUtil.autowidth(15),
+    //paddingHorizontal: ScreenUtil.autowidth(15),
   },
   rowFooter: {
     flex: 1,
@@ -556,9 +714,9 @@ const styles = StyleSheet.create({
   },
 
   journalism: {
-    fontSize: ScreenUtil.setSpText(15),  
+    fontSize: ScreenUtil.setSpText(14),  
     marginTop: ScreenUtil.autoheight(10), 
-    lineHeight: ScreenUtil.autoheight(25),
+    lineHeight: ScreenUtil.autoheight(21),
   },
   moretext: {
     textAlign: "right", 
@@ -576,11 +734,11 @@ const styles = StyleSheet.create({
     padding: ScreenUtil.autowidth(10)
   },
   updownimg: {
-    width: ScreenUtil.autowidth(18), 
-    height: ScreenUtil.autowidth(18)
+    width: ScreenUtil.autowidth(17), 
+    height: ScreenUtil.autowidth(17)
   },
   updowntext: {
-    fontSize: ScreenUtil.setSpText(13),
+    fontSize: ScreenUtil.setSpText(16),
     marginLeft: ScreenUtil.autowidth(5), 
   },
   image: {
