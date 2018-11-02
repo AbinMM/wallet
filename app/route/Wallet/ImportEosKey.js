@@ -641,14 +641,14 @@ class ImportEosKey extends BaseComponent {
               <View style={{flexDirection: 'row'}}>
                 <View style={styles.readout}>
                   <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
-                    <View style={[{width: ScreenUtil.autowidth(12), height: ScreenUtil.autowidth(12),marginLeft: ScreenUtil.autowidth(18), margin: ScreenUtil.autowidth(13), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
+                    <View style={[{width: ScreenUtil.autowidth(12), height: ScreenUtil.autowidth(12),marginLeft: ScreenUtil.autowidth(18), marginTop: ScreenUtil.autowidth(13), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
                   </TouchableHighlight>
-                  <Text style={[styles.readtext,{color: UColor.arrow}]} >我已经阅读并同意 <Text onPress={() => this.prot(this,'clause')} style={[styles.servicetext,{color: UColor.arrow}]}>【服务及隐私条款】</Text></Text> 
+                  <Text style={[styles.readtext,{color: UColor.arrow}]} > 我已经阅读并同意 <Text onPress={() => this.prot(this,'clause')} style={[styles.servicetext,{color: UColor.arrow}]}>【服务及隐私条款】</Text></Text> 
                 </View> 
                 {!this.state.isSenior && <Text style={[styles.privatekeytext,{color: UColor.tintColor}]}  onPress={() => this.prot(this,'howImportPrivatekey')}>如何导入私钥？</Text>}
               </View>
               
-              <Button onPress={() => this.importPriKey()} style={{marginTop: ScreenUtil.autowidth(43), marginHorizontal: ScreenUtil.autowidth(16),}}>
+              <Button onPress={() => this.importPriKey()} style={this.state.isSenior==true?styles.buttonImportStyleSenior:styles.buttonImportStyle}>
                 <View style={styles.importPriout} backgroundColor={this.state.CreateButton}>
                   <Text style={[styles.importPritext,{color: UColor.btnColor}]}>导入钱包</Text>
                 </View>
@@ -766,7 +766,7 @@ const styles = StyleSheet.create({
   },
   inptgo: {
     textAlignVertical: 'top', 
-    height: ScreenUtil.autowidth(85), 
+    height: ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(85):ScreenUtil.autoheight(65), 
     fontSize: ScreenUtil.setSpText(15),
     lineHeight: ScreenUtil.autowidth(25),
   },
@@ -943,7 +943,15 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
-  }
+  },
+  buttonImportStyle: {
+    marginTop: ScreenUtil.autowidth(43), 
+    marginHorizontal: ScreenUtil.autowidth(16),
+  },
+  buttonImportStyleSenior: {
+    marginTop: ScreenUtil.autowidth(26), 
+    marginHorizontal: ScreenUtil.autowidth(16),
+  },
 });
 
 export default ImportEosKey;
