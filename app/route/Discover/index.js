@@ -35,7 +35,7 @@ class Discover extends React.Component {
     tabBarLabel: '发现',
     tabBarIcon: ({ focused}) => (
       <Image resizeMode='stretch'
-          source={focused ? UImage.tab_3_h : UImage.tab_3} style={{width: ScreenUtil.autowidth(18), height: ScreenUtil.autowidth(21),}}
+          source={focused ? UImage.tab_2_h : UImage.tab_2} style={{width: ScreenUtil.autowidth(18), height: ScreenUtil.autowidth(21),}}
       />
     ),
     header: null,
@@ -44,6 +44,7 @@ class Discover extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      
       refresh: false,
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
       dappList:[],
@@ -52,6 +53,8 @@ class Discover extends React.Component {
 
   //组件加载完成
   componentDidMount() {
+    //获取banner图
+    this.props.dispatch({ type: 'banner/list', payload: {} });
     this.props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
       if (resp && resp.code == '0') {
         if(resp.data && resp.data.length > 0){
@@ -113,7 +116,7 @@ class Discover extends React.Component {
   renderSwipeView() {
     if (this.props.banners != null) {
       return this.props.banners.map((item, i) => {
-        return (<Button key={i} onPress={this.bannerPress.bind(this, item)}>
+        return (<Button key={i} onPress={this.bannerPress.bind(this, item)} style={{borderRadius: 7,}}>
           <Image style={styles.image} key={item} source={{ uri: item.img, width: ScreenWidth }} resizeMode="cover"/>
         </Button>)
       })
@@ -124,7 +127,14 @@ class Discover extends React.Component {
 
   render() {
     return (
-      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+      <View style={[styles.container,{backgroundColor: '#FFFFFF',paddingTop: Constants.FitPhone + ScreenUtil.autoheight(20),}]}>
+        <View style={{width:ScreenWidth - ScreenUtil.autowidth(32),  height: (ScreenWidth-ScreenUtil.autowidth(32)) * 0.436 + ScreenUtil.autoheight(30), borderRadius: 7, overflow: 'hidden', }}>
+          <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth-ScreenUtil.autowidth(32)} pageIndicatorContainerStyle={{bottom: -20, zIndex: 999}} 
+          pageIndicatorStyle={{backgroundColor: '#EAEAEA', }} activePageIndicatorStyle={{backgroundColor:'#6DA0F8',}}>
+            {this.renderSwipeView()}
+          </Carousel>
+        </View>
+       
         {this.state.routes && <TabViewAnimated 
             lazy={true} navigationState={this.state}
             renderScene={this.renderScene.bind(this)}
@@ -262,6 +272,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+    alignItems: 'center',
+    //justifyContent: 'center',
+    
   },
   row: {
     flex: 1,
@@ -320,8 +333,9 @@ const styles = StyleSheet.create({
   },
   image: {
     marginRight: 2,
-    height: "100%",
-    width: ScreenWidth,
+    height: (ScreenWidth-ScreenUtil.autowidth(32)) * 0.436,
+    width: ScreenWidth - ScreenUtil.autowidth(32),
+    borderRadius: 7,
   },
 
   modalStyle: {

@@ -44,10 +44,7 @@ export default {
 
   signed: require('../img/day/signed.png'), 
   signln_bg: require('../img/day/signln_bg.png'),
-  tab_1: require('../img/day/tab_1.png'),
-  tab_2: require('../img/day/tab_2.png'),
-  tab_3: require('../img/day/tab_3.png'),
-  tab_4: require('../img/day/tab_4.png'),
+ 
   tab_5_h: require('../img/day/tab_5_h.png'),
   tab_5: require('../img/day/tab_5.png'),
   tokenissue: require('../img/day/tokenissue.png'),
@@ -142,10 +139,7 @@ export default {
   starfull: require('../img/starfull.png'),
   starhalf: require('../img/starhalf.png'),
   strip_bg:require('../img/strip_bg.png'),
-  tab_1_h: require('../img/tab_1_h.png'),
-  tab_2_h: require('../img/tab_2_h.png'),
-  tab_3_h: require('../img/tab_3_h.png'),
-  tab_4_h: require('../img/tab_4_h.png'),
+ 
   take_out: require('../img/take_out.png'),
   trade_bg: require('../img/trade_bg.png'),
   Tick_h:require('../img/Tick_h.png'),
@@ -207,4 +201,12 @@ export default {
   down: require('../img/newimg/down.png'),
   down_h:require('../img/newimg/down_h.png'),
   share_i: require('../img/newimg/share_i.png'),
+  tab_1: require('../img/newimg/tab_1.png'),
+  tab_2: require('../img/newimg/tab_2.png'),
+  tab_3: require('../img/newimg/tab_3.png'),
+  tab_4: require('../img/newimg/tab_4.png'),
+  tab_1_h: require('../img/newimg/tab_1_h.png'),
+  tab_2_h: require('../img/newimg/tab_2_h.png'),
+  tab_3_h: require('../img/newimg/tab_3_h.png'),
+  tab_4_h: require('../img/newimg/tab_4_h.png'),
 }
