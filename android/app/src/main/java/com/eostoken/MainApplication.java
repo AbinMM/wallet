@@ -3,6 +3,7 @@ package com.eostoken;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.hieuvp.fingerprint.ReactNativeFingerprintScannerPackage;
 import com.theweflex.react.WeChatPackage;
 import fr.greweb.reactnativeviewshot.RNViewShotPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -72,6 +73,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                 new MainReactPackage(),
+            new ReactNativeFingerprintScannerPackage(),
                 new WeChatPackage(),
                 new RNViewShotPackage(),
                 new VectorIconsPackage(),

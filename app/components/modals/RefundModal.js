@@ -1,9 +1,7 @@
 import React from 'react';
-import { StyleSheet, Modal,Animated, Text, Platform, TouchableHighlight, KeyboardAvoidingView, TouchableWithoutFeedback, View, Dimensions, ActivityIndicator} from 'react-native';
-import UColor from '../utils/Colors';
-import ScreenUtil from '../utils/ScreenUtil';
-import TextButton from './TextButton';
-import LineView from './LineView';
+import {StyleSheet,Animated,Text,TouchableWithoutFeedback,View} from 'react-native';
+import ScreenUtil from '../../utils/ScreenUtil';
+import TextButton from '../TextButton';
 
 export class RefundModal {
 
@@ -18,6 +16,10 @@ export class RefundModal {
 
   static show(data,callback) {
     this.map["RefundModal"].show(data,callback);
+  }
+
+  static dimss() {
+    this.map["RefundModal"].dimss();
   }
 
 }
@@ -40,11 +42,13 @@ export class RefundModalView extends React.Component {
 
     show = (data,callback) =>{
       if(this.isShow)return;
+      //如果需要支持返回关闭，请添加这句，并且实现dimss方法
+      window.currentDialog = this;
       this.RefundModalCallback = callback;
       this.setState({data,modalVisible:true});
       Animated.parallel([
-        Animated.timing(this.state.mask,{toValue:0.6,duration:1000}),
-        Animated.timing(this.state.alert,{toValue:1,duration:500})
+        Animated.timing(this.state.mask,{toValue:0.6,duration:500}),
+        Animated.timing(this.state.alert,{toValue:1,duration:200})
       ]).start(() => {
           this.isShow = true;
       });
@@ -52,9 +56,10 @@ export class RefundModalView extends React.Component {
 
     dimss = () => {
       if(!this.isShow)return;
+      window.currentDialog = null;
       Animated.parallel([
-          Animated.timing(this.state.mask,{toValue:0,duration:300}),
-          Animated.timing(this.state.alert,{toValue:0,duration:300})
+          Animated.timing(this.state.mask,{toValue:0,duration:500}),
+          Animated.timing(this.state.alert,{toValue:0,duration:200})
       ]).start(() => {
           this.setState({modalVisible:false});
           this.isShow = false;
@@ -72,41 +77,39 @@ export class RefundModalView extends React.Component {
 
     render() {
         return (
-          <View style={styles.continer}>
-            <Modal transparent={true} animationType={'fade'} onRequestClose={()=>{this.dimss()}} visible={this.state.modalVisible}>
-              <TouchableWithoutFeedback onPress={()=>{this.dimss()}}>
-                <View style={styles.content}>
-                  <Animated.View style={[styles.mask,{opacity:this.state.mask}]}></Animated.View>
-                  <View style={styles.alertContent}>
-                    <Animated.View style={[styles.alert,{opacity:this.state.alert}]}>
-                      <Text style={styles.title}>赎回资源</Text>
-                      <View style={styles.ctx}>
-                        <View style={styles.ctx_account}>
-                          <Text style={styles.ctx_txt}>抵押账号:</Text>
-                          <Text style={styles.ctx_txt}>{this.state.data.account?this.state.data.account:""}</Text>
-                        </View>
-                        <View style={[styles.input,{marginTop:ScreenUtil.autowidth(15)}]}>
-                          <Text style={styles.ctx_txt}>计算资源:</Text>
-                          <Text style={styles.input_right}>{this.state.data.cpu?this.state.data.cpu:0} EOS</Text>
-                        </View>
-                        <View style={styles.input}>
-                          <Text style={styles.ctx_txt}>网络资源:</Text>
-                          <Text style={styles.input_right}>{this.state.data.net?this.state.data.net:0} EOS</Text>
-                        </View>
+          this.state.modalVisible && <View style={styles.continer}>
+            <TouchableWithoutFeedback onPress={()=>{this.dimss()}}>
+              <View style={styles.content}>
+                <Animated.View style={[styles.mask,{opacity:this.state.mask}]}></Animated.View>
+                <View style={styles.alertContent}>
+                  <Animated.View style={[styles.alert,{opacity:this.state.alert}]}>
+                    <Text style={styles.title}>赎回资源</Text>
+                    <View style={styles.ctx}>
+                      <View style={styles.ctx_account}>
+                        <Text style={styles.ctx_txt}>抵押账号:</Text>
+                        <Text style={styles.ctx_txt}>{this.state.data.account?this.state.data.account:""}</Text>
                       </View>
-                      <View style={styles.bottom}>
-                        <View style={{width:"50%"}}>
-                          <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
-                        </View>
-                        <View style={{width:"50%"}}>
-                          <TextButton onPress={()=>{this.ok()}} bgColor="#6DA0F8" textColor="#fff" text="确认" style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
-                        </View>
+                      <View style={[styles.input,{marginTop:ScreenUtil.autowidth(15)}]}>
+                        <Text style={styles.ctx_txt}>计算资源:</Text>
+                        <Text style={styles.input_right}>{this.state.data.cpu?this.state.data.cpu:0} EOS</Text>
                       </View>
-                    </Animated.View>
-                  </View>
+                      <View style={styles.input}>
+                        <Text style={styles.ctx_txt}>网络资源:</Text>
+                        <Text style={styles.input_right}>{this.state.data.net?this.state.data.net:0} EOS</Text>
+                      </View>
+                    </View>
+                    <View style={styles.bottom}>
+                      <View style={{width:"50%"}}>
+                        <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
+                      </View>
+                      <View style={{width:"50%"}}>
+                        <TextButton onPress={()=>{this.ok()}} bgColor="#6DA0F8" textColor="#fff" text="确认" style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
+                      </View>
+                    </View>
+                  </Animated.View>
                 </View>
-              </TouchableWithoutFeedback>
-            </Modal>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         )
     }
@@ -114,6 +117,10 @@ export class RefundModalView extends React.Component {
 
 const styles = StyleSheet.create({
   continer:{
+    left:0,
+    top:0,
+    position: 'absolute',
+    zIndex: 99999,
     flex: 1,
     width:"100%",
     height:"100%"
@@ -124,7 +131,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:UColor.transport
+    backgroundColor:"rgba(0, 0, 0, 0.0)"
   },
   mask: {
     flex:1,
@@ -142,7 +149,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:UColor.transport,
+    backgroundColor:"rgba(0, 0, 0, 0.0)",
     padding:ScreenUtil.autowidth(40)
   },
   alert:{

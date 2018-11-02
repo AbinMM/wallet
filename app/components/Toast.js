@@ -1,164 +1,107 @@
 import React from 'react';
-import { StyleSheet, Dimensions, Text, View,Animated,Keyboard} from 'react-native';
-import PropTypes from 'prop-types';
-const ScreenWidth = Dimensions.get('window').width;
-const ScreenHeight = Dimensions.get('window').height;
+import {StyleSheet,Text,View,Animated,Easing} from 'react-native';
+import ScreenUtil from "../utils/ScreenUtil";
 
 export class EasyToast {
-    
-    constructor() {
-    
-    }
 
-    static bind(toast) {
-        toast && (this.map['toast'] = toast);
-    }
+  static bind(toast) {
+    toast && (this.map['toast'] = toast);
+  }
 
-    static unBind() {
-        this.map["toast"] = null
-        delete this.map["toast"];
-    }
+  static unBind() {
+    this.map["toast"] = null
+    delete this.map["toast"];
+  }
 
-    static show(text) {
-        this.map["toast"].show(text);
-    }
+  static show(text,duration, callback) {
+    this.map["toast"].show(text,duration, callback);
+  }
 
-    //切换页面时,如果有显示,立刻关闭
-    static switchRoute(){
-        if(this.map["toast"] && this.map["toast"].state.isShow)
-        {
-            this.dismis();
-        }
-    }
+  static dismis() {
+    this.map["toast"].close();
+  }
 
-    static dismis() {
-        this.map["toast"].close();
-    }
+  static switchRoute(){
+
+  }
+
 }
 
 EasyToast.map = {};
 
-export const DURATION = { 
-    LENGTH_SHORT: 500,
-    FOREVER: 0,
-};
+export const DURATION = {LENGTH_SHORT: 800,FOREVER: 0};
 
 export class Toast extends React.Component {
 
-    state = {
-        keyboardHeight:0
-    }
-
     constructor(props) {
-        super(props);
-        this.state = {
-            isShow: false,
-            text: '',
-            opacityValue: new Animated.Value(0.7),
-            keyboardHeight:0,
-        }
-        EasyToast.bind(this);
+      super(props);
+      this.state = {
+        isShow: false,
+        text: '',
+        transformY:new Animated.Value(-150),
+        opacityValue: new Animated.Value(0.7),
+      }
+      EasyToast.bind(this);
     }
 
-    show(text, duration, callback) {
-        this.duration = typeof duration === 'number' ? duration : 1000;
-        this.callback = callback;
-        this.setState({
-            isShow: true,
-            text: text,
+    show(text) {
+      if(this.isShow) return;
+      this.isShow=true;
+      this.setState({isShow:true,text:text});
+      Animated.timing(this.state.transformY,{toValue:0,duration:300,easing:Easing.linear}).start(() => {this.close()});
+    }
+
+    close() {
+      if(!this.isShow)return;
+      this.ToastTimer && clearTimeout(this.ToastTimer);
+      this.ToastTimer = setTimeout(() => {
+        clearTimeout(this.ToastTimer);
+        Animated.timing(this.state.transformY,{toValue: 0-ScreenUtil.autowidth(70),duration: 300,easing: Easing.linear}).start(() => {
+          this.setState({isShow:false});
+          this.isShow=false;
         });
-
-        Animated.timing(
-            this.state.opacityValue,
-            {
-                toValue: 0.7,
-                duration: 500,
-            }
-        ).start(() => {
-            this.isShow = true;
-            if(duration !== DURATION.FOREVER) this.close();
-        });
+      },1500);
     }
 
-    close( duration ) {
-        let delay = typeof duration === 'undefined' ? this.duration : duration;
-
-        if(delay === DURATION.FOREVER) delay = this.props.defaultCloseDelay || 1000;
-
-        if (!this.isShow && !this.state.isShow) return;
-        this.timer && clearTimeout(this.timer);
-        this.timer = setTimeout(() => {
-            Animated.timing(
-                this.state.opacityValue,
-                {
-                    toValue: 0.0,
-                    duration: 500,
-                }
-            ).start(() => {
-                this.setState({
-                    isShow: false,
-                });
-                this.isShow = false;
-                if(typeof this.callback === 'function') {
-                    this.callback();
-                }
-            });
-        }, delay);
-    }
-
-    componentWillMount(){
-        Keyboard.addListener('keyboardDidShow', this._keyboardDidShow.bind(this));
-        Keyboard.addListener('keyboardDidHide', this._keyboardDidHide.bind(this));
-    }
-
-    componentWillUnmount() {
-        this.timer && clearTimeout(this.timer);
-        Keyboard.removeListener('keyboardDidShow');
-        Keyboard.removeListener('keyboardDidHide');
-        EasyToast.unBind();
-    }
-
-    _keyboardDidShow(e){
-        this.setState({
-            keyboardHeight:e.endCoordinates.height
-        })
-        
-    }
-
-    _keyboardDidHide(e){
-        this.setState({
-            keyboardHeight:0
-        })
-    }
-    
     render() {
         const view = this.state.isShow ?
-        <View style={[styles.container, { top: ScreenHeight-this.state.keyboardHeight-((this.state.keyboardHeight==0)?150:43) }]} pointerEvents="none">
-            <Animated.View style={[styles.content,{opacity:this.state.opacityValue}]}>
-                <Text style={styles.text}>{this.state.text}</Text>
-            </Animated.View>
-        </View>
+        <Animated.View style={[styles.container,{transform:[{translateY:this.state.transformY}]}]}>
+          <View style={styles.content}>
+            <Text style={styles.text}>{this.state.text}</Text>
+          </View>
+        </Animated.View>
         : null;
-        return view;       
+        return view;
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        elevation: 999,
-        alignItems: 'center',
-        zIndex: 10000,
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      alignItems: 'center',
+      zIndex: 9999999999,
+      width:"100%",
+      height:ScreenUtil.autowidth(ScreenUtil.isIphoneX()?88:66),
+      backgroundColor:"#6DA0F8",
+      elevation:4,
+      shadowColor:"rgba(0,0,0,0.5)",
+      shadowOffset:{width:3,height:3},
+      shadowOpacity:0.9,
+      shadowRadius:5
     },
     content: {
-        backgroundColor: 'black',
-        borderRadius: 5,
-        padding: 10,
-        opacity:80
+      marginTop: ScreenUtil.autowidth(ScreenUtil.isIphoneX()?36:16),
+      borderRadius: ScreenUtil.autowidth(5),
+      padding: ScreenUtil.autowidth(10),
+      height:ScreenUtil.autowidth(50),
+      flexDirection: 'row',
+      justifyContent: 'center',
     },
     text: {
-        color: 'white'
+      color: '#ffffff',
+      alignSelf: 'center',
+      fontSize: ScreenUtil.autowidth(15),
     }
 });

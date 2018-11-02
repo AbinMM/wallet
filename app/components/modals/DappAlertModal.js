@@ -1,9 +1,7 @@
 import React from 'react';
-import { StyleSheet, Modal,Animated, Text, Platform, TouchableHighlight, KeyboardAvoidingView, TouchableWithoutFeedback, View, Dimensions, ActivityIndicator} from 'react-native';
-import UColor from '../utils/Colors';
-import ScreenUtil from '../utils/ScreenUtil';
-import TextButton from './TextButton';
-import LineView from './LineView';
+import {StyleSheet,Animated,Text,TouchableWithoutFeedback,View} from 'react-native';
+import ScreenUtil from '../../utils/ScreenUtil';
+import TextButton from '../TextButton';
 
 export class DappAlertModal {
 
@@ -40,18 +38,20 @@ export class DappAlertModalView extends React.Component {
 
     show = (dapp,callback) =>{
       if(this.isShow)return;
+      this.isShow = true;
+      //如果需要支持返回关闭，请添加这句，并且实现dimss方法
+      window.currentDialog = this;
       this.DappAlertModalCallback = callback;
       this.setState({dapp,modalVisible:true});
       Animated.parallel([
-        Animated.timing(this.state.mask,{toValue:0.6,duration:1000}),
-        Animated.timing(this.state.alert,{toValue:1,duration:500})
-      ]).start(() => {
-          this.isShow = true;
-      });
+        Animated.timing(this.state.mask,{toValue:0.6,duration:500}),
+        Animated.timing(this.state.alert,{toValue:1,duration:200})
+      ]).start(() => {});
     }
 
     dimss = () => {
       if(!this.isShow)return;
+      window.currentDialog = null;
       Animated.parallel([
           Animated.timing(this.state.mask,{toValue:0,duration:500}),
           Animated.timing(this.state.alert,{toValue:0,duration:200})
@@ -72,28 +72,26 @@ export class DappAlertModalView extends React.Component {
 
     render() {
         return (
-          <View style={styles.continer}>
-            <Modal transparent={true} animationType={'fade'} onRequestClose={()=>{this.dimss()}} visible={this.state.modalVisible}>
-              <TouchableWithoutFeedback onPress={()=>{this.dimss()}}>
-                <View style={styles.content}>
-                  <Animated.View style={[styles.mask,{opacity:this.state.mask}]}></Animated.View>
-                  <View style={styles.alertContent}>
-                    <Animated.View style={[styles.alert,{opacity:this.state.alert}]}>
-                      <Text style={styles.title}>您所访问的页面将跳至第三方DApp {this.state.dapp}</Text>
-                      <Text style={styles.ctx}>提示：您所访问的页面将跳转至第三方DApp {this.state.dapp}。您在第三方DApp上的使用行为将适用该第三方DApp的用户协议和隐私政策，由其直接并单独向您承担责任。</Text>
-                      <View style={styles.bottom}>
-                        <View style={{width:"50%"}}>
-                          <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
-                        </View>
-                        <View style={{width:"50%"}}>
-                          <TextButton onPress={()=>{this.ok()}} bgColor="#6DA0F8" textColor="#fff" text="确认" style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
-                        </View>
+          this.state.modalVisible && <View style={styles.continer}>
+            <TouchableWithoutFeedback onPress={()=>{this.dimss()}}>
+              <View style={styles.content}>
+                <Animated.View style={[styles.mask,{opacity:this.state.mask}]}></Animated.View>
+                <View style={styles.alertContent}>
+                  <Animated.View style={[styles.alert,{opacity:this.state.alert}]}>
+                    <Text style={styles.title}>您所访问的页面将跳至第三方DApp {this.state.dapp}</Text>
+                    <Text style={styles.ctx}>提示：您所访问的页面将跳转至第三方DApp {this.state.dapp}。您在第三方DApp上的使用行为将适用该第三方DApp的用户协议和隐私政策，由其直接并单独向您承担责任。</Text>
+                    <View style={styles.bottom}>
+                      <View style={{width:"50%"}}>
+                        <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
                       </View>
-                    </Animated.View>
-                  </View>
+                      <View style={{width:"50%"}}>
+                        <TextButton onPress={()=>{this.ok()}} bgColor="#6DA0F8" textColor="#fff" text="确认" style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
+                      </View>
+                    </View>
+                  </Animated.View>
                 </View>
-              </TouchableWithoutFeedback>
-            </Modal>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         )
     }
@@ -101,6 +99,10 @@ export class DappAlertModalView extends React.Component {
 
 const styles = StyleSheet.create({
   continer:{
+    left:0,
+    top:0,
+    position: 'absolute',
+    zIndex: 99999,
     flex: 1,
     width:"100%",
     height:"100%"
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:UColor.transport
+    backgroundColor:"rgba(0, 0, 0, 0.0)"
   },
   mask: {
     flex:1,
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:UColor.transport,
+    backgroundColor:"rgba(0, 0, 0, 0.0)",
     padding:ScreenUtil.autowidth(40)
   },
   alert:{

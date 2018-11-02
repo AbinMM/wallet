@@ -51,7 +51,7 @@ import Imvote from './Settings/Imvote'
 import MortgageRecord from './Settings/MortgageRecord'
 import Nodevoting from './Settings/Nodevoting'
 import Set from './Settings/Set'
-import undelegated from './Settings/undelegated' 
+import undelegated from './Settings/undelegated'
 import WithdrawMoney from './Settings/WithdrawMoney'
 
 import Transaction from './Transaction'
@@ -89,7 +89,7 @@ import UColor from '../utils/Colors'
 import { redirect } from '../utils/Api'
 import Constants from '../utils/Constants'
 import ScreenUtil from '../utils/ScreenUtil'
-
+import Security from '../utils/Security';
 
 
 require('moment/locale/zh-cn');
@@ -118,7 +118,7 @@ var TabContainer = TabNavigator(
       inactiveTintColor: '#727272', // 文字和图片未选中颜色
       showIcon: true, // android 默认不显示 icon, 需要设置为 true 才会显示
       showLabel: true,
-      style: { // TabBar 
+      style: { // TabBar
         height: 50,
         backgroundColor: UColor.btnColor, // tab背景色
         borderBottomWidth: 0,
@@ -128,7 +128,7 @@ var TabContainer = TabNavigator(
         margin: 0
       },
       indicatorStyle: { // 如TabBar下面显示有一条线，可以设高度为0后隐藏
-        opacity: 0 
+        opacity: 0
       },
       tabStyle: {
         padding: 0,
@@ -176,7 +176,7 @@ const Nav = StackNavigator(
       screen: BackupsAOkey
     },
     BackupsPkey: {
-      screen: BackupsPkey   
+      screen: BackupsPkey
     },
     ImportEosKey: {
       screen: ImportEosKey
@@ -408,7 +408,7 @@ class Route extends React.Component {
     this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
       this.props.dispatch({ type: 'wallet/walletList', payload: {}, callback: (walletArr) => {
         if(walletArr == null || walletArr.length == 0){
-          this.props.dispatch({ type: 'wallet/updateGuideState', payload: {guide: true}});  
+          this.props.dispatch({ type: 'wallet/updateGuideState', payload: {guide: true}});
         }
       }
       });
@@ -420,7 +420,7 @@ class Route extends React.Component {
     } });
 
   }
- 
+
   componentDidMount() {
     //回到app触发检测更新
     AppState.addEventListener("change", (newState) => {
@@ -431,7 +431,11 @@ class Route extends React.Component {
                 break;
         }
       });
+      //检查指纹是否存在
+      newState === "active" && Security.chechTouchId();
     });
+    //检查指纹是否存在
+    Security.chechTouchId();
     //加载广告
     this.props.dispatch({ type: 'banner/list', payload: {} });
     //加载资讯类别
@@ -468,7 +472,7 @@ class Route extends React.Component {
         }
       })
     }, 1000);
-    
+
     BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
 
     DeviceEventEmitter.addListener('Activation', (news) => {
@@ -503,7 +507,7 @@ class Route extends React.Component {
         ]).start();
       }, 300);
     });
-    
+
     DeviceEventEmitter.addListener('ReturnActivation', (news) => {
       var result = JSON.parse(news);// 转成JSON对象
       this.setState({
@@ -560,7 +564,7 @@ class Route extends React.Component {
         ]).start();
       }, 300);
     });
-    
+
     DeviceEventEmitter.addListener('voteShare', (news) => {
       this.setState({showVoteShare: true });
       this.state.vtransformY = new Animated.Value(200);
@@ -612,7 +616,7 @@ class Route extends React.Component {
     DeviceEventEmitter.addListener('turninShare', (news) => {
       this.setState({showTurninShare: true });
       var result = JSON.parse(news);// 转成JSON对象
- 
+
       if(result.toaccount){
         this.setState({turnintoaccount:result.toaccount});
       }else{
@@ -633,7 +637,7 @@ class Route extends React.Component {
       }else{
         this.setState({turnincontractAccount:""});
       }
-     
+
       this.state.vtransformY = new Animated.Value(500);
       this.state.vtransformY1 = new Animated.Value(-1000);
       setTimeout(() => {
@@ -726,8 +730,8 @@ class Route extends React.Component {
           .then((isInstalled) => {
             th.setState({ showDappShare: false });
             if (isInstalled) {
-              WeChat.shareToSession({ 
-                type: 'news', 
+              WeChat.shareToSession({
+                type: 'news',
                 webpageUrl: this.state.news,
                 title: ''+this.state.news,
                 description: 'eos dapp',
@@ -736,7 +740,7 @@ class Route extends React.Component {
                 if(resp && resp.errCode == 0){ // 分享成功
                   // th.shareSuccess();
                   EasyToast.show('分享成功');
-                  // this.setState({ showDappShare: false }); 
+                  // this.setState({ showDappShare: false });
                 }
               })
                 .catch((error) => {
@@ -753,8 +757,8 @@ class Route extends React.Component {
           .then((isInstalled) => {
             th.setState({ showDappShare: false });
             if (isInstalled) {
-              WeChat.shareToTimeline({ 
-              type: 'news', 
+              WeChat.shareToTimeline({
+              type: 'news',
               webpageUrl: this.state.news ,
               title: 'DAPP分享:'+this.state.news,
             }).then((resp) => {
@@ -770,10 +774,10 @@ class Route extends React.Component {
             }
           });
       // });
-    } 
+    }
   }
 
-  
+
 
   shareSuccess(){
     // 增加积分
@@ -790,6 +794,11 @@ class Route extends React.Component {
         BackHandler.exitApp();
         return false;
       }
+      //返回，关闭弹框
+      if(window.currentDialog){
+        window.currentDialog.dimss();
+        return true;
+      }
       this.lastBackPressed = Date.now();
       EasyToast.show('再按一次退出应用');
       return true;
@@ -798,7 +807,7 @@ class Route extends React.Component {
     }
   };
   getIncrease(){
-    this.props.dispatch({ type: 'sticker/listincrease', payload: { type: 0}, callback: (data) => { 
+    this.props.dispatch({ type: 'sticker/listincrease', payload: { type: 0}, callback: (data) => {
         if(data){
            if(data[0].increase){
             DeviceEventEmitter.emit('eos_increase', data[0].increase);
@@ -806,7 +815,7 @@ class Route extends React.Component {
         }
     } });
   }
-  getBalance() { 
+  getBalance() {
     if(this.props.walletList == null){
       return;
     }
@@ -816,7 +825,7 @@ class Route extends React.Component {
         this.props.dispatch({
           type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.walletList[i].name, symbol: 'EOS' }
         })
-  
+
       }
     }
 
@@ -824,7 +833,7 @@ class Route extends React.Component {
     if(this.props.myAssets == null){
       return;
     }
-          
+
     this.props.dispatch({
       type: 'assets/getBalance', payload: {myAssets: this.props.myAssets, accountName: this.props.defaultWallet.name}, callback: () => {
         // this.props.dispatch({ type: 'assets/myAssetInfo', payload: { page: 1}, callback: (myAssets) => {}});
@@ -857,12 +866,12 @@ class Route extends React.Component {
   switchRoute = (prevNav, nav, action) => {
     //关闭loading显示,防止进入下一页面，上一个页面的loading显示还在
     if(action && action.routeName){
-      EasyShowLD.switchRoute();    
+      EasyShowLD.switchRoute();
       EasyToast.switchRoute();
     }
 
     routeLength = nav.routes.length;
-    
+
     //切换到个人中心，更新用户信息
     if (action && action.routeName && action.routeName == "Settings") {
       if (this.props.loginUser) {
@@ -876,7 +885,7 @@ class Route extends React.Component {
         this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
           this.props.dispatch({ type: 'wallet/walletList', payload: {}, callback: (walletArr) => {
             if(walletArr == null || walletArr.length == 0){
-              this.props.dispatch({ type: 'wallet/updateGuideState', payload: {guide: true}, callback: (data) => {  
+              this.props.dispatch({ type: 'wallet/updateGuideState', payload: {guide: true}, callback: (data) => {
                 if (action && action.routeName) {
                   DeviceEventEmitter.emit('changeTab', action.routeName);
                 }
@@ -888,7 +897,7 @@ class Route extends React.Component {
             }else{
               this.props.dispatch({ type: 'wallet/updateGuideState', payload: {guide: false}, callback: (data) => {
                 this.startTimer();
-      
+
                 if (action && action.routeName) {
                   DeviceEventEmitter.emit('changeTab', action.routeName);
                 }
@@ -1058,7 +1067,7 @@ class Route extends React.Component {
                           <Text style={{ color: UColor.tintColor, fontSize: 16, textAlign: 'center', width: '100%', marginTop: 5 }}>ET钱包</Text>
                           <Text style={{ color: UColor.tintColor, fontSize: 16, textAlign: 'center', width: '100%', marginTop: 5 }}>专注于柚子生态</Text>
                           <Text style={{ color: UColor.btnColor, fontSize: 16, textAlign: 'center', padding: 5, backgroundColor: UColor.blueDeep, margin: 10 }}>更多精彩 长按识别二维码</Text>
-                        </View>                            
+                        </View>
                       </View>
                     </View>
                   </ViewShot>
@@ -1104,8 +1113,8 @@ class Route extends React.Component {
             </View>
           </View>
         ) : null
-      }    
-   
+      }
+
       {this.state.showDappShare ? (
         <View style={{ position: 'absolute', zIndex: 100000, top: 0, left: 0, width: ScreenWidth, height: ScreenHeight, backgroundColor: UColor.mask }}>
             {/* <Animated.View style={{
@@ -1174,7 +1183,7 @@ class Route extends React.Component {
               </Animated.View>
             </View>
           </View>
-        ) : null}   
+        ) : null}
 
 
       {/*  收款分享 */}
@@ -1229,13 +1238,13 @@ class Route extends React.Component {
                           <View style={{ justifyContent: 'center', alignSelf: 'center', padding: ScreenUtil.autowidth(10), backgroundColor:UColor.btnColor }}>
                             <QRCode size={ScreenUtil.autowidth(69)}  logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(16)} logoBorderRadius={5}
                             value={this.state.turninsymbol.toLowerCase() +':' + this.state.turnintoaccount + '?amount=' + ((this.state.turninamount == "")?'0':this.state.turninamount) + '&contractAccount=' + this.state.turnincontractAccount + '&token=' + this.state.turninsymbol.toUpperCase()}/>
-                          </View> 
+                          </View>
                           <Text style={{ color: UColor.btnColor, fontSize: ScreenUtil.setSpText(10), textAlign: 'center', lineHeight: ScreenUtil.autowidth(20),}}>扫描二维码向他付款</Text>
                         </View>
                       </View>
                     </ViewShot>
                   </View>
-                 
+
                   <View style={{ flexDirection: "row" }}>
                     <Button onPress={() => { this.shareAction(1) }}>
                       <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/3, }}>
@@ -1265,7 +1274,7 @@ class Route extends React.Component {
               </Animated.View>
             </View>
           </View>
-        ) : null}   
+        ) : null}
 
 
         {this.state.showActivationPay ? (
@@ -1439,38 +1448,38 @@ class Route extends React.Component {
               </Animated.View>
             </View>
           </View>
-        ) : null}                                  
+        ) : null}
     </View>)
   }
 }
 
 const styles = StyleSheet.create({
   sharetitle: {
-    width: ScreenWidth, 
+    width: ScreenWidth,
     textAlign: "center",
-    marginTop: ScreenUtil.autowidth(10), 
+    marginTop: ScreenUtil.autowidth(10),
   },
   shareimg: {
     alignSelf: 'center',
-    width: ScreenUtil.autowidth(50), 
-    height: ScreenUtil.autowidth(50), 
-    marginTop: ScreenUtil.autowidth(10), 
-    marginBottom: ScreenUtil.autowidth(5), 
+    width: ScreenUtil.autowidth(50),
+    height: ScreenUtil.autowidth(50),
+    marginTop: ScreenUtil.autowidth(10),
+    marginBottom: ScreenUtil.autowidth(5),
   },
   sharetext: {
     textAlign: 'center',
-    fontSize: ScreenUtil.setSpText(16), 
+    fontSize: ScreenUtil.setSpText(16),
   },
 
   cancelout: {
-    width: ScreenWidth, 
+    width: ScreenWidth,
     alignSelf: 'center' ,
     justifyContent: 'center',
-    height: ScreenUtil.autowidth(45), 
+    height: ScreenUtil.autowidth(45),
   },
   canceltext: {
-    textAlign: "center", 
-    fontSize: ScreenUtil.setSpText(18), 
+    textAlign: "center",
+    fontSize: ScreenUtil.setSpText(18),
   },
 
 })
