@@ -28,6 +28,8 @@ import TradeDetails from './Home/TradeDetails'
 import TurnInAsset from './Home/TurnInAsset'
 import TurnOutAsset from './Home/TurnOutAsset'
 import Resources from './Home/Resources'
+import CpuNet from './Home/CpuNet'
+import Ram from './Home/Ram'
 
 import Login from './Login'
 import AssistantQrcode from './Login/AssistantQrcode'
@@ -56,7 +58,7 @@ import WithdrawMoney from './Settings/WithdrawMoney'
 
 import Transaction from './Transaction'
 import Detailsofmoney from './Transaction/Detailsofmoney'
-import Ram from './Transaction/Ram'
+import RamSale from './Transaction/RamSale'
 import RecordQueryET from './Transaction/RecordQueryET';
 import RecordQueryRam from './Transaction/RecordQueryRam';
 import Tradingpool from './Transaction/Tradingpool';
@@ -235,6 +237,12 @@ const Nav = StackNavigator(
     Resources: {
       screen: Resources
     },
+    CpuNet: {
+      screen: CpuNet
+    },
+    Ram: {
+      screen: Ram
+    },
     undelegated: {
       screen: undelegated
     },
@@ -289,8 +297,8 @@ const Nav = StackNavigator(
     Detailsofmoney: {
       screen: Detailsofmoney
     },
-    Ram: {
-      screen: Ram
+    RamSale: {
+      screen: RamSale
     },
     RecordQueryRam: {
       screen: RecordQueryRam

@@ -105,7 +105,7 @@ export default {
   ManualSearch: require('../img/ManualSearch.png'),
   Memory:require('../img/Memory.png'),
   MessagePush:require('../img/MessagePush.png'),
-  Mortgage_record: require('../img/Mortgage_record.png'),
+  delegatebw_record: require('../img/delegatebw_record.png'),
   mustread: require('../img/mustread.png'),
   network:require('../img/network.png'),
   point_empty:require('../img/point_empty.png'),

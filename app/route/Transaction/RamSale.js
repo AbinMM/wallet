@@ -25,7 +25,7 @@ var dismissKeyboard = require('dismissKeyboard');
 const transactionOption = ['最新交易','我的交易','最近大单','持仓大户'];
 var DeviceInfo = require('react-native-device-info');
 @connect(({transaction,sticker,wallet,vote}) => ({...transaction, ...sticker, ...wallet, ...vote}))
-class Ram extends BaseComponent {
+class RamSale extends BaseComponent {
 
     static navigationOptions = {
         headerTitle: "内存交易",
@@ -1991,4 +1991,4 @@ function combineRamKLine(data) {
     };
 }
 
-export default Ram;
+export default RamSale;

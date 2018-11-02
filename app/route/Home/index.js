@@ -294,6 +294,30 @@ class Home extends React.Component {
   }
 
 
+  gotoCpuNet(){
+    const { navigate } = this.props.navigation;
+    if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) {
+      EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
+        this.createWallet();
+        EasyShowLD.dialogClose()
+      }, () => { EasyShowLD.dialogClose() });  
+      return;
+    }
+    navigate('CpuNet', {});
+  }
+
+  gotoRam(){
+    const { navigate } = this.props.navigation;
+    if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) {
+      EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
+        this.createWallet();
+        EasyShowLD.dialogClose()
+      }, () => { EasyShowLD.dialogClose() });  
+      return;
+    }
+    navigate('Ram', {});
+  }
+
   onPress(key, data = {}) {
     this.setState({ listmodal: false });
     const { navigate } = this.props.navigation;
@@ -325,7 +349,7 @@ class Home extends React.Component {
         return;
       }
       navigate('TurnOutAsset', { coins:this.props.myAssets[0], Choicesymbol: true, getbalance: true });
-    }else if (key == 'Resources') {
+    }else if (key == 'CpuNet') {
       if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) {
         EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
           this.createWallet();
@@ -333,7 +357,7 @@ class Home extends React.Component {
         }, () => { EasyShowLD.dialogClose() });  
         return;
       }
-      navigate('Resources', {});
+      navigate('CpuNet', {});
     }else if(key == 'addAssets'){
       if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) {
         EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
@@ -642,12 +666,12 @@ class Home extends React.Component {
           </LinearGradient>
         </View>
         <View style={{paddingHorizontal: ScreenUtil.autowidth(16), paddingTop: ScreenUtil.autowidth(28)}}>
-          <TouchableOpacity onPress={this.onPress.bind(this, 'Resources')} style={{height: ScreenUtil.autowidth(49), flexDirection: 'row', alignItems: 'center', borderBottomColor: '#F7F8F9', borderBottomWidth: 0.5,}}>
+          <TouchableOpacity onPress={()=>{this.gotoCpuNet()}} style={{height: ScreenUtil.autowidth(49), flexDirection: 'row', alignItems: 'center', borderBottomColor: '#F7F8F9', borderBottomWidth: 0.5,}}>
             <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#080808',fontWeight: "100"}}>已抵押资源(CPU+NET)</Text>
             <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(18), color: '#1A1A1A'}}>{this.state.mortgage}</Text>
             <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#080808',fontWeight: "100"}}> EOS</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.onPress.bind(this, 'Resources')} style={{height: ScreenUtil.autowidth(49), flexDirection: 'row', alignItems: 'center',}}>
+          <TouchableOpacity onPress={()=>{this.gotoRam()}} style={{height: ScreenUtil.autowidth(49), flexDirection: 'row', alignItems: 'center',}}>
             <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#080808',fontWeight: "100"}}>内存(RAM)</Text>
             <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(18), color: '#1A1A1A'}}>{this.state.allowance}</Text>
             <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#080808',fontWeight: "100"}}> KB</Text>
