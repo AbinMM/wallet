@@ -209,4 +209,9 @@ export default {
   tab_2_h: require('../img/newimg/tab_2_h.png'),
   tab_3_h: require('../img/newimg/tab_3_h.png'),
   tab_4_h: require('../img/newimg/tab_4_h.png'),
+
+  //转账
+  turnout_pop: require('../img/turnout_pop.png'),
+  turnout_delete: require('../img/turnout_delete.png'),
+  turnout_add: require('../img/turnout_add.png'),
 }

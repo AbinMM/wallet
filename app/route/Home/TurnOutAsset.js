@@ -23,7 +23,7 @@ var dismissKeyboard = require('dismissKeyboard');
 @connect(({ wallet, assets,addressBook }) => ({ ...wallet, ...assets,...addressBook }))
 class TurnOutAsset extends BaseComponent {
     static navigationOptions = {
-        headerTitle: '转出' ,
+        headerTitle: '转账' ,
         header:null, 
     };
 
@@ -31,6 +31,7 @@ class TurnOutAsset extends BaseComponent {
      constructor(props) {
         super(props);
         this.state = {
+            isMultiAccount: false, //批量转账
             show: false, 
             toAccount: '', // 账户名称
             amount: '', // 转账金额
@@ -131,6 +132,18 @@ class TurnOutAsset extends BaseComponent {
     openAddressBook() {
         const { navigate } = this.props.navigation;
         navigate('addressManage', {isTurnOut:true,coinType:this.state.name});
+    }
+
+    //批量转账
+    addMultiAccount(){
+        var ishow = this.state.isMultiAccount;
+        this.setState({
+            isMultiAccount: !ishow,
+        });
+    }
+    deleteAccount(){
+
+      
     }
     
     //选择代币
@@ -374,18 +387,13 @@ class TurnOutAsset extends BaseComponent {
     render() {
         return (
         <View style={[styles.container,{backgroundColor:UColor.secdfont}]}>
-            <Header {...this.props} onPressLeft={true} title={"转出" + this.state.name} />
+            <Header {...this.props} onPressLeft={true} title={"转账"} />
             <ScrollView  keyboardShouldPersistTaps="always">
                 <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                     <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-                        {/* <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
-                            <Image source={{uri:this.state.tokenicon}} style={{width: ScreenUtil.autowidth(30),height: ScreenUtil.autowidth(30),margin: ScreenUtil.autowidth(5)}} />  
-                            <Text style={[styles.headertext,{color: UColor.fontColor}]}>{this.state.balance==""? "0.0000" :this.state.balance +" "+ this.state.name}</Text>
-                            <Text style={[styles.rowtext,{color: UColor.lightgray}]}>≈ {(this.state.balance == null || this.state.tokenvalue == null) ? "0.00" : (this.state.balance * this.state.tokenvalue).toFixed(2)} ￥</Text>
-                        </View> */}
+                        
                         <View style={styles.taboutsource}>
                             <View style={[styles.outsource,{}]}>
-                                {/* <View style={[styles.inptoutsource,{borderBottomColor:UColor.mainsecd}]}> */}
                                 <View style={styles.accountoue} >
                                     <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>收款账户</Text>
                                     <View style={styles.scanning}>
@@ -397,7 +405,7 @@ class TurnOutAsset extends BaseComponent {
                                 <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
                                     <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"   
                                         selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}      
-                                        placeholder="收款账户" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
+                                        placeholder="请输入收款账户" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
                                         onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})} 
                                     />
                                     <View style={styles.scanning}>
@@ -406,9 +414,37 @@ class TurnOutAsset extends BaseComponent {
                                         </Button>
                                     </View>
                                 </View>
-
+                                {
+                                this.state.isMultiAccount ? 
+                                <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
+                                    <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"   
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}      
+                                        placeholder="请输入收款账户" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
+                                        onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})} 
+                                    />
+                                    <View style={styles.scanning}>
+                                        <Button onPress={() => this.deleteAccount()}>                                  
+                                            <Image source={UImage.turnout_delete} style={styles.alningimg} />                                 
+                                        </Button>
+                                    </View>
+                                </View>
+                                
+                                : 
+                                <View style={[styles.headerMulti]}>
+                                    <Button style={{backgroundColor: UColor.mainColor,width: ScreenUtil.autowidth(60),height: ScreenUtil.autoheight(30),}} onPress={() => this.addMultiAccount()}>  
+                                        <Image source={UImage.turnout_pop} style={{width: ScreenUtil.autowidth(30),height: ScreenUtil.autoheight(15),margin: ScreenUtil.autowidth(0)}} />  
+                                    </Button>
+                                  </View>
+                                }
+                                { this.state.isMultiAccount && <View style={[styles.addStyle]}>
+                                    <Button  onPress={() => this.addMultiAccount()}>  
+                                        <Image source={UImage.turnout_add} style={{width: ScreenUtil.autowidth(30),height: ScreenUtil.autoheight(15),margin: ScreenUtil.autowidth(0)}} />  
+                                    </Button>
+                                  </View>}
                                 <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(56),color: UColor.fontColor}]}>转账金额</Text>
+                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(56),color: UColor.fontColor}]}>转账金额</Text>
+                                    <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
+                                       {lineHeight: ScreenUtil.autoheight(56),color: UColor.arrow,marginRight: ScreenUtil.autowidth(20),}]}>{this.state.balance==""? "余额：0.0000" : "余额：" + this.state.balance +" "+ this.state.name}</Text>
                                 </View>
                                 <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
                                     <View style={{paddingRight: ScreenUtil.autowidth(20),borderRightColor: UColor.secdColor,borderRightWidth: 1,}} >
@@ -426,7 +462,6 @@ class TurnOutAsset extends BaseComponent {
                                         }
                                     </View>
                                     <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} selectionColor={UColor.tintColor} 
-                                        placeholder={this.state.balance==""? "余额：0.0000" : "余额：" + this.state.balance +" "+ this.state.name}
                                         style={[styles.textinpt,{paddingLeft: ScreenUtil.autowidth(15),color: UColor.arrow}]} maxLength = {15} 
                                         placeholderTextColor={UColor.inputtip}  underlineColorAndroid="transparent"   keyboardType="numeric"  
                                         onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })} returnKeyType="next"
@@ -719,6 +754,22 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(12),
         lineHeight: ScreenUtil.autoheight(18),
         marginLeft: ScreenUtil.autowidth(10),
+    },
+
+    headerMulti: {
+        // borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        // margin: ScreenUtil.autowidth(5),
+        // height: ScreenUtil.autoheight(20),
+    },
+    addStyle: {
+        // borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        // margin: ScreenUtil.autowidth(5),
+        height: ScreenUtil.autoheight(30),
+        backgroundColor: UColor.mainColor
     },
 })
 export default TurnOutAsset;
