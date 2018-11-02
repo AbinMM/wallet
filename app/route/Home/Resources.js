@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import {DeviceEventEmitter,StyleSheet,Image,ScrollView,View,Text, TextInput,Platform,Dimensions,ImageBackground,TouchableOpacity,KeyboardAvoidingView,BVLinearGradient} from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import moment from 'moment';
-import Echarts from 'native-echarts'
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import { Eos } from "react-native-eosjs";
