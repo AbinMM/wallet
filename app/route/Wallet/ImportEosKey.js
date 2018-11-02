@@ -570,7 +570,7 @@ class ImportEosKey extends BaseComponent {
     let {feedBackText, selection} = this.state;
     return (
       <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-      <Header {...this.props} onPressLeft={true} title="导入EOS私钥" onPressRight={this.seniorImport.bind()} subName={this.props.navigation.state.params.isSenior?"":"高级导入"}/>
+      <Header {...this.props} onPressLeft={true} title="导入EOS钱包" onPressRight={this.seniorImport.bind()} subName={this.props.navigation.state.params.isSenior?"":"高级导入"}/>
       <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "padding" : null} style={styles.tab}>
       <ScrollView keyboardShouldPersistTaps="always" >
         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex: 1,}}>
@@ -604,16 +604,16 @@ class ImportEosKey extends BaseComponent {
 
               
               <View style={[styles.inptout,{flexDirection: 'row',}]}>
-                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(58),color: UColor.fontColor}]}>设置密码</Text>
+                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(56),color: UColor.fontColor}]}>设置密码</Text>
                 <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center'}}>
                   <View style={[styles.Strengthout,this.state.weak&&{backgroundColor: UColor.baseline}]}>
-                    <Text style={[styles.Strengthtext,{color:this.state.weak?UColor.btnColor:UColor.arrow}]}>弱</Text>
+                    <Text style={[styles.Strengthtext,{color:this.state.weak?UColor.btnColor:UColor.arrow}]}>低</Text>
                   </View>
                   <View style={[styles.Strengthout,this.state.medium&&{backgroundColor: UColor.baseline}]}>
                     <Text style={[styles.Strengthtext,{color:this.state.medium?UColor.btnColor:UColor.arrow}]}>中</Text>
                   </View>
                   <View style={[styles.Strengthout,this.state.strong&&{backgroundColor: UColor.baseline}]}>
-                    <Text style={[styles.Strengthtext,{color:this.state.strong?UColor.btnColor:UColor.arrow}]}>强</Text>
+                    <Text style={[styles.Strengthtext,{color:this.state.strong?UColor.btnColor:UColor.arrow}]}>高</Text>
                   </View>
                 </View>
               </View>
@@ -630,7 +630,7 @@ class ImportEosKey extends BaseComponent {
                       onChangeText={(reWalletpwd) => this.setState({ reWalletpwd })} />  
               </View>
               <View style={[styles.inptout,]} >
-                  <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(60),color: UColor.fontColor}]}>设置密码提示</Text>
+                  <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(56),color: UColor.fontColor}]}>设置密码提示</Text>
               </View>
               <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]} >
                   <TextInput ref={(ref) => this._lnote = ref} value={this.state.passwordNote} selectionColor={UColor.tintColor} maxLength={40}
@@ -641,14 +641,14 @@ class ImportEosKey extends BaseComponent {
               <View style={{flexDirection: 'row'}}>
                 <View style={styles.readout}>
                   <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
-                    <View style={[{width: ScreenUtil.autowidth(10), height: ScreenUtil.autowidth(10),marginLeft: ScreenUtil.autowidth(20), margin: ScreenUtil.autowidth(15), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
+                    <View style={[{width: ScreenUtil.autowidth(12), height: ScreenUtil.autowidth(12),marginLeft: ScreenUtil.autowidth(18), margin: ScreenUtil.autowidth(13), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
                   </TouchableHighlight>
-                  <Text style={[styles.readtext,{color: UColor.arrow}]} >我已经阅读并同意 <Text onPress={() => this.prot(this,'clause')} style={[styles.servicetext,{color: UColor.tintColor}]}>服务及隐私条款</Text></Text> 
+                  <Text style={[styles.readtext,{color: UColor.arrow}]} >我已经阅读并同意 <Text onPress={() => this.prot(this,'clause')} style={[styles.servicetext,{color: UColor.arrow}]}>【服务及隐私条款】</Text></Text> 
                 </View> 
                 {!this.state.isSenior && <Text style={[styles.privatekeytext,{color: UColor.tintColor}]}  onPress={() => this.prot(this,'howImportPrivatekey')}>如何导入私钥？</Text>}
               </View>
               
-              <Button onPress={() => this.importPriKey()} style={{marginVertical: ScreenUtil.autowidth(10), marginHorizontal: ScreenUtil.autowidth(20),}}>
+              <Button onPress={() => this.importPriKey()} style={{marginTop: ScreenUtil.autowidth(43), marginHorizontal: ScreenUtil.autowidth(16),}}>
                 <View style={styles.importPriout} backgroundColor={this.state.CreateButton}>
                   <Text style={[styles.importPritext,{color: UColor.btnColor}]}>导入钱包</Text>
                 </View>
@@ -761,22 +761,22 @@ const styles = StyleSheet.create({
     
   },
   inpt: {
-    height: ScreenUtil.autowidth(60),
+    height: ScreenUtil.autowidth(55),
     fontSize: ScreenUtil.setSpText(16),
   },
   inptgo: {
     textAlignVertical: 'top', 
-    height: ScreenUtil.autowidth(65), 
-    fontSize: ScreenUtil.setSpText(16),
+    height: ScreenUtil.autowidth(85), 
+    fontSize: ScreenUtil.setSpText(15),
     lineHeight: ScreenUtil.autowidth(25),
   },
   Strengthout: {
-    borderRadius: 5,
+    borderRadius: 4,
     paddingHorizontal: ScreenUtil.autowidth(8),
-    paddingVertical: ScreenUtil.autowidth(4),
+    paddingVertical: ScreenUtil.autowidth(6),
   },
   Strengthtext: {
-    fontSize: ScreenUtil.setSpText(15), 
+    fontSize: ScreenUtil.setSpText(12), 
   },
   readout: {
     flex: 1,
@@ -810,6 +810,7 @@ const styles = StyleSheet.create({
     paddingRight: ScreenUtil.autowidth(10),
     fontSize: ScreenUtil.setSpText(12), 
     lineHeight: ScreenUtil.autowidth(40),
+    textDecorationLine:'underline',
   },
   pupuo: {
     flex: 1,
