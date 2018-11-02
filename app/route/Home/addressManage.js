@@ -252,6 +252,10 @@ class addressManage extends BaseComponent {
             this.setState({selectMap: map})
         })
     }
+    btnRightSelect(){
+        //选择
+
+    }
 
     render() {
         let temp = [...this.state.selectMap.values()];
@@ -259,7 +263,7 @@ class addressManage extends BaseComponent {
         console.log(temp, '......')
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-                <Header {...this.props} onPressLeft={true} title="联系人" />
+                <Header {...this.props} onPressLeft={true} title="联系人"  onPressRight={this.btnRightSelect.bind(this)}/>
                 <ListView renderRow={this.renderRow}  
                 enableEmptySections = {true}  
                 dataSource={this.state.dataSource.cloneWithRows((this.props.addressBook == null ? [] : this.props.addressBook))}> 
@@ -267,11 +271,8 @@ class addressManage extends BaseComponent {
 
                 { this.state.isShowBottom == false ? 
                 <View style={[styles.replace,{backgroundColor: UColor.secdColor}]}>
-                    <TouchableOpacity onPress={this.newlyAddedClick.bind(this)} style={[styles.added,{backgroundColor: UColor.tintColor}]}>
-                        <Text style={[styles.address,{color:UColor.btnColor}]}>新增地址</Text>
-                    </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.editClick(this)} style={[styles.editClickout,{backgroundColor: UColor.tintColor}]}>
-                        <Text style={[styles.address,{color:UColor.btnColor}]}>管理地址</Text>
+                        <Text style={[styles.address,{color:UColor.btnColor}]}>新建联系人</Text>
                     </TouchableOpacity>                 
                 </View> : null
                 }             
