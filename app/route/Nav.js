@@ -19,6 +19,7 @@ import Coin from './Coins/Detail'
 
 import Home from './Home'
 import AddAssets from './Home/AddAssets'
+import addressCreate from './Home/addressCreate'
 import addressManage from './Home/addressManage'
 import AssetInfo from './Home/AssetInfo'
 import AssetSearch from './Home/AssetSearch'
@@ -287,6 +288,9 @@ const Nav = StackNavigator(
     },
     AssetInfo: {
       screen: AssetInfo
+    },
+    addressCreate: {
+      screen: addressCreate
     },
     addressManage: {
       screen: addressManage

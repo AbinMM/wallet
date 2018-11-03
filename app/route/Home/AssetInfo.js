@@ -258,46 +258,6 @@ class AssetInfo extends BaseComponent {
                         {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isDelegatebw, 'isDelegatebw', logOption[1])}  
                         {this.ownOthersButton(styles.tabbutton, this.state.isExchange, 'isExchange', logOption[3])}
                     </View>
-                    {/* <Button onPress={this._openDetails.bind(this)}> 
-                        <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
-                            <View style={{alignItems: 'center',justifyContent: 'center',marginRight: ScreenUtil.autowidth(15)}}>
-                                <Image source={UImage.shift_to} style={styles.shiftturn} />
-                            </View>
-                            <View style={styles.top}>
-                                <View style={styles.timequantity}>
-                                    <Text style={[styles.timetext,{color: UColor.arrow}]}>2018-07-30 18:31</Text>
-                                    <Text style={[styles.quantity,{color: UColor.fontColor}]}>eos123451234</Text>
-                                </View>
-                                <View style={styles.typedescription}>
-                                    <Text style={[styles.typeto,{color:UColor.fallColor}]}>+0.36</Text>
-                                </View>
-                            </View>
-                            <View style={styles.Ionicout}>
-                                <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
-                            </View>
-                        </View>
-                    </Button>  
-                    <Button onPress={this._openDetails.bind(this)}> 
-                        <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
-                            <View style={{alignItems: 'center',justifyContent: 'center',marginRight: ScreenUtil.autowidth(15)}}>
-                                <Image source={UImage.turn_out} style={styles.shiftturn} />
-                            </View>
-                            <View style={styles.top}>
-                                <View style={styles.timequantity}>
-                                    <Text style={[styles.timetext,{color: UColor.arrow}]}>2018-07-30 18:31</Text>
-                                    <Text style={[styles.quantity,{color: UColor.fontColor}]}>eos123451234</Text>
-                                </View>
-                                <View style={styles.typedescription}>
-                                    <Text style={[styles.typeto,{color:UColor.warningRed}]}>-0.36</Text>
-                                </View>
-                            </View>
-                            <View style={styles.Ionicout}>
-                                <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
-                            </View>
-                        </View>
-                    </Button>   */}
-                  
-                    
                     <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} onEndReachedThreshold = {50}
                     onEndReached={() => this.onEndReached()}
                     refreshControl={
@@ -312,35 +272,8 @@ class AssetInfo extends BaseComponent {
                     dataSource={this.state.dataSource.cloneWithRows(this.props.tradeLog == null ? [] : this.props.tradeLog)} 
                     renderRow={(rowData, sectionID, rowID) => (                 
                     <View>
-                        {/* <Button onPress={this._openDetails.bind(this,rowData)}> 
-                            <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
-                                <View style={styles.top}>
-                                    <View style={styles.timequantity}>
-                                        <Text style={[styles.timetext,{color: UColor.arrow}]}>时间 : <Text style={{color: UColor.lightgray}}>{this.transferTimeZone(rowData.blockTime)}</Text></Text>
-                                        <Text style={[styles.quantity,{color: UColor.arrow}]}>数量 : <Text style={{color: UColor.lightgray}}>{rowData.quantity.replace(c.asset.name, "")}</Text></Text>
-                                    </View>
-                                    {(rowData.blockNum == null || rowData.blockNum == '') ? 
-                                        <View style={styles.unconfirmedout}>
-                                            <Image source={UImage.unconfirm} style={styles.shiftturn} />
-                                            <Text style={[styles.unconfirmed,{color: UColor.showy}]}>未确认...</Text>
-                                        </View>
-                                            :
-                                        <View style={styles.typedescription}>
-                                            <Text style={[styles.typeto,{color: rowData.type == '转出' ? UColor.tintColor: UColor.fallColor}]}>类型 : {rowData.type}</Text>
-                                            <Text style={[styles.description,{color: UColor.arrow}]}>（{rowData.description}）</Text>
-                                        </View>
-                                    }
-                                </View>
-                                <View style={styles.Ionicout}>
-                                    <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
-                                </View>
-                            </View>
-                        </Button>   */}
                         <Button onPress={this._openDetails.bind(this, rowData)}> 
                             <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
-                                {/* <View style={{alignItems: 'center',justifyContent: 'center',marginRight: ScreenUtil.autowidth(15)}}>
-                                    <Image source={rowData.type=='转出'?UImage.turn_out:UImage.shift_to} style={styles.shiftturn} />
-                                </View> */}
                                 <View style={styles.top}>
                                     <View style={styles.timequantity}>
                                         <Text style={[styles.quantity,{color: UColor.fontColor}]}>{rowData.type=='转出'? rowData.to : rowData.from}</Text>
@@ -350,9 +283,6 @@ class AssetInfo extends BaseComponent {
                                         <Text style={[styles.typeto,{color:rowData.type=='转出'?UColor.warningRed:UColor.fallColor}]}>{(rowData.type=='转出'?'-':'+') +  Math.floor(rowData.quantity.replace(c.asset.name, "")*10000)/10000}</Text>
                                     </View>
                                 </View>
-                                {/* <View style={styles.Ionicout}>
-                                    <Ionicons color={UColor.arrow} name="ios-arrow-forward-outline" size={20} /> 
-                                </View> */}
                             </View>
                         </Button>  
                     </View>)}                
