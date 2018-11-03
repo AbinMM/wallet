@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { DeviceEventEmitter, Dimensions, TouchableOpacity, ListView, StyleSheet, Image, View, RefreshControl, Text, ImageBackground} from 'react-native';
+import { DeviceEventEmitter, Dimensions, TouchableOpacity,TouchableHighlight, ListView, StyleSheet, Image, View, RefreshControl, Text, ImageBackground} from 'react-native';
 import moment from 'moment';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
@@ -13,8 +13,8 @@ import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
-const BTN_SELECTED_STATE_ARRAY = ['isTransfer','isDelegatebw', 'isMemory', 'isExchange']; 
-const logOption = ['转账','抵押','内存','ET交易'];
+const BTN_SELECTED_STATE_ARRAY = ['isTransfer','isDelegatebw', 'isMemory']; 
+const logOption = ['转账','抵押','内存'];
 @connect(({ wallet, assets}) => ({ ...wallet, ...assets }))
 class AssetInfo extends BaseComponent {
     static navigationOptions = ({ navigation }) => {
@@ -39,9 +39,9 @@ class AssetInfo extends BaseComponent {
             isTransfer: true,
             isDelegatebw: false, 
             isMemory: false,
-            isExchange: false,
             tradeLog:[],
-            logType: "transfer"
+            logType: "transfer",
+            isFilter: this.props.isFilter || false,
         };
         DeviceEventEmitter.addListener('transaction_success', () => {
             try {
@@ -201,7 +201,11 @@ class AssetInfo extends BaseComponent {
        this.doRefresh(type);
     }
 
-
+    checkClick() {
+        this.setState({
+          isFilter: !this.state.isFilter
+        });
+      }
 
 
      // 更新"转账，抵押记录，内存交易，ET交易"按钮的状态  
@@ -229,9 +233,6 @@ class AssetInfo extends BaseComponent {
         }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[2]){
             this.setState({logType:"ram"})
             action="ram";
-        }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[3]){
-            this.setState({logType:"ET"})
-            action="ET";
         }
         this.changeLogType(action);
     }  
@@ -247,8 +248,14 @@ class AssetInfo extends BaseComponent {
                         <Text style={[styles.headmarket,{color: UColor.lightgray}]}>≈ {(this.state.balance == null || c.asset.value == null) ? "0.00" : (this.state.balance.replace(c.asset.name, "") * c.asset.value).toFixed(2)} ￥</Text>
                     </ImageBackground>
                 </View>
-                <View style={{paddingHorizontal: ScreenUtil.autowidth(15), paddingVertical: ScreenUtil.autowidth(10),}}>
-                    <Text style={[styles.latelytext,{color: UColor.arrow}]}>交易记录</Text>
+                <View style={styles.Subcolumn}>
+                    <Text style={[styles.recordText,{color: UColor.arrow}]}>交易记录</Text>
+                    <View style={styles.filterView}>
+                        <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
+                            <View style={[{width: ScreenUtil.autowidth(12), height: ScreenUtil.autowidth(12), marginRight: ScreenUtil.autowidth(1), borderColor: this.state.isFilter?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isFilter?UColor.tintColor:UColor.mainColor}]}/>
+                        </TouchableHighlight>
+                        <Text style={[styles.filterText,{color: UColor.arrow}]} > 过滤小额交易 </Text> 
+                    </View>
                 </View>
 
                 <View style={styles.btn}>
@@ -256,7 +263,6 @@ class AssetInfo extends BaseComponent {
                         {this.ownOthersButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', logOption[0])}  
                         {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isMemory, 'isMemory', logOption[2])}  
                         {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isDelegatebw, 'isDelegatebw', logOption[1])}  
-                        {this.ownOthersButton(styles.tabbutton, this.state.isExchange, 'isExchange', logOption[3])}
                     </View>
                     <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} onEndReachedThreshold = {50}
                     onEndReached={() => this.onEndReached()}
@@ -337,11 +343,6 @@ const styles = StyleSheet.create({
         paddingBottom: ScreenUtil.autoheight(50),
     },
 
-    latelytext: {
-        fontSize: ScreenUtil.setSpText(14),
-        
-       
-    },
 
     tabbutton: {  
         flex: 1,
@@ -471,6 +472,29 @@ const styles = StyleSheet.create({
     },
     copytext: {
         fontSize: ScreenUtil.setSpText(16), 
+    },
+
+    Subcolumn:{
+        alignItems: 'center',
+        flexDirection: "row",
+        height:  ScreenUtil.autoheight(38),
+        marginHorizontal: ScreenUtil.autowidth(18),
+    },
+    
+    recordText: {
+        textAlign: 'left',
+        fontSize: ScreenUtil.setSpText(16),
+    },
+    filterView: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+    },
+
+    filterText: {
+        textAlign: 'right',
+        fontSize: ScreenUtil.setSpText(14),
     },
 
 })
