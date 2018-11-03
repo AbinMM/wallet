@@ -38,15 +38,15 @@ class Header extends BaseComponent {
         <View style={[styles.header,{height: ScreenUtil.autoheight(45) + Constants.FitPhone,paddingTop: Constants.FitPhone,backgroundColor: backgroundColors?backgroundColors:'#FFFFFF'}]}> 
             <View style={styles.Leftout} >
                 <TouchableOpacity style={styles.LeftBack} onPress={onPressLeft ? (onPressRightFun==undefined?() => {this.props.navigation.goBack()}:onPressRightFun) : () => {undefined}}>
-                    {onPressLeft &&<Ionicons style={{color:'#080808'}} name="ios-arrow-back" size={ScreenUtil.setSpText(30)}/>}
+                    {onPressLeft &&<Ionicons style={{color:'#080808'}} name="ios-arrow-back" size={ScreenUtil.setSpText(25)}/>}
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.LeftClose} onPress={onDappBackFalg ? (onLeftCloseFun==undefined?() => {this.props.navigation.goBack()}:onLeftCloseFun) : () => {undefined}}>
-                    {onDappBackFalg &&<Ionicons style={{color:'#080808'}} name="md-close" size={ScreenUtil.setSpText(30)}/>}
+                    {onDappBackFalg &&<Ionicons style={{color:'#080808'}} name="md-close" size={ScreenUtil.setSpText(25)}/>}
                 </TouchableOpacity>
             </View>
             <Text style={[styles.titletext,{color:'#080808'}]} ellipsizeMode='middle' numberOfLines={1}>{title}</Text>
             <TouchableOpacity style={styles.Rightout} onPress={onPressRight}>
-                {avatar?<Image source={avatar} style={{width:imgWidth?imgWidth:ScreenUtil.autowidth(28), height: imgHeight?imgHeight:ScreenUtil.autowidth(28)}} resizeMode={'contain'} />:null}
+                {avatar?<Image source={avatar} style={{width:imgWidth?imgWidth:ScreenUtil.autowidth(26), height: imgHeight?imgHeight:ScreenUtil.autowidth(26)}} resizeMode={'contain'} />:null}
                 {subName?<Text style={[styles.Righttext,{color: '#080808'}]}>{subName}</Text>:null}
             </TouchableOpacity>
         </View>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     titletext: {
         flex: 2,  
         textAlign: "center",
-        fontSize: ScreenUtil.setSpText(18),
+        fontSize: ScreenUtil.setSpText(16),
     },
     Rightout: {
         flex: 1.5, 
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autowidth(28),
     },
     Righttext: {
-        fontSize:ScreenUtil.autowidth(16),
+        fontSize:ScreenUtil.autowidth(14),
     },
 });
 

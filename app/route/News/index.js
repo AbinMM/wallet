@@ -26,36 +26,39 @@ var ScreenWidth = Dimensions.get('window').width;
 var ScreenHeight = Dimensions.get('window').height;
 var cangoback = false;
 var ITEM_HEIGHT = 100;
-var sections = [
+var sections = {msg: "succcess",data:[
   { key: 1540411105000, data: [
-    { title: "阿童木", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000}, 
-    { title: "阿玛尼", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000}, 
-    { title: "爱多多", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000}
+    { 
+      title: "动态 | EOS区块生产者shEOS引入跨链协议EOS21", 
+      row: 3, isUp: false, isDown: false, 
+      content: "1.REX 已开发完成，B1 的钱包也很快就会推出。至于为什么让社区等了这么长时间，他解释道：迅速、低成本开发、保证质量，三者只能择其二，我们选择花费更长时间创造一个优质的应用程序。2.目前 Block.one 都会针对 EOSIO 的主要性能推出补丁更新。3.预估下一次发布时将会进行多线程签名验证。签名确认最多可缩短至验证时间的 50％。 这应该会显着减少中继时间，使实时性得到进一步优化。4.多线程签名确认和 REX 将会帮助缓解 CPU 分配问题。", up: '1023', down: '56',createdate: 1540981805000}, 
+    { title: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000}, 
+    { title: "动态 | EOS区块生产者shEOS引入跨链协议EOS21", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000}
   ] },
   { key: 1540521205000, data: [
-    { title: "表哥", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
-    { title: "贝贝", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
-    { title: "表弟", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
-    { title: "表姐", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
-    { title: "表叔", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }
+    { title: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "动态 | EOS区块生产者shEOS引入跨链协议EOS21", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "动态 | EOS区块生产者shEOS引入跨链协议EOS21", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }
   ] },
   { key: 1540631305000, data: [
-    { title: "成吉思汗", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
-    { title: "超市快递", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }
+    { title: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "动态 | EOS区块生产者shEOS引入跨链协议EOS21", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }
   ] },
   { key: 1540741405000, data: [
-    { title: "成吉思汗", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
-    { title: "超市快递", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }
+    { title: "动态 | EOS区块生产者shEOS引入跨链协议EOS21", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }
   ] },
   { key: 1540851505000, data: [
-    { title: "王磊", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
-    { title: "王者荣耀", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
-    { title: "往事不能回味", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 },
-    { title: "王小磊", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
-    { title: "王中磊", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
-    { title: "王大磊", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }
+    { title: "动态 | EOS区块生产者shEOS引入跨链协议EOS21", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "动态 | EOS区块生产者shEOS引入跨链协议EOS21", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 },
+    { title: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "动态 | EOS区块生产者shEOS引入跨链协议EOS21", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }, 
+    { title: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", row: 3, isUp: false, isDown: false, content: "据 IMEOS 报道，BM 今晚现身 EOS 电报群答疑，透露 Block.one 近期的工作进展", up: '1023', down: '56',createdate: 1540981805000 }
   ] },
-];
+], code: "0"}
 
 @connect(({ banner, newsType, news, wallet, vote, common,}) => ({ ...banner, ...newsType, ...news, ...wallet , ...vote, ...common,}))
 class News extends React.Component {
@@ -389,7 +392,7 @@ class News extends React.Component {
       //   onEndReached={() => this.onEndReached(route.key)}
       //   refreshControl={<RefreshControl refreshing={this.props.newsRefresh} onRefresh={() => this.onRefresh(route.key, true)}
       //      tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
-          sections={sections}
+          sections={sections.data}
           renderSectionHeader={this._sectionComp}
           renderItem={this._renderItem}
           keyExtractor = {this._extraUniqueKey} 
@@ -403,7 +406,7 @@ class News extends React.Component {
   _sectionComp = (info) => {
     var txt = info.section.key;
     return (<View style={{height: ScreenUtil.autoheight(30),backgroundColor: '#F7F8F9',justifyContent: 'center',paddingHorizontal: ScreenUtil.autowidth(15), }}>
-      <Text style={{color: '#1A1A1A', fontSize: ScreenUtil.setSpText(16) }}>{moment(txt).format('YYYY-MM-DD')}</Text>
+      <Text style={{color: '#1A1A1A', fontSize: ScreenUtil.setSpText(14) }}>{moment(txt).format('YYYY-MM-DD')}</Text>
     </View>)
   }
 
@@ -418,10 +421,9 @@ class News extends React.Component {
             <View style={{flex: 1, width: 1,backgroundColor: '#F7F8F9'}}/>
           </View>
           <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
-            <Text style={{ fontSize: ScreenUtil.setSpText(16), color: '#1A1A1A', lineHeight: ScreenUtil.autoheight(21), }}>{rowData.title}</Text>
-
-            <Text numberOfLines={rowData.row} style={[styles.journalism,{color: '#808080'}]} >{rowData.content}</Text>
-          
+            <Text style={{ fontSize: ScreenUtil.setSpText(14), color: '#1A1A1A', lineHeight: ScreenUtil.autoheight(21), }}>{rowData.title}</Text>
+            <Text numberOfLines={5} style={[styles.journalism,{color: '#808080'}]} >{rowData.content}</Text>
+            {rowData.row == 3 && <Text style={[styles.moretext,{color: UColor.tintColor}]}>展开更多</Text>}
             <View style={styles.rowFooter}>
               <Text style={[styles.pastTime,{color: '#1A1A1A'}]}>{moment(rowData.createdate).format('HH:mm')}</Text>
               <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end" }}>
@@ -439,7 +441,7 @@ class News extends React.Component {
                 </Button>
                 <Button onPress={this.onShare.bind(this, rowData)}>
                   <View style={styles.spotout}>
-                    <Image style={{width:ScreenUtil.autowidth(16),height:ScreenUtil.autowidth(16)}} source={UImage.share_bright} />
+                    <Image style={{width:ScreenUtil.autowidth(14),height:ScreenUtil.autowidth(14)}} source={UImage.share_bright} />
                   </View>
                 </Button>
               </View>
@@ -612,12 +614,12 @@ sectionHeaderViewStyle: {
     marginHorizontal: ScreenUtil.autowidth(15),
   },
   headbtntext: {
-    fontSize: ScreenUtil.setSpText(12),
+    fontSize: ScreenUtil.setSpText(10),
     lineHeight: ScreenUtil.autoheight(20), 
   },
   descriptiontext: {
    
-    fontSize: ScreenUtil.setSpText(10),
+    fontSize: ScreenUtil.setSpText(8),
     lineHeight: ScreenUtil.autoheight(20), 
   },
   pupuoBackup: {
@@ -677,7 +679,7 @@ sectionHeaderViewStyle: {
   },
   labelStyle: {
     margin: 0, 
-    fontSize: ScreenUtil.setSpText(15), 
+    fontSize: ScreenUtil.setSpText(16), 
   },
  
   container: {
@@ -694,7 +696,6 @@ sectionHeaderViewStyle: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: ScreenUtil.autoheight(10),
   },
   systemSettingTip: {
     width: ScreenWidth,
@@ -712,9 +713,9 @@ sectionHeaderViewStyle: {
   },
 
   journalism: {
-    fontSize: ScreenUtil.setSpText(14),  
-    marginTop: ScreenUtil.autoheight(10), 
-    lineHeight: ScreenUtil.autoheight(21),
+    fontSize: ScreenUtil.setSpText(12),  
+    marginTop: ScreenUtil.autoheight(8), 
+    lineHeight: ScreenUtil.autoheight(20),
   },
   moretext: {
     textAlign: "right", 
@@ -722,7 +723,7 @@ sectionHeaderViewStyle: {
     lineHeight: ScreenUtil.autoheight(20), 
   },
   pastTime: {
-    fontSize: ScreenUtil.setSpText(13), 
+    fontSize: ScreenUtil.setSpText(12), 
     marginTop: ScreenUtil.autoheight(10),
     paddingBottom: ScreenUtil.autoheight(10), 
   },
@@ -732,11 +733,11 @@ sectionHeaderViewStyle: {
     padding: ScreenUtil.autowidth(10)
   },
   updownimg: {
-    width: ScreenUtil.autowidth(17), 
-    height: ScreenUtil.autowidth(17)
+    width: ScreenUtil.autowidth(15), 
+    height: ScreenUtil.autowidth(15)
   },
   updowntext: {
-    fontSize: ScreenUtil.setSpText(16),
+    fontSize: ScreenUtil.setSpText(12),
     marginLeft: ScreenUtil.autowidth(5), 
   },
   image: {

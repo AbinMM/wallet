@@ -8,7 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
-const itemHeight = ScreenUtil.autoheight(56)
+const itemHeight = ScreenUtil.autoheight(49)
 
 const Font = {
   Ionicons,
@@ -62,10 +62,10 @@ export default class Item extends Component {
       <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginTop: first?ScreenUtil.autoheight(10):0}]}>
         {icon?(<Icon name={icon} size={iconSize||ScreenUtil.setSpText(20)} style={{width: ScreenUtil.autowidth(22), marginRight:ScreenUtil.autowidth(5), textAlign:"center"}} color={color || UColor.blueDeep} />):null}
         <View style={[styles.listInfo, {borderTopColor: UColor.secdColor,borderTopWidth: !first?0.5:0}]}>
-          {avatar?(<Image source={avatar} style={{width: ScreenUtil.autowidth(17), height: ScreenUtil.autowidth(17), resizeMode: "cover", overflow:"hidden",marginRight:ScreenUtil.autowidth(10),}}/>):null}
-          <View style={{flex: 1}}><Text style={{color: '#080808', fontSize:ScreenUtil.autowidth(16)}}>{name}</Text></View>
+          {avatar?(<Image source={avatar} style={{width: ScreenUtil.autowidth(16), height: ScreenUtil.autowidth(16), resizeMode: "cover", overflow:"hidden",marginRight:ScreenUtil.autowidth(10),}}/>):null}
+          <View style={{flex: 1}}><Text style={{color: '#080808', fontSize:ScreenUtil.autowidth(14)}}>{name}</Text></View>
           <View style={styles.listInfoRight}>
-            {subName?(<Text style={{color:UColor.arrow, fontSize:ScreenUtil.autowidth(16)}}>{subName}</Text>):null}            
+            {subName?(<Text style={{color:UColor.arrow, fontSize:ScreenUtil.autowidth(14)}}>{subName}</Text>):null}            
             {disable?null:(<Font.Ionicons style={{marginLeft: ScreenUtil.autowidth(10)}} name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(20)} color='#999999' />)}
             {!swt?null:( 
             <Switch 

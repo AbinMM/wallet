@@ -19,7 +19,7 @@ export default {
 
                 var news = yield call(store.get, "news_list_"+payload.type);
 
-                const resp = yield call(Request.request,newsList+payload.type+"?page="+payload.page,'get');
+                const resp = yield call(Request.request,'http://192.168.1.21:8088/api' + newsList+payload.type+"?page="+payload.page,'get');
                 if(resp.code=='0'){
                     let dts = new Array();
                     for(let i in resp.data){

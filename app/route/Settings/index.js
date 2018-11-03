@@ -272,14 +272,14 @@ class Setting extends React.Component {
               {this.props.loginUser ?
               <Image source={UImage.logo} style={styles.headimg}/>
               :
-              <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#1A1A1A'}}>登陆</Text>
+              <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#1A1A1A'}}>登陆</Text>
                }
               
             </View>
             <Text style={[styles.headtext,{color: '#1A1A1A'}]}>{(this.props.loginUser) ? this.props.loginUser.nickname : ""}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.signedout,{backgroundColor: this.state.Sign_in ? '#E6E6E6':'#6DA0F8'}]} onPress={this.signIn.bind(this)} >
-            <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#FFFFFF', textAlign: 'center'}}>签到</Text>
+            <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#FFFFFF', textAlign: 'center'}}>签到</Text>
           </TouchableOpacity>
         </View>
         
@@ -353,8 +353,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: ScreenWidth,
     height: ScreenUtil.autoheight(75),
-    paddingVertical: ScreenUtil.autoheight(8),
-    paddingHorizontal: ScreenUtil.autowidth(16),
+    paddingHorizontal: ScreenUtil.autowidth(15),
   },
   headout: {
     flex: 1,
@@ -365,15 +364,15 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
-    width: ScreenUtil.autowidth(60),
-    height: ScreenUtil.autowidth(60),
+    width: ScreenUtil.autowidth(48),
+    height: ScreenUtil.autowidth(48),
   },
   headimg: {
-    width: ScreenUtil.autowidth(40),
-    height: ScreenUtil.autowidth(40),
+    width: ScreenUtil.autowidth(32),
+    height: ScreenUtil.autowidth(32),
   },
   headtext: {
-    fontSize: ScreenUtil.setSpText(15),
+    fontSize: ScreenUtil.setSpText(13),
     paddingTop: ScreenUtil.autoheight(5),
     marginHorizontal: ScreenUtil.autowidth(15),
   },
@@ -381,8 +380,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignSelf: 'center',
     justifyContent: "center",
-    width: ScreenUtil.autowidth(60),
-    height: ScreenUtil.autoheight(30),
+    width: ScreenUtil.autowidth(50),
+    height: ScreenUtil.autoheight(25),
   },
  
   signedimg: {
