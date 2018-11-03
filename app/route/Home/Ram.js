@@ -17,6 +17,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient';
 import BaseComponent from "../../components/BaseComponent";
 import CountDownReact from '../../components/CountDownReact'
+import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
@@ -338,103 +340,70 @@ class Ram extends BaseComponent {
             return;
         }
         this. dismissKeyboardClick();
-        const view =
-            <View style={styles.passoutsource}>
-                <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                    selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
-                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-                    placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-            </View>
-        EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
-            if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-                EasyToast.show('密码长度至少4位,请重输');
-                return;
-            }
-            EasyShowLD.dialogClose();
+
+        AuthModal.show((authInfo) => {
             try {
-                var bytes_privateKey;
-                var plaintext_privateKey;
-                var permission = 'active';
-                try {
-                    var privateKey = this.props.defaultWallet.activePrivate;
-                    bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                    if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
-                        bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
-                        plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                        permission = "owner"; 
-                    }
-                } catch (error) {
-                    EasyToast.show('密码错误');
-                    return;
-                }
                 EasyShowLD.loadingShow();
-                if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                    plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                    if(this.state.isOwn){
-                        this.state.receiver = this.props.defaultWallet.account;
-                    }
-                    Eos.transaction({
-                        actions: [
-                            {
-                                account: "eosio",
-                                name: "buyram", 
-                                authorization: [{
-                                actor: this.props.defaultWallet.account,
-                                permission: permission,
-                                }], 
-                                data: {
-                                    payer: this.props.defaultWallet.account,
-                                    receiver: this.state.receiver,
-                                    quant: formatEosQua(this.state.buyRamAmount + " EOS"),
-                                }
-                            },
-                        ]
-                    }, plaintext_privateKey, (r) => {
-                        EasyShowLD.loadingClose();
-                        if(r.isSuccess){
-                            this.getAccountInfo();
-                            EasyToast.show("购买成功");
-                        }else{
-                            if(r.data){
-                                if(r.data.code){
-                                    var errcode = r.data.code;
-                                    if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{ 
-                                        if(resp.code == 608){ 
-                                            //弹出提示框,可申请免费抵押功能
-                                            const view =
-                                            <View style={styles.passoutsource2}>
-                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                            </View>
-                                            EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                                const { navigate } = this.props.navigation;
-                                                navigate('FreeMortgage', {});
-                                            }, () => { EasyShowLD.dialogClose() });
-                                        }
-                                    }});
+                if(this.state.isOwn){
+                    this.state.receiver = this.props.defaultWallet.account;
+                }
+                Eos.transaction({
+                    actions: [
+                        {
+                            account: "eosio",
+                            name: "buyram", 
+                            authorization: [{
+                            actor: this.props.defaultWallet.account,
+                            permission: authInfo.permission,
+                            }], 
+                            data: {
+                                payer: this.props.defaultWallet.account,
+                                receiver: this.state.receiver,
+                                quant: formatEosQua(this.state.buyRamAmount + " EOS"),
+                            }
+                        },
+                    ]
+                }, authInfo.pk, (r) => {
+                    EasyShowLD.loadingClose();
+                    if(r.isSuccess){
+                        this.getAccountInfo();
+                        EasyToast.show("购买成功");
+                    }else{
+                        if(r.data){
+                            if(r.data.code){
+                                var errcode = r.data.code;
+                                if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
+                                    this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{ 
+                                    if(resp.code == 608){ 
+                                        //弹出提示框,可申请免费抵押功能
+                                        const view =
+                                        <View style={styles.passoutsource2}>
+                                            <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                            <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                        </View>
+                                        EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                                            const { navigate } = this.props.navigation;
+                                            navigate('FreeMortgage', {});
+                                        }, () => { EasyShowLD.dialogClose() });
                                     }
+                                }});
                                 }
-                                if(r.data.msg){
-                                    EasyToast.show(r.data.msg);
-                                }else{
-                                    EasyToast.show("购买失败");
-                                }
+                            }
+                            if(r.data.msg){
+                                EasyToast.show(r.data.msg);
                             }else{
                                 EasyToast.show("购买失败");
                             }
+                        }else{
+                            EasyToast.show("购买失败");
                         }
-                    });
-                } else {
-                    EasyShowLD.loadingClose();
-                    EasyToast.show('密码错误');
-                }
-            } catch (e) {
+                    }
+                });
+            } catch (error) {
                 EasyToast.show('未知异常');
+                EasyShowLD.loadingClose();
             }
-           
-        }, () => { EasyShowLD.dialogClose() });
+        });
     };
 
     // 出售内存
@@ -452,105 +421,70 @@ class Ram extends BaseComponent {
             return ;
         }
         this. dismissKeyboardClick();
-        const view =
-            <View style={styles.passoutsource}>
-                <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                    selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
-                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-                    placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-            </View>
-        EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
-            if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-                EasyToast.show('密码长度至少4位,请重输');
-                return;
-            }
-            EasyShowLD.dialogClose();
+
+        AuthModal.show((authInfo) => {
             try {
-                var bytes_privateKey;
-                var plaintext_privateKey;
-                var permission = 'active';
-
-                try {
-                    var privateKey = this.props.defaultWallet.activePrivate;    
-                    bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                    if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
-                        bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
-                        plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                        permission = "owner"; 
-                    }
-                } catch (error) {
-                    EasyToast.show('密码错误');
-                    return;
-                }
-
                 EasyShowLD.loadingShow();
-                if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                    plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                    Eos.transaction({
-                        actions: [
-                            {
-                                account: "eosio",
-                                name: "sellram", 
-                                authorization: [{
-                                actor: this.props.defaultWallet.account,
-                                permission: permission,
-                                }], 
-                                data: {
-                                    account: this.props.defaultWallet.account,
-                                    bytes: (this.state.buyRamAmount * 1024).toFixed(0),
-                                }
-                            },
-                        ]
-                    }, plaintext_privateKey, (r) => {
-                        EasyShowLD.loadingClose();
-                        if(r.isSuccess){
-                            this.getAccountInfo();
-                            EasyToast.show("出售成功");
-                        }else{
-                            if(r.data){
-                                if(r.data.code){
-                                    var errcode = r.data.code;
-                                    if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},
-                                            callback:(resp)=>{ 
-                                                if(resp.code == 608){ 
-                                                    //弹出提示框,可申请免费抵押功能
-                                                    const view =
-                                                    <View style={styles.passoutsource2}>
-                                                        <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                                        <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                                    </View>
-                                                    EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                                        const { navigate } = this.props.navigation;
-                                                        navigate('FreeMortgage', {});
-                                                    }, () => { EasyShowLD.dialogClose() });
-                                                }
+                Eos.transaction({
+                    actions: [
+                        {
+                            account: "eosio",
+                            name: "sellram", 
+                            authorization: [{
+                            actor: this.props.defaultWallet.account,
+                            permission: authInfo.permission,
+                            }], 
+                            data: {
+                                account: this.props.defaultWallet.account,
+                                bytes: (this.state.buyRamAmount * 1024).toFixed(0),
+                            }
+                        },
+                    ]
+                }, authInfo.pk, (r) => {
+                    EasyShowLD.loadingClose();
+                    if(r.isSuccess){
+                        this.getAccountInfo();
+                        EasyToast.show("出售成功");
+                    }else{
+                        if(r.data){
+                            if(r.data.code){
+                                var errcode = r.data.code;
+                                if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
+                                    this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},
+                                        callback:(resp)=>{ 
+                                            if(resp.code == 608){ 
+                                                //弹出提示框,可申请免费抵押功能
+                                                const view =
+                                                <View style={styles.passoutsource2}>
+                                                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                                </View>
+                                                EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                                                    const { navigate } = this.props.navigation;
+                                                    navigate('FreeMortgage', {});
+                                                }, () => { EasyShowLD.dialogClose() });
                                             }
-                                        });
-                                    }
+                                        }
+                                    });
                                 }
+                            }
 
-                                if(r.data.msg){
-                                    EasyToast.show(r.data.msg);
-                                }else{
-                                    EasyToast.show("出售失败");
-                                }
-
+                            if(r.data.msg){
+                                EasyToast.show(r.data.msg);
                             }else{
                                 EasyToast.show("出售失败");
                             }
-                        }
-                    });
-                } else {
-                    EasyShowLD.loadingClose();
-                    EasyToast.show('密码错误');
-                }
-            } catch (e) {
-                EasyToast.show('未知异常');
-            }
 
-        }, () => { EasyShowLD.dialogClose() });
+                        }else{
+                            EasyToast.show("出售失败");
+                        }
+                    }
+                });
+            } catch (error) {
+                EasyToast.show('未知异常');
+                EasyShowLD.loadingClose();
+            }
+        });
     };
     
     //收回键盘
@@ -577,100 +511,102 @@ class Ram extends BaseComponent {
                 <Header {...this.props} onPressLeft={true} title="内存" 
                 avatar={UImage.delegatebw_record} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)} /> 
 
-            <View style={[styles.inptoutsource,{flex: 1,}]}>
-                 <ScrollView  keyboardShouldPersistTaps="always">
-                    <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-                        <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
-                            <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(1), }}>
-                                <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>内存资源</Text>
-                                </View>
-                                <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
-                                    <View style={{flexDirection: 'row', alignItems: 'center', }}>
-                                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                            <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
-                                            <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.ram_AlreadyUsed}</Text>
-                                        </View>
-                                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                            <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
-                                            <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.ram_available}</Text>
-                                        </View>
+                <View style={[styles.inptoutsource,{flex: 1,}]}>
+                    <ScrollView  keyboardShouldPersistTaps="always">
+                        <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
+                            <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
+                                <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(1), }}>
+                                    <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
+                                        <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>内存资源</Text>
                                     </View>
-                                    <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
-                                        <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.ram_Percentage}/>
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(10), }}>
-                                <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>全网内存</Text>
-                                </View>
-                                <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
-                                    <View style={{flexDirection: 'row', alignItems: 'center', }}>
-                                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                            <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
-                                            <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.total_ram_used}</Text>
+                                    <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
+                                        <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                                <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
+                                                <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.ram_AlreadyUsed}</Text>
+                                            </View>
+                                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                                <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
+                                                <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.ram_available}</Text>
+                                            </View>
                                         </View>
-                                        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                            <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
-                                            <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.total_ram_reserved}</Text>
+                                        <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
+                                            <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.ram_Percentage}/>
                                         </View>
                                     </View>
-                                    <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
-                                        <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.total_ram_used_Percentage}/>
+                                </View>
+                                <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(10), }}>
+                                    <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
+                                        <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>全网内存</Text>
+                                    </View>
+                                    <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
+                                        <View style={{flexDirection: 'row', alignItems: 'center', }}>
+                                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                                <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
+                                                <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.total_ram_used}</Text>
+                                            </View>
+                                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                                <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
+                                                <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.total_ram_reserved}</Text>
+                                            </View>
+                                        </View>
+                                        <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
+                                            <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.total_ram_used_Percentage}/>
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
-                            <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>  
-                                {this.ownOthersButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isBuy, 'isBuy', '购买')}  
-                                {this.ownOthersButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '出售')}  
-                            </View> 
-                            <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor, }]}>
-                                <View style={styles.inptTitleout}>
-                                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.isBuy ? "购买" : "出售" }内存</Text>
-                                    <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>当前价格：{this.state.Currentprice} EOS/kb</Text>
+                                <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>  
+                                    {this.ownOthersButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isBuy, 'isBuy', '购买')}  
+                                    {this.ownOthersButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '出售')}  
+                                </View> 
+                                <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor, }]}>
+                                    <View style={styles.inptTitleout}>
+                                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.isBuy ? "购买" : "出售" }内存</Text>
+                                        <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>当前价格：{this.state.Currentprice} EOS/kb</Text>
+                                    </View>
+                                    <View style={styles.inptout}>
+                                        <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount} returnKeyType="go" 
+                                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
+                                        placeholder={this.state.isBuy ? "请输入EOS数量" : "请输入内存额度kb"} underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
+                                        onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkPrice(buyRamAmount)})} 
+                                        />
+                                    </View>
                                 </View>
-                                <View style={styles.inptout}>
-                                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount} returnKeyType="go" 
-                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
-                                    placeholder={this.state.isBuy ? "请输入EOS数量" : "请输入内存额度kb"} underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
-                                    onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkPrice(buyRamAmount)})} 
-                                    />
+                                {this.state.isBuy&&
+                                <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor}]}>
+                                    <View style={styles.inptTitleout}>
+                                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
+                                    </View>
+                                    <View style={styles.inptout}>
+                                        <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go" 
+                                            selectionColor={UColor.tintColor}  placeholderTextColor={UColor.inputtip} maxLength={12}
+                                            placeholder={this.state.receiver} underlineColorAndroid="transparent" keyboardType="default" 
+                                            onChangeText={(receiver) => this.chkAccount(receiver)} style={[styles.inpt,{color: UColor.arrow}]}
+                                        />
+                                        <Button onPress={() => this.openAddressBook()}>
+                                            <View style={styles.botnout}>
+                                                <Image source={UImage.al} style={styles.botnimg} />
+                                            </View>
+                                        </Button> 
+                                    </View>
+                                </View>}
+                                <View style={styles.basc}>
+                                    <Text style={[styles.basctext,{color: UColor.fontColor}]}>余额：{this.state.balance}EOS</Text>
                                 </View>
-                            </View>
-                            {this.state.isBuy&&
-                            <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor}]}>
-                                <View style={styles.inptTitleout}>
-                                    <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
-                                </View>
-                                <View style={styles.inptout}>
-                                    <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go" 
-                                        selectionColor={UColor.tintColor}  placeholderTextColor={UColor.inputtip} maxLength={12}
-                                        placeholder={this.state.receiver} underlineColorAndroid="transparent" keyboardType="default" 
-                                        onChangeText={(receiver) => this.chkAccount(receiver)} style={[styles.inpt,{color: UColor.arrow}]}
-                                    />
-                                    <Button onPress={() => this.openAddressBook()}>
-                                        <View style={styles.botnout}>
-                                            <Image source={UImage.al} style={styles.botnimg} />
+                
+                                <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
+                                    <Button onPress={this.sellRedeem.bind(this)} >
+                                        <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
+                                            <Text style={[styles.botText,{color: UColor.btnColor}]}>{this.state.isSell ? "出售" : "购买"}</Text>
                                         </View>
                                     </Button> 
                                 </View>
-                            </View>}
-                            <View style={styles.basc}>
-                                <Text style={[styles.basctext,{color: UColor.fontColor}]}>余额：{this.state.balance}EOS</Text>
-                            </View>
-               
-                            <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
-                                <Button onPress={this.sellRedeem.bind(this)} >
-                                    <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
-                                        <Text style={[styles.botText,{color: UColor.btnColor}]}>{this.state.isSell ? "出售" : "购买"}</Text>
-                                    </View>
-                                </Button> 
-                            </View>
-                        </KeyboardAvoidingView>
-                    </TouchableOpacity>
-                </ScrollView>
-            </View>
+                            </KeyboardAvoidingView>
+                        </TouchableOpacity>
+                    </ScrollView>
+                </View>
+
+                <AuthModalView {...this.props} />
             </View>
         )
     }

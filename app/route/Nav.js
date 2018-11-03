@@ -51,10 +51,9 @@ import Settings from './Settings'
 import Activity from './Settings/Activity'
 import AgentInfo from './Settings/AgentInfo'
 import Community from './Settings/Community'
-import Imvote from './Settings/Imvote'
 import Nodevoting from './Settings/Nodevoting'
 import Set from './Settings/Set'
-import undelegated from './Settings/undelegated'
+import undelegatedRefund from './Settings/undelegatedRefund'
 import WithdrawMoney from './Settings/WithdrawMoney'
 
 import Transaction from './Transaction'
@@ -244,8 +243,8 @@ const Nav = StackNavigator(
     Ram: {
       screen: Ram
     },
-    undelegated: {
-      screen: undelegated
+    undelegatedRefund: {
+      screen: undelegatedRefund
     },
     WithdrawMoney: {
       screen: WithdrawMoney
@@ -267,9 +266,6 @@ const Nav = StackNavigator(
     },
     AgentInfo: {
       screen: AgentInfo
-    },
-    Imvote: {
-      screen: Imvote
     },
     Nodevoting: {
       screen: Nodevoting

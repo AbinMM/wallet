@@ -95,7 +95,6 @@ export default {
   goto: require('../img/goto.png'),
   guide: require('../img/guide.png'),
   homecard_bg: require('../img/homecard_bg.png'),
-  imvote:require('../img/imvote.png'),
   inb:require('../img/inb.png'),
   Invitation_vote:require('../img/Invitation_vote.png'),
   link:require('../img/link.png'),

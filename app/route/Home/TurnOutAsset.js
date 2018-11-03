@@ -14,6 +14,8 @@ import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import { EasyShowLD } from '../../components/EasyShow'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
+import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var AES = require("crypto-js/aes");
@@ -219,105 +221,76 @@ class TurnOutAsset extends BaseComponent {
 
     inputPwd = () => {
         this._setModalVisible();
-        const view =
-            <View style={styles.passout}>
-                <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                    selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
-                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-                    placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-            </View>
-            EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
-            if (!this.state.password || this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-                EasyToast.show('密码长度至少4位,请重输');
-                return;
-            }
-
+        AuthModal.show((authInfo) => {
             try {
-                var privateKey = this.props.defaultWallet.activePrivate;
-                var permission = 'active';
-
-                var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
-                    bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
-                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                    permission = "owner"; 
-                }
-                if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                    EasyShowLD.loadingShow();
-                    plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                    Eos.transaction({
-                        actions: [
-                            {
-                                account: this.state.contractAccount,
-                                name: "transfer", 
-                                authorization: [{
-                                    actor: this.props.defaultWallet.account,
-                                    permission: permission,
-                                }], 
-                                data: {
-                                    from: this.props.defaultWallet.account,
-                                    to: this.state.toAccount,
-                                    quantity: formatEosQua(this.state.amount + " " + this.state.name, this.state.precisionNumber),
-                                    memo: this.state.memo,
-                                }
-                            },
-                        ]
-                    }, plaintext_privateKey, (r) => {
-                        EasyShowLD.loadingClose();
-                        if(r && r.isSuccess){
-                            this.addToAddressManage();
-                            this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.props.defaultWallet.account, to: this.state.toAccount, amount: this.state.amount + " " + this.state.name, memo: this.state.memo, data: "push"}});
-                            AnalyticsUtil.onEvent('Turn_out');
-                            EasyToast.show('交易成功');
-                            DeviceEventEmitter.emit('transaction_success');
-                            this.props.navigation.goBack();
-                        }else{
-                            if(r && r.data){
-                                if(r.data.code){
-                                    var errcode = r.data.code;
-                                    if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
-                                        || errcode == 3081001)
-                                    {
-                                      this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
-                                        if(resp.code == 608)
-                                        { 
-                                            //弹出提示框,可申请免费抵押功能
-                                            const view =
-                                            <View style={styles.Explainout}>
-                                                <Text style={[styles.Explain,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                                <Text style={[styles.Explain,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                            </View>
-                                            EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                                
-                                            const { navigate } = this.props.navigation;
-                                            navigate('FreeMortgage', {});
-                                            // EasyShowLD.dialogClose();
-                                            }, () => { EasyShowLD.dialogClose() });
-                                        }
-                                    }});
+                EasyShowLD.loadingShow();
+                Eos.transaction({
+                    actions: [
+                        {
+                            account: this.state.contractAccount,
+                            name: "transfer", 
+                            authorization: [{
+                                actor: this.props.defaultWallet.account,
+                                permission: authInfo.permission,
+                            }], 
+                            data: {
+                                from: this.props.defaultWallet.account,
+                                to: this.state.toAccount,
+                                quantity: formatEosQua(this.state.amount + " " + this.state.name, this.state.precisionNumber),
+                                memo: this.state.memo,
+                            }
+                        },
+                    ]
+                }, authInfo.pk, (r) => {
+                    EasyShowLD.loadingClose();
+                    if(r && r.isSuccess){
+                        this.addToAddressManage();
+                        this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.props.defaultWallet.account, to: this.state.toAccount, amount: this.state.amount + " " + this.state.name, memo: this.state.memo, data: "push"}});
+                        AnalyticsUtil.onEvent('Turn_out');
+                        EasyToast.show('交易成功');
+                        DeviceEventEmitter.emit('transaction_success');
+                        this.props.navigation.goBack();
+                    }else{
+                        if(r && r.data){
+                            if(r.data.code){
+                                var errcode = r.data.code;
+                                if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
+                                    || errcode == 3081001)
+                                {
+                                  this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
+                                    if(resp.code == 608)
+                                    { 
+                                        //弹出提示框,可申请免费抵押功能
+                                        const view =
+                                        <View style={styles.Explainout}>
+                                            <Text style={[styles.Explain,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                                            <Text style={[styles.Explain,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                                        </View>
+                                        EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                                            
+                                        const { navigate } = this.props.navigation;
+                                        navigate('FreeMortgage', {});
+                                        // EasyShowLD.dialogClose();
+                                        }, () => { EasyShowLD.dialogClose() });
                                     }
+                                }});
                                 }
-                                if(r.data.msg){
-                                    EasyToast.show(r.data.msg);
-                                }else{
-                                    EasyToast.show("交易失败");
-                                }
+                            }
+                            if(r.data.msg){
+                                EasyToast.show(r.data.msg);
                             }else{
                                 EasyToast.show("交易失败");
                             }
+                        }else{
+                            EasyToast.show("交易失败");
                         }
-                    });
-                } else {
-                    EasyShowLD.loadingClose();
-                    EasyToast.show('密码错误');
-                }
-            } catch (e) {
+                    }
+                });
+            } catch (error) {
+                EasyToast.show('未知异常');
                 EasyShowLD.loadingClose();
-                EasyToast.show('密码错误');
             }
-            // EasyShowLD.dialogClose();
-        }, () => { EasyShowLD.dialogClose() });
+        });
     }
 
     chkLast(obj) {
@@ -563,6 +536,8 @@ class TurnOutAsset extends BaseComponent {
                     </TouchableOpacity>
                 </Modal>
             </View>
+
+            <AuthModalView {...this.props} />
         </View>
         )
     }

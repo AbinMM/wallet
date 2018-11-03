@@ -11,6 +11,8 @@ import { EasyToast } from '../../components/Toast';
 import {formatEosQua} from '../../utils/FormatUtil';
 import { EasyShowLD } from "../../components/EasyShow"
 import BaseComponent from "../../components/BaseComponent";
+import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 var dismissKeyboard = require('dismissKeyboard');
@@ -69,116 +71,79 @@ class APactivation extends BaseComponent {
 
   createAccount() {
     this._setModalVisible();
-    const view =
-        <View style={styles.passoutsource}>
-            <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
-                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}
-                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-        </View>
-        EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
-        if (!this.state.password || this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-            EasyToast.show('密码长度至少4位,请重输');
-            return;
-        }
+
+    AuthModal.show((authInfo) => {
         try {
-            var bytes_privateKey;
-            var plaintext_privateKey;
-            var permission = 'active';
-
-            try {
-                var privateKey = this.props.defaultWallet.activePrivate;
-                bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
-                    bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
-                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                    permission = "owner"; 
-                }
-            } catch (error) {
+            EasyShowLD.loadingShow();
+            Eos.transaction({
+                actions: [{
+                    account: "eosio",
+                    name: "newaccount",
+                    authorization: [{
+                        actor: this.props.defaultWallet.account,
+                        permission: authInfo.permission
+                    }],
+                    data: {
+                        creator: this.props.defaultWallet.account,
+                        name: this.state.accountName,
+                        owner: this.state.ownerPuk,
+                        active: this.state.activePuk
+                    }
+                },{
+                    account: "eosio",
+                    name: "buyram",
+                    authorization: [{
+                        actor: this.props.defaultWallet.account,
+                        permission: authInfo.permission
+                    }],
+                    data: {
+                        payer: this.props.defaultWallet.account,
+                        receiver: this.state.accountName,
+                        quant: formatEosQua(this.state.ram + " EOS")
+                    }
+                },{
+                    account: "eosio",
+                    name: "delegatebw",
+                    authorization: [{
+                        actor: this.props.defaultWallet.account,
+                        permission: authInfo.permission
+                    }],
+                    data: {
+                        from: this.props.defaultWallet.account,
+                        receiver: this.state.accountName,
+                        stake_net_quantity:formatEosQua(this.state.net + " EOS"),
+                        stake_cpu_quantity:formatEosQua(this.state.cpu + " EOS"),
+                        transfer:1
+                    }
+                }]
+            }, authInfo.pk, (r)=>{
                 EasyShowLD.loadingClose();
-                EasyToast.show('密码错误');
-                return;
-            }
-
-            if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                // EasyShowLD.dialogClose();
-                EasyShowLD.loadingShow();
-                plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                Eos.transaction({
-                    actions: [{
-                        account: "eosio",
-                        name: "newaccount",
-                        authorization: [{
-                            actor: this.props.defaultWallet.account,
-                            permission: permission
-                        }],
-                        data: {
-                            creator: this.props.defaultWallet.account,
-                            name: this.state.accountName,
-                            owner: this.state.ownerPuk,
-                            active: this.state.activePuk
-                        }
-                    },{
-                        account: "eosio",
-                        name: "buyram",
-                        authorization: [{
-                            actor: this.props.defaultWallet.account,
-                            permission: permission
-                        }],
-                        data: {
-                            payer: this.props.defaultWallet.account,
-                            receiver: this.state.accountName,
-                            quant: formatEosQua(this.state.ram + " EOS")
-                        }
-                    },{
-                        account: "eosio",
-                        name: "delegatebw",
-                        authorization: [{
-                            actor: this.props.defaultWallet.account,
-                            permission: permission
-                        }],
-                        data: {
-                            from: this.props.defaultWallet.account,
-                            receiver: this.state.accountName,
-                            stake_net_quantity:formatEosQua(this.state.net + " EOS"),
-                            stake_cpu_quantity:formatEosQua(this.state.cpu + " EOS"),
-                            transfer:1
-                        }
-                    }]
-                }, plaintext_privateKey, (r)=>{
-                    EasyShowLD.loadingClose();
-                    if(r.isSuccess){
-                      //   EasyToast.show("创建账号成功");
-                      EasyShowLD.dialogShow("支付成功", (<View>
-                          <Text style={[styles.Becarefultext,{color: UColor.showy}]}>{this.state.accountName}</Text>
-                          <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>该账号完成支付，请告知账号主人点击激活即可正常使用。</Text>
-                          <View style={styles.linkout}>
-                              <Text style={[styles.linktext,{color: UColor.tintColor}]} onPress={() => this.onShareFriend()}>分享给您的朋友</Text>
-                          </View>
-                      </View>), "知道了", null,  () => { EasyShowLD.dialogClose();this.props.navigation.goBack(); });
-                    }else{
-                        if(r.data){
-                            if(r.data.msg){
-                                EasyToast.show(r.data.msg);
-                            }else{
-                                EasyToast.show("创建账号失败");
-                            }
+                if(r.isSuccess){
+                  //   EasyToast.show("创建账号成功");
+                  EasyShowLD.dialogShow("支付成功", (<View>
+                      <Text style={[styles.Becarefultext,{color: UColor.showy}]}>{this.state.accountName}</Text>
+                      <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>该账号完成支付，请告知账号主人点击激活即可正常使用。</Text>
+                      <View style={styles.linkout}>
+                          <Text style={[styles.linktext,{color: UColor.tintColor}]} onPress={() => this.onShareFriend()}>分享给您的朋友</Text>
+                      </View>
+                  </View>), "知道了", null,  () => { EasyShowLD.dialogClose();this.props.navigation.goBack(); });
+                }else{
+                    if(r.data){
+                        if(r.data.msg){
+                            EasyToast.show(r.data.msg);
                         }else{
                             EasyToast.show("创建账号失败");
                         }
+                    }else{
+                        EasyToast.show("创建账号失败");
                     }
-                  });
-            } else {
-                EasyShowLD.loadingClose();
-                EasyToast.show('密码错误');
-            }
-        } catch (e) {
+                }
+              });
+        } catch (error) {
             EasyShowLD.loadingClose();
-            EasyToast.show('密码错误');
+            EasyToast.show('未知异常');
         }
-        // EasyShowLD.dialogClose();
-    }, () => { EasyShowLD.dialogClose() });
+    });
   }
 
    // 显示/隐藏 modal  
@@ -328,6 +293,8 @@ class APactivation extends BaseComponent {
         </KeyboardAvoidingView>
       </TouchableOpacity>
     </ScrollView>
+
+    <AuthModalView {...this.props} />
   </View>
   }
 }
