@@ -70,7 +70,9 @@ class addressManage extends BaseComponent {
     createAddr = () => { 
         //跳转到 新
         const { navigate } = this.props.navigation;
-        navigate('addressCreate', {  });
+        navigate('addressCreate', {callback:(()=>{
+            this.props.dispatch({ type: 'addressBook/addressInfo'});
+        })});
     };
 
     selectedClick = () => { 

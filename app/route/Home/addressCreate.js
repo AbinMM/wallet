@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux'
-import {Platform,DeviceEventEmitter,StyleSheet,Image,View,Text, TextInput,Dimensions,Modal,TouchableOpacity,KeyboardAvoidingView,ScrollView} from 'react-native';
+import {Platform,DeviceEventEmitter,StyleSheet,Image,View,Text, TextInput,Dimensions,TouchableOpacity,KeyboardAvoidingView,ScrollView} from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
@@ -29,7 +29,7 @@ class addressCreate extends BaseComponent {
         super(props);
         this.state = {
             labelName:'',    //标签名称
-            address:'',      //账户
+            toAccount:'',      //账户
             memo:'', //分组用的备注
         };
     }
@@ -77,13 +77,10 @@ class addressCreate extends BaseComponent {
     }
 
     componentDidMount() {
-        const { dispatch } = this.props;
-        this.props.dispatch({ type: 'addressBook/addressInfo'});
-
         DeviceEventEmitter.addListener('scan_result', (data) => {
             if(data && data.toaccount){
                 if(this.verifyAccount(data.toaccount)){
-                    this.setState({address:data.toaccount,show:true});
+                    this.setState({toAccount:data.toaccount});
                 }else{
                     EasyToast.show('请输入正确的账号');
                 }
@@ -99,17 +96,19 @@ class addressCreate extends BaseComponent {
     }
 
       //扫码
-     _rightTopClick = () =>{
+     scan = () =>{
         const { navigate } = this.props.navigation;
         navigate('BarCode', {isTurnOut:true,});
     }
 
 
     saveAddress = () => { 
-
-        //确认选择
+        this.props.dispatch({ type: 'addressBook/saveAddress', payload: { address: this.state.toAccount, labelName: this.state.labelName,memo: this.state.memo } });
+        this.props.navigation.goBack();  //正常返回上一个页面
+        if(this.props.navigation.state.params.callback){
+            this.props.navigation.state.params.callback();
+        }
     };
-
 
     btnRightSelect() { 
         //取消
@@ -133,29 +132,30 @@ class addressCreate extends BaseComponent {
                                     <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>名字</Text>
                                 </View>
                                 <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
+                                    <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.labelName} returnKeyType="next"
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
+                                        placeholder="请输入联系人名字" underlineColorAndroid="transparent" keyboardType="default"  maxLength={12}
+                                        onChangeText={(labelName) => this.setState({ labelName })}
+                                    />
+                                </View>
+                          
+                                <View style={styles.accountoue} >
+                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(56),color: UColor.fontColor}]}>账户名称</Text>
+                                </View>
+
+                                <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
                                     <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"   
                                         selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}      
-                                        placeholder="请输入联系人名字" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
+                                        placeholder="输入a-z小写字符和1-5数字组合字符" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
                                         onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})} 
                                     />
                                    <View style={styles.scanning}>
-                                        <Button onPress={() => this._rightTopClick()}>                                  
+                                        <Button onPress={() => this.scan()}>                                  
                                             <Image source={UImage.scanning} style={styles.scanningimg} />                                 
                                         </Button>
                                     </View>
                                 </View>
-                          
-                           
-                                <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(56),color: UColor.fontColor}]}>账户名称</Text>
-                                </View>
-                                <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
-                                    <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
-                                        placeholder="输入a-z小写字符和1-5数字组合字符" underlineColorAndroid="transparent" keyboardType="default"  maxLength={12}
-                                        onChangeText={(memo) => this.setState({ memo })}
-                                    />
-                                </View>
+                                
 
                                 <View style={styles.accountoue} >
                                     <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>备注</Text>
@@ -163,7 +163,7 @@ class addressCreate extends BaseComponent {
                                 <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
                                     <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
                                         selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
-                                        placeholder="备注(Memo)" underlineColorAndroid="transparent" keyboardType="default"  
+                                        placeholder="备注(Memo)" underlineColorAndroid="transparent" keyboardType="default"  maxLength={20}
                                         onChangeText={(memo) => this.setState({ memo })}
                                     />
                                 </View>
