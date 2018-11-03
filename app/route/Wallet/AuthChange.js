@@ -11,6 +11,8 @@ import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from "../../components/EasyShow"
 import { EasyToast } from '../../components/Toast';
 import BaseComponent from "../../components/BaseComponent";
+import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');

@@ -14,6 +14,8 @@ import { EasyShowLD } from "../../components/EasyShow"
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 import { SegmentedControls } from 'react-native-radio-buttons'
+import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+
 var dismissKeyboard = require('dismissKeyboard');
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -72,6 +74,23 @@ class Nodevoting extends BaseComponent {
         }
     }
     
+    freeDelegatePrompt(){
+        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
+            if(resp.code == 608){ 
+                //弹出提示框,可申请免费抵押功能
+                const view =
+                <View style={styles.passoutsource2}>
+                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                </View>
+                EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                    const { navigate } = this.props.navigation;
+                    navigate('FreeMortgage', {});
+                }, () => { EasyShowLD.dialogClose() });
+            }
+        }});
+    }
+
     //投票
     addvote = (rowData) => { // 选中用户
         if(!this.props.defaultWallet){
@@ -90,82 +109,48 @@ class Nodevoting extends BaseComponent {
             return;
         }
         selectArr.sort();
-        const view =
-        <View style={styles.passoutsource}>
-            <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
-                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-            <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>提示：为确保您的投票生效成功，EOS将进行锁仓三天，期间转账或撤票都可能导致投票失败。</Text>  
-        </View>
-        EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
-            if (!this.state.password || this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-                EasyToast.show('密码长度至少4位,请重输');
-                return;
-            }
-            var privateKey = this.props.defaultWallet.activePrivate;
+
+        AuthModal.show((authInfo) => {
             try {
-                var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                    plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                    EasyShowLD.loadingShow();
-                    //投票
-                    Eos.transaction({
-                        actions:[
-                            {
-                                account: 'eosio',
-                                name: 'voteproducer',
-                                authorization: [{
-                                    actor: this.props.defaultWallet.account,
-                                    permission: 'active'
-                                }],
-                                data:{
-                                    voter: this.props.defaultWallet.account,
-                                    proxy: '',
-                                    producers: selectArr //["producer111j", "producer111p"]
-                                }
+                EasyShowLD.loadingShow();
+                //投票
+                Eos.transaction({
+                    actions:[
+                        {
+                            account: 'eosio',
+                            name: 'voteproducer',
+                            authorization: [{
+                                actor: this.props.defaultWallet.account,
+                                permission: authInfo.permission
+                            }],
+                            data:{
+                                voter: this.props.defaultWallet.account,
+                                proxy: '',
+                                producers: selectArr //["producer111j", "producer111p"]
                             }
-                        ]
-                    }, plaintext_privateKey, (r) => {
-                        EasyShowLD.loadingClose();
-                        if(r.data && r.data.transaction_id){
-                            AnalyticsUtil.onEvent('vote');
-                            EasyToast.show("投票成功");
-                            this.onRefreshing();
-                        }else{
-                            if(r.data.code){
-                                var errcode = r.data.code;
-                                if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                    this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
-                                        if(resp.code == 608){ 
-                                            //弹出提示框,可申请免费抵押功能
-                                            const view =
-                                            <View style={styles.passoutsource2}>
-                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                            </View>
-                                            EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                                const { navigate } = this.props.navigation;
-                                                navigate('FreeMortgage', {});
-                                            }, () => { EasyShowLD.dialogClose() });
-                                        }
-                                    }});
-                                }
-                            }
-                            var errmsg = "投票失败: "+ r.data.msg;
-                            EasyToast.show(errmsg);
                         }
-                    }); 
-                } else {
+                    ]
+                }, authInfo.pk, (r) => {
                     EasyShowLD.loadingClose();
-                    EasyToast.show('密码错误');
-                }
-            } catch (e) {
-                EasyShowLD.loadingClose();
-                EasyToast.show('密码错误');
+                    if(r.data && r.data.transaction_id){
+                        AnalyticsUtil.onEvent('vote');
+                        EasyToast.show("投票成功");
+                        this.onRefreshing();
+                    }else{
+                        if(r.data.code){
+                            var errcode = r.data.code;
+                            if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
+                                this.freeDelegatePrompt();
+                            }
+                        }
+                        var errmsg = "投票失败: "+ r.data.msg;
+                        EasyToast.show(errmsg);
+                    }
+                }); 
+            } catch (error) {
+                
             }
-        }, () => { EasyShowLD.dialogClose() });
+        });
     };
 
     //撤票
@@ -189,25 +174,10 @@ class Nodevoting extends BaseComponent {
             }
         });
         selectArr.sort();
-            const view =
-            <View style={styles.passoutsource}>
-                <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                    selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
-                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-                    placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-            </View>
-            EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
-            if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-                EasyToast.show('密码长度至少4位,请重输');
-                return;
-            }
-            var privateKey = this.props.defaultWallet.activePrivate;
+
+        AuthModal.show((authInfo) => {
             try {
-                var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                    plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                    EasyShowLD.loadingShow();
+                EasyShowLD.loadingShow();
                     //撤票
                     Eos.transaction({
                         actions:[
@@ -216,7 +186,7 @@ class Nodevoting extends BaseComponent {
                                 name: 'voteproducer',
                                 authorization: [{
                                     actor: this.props.defaultWallet.account,
-                                    permission: 'active'
+                                    permission: authInfo.permission
                                 }],
                                 data:{
                                     voter: this.props.defaultWallet.account,
@@ -225,7 +195,7 @@ class Nodevoting extends BaseComponent {
                                 }
                             }
                         ]
-                    }, plaintext_privateKey, (r) => {
+                    }, authInfo.pk, (r) => {
                         EasyShowLD.loadingClose();
                         if(r.data && r.data.transaction_id){
                             this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: this.props.defaultWallet.account} });
@@ -235,36 +205,18 @@ class Nodevoting extends BaseComponent {
                             if(r.data.code){
                                 var errcode = r.data.code;
                                 if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                    this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
-                                        if(resp.code == 608){ 
-                                            //弹出提示框,可申请免费抵押功能
-                                            const view =
-                                            <View style={styles.passoutsource2}>
-                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                            </View>
-                                            EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                                const { navigate } = this.props.navigation;
-                                                navigate('FreeMortgage', {});
-                                                // EasyShowLD.dialogClose();
-                                            }, () => { EasyShowLD.dialogClose() });
-                                        }
-                                    }});
+                                    this.freeDelegatePrompt();
                                 }
                             }
                             var errmsg = "撤票失败: "+ r.data.msg;
                             EasyToast.show(errmsg);
                         }
                     }); 
-                } else {
-                    EasyShowLD.loadingClose();
-                    EasyToast.show('密码错误');
-                }
-            } catch (e) {
+            } catch (error) {
                 EasyShowLD.loadingClose();
-                EasyToast.show('密码错误');
+                EasyToast.show('未知异常');
             }
-        }, () => { EasyShowLD.dialogClose() });
+        });
     };
 
 
@@ -506,6 +458,9 @@ class Nodevoting extends BaseComponent {
                         </View>
                     </Button>
                 </View>         
+
+                <AuthModalView {...this.props} />
+
             </View>
         );
     }

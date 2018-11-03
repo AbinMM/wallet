@@ -17,6 +17,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient';
 import BaseComponent from "../../components/BaseComponent";
 import CountDownReact from '../../components/CountDownReact'
+import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
@@ -424,6 +426,47 @@ class Resources extends BaseComponent {
         }
     }
 
+    // 免费抵押提示
+    freeDelegatePrompt(){
+        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{ 
+            if(resp.code == 608){ 
+                //弹出提示框,可申请免费抵押功能
+                const view =
+                <View style={styles.passoutsource2}>
+                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                </View>
+                EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                    const { navigate } = this.props.navigation;
+                    navigate('FreeMortgage', {});
+                }, () => { EasyShowLD.dialogClose() });
+            }
+        }});
+    }
+
+    eosResultPro(r){
+        if(r.isSuccess){
+            this.getAccountInfo();
+            EasyToast.show("交易成功");
+        }else{
+            if(r.data){
+                if(r.data.code){
+                    var errcode = r.data.code;
+                    if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
+                        this.freeDelegatePrompt();
+                    }
+                }
+                if(r.data.msg){
+                    EasyToast.show(r.data.msg);
+                }else{
+                    EasyToast.show("交易失败");
+                }
+            }else{
+                EasyToast.show("交易失败");
+            }
+        }
+    }
+
     // 购买内存
     buyram = () => { 
         if(!this.props.defaultWallet){
@@ -443,103 +486,35 @@ class Resources extends BaseComponent {
             return;
         }
         this. dismissKeyboardClick();
-        const view =
-            <View style={styles.passoutsource}>
-                <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                    selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
-                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-                    placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-            </View>
-        EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
-            if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-                EasyToast.show('密码长度至少4位,请重输');
-                return;
-            }
-            EasyShowLD.dialogClose();
+
+        AuthModal.show((authInfo) => {
             try {
-                var bytes_privateKey;
-                var plaintext_privateKey;
-                var permission = 'active';
-                try {
-                    var privateKey = this.props.defaultWallet.activePrivate;
-                    bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                    if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
-                        bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
-                        plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                        permission = "owner"; 
-                    }
-                } catch (error) {
-                    EasyToast.show('密码错误');
-                    return;
-                }
                 EasyShowLD.loadingShow();
-                if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                    plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                    if(this.state.isOwn){
-                        this.state.receiver = this.props.defaultWallet.account;
-                    }
-                    Eos.transaction({
-                        actions: [
-                            {
-                                account: "eosio",
-                                name: "buyram", 
-                                authorization: [{
-                                actor: this.props.defaultWallet.account,
-                                permission: permission,
-                                }], 
-                                data: {
-                                    payer: this.props.defaultWallet.account,
-                                    receiver: this.state.receiver,
-                                    quant: formatEosQua(this.state.buyRamAmount + " EOS"),
-                                }
-                            },
-                        ]
-                    }, plaintext_privateKey, (r) => {
-                        EasyShowLD.loadingClose();
-                        if(r.isSuccess){
-                            this.getAccountInfo();
-                            EasyToast.show("购买成功");
-                        }else{
-                            if(r.data){
-                                if(r.data.code){
-                                    var errcode = r.data.code;
-                                    if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{ 
-                                        if(resp.code == 608){ 
-                                            //弹出提示框,可申请免费抵押功能
-                                            const view =
-                                            <View style={styles.passoutsource2}>
-                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                                <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                            </View>
-                                            EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                                const { navigate } = this.props.navigation;
-                                                navigate('FreeMortgage', {});
-                                            }, () => { EasyShowLD.dialogClose() });
-                                        }
-                                    }});
-                                    }
-                                }
-                                if(r.data.msg){
-                                    EasyToast.show(r.data.msg);
-                                }else{
-                                    EasyToast.show("购买失败");
-                                }
-                            }else{
-                                EasyToast.show("购买失败");
+                Eos.transaction({
+                    actions: [
+                        {
+                            account: "eosio",
+                            name: "buyram", 
+                            authorization: [{
+                            actor: this.props.defaultWallet.account,
+                            permission: authInfo.permission,
+                            }], 
+                            data: {
+                                payer: this.props.defaultWallet.account,
+                                receiver: this.state.receiver,
+                                quant: formatEosQua(this.state.buyRamAmount + " EOS"),
                             }
-                        }
-                    });
-                } else {
+                        },
+                    ]
+                }, authInfo.pk, (r) => {
                     EasyShowLD.loadingClose();
-                    EasyToast.show('密码错误');
-                }
-            } catch (e) {
+                    this.eosResultPro(r);
+                });
+            } catch (error) {
+                EasyShowLD.loadingClose();
                 EasyToast.show('未知异常');
             }
-           
-        }, () => { EasyShowLD.dialogClose() });
+        });
     };
 
     // 出售内存
@@ -557,105 +532,34 @@ class Resources extends BaseComponent {
             return ;
         }
         this. dismissKeyboardClick();
-        const view =
-            <View style={styles.passoutsource}>
-                <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                    selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
-                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-                    placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-            </View>
-        EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
-            if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-                EasyToast.show('密码长度至少4位,请重输');
-                return;
-            }
-            EasyShowLD.dialogClose();
+        AuthModal.show((authInfo) => {
             try {
-                var bytes_privateKey;
-                var plaintext_privateKey;
-                var permission = 'active';
-
-                try {
-                    var privateKey = this.props.defaultWallet.activePrivate;    
-                    bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                    if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
-                        bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
-                        plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                        permission = "owner"; 
-                    }
-                } catch (error) {
-                    EasyToast.show('密码错误');
-                    return;
-                }
-
                 EasyShowLD.loadingShow();
-                if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                    plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                    Eos.transaction({
-                        actions: [
-                            {
-                                account: "eosio",
-                                name: "sellram", 
-                                authorization: [{
-                                actor: this.props.defaultWallet.account,
-                                permission: permission,
-                                }], 
-                                data: {
-                                    account: this.props.defaultWallet.account,
-                                    bytes: (this.state.buyRamAmount * 1024).toFixed(0),
-                                }
-                            },
-                        ]
-                    }, plaintext_privateKey, (r) => {
-                        EasyShowLD.loadingClose();
-                        if(r.isSuccess){
-                            this.getAccountInfo();
-                            EasyToast.show("出售成功");
-                        }else{
-                            if(r.data){
-                                if(r.data.code){
-                                    var errcode = r.data.code;
-                                    if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},
-                                            callback:(resp)=>{ 
-                                                if(resp.code == 608){ 
-                                                    //弹出提示框,可申请免费抵押功能
-                                                    const view =
-                                                    <View style={styles.passoutsource2}>
-                                                        <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                                        <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                                    </View>
-                                                    EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                                        const { navigate } = this.props.navigation;
-                                                        navigate('FreeMortgage', {});
-                                                    }, () => { EasyShowLD.dialogClose() });
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-
-                                if(r.data.msg){
-                                    EasyToast.show(r.data.msg);
-                                }else{
-                                    EasyToast.show("出售失败");
-                                }
-
-                            }else{
-                                EasyToast.show("出售失败");
+                Eos.transaction({
+                    actions: [
+                        {
+                            account: "eosio",
+                            name: "sellram", 
+                            authorization: [{
+                            actor: this.props.defaultWallet.account,
+                            permission: authInfo.permission,
+                            }], 
+                            data: {
+                                account: this.props.defaultWallet.account,
+                                bytes: (this.state.buyRamAmount * 1024).toFixed(0),
                             }
-                        }
-                    });
-                } else {
+                        },
+                    ]
+                }, authInfo.pk, (r) => {
                     EasyShowLD.loadingClose();
-                    EasyToast.show('密码错误');
-                }
-            } catch (e) {
+                    this.eosResultPro(r);
+                });
+            } catch (error) {
+                EasyShowLD.loadingClose();
                 EasyToast.show('未知异常');
             }
-
-        }, () => { EasyShowLD.dialogClose() });
+        });
+   
     };
 
     // 计算网络抵押
@@ -681,113 +585,40 @@ class Resources extends BaseComponent {
             return;
         }
         this. dismissKeyboardClick();
-        const view =
-        <View style={styles.passoutsource}>
-            <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-            selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
-            style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-            placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-            <View style={{flexDirection: 'row',}}>
-                <Text style={[styles.inptpasstext,{color: UColor.lightgray}]}>CPU抵押 {this.state.delegateb == "" ? 0 : this.state.delegateb} EOS</Text>
-                <Text style={[styles.inptpasstext,{color: UColor.lightgray}]}>NET抵押 {this.state.undelegateb == "" ? 0 : this.state.undelegateb} EOS</Text>
-            </View>
-        </View>
-        EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
-            if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-                EasyToast.show('密码长度至少4位,请重输');
-                return;
-            }
-            EasyShowLD.dialogClose();
+
+        AuthModal.show((authInfo) => {
             try {
-                var bytes_privateKey;
-                var plaintext_privateKey;
-                var permission = 'active';
-
-                try {
-                    var privateKey = this.props.defaultWallet.activePrivate;
-                    bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                    if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
-                        bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
-                        plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                        permission = "owner"; 
-                    }
-                } catch (error) {
-                    EasyToast.show('密码错误');
-                    return;
-                }
                 EasyShowLD.loadingShow();
-                if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                    plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                    if(this.state.isOthers && this.state.isTransfer){
-                        this.state.LeaseTransfer = 1;
-                    }
-                    Eos.transaction({
-                        actions: [
-                            {
-                                account: "eosio",
-                                name: "delegatebw", 
-                                authorization: [{
-                                actor: this.props.defaultWallet.account,
-                                permission: permission,
-                                }], 
-                                data: {
-                                    from: this.props.defaultWallet.account,
-                                    receiver: this.state.receiver,
-                                    stake_net_quantity: formatEosQua(this.state.undelegateb == "" ? "0 EOS" : this.state.undelegateb + " EOS"),
-                                    stake_cpu_quantity: formatEosQua(this.state.delegateb == "" ? "0 EOS" : this.state.delegateb + " EOS"),
-                                    transfer: this.state.LeaseTransfer,
-                                }
-                            },
-                        ]
-                    }, plaintext_privateKey, (r) => {
-                        EasyShowLD.loadingClose();
-                        if(r.isSuccess){
-                            this.getAccountInfo();
-                            EasyToast.show("抵押成功");
-                        }else{
-                            if(r.data){
-                                if(r.data.code){
-                                    var errcode = r.data.code;
-                                    if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},
-                                            callback:(resp)=>{ 
-                                                if(resp.code == 608){ 
-                                                    //弹出提示框,可申请免费抵押功能
-                                                    const view =
-                                                    <View style={styles.passoutsource2}>
-                                                        <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                                        <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                                    </View>
-                                                    EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                                        const { navigate } = this.props.navigation;
-                                                        navigate('FreeMortgage', {});
-                                                    }, () => { EasyShowLD.dialogClose() });
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-
-                                if(r.data.msg){
-                                    EasyToast.show(r.data.msg);
-                                }else{
-                                    EasyToast.show("抵押失败");
-                                }
-
-                            }else{
-                                EasyToast.show("抵押失败");
-                            }
-                        }
-                    });
-                } else {
-                    EasyShowLD.loadingClose();
-                    EasyToast.show('密码错误');
+                if(this.state.isOthers && this.state.isTransfer){
+                    this.state.LeaseTransfer = 1;
                 }
-            } catch (e) {
+                Eos.transaction({
+                    actions: [
+                        {
+                            account: "eosio",
+                            name: "delegatebw", 
+                            authorization: [{
+                            actor: this.props.defaultWallet.account,
+                            permission: authInfo.permission,
+                            }], 
+                            data: {
+                                from: this.props.defaultWallet.account,
+                                receiver: this.state.receiver,
+                                stake_net_quantity: formatEosQua(this.state.undelegateb == "" ? "0 EOS" : this.state.undelegateb + " EOS"),
+                                stake_cpu_quantity: formatEosQua(this.state.delegateb == "" ? "0 EOS" : this.state.delegateb + " EOS"),
+                                transfer: this.state.LeaseTransfer,
+                            }
+                        },
+                    ]
+                }, authInfo.pk, (r) => {
+                    EasyShowLD.loadingClose();
+                    this.eosResultPro(r);
+                });
+            } catch (error) {
+                EasyShowLD.loadingClose();
                 EasyToast.show('未知异常');
             }
-        }, () => { EasyShowLD.dialogClose() }); 
+        });
     };
 
     //计算网络赎回
@@ -813,114 +644,42 @@ class Resources extends BaseComponent {
             return;
         }
         this. dismissKeyboardClick();
-        const view =
-            <View style={styles.passoutsource}>
-                <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go"  
-                    selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
-                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-                    placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-                <View style={{flexDirection: 'row',}}>
-                  <Text style={[styles.inptpasstext,{color: UColor.lightgray}]}>CPU赎回 {this.state.delegateb == "" ? 0 : this.state.delegateb} EOS</Text>
-                  <Text style={[styles.inptpasstext,{color: UColor.lightgray}]}>NET赎回 {this.state.undelegateb == "" ? 0 : this.state.undelegateb} EOS</Text>
-                </View>
-            </View>
-        EasyShowLD.dialogShow("请输入密码", view, "确认", "取消", () => {
-            if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-                EasyToast.show('密码长度至少4位,请重输');
-                return;
-            }
-            EasyShowLD.dialogClose();
+
+        AuthModal.show((authInfo) => {
             try {
-                var bytes_privateKey;
-                var plaintext_privateKey;
-                var permission = 'active';
-
-                try {
-                    var privateKey = this.props.defaultWallet.activePrivate;
-                    bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.defaultWallet.salt);
-                    plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                    if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
-                        bytes_privateKey = CryptoJS.AES.decrypt(this.props.defaultWallet.ownerPrivate, this.state.password + this.props.defaultWallet.salt);
-                        plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-                        permission = "owner"; 
-                    }
-                } catch (error) {
-                    EasyToast.show('密码错误');
-                    return;
-                }
-
                 EasyShowLD.loadingShow();
-                if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                    plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                    Eos.transaction({
-                        actions: [
-                            {
-                                account: "eosio",
-                                name: "undelegatebw", 
-                                authorization: [{
-                                actor: this.props.defaultWallet.account,
-                                permission: permission,
-                                }], 
-                                data: {
-                                    from: this.props.defaultWallet.account,
-                                    receiver: this.state.receiver,
-                                    unstake_net_quantity: formatEosQua(this.state.undelegateb == "" ? "0 EOS" : this.state.undelegateb + " EOS"),
-                                    unstake_cpu_quantity: formatEosQua(this.state.delegateb == "" ? "0 EOS" : this.state.delegateb + " EOS"),
-                                }
-                            },
-                        ]
-                    }, plaintext_privateKey, (r) => {
-                        EasyShowLD.loadingClose();
-                        if(r.isSuccess){
-                            this.getAccountInfo();
-                            EasyToast.show("赎回成功");
-                        }else{    
-                            if(r.data){
-                                if(r.data.code){
-                                    var errcode = r.data.code;
-                                    if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001) {
-                                        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},
-                                            callback:(resp)=>{ 
-                                                if(resp.code == 608){ 
-                                                    //弹出提示框,可申请免费抵押功能
-                                                    const view =
-                                                    <View style={styles.passoutsource2}>
-                                                        <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                                        <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                                    </View>
-                                                    EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                                        const { navigate } = this.props.navigation;
-                                                        navigate('FreeMortgage', {});
-                                                    }, () => { EasyShowLD.dialogClose() });
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                                if(r.data.msg){
-                                    EasyToast.show(r.data.msg);
-                                }else{
-                                    EasyToast.show("赎回失败");
-                                }
-                            }else{
-                                EasyToast.show("赎回失败");
+                Eos.transaction({
+                    actions: [
+                        {
+                            account: "eosio",
+                            name: "undelegatebw", 
+                            authorization: [{
+                            actor: this.props.defaultWallet.account,
+                            permission: authInfo.permission,
+                            }], 
+                            data: {
+                                from: this.props.defaultWallet.account,
+                                receiver: this.state.receiver,
+                                unstake_net_quantity: formatEosQua(this.state.undelegateb == "" ? "0 EOS" : this.state.undelegateb + " EOS"),
+                                unstake_cpu_quantity: formatEosQua(this.state.delegateb == "" ? "0 EOS" : this.state.delegateb + " EOS"),
                             }
-                        }
-                    });
-                } else {
+                        },
+                    ]
+                }, authInfo.pk, (r) => {
                     EasyShowLD.loadingClose();
-                    EasyToast.show('密码错误');
-                }
-            } catch (e) {
+                    this.eosResultPro(r);
+                });
+            } catch (error) {
+                EasyShowLD.loadingClose();
                 EasyToast.show('未知异常');
             }
-        }, () => { EasyShowLD.dialogClose() });
+        });
     };
   
     //赎回遇到问题
     redemption = () => { 
         const { navigate } = this.props.navigation;
-        navigate('undelegated', {});
+        navigate('undelegatedRefund', {});
     }
     
     //收回键盘
@@ -1186,6 +945,9 @@ class Resources extends BaseComponent {
                     onIndexChange={this._handleIndexChange}
                     initialLayout={{ height: 0, width: ScreenWidth }}
                 />
+                
+                <AuthModalView {...this.props} />
+
             </View>
         )
     }
