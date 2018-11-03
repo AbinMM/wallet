@@ -244,8 +244,8 @@ class AssetInfo extends BaseComponent {
                 <Header {...this.props} onPressLeft={true} title={c.asset.name} avatar={UImage.pool_explain} onPressRight={this._rightTopClick.bind(this)} imgWidth={ScreenUtil.autowidth(21)} imgHeight={ScreenUtil.autowidth(21)}/>  
                 <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
                     <ImageBackground style={[styles.bgtopout,ScreenUtil.isIphoneX()?{minHeight:(ScreenWidth-ScreenUtil.autowidth(60))*0.3974}:{height:(ScreenWidth-ScreenUtil.autowidth(60))*0.3974}]} source={UImage.home_bg} resizeMode="stretch">
-                        <Text style={[styles.headbalance,{color: UColor.fontColor}]}>{this.state.balance==""? "0.0000" :this.state.balance.replace(c.asset.name, "")} {c.asset.name}</Text>
-                        <Text style={[styles.headmarket,{color: UColor.lightgray}]}>≈ {(this.state.balance == null || c.asset.value == null) ? "0.00" : (this.state.balance.replace(c.asset.name, "") * c.asset.value).toFixed(2)} ￥</Text>
+                        <Text style={[styles.headbalance,{color: UColor.fontColor}]}>{this.state.balance==""? "0.0000" :this.state.balance.replace(c.asset.name, "")} </Text>
+                        <Text style={[styles.headmarket,{color: UColor.lightgray}]}>≈ ￥ {(this.state.balance == null || c.asset.value == null) ? "0.00" : (this.state.balance.replace(c.asset.name, "") * c.asset.value).toFixed(2)}</Text>
                     </ImageBackground>
                 </View>
                 <View style={styles.Subcolumn}>
@@ -295,16 +295,16 @@ class AssetInfo extends BaseComponent {
                  /> 
                 </View>
                 <View style={[styles.footer,{backgroundColor: UColor.secdColor}]}>
-                    <Button onPress={this.turnInAsset.bind(this, c)} style={{ flex: 1 }}>
+                    <Button onPress={this.turnOutAsset.bind(this, c)} style={{ flex: 1 }}>
                         <View style={[styles.shiftshiftturnout,{backgroundColor: UColor.mainColor,marginRight: 0.5,}]}>
                             <Image source={UImage.shift_to} style={styles.shiftimg} />
-                            <Text style={[styles.shifttoturnout,{color: UColor.tintColor}]}>转入</Text>
+                            <Text style={[styles.shifttoturnout,{color: UColor.tintColor}]}>转账</Text>
                         </View>
                     </Button>
-                    <Button onPress={this.turnOutAsset.bind(this, c)} style={{ flex: 1 }}>
+                    <Button onPress={this.turnInAsset.bind(this, c)} style={{ flex: 1 }}>
                         <View style={[styles.shiftshiftturnout,{backgroundColor: UColor.mainColor,marginLeft: 0.5}]}>
                             <Image source={UImage.turn_out} style={styles.turnimg} />
-                            <Text style={[styles.shifttoturnout,{color: UColor.tintColor}]}>转出</Text>
+                            <Text style={[styles.shifttoturnout,{color: UColor.tintColor}]}>收款</Text>
                         </View>
                     </Button>
                 </View>
