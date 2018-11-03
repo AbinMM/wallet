@@ -6,6 +6,7 @@ import Security from '../../utils/Security';
 import FingerprintScanner from 'react-native-fingerprint-scanner';
 import RadioButton from '../RadioButton';
 import { EasyToast } from '../Toast';
+import { connect } from 'react-redux';
 
 export class AuthModal {
 
@@ -18,14 +19,15 @@ export class AuthModal {
     delete this.map["AuthModal"];
   }
 
-  static show(data,callback) {
-    this.map["AuthModal"].show(data,callback);
+  static show(account,callback) {
+    this.map["AuthModal"].show(account,callback);
   }
 
 }
 
 AuthModal.map = {};
 
+@connect(({wallet}) => ({}))
 export class AuthModalView extends React.Component {
 
     state = {
@@ -42,22 +44,26 @@ export class AuthModalView extends React.Component {
       AuthModal.bind(this);
     }
 
-    show = (callback) =>{
+    show = (account,callback) =>{
+      if(!account){
+        EasyToast.show("参数错误");
+        return;
+      }
       if(this.isShow)return;
       this.isShow = true;
       this.AuthModalCallback = callback;
       //如果需要支持返回关闭，请添加这句，并且实现dimss方法
       window.currentDialog = this;
       //如果本地有密码，并且有指纹，则显示指纹验证
-      if(Security.hasPayPass() && Security.hasTouchID){
+      if(Security.hasPayPass(account) && Security.hasTouchID){
         this.setState({action:"finger",modalVisible:true});
         FingerprintScanner.authenticate({onAttempt:this.handleAuthenticationAttempted}).then(() => {
-          this.doAuth(Security.getPayPass());
+          this.doAuth(Security.getPayPass(account));
         });
       }else{
         this.setState({action:"password",modalVisible:true});
       }
-      this.setState({hasPayPass:Security.hasPayPass(),hasTouchID:Security.hasTouchID});
+      this.setState({account,hasPayPass:Security.hasPayPass(account),hasTouchID:Security.hasTouchID});
       Animated.parallel([
         Animated.timing(this.state.mask,{toValue:0.6,duration:500}),
         Animated.timing(this.state.alert,{toValue:1,duration:200})
@@ -73,7 +79,7 @@ export class AuthModalView extends React.Component {
           Animated.timing(this.state.mask,{toValue:0,duration:500}),
           Animated.timing(this.state.alert,{toValue:0,duration:200})
       ]).start(() => {
-          this.setState({modalVisible:false,action:"password",password:"",checkTouch:false});
+          this.setState({data:null,modalVisible:false,action:"password",password:"",checkTouch:false});
           this.isShow = false;
       });
     }
@@ -96,33 +102,39 @@ export class AuthModalView extends React.Component {
 
     //验证密码
     doAuth = (password) =>{
-      try{
-        var privateKey = this.props.defaultWallet.activePrivate;
-        var permission = 'active';
-        var plaintext_privateKey = Security.decrypt(privateKey,password+this.props.defaultWallet.salt);
-        if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
-          plaintext_privateKey =Security.decrypt(this.props.defaultWallet.ownerPrivate, password+ this.props.defaultWallet.salt);
-          permission = "owner";
-        }
-        if (plaintext_privateKey.indexOf('eostoken') ===0 ) {
-          plaintext_privateKey = plaintext_privateKey.substr(8);
-          if(this.state.checkTouch){
-            this.setState({action:"setFinger"});
-            FingerprintScanner.authenticate({onAttempt:this.handleAuthenticationAttempted}).then(() => {
-              Security.savePayPass(password);
-              this.AuthModalCallback && this.AuthModalCallback({pk:plaintext_privateKey,permission});
-              this.dimss();
-            });
-          }else{
-            this.AuthModalCallback && this.AuthModalCallback({pk:plaintext_privateKey,permission});
-            this.dimss();
+      this.props.dispatch({ type: 'wallet/getWalletByAccount', payload: { account:this.state.account}, callback: (wallet) => {
+        if(wallet){
+          try{
+            var privateKey = wallet.activePrivate;
+            var permission = 'active';
+            var plaintext_privateKey = Security.decrypt(privateKey,password+wallet.salt);
+            if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
+              plaintext_privateKey =Security.decrypt(wallet.ownerPrivate, password+ wallet.salt);
+              permission = "owner";
+            }
+            if (plaintext_privateKey.indexOf('eostoken') ===0 ) {
+              plaintext_privateKey = plaintext_privateKey.substr(8);
+              if(this.state.checkTouch){
+                this.setState({action:"setFinger"});
+                FingerprintScanner.authenticate({onAttempt:this.handleAuthenticationAttempted}).then(() => {
+                  Security.savePayPass(this.state.account,password);
+                  this.AuthModalCallback && this.AuthModalCallback({pk:plaintext_privateKey,permission});
+                  this.dimss();
+                });
+              }else{
+                this.AuthModalCallback && this.AuthModalCallback({pk:plaintext_privateKey,permission});
+                this.dimss();
+              }
+            }else{
+              EasyToast.show("密码错误，请重新输入");
+            }
+          }catch(e){
+            EasyToast.show("密码错误，请重新输入");
           }
         }else{
-          EasyToast.show("密码错误，请重新输入");
+          EasyToast.show("账户异常");
         }
-      }catch(e){
-        EasyToast.show("密码错误，请重新输入");
-      }
+      }});
     }
 
     //指纹错误

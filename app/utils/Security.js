@@ -2,8 +2,8 @@ import FingerprintScanner from 'react-native-fingerprint-scanner';
 var CryptoJS = require("crypto-js");
 const appkey="eostoken";
 const Security = {
-  payPass:null,
-  paySalt:null,
+  payPass:{},
+  paySalt:{},
   hasTouchID:false,
   chechTouchId:function(){
     FingerprintScanner.isSensorAvailable().then(biometryType =>this.hasTouchID=true).catch(error => this.hasTouchID=false);
@@ -25,22 +25,24 @@ const Security = {
     var plaintext = bytes.toString(CryptoJS.enc.Utf8);
     return plaintext;
   },
-  hasPayPass:function(){
-    if(this.payPass && this.paySalt){return true}
+  hasPayPass:function(account){
+    if(this.payPass[account] && this.paySalt[account]){
+      return true
+    }
     return false;
   },
-  savePayPass:function(password){
+  savePayPass:function(account,password){
     let salt = this.salt();
     let sk = this.pbkdf2(appkey,salt);
     let spass = this.encrypt(password,sk)
-    this.payPass=spass;
-    this.paySalt=salt;
+    this.payPass[account]=spass;
+    this.paySalt[account]=salt;
   },
-  getPayPass:function(){
-    if(this.payPass && this.paySalt){
+  getPayPass:function(account){
+    if(this.payPass[account] && this.paySalt[account]){
       try{
-          let sk = this.pbkdf2(appkey,this.paySalt);
-          return this.decrypt(this.payPass,sk);
+          let sk = this.pbkdf2(appkey,this.paySalt[account]);
+          return this.decrypt(this.payPass[account],sk);
       }catch(e){
         return null;
       }

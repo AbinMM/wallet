@@ -39,7 +39,7 @@ export default {
                 walletArr = [];
                 if (callback) callback({error: wallet.account + "不存在"});
                 return;
-            } 
+            }
             for (var i = 0; i < walletArr.length; i++) {
                 if (walletArr[i].account == wallet.account) {
                     if(walletArr[i].isactived) {
@@ -54,7 +54,7 @@ export default {
                         DeviceEventEmitter.emit('updateDefaultWallet', {});
                         if (callback) callback(wallet,null);
                         return;
-                    }                   
+                    }
                 }
             }
 
@@ -69,7 +69,7 @@ export default {
                 walletArr = [];
                 if (callback) callback({error: wallet.account + "不存在"});
                 return;
-            } 
+            }
             for (var i = 0; i < walletArr.length; i++) {
                 if (walletArr[i].account == wallet.account) {
                     walletArr.splice(i, 1);
@@ -78,7 +78,7 @@ export default {
             walletArr[walletArr.length] = wallet;
             yield call(store.save, 'walletArr', walletArr);
             yield call(store.save, 'defaultWallet', wallet);
-            DeviceEventEmitter.emit('updateDefaultWallet', {}); 
+            DeviceEventEmitter.emit('updateDefaultWallet', {});
             if (callback) callback(wallet,null);
 
         },
@@ -117,7 +117,7 @@ export default {
                     //     if (callback) callback(_wallet,null);
                     //     return;
                     // }
-                   
+
                 }
             }
 
@@ -202,7 +202,7 @@ export default {
                 var _activePrivate = CryptoJS.AES.encrypt('eostoken' + wallet.data.activePrivate, wallet.password + wallet.salt);
                 var _words = CryptoJS.AES.encrypt('eostoken' + wallet.data.words, wallet.password + wallet.salt);
                 var _words_active = CryptoJS.AES.encrypt('eostoken' + wallet.data.words_active, wallet.password + wallet.salt);
-    
+
                 var _wallet = {
                     name: wallet.name,
                     account: wallet.name,
@@ -216,7 +216,7 @@ export default {
                     isactived: wallet.isactived,
                     isBackups: wallet.isBackups,
                 }
-    
+
                 walletArr[walletArr.length] = _wallet;
 
                 yield call(store.save, 'walletArr', walletArr);
@@ -227,11 +227,23 @@ export default {
                 }
                 // DeviceEventEmitter.emit('wallet_backup', _wallet);
                 JPushModule.addTags([_wallet.name], map => {
-    
+
                 })
             }
             DeviceEventEmitter.emit('updateDefaultWallet', {});
             if (callback) callback(_wallet,null);
+        },
+        *getWalletByAccount({ payload, callback }, { call, put }) {
+          var walletArr = yield call(store.get, 'walletArr');
+          if(walletArr){
+            for (var i = 0; i < walletArr.length; i++) {
+              if (walletArr[i].account == payload.account) {
+                callback && callback(walletArr[i]);
+                break;
+              }
+            }
+          }
+          callback && callback(null);
         },
         *importPrivateKey({ payload, callback }, { call, put }) {
             var AES = require("crypto-js/aes");
@@ -268,7 +280,7 @@ export default {
             const walletArr = yield call(store.get, 'walletArr');
             yield put({ type: 'updateAction', payload: { data: walletArr, ...payload } });
             if(callback) callback(walletArr);
-        }, 
+        },
         *getWalletDetail({ payload }, { call, put }) {
             const walletArr = yield call(store.get, 'walletArr');
         },
@@ -285,7 +297,7 @@ export default {
             if(callback) callback(payload);
             DeviceEventEmitter.emit('modify_password', payload);
             DeviceEventEmitter.emit('updateDefaultWallet', payload);
-        }, 
+        },
         *delWallet({ payload, callback }, { call, put }) {
             var walletArr = yield call(store.get, 'walletArr');
             var defaultWallet = yield call(store.get, 'defaultWallet');
@@ -311,7 +323,7 @@ export default {
             }
             if(callback) callback(payload);
             DeviceEventEmitter.emit('updateDefaultWallet');
-        }, 
+        },
         *delWalletList({ payload, callback }, { call, put }) {
             if(payload.walletList == null){
                 return;
@@ -342,18 +354,18 @@ export default {
             if (callback) callback({ walletArr });
 
             DeviceEventEmitter.emit('updateDefaultWallet');
-        }, 
+        },
         *getDefaultWallet({ payload, callback }, { call, put }) {
             var defaultWallet = yield call(store.get, 'defaultWallet');
             yield put({ type: 'updateDefaultWallet', payload: { defaultWallet: defaultWallet } });
             if (callback) callback({ defaultWallet });
 
-        }, 
+        },
         *changeWallet({ payload, callback }, { call, put }) {
             yield call(store.save, 'defaultWallet', payload.data);
             yield put({ type: 'updateDefaultWallet', payload: { defaultWallet: payload.data } });
             if(callback) callback(payload.data);
-        }, 
+        },
         *backupWords({ payload }, { call, put }) {
             var walletArr = yield call(store.get, 'walletArr');
             for (var i = 0; i < walletArr.length; i++) {
@@ -366,7 +378,7 @@ export default {
                 }
             }
             // yield put({ type: 'updateDefaultWallet', payload: { defaultWallet: payload.data } });
-        }, 
+        },
         *createAccount({ payload }, { call, put }) {
             var walletArr = yield call(store.get, 'walletArr');
             if (walletArr == null) {
@@ -377,7 +389,7 @@ export default {
             yield call(store.save, 'defaultWallet', payload);
             DeviceEventEmitter.emit('wallet_backup', payload);
             yield put({ type: 'updateDefaultWallet', payload: { defaultWallet: payload.data } });
-        }, 
+        },
         *createAccountService({ payload, callback }, { call, put }) {
             // var defaultWallet = yield call(store.get, 'defaultWallet');
             // if (defaultWallet != null && defaultWallet.account != null) {
@@ -391,8 +403,8 @@ export default {
             } catch (error) {
                 if (callback) callback({ code: 500, msg: "网络异常" });
             }
-            
-        }, 
+
+        },
         *pushTransaction({ payload, callback }, { call, put }) {
             try {
                 const resp = yield call(Request.request, pushTransaction, 'post', payload);
@@ -400,7 +412,7 @@ export default {
             } catch (error) {
                 if (callback) callback({ code: 500, msg: "网络异常" });
             }
-        }, 
+        },
         *getBalance({ payload, callback }, { call, put }) {
             try {
                 const resp = yield call(Request.request, getBalance, 'post', payload);
@@ -417,7 +429,7 @@ export default {
                     }
                 }
                 yield call(store.save, 'walletArr', walletArr);
-                yield put({ type: 'updateAction', payload: { data: walletArr, ...payload } });                
+                yield put({ type: 'updateAction', payload: { data: walletArr, ...payload } });
             } catch (error) {
                 if (callback) callback({ code: 500, msg: "网络异常" });
             }
@@ -432,7 +444,7 @@ export default {
             } catch (error) {
                 if (callback) callback({ code: 500, msg: "网络异常" });
             }
-         },   
+         },
          *isExistAccountName({payload, callback}, {call, put}) {
             try{
                 let resp = yield call(Request.request, isExistAccountName,"post", payload);
@@ -447,7 +459,7 @@ export default {
          *getintegral({payload, callback},{call,put}) {
             try{
                 const resp = yield call(Request.request, getintegral, "post", payload);
-                if(resp.code=='0'){              
+                if(resp.code=='0'){
                     if (callback) callback(resp);
                 }else{
                     EasyToast.show(resp.msg);
@@ -480,10 +492,10 @@ export default {
             yield call(store.save, 'invalidWalletArr', invalidWalletArr);
          },
          *changeRevealWallet({ payload,callback }, { call, put }) {
-            var reveal = yield call(store.get, 'reveal_wallet');  
-            // alert(JSON.stringify(reveal) );      
+            var reveal = yield call(store.get, 'reveal_wallet');
+            // alert(JSON.stringify(reveal) );
             if (reveal == null) {
-                reveal = false;              
+                reveal = false;
             }else{
                 reveal = !reveal;
             }
@@ -493,8 +505,8 @@ export default {
           *getRevealWallet({ payload,callback }, { call, put }) {
             var reveal = yield call(store.get, 'reveal_wallet');
             if (reveal == null) {
-                reveal = false;              
-                //没有记录要保存         
+                reveal = false;
+                //没有记录要保存
                 yield call(store.save, 'reveal_wallet', reveal);
             }
             if (callback) callback({ reveal: reveal });
@@ -504,101 +516,101 @@ export default {
             try{
                 const resp = yield call(Request.request, getFreeMortgage, 'post', payload);
                 // alert('getFreeMortgage: '+JSON.stringify(resp);
-                // if(resp.code=='0'){    
+                // if(resp.code=='0'){
 
                 // }else{
                 //     EasyToast.show(resp.msg);
                 // }
-                if (callback) callback(resp);                
+                if (callback) callback(resp);
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
-                if (callback) callback({ code: 500, msg: "网络异常" });                
+                if (callback) callback({ code: 500, msg: "网络异常" });
             }
         },
-        
+
         *getEosTransactionRecord({ payload, callback }, { call, put }) {
             try{
                 const resp = yield call(Request.request, getEosTransactionRecord, 'post', payload);
                 // alert('getEosTransactionRecord: '+JSON.stringify(resp) + " " + JSON.stringify(payload));
-                // if(resp.code=='0'){    
+                // if(resp.code=='0'){
 
                 // }else{
                 //     EasyToast.show(resp.msg);
                 // }
-                if (callback) callback(resp);                
+                if (callback) callback(resp);
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
-                if (callback) callback({ code: 500, msg: "网络异常" });                
+                if (callback) callback({ code: 500, msg: "网络异常" });
             }
         },
         *getEosTableRows({ payload, callback }, { call, put }) {
             try{
                 const resp = yield call(Request.request, getEosTableRows, 'post', payload);
                 // alert('getEosTableRows: '+JSON.stringify(resp) + " " + JSON.stringify(payload));
-                // if(resp.code=='0'){    
+                // if(resp.code=='0'){
 
                 // }else{
                 //     EasyToast.show(resp.msg);
                 // }
-                if (callback) callback(resp);                
+                if (callback) callback(resp);
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
-                if (callback) callback({ code: 500, msg: "网络异常" });                
+                if (callback) callback({ code: 500, msg: "网络异常" });
             }
         },
         *getContract({payload, callback},{call,put}){
             try{
                 const resp = yield call(Request.requestO, Constants.EosNode + '/v1/chain/get_abi', 'post', payload);
                 // alert('getContract: '+JSON.stringify(resp));
-                if (callback) callback(resp);                
+                if (callback) callback(resp);
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
-                if (callback) callback(null);                
+                if (callback) callback(null);
             }
         },
         *dappfindAll({ payload, callback }, { call, put }) {
             try{
                 const resp = yield call(Request.request, dappfindAll, 'post', payload);
                 // alert('dappfindAll: '+JSON.stringify(resp) + " " + JSON.stringify(payload));
-                // if(resp.code=='0'){    
+                // if(resp.code=='0'){
 
                 // }else{
                 //     EasyToast.show(resp.msg);
                 // }
-                if (callback) callback(resp);                
+                if (callback) callback(resp);
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
-                if (callback) callback({ code: 500, msg: "网络异常" });                
+                if (callback) callback({ code: 500, msg: "网络异常" });
             }
         },
         *dappfindAllRecommend({ payload, callback }, { call, put }) {
             try{
                 const resp = yield call(Request.request, dappfindAllRecommend, 'post');
                 // alert('dappfindAllRecommend: '+JSON.stringify(resp));
-                // if(resp.code=='0'){    
+                // if(resp.code=='0'){
 
                 // }else{
                 //     EasyToast.show(resp.msg);
                 // }
-                if (callback) callback(resp);                
+                if (callback) callback(resp);
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
-                if (callback) callback({ code: 500, msg: "网络异常" });                
+                if (callback) callback({ code: 500, msg: "网络异常" });
             }
         },
         *dappfindAllCategory({ payload, callback }, { call, put }) {
             try{
                 const resp = yield call(Request.request, dappfindAllCategory, 'post');
                 // alert('dappfindAllCategory: '+JSON.stringify(resp));
-                // if(resp.code=='0'){    
+                // if(resp.code=='0'){
 
                 // }else{
                 //     EasyToast.show(resp.msg);
                 // }
-                if (callback) callback(resp);                
+                if (callback) callback(resp);
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
-                if (callback) callback({ code: 500, msg: "网络异常" });                
+                if (callback) callback({ code: 500, msg: "网络异常" });
             }
         },
         *isExistAccountNameAndPublicKey({payload, callback},{call,put}) {
@@ -624,30 +636,30 @@ export default {
             try{
                 const resp = yield call(Request.request, getcreateWxOrder, 'post', payload);
                 // alert('getcreateWxOrder: '+JSON.stringify(resp));
-                if(resp && resp.code=='0'){    
+                if(resp && resp.code=='0'){
 
                 }else{
                     EasyToast.show(resp.msg);
                 }
-                if (callback) callback(resp);                
+                if (callback) callback(resp);
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
-                if (callback) callback({ code: 500, msg: "网络异常" });                
+                if (callback) callback({ code: 500, msg: "网络异常" });
             }
         },
         *getcheckBy({ payload, callback }, { call, put }) {
             try{
                 const resp = yield call(Request.request, getcheckBy, 'post', payload);
                 // alert('dappfindAllCategory: '+JSON.stringify(resp));
-                if(resp && resp.code=='0'){    
+                if(resp && resp.code=='0'){
 
                 }else{
                     // EasyToast.show(resp.msg);
                 }
-                if (callback) callback(resp);                
+                if (callback) callback(resp);
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
-                if (callback) callback({ code: 500, msg: "网络异常" });                
+                if (callback) callback({ code: 500, msg: "网络异常" });
             }
         },
     },
@@ -661,7 +673,7 @@ export default {
         },
         walletCreated(state, action) {
             let data = action.payload.data;
-        }, 
+        },
         updateDefaultWallet(state, action) {
             return { ...state, ...action.payload };
         },
@@ -679,7 +691,7 @@ export default {
                 item.isChecked=true;
                 newarr.push(item);
             })
-            return {...state,invalidWalletList:newarr}; 
+            return {...state,invalidWalletList:newarr};
         },
         updateTip(state, action){
             // alert('11: ' + JSON.stringify(action.payload))

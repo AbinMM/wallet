@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet,Text,View,Animated,Easing} from 'react-native';
+import {StyleSheet,Text,View,Animated,Easing,Keyboard,Dimensions} from 'react-native';
 import ScreenUtil from "../utils/ScreenUtil";
+const ScreenHeight = Dimensions.get('window').height;
 
 export class EasyToast {
 
@@ -36,8 +37,9 @@ export class Toast extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        isShow: false,
-        text: '',
+        isTopShow: false,
+        isCenterShow:false,
+        text:'',
         transformY:new Animated.Value(-150),
         opacityValue: new Animated.Value(0.7),
       }
@@ -47,8 +49,17 @@ export class Toast extends React.Component {
     show(text) {
       if(this.isShow) return;
       this.isShow=true;
-      this.setState({isShow:true,text:text});
-      Animated.timing(this.state.transformY,{toValue:0,duration:300,easing:Easing.linear}).start(() => {this.close()});
+      if(this.isShowKeyBoard){
+        this.setState({isTopShow:true,text:text});
+      }else{
+        this.setState({isCenterShow:true,text:text});
+      }
+      Animated.parallel([
+        Animated.timing(this.state.transformY,{toValue:0,duration:300,easing:Easing.linear}),
+        Animated.timing(this.state.opacityValue,{toValue:1,duration:300,easing:Easing.linear})
+      ]).start(() => {
+        this.close();
+      });
     }
 
     close() {
@@ -56,25 +67,73 @@ export class Toast extends React.Component {
       this.ToastTimer && clearTimeout(this.ToastTimer);
       this.ToastTimer = setTimeout(() => {
         clearTimeout(this.ToastTimer);
-        Animated.timing(this.state.transformY,{toValue: 0-ScreenUtil.autowidth(70),duration: 300,easing: Easing.linear}).start(() => {
-          this.setState({isShow:false});
+        Animated.parallel([
+          Animated.timing(this.state.transformY,{toValue: 0-ScreenUtil.autowidth(70),duration: 300,easing: Easing.linear}),
+          Animated.timing(this.state.opacityValue,{toValue:0,duration:300,easing:Easing.linear})
+        ]).start(() => {
           this.isShow=false;
+          this.setState({isTopShow:false,isCenterShow:false});
         });
       },1500);
     }
 
+    componentWillMount(){
+      Keyboard.addListener('keyboardDidShow', this._keyboardDidShow.bind(this));
+      Keyboard.addListener('keyboardDidHide', this._keyboardDidHide.bind(this));
+    }
+
+    componentWillUnmount() {
+      this.ToastTimer && clearTimeout(this.ToastTimer);
+      Keyboard.removeListener('keyboardDidShow');
+      Keyboard.removeListener('keyboardDidHide');
+      EasyToast.unBind();
+    }
+
+    _keyboardDidShow(e){
+      this.isShowKeyBoard=true;
+    }
+
+    _keyboardDidHide(e){
+      this.isShowKeyBoard=false;
+    }
+
     render() {
-        const view = this.state.isShow ?
-        <Animated.View style={[styles.container,{transform:[{translateY:this.state.transformY}]}]}>
+        var view = null;
+        if(this.state.isTopShow){
+          view = <Animated.View style={[styles.container,{transform:[{translateY:this.state.transformY}]}]}>
           <View style={styles.content}>
             <Text style={styles.text}>{this.state.text}</Text>
           </View>
         </Animated.View>
-        : null;
+        }else if(this.state.isCenterShow){
+          view = <View style={[centerStyles.container,{top:ScreenHeight-ScreenUtil.autowidth(150)}]} pointerEvents="none">
+              <Animated.View style={[centerStyles.content,{opacity:this.state.opacityValue}]}>
+                  <Text style={centerStyles.text}>{this.state.text}</Text>
+              </Animated.View>
+          </View>
+        }
         return view;
     }
 }
-
+const centerStyles = StyleSheet.create({
+  container: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      elevation: 999,
+      alignItems: 'center',
+      zIndex: 99999999999999,
+  },
+  content: {
+      backgroundColor: 'black',
+      borderRadius:4,
+      padding: 12,
+      opacity:50
+  },
+  text: {
+    color: 'white'
+  }
+});
 const styles = StyleSheet.create({
     container: {
       position: 'absolute',
