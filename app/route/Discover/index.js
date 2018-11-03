@@ -34,7 +34,7 @@ class Discover extends React.Component {
   static navigationOptions = {
     tabBarLabel: '发现',
     tabBarIcon: ({ focused}) => (
-      <Image resizeMode='contain' source={focused ? UImage.tab_2_h : UImage.tab_2} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22)}}/>
+      <Image resizeMode='contain' source={focused ? UImage.tab_2_h : UImage.tab_2} style={{width: ScreenUtil.autowidth(22), height: ScreenUtil.autowidth(20)}}/>
     ),
     header: null,
   };

@@ -26,7 +26,7 @@ class Setting extends React.Component {
     header:null,   
     tabBarLabel: '我的',
     tabBarIcon: ({ focused}) => (
-      <Image resizeMode='contain' source={focused ? UImage.tab_4_h : UImage.tab_4} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22)}}/>
+      <Image resizeMode='contain' source={focused ? UImage.tab_4_h : UImage.tab_4} style={{width: ScreenUtil.autowidth(22), height: ScreenUtil.autowidth(20)}}/>
     ),
   };
 
@@ -272,14 +272,14 @@ class Setting extends React.Component {
               {this.props.loginUser ?
               <Image source={UImage.logo} style={styles.headimg}/>
               :
-              <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#1A1A1A'}}>登陆</Text>
+              <Text style={{fontSize: ScreenUtil.setSpText(14.5), color: '#1A1A1A'}}>登陆</Text>
                }
               
             </View>
             <Text style={[styles.headtext,{color: '#1A1A1A'}]}>{(this.props.loginUser) ? this.props.loginUser.nickname : ""}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.signedout,{backgroundColor: this.state.Sign_in ? '#E6E6E6':'#6DA0F8'}]} onPress={this.signIn.bind(this)} >
-            <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#FFFFFF', textAlign: 'center'}}>签到</Text>
+            <Text style={{fontSize: ScreenUtil.setSpText(11), color: '#FFFFFF', textAlign: 'center'}}>签到</Text>
           </TouchableOpacity>
         </View>
         
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headimgout: {
-    borderRadius: 50,
+    borderRadius: 48,
     alignItems: "center",
     justifyContent: "center",
     width: ScreenUtil.autowidth(48),

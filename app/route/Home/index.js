@@ -23,7 +23,7 @@ class Home extends React.Component {
   static navigationOptions = {
     tabBarLabel: '钱包',
     tabBarIcon: ({ focused}) => (
-      <Image resizeMode='contain' source={focused ? UImage.tab_1_h : UImage.tab_1} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22)}}/>
+      <Image resizeMode='contain' source={focused ? UImage.tab_1_h : UImage.tab_1} style={{width: ScreenUtil.autowidth(22), height: ScreenUtil.autowidth(20)}}/>
     ),
     header: null,
   };
@@ -632,9 +632,9 @@ class Home extends React.Component {
           <LinearGradient style={{width: ScreenWidth, height: ScreenUtil.autowidth(200), paddingBottom: ScreenUtil.autowidth(35),}}  paddingTop = {Constants.FitPhone} colors={['#6C9EF8','#5F5DE6']} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
             <View style={[styles.topbtn,]}>
               <TouchableOpacity onPress={() => this.setState({ modal: !this.state.modal })} style={{flex: 1, height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(20),alignItems: 'flex-start',justifyContent: 'center', }}>
-                <View style={{flexDirection: 'row',}}>
-                  <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#FFFFFF', marginRight: ScreenUtil.autowidth(5),}}>{this.props.defaultWallet.account}</Text>
-                  <Ionicons color={'#FFFFFF'} name={this.state.modal ? "ios-arrow-down-outline" : "ios-arrow-forward-outline"} size={18} />
+                <View style={{flexDirection: 'row',alignItems:"center"}}>
+                  <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#FFFFFF', marginRight: ScreenUtil.autowidth(5)}}>{this.props.defaultWallet.account}</Text>
+                  <Ionicons color={'#FFFFFF'} style={{marginTop:4}} name={this.state.modal ? "ios-arrow-down-outline" : "ios-arrow-forward-outline"} size={18} />
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => this.setState({ listmodal: !this.state.listmodal })} style={{flex: 1, height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(20), alignItems:'flex-end', justifyContent: 'center', }}>

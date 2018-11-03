@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     titletext: {
         flex: 2,  
         textAlign: "center",
-        fontSize: ScreenUtil.setSpText(16),
+        fontSize: ScreenUtil.setSpText(16.5),
     },
     Rightout: {
         flex: 1.5, 

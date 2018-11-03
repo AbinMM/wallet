@@ -66,7 +66,7 @@ class News extends React.Component {
   static navigationOptions = {
     tabBarLabel: '资讯',
     tabBarIcon: ({ focused}) => (
-      <Image resizeMode='contain' source={focused ? UImage.tab_3_h : UImage.tab_3} style={{width: ScreenUtil.autowidth(24), height: ScreenUtil.autowidth(22)}}/>
+      <Image resizeMode='contain' source={focused ? UImage.tab_3_h : UImage.tab_3} style={{width: ScreenUtil.autowidth(22), height: ScreenUtil.autowidth(20)}}/>
     ),
     header: null,
   };
