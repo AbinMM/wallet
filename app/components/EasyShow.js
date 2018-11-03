@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Modal, Text, Platform, TouchableHighlight, KeyboardAvoidingView, TouchableWithoutFeedback, View, Dimensions, ActivityIndicator} from 'react-native';
+import { StyleSheet, Modal, Text, Platform, TouchableHighlight,Animated, KeyboardAvoidingView, TouchableWithoutFeedback, View, Dimensions, ActivityIndicator} from 'react-native';
 import { material } from 'react-native-typography';
 import ProgressBar from "./ProgressBar";
 import UColor from '../utils/Colors'
@@ -13,7 +13,7 @@ const DailogShow=0;
 const DailogShowWL=2;
 
 export class EasyShowLD {
-    
+
     constructor() {}
 
     static bind(LoadingDialog) {
@@ -90,22 +90,7 @@ export class EasyShowLD {
 
     //以下是loading部分的
     static loadingShow(text = 'Loading...', timeout = 60000) {
-      clearTimeout(this.handle);
-      this.map["LoadingDialog"].setState({
-        modalVisible: true,
-        loadingDialogFlag: LoadingShow,
-        "text": text,
-        "timeout": timeout
-      });
-
-      if (timeout > 0) {
-        var th = this;
-        this.handle = setTimeout(() => {
-          th.loadingClose();
-          clearTimeout(this.handle);
-        }, timeout);
-      }
-
+      this.map["LoadingDialog"].loadingShow(text,timeout);
     }
 
     //切换页面时,如果有loading显示,立刻关闭
@@ -119,12 +104,7 @@ export class EasyShowLD {
     }
 
     static loadingClose() {
-      // if(this.map["LoadingDialog"].state.loadingDialogFlag==LoadingShow){
-        clearTimeout(this.handle);
-        this.map["LoadingDialog"].setState({
-          "modalVisible": false
-        });
-      // }
+      this.map["LoadingDialog"].loadingClose();
     }
 
 }
@@ -150,7 +130,8 @@ export class LoadingDialog extends React.Component {
       progress: 0,
 
       timeout: 60000,
-      text: "Loading..."
+      text: "Loading...",
+      mask: new Animated.Value(0),
     };
 
     constructor(props) {
@@ -162,9 +143,34 @@ export class LoadingDialog extends React.Component {
 
     componentWillUnmount() {
       clearTimeout(this.handle);
-
     }
 
+    loadingClose = () =>{
+      Animated.parallel([
+          Animated.timing(this.state.mask,{toValue:0,duration:300}),
+      ]).start(() => {
+        this.isLoadingShow = false;
+        this.setState({modalVisible:false});
+      });
+    }
+
+    loadingShow = (text,timeout) => {
+      if(this.isLoadingShow){
+        return;
+      }
+      this.isLoadingShow = true;
+      clearTimeout(this.handle);
+      this.setState({modalVisible: true,loadingDialogFlag: LoadingShow,"text": text,"timeout": timeout});
+      Animated.parallel([Animated.timing(this.state.mask,{toValue:0.6,duration:300})]).start(()=>{
+
+      });
+      if (timeout > 0) {
+        this.handle = setTimeout(() => {
+          clearTimeout(this.handle);
+          this.loadingClose();
+        }, timeout);
+      }
+    }
 
     render() {
 
@@ -179,9 +185,9 @@ export class LoadingDialog extends React.Component {
             onRequestClose={()=>{console.log('dailog modal close...')}}
             supportedOrientations={['portrait', 'landscape']}
             onShow={()=>{console.log('dailog modal show...')}}>
-
+          <Animated.View style={[styles.mask,{opacity:this.state.mask}]}></Animated.View>
           {this.state.loadingDialogFlag==LoadingShow &&
-          <View style={[styles.load_box,{backgroundColor: UColor.tintstart}, this.props.loadingStyle]}>
+          <View style={[styles.load_box,{backgroundColor: "rgba(0,0,0,0.7)"}, this.props.loadingStyle]}>
               <ActivityIndicator animating={true} color={this.props.color || UColor.btnColor} size={'large'} style={styles.load_progress} />
               <Text style={[styles.load_text,{color: UColor.btnColor}, this.props.textStyle]}>{this.state.text}</Text>
           </View>}
@@ -382,6 +388,16 @@ load_text: {
     // backgroundColor: UColor.secdColor,
   },
 
+  mask: {
+    flex:1,
+    left:0,
+    top:0,
+    position: 'absolute',
+    zIndex: 0,
+    width:"100%",
+    height:"100%",
+    backgroundColor:"#000",
+  },
 
 
 
