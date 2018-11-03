@@ -1,14 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { BackHandler, ImageBackground, Dimensions,NativeModules, Image, Modal, ScrollView, DeviceEventEmitter, 
-         InteractionManager, ListView, StyleSheet, View, RefreshControl, Text, WebView, Platform, SectionList,
-         TouchableHighlight, Linking, TouchableOpacity } from 'react-native';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+import { Dimensions,Image,  ScrollView,  
+         InteractionManager, ListView, StyleSheet, View,  Text,  SectionList,
+         Linking, } from 'react-native';
 
-import moment from 'moment';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
-import Swiper from 'react-native-swiper';
 import Button from '../../components/Button'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
@@ -20,15 +17,10 @@ import Carousel from 'react-native-banner-carousel';
 require('moment/locale/zh-cn');
 
 
-const pages = [];
-let loadMoreTime = 0;
-let currentLoadMoreTypeId;
 var ScreenWidth = Dimensions.get('window').width;
 var ScreenHeight = Dimensions.get('window').height;
-var cangoback = false;
-var ITEM_HEIGHT = 100;
 
-@connect(({ banner, newsType, news, wallet, vote, common,}) => ({ ...banner, ...newsType, ...news, ...wallet , ...vote, ...common,}))
+@connect(({ banner, dapp,}) => ({ ...banner,...dapp}))
 class Discover extends React.Component {
 
   static navigationOptions = {
@@ -43,11 +35,14 @@ class Discover extends React.Component {
     super(props);
     this.state = {
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
-      // mydapplist: [],
-      // hotdappList:[],
-      //holdallList: [],
+      mydapplist:[{icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},],
+      // hotdappList:{name: '', list: [{icon: '',name:'',description:''}]},  
+      // holdallList: [
+      //   {id:1,name: '', data: [{icon: '',name:'',description:''}]},  
+      // ],
+
       holdallList: [
-        {key: '我的DApps', data: [
+        {name: '我的DApps', data: [
           {icon: UImage.ManualSearch,name:'手动搜索DAPPsdhjsdf',description:'手动搜索DAPP,可添加到收藏夹'},
           {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
           {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
@@ -57,7 +52,7 @@ class Discover extends React.Component {
           {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
           {icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},
         ]},
-        {key: '糖果系列', data: [
+        {name: '糖果系列', data: [
           {icon: UImage.ManualSearch,name:'手动搜索DAPPsdhjsdf',description:'手动搜索DAPP,可添加到收藏夹'},
           {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
           {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
@@ -67,12 +62,12 @@ class Discover extends React.Component {
           {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
           {icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},
         ]},
-        {key: 'EOS工具', data: [
+        {name: 'EOS工具', data: [
           {icon: UImage.ManualSearch,name:'手动搜索DAPPsdhjsdf',description:'手动搜索DAPP,可添加到收藏夹'},
           {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
           {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
         ]},
-        {key: '第三方工具', data: [
+        {name: '第三方工具', data: [
           {icon: UImage.ManualSearch,name:'手动搜索DAPPsdhjsdf',description:'手动搜索DAPP,可添加到收藏夹'},
           {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
           {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
@@ -86,23 +81,34 @@ class Discover extends React.Component {
     //获取banner图
     this.props.dispatch({ type: 'banner/list', payload: {} });
     //获取DAPP列表
-    this.props.dispatch({ type: 'wallet/dappfindAllRecommend', 
-      callback: (resp) => {
+    this.props.dispatch({ type: 'dapp/dappfindAllHotRecommend', callback: (resp) => {
        // alert(JSON.stringify(resp));
         if (resp && resp.code == '0') {
           if(resp.data && resp.data.length > 0){
             this.setState({
-              // mydapplist: resp.data[0],
-              // hotdappList: resp.data[1],
-              // holdallList: resp.data,
+              hotdappList: resp.data,
             });
           }
         } else {
-          // this.setState({logRefreshing: false});
-          console.log("dappfindAllRecommend error");
+          console.log("dappfindAllHotRecommend error");
         }
       } 
     });
+
+    this.props.dispatch({ type: 'dapp/dappfindAllRecommend', callback: (resp) => {
+     // alert(JSON.stringify(resp));
+      if (resp && resp.code == '0') {
+        if(resp.data && resp.data.length > 0){
+          this.setState({
+            holdallList: resp.data,
+          });
+        }
+      } else {
+        console.log("dappfindAllRecommend error");
+      }
+    } 
+  });
+
   }
 
   componentWillUnmount() {
@@ -182,24 +188,26 @@ class Discover extends React.Component {
             </View>
             <View style={{backgroundColor: '#FFFFFF'}}>
               <View style={{marginVertical:ScreenUtil.autoheight(15),flexDirection: 'row',}}>  
-                <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(14),color: '#1A1A1A',fontWeight:'bold',paddingHorizontal: ScreenUtil.autowidth(16),}}>{this.state.holdallList[0].key}</Text>
+                <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(14),color: '#1A1A1A',fontWeight:'bold',paddingHorizontal: ScreenUtil.autowidth(16),}}>我的DApps</Text>
                 <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#6DA0F8',paddingHorizontal: ScreenUtil.autowidth(16),}}>更多</Text>
               </View> 
             <View style={{paddingHorizontal: ScreenUtil.autowidth(16),}}>
               <ListView enableEmptySections = {true} horizontal={true} showsHorizontalScrollIndicator={false}
-                dataSource={this.state.dataSource.cloneWithRows(this.state.holdallList[0].data == null ? [] : this.state.holdallList[0].data)} 
+                dataSource={this.state.dataSource.cloneWithRows(this.state.mydapplist == null ? [] : this.state.mydapplist)} 
                 renderRow={(rowData) => (  
                   <Button  onPress={this.onPressTool.bind(this, rowData)}  style={styles.headDAPP}>
                     <View style={styles.headbtnout}>
                       {/* <Image source={{uri: rowData.icon}}  style={styles.imgBtnDAPP} resizeMode='contain' /> */}
                       <Image source={rowData.icon}  style={styles.imgBtnDAPP} resizeMode='contain' />
+                      <Text numberOfLines={1} style={[styles.headbtntext,{width: ScreenUtil.autowidth(69), color: UColor.fontColor,textAlign: 'center'}]}>{rowData.name}</Text>
                     </View>
                   </Button>
+                  
                 )}                
               /> 
             </View>
             <View style={{marginHorizontal: ScreenUtil.autowidth(15),marginVertical:ScreenUtil.autoheight(15),}}>  
-              <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#1A1A1A',fontWeight:'bold',}}>{this.state.holdallList[1].key}</Text>
+              <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#1A1A1A',fontWeight:'bold',}}>{this.state.holdallList[1].name}</Text>
             </View> 
             <ListView enableEmptySections = {true}
               contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
@@ -223,7 +231,7 @@ class Discover extends React.Component {
               sections={this.state.holdallList}
               renderSectionHeader={(info) => (
                 <View style={{width:ScreenWidth, justifyContent: 'center',paddingHorizontal: ScreenUtil.autowidth(10),paddingTop: ScreenUtil.autoheight(10) }}>
-                  <Text style={{width:ScreenWidth,color: '#8C8C8C', fontSize: ScreenUtil.setSpText(14) }}>{info.section.key}</Text>
+                  <Text style={{width:ScreenWidth,color: '#8C8C8C', fontSize: ScreenUtil.setSpText(14) }}>{info.section.name}</Text>
                 </View>
                 )}
               renderItem={ (rowData) => (

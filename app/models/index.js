@@ -12,6 +12,7 @@ import vote from './vote'
 import Transaction from './Transaction'
 import addressBook from './AddressBook'
 import writeList from './WriteList'
+import Dapp from './Dapp'
 const models = [
     Assets,
     Banner,
@@ -27,5 +28,6 @@ const models = [
     Transaction,
     addressBook,
     writeList,
+    Dapp,
 ]
 export default models;

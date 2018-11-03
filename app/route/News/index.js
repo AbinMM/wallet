@@ -140,8 +140,6 @@ class News extends React.Component {
       }
     }});
    
-    this.onRefreshing();
-
     this.props.dispatch({type: 'news/getActivityStages', payload:{activityId:"1"},callback: (periodsdata) => {
         try {
           let periodstext= '';
@@ -296,25 +294,6 @@ class News extends React.Component {
       }});
       this.props.navigation.setParams({img:UImage.fav_h,onPress:this.onPress});
       EasyToast.show("已加入自选")
-    }
-  }
-
-  onRefreshing() {
-    try {
-      this.setState({logRefreshing: true});
-      this.props.dispatch({ type: 'wallet/dappfindAllCategory', });
-      this.props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
-          if (resp && resp.code == '0') {
-            if(resp.data && resp.data.length > 0){
-              this.setState({dappList : resp.data,logRefreshing: false});
-            }
-          } else {
-            this.setState({logRefreshing: false});
-            console.log("dappfindAllRecommend error");
-          }
-      } });
-    } catch (error) {
-      console.log("dappfindAllRecommend error: %s",error.message);
     }
   }
 

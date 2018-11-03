@@ -89,9 +89,9 @@ export const getFreeMortgage = rootaddr + '/eosrpc/delegatebwRecord';
 export const getEosTransactionRecord = rootaddr + '/eosrpc/getEosTransactionRecord';
 export const getEosTableRows = rootaddr + '/eosrpc/getEosTableRows';
 
-export const dappfindAll = rootaddr + '/dapp/findAll';
-export const dappfindAllRecommend = rootaddr + '/dapp/findAllRecommendNew';
-export const dappfindAllCategory = rootaddr + '/dapp/findAllCategory';
+export const dappfindAllHotRecommend = rootaddr + '/dapp/findAllHotRecommend'; //首页热门推荐
+export const dappfindAllRecommend = rootaddr + '/dapp/findAllRecommend'; //首页分类推荐
+export const dappfindAllByType = rootaddr + '/dapp/findAllByType'; //更多接口带分页
 
 export const atcgetInfo = rootaddr + '/act/getInfo';
 export const getActivityStages = rootaddr + '/act/getActivityStages';

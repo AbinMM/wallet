@@ -20,7 +20,7 @@ import CustomWebView from './CustomWebView.android';
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 
-@connect(({ wallet,writeList }) => ({ ...wallet,writeList }))
+@connect(({ wallet,writeList,dapp,vote }) => ({ ...wallet,...writeList,...dapp,...vote }))
 export default class DappWeb extends Component {
 
   static navigationOptions = ({ navigation, navigationOptions }) => {
@@ -547,7 +547,7 @@ _setModalVisible_Auth() {
         return ;
     }
     this.props.dispatch({
-        type: 'wallet/getContract', payload: {account_name:result.params.contract }, callback: (resp) => {
+        type: 'dapp/getContract', payload: {account_name:result.params.contract }, callback: (resp) => {
             try {
                 if(resp){
                     var respabi = {abi:resp.abi};
@@ -747,7 +747,7 @@ _setModalVisible_Auth() {
   eos_getTableRows(result)
   {
     this.props.dispatch({
-        type: 'wallet/getEosTableRows', payload: result.params.obj_param, callback: (resp) => {
+        type: 'dapp/getEosTableRows', payload: result.params.obj_param, callback: (resp) => {
           try {
             var obj = new Object();
             if (resp && resp.code == '0') {

@@ -9,8 +9,6 @@ import { EasyToast } from '../../components/Toast';
 import BaseComponent from "../../components/BaseComponent";
 var dismissKeyboard = require('dismissKeyboard');
 
-
-@connect(({wallet, assets,vote}) => ({...wallet, ...assets, ...vote}))
 class Dappsearch extends BaseComponent {
 
     static navigationOptions = {
