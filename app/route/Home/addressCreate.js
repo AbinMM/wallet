@@ -30,6 +30,7 @@ class addressCreate extends BaseComponent {
         this.state = {
             labelName:'',    //标签名称
             address:'',      //账户
+            memo:'', //分组用的备注
         };
     }
 
@@ -155,6 +156,18 @@ class addressCreate extends BaseComponent {
                                         onChangeText={(memo) => this.setState({ memo })}
                                     />
                                 </View>
+
+                                <View style={styles.accountoue} >
+                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>备注</Text>
+                                </View>
+                                <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
+                                    <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
+                                        placeholder="备注(Memo)" underlineColorAndroid="transparent" keyboardType="default"  
+                                        onChangeText={(memo) => this.setState({ memo })}
+                                    />
+                                </View>
+
                             </View>
                         </View>
                     </TouchableOpacity>
