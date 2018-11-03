@@ -40,7 +40,7 @@ export default {
   resources_f: require('../img/day/resources_f.png'),
   resources_h: require('../img/day/resources_h.png'),
   resources: require('../img/day/resources.png'),
-  scan: require('../img/day/scan.png'),
+  
 
   signed: require('../img/day/signed.png'), 
   signln_bg: require('../img/day/signln_bg.png'),
@@ -114,8 +114,8 @@ export default {
   record:require('../img/record.png'),
   refresh:require('../img/refresh.png'),
   resources_bj:require('../img/resources_bj.png'),
-  reveal_h:require('../img/reveal_h.png'),
-  reveal:require('../img/reveal.png'),
+  
+  
   reveal_h_wallet:require('../img/reveal_h_wallet.png'),
   reveal_wallet:require('../img/reveal_wallet.png'),
   scangray: require('../img/scangray.png'),
@@ -159,11 +159,11 @@ export default {
   wallet_1:require('../img/wallet_1.png'),
   wallet: require('../img/wallet.png'),
   wallet_h: require('../img/wallet_h.png'),
-  xin_import: require('../img/xin_import.png'),
+ 
   xin0: require('../img/xin0.png'),
   xin1: require('../img/xin1.png'),
-  xin_qr: require('../img/xin_qr.png'),
-  xin_add: require('../img/xin_add.png'),
+  
+  
   tx_ram: require('../img/tx_ram.png'),
   warning_h: require('../img/warning_h.png'),
   //活动
@@ -194,6 +194,8 @@ export default {
   my_wallet: require('../img/newimg/my_wallet.png'),
   transfer: require('../img/newimg/transfer.png'),
   receipt: require('../img/newimg/receipt.png'),
+  transfer_float: require('../img/newimg/transfer_float.png'),
+  receipt_float: require('../img/newimg/receipt_float.png'),
   share_bright:require('../img/newimg/share_bright.png'),
   up: require('../img/newimg/up.png'),
   up_h:require('../img/newimg/up_h.png'),
@@ -208,7 +210,13 @@ export default {
   tab_2_h: require('../img/newimg/tab_2_h.png'),
   tab_3_h: require('../img/newimg/tab_3_h.png'),
   tab_4_h: require('../img/newimg/tab_4_h.png'),
-
+  reveal_h:require('../img/newimg/reveal_h.png'),
+  reveal:require('../img/newimg/reveal.png'),
+  xin_import: require('../img/newimg/xin_import.png'),
+  scan: require('../img/newimg/scan.png'),
+  xin_add: require('../img/newimg/xin_add.png'),
+  xin_qr: require('../img/newimg/xin_qr.png'),
+  
   //转账
   turnout_pop: require('../img/turnout_pop.png'),
   turnout_delete: require('../img/turnout_delete.png'),
