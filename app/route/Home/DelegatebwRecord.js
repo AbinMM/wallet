@@ -104,7 +104,7 @@ class DelegatebwRecord extends React.Component {
 
   //赎回
   undelegateb = (redeem) => { 
-    AuthModal.show((authInfo)=>{
+    AuthModal.show(redeem.from, (authInfo)=>{
       try {
         EasyShowLD.loadingShow();
         // 解除抵押

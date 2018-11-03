@@ -239,7 +239,7 @@ export default {
             for (var i = 0; i < walletArr.length; i++) {
               if (walletArr[i].account == payload.account) {
                 callback && callback(walletArr[i]);
-                break;
+                return;
               }
             }
           }

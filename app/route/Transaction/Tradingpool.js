@@ -395,7 +395,7 @@ class Tradingpool extends BaseComponent {
         }
         this._setModalBanker();
 
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             this.addToken();
         });
     }
@@ -486,7 +486,7 @@ class Tradingpool extends BaseComponent {
         }
         this._setModalVisible();
 
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             this.subToken(authInfo);
         });
     }

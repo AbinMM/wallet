@@ -487,7 +487,7 @@ class Resources extends BaseComponent {
         }
         this. dismissKeyboardClick();
 
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
                 EasyShowLD.loadingShow();
                 Eos.transaction({
@@ -532,7 +532,7 @@ class Resources extends BaseComponent {
             return ;
         }
         this. dismissKeyboardClick();
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
                 EasyShowLD.loadingShow();
                 Eos.transaction({
@@ -586,7 +586,7 @@ class Resources extends BaseComponent {
         }
         this. dismissKeyboardClick();
 
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
                 EasyShowLD.loadingShow();
                 if(this.state.isOthers && this.state.isTransfer){
@@ -645,7 +645,7 @@ class Resources extends BaseComponent {
         }
         this. dismissKeyboardClick();
 
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
                 EasyShowLD.loadingShow();
                 Eos.transaction({
@@ -945,7 +945,7 @@ class Resources extends BaseComponent {
                     onIndexChange={this._handleIndexChange}
                     initialLayout={{ height: 0, width: ScreenWidth }}
                 />
-                
+
                 <AuthModalView {...this.props} />
 
             </View>

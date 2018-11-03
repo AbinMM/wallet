@@ -12,6 +12,8 @@ import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
 import BaseComponent from "../../components/BaseComponent";
+import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
@@ -251,48 +253,25 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
     });
   };
   changeAuth(authTemp){
-    const view =
-        <View style={styles.passoutsource}>
-            <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
-                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-        </View>
-        EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
-        if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-            EasyToast.show('密码长度至少4位,请重输');
-            return;
-        }
-        EasyShowLD.dialogClose();
-        // var privateKey = this.props.navigation.state.params.wallet.activePrivate;
-        var privateKey = this.props.navigation.state.params.wallet.ownerPrivate;
-        try {
-            // EasyShowLD.loadingShow();
+      AuthModal.show(this.props.navigation.state.params.wallet.account, (authInfo) => {
+          try {
             this.setState({isRefreshing: true})//开始刷新
-            var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.navigation.state.params.wallet.salt);
-            var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-            if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                
-                plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                this.EosUpdateAuth(this.props.navigation.state.params.wallet.name, plaintext_privateKey,authTemp,(r) => {
-                        // alert(JSON.stringify(r));
-                        console.log("r=%s",JSON.stringify(r))
-                        if(r.isSuccess==true){
-                            EasyToast.show('授权变更成功！');
-                        }else{
-                            EasyToast.show('授权变更失败！');
-                        }
-                        this.getAuthInfo();//刷新一下
-                    });
-            } else {
-                this.setState({isRefreshing: false})//开始刷新
-                EasyToast.show('密码错误');
-            }
-        } catch (e) {
-            this.setState({isRefreshing: false})//开始刷新
-            EasyToast.show('密码错误');
-        }
-    }, () => { EasyShowLD.dialogClose() });
+
+            this.EosUpdateAuth(this.props.navigation.state.params.wallet.account, authInfo.pk,authTemp,(r) => {
+                this.setState({isRefreshing: false})//停止刷新
+                if(r.isSuccess==true){
+                    EasyToast.show('授权变更成功！');
+                }else{
+                    EasyToast.show('授权变更失败！');
+                }
+                this.getAuthInfo();//刷新一下
+            });
+          } catch (error) {
+            this.setState({isRefreshing: false})//停止刷新
+            EasyToast.show('未知异常');
+          }
+
+      });
   }
 
     dismissKeyboardClick() {
@@ -550,7 +529,7 @@ _onRefresh(){
         initialLayout={{height:0,width:ScreenWidth}}
         />}
 
-
+        <AuthModal {...this.props} />
 
     </View>);
   }

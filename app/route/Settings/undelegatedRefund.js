@@ -67,7 +67,7 @@ class undelegatedRefund extends BaseComponent {
     }; 
     this.dismissKeyboardClick();
 
-    AuthModal.show((authInfo) => {
+    AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
       try {
         EasyShowLD.loadingShow();
         Eos.transaction({

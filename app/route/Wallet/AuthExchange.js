@@ -10,6 +10,8 @@ import { EasyToast } from "../../components/Toast"
 import { EasyShowLD } from '../../components/EasyShow'
 import { Eos } from "react-native-eosjs";
 import Constants from '../../utils/Constants'
+import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
@@ -116,51 +118,29 @@ EosUpdateAuth = (account, pvk,authActiveArr, callback) => {
        if(callback) callback(r);
     });
 };
+
 changeAuth(authTempActive){
-    const view =
-        <View style={styles.passoutsource}>
-            <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
-                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-        </View>
-        EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
-        if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-            EasyToast.show('密码长度至少4位,请重输');
-            return;
-        }
-        EasyShowLD.dialogClose();
-        var privateKey = this.props.navigation.state.params.wallet.activePrivate;
+    AuthModal.show(this.props.navigation.state.params.wallet.account, (authInfo) => {
         try {
             EasyShowLD.loadingShow();
-            var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.props.navigation.state.params.wallet.salt);
-            var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
             this.setState({password: ''});
-            if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                this.EosUpdateAuth(this.props.navigation.state.params.wallet.name, plaintext_privateKey,authTempActive,(r) => {
-                    // EasyShowLD.loadingClose();
-                    console.log("r=%s",JSON.stringify(r))
-                    if(r.isSuccess==true){
-                        EasyShowLD.loadingClose();
-                        EasyToast.show('交易授权变更成功！');
-                        this.props.navigation.goBack();
-                    }else{
-                        EasyToast.show('交易授权变更失败！');
-                    }
-                    this.getAuthInfo();//刷新一下
-                });
-            } else {
+            this.EosUpdateAuth(this.props.navigation.state.params.wallet.account, authInfo.pk,authTempActive,(r) => {
                 EasyShowLD.loadingClose();
-                EasyToast.show('密码错误');
-            }
-        } catch (e) {
+                console.log("r=%s",JSON.stringify(r))
+                if(r.isSuccess==true){
+                    EasyToast.show('交易授权变更成功！');
+                    this.props.navigation.goBack();
+                }else{
+                    EasyToast.show('交易授权变更失败！');
+                }
+                this.getAuthInfo();//刷新一下
+            });
+        } catch (error) {
             EasyShowLD.loadingClose();
-            EasyToast.show('密码错误');
+            EasyToast.show('未知异常');
         }
-    }, () => { EasyShowLD.dialogClose() });
+    });
 }
-
 
 authExchangeCtr= () =>{ 
         //当前钱包账户，校验是否有激活
@@ -196,7 +176,7 @@ goToGithub(){
    
   render() {
     return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-    <Header {...this.props} onPressLeft={true} title="交易授权" />
+        <Header {...this.props} onPressLeft={true} title="交易授权" />
 
         <View style={styles.head}>
             <ImageBackground style={styles.bgout} source={UImage.authFrame} resizeMode="cover">
@@ -216,7 +196,9 @@ goToGithub(){
           <TouchableOpacity onPress={this.authExchangeCtr.bind(this)} style={[styles.Applyout,{backgroundColor: UColor.tintColor}]}>  
               <Text style={[styles.canceltext,{color: UColor.btnColor}]}>{this.state.isAuth==false?"授权":"取消授权"}</Text>
           </TouchableOpacity>   
-      </View> 
+        </View> 
+
+        <AuthModal {...this.props} />
 
     </View>
     );

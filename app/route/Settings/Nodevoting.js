@@ -110,7 +110,7 @@ class Nodevoting extends BaseComponent {
         }
         selectArr.sort();
 
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
                 EasyShowLD.loadingShow();
                 //投票
@@ -175,7 +175,7 @@ class Nodevoting extends BaseComponent {
         });
         selectArr.sort();
 
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
                 EasyShowLD.loadingShow();
                     //撤票

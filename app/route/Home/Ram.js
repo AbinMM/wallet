@@ -341,7 +341,7 @@ class Ram extends BaseComponent {
         }
         this. dismissKeyboardClick();
 
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
                 EasyShowLD.loadingShow();
                 if(this.state.isOwn){
@@ -422,7 +422,7 @@ class Ram extends BaseComponent {
         }
         this. dismissKeyboardClick();
 
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
                 EasyShowLD.loadingShow();
                 Eos.transaction({

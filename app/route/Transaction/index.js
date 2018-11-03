@@ -681,7 +681,7 @@ class Transaction extends BaseComponent {
         this.setState({ business: false});
         this. dismissKeyboardClick();
 
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
                 EasyShowLD.loadingShow();
                 Eos.transaction({
@@ -737,7 +737,7 @@ class Transaction extends BaseComponent {
         this.setState({ business: false});
         this. dismissKeyboardClick();
 
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
                 EasyShowLD.loadingShow();
                 Eos.transaction({

@@ -72,7 +72,7 @@ class APactivation extends BaseComponent {
   createAccount() {
     this._setModalVisible();
 
-    AuthModal.show((authInfo) => {
+    AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
         try {
             EasyShowLD.loadingShow();
             Eos.transaction({

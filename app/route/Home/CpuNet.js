@@ -382,7 +382,7 @@ class CpuNet extends BaseComponent {
         }
         this. dismissKeyboardClick();
 
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
                 EasyShowLD.loadingShow();
                 if(this.state.isOthers && this.state.isTransfer){

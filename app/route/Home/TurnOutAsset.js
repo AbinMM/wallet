@@ -221,7 +221,7 @@ class TurnOutAsset extends BaseComponent {
 
     inputPwd = () => {
         this._setModalVisible();
-        AuthModal.show((authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
                 EasyShowLD.loadingShow();
                 Eos.transaction({
