@@ -90,7 +90,7 @@ export const getEosTransactionRecord = rootaddr + '/eosrpc/getEosTransactionReco
 export const getEosTableRows = rootaddr + '/eosrpc/getEosTableRows';
 
 export const dappfindAllHotRecommend = rootaddr + '/dapp/findAllHotRecommend'; //首页热门推荐
-export const dappfindAllRecommend = rootaddr + '/dapp/findAllRecommend'; //首页分类推荐
+export const dappfindAllRecommend = rootaddr + '/dapp/findAllRecommendNew'; //首页分类推荐
 export const dappfindAllByType = rootaddr + '/dapp/findAllByType'; //更多接口带分页
 
 export const atcgetInfo = rootaddr + '/act/getInfo';
