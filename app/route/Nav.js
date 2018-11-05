@@ -127,7 +127,8 @@ var TabContainer = TabNavigator(
       },
       labelStyle: { // 文字
         fontSize: 10,
-        margin: 0
+        margin: 0,
+        marginTop:3
       },
       indicatorStyle: { // 如TabBar下面显示有一条线，可以设高度为0后隐藏
         opacity: 0

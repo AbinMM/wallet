@@ -23,7 +23,7 @@ class Setting extends React.Component {
 
   static navigationOptions = {
     title: "我的",
-    header:null,   
+    header:null,
     tabBarLabel: '我的',
     tabBarIcon: ({ focused}) => (
       <Image resizeMode='contain' source={focused ? UImage.tab_4_h : UImage.tab_4} style={{width: ScreenUtil.autowidth(22), height: ScreenUtil.autowidth(20)}}/>
@@ -65,9 +65,9 @@ class Setting extends React.Component {
         }
       }
     } })
-    
+
     //获取签到状态
-    this.props.dispatch({ type: 'login/isSigned', payload:{name: this.state.phone},callback: (data) => { 
+    this.props.dispatch({ type: 'login/isSigned', payload:{name: this.state.phone},callback: (data) => {
       this.setState({Sign_in: data.data});
     } });
 
@@ -76,7 +76,7 @@ class Setting extends React.Component {
       // ToastAndroid.show("发送成功", ToastAndroid.SHORT);
       alert(title);
     })
-    this.eostRecord(); 
+    this.eostRecord();
   }
 
   eostRecord() {
@@ -121,12 +121,12 @@ class Setting extends React.Component {
     }
   }
 
-  skipNativeCall() {  
+  skipNativeCall() {
     let phone = '123123123';
-    NativeModules.commModule.rnCallNative(phone);  
-  }  
+    NativeModules.commModule.rnCallNative(phone);
+  }
 
-  //Callback 通信方式 
+  //Callback 通信方式
   callbackComm(msg) {
     NativeModules.commModule.rnCallNativeFromCallback(msg, (result) => {
       alert("CallBack收到消息:" + result);
@@ -145,7 +145,7 @@ class Setting extends React.Component {
     }else{
       const { navigate } = this.props.navigation;
       navigate('Login', {});
-    } 
+    }
   }
 
   signIn() {
@@ -168,7 +168,7 @@ class Setting extends React.Component {
       const { navigate } = this.props.navigation;
       if(this.state.isquery){
         this.props.dispatch({type:'login/geteostRecord',payload:{},callback:(carry)=>{
-          EasyShowLD.loadingClose();   
+          EasyShowLD.loadingClose();
           if(carry.code == 0){
             navigate('WithdrawMoney', {carry});
           }else{
@@ -188,26 +188,26 @@ class Setting extends React.Component {
                 }, () => { EasyShowLD.dialogClose() });
               }else if(integral.code == 607){
                 // const view = <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>您没有活动奖励可领取！</Text>
-                // EasyShowLD.dialogShow("温馨提示",view,"知道了",null,()=>{EasyShowLD.dialogClose()}); 
+                // EasyShowLD.dialogShow("温馨提示",view,"知道了",null,()=>{EasyShowLD.dialogClose()});
                 const view = <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>首批奖励领取已圆满结束，期待您的下次参与！</Text>
                 EasyShowLD.dialogShow("温馨提示", view, "查看", "好的", () => {
                   navigate('Web', { title: "活动结束公告", url: "http://news.eostoken.im/html/20180831/1535698529506.html" });
                   EasyShowLD.dialogClose()
                 }, () => { EasyShowLD.dialogClose() });
-              }else if(integral.code == 0){         
+              }else if(integral.code == 0){
                 EasyShowLD.loadingClose();
                 if (Platform.OS == 'ios') {
                   var th = this;
                     this.handle = setTimeout(() => {
                       th._setModalVisible();
-                      th.setState({walletName: this.props.defaultWallet ? this.props.defaultWallet.name : ''}); 
+                      th.setState({walletName: this.props.defaultWallet ? this.props.defaultWallet.name : ''});
                     }, 100);
                   }else{
                     this._setModalVisible();
-                    this.setState({walletName: this.props.defaultWallet ? this.props.defaultWallet.name : ''}); 
+                    this.setState({walletName: this.props.defaultWallet ? this.props.defaultWallet.name : ''});
                   }
                 // this._setModalVisible();
-                // this.setState({walletName: this.props.defaultWallet ? this.props.defaultWallet.name : ''}); 
+                // this.setState({walletName: this.props.defaultWallet ? this.props.defaultWallet.name : ''});
               }else{
                 EasyShowLD.loadingClose();
                 EasyToast.show(integral && integral.msg ? integral.msg : "抱歉,您未达到奖励获取条件");
@@ -245,13 +245,13 @@ class Setting extends React.Component {
     }
   }
 
-  // 显示/隐藏 modal  
-  _setModalVisible() {  
-    let isShow = this.state.show;  
-    this.setState({  
-      show:!isShow,  
-    });  
-  }  
+  // 显示/隐藏 modal
+  _setModalVisible() {
+    let isShow = this.state.show;
+    this.setState({
+      show:!isShow,
+    });
+  }
 
   render() {
     return <View style={[styles.container,{backgroundColor: '#F7F8F9'}]}>
@@ -264,17 +264,17 @@ class Setting extends React.Component {
               <Ionicons style={[styles.systemSettingArrow,{color: UColor.fontColor}]} name="ios-arrow-forward-outline" size={20} />
           </View>
         </Button>}
-        
-      
+
+
         <View style={[styles.userHead,{backgroundColor: UColor.mainColor}]} >
           <TouchableOpacity style={styles.headout} onPress={this.goProfile.bind(this)}>
-            <View style={[styles.headimgout, {backgroundColor:'#F7F8F9'}]}> 
+            <View style={[styles.headimgout, {backgroundColor:'#F7F8F9'}]}>
               {this.props.loginUser ?
               <Image source={UImage.logo} style={styles.headimg}/>
               :
               <Text style={{fontSize: ScreenUtil.setSpText(14.5), color: '#1A1A1A'}}>登陆</Text>
                }
-              
+
             </View>
             <Text style={[styles.headtext,{color: '#1A1A1A'}]}>{(this.props.loginUser) ? this.props.loginUser.nickname : ""}</Text>
           </TouchableOpacity>
@@ -282,8 +282,8 @@ class Setting extends React.Component {
             <Text style={{fontSize: ScreenUtil.setSpText(11), color: '#FFFFFF', textAlign: 'center'}}>签到</Text>
           </TouchableOpacity>
         </View>
-        
-        
+
+
         {/* <View style={[styles.eosbtnout,{backgroundColor: UColor.mainColor}]}>
           <View style={styles.eosout}>
             <Text style={[styles.eosbtntext,{color: UColor.arrow}]}>活动奖励</Text>
@@ -297,21 +297,21 @@ class Setting extends React.Component {
             }
           </View>
         </View> */}
-        
+
         <View>
           {this._renderListItem()}
         </View>
-        
+
         {/* <View style={styles.footer}>
           <Text style={[styles.foottext,{color: UColor.arrow}]}>© 2018 eostoken all rights reserved </Text>
           <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V{DeviceInfo.getVersion()}</Text>
           <Text style={[styles.foottext,{color: UColor.arrow}]}>EOS专业版钱包 V2.3.8.1</Text>
         </View> */}
-      
+
         <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.state.show} onRequestClose={()=>{}}>
           <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
             <View style={{ width: ScreenWidth-20, backgroundColor: UColor.fontColor, borderRadius: 5, }}>
-                <View style={styles.subViewBackup}> 
+                <View style={styles.subViewBackup}>
                   <Button onPress={this._setModalVisible.bind(this)} style={styles.buttonView}>
                       <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={30} />
                   </Button>
@@ -328,8 +328,8 @@ class Setting extends React.Component {
                     <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
                         <Text style={[styles.deletetext,{color: UColor.btnColor}]}>提交</Text>
                     </View>
-                </Button> 
-            </View> 
+                </Button>
+            </View>
           </TouchableOpacity>
         </Modal>
       </ScrollView>
@@ -352,8 +352,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: ScreenWidth,
-    height: ScreenUtil.autoheight(75),
+    height: ScreenUtil.autoheight(65),
     paddingHorizontal: ScreenUtil.autowidth(15),
+    marginTop:ScreenUtil.autoheight(10)
   },
   headout: {
     flex: 1,
@@ -383,7 +384,7 @@ const styles = StyleSheet.create({
     width: ScreenUtil.autowidth(50),
     height: ScreenUtil.autoheight(25),
   },
- 
+
   signedimg: {
     width: ScreenUtil.autowidth(40),
     height: ScreenUtil.autowidth(49)
@@ -436,7 +437,7 @@ const styles = StyleSheet.create({
   systemSettingTip: {
     width: ScreenWidth,
     flexDirection: "row",
-    alignItems: 'center', 
+    alignItems: 'center',
     height: ScreenUtil.autoheight(40),
   },
   systemSettingText: {
@@ -452,9 +453,9 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   pupuoBackup: {
-    flex: 1, 
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center', 
+    justifyContent: 'center',
   },
   subViewBackup: {
     alignItems: 'flex-end',
@@ -475,7 +476,7 @@ const styles = StyleSheet.create({
   },
   warningout: {
     paddingHorizontal: ScreenUtil.autowidth(30),
-  }, 
+  },
   accountoue: {
     alignItems: 'center',
     flexDirection: "row",

@@ -11,7 +11,7 @@ import NativeUtil from '../../utils/NativeUtil'
 import { EasyToast } from "../../components/Toast"
 import { EasyShowLD } from '../../components/EasyShow'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
-import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter' 
+import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 const ScreenWidth = Dimensions.get('window').width;
@@ -56,10 +56,10 @@ class Home extends React.Component {
 
   componentDidMount() {
     //加载地址数据
-    this.props.dispatch({type:'assets/getReveal',callback:(reveal)=>{ 
+    this.props.dispatch({type:'assets/getReveal',callback:(reveal)=>{
       this.setState({isEye:reveal.reveal,});
     }});
-    
+
     this.props.dispatch({ type: 'wallet/updateInvalidState', payload: {Invalid: false}});
     this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
       this.setState({assetRefreshing: true});
@@ -75,14 +75,14 @@ class Home extends React.Component {
     this.props.dispatch({ type: 'wallet/walletList' });
     this.props.dispatch({ type: 'wallet/invalidWalletList',  callback: (invalidWalletList) => {
       if(invalidWalletList != null){
-        this.setState({ 
+        this.setState({
           Invalid: true,
           arr1 : invalidWalletList.length,
           invalidWalletList : invalidWalletList
          })
       }
     }});
-   
+
     Animated.timing(
       this.state.fadeAnim,  //初始值
       {
@@ -94,7 +94,7 @@ class Home extends React.Component {
     // DeviceEventEmitter.addListener('wallet_info', (data) => {
     //   this.getDefaultWalletEosBalance();
     //   this.getAllWalletEosBalance();
-    //   this.getMyAssetsInfo();    
+    //   this.getMyAssetsInfo();
     // });
     DeviceEventEmitter.addListener('updateDefaultWallet', (data) => {
       this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
@@ -105,9 +105,9 @@ class Home extends React.Component {
       } });
     });
 
-    this.listener = RCTDeviceEventEmitter.addListener('createWallet',(value)=>{  
-      this.createWallet();  
-    });  
+    this.listener = RCTDeviceEventEmitter.addListener('createWallet',(value)=>{
+      this.createWallet();
+    });
 
     DeviceEventEmitter.addListener('eos_increase', (data) => {
       if(data == null || data == undefined){
@@ -143,7 +143,7 @@ class Home extends React.Component {
       this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
         // this.getDefaultWalletEosBalance(); // 默认钱包余额
         // this.getAllWalletEosBalance();
-        this.getMyAssetsInfo(); 
+        this.getMyAssetsInfo();
         this.getIncrease();
       } });
     });
@@ -166,7 +166,7 @@ class Home extends React.Component {
   }
 
   componentWillUnmount(){
-    this.listener.remove();  
+    this.listener.remove();
     this.setState({listmodal: false,})
   }
 
@@ -177,7 +177,7 @@ class Home extends React.Component {
     this.props.dispatch({ type: 'assets/myAssetInfo', payload: { page: 1, isInit: init, accountName: this.props.defaultWallet.name}, callback: (myAssets) => {
       this.calTotalBalance();
       this.props.dispatch({ type: 'assets/fetchMyAssetsFromNet', payload: { accountName: this.props.defaultWallet.name}, callback: () => {
-        this.getAssetBalance(getAssetsInfoCallback);    
+        this.getAssetBalance(getAssetsInfoCallback);
       }});
     }});
   }
@@ -216,7 +216,7 @@ class Home extends React.Component {
   }
 
   getIncrease(){
-    this.props.dispatch({ type: 'sticker/listincrease', payload: { type: 0}, callback: (data) => { 
+    this.props.dispatch({ type: 'sticker/listincrease', payload: { type: 0}, callback: (data) => {
         if(data == undefined || data == null){
           reurn;
         }
@@ -225,8 +225,8 @@ class Home extends React.Component {
         }
     } });
   }
-  
-  getDefaultWalletEosBalance(callback) { 
+
+  getDefaultWalletEosBalance(callback) {
     if (this.props.defaultWallet == null || this.props.defaultWallet.name == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
       if(callback) callback();
       return;
@@ -249,7 +249,7 @@ class Home extends React.Component {
         this.props.dispatch({
           type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.walletList[i].name, symbol: 'EOS' }
         })
-  
+
       }
     }
   }
@@ -273,7 +273,7 @@ class Home extends React.Component {
     });
   }
 
-  // 显示/隐藏   
+  // 显示/隐藏
   _setModalInvalid() {
     this.props.dispatch({ type: 'wallet/updateInvalidState', payload: {Invalid: false}});
   }
@@ -283,14 +283,14 @@ class Home extends React.Component {
       return;
     }
     var arr = [];
-    for(var i = 0; i < this.props.invalidWalletList.length; i++){ 
+    for(var i = 0; i < this.props.invalidWalletList.length; i++){
         if(this.props.invalidWalletList[i].isChecked == true){
           arr.push(this.props.invalidWalletList[i]);
-        }     
+        }
     }
     this.props.dispatch({ type: 'wallet/delWalletList', payload: { walletList: arr } });
     EasyToast.show("删除无效账号成功！");
-    this._setModalInvalid(); 
+    this._setModalInvalid();
   }
 
 
@@ -300,7 +300,7 @@ class Home extends React.Component {
       EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
         this.createWallet();
         EasyShowLD.dialogClose()
-      }, () => { EasyShowLD.dialogClose() });  
+      }, () => { EasyShowLD.dialogClose() });
       return;
     }
     navigate('CpuNet', {});
@@ -312,7 +312,7 @@ class Home extends React.Component {
       EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
         this.createWallet();
         EasyShowLD.dialogClose()
-      }, () => { EasyShowLD.dialogClose() });  
+      }, () => { EasyShowLD.dialogClose() });
       return;
     }
     navigate('Ram', {});
@@ -345,7 +345,7 @@ class Home extends React.Component {
         EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
           this.createWallet();
           EasyShowLD.dialogClose()
-        }, () => { EasyShowLD.dialogClose() });  
+        }, () => { EasyShowLD.dialogClose() });
         return;
       }
       navigate('TurnOutAsset', { coins:this.props.myAssets[0], Choicesymbol: true, getbalance: true });
@@ -354,7 +354,7 @@ class Home extends React.Component {
         EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
           this.createWallet();
           EasyShowLD.dialogClose()
-        }, () => { EasyShowLD.dialogClose() });  
+        }, () => { EasyShowLD.dialogClose() });
         return;
       }
       navigate('CpuNet', {});
@@ -363,7 +363,7 @@ class Home extends React.Component {
         EasyShowLD.dialogShow("温馨提示", "您还没有创建钱包", "创建一个", "取消", () => {
           this.createWallet();
           EasyShowLD.dialogClose()
-        }, () => { EasyShowLD.dialogClose() });  
+        }, () => { EasyShowLD.dialogClose() });
         return;
       }
       navigate('AddAssets', {});
@@ -486,7 +486,7 @@ class Home extends React.Component {
     if(this.props.myAssets && this.props.myAssets[0] && this.props.myAssets[0].balance)
     {
       balance = this.props.myAssets[0].balance;
-    }  
+    }
 
     //未激活
     if(!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))
@@ -505,7 +505,7 @@ class Home extends React.Component {
     const { navigate } = this.props.navigation;
     navigate('CreateWallet', {entry: "wallet_home"});
   }
-  
+
   Import() {
     this._disableTipVisible();
     const { navigate } = this.props.navigation;
@@ -542,7 +542,7 @@ class Home extends React.Component {
     }
     this.setState({ modal: !this.state.modal })
   }
-  
+
   onRefresh(){
     if(this.props.defaultWallet == null || this.props.defaultWallet.name == null){
       return;
@@ -556,14 +556,14 @@ class Home extends React.Component {
     // }});
 
     // 默认钱包余额
-    // this.getDefaultWalletEosBalance(); 
+    // this.getDefaultWalletEosBalance();
 
     //获取资源详情
     this.getResourcesinfo((this.props.defaultWallet == null || this.props.defaultWallet.name == null) ? this.state.account : this.props.defaultWallet.name);
-    
+
     // this.getMyAssetsInfo(() => {this.setState({assetRefreshing: false})});
     this.props.dispatch({ type: 'assets/fetchMyAssetsFromNet', payload: { accountName: this.props.defaultWallet.name}, callback: () => {
-      this.getAssetBalance(() => {this.setState({assetRefreshing: false})});    
+      this.getAssetBalance(() => {this.setState({assetRefreshing: false})});
     }});
   }
 
@@ -578,11 +578,11 @@ class Home extends React.Component {
     return false;
   }
 
-    // 显示/隐藏 tipIOS  
+    // 显示/隐藏 tipIOS
     _disableTipVisible() {
       this.props.dispatch({ type: 'wallet/updateTipState', payload: {tipFlagIOS: false}});
     }
-  
+
 
   WalletDetailBackup(data) {
     const { navigate } = this.props.navigation;
@@ -602,26 +602,29 @@ class Home extends React.Component {
   }
 
   _onScroll(event) {
-    if(event.nativeEvent.contentOffset.y>180){
-      if(this.state.fadeOpacity>0){
+    if(event.nativeEvent.contentOffset.y>150){
+      if(this.showMenu){
         return;
       }
-      this.setState({zIndex: 999})
+      this.showMenu = true;
+      this.setState({zIndex:9999})
       Animated.timing(this.state.fadeOpacity, {
           toValue: 1,
-          duration: 300,
+          duration: 500,
           easing: Easing.linear,// 线性的渐变函数
       }).start();
     }else{
-      if(this.state.fadeOpacity>=1){
+      if(!this.showMenu){
         return;
       }
-      this.setState({zIndex: 0})
       Animated.timing(this.state.fadeOpacity, {
         toValue: 0,
         duration: 300,
         easing: Easing.linear,// 线性的渐变函数
-      }).start();
+      }).start(() => {
+        this.showMenu=false;
+        this.setState({zIndex: 0})
+      });
     }
   }
 
@@ -642,44 +645,44 @@ class Home extends React.Component {
               </TouchableOpacity>
             </View>
             <View style={{flex: 1, alignItems: 'center',justifyContent: 'space-around'}}>
-              <Text style={{fontSize: ScreenUtil.setSpText(40), color: '#FEFEFE', fontWeight: 'bold'}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : "" + this.state.adjustTotalBalance) : '****'}</Text>
+              <Text style={{fontSize: ScreenUtil.setSpText(36), color: '#FEFEFE'}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : "" + this.state.adjustTotalBalance) : '****'}</Text>
               <View style={{flexDirection: 'row', alignItems: 'center',}}>
                 <Text style={[styles.cupcdo,{color: UColor.btnColor}]}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
                 <TouchableOpacity onPress={this.onPressReveal.bind(this,this.state.isEye)}>
-                  <Image source={this.state.isEye ? UImage.reveal : UImage.reveal_h} style={this.state.isEye ? styles.imgTeOy : styles.imgoney}/>
+                  <Image resizeMode="contain" source={this.state.isEye ? UImage.reveal : UImage.reveal_h} style={this.state.isEye ? styles.imgTeOy : styles.imgoney}/>
                 </TouchableOpacity>
               </View>
-              {(this.props.defaultWallet && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))) 
-              ? 
+              {(this.props.defaultWallet && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))
+              ?
               <View style={[styles.backoractivestyle,{borderColor: '#FEFEFE'}]}>
                 <Text style={[styles.notactived,{color: '#FEFEFE'}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未激活</Text>
               </View>
               :
-              ((!this.props.defaultWallet || !this.props.defaultWallet.name || (this.props.defaultWallet &&this.props.defaultWallet.isBackups)) 
-                ? 
+              ((!this.props.defaultWallet || !this.props.defaultWallet.name || (this.props.defaultWallet &&this.props.defaultWallet.isBackups))
+                ?
                 <Text style={styles.notactived} />
-                :  
+                :
                 <View style={[styles.backoractivestyle,{borderColor: '#FEFEFE'}]}>
                   <Text style={[styles.notactived,{color: '#FEFEFE'}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未备份</Text>
-                </View>) }   
+                </View>) }
             </View>
           </LinearGradient>
         </View>
-        <View style={{paddingHorizontal: ScreenUtil.autowidth(16), paddingTop: ScreenUtil.autowidth(28)}}>
-          <TouchableOpacity onPress={()=>{this.gotoCpuNet()}} style={{height: ScreenUtil.autowidth(45), flexDirection: 'row', alignItems: 'center', borderBottomColor: '#F7F8F9', borderBottomWidth: 0.5,}}>
+        <View style={{paddingHorizontal: ScreenUtil.autowidth(16), paddingTop: ScreenUtil.autowidth(32)}}>
+          <TouchableOpacity onPress={()=>{this.gotoCpuNet()}} style={{height: ScreenUtil.autowidth(50), flexDirection: 'row', alignItems: 'center', borderBottomColor: '#F7F8F9', borderBottomWidth: 0.7,}}>
             <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#080808',}}>已抵押资源(CPU+NET)</Text>
-            <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(16), color: '#1A1A1A'}}>{this.state.mortgage}</Text>
-            <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#080808',fontWeight: "100"}}> EOS</Text>
+            <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(18), color: '#1A1A1A'}}>{this.state.mortgage}</Text>
+            <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#080808'}}> EOS </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>{this.gotoRam()}} style={{height: ScreenUtil.autowidth(45), flexDirection: 'row', alignItems: 'center',}}>
+          <TouchableOpacity onPress={()=>{this.gotoRam()}} style={{height: ScreenUtil.autowidth(50), flexDirection: 'row', alignItems: 'center',}}>
             <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#080808',}}>内存(RAM)</Text>
-            <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(16), color: '#1A1A1A'}}>{this.state.allowance}</Text>
-            <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#080808',fontWeight: "100"}}> KB</Text>
+            <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(18), color: '#1A1A1A'}}>{this.state.allowance}</Text>
+            <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#080808'}}> KB </Text>
           </TouchableOpacity>
         </View>
         <View onScroll={this.onScroll} style={{ top: ScreenUtil.autowidth(175),position: "absolute",flexDirection: 'row',width: ScreenWidth-ScreenUtil.autowidth(36), borderRadius: 25,
           height: ScreenUtil.autowidth(45),marginHorizontal: ScreenUtil.autowidth(16), paddingVertical:ScreenUtil.autowidth(12), backgroundColor: UColor.mainColor,
-          shadowColor: '#6f7bff',shadowOffset:{height: 3,width: 0},shadowRadius: 5,shadowOpacity: 0.16,elevation: 5,}}>
+          shadowColor: '#6f7bff',shadowOffset:{height: 3,width: 0},shadowRadius: 5,shadowOpacity: 0.16,elevation:0.3}}>
           <TouchableOpacity onPress={this.onPress.bind(this, 'transfer')} style={[styles.headbtn,{borderRightWidth: 0.5, borderRightColor: '#F7F8F9'}]}>
             <View style={styles.headbtnout}>
               <Image source={UImage.transfer} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
@@ -698,22 +701,22 @@ class Home extends React.Component {
   }
 
   _renderFooter() {
-    return(<View style={{marginBottom: ScreenUtil.autowidth(10), backgroundColor: UColor.mainColor,marginHorizontal: ScreenUtil.autowidth(16)}}>
+    return((this.props.myAssets && this.props.myAssets.length>0) ? <View style={[{marginBottom: ScreenUtil.autowidth(16), backgroundColor: UColor.mainColor,marginHorizontal: ScreenUtil.autowidth(16),borderBottomLeftRadius:4,borderBottomRightRadius:4}]}>
       <Button onPress={this.onPress.bind(this, 'addAssets')} >
-        <View style={{alignItems: 'center',justifyContent: 'center', height: ScreenUtil.autoheight(50),}}>
+        <View style={{alignItems: 'center',justifyContent: 'center', height: ScreenUtil.autoheight(50)}}>
           <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#6DA0F8'}}>添加新资产</Text>
         </View>
       </Button>
-    </View>)
+    </View>:null);
   }
 
   _renderRow = (rowData, sectionID, rowID) => {
-    return(<View style={[{borderBottomColor: UColor.secdfont, borderBottomWidth: 1.5, marginHorizontal: ScreenUtil.autowidth(16),borderTopRightRadius: 5, borderTopLeftRadius: 5,overflow: 'hidden',},rowID == 0 && {marginTop: ScreenUtil.autowidth(10)}]}>
+    return(<View style={[{borderBottomColor: UColor.secdfont, borderBottomWidth:0.7, marginHorizontal: ScreenUtil.autowidth(16),overflow: 'hidden',},rowID == 0 && {marginTop: ScreenUtil.autowidth(16),borderTopRightRadius:4,borderTopLeftRadius:4}]}>
         <Button onPress={this.assetInfo.bind(this, rowData)}>
           <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
             <View style={styles.lefts}>
-              <View style={[styles.leftimg,{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(16)}]}> 
-                <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
+              <View style={[styles.leftimg,{backgroundColor:"#808080",marginRight: ScreenUtil.autowidth(16)}]}>
+                <Image resizeMode="contain" source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
               </View>
               <Text style={[styles.lefttext,{color: UColor.fontColor}]}>{rowData.asset.name}</Text>
             </View>
@@ -760,14 +763,14 @@ class Home extends React.Component {
                     <Ionicons style={[styles.systemSettingArrow,{color: UColor.btnColor}]} name="ios-arrow-forward-outline" size={20} />
                 </View>
           </Button>}
-          <Animated.View style={{zIndex:this.state.zIndex,position:"absolute",top:0,left:0,width:ScreenWidth,opacity: this.state.fadeOpacity}}>
-            <LinearGradient style={{width: ScreenWidth, height: Constants.FitPhone + ScreenUtil.autowidth(40), flexDirection: "row", justifyContent: "center",}}  paddingTop = {Constants.FitPhone} colors={['#6C9EF8','#5F5DE6']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} >
+          <Animated.View style={{zIndex:999,position:"absolute",top:0,left:0,width:ScreenWidth,opacity: this.state.fadeOpacity}}>
+            <LinearGradient style={{width: ScreenWidth, height: Constants.FitPhone + ScreenUtil.autowidth(45), flexDirection: "row", justifyContent: "center",}}  paddingTop = {Constants.FitPhone} colors={['#6C9EF8','#5F5DE6']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} >
               <TouchableOpacity onPress={this.onPress.bind(this, 'transfer')} style={{flexDirection: "row", alignItems: 'center', paddingHorizontal: ScreenUtil.autowidth(15),}}>
-                  <Image source={UImage.transfer_float} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
+                  <Image resizeMode='contain' source={UImage.transfer_float} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
                   <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#FFFFFF'}}>转账</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={this.onPress.bind(this, 'Receivables')} style={{flexDirection: "row", alignItems: 'center', paddingHorizontal: ScreenUtil.autowidth(15),}}>
-                  <Image source={UImage.receipt_float} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
+                  <Image resizeMode='contain' source={UImage.receipt_float} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
                   <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#FFFFFF'}}>收款</Text>
               </TouchableOpacity>
               <View style={{flex:1}}/>
@@ -779,16 +782,16 @@ class Home extends React.Component {
           <ListView 
             refreshControl={<RefreshControl refreshing={this.state.assetRefreshing} onRefresh={() => this.onRefresh()}
             tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
-            onScroll={(event) => this._onScroll(event)}  enableEmptySections={true} initialListSize={1}
+            onScroll={(event) => this._onScroll(event)}  enableEmptySections={true} initialListSize={10}
             renderHeader={() => this._renderHeader()}  renderFooter={()=> this._renderFooter()}
-            dataSource={this.state.dataSource.cloneWithRows(this.props.myAssets == null ? [] : this.props.myAssets)} 
-            renderRow={(rowData, sectionID, rowID) => this._renderRow(rowData, sectionID, rowID)}                
-          />  
+            dataSource={this.state.dataSource.cloneWithRows(this.props.myAssets == null ? [] : this.props.myAssets)}
+            renderRow={(rowData, sectionID, rowID) => this._renderRow(rowData, sectionID, rowID)}
+          />
 
           <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.isTipShow()} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
               <View style={{ width: ScreenWidth-20, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
-                <View style={styles.subViewBackup}> 
+                <View style={styles.subViewBackup}>
                   <Button onPress={this._disableTipVisible.bind(this) } style={styles.buttonView2}>
                       <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={30} />
                   </Button>
@@ -802,8 +805,8 @@ class Home extends React.Component {
                     <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
                         <Text style={[styles.deletetext,{color: UColor.btnColor}]}>立即备份</Text>
                     </View>
-                </Button> 
-              </View> 
+                </Button>
+              </View>
             </TouchableOpacity>
           </Modal>
 
@@ -820,19 +823,19 @@ class Home extends React.Component {
                         <View style={[styles.walletlist]} backgroundColor={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account) && UColor.secdfont}>
                           <View style={styles.topout}>
                             <Text style={[styles.outname,{color: '#6DA0F8'}]}>{rowData.name}</Text>
-                            {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ? 
+                            {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ?
                             <View style={[styles.stopoutBackupsout,{borderColor: UColor.showy}]}>
                               <Text style={[styles.stopoutBackups,{color: UColor.showy}]} onPress={this.WalletDetail.bind(this, rowData)}>未激活</Text>
                             </View>
                             :
-                            (rowData.isBackups ? null :  
+                            (rowData.isBackups ? null :
                             <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
                               <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this, rowData)}>未备份</Text>
-                            </View>)}  
+                            </View>)}
                           </View>
                           <Text style={[styles.walletaccount,{color: '#6DA0F8'}]} numberOfLines={1} ellipsizeMode='middle'>{this.state.isEye ? (rowData.isactived && rowData.balance != null && rowData.balance != ""? rowData.balance : '0.0000') : '****'} EOS</Text>
                         </View>
-                      </Button> 
+                      </Button>
                     )}
                   />
                   <Button onPress={() => this.createWallet()} style={styles.btnout}>
@@ -883,7 +886,7 @@ class Home extends React.Component {
           <Modal style={styles.touchableouts} animationType={'slide'} transparent={true}  visible={this.props.Invalid} onRequestClose={()=>{}}>
             <TouchableOpacity style={styles.pupuo} activeOpacity={1.0}>
               <View style={[styles.modalStyle,{backgroundColor: UColor.fontColor}]}>
-                <View style={styles.subView}> 
+                <View style={styles.subView}>
                   <Text style={styles.titleText}/>
                   <Text style={styles.contentText}>无效账户删除提示</Text>
                   <Button onPress={this._setModalInvalid.bind(this)}>
@@ -891,11 +894,11 @@ class Home extends React.Component {
                   </Button>
                 </View>
                 <Text style={[styles.prompt,{color: UColor.showy}]}>警告：系统检测到您有无效账号残留，为了避免误转账至无效账户带来不必要的损失，请即时清理无效账户！</Text>
-                <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true} 
-                    dataSource={this.state.dataSource.cloneWithRows(this.props.invalidWalletList == null ? [] : this.props.invalidWalletList)} 
-                    renderRow={(rowData, sectionID, rowID) => (                 
+                <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true}
+                    dataSource={this.state.dataSource.cloneWithRows(this.props.invalidWalletList == null ? [] : this.props.invalidWalletList)}
+                    renderRow={(rowData, sectionID, rowID) => (
                       <View>
-                          <Button > 
+                          <Button >
                               <View style={[styles.codeout,{borderBottomColor: UColor.riceWhite}]} >
                                   <View style={styles.copyout}>
                                       <Text style={[styles.copytext,{color: UColor.secdColor}]}>{rowData.name}</Text>
@@ -903,18 +906,18 @@ class Home extends React.Component {
                                   <TouchableOpacity style={styles.taboue} >
                                       <View style={[styles.tabview,{borderColor: UColor.lightgray}]} >
                                           <Image source={rowData.isChecked ? UImage.Tick:null} style={styles.tabimg} />
-                                      </View>  
-                                  </TouchableOpacity>  
-                              </View> 
-                          </Button>  
-                      </View>      
-                    )}                   
-                  /> 
+                                      </View>
+                                  </TouchableOpacity>
+                              </View>
+                          </Button>
+                      </View>
+                    )}
+                  />
                   <Button onPress={this.delInvalidWallet.bind(this)}>
                       <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
                         <Text style={[styles.deletetext,{color: UColor.fontColor}]}>一键删除</Text>
                       </View>
-                  </Button>  
+                  </Button>
               </View>
             </TouchableOpacity>
           </Modal>
@@ -938,7 +941,7 @@ const styles = StyleSheet.create({
 
   topbtn: {
     width: ScreenWidth,
-    
+
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: "space-between",
@@ -963,23 +966,23 @@ const styles = StyleSheet.create({
     marginBottom: ScreenUtil.autowidth(15),
   },
   headbtn: {
-    flex: 1, 
+    flex: 1,
     alignItems: 'center',
-    justifyContent: "center", 
-   
+    justifyContent: "center",
+
   },
   headbtnout: {
-    flex:1, 
+    flex:1,
     flexDirection: 'row',
-    alignItems: 'center', 
+    alignItems: 'center',
     justifyContent: "center",
   },
   headbtntext: {
     fontSize: ScreenUtil.setSpText(16),
   },
   resourceout: {
-    flex: 1, 
-    flexDirection: "column",  
+    flex: 1,
+    flexDirection: "column",
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1013,11 +1016,11 @@ const styles = StyleSheet.create({
     width: ScreenUtil.autowidth(50),
     height: ScreenUtil.autowidth(18),
   },
-  accountText: { 
-    fontSize: ScreenUtil.setSpText(16), 
+  accountText: {
+    fontSize: ScreenUtil.setSpText(16),
   },
-  addtotext: { 
-    fontSize: ScreenUtil.setSpText(12), 
+  addtotext: {
+    fontSize: ScreenUtil.setSpText(12),
   },
   imgTeOy: {
     width: ScreenUtil.autowidth(16),
@@ -1032,19 +1035,19 @@ const styles = StyleSheet.create({
   addtoouttop: {
     flex: 1,
     flexDirection: "row",
-    alignItems: 'center', 
+    alignItems: 'center',
   },
   addtoouttext: {
-    fontSize: ScreenUtil.setSpText(15), 
+    fontSize: ScreenUtil.setSpText(15),
   },
   addtoout: {
     flexDirection: "row",
-    alignItems: 'center', 
+    alignItems: 'center',
   },
 
   addbtnout: {
-    flex:1,  
-    alignItems: 'center', 
+    flex:1,
+    alignItems: 'center',
     justifyContent: "center",
   },
 
@@ -1053,16 +1056,16 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   touchable: {
-    flex: 1, 
-    alignItems: 'flex-end', 
-    justifyContent: 'flex-start', 
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
   },
   touchableout: {
-    width: ScreenWidth, 
-    alignItems: 'center', 
+    width: ScreenWidth,
+    alignItems: 'center',
   },
   touchablelist: {
-    width: '100%', 
+    width: '100%',
   },
 
   imgBtn: {
@@ -1073,7 +1076,7 @@ const styles = StyleSheet.create({
 
   walletlist: {
     width: '100%',
-    
+
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: 'center',
@@ -1109,10 +1112,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-  },  
+  },
 
   notactived: {
-    textAlign: 'center', 
+    textAlign: 'center',
     fontSize: ScreenUtil.setSpText(10),
   },
 
@@ -1122,37 +1125,37 @@ const styles = StyleSheet.create({
   },
 
   btnout: {
-    width: '100%', 
-    alignItems: 'center', 
-    flexDirection: "column",  
+    width: '100%',
+    alignItems: 'center',
+    flexDirection: "column",
   },
   estabwallet: {
     flexDirection: "row",
-    alignItems: 'center', 
+    alignItems: 'center',
     height: ScreenUtil.autoheight(60),
   },
 
 
   establishout: {
     flexDirection: "row",
-    alignItems: 'center', 
+    alignItems: 'center',
     borderTopWidth: 0.5,
     height: ScreenUtil.autoheight(44),
-    paddingHorizontal: ScreenUtil.autowidth(25), 
+    paddingHorizontal: ScreenUtil.autowidth(25),
   },
   establishimg:{
-    width: ScreenUtil.autowidth(17), 
-    height: ScreenUtil.autowidth(18), 
+    width: ScreenUtil.autowidth(17),
+    height: ScreenUtil.autowidth(18),
   },
   establishtext: {
-    fontSize: ScreenUtil.setSpText(15), 
-    marginLeft: ScreenUtil.autowidth(10), 
+    fontSize: ScreenUtil.setSpText(15),
+    marginLeft: ScreenUtil.autowidth(10),
   },
 
   pupuo: {
-    flex: 1, 
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-end', 
+    justifyContent: 'flex-end',
   },
   modalStyle: {
       width: ScreenWidth,
@@ -1207,8 +1210,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftimg: {
-    width: ScreenUtil.autowidth(30), 
-    height: ScreenUtil.autowidth(30),
+    width: ScreenUtil.autowidth(32),
+    height: ScreenUtil.autowidth(32),
+    borderRadius: ScreenUtil.autowidth(16),
   },
   lefttext: {
     fontSize: ScreenUtil.setSpText(14),
@@ -1228,23 +1232,23 @@ const styles = StyleSheet.create({
   rightbalance: {
     flex: 1,
     textAlign: 'right',
-    fontSize: ScreenUtil.setSpText(14), 
+    fontSize: ScreenUtil.setSpText(16),
   },
   rightmarket: {
     flex: 1,
     textAlign: 'right',
-    fontSize: ScreenUtil.setSpText(10),
+    fontSize: ScreenUtil.setSpText(11),
   },
 
   incdocupout: {
-    borderBottomLeftRadius: 25, 
+    borderBottomLeftRadius: 25,
     borderTopLeftRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: ScreenUtil.autowidth(10),
   },
   cupcdo:{
-    fontSize: ScreenUtil.setSpText(16),
+    fontSize: ScreenUtil.setSpText(14),
   },
   imgTop: {
     width: ScreenUtil.autowidth(121),
@@ -1271,7 +1275,7 @@ const styles = StyleSheet.create({
 
  taboue: {
   alignItems: 'center',
-  justifyContent: 'center', 
+  justifyContent: 'center',
 },
 tabview: {
   borderWidth: 1,
@@ -1280,7 +1284,7 @@ tabview: {
   height: ScreenUtil.autowidth(24),
 },
 tabimg: {
-  width: ScreenUtil.autowidth(24), 
+  width: ScreenUtil.autowidth(24),
   height: ScreenUtil.autowidth(24),
 },
 
@@ -1297,9 +1301,9 @@ deletetext: {
 },
 
 pupuoBackup: {
-  flex: 1, 
+  flex: 1,
   alignItems: 'center',
-  justifyContent: 'center', 
+  justifyContent: 'center',
 },
 
 headout: {
@@ -1310,7 +1314,7 @@ warningout: {
   borderWidth: 1,
   borderRadius: 5,
   flexDirection: "row",
-  alignItems: 'center', 
+  alignItems: 'center',
   marginHorizontal: ScreenUtil.autowidth(15),
   width: ScreenWidth-ScreenUtil.autowidth(50),
 },
@@ -1327,7 +1331,7 @@ headtitle: {
 },
 
   subViewBackup: {
-    flexDirection: "row", 
+    flexDirection: "row",
     alignItems: 'center',
   },
   subViewBackup: {
@@ -1341,13 +1345,13 @@ headtitle: {
     justifyContent: 'center',
     width: ScreenUtil.autowidth(30),
   },
-    
+
   systemSettingTip: {
     width: ScreenWidth,
     flexDirection: "row",
-    alignItems: 'center', 
+    alignItems: 'center',
     height: ScreenUtil.autoheight(40),
-   
+
   },
   systemSettingText: {
     flex: 1,
