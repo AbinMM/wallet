@@ -10,6 +10,7 @@ import Button from '../../components/Button'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
+import {DappAlertModal,DappAlertModalView} from '../../components/modals/DappAlertModal'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -183,9 +184,10 @@ class Discover extends React.Component {
   //点DAPP跳转
   onPressTool(data) {
     const { navigate } = this.props.navigation;
-    navigate('DappWeb', { title: data.name, url:data.url});
-
-    this.props.dispatch({ type: 'dapp/saveMyDapp', payload: data });
+    DappAlertModal.show(data.name,()=>{
+        navigate('DappWeb', { title: data.name, url:data.url});
+        this.props.dispatch({ type: 'dapp/saveMyDapp', payload: data });
+    });
   }
 
   render() {
@@ -266,6 +268,7 @@ class Discover extends React.Component {
             />
           </View>
         </ScrollView>
+        <DappAlertModalView {...this.props} />
       </View>
     );
   }

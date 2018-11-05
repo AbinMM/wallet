@@ -16,6 +16,7 @@ import Constants from '../../utils/Constants'
 import {formatEosQua} from '../../utils/FormatUtil';
 
 import CustomWebView from './CustomWebView.android';
+import {DappSignModal,DappSignModalView} from '../../components/modals/DappSignModal'
 
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
