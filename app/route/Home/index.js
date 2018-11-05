@@ -50,7 +50,7 @@ class Home extends React.Component {
       allowance: '0',
       listmodal: false,
       fadeOpacity: new Animated.Value(0),
-      zIndex: 0
+      zIndex: 0,
     };
   }
 
@@ -776,7 +776,7 @@ class Home extends React.Component {
               </TouchableOpacity>
             </LinearGradient>
           </Animated.View>
-          <ListView  style={{backgroundColor: '#F7F8F9'}}
+          <ListView 
             refreshControl={<RefreshControl refreshing={this.state.assetRefreshing} onRefresh={() => this.onRefresh()}
             tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
             onScroll={(event) => this._onScroll(event)}  enableEmptySections={true} initialListSize={1}

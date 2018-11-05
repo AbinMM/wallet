@@ -43,7 +43,8 @@ class Ram extends BaseComponent {
             { key: '1', title: "CPU/NET" }, 
             { key: '2', title:  "内存" }
         ],
-        isOthers: false, //自己，他人
+        isOwn: true, // 自己
+        isOthers: false, //他人
         delegateb: "", //计算抵押赎回
         undelegateb: "", //网络抵押赎回
 
@@ -183,7 +184,6 @@ class Ram extends BaseComponent {
         } catch (error) {
             EasyShowLD.loadingClose();
         }
-       
     } 
 
     // 返回购买,出售
@@ -211,6 +211,35 @@ class Ram extends BaseComponent {
                 this.setState(newState);  
             }  
         }  
+        this.Initialization();
+    }  
+
+    // 返回自己,他人
+    businesButton(style, selectedSate, stateType, buttonTitle) {  
+        let BTN_SELECTED_STATE_ARRAY = ['isOwn', 'isOthers'];  
+        return(  
+            <TouchableOpacity style={[style, selectedSate ? {backgroundColor:'#6DA0F8'} : {backgroundColor: '#FFFFFF'}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
+                <Text style={[{fontSize: ScreenUtil.setSpText(8) }, selectedSate ? {color: '#FFFFFF'} : {color: '#6DA0F8'}]}>{buttonTitle}</Text>  
+            </TouchableOpacity>  
+        );  
+    } 
+
+    // 更新"自己,他人"按钮的状态  
+    _updateBtnState(currentPressed, array) { 
+        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {  
+            return;  
+        }  
+        let newState = {...this.state};  
+        for (let type of array) {  
+            if (currentPressed == type) {  
+                newState[type] ? {} : newState[type] = !newState[type];  
+                this.setState(newState);  
+            } else {  
+                newState[type] ? newState[type] = !newState[type] : {};  
+                this.setState(newState);  
+            }  
+        } 
+        this.Initialization();
     }  
     
     //初始化输入框
@@ -222,7 +251,6 @@ class Ram extends BaseComponent {
             delegateb: "",
             undelegateb: "",
             LeaseTransfer: 0,
-            isOthers: false,
         })
     }
     
@@ -559,7 +587,7 @@ class Ram extends BaseComponent {
                                     {this.ownOthersButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isBuy, 'isBuy', '购买')}  
                                     {this.ownOthersButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '出售')}  
                                 </View> 
-                                <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor, }]}>
+                                <View style={[styles.outsource,{height: ScreenUtil.autowidth(65), flexDirection:'column',backgroundColor: UColor.mainColor, }]}>
                                     <View style={styles.inptTitleout}>
                                         <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.isBuy ? "购买" : "出售" }内存</Text>
                                         <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>当前价格：{this.state.Currentprice} EOS/kb</Text>
@@ -573,11 +601,15 @@ class Ram extends BaseComponent {
                                     </View>
                                 </View>
                                 {this.state.isBuy&&
-                                <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor}]}>
+                                <View style={[styles.outsource,{height: this.state.isOwn?ScreenUtil.autowidth(30):ScreenUtil.autowidth(65), flexDirection:'column',backgroundColor: UColor.mainColor}]}>
                                     <View style={styles.inptTitleout}>
                                         <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
+                                        <View style={[styles.businestab]}>  
+                                            {this.businesButton([styles.owntab,{borderColor: '#6DA0F8'}], this.state.isOwn, 'isOwn', '自己')}  
+                                            {this.businesButton([styles.otherstab,{borderColor: '#6DA0F8'}], this.state.isOthers, 'isOthers', '他人')}  
+                                        </View>
                                     </View>
-                                    <View style={styles.inptout}>
+                                    {this.state.isOthers && <View style={styles.inptout}>
                                         <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go" 
                                             selectionColor={UColor.tintColor}  placeholderTextColor={UColor.inputtip} maxLength={12}
                                             placeholder={this.state.receiver} underlineColorAndroid="transparent" keyboardType="default" 
@@ -588,7 +620,7 @@ class Ram extends BaseComponent {
                                                 <Image source={UImage.al} style={styles.botnimg} />
                                             </View>
                                         </Button> 
-                                    </View>
+                                    </View>}
                                 </View>}
                                 <View style={styles.basc}>
                                     <Text style={[styles.basctext,{color: UColor.fontColor}]}>余额：{this.state.balance}EOS</Text>
@@ -708,6 +740,29 @@ const styles = StyleSheet.create({
     inptTitle: {
         flex: 1,
         fontSize: ScreenUtil.setSpText(16),  
+    },
+    businestab: {
+        flexDirection: 'row', 
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    owntab: {
+        borderWidth: 1,
+        alignItems: 'center',   
+        justifyContent: 'center',
+        borderTopLeftRadius: 5,
+        borderBottomLeftRadius: 5,
+        width: ScreenUtil.autowidth(35),
+        height: ScreenUtil.autoheight(18),
+    },
+    otherstab: {
+        borderWidth: 1,
+        alignItems: 'center',   
+        justifyContent: 'center',
+        borderTopRightRadius: 5,
+        borderBottomRightRadius: 5,
+        width: ScreenUtil.autowidth(35),
+        height: ScreenUtil.autoheight(18),
     },
     inptTitlered: {
         fontSize: ScreenUtil.setSpText(14), 
