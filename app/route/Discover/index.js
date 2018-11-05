@@ -183,7 +183,7 @@ class Discover extends React.Component {
   //点DAPP跳转
   onPressTool(data) {
     const { navigate } = this.props.navigation;
-    navigate('Web', { title: data.name, url:data.url});
+    navigate('DappWeb', { title: data.name, url:data.url});
 
     this.props.dispatch({ type: 'dapp/saveMyDapp', payload: data });
   }
