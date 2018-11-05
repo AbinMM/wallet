@@ -11,15 +11,38 @@ export default {
     },
     effects: {
 
+        *mydappInfo({ payload }, { call, put }) {
+            try {
+                let mydappBook = yield call(store.get, 'mydappBook');
+                yield put({ type: 'updateAction', payload: { data: mydappBook, ...payload } });
+            } catch (error) {
+                EasyToast.show('获取失败!');
+            }
+        },
+        *saveMyDapp({ payload,callback}, { call, put }) {
+            var mydappBook = yield call(store.get, 'mydappBook');        
+            if (mydappBook == null) {
+                mydappBook = [];              
+            }
+
+            for (var i = 0; i < mydappBook.length; i++) {
+                if ((mydappBook[i].id == payload.id)
+                      && (mydappBook[i].categoryId == payload.categoryId)) {
+                    // EasyToast.show('dapp已存在！');
+                    return;
+                }
+            }
+
+            mydappBook[mydappBook.length] = payload;
+            yield call(store.save, 'mydappBook', mydappBook);
+            yield put({ type: 'updateAction', payload: { data: mydappBook, ...payload } });
+            if(callback) callback(mydappBook);
+        },
+
         *getEosTableRows({ payload, callback }, { call, put }) {
             try{
                 const resp = yield call(Request.request, getEosTableRows, 'post', payload);
                 // alert('getEosTableRows: '+JSON.stringify(resp) + " " + JSON.stringify(payload));
-                // if(resp.code=='0'){    
-
-                // }else{
-                //     EasyToast.show(resp.msg);
-                // }
                 if (callback) callback(resp);                
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
@@ -66,5 +89,9 @@ export default {
     },
     reducers: {
        
+        updateAction(state, action) {
+            let mydappBook = action.payload.data;
+            return { ...state, mydappBook };
+        },
     }
 }
