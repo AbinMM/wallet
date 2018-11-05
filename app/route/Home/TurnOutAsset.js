@@ -42,7 +42,7 @@ class TurnOutAsset extends BaseComponent {
             tokenicon: "http://news.eostoken.im/images/20180319/1521432637907.png", // 代币图标
             contractAccount: "eosio.token", // 契约帐户
             precisionNumber: '0', // 代币经度
-            Choicesymbol: this.props.navigation.state.params.Choicesymbol, // 是否具有选择代币功能
+            choiceSymbol: this.props.navigation.state.params.choiceSymbol, // 是否具有选择代币功能
             getbalance: this.props.navigation.state.params.getbalance, // 扫码and页面进来
         };
     }
@@ -55,53 +55,58 @@ class TurnOutAsset extends BaseComponent {
 
     //组件加载完成
     componentDidMount() {
-        this.props.dispatch({ type: 'addressBook/addressInfo'});
-        this.props.dispatch({ type: 'wallet/getDefaultWallet', callback: (data) => {}})
-        var params = this.props.navigation.state.params.coins;
-        if(this.state.getbalance){
-            this.setState({
-                name: params.asset.name,
-                balance: params.balance.replace(params.asset.name, ""),
-                tokenvalue: params.asset.value,
-                tokenicon: params.asset.icon,
-                contractAccount: params.asset.contractAccount,
-                precisionNumber: params.asset.precisionNumber,
-            })
-        }else{
-            this.getBalance(params);
-            this.setState({
-                toAccount: params.toaccount,
-                amount: params.amount,
-                name: params.symbol,
-            })
-        }
-     
-        //点击本页面的扫码返回的参数
-        DeviceEventEmitter.addListener('scan_result', (data) => {
-            this.getBalance(data);
-            this.setState({
-                toAccount: data.toaccount,
-                amount: data.amount,
-                name: data.symbol,
-            })
-        });  
-
-        //选择联系人返回的参数
-        DeviceEventEmitter.addListener('transfer_scan_result', (data) => {
-            this.setState({toAccount:data.toaccount});
-        });
-
-        //选择代币返回的参数
-        DeviceEventEmitter.addListener('transfer_token_result', (data) => {
-            this.setState({
-                balance: data.balance.replace(data.asset.name, ""),
-                name:data.asset.name,
-                tokenvalue: data.asset.value, 
-                tokenicon:data.asset.icon,
-                contractAccount: data.asset.contractAccount,
-                precisionNumber: data.asset.precisionNumber,
+        try {
+            this.props.dispatch({ type: 'addressBook/addressInfo'});
+            this.props.dispatch({ type: 'wallet/getDefaultWallet', callback: (data) => {}})
+            var params = this.props.navigation.state.params.coins;
+            if(this.state.getbalance){
+                this.setState({
+                    name: params.asset.name,
+                    balance: params.balance.replace(params.asset.name, ""),
+                    tokenvalue: params.asset.value,
+                    tokenicon: params.asset.icon,
+                    contractAccount: params.asset.contractAccount,
+                    precisionNumber: params.asset.precisionNumber,
+                })
+            }else{
+                this.getAssetInfoBySymbol(params.symbol);
+                this.setState({
+                    toAccount: params.toaccount,
+                    amount: params.amount,
+                    name: params.symbol,
+                })
+            }
+         
+            //点击本页面的扫码返回的参数
+            DeviceEventEmitter.addListener('scan_result', (data) => {
+                this.getAssetInfoBySymbol(data.symbol);
+                this.setState({
+                    toAccount: data.toaccount,
+                    amount: data.amount,
+                    name: data.symbol,
+                })
+            });  
+    
+            //选择联系人返回的参数
+            DeviceEventEmitter.addListener('transfer_scan_result', (data) => {
+                this.setState({toAccount:data.toaccount});
             });
-        });
+    
+            //选择代币返回的参数
+            DeviceEventEmitter.addListener('transfer_token_result', (data) => {
+                this.setState({
+                    balance: data.balance.replace(data.asset.name, ""),
+                    name:data.asset.name,
+                    tokenvalue: data.asset.value, 
+                    tokenicon:data.asset.icon,
+                    contractAccount: data.asset.contractAccount,
+                    precisionNumber: data.asset.precisionNumber,
+                });
+            });
+        } catch (error) {
+            
+        }
+
     }
 
     componentWillUnmount(){
@@ -111,19 +116,26 @@ class TurnOutAsset extends BaseComponent {
     }
 
     //查询代币余额
-    getBalance(data) {
-        this.props.dispatch({
-            type: 'assets/getmyAssetInfo', payload: { accountName: this.props.defaultWallet.account, symbol: data.symbol }, callback: (data) => {
-                this.setState({
-                    balance: data.balance.replace(data.asset.name, ""),
-                    name: data.asset.name,
-                    tokenvalue: data.asset.value, 
-                    tokenicon: data.asset.icon,
-                    contractAccount: data.asset.contractAccount,
-                    precisionNumber: data.asset.precisionNumber,
-                });
-            }
-        })
+    getAssetInfoBySymbol(symbol) {
+        try {
+            this.props.dispatch({
+                type: 'assets/getmyAssetInfo', payload: { accountName: this.props.defaultWallet.account, symbol: symbol }, callback: (data) => {
+                    if(data && data.length != 0){
+                        this.setState({
+                            balance: data.balance.replace(data.asset.name, ""),
+                            name: data.asset.name,
+                            tokenvalue: data.asset.value, 
+                            tokenicon: data.asset.icon,
+                            contractAccount: data.asset.contractAccount,
+                            precisionNumber: data.asset.precisionNumber,
+                        });
+                    }
+                }
+            });
+        } catch (error) {
+            
+        }
+
     }
    
 
@@ -412,7 +424,7 @@ class TurnOutAsset extends BaseComponent {
                                 </View>
                                 <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
                                     <View style={{paddingRight: ScreenUtil.autowidth(20),borderRightColor: UColor.secdColor,borderRightWidth: 1,}} >
-                                        {this.state.Choicesymbol ? 
+                                        {this.state.choiceSymbol ? 
                                             <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>    
                                                 <View style={{flexDirection: 'row',paddingVertical: ScreenUtil.autowidth(10),}}>                              
                                                     <Text style={{fontSize: ScreenUtil.setSpText(15),color: UColor.arrow, marginRight: ScreenUtil.autowidth(5),}}>{this.state.name}</Text>

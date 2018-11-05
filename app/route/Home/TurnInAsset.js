@@ -43,7 +43,7 @@ class TurnInAsset extends BaseComponent {
       symbol: "", //币种
       amount: "", //数量
       contractAccount: "", //契约帐户
-      Choicesymbol: this.props.navigation.state.params.Choicesymbol, //是否具有选择币种功能
+      choiceSymbol: this.props.navigation.state.params.choiceSymbol, //是否具有选择币种功能
     };
   }
 
@@ -142,7 +142,7 @@ class TurnInAsset extends BaseComponent {
             <View style={[styles.outsource,{backgroundColor:UColor.secdfont}]}>
               <View style={[styles.inptoutsource,{backgroundColor: UColor.mainColor}]}>
                 <View style={{paddingHorizontal: ScreenUtil.autowidth(20),borderRightColor: UColor.secdColor,borderRightWidth: 1,}}>
-                  {this.state.Choicesymbol ? 
+                  {this.state.choiceSymbol ? 
                   <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>    
                       <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center',}}>                              
                           <Text style={{fontSize: ScreenUtil.setSpText(15),color: UColor.arrow, marginRight: ScreenUtil.autowidth(5),lineHeight: ScreenUtil.autowidth(36),}}>{this.state.symbol}</Text>

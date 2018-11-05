@@ -32,9 +32,9 @@ class FunctionsMore extends React.Component {
     const { navigate } = this.props.navigation;
     if (key == 'Receivables') {
         AnalyticsUtil.onEvent('Receipt_code');
-        navigate('TurnInAsset', {coins: params.coins, Choicesymbol: true });
+        navigate('TurnInAsset', {coins: params.coins, choiceSymbol: true });
     }else if (key == 'transfer') {
-        navigate('TurnOutAsset', { coins: params.coins, Choicesymbol: true, getbalance: true });
+        navigate('TurnOutAsset', { coins: params.coins, choiceSymbol: true, getbalance: true });
     }else if (key == 'Resources') {
         navigate('Resources', {account_name: params.account_name});
     }else if(key == 'candy'){

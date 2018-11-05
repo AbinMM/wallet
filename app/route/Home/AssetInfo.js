@@ -105,12 +105,12 @@ class AssetInfo extends BaseComponent {
 
     turnInAsset(coins) {
         const { navigate } = this.props.navigation;
-        navigate('TurnInAsset', { coins, Choicesymbol: false, getbalance: true });
+        navigate('TurnInAsset', { coins, choiceSymbol: false, getbalance: true });
     }
 
     turnOutAsset(coins) {
         const { navigate } = this.props.navigation;
-        navigate('TurnOutAsset', { coins, Choicesymbol: false, getbalance: true });
+        navigate('TurnOutAsset', { coins, choiceSymbol: false, getbalance: true });
     }
 
     getBalance() {
