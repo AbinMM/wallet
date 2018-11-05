@@ -56,7 +56,7 @@ export default {
         },
         *dappfindAllByType({ payload, callback }, { call, put }) {
             try{
-                const resp = yield call(Request.request, dappfindAllByType, 'post');
+                const resp = yield call(Request.request, dappfindAllByType, 'post', payload);
                 if (callback) callback(resp);                
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
