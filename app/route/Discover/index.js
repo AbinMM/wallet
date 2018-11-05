@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions,Image,  ScrollView,  
+import { Dimensions,Image,  ScrollView,
          InteractionManager, ListView, StyleSheet, View,  Text,  SectionList,
          Linking, } from 'react-native';
 
@@ -30,49 +30,49 @@ class Discover extends React.Component {
     ),
     header: null,
   };
-  
+
   constructor(props) {
     super(props);
     this.state = {
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
       mydapplist:[{icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},],
-      hotdappList:{name: '', list: [{icon: '',name:'',description:'',url:''}]},  
-      holdallList: [
-        {id:1,name: '',is_there_more:false, data: [{id:1,icon: '',url:'',name:'',description:''}]},  
-      ],
-
+      // hotdappList:{name: '', list: [{icon: '',name:'',description:''}]},
       // holdallList: [
-      //   {name: '我的DApps', data: [
-      //     {icon: UImage.ManualSearch,name:'手动搜索DAPPsdhjsdf',description:'手动搜索DAPP,可添加到收藏夹'},
-      //     {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
-      //     {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
-      //     {icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},
-      //     {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
-      //     {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
-      //     {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
-      //     {icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},
-      //   ]},
-      //   {name: '糖果系列', data: [
-      //     {icon: UImage.ManualSearch,name:'手动搜索DAPPsdhjsdf',description:'手动搜索DAPP,可添加到收藏夹'},
-      //     {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
-      //     {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
-      //     {icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},
-      //     {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
-      //     {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
-      //     {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
-      //     {icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},
-      //   ]},
-      //   {name: 'EOS工具', data: [
-      //     {icon: UImage.ManualSearch,name:'手动搜索DAPPsdhjsdf',description:'手动搜索DAPP,可添加到收藏夹'},
-      //     {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
-      //     {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
-      //   ]},
-      //   {name: '第三方工具', data: [
-      //     {icon: UImage.ManualSearch,name:'手动搜索DAPPsdhjsdf',description:'手动搜索DAPP,可添加到收藏夹'},
-      //     {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
-      //     {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
-      //   ]},
+      //   {id:1,name: '', data: [{icon: '',name:'',description:''}]},
       // ],
+
+      holdallList: [
+        {name: '我的DApps', data: [
+          {icon: UImage.ManualSearch,name:'手动搜索DAPPsdhjsdf',description:'手动搜索DAPP,可添加到收藏夹'},
+          {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
+          {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
+          {icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},
+          {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
+          {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
+          {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
+          {icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},
+        ]},
+        {name: '糖果系列', data: [
+          {icon: UImage.ManualSearch,name:'手动搜索DAPPsdhjsdf',description:'手动搜索DAPP,可添加到收藏夹'},
+          {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
+          {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
+          {icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},
+          {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
+          {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
+          {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
+          {icon: UImage.icon_vote,name:'节点投票',description:'eos节点投票'},
+        ]},
+        {name: 'EOS工具', data: [
+          {icon: UImage.ManualSearch,name:'手动搜索DAPPsdhjsdf',description:'手动搜索DAPP,可添加到收藏夹'},
+          {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
+          {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
+        ]},
+        {name: '第三方工具', data: [
+          {icon: UImage.ManualSearch,name:'手动搜索DAPPsdhjsdf',description:'手动搜索DAPP,可添加到收藏夹'},
+          {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
+          {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
+        ]},
+      ],
     };
   }
 
@@ -81,54 +81,40 @@ class Discover extends React.Component {
     //获取banner图
     this.props.dispatch({ type: 'banner/list', payload: {} });
     //获取DAPP列表
-    this.props.dispatch({ type: 'dapp/dappfindAllHotRecommend', callback: (resp) => {
-       // alert(JSON.stringify(resp));
-        if (resp && resp.code == '0') {
-          if(resp.data){
-            this.setState({
-              hotdappList: resp.data,
-            });
-          }
-        } else {
-          console.log("dappfindAllHotRecommend error");
-        }
-      } 
-    });
+    // this.props.dispatch({ type: 'dapp/dappfindAllHotRecommend', callback: (resp) => {
+    //    // alert(JSON.stringify(resp));
+    //     if (resp && resp.code == '0') {
+    //       if(resp.data && resp.data.length > 0){
+    //         this.setState({
+    //           hotdappList: resp.data,
+    //         });
+    //       }
+    //     } else {
+    //       console.log("dappfindAllHotRecommend error");
+    //     }
+    //   }
+    // });
 
-    this.props.dispatch({ type: 'dapp/dappfindAllRecommend', callback: (resp) => {
-     // alert(JSON.stringify(resp));
-      if (resp && resp.code == '0') {
-        if(resp.data && resp.data.length > 0){
-          this.setState({
-            holdallList: resp.data,
-          });
-          //debug
-          // for(var i = 0; i < resp.data.length;i++)
-          // {
-          //   if( resp.data[i].is_there_more)
-          //   {
-          //     var tid=resp.data[i].id;
-          //     this.props.dispatch({ type: 'dapp/dappfindAllByType', payload: {tid:tid,page:1,pageSize:20},callback:(resp) =>{
-          //       if (resp && resp.code == '0'){
-          //         var tt = resp.data;
-          //       }
-          //     } });
-          //     break;
-          //   }
-          // }
-        }
-      } else {
-        console.log("dappfindAllRecommend error");
-      }
-    } 
-  });
+    // this.props.dispatch({ type: 'dapp/dappfindAllRecommend', callback: (resp) => {
+    //  // alert(JSON.stringify(resp));
+    //   if (resp && resp.code == '0') {
+    //     if(resp.data && resp.data.length > 0){
+    //       this.setState({
+    //         holdallList: resp.data,
+    //       });
+    //     }
+    //   } else {
+    //     console.log("dappfindAllRecommend error");
+    //   }
+    // }
+  // });
 
   }
 
   componentWillUnmount() {
 
   }
- 
+
   //点击banner图跳转
   bannerPress(banner) {
     if (banner && banner.url && banner.url != "") {
@@ -155,7 +141,7 @@ class Discover extends React.Component {
         navigate(banner.url.substring("app:".length), {}); // app内部的js跳转
         return;
       }
-      
+
       navigate('Web', { title: banner.title, url: url });
     }
 
@@ -178,7 +164,7 @@ class Discover extends React.Component {
       return (<View></View>)
     }
   }
-  
+
   //点DAPP跳转
   onPressTool(data) {
     const { navigate } = this.props.navigation;
@@ -189,53 +175,53 @@ class Discover extends React.Component {
     return (
       <View style={[styles.container,{backgroundColor: '#FFFFFF',paddingTop: Constants.FitPhone}]}>
         <ScrollView  keyboardShouldPersistTaps="always" style={{flex: 1, paddingTop: ScreenUtil.autoheight(10),}}
-            // refreshControl={<RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} 
+            // refreshControl={<RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
             // tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor} style={{backgroundColor: UColor.transport}}/>}
           >
           <View style={{alignItems: 'center',}}>
-              <View style={{width:ScreenWidth,  height: (ScreenWidth) * 0.436 + ScreenUtil.autoheight(30), borderRadius: 7, overflow: 'hidden',}}>
-                <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth} pageIndicatorContainerStyle={{bottom: -20, zIndex: 999}} 
+              <View style={{width:ScreenWidth,  height: (ScreenWidth) * 0.436 + ScreenUtil.autoheight(20), borderRadius: 7, overflow: 'hidden',}}>
+                <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth} pageIndicatorContainerStyle={{bottom: -10, zIndex: 999}}
                 pageIndicatorStyle={{backgroundColor: '#EAEAEA', }} activePageIndicatorStyle={{backgroundColor:'#6DA0F8',}}>
                   {this.renderSwipeView()}
                 </Carousel>
               </View>
             </View>
             <View style={{backgroundColor: '#FFFFFF'}}>
-              <View style={{marginVertical:ScreenUtil.autoheight(15),flexDirection: 'row',}}>  
+              <View style={{marginVertical:ScreenUtil.autoheight(15),flexDirection: 'row',}}>
                 <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(14),color: '#1A1A1A',fontWeight:'bold',paddingHorizontal: ScreenUtil.autowidth(16),}}>我的DApps</Text>
-                <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#6DA0F8',paddingHorizontal: ScreenUtil.autowidth(16),}}>更多</Text>
-              </View> 
+                <Text style={{fontSize: ScreenUtil.setSpText(12),color: '#6DA0F8',paddingHorizontal: ScreenUtil.autowidth(16),}}>更多</Text>
+              </View>
             <View style={{paddingHorizontal: ScreenUtil.autowidth(16),}}>
               <ListView enableEmptySections = {true} horizontal={true} showsHorizontalScrollIndicator={false}
-                dataSource={this.state.dataSource.cloneWithRows(this.state.mydapplist == null ? [] : this.state.mydapplist)} 
-                renderRow={(rowData) => (  
+                dataSource={this.state.dataSource.cloneWithRows(this.state.mydapplist == null ? [] : this.state.mydapplist)}
+                renderRow={(rowData) => (
                   <Button  onPress={this.onPressTool.bind(this, rowData)}  style={styles.headDAPP}>
                     <View style={styles.headbtnout}>
                       {/* <Image source={{uri: rowData.icon}}  style={styles.imgBtnDAPP} resizeMode='contain' /> */}
                       <Image source={rowData.icon}  style={styles.imgBtnDAPP} resizeMode='contain' />
-                      <Text numberOfLines={1} style={[styles.headbtntext,{width: ScreenUtil.autowidth(69), color: UColor.fontColor,textAlign: 'center'}]}>{rowData.name}</Text>
+                      <Text numberOfLines={1} style={[styles.headbtntext,{ color: UColor.fontColor,textAlign: 'center',paddingHorizontal:8}]}>{rowData.name}</Text>
                     </View>
                   </Button>
-                  
-                )}                
-              /> 
+
+                )}
+              />
             </View>
-            <View style={{marginHorizontal: ScreenUtil.autowidth(15),marginVertical:ScreenUtil.autoheight(15),}}>  
-              <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#1A1A1A',fontWeight:'bold',}}>{this.state.hotdappList.name}</Text>
-            </View> 
+            <View style={{marginHorizontal: ScreenUtil.autowidth(15),marginVertical:ScreenUtil.autoheight(15),}}>
+              <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#1A1A1A',fontWeight:'bold',}}>{this.state.holdallList[1].name}</Text>
+            </View>
             <ListView enableEmptySections = {true}
               contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
-              dataSource={this.state.dataSource.cloneWithRows(this.state.hotdappList.list == null ? [] : this.state.hotdappList.list)} 
-              renderRow={(rowData) => (  
+              dataSource={this.state.dataSource.cloneWithRows(this.state.holdallList[1].data == null ? [] : this.state.holdallList[1].data)}
+              renderRow={(rowData) => (
                 <Button  onPress={this.onPressTool.bind(this, rowData)}  style={{width: ScreenWidth/4, paddingBottom: ScreenUtil.autoheight(18),}}>
                   <View style={styles.headbtnout}>
-                    <Image source={{uri: rowData.icon}} style={{width: ScreenUtil.autowidth(50),height: ScreenUtil.autowidth(50),marginBottom: ScreenUtil.autoheight(10),}} resizeMode='contain'/>
-                    {/* <Image source={rowData.icon} style={{width: ScreenUtil.autowidth(50),height: ScreenUtil.autowidth(50),marginBottom: ScreenUtil.autoheight(10),}} resizeMode='contain'/> */}
-                    <Text numberOfLines={1} style={[styles.headbtntext,{width: ScreenUtil.autowidth(69), color: UColor.fontColor,textAlign: 'center'}]}>{rowData.name}</Text>
+                    {/* <Image source={{uri: rowData.icon}} style={{width: ScreenUtil.autowidth(50),height: ScreenUtil.autowidth(50),marginBottom: ScreenUtil.autoheight(10),}} resizeMode='contain'/> */}
+                    <Image source={rowData.icon} style={{width: ScreenUtil.autowidth(48),height: ScreenUtil.autowidth(48),marginBottom: ScreenUtil.autoheight(7),}} resizeMode='contain'/>
+                    <Text numberOfLines={1} style={[styles.headbtntext,{ color: UColor.fontColor,textAlign: 'center',paddingHorizontal:8}]}>{rowData.name}</Text>
                   </View>
                 </Button>
-              )}                
-            /> 
+              )}
+            />
           </View>
           <View style={{backgroundColor: '#F7F8F9',}}>
             <SectionList
@@ -243,16 +229,16 @@ class Discover extends React.Component {
               initialNumToRender={4}
               keyExtractor={(item, index) => index + item}
               sections={this.state.holdallList}
-              renderSectionHeader={(info) => (
-                <View style={{width:ScreenWidth, justifyContent: 'center',paddingHorizontal: ScreenUtil.autowidth(10),paddingTop: ScreenUtil.autoheight(10) }}>
-                  <Text style={{width:ScreenWidth,color: '#8C8C8C', fontSize: ScreenUtil.setSpText(14) }}>{info.section.name}</Text>
+              renderSectionHeader={(info,index) => (
+                <View style={[{width:ScreenWidth, justifyContent: 'center',paddingHorizontal: ScreenUtil.autowidth(15),paddingTop: ScreenUtil.autoheight(15)}]}>
+                  <Text style={{width:ScreenWidth,color: '#8C8C8C',fontWeight:'bold', fontSize: ScreenUtil.setSpText(14) }}>{info.section.name}</Text>
                 </View>
                 )}
               renderItem={ (rowData) => (
-                <Button  onPress={this.onPressTool.bind(this, rowData.item)}  style={{width: ScreenWidth/2, paddingHorizontal: ScreenUtil.autowidth(9),paddingVertical: ScreenUtil.autoheight(10)}}>
+                <Button  onPress={this.onPressTool.bind(this, rowData.item)}  style={{width: (ScreenWidth-ScreenUtil.autowidth(15))/2, paddingLeft: ScreenUtil.autowidth(15),paddingTop: ScreenUtil.autoheight(15)}}>
                   <View style={{ flexDirection: 'row',alignItems: 'center', justifyContent: "center", backgroundColor: '#FFFFFF',paddingHorizontal:ScreenUtil.autowidth(12),paddingVertical:ScreenUtil.autoheight(15),borderRadius: 5, }}>
-                    <Image source={{uri: rowData.item.icon}} style={{width: ScreenUtil.autowidth(39),height: ScreenUtil.autowidth(39),}} />
-                    {/* <Image source={rowData.item.icon} style={{width: ScreenUtil.autowidth(39),height: ScreenUtil.autowidth(39),}} /> */}
+                    {/* <Image source={{uri: rowData.item.icon}} style={{width: ScreenUtil.autowidth(39),height: ScreenUtil.autowidth(39),}} /> */}
+                    <Image source={rowData.item.icon} style={{width: ScreenUtil.autowidth(39),height: ScreenUtil.autowidth(39),}} />
                     <View style={{flex: 1, paddingLeft:  ScreenUtil.autowidth(10),}}>
                       <Text style={[styles.headbtntext,{color: '#1A1A1A'}]} numberOfLines={1}>{rowData.item.name}</Text>
                       <Text style={[styles.descriptiontext,{color: '#8C8C8C'}]} numberOfLines={1}>{rowData.item.description}</Text>
@@ -269,55 +255,55 @@ class Discover extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  selflist:{ 
-    flexWrap:'wrap', 
-    flexDirection:'row', 
-    alignItems:'center', 
-    width: ScreenWidth, 
+  selflist:{
+    flexWrap:'wrap',
+    flexDirection:'row',
+    alignItems:'center',
+    width: ScreenWidth,
     marginTop:ScreenUtil.autoheight(10),
     borderBottomWidth: 1,
-  }, 
+  },
   selfDAPP: {
     width: ScreenWidth/4,
     paddingBottom: ScreenUtil.autoheight(10),
   },
   selfbtnout: {
-    flex:1, 
-    alignItems: 'center', 
+    flex:1,
+    alignItems: 'center',
     justifyContent: "center",
   },
-  selfBtnDAPP: { 
+  selfBtnDAPP: {
     width: ScreenUtil.autowidth(40),
     height: ScreenUtil.autoheight(40),
     margin: ScreenUtil.autowidth(5),
   },
-  listViewStyle:{ 
+  listViewStyle:{
     flexDirection:'row',
     flexWrap:'wrap',
-    //alignItems:'center', 
+    //alignItems:'center',
     alignItems:'flex-start',
-  }, 
+  },
   headDAPP: {
     // paddingBottom: ScreenUtil.autoheight(15),
     // paddingHorizontal: ScreenUtil.autowidth(8),
   },
   headbtnout: {
     flexDirection: 'column',
-    alignItems: 'center', 
+    alignItems: 'center',
     justifyContent: "center",
   },
-  imgBtnDAPP: { 
-    width: ScreenUtil.autowidth(50),
-    height: ScreenUtil.autowidth(50),
-    marginRight: ScreenUtil.autowidth(28),
+  imgBtnDAPP: {
+    width: ScreenUtil.autowidth(48),
+    height: ScreenUtil.autowidth(48),
+    marginBottom: ScreenUtil.autoheight(7)
   },
   headbtntext: {
     fontSize: ScreenUtil.setSpText(12),
-    lineHeight: ScreenUtil.autoheight(20), 
+    lineHeight: ScreenUtil.autoheight(20),
   },
   descriptiontext: {
     fontSize: ScreenUtil.setSpText(12),
-    lineHeight: ScreenUtil.autoheight(20), 
+    lineHeight: ScreenUtil.autoheight(20),
   },
   pupuoBackup: {
     flex: 1,
@@ -357,7 +343,7 @@ const styles = StyleSheet.create({
   },
   headtext: {
     fontWeight: "bold",
-    fontSize: ScreenUtil.setSpText(16), 
+    fontSize: ScreenUtil.setSpText(16),
   },
   headtitle: {
     fontSize: ScreenUtil.setSpText(14),
@@ -375,8 +361,8 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(16),
   },
   labelStyle: {
-    margin: 0, 
-    fontSize: ScreenUtil.setSpText(15), 
+    margin: 0,
+    fontSize: ScreenUtil.setSpText(15),
   },
   indicatorStyle: {
     marginLeft: ScreenUtil.autowidth(20),
@@ -387,7 +373,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     //alignItems: 'center',
     //justifyContent: 'center',
-    
+
   },
   row: {
     flex: 1,
@@ -404,7 +390,7 @@ const styles = StyleSheet.create({
   systemSettingTip: {
     width: ScreenWidth,
     flexDirection: "row",
-    alignItems: 'center', 
+    alignItems: 'center',
     height: ScreenUtil.autoheight(40),
   },
   systemSettingText: {
@@ -417,38 +403,38 @@ const styles = StyleSheet.create({
   },
 
   journalism: {
-    fontSize: ScreenUtil.setSpText(15),  
-    marginTop: ScreenUtil.autoheight(10), 
+    fontSize: ScreenUtil.setSpText(15),
+    marginTop: ScreenUtil.autoheight(10),
     lineHeight: ScreenUtil.autoheight(25),
   },
   moretext: {
-    textAlign: "right", 
-    fontSize: ScreenUtil.setSpText(13), 
-    lineHeight: ScreenUtil.autoheight(20), 
+    textAlign: "right",
+    fontSize: ScreenUtil.setSpText(13),
+    lineHeight: ScreenUtil.autoheight(20),
   },
   pastTime: {
-    fontSize: ScreenUtil.setSpText(13), 
+    fontSize: ScreenUtil.setSpText(13),
     marginTop: ScreenUtil.autoheight(10),
-    paddingBottom: ScreenUtil.autoheight(10), 
+    paddingBottom: ScreenUtil.autoheight(10),
   },
   spotout: {
-    flex: 1, 
-    flexDirection: "row", 
+    flex: 1,
+    flexDirection: "row",
     padding: ScreenUtil.autowidth(10)
   },
   updownimg: {
-    width: ScreenUtil.autowidth(18), 
+    width: ScreenUtil.autowidth(18),
     height: ScreenUtil.autowidth(18)
   },
   updowntext: {
     fontSize: ScreenUtil.setSpText(13),
-    marginLeft: ScreenUtil.autowidth(5), 
+    marginLeft: ScreenUtil.autowidth(5),
   },
   image: {
     height: (ScreenWidth-ScreenUtil.autowidth(32)) * 0.436,
     width: ScreenWidth - ScreenUtil.autowidth(32),
     borderRadius: 7,
-    
+
   },
 
   modalStyle: {
@@ -460,7 +446,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     justifyContent: 'center',
     marginHorizontal: ScreenUtil.setSpText(35),
-    
+
   },
 });
 

@@ -374,6 +374,7 @@ class News extends React.Component {
           sections={sections.data}
           renderSectionHeader={this._sectionComp}
           renderItem={this._renderItem}
+          stickySectionHeadersEnabled={true}
           keyExtractor = {this._extraUniqueKey}
           extraData={this.state}
           // ItemSeparatorComponent={() => <View><Text></Text></View>}
