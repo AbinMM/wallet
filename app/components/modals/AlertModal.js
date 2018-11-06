@@ -3,46 +3,45 @@ import {StyleSheet,Animated,Text,TouchableWithoutFeedback,View} from 'react-nati
 import ScreenUtil from '../../utils/ScreenUtil';
 import TextButton from '../TextButton';
 
-export class DappAlertModal {
+export class AlertModal {
 
-  static bind(DappAlertModal) {
-    this.map["DappAlertModal"] = DappAlertModal;
+  static bind(AlertModal) {
+    this.map["AlertModal"] = AlertModal;
   }
 
   static unBind() {
-    this.map["DappAlertModal"] = null;
-    delete this.map["DappAlertModal"];
+    this.map["AlertModal"] = null;
+    delete this.map["AlertModal"];
   }
 
-  static show(dapp,callback) {
-    this.map["DappAlertModal"].show(dapp,callback);
+  static show(title,content,ok,callback) {
+    this.map["AlertModal"].show(title,content,ok,callback);
   }
 
 }
 
-DappAlertModal.map = {};
+AlertModal.map = {};
 
-export class DappAlertModalView extends React.Component {
+export class AlertModalView extends React.Component {
 
     state = {
       modalVisible: false,
       mask: new Animated.Value(0),
-      alert: new Animated.Value(0),
-      dapp:""
+      alert: new Animated.Value(0)
     };
 
     constructor(props) {
       super(props);
-      DappAlertModal.bind(this);
+      AlertModal.bind(this);
     }
 
-    show = (dapp,callback) =>{
+    show = (title,content,ok,callback) =>{
       if(this.isShow)return;
       this.isShow = true;
       //如果需要支持返回关闭，请添加这句，并且实现dimss方法
       window.currentDialog = this;
-      this.DappAlertModalCallback = callback;
-      this.setState({dapp,modalVisible:true});
+      this.AlertModalCallback = callback;
+      this.setState({title,content,ok,modalVisible:true});
       Animated.parallel([
         Animated.timing(this.state.mask,{toValue:0.6,duration:500}),
         Animated.timing(this.state.alert,{toValue:1,duration:200})
@@ -63,11 +62,11 @@ export class DappAlertModalView extends React.Component {
 
     ok = () =>{
       this.dimss();
-      this.DappAlertModalCallback && this.DappAlertModalCallback();
+      this.AlertModalCallback && this.AlertModalCallback();
     }
 
     componentWillUnmount() {
-      DappAlertModal.unBind();
+      AlertModal.unBind();
     }
 
     render() {
@@ -78,14 +77,14 @@ export class DappAlertModalView extends React.Component {
                 <Animated.View style={[styles.mask,{opacity:this.state.mask}]}></Animated.View>
                 <View style={styles.alertContent}>
                   <Animated.View style={[styles.alert,{opacity:this.state.alert}]}>
-                    <Text style={styles.title}>您所访问的页面将跳至第三方DApp {this.state.dapp}</Text>
-                    <Text style={styles.ctx}>提示：您所访问的页面将跳转至第三方DApp {this.state.dapp}。您在第三方DApp上的使用行为将适用该第三方DApp的用户协议和隐私政策，由其直接并单独向您承担责任。</Text>
+                    <Text style={styles.title}>{this.state.title?this.state.title:"提示"}</Text>
+                    <Text style={styles.ctx}>{this.state.content?this.state.content:""}</Text>
                     <View style={styles.bottom}>
                       <View style={{width:"50%"}}>
                         <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
                       </View>
                       <View style={{width:"50%"}}>
-                        <TextButton onPress={()=>{this.ok()}} bgColor="#6DA0F8" textColor="#fff" text="确认" style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
+                        <TextButton onPress={()=>{this.ok()}} bgColor="#6DA0F8" textColor="#fff" text={this.state.ok?this.state.ok:"确认"} style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
                       </View>
                     </View>
                   </Animated.View>
