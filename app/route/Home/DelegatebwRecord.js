@@ -27,7 +27,7 @@ class DelegatebwRecord extends React.Component {
     title: "抵押记录",
     header:null,
   };
- 
+
   constructor(props) {
     super(props);
     this.state = {
@@ -48,7 +48,7 @@ class DelegatebwRecord extends React.Component {
           this.setState({labelname:data.toaccount})
           this._query(data.toaccount);
       }
-    }); 
+    });
   }
 
   getAccountInfo() {
@@ -103,7 +103,7 @@ class DelegatebwRecord extends React.Component {
   }
 
   //赎回
-  undelegateb = (redeem) => { 
+  undelegateb = (redeem) => {
     AuthModal.show(redeem.from, (authInfo)=>{
       try {
         EasyShowLD.loadingShow();
@@ -112,11 +112,11 @@ class DelegatebwRecord extends React.Component {
           actions: [
               {
                   account: "eosio",
-                  name: "undelegatebw", 
+                  name: "undelegatebw",
                   authorization: [{
                   actor: redeem.from,
                   permission: authInfo.permission,
-                  }], 
+                  }],
                   data: {
                       from: redeem.from,
                       receiver: redeem.to,
@@ -130,16 +130,16 @@ class DelegatebwRecord extends React.Component {
         if(r.isSuccess){
             this.getAccountInfo();
             EasyToast.show("赎回成功");
-        }else{    
+        }else{
             if(r.data){
               if(r.data.code){
                 var errcode = r.data.code;
                 if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
                     || errcode == 3081001)
                 {
-                  this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
+                  this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{
                     if(resp.code == 608)
-                    { 
+                    {
                         //弹出提示框,可申请免费抵押功能
                         const view =
                         <View style={styles.Explainout}>
@@ -147,7 +147,7 @@ class DelegatebwRecord extends React.Component {
                           <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                         </View>
                         EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                            
+
                         const { navigate } = this.props.navigation;
                         navigate('FreeMortgage', {});
                         // EasyShowLD.dialogClose();
@@ -212,35 +212,35 @@ class DelegatebwRecord extends React.Component {
     return obj;
   }
 
-  
+
 
   render() {
     return (<View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
      <Header {...this.props} onPressLeft={true} title="抵押赎回" />
-      {/* <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
+      {/* <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
           <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
               <Image source={UImage.Magnifier_ash} style={styles.headleftimg}/>
               <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
-                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={12} 
+                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={12}
                   placeholder="输入EOS账号" underlineColorAndroid="transparent" keyboardType="default"
-                  onChangeText={(labelname) => this.setState({ labelname })}  numberOfLines={1} 
-                  />    
-              <TouchableOpacity onPress={this.Scan.bind(this)}>  
+                  onChangeText={(labelname) => this.setState({ labelname })}  numberOfLines={1}
+                  />
+              <TouchableOpacity onPress={this.Scan.bind(this)}>
                   <Image source={UImage.account_scan} style={styles.headleftimg} />
-              </TouchableOpacity>  
-          </View>    
-          <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>  
+              </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>
               <Text style={[styles.canceltext,{color: UColor.fontColor}]}>查询</Text>
-          </TouchableOpacity>   
-          <TouchableOpacity   onPress={this._empty.bind(this)}>  
+          </TouchableOpacity>
+          <TouchableOpacity   onPress={this._empty.bind(this)}>
               <Text style={[styles.canceltext,{color: UColor.fontColor}]}>清空</Text>
-          </TouchableOpacity>  
+          </TouchableOpacity>
       </View>   */}
 
-      {this.state.show && <View style={[styles.nothave,{backgroundColor: UColor.mainColor}]}><Text style={[styles.copytext,{color: UColor.fontColor}]}>还没有抵押记录哟~</Text></View>}       
-      <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true} 
-        dataSource={this.state.dataSource.cloneWithRows(this.state.delegateLoglist == null ? [] : this.state.delegateLoglist)} 
-        renderRow={(rowData, sectionID, rowID) => (   
+      {this.state.show && <View style={[styles.nothave,{backgroundColor: UColor.mainColor}]}><Text style={[styles.copytext,{color: UColor.fontColor}]}>还没有抵押记录哟~</Text></View>}
+      <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true}
+        dataSource={this.state.dataSource.cloneWithRows(this.state.delegateLoglist == null ? [] : this.state.delegateLoglist)}
+        renderRow={(rowData, sectionID, rowID) => (
           <Button onPress={this._setModalVisible.bind(this,rowData)} style={{flex: 1,}}>
             <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
               <View style={styles.leftout}>
@@ -252,10 +252,10 @@ class DelegatebwRecord extends React.Component {
               </View>
             </View>
           </Button>
-        )}                   
-      /> 
+        )}
+      />
       <RefundModalView />
-      <AuthModalView {...this.props}/>
+
     </View>
     );
   }
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "center",
       marginBottom: ScreenUtil.autoheight(5),
-      paddingVertical: ScreenUtil.autoheight(7), 
+      paddingVertical: ScreenUtil.autoheight(7),
     },
     headleftout: {
       paddingLeft: ScreenUtil.autowidth(15),
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: ScreenUtil.autowidth(20),
     },
     copytext: {
-      fontSize: ScreenUtil.setSpText(16), 
+      fontSize: ScreenUtil.setSpText(16),
     },
     outsource: {
       flexDirection: "row",
@@ -324,13 +324,13 @@ const styles = StyleSheet.create({
       paddingHorizontal: ScreenUtil.autowidth(17),
     },
     leftout:{
-      flex: 1, 
+      flex: 1,
       alignItems: "flex-start",
       justifyContent: 'center',
     },
     rightout: {
-      flex: 1, 
-      alignItems: "flex-end", 
+      flex: 1,
+      alignItems: "flex-end",
       justifyContent: 'space-between',
     },
     fromtotext: {
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       borderRadius: 5,
       flexDirection: "row",
-      alignItems: 'center', 
+      alignItems: 'center',
       width: ScreenWidth-ScreenUtil.autowidth(80),
     },
     imgBtn: {
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     },
     passoutsource: {
       alignItems: 'center',
-      flexDirection: 'column', 
+      flexDirection: 'column',
     },
     inptpass: {
       textAlign: "center",
@@ -397,12 +397,12 @@ const styles = StyleSheet.create({
       alignItems: 'flex-end',
     },
     Explainout: {
-      flexDirection: 'column', 
+      flexDirection: 'column',
       alignItems: 'flex-start'
     },
     Explaintext: {
       fontSize: ScreenUtil.setSpText(15),
-      lineHeight: ScreenUtil.autoheight(30), 
+      lineHeight: ScreenUtil.autoheight(30),
     },
 
 });

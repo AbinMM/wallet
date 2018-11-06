@@ -92,7 +92,9 @@ import { redirect } from '../utils/Api'
 import Constants from '../utils/Constants'
 import ScreenUtil from '../utils/ScreenUtil'
 import Security from '../utils/Security';
-
+import {AlertModalView} from '../components/modals/AlertModal'
+import {AuthModalView} from '../components/modals/AuthModal'
+import {DappSignModalView} from '../components/modals/DappSignModal'
 
 require('moment/locale/zh-cn');
 var DeviceInfo = require('react-native-device-info');
@@ -1458,6 +1460,9 @@ class Route extends React.Component {
             </View>
           </View>
         ) : null}
+      <DappSignModalView />
+      <AlertModalView />
+      <AuthModalView />
     </View>)
   }
 }

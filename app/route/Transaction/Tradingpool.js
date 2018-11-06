@@ -25,10 +25,10 @@ class Tradingpool extends BaseComponent {
 
     static navigationOptions = {
         headerTitle: '资金池',
-        header:null,   
+        header:null,
     };
 
-    // 构造函数  
+    // 构造函数
     constructor(props) {
         super(props);
         this.state = {
@@ -98,8 +98,8 @@ class Tradingpool extends BaseComponent {
         // }
         this.setState({logRefreshing: true});
         try {
-            this.props.dispatch({ 
-                type: 'transaction/getEosMarkets', 
+            this.props.dispatch({
+                type: 'transaction/getEosMarkets',
                 payload:{code: this.state.params.selectcode, base_contract: this.state.params.contract, tradename: this.state.params.tradename},
                 callback: (data) => {
                 if(data && data.code=='0'){
@@ -118,7 +118,7 @@ class Tradingpool extends BaseComponent {
                 }else{
                     this.setState({logRefreshing: false,})
                 }
-                this.props.dispatch({ type: 'transaction/getEosShareholdersInfo', 
+                this.props.dispatch({ type: 'transaction/getEosShareholdersInfo',
                     payload:{code: this.state.params.selectcode, base_contract: this.state.params.contract,tradename: this.state.params.tradename},
                     callback: (data) => {
                         if(data && data.code=='0'){
@@ -171,11 +171,11 @@ class Tradingpool extends BaseComponent {
         }
         this.getBalance();  //取eos余额
         this.getETBalance(); //取Token余额
-    } 
+    }
 
     getBalance() {
         this.props.dispatch({
-            type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account, symbol: 'EOS' }, 
+            type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account, symbol: 'EOS' },
             callback: (data) => {
                 if (data.code == '0') {
                     if (data.data == null || data.data == "") {
@@ -190,7 +190,7 @@ class Tradingpool extends BaseComponent {
 
     getETBalance() {
         this.props.dispatch({
-            type: 'transaction/getETBalance', payload: { contract: this.state.params.contract, account: this.props.defaultWallet.account, symbol: this.state.params.tradename }, 
+            type: 'transaction/getETBalance', payload: { contract: this.state.params.contract, account: this.props.defaultWallet.account, symbol: this.state.params.tradename },
             callback: (data) => {
                 if (data && data.code == '0') {
                     if (data.data == null || data.data == "") {
@@ -255,7 +255,7 @@ class Tradingpool extends BaseComponent {
         this._setModalVisible();
     }
 
-     // 显示/隐藏 modal  
+     // 显示/隐藏 modal
     _setModalVisible() {
         let isWithdraw = this.state.Withdraw;
         this.setState({
@@ -272,7 +272,7 @@ class Tradingpool extends BaseComponent {
 
     _setModalRankingList(listdata) {
         let isRankingList = this.state.RankingList;
-        this.setState({ 
+        this.setState({
             RankingList: !isRankingList,
             ListEosTotalinput: Math.floor(listdata.info.eos_in.replace("EOS", "")*100)/100, //排行榜详情Eos总投入
             ListTokenTotalinput: Math.floor(listdata.info.token_in.replace(this.state.params.tradename, "")*100)/100, //排行榜详情Token总投入
@@ -295,11 +295,11 @@ class Tradingpool extends BaseComponent {
                 actions: [
                     {
                         account: "etbexchanger",
-                        name: "addtoken", 
+                        name: "addtoken",
                         authorization: [{
                         actor: this.props.defaultWallet.account,
                         permission: authInfo.permission
-                        }], 
+                        }],
                         data: {
                             account: this.props.defaultWallet.account,
                             quant: formatEosQua(this.state.buyEosAmount + " EOS"),
@@ -319,8 +319,8 @@ class Tradingpool extends BaseComponent {
                         if(r.data.code){
                             var errcode = r.data.code;
                             if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
-                                    if(resp.code == 608){ 
+                                this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{
+                                    if(resp.code == 608){
                                         //弹出提示框,可申请免费抵押功能
                                         const view =
                                         <View style={styles.Explainout}>
@@ -408,11 +408,11 @@ class Tradingpool extends BaseComponent {
                 actions: [
                     {
                         account: "etbexchanger",
-                        name: "subtoken", 
+                        name: "subtoken",
                         authorization: [{
                         actor: this.props.defaultWallet.account,
                         permission: authInfo.permission
-                        }], 
+                        }],
                         data: {
                             receiver: this.props.defaultWallet.account,
                             quant: formatEosQua(this.state.EosTotalinput + " EOS"),
@@ -432,8 +432,8 @@ class Tradingpool extends BaseComponent {
                         if(r.data.code){
                             var errcode = r.data.code;
                             if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
-                                    if(resp.code == 608){ 
+                                this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{
+                                    if(resp.code == 608){
                                         //弹出提示框,可申请免费抵押功能
                                         const view =
                                         <View style={styles.Explainout}>
@@ -540,17 +540,17 @@ class Tradingpool extends BaseComponent {
         if(eos == null || eos == '' || currentPrice == null || currentPrice == ''){
             return '0';
         }
-        var ret =  Math.floor((eos*currentPrice)*100)/100; 
+        var ret =  Math.floor((eos*currentPrice)*100)/100;
         if(ret == 'NaN'){
             ret = '0';
         }
-        return ret; 
+        return ret;
     }
 
     render() {
         return (
         <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-            <Header {...this.props} onPressLeft={true} title={'Bancor池'+this.props.navigation.state.params.tradename} avatar={UImage.pool_explain} onPressRight={this._rightTopClick.bind(this,this.props.navigation.state.params.tradename)}/>  
+            <Header {...this.props} onPressLeft={true} title={'Bancor池'+this.props.navigation.state.params.tradename} avatar={UImage.pool_explain} onPressRight={this._rightTopClick.bind(this,this.props.navigation.state.params.tradename)}/>
             <ScrollView style={styles.row}
                 refreshControl={
                     <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.getAccountTrading()}  colors={[UColor.tintColor]}
@@ -610,7 +610,7 @@ class Tradingpool extends BaseComponent {
                         <Text style={[styles.recordtext,{color:UColor.lightgray}]} numberOfLines={1}>{this.state.TokenProportion} %</Text>
                     </View>
                 </View>
-                <ListView style={[styles.listViewout,{backgroundColor: UColor.mainColor}]} renderRow={this.renderRow} enableEmptySections={true} 
+                <ListView style={[styles.listViewout,{backgroundColor: UColor.mainColor}]} renderRow={this.renderRow} enableEmptySections={true}
                     renderHeader = {()=>
                     <View >
                         <View style={[styles.titleout,{borderBottomColor: UColor.secdColor,}]}>
@@ -626,8 +626,8 @@ class Tradingpool extends BaseComponent {
                         </View>
                     </View>
                     }
-                    dataSource={this.state.dataSource.cloneWithRows(this.state.largeRankByCode == null ? [] : this.state.largeRankByCode)} 
-                    renderRow={(rowData, sectionID, rowID) => (                 
+                    dataSource={this.state.dataSource.cloneWithRows(this.state.largeRankByCode == null ? [] : this.state.largeRankByCode)}
+                    renderRow={(rowData, sectionID, rowID) => (
                         <Button onPress={this._setModalRankingList.bind(this,rowData)}>
                             <View style={[styles.businessRan,{borderTopColor: UColor.secdColor}]}>
                                 <View style={styles.liststrip}>
@@ -638,8 +638,8 @@ class Tradingpool extends BaseComponent {
                                 </View>
                             </View>
                         </Button>
-                    )}                
-                /> 
+                    )}
+                />
             </ScrollView>
             <View style={[styles.footer,{backgroundColor: UColor.secdColor}]}>
                 <Button onPress={this.turnInAsset.bind(this)} style={{ flex: 1 }}>
@@ -653,9 +653,9 @@ class Tradingpool extends BaseComponent {
                     </View>
                 </Button>
             </View>
-            
+
             <Modal animationType={'slide'} transparent={true} visible={this.state.Banker} onShow={() => { }} onRequestClose={() => { }} >
-                <TouchableOpacity style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
+                <TouchableOpacity style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>
                     <View style={[styles.modalview,{backgroundColor: UColor.btnColor,}]}>
                         <View style={[styles.subView,{borderBottomColor: UColor.riceWhite}]}>
                             <Text style={styles.buttontext}/>
@@ -665,7 +665,7 @@ class Tradingpool extends BaseComponent {
                         <View style={styles.progressbar}>
                             <View style={styles.paragraph}>
                                 <Text style={[styles.subsection,{color: UColor.blackColor}]}>0%</Text>
-                                <Text style={[styles.subsection,{color: UColor.blackColor}]}>100%</Text>     
+                                <Text style={[styles.subsection,{color: UColor.blackColor}]}>100%</Text>
                             </View>
                             <Slider maximumValue={this.state.myEosAvailable*1} minimumValue={0} step={0.0001} value={this.state.buyEosAmount*1}
                             onSlidingComplete={(value)=>this.setState({ buyEosAmount: value.toFixed(2), eosToToken: this.eosToToken(value/1, this.state.ConvertBalance)})}
@@ -673,16 +673,16 @@ class Tradingpool extends BaseComponent {
                             />
                             <View style={styles.paragraph}>
                                 <Text style={[styles.subsection,{color: UColor.blackColor}]}>0</Text>
-                                <Text style={[styles.subsection,{color: UColor.blackColor}]}>1/4</Text>     
+                                <Text style={[styles.subsection,{color: UColor.blackColor}]}>1/4</Text>
                                 <Text style={[styles.subsection,{color: UColor.blackColor}]}>1/2</Text>
                                 <Text style={[styles.subsection,{color: UColor.blackColor}]}>3/4</Text>
-                                <Text style={[styles.subsection,{color: UColor.blackColor}]}>ALL</Text>                                
-                            </View>    
+                                <Text style={[styles.subsection,{color: UColor.blackColor}]}>ALL</Text>
+                            </View>
                             <View style={[styles.inputout]}>
                                 <Text style={[styles.unittext,{color: UColor.blackColor}]}>EOS数量:</Text>
-                                <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyEosAmount + ''} returnKeyType="go" keyboardType="phone-pad"  
-                                    selectionColor={UColor.tintColor} style={[styles.inpt,{borderBottomColor: UColor.blackColor,color: UColor.blackColor,}]} 
-                                    placeholder="输入EOS数量" underlineColorAndroid="transparent" maxLength = {15} placeholderTextColor={UColor.inputtip} 
+                                <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyEosAmount + ''} returnKeyType="go" keyboardType="phone-pad"
+                                    selectionColor={UColor.tintColor} style={[styles.inpt,{borderBottomColor: UColor.blackColor,color: UColor.blackColor,}]}
+                                    placeholder="输入EOS数量" underlineColorAndroid="transparent" maxLength = {15} placeholderTextColor={UColor.inputtip}
                                     onChangeText={(buyEosAmount) => this.setState({ buyEosAmount: this.chkInputSellET(buyEosAmount), eosToToken: this.eosToToken(buyEosAmount, this.state.ConvertBalance)})}
                                 />
                             </View>
@@ -724,7 +724,7 @@ class Tradingpool extends BaseComponent {
             </Modal>
 
              <Modal animationType={'slide'} transparent={true} visible={this.state.Withdraw} onShow={() => { }} onRequestClose={() => { }} >
-                <TouchableOpacity style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
+                <TouchableOpacity style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>
                     <View style={[styles.modalview,{backgroundColor: UColor.btnColor,}]}>
                         <View style={[styles.subView,{borderBottomColor: UColor.riceWhite,}]}>
                             <Text style={styles.buttontext}/>
@@ -779,7 +779,7 @@ class Tradingpool extends BaseComponent {
             </Modal>
 
              <Modal animationType={'slide'} transparent={true} visible={this.state.RankingList} onShow={() => { }} onRequestClose={() => { }} >
-                <TouchableOpacity style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
+                <TouchableOpacity style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>
                     <View style={[styles.modalview,{backgroundColor: UColor.btnColor,}]}>
                         <View style={[styles.subView,{borderBottomColor: UColor.riceWhite,}]}>
                             <Text style={styles.buttontext}/>
@@ -812,7 +812,7 @@ class Tradingpool extends BaseComponent {
                 </TouchableOpacity>
             </Modal>
 
-            <AuthModalView {...this.props} />
+
         </View>
         )
     }
@@ -820,7 +820,7 @@ class Tradingpool extends BaseComponent {
 const styles = StyleSheet.create({
     passout: {
         alignItems: 'center',
-        flexDirection: 'column', 
+        flexDirection: 'column',
     },
     inptpass: {
         textAlign: 'center',
@@ -847,18 +847,18 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        height: ScreenUtil.autoheight(40), 
+        height: ScreenUtil.autoheight(40),
         marginHorizontal: ScreenUtil.autowidth(15),
     },
     nametext: {
         flex: 1,
-        textAlign: "left", 
-        fontSize: ScreenUtil.setSpText(16), 
+        textAlign: "left",
+        fontSize: ScreenUtil.setSpText(16),
     },
     recordtext: {
         flex: 1,
-        textAlign: "left", 
-        fontSize: ScreenUtil.setSpText(14), 
+        textAlign: "left",
+        fontSize: ScreenUtil.setSpText(14),
     },
     listViewout: {
         marginBottom: ScreenUtil.autowidth(40),
@@ -872,7 +872,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: ScreenUtil.autowidth(15),
     },
     rankout: {
-        flexDirection: "row", 
+        flexDirection: "row",
         alignItems: 'center',
         height: ScreenUtil.autoheight(30),
         marginHorizontal: ScreenUtil.autowidth(10),
@@ -896,7 +896,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: ScreenUtil.setSpText(12),
     },
-   
+
     footer: {
         left: 0,
         right: 0,
@@ -919,9 +919,9 @@ const styles = StyleSheet.create({
 
 
     modalStyle: {
-        flex: 1, 
+        flex: 1,
         alignItems: 'center',
-        justifyContent: 'center', 
+        justifyContent: 'center',
     },
     modalview: {
         borderRadius: 5,
@@ -929,9 +929,9 @@ const styles = StyleSheet.create({
     },
     subView: {
         borderBottomWidth: 1.5,
-        flexDirection: "row", 
+        flexDirection: "row",
         alignItems: 'center',
-        height:  ScreenUtil.autoheight(50), 
+        height:  ScreenUtil.autoheight(50),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },
     buttontext: {
@@ -958,10 +958,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
     },
-    clauseimg: { 
-        width: ScreenUtil.autowidth(15), 
+    clauseimg: {
+        width: ScreenUtil.autowidth(15),
         height: ScreenUtil.autowidth(15),
-        marginRight: ScreenUtil.autowidth(10), 
+        marginRight: ScreenUtil.autowidth(10),
     },
     welcome: {
         fontSize: ScreenUtil.setSpText(12),
@@ -1003,15 +1003,15 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(14),
     },
     inpt: {
-        flex: 1, 
+        flex: 1,
         borderBottomWidth: 0.5,
         fontSize: ScreenUtil.setSpText(14),
-        marginLeft: ScreenUtil.autowidth(10), 
+        marginLeft: ScreenUtil.autowidth(10),
     },
     inpout: {
-        flex: 1, 
+        flex: 1,
         borderBottomWidth: 0.5,
-        marginLeft: ScreenUtil.autowidth(10), 
+        marginLeft: ScreenUtil.autowidth(10),
     },
 
     hintout: {
@@ -1023,6 +1023,6 @@ const styles = StyleSheet.create({
     tipstext: {
         fontSize: ScreenUtil.setSpText(12),
     },
-    
+
 })
 export default Tradingpool;

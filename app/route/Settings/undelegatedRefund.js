@@ -26,7 +26,7 @@ class undelegatedRefund extends BaseComponent {
       headerTitle: "赎回问题",
       header:null,
   };
- 
+
   //组件加载完成
   componentDidMount() {
     const c = this.props.navigation;
@@ -38,7 +38,7 @@ class undelegatedRefund extends BaseComponent {
       toAccount: this.props.defaultWallet.account,
     });
   }
-  
+
   componentWillUnmount(){
     //结束页面前，资源释放操作
     super.componentWillUnmount();
@@ -64,7 +64,7 @@ class undelegatedRefund extends BaseComponent {
        this.setState({ error: true,errortext: '请先创建并激活钱包' });
        EasyToast.show("请先创建并激活钱包");
        return;
-    }; 
+    };
     this.dismissKeyboardClick();
 
     AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
@@ -74,11 +74,11 @@ class undelegatedRefund extends BaseComponent {
             actions: [
                 {
                     account: "eosio",
-                    name: "refund", 
+                    name: "refund",
                     authorization: [{
                     actor: this.props.defaultWallet.account,
                     permission: authInfo.permission
-                    }], 
+                    }],
                     data: {
                         owner: this.props.defaultWallet.account,
                     }
@@ -95,9 +95,9 @@ class undelegatedRefund extends BaseComponent {
                     if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
                         || errcode == 3081001)
                     {
-                      this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
+                      this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{
                         if(resp.code == 608)
-                        { 
+                        {
                             //弹出提示框,可申请免费抵押功能
                             const view =
                             <View style={styles.Explainout}>
@@ -105,7 +105,7 @@ class undelegatedRefund extends BaseComponent {
                               <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                             </View>
                             EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                
+
                             const { navigate } = this.props.navigation;
                             navigate('FreeMortgage', {});
                             // EasyShowLD.dialogClose();
@@ -133,8 +133,8 @@ class undelegatedRefund extends BaseComponent {
 
   render() {
     return (
-      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>   
-          <Header {...this.props} onPressLeft={true} title="赎回问题" />  
+      <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+          <Header {...this.props} onPressLeft={true} title="赎回问题" />
           <View style={[styles.taboutsource,{backgroundColor: UColor.mainColor}]}>
               <Text style={[styles.accountTitle,{color: UColor.fontColor}]}>温馨提示：</Text>
               <Text style={[styles.accountText,{color: UColor.arrow}]}>主网赎回EOS存在少量网络冲突问题，可能导致</Text>
@@ -151,7 +151,7 @@ class undelegatedRefund extends BaseComponent {
               <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
           </View>
 
-          <AuthModalView {...this.props} />
+
       </View>
     );
   }
@@ -159,7 +159,7 @@ class undelegatedRefund extends BaseComponent {
 
 const styles = StyleSheet.create({
   passoutsource: {
-   flexDirection: 'column', 
+   flexDirection: 'column',
     alignItems: 'center'
   },
   inptpass: {
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     paddingBottom: ScreenUtil.autoheight(20),
   },
   logimg: {
-    width: ScreenUtil.autowidth(50), 
+    width: ScreenUtil.autowidth(50),
     height: ScreenUtil.autowidth(50)
   },
   logtext: {
@@ -222,12 +222,12 @@ const styles = StyleSheet.create({
     flex: 1
   },
   Explainout: {
-    flexDirection: 'column', 
+    flexDirection: 'column',
     alignItems: 'flex-start'
   },
   Explaintext: {
       fontSize: ScreenUtil.setSpText(15),
-      lineHeight: ScreenUtil.autoheight(30), 
+      lineHeight: ScreenUtil.autoheight(30),
   },
 });
 export default undelegatedRefund;

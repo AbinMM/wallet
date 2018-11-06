@@ -31,7 +31,7 @@ class RamSale extends BaseComponent {
 
     static navigationOptions = {
         headerTitle: "内存交易",
-        header:null,  
+        header:null,
         tabBarLabel: '交易所',
         tabBarIcon: ({ focused}) => (
             <Image resizeMode='stretch' source={focused ? UImage.tab_5_h : UImage.tab_5} style={{width: ScreenUtil.autowidth(21), height: ScreenUtil.autowidth(21)}}/>
@@ -45,7 +45,7 @@ class RamSale extends BaseComponent {
           selectedTransactionRecord: transactionOption[0],
           isBuy: true,
           isSell: false,
-          balance: '0.0000',   
+          balance: '0.0000',
           slideCompletionValue: 0,
           buyRamAmount: "0",    //输入购买的额度
           eosToKB: '0.0000',
@@ -57,14 +57,14 @@ class RamSale extends BaseComponent {
           newramTradeLog: [],
           logId: "-1",
           password:"",   //买卖交易时的密码
-          showMore:false,     
+          showMore:false,
           showMoreTitle:"更多",
           isKLine:true,  //是否K线
           dataKLine: {},
           business: false,
           error: false,
           errortext: '',
-          scrollEnabled: true, 
+          scrollEnabled: true,
         };
     }
 
@@ -114,7 +114,7 @@ class RamSale extends BaseComponent {
         // 获取曲线
         this.fetchLine(this.state.selectedSegment, true);
     }
-  
+
     getRamTradeLog(){
         this.props.dispatch({type: 'transaction/getRamTradeLog',payload: {last_id: -1}, callback: (resp) => {
             try {
@@ -130,7 +130,7 @@ class RamSale extends BaseComponent {
             } catch (error) {
 
             }
-        }}); 
+        }});
     }
 
     getAccountInfo(){
@@ -141,12 +141,12 @@ class RamSale extends BaseComponent {
         try {
             this.setState({ myRamAvailable:((data.total_resources.ram_bytes - data.ram_usage)).toFixed(0)});
         } catch (error) {
-            
+
         }
 
         } });
         this.getBalance();
-    } 
+    }
 
     //获取时分图
     fetchRAMLine(type,opt, onRefreshing = false){
@@ -191,7 +191,7 @@ class RamSale extends BaseComponent {
                                     timezone = "";
                                 }
                                 elementArray[0] = timezone;
-                            }   
+                            }
                             if(element.open) {
                                 elementArray[1] = element.open;
                             }
@@ -220,7 +220,7 @@ class RamSale extends BaseComponent {
             }  catch (error) {
                 this.setState({ dataKLine : {}});
                 this.setState({logRefreshing: false});
-            } 
+            }
         });
     }
 
@@ -260,11 +260,11 @@ class RamSale extends BaseComponent {
             this.onClickMore();
         }
     }
-  
+
     getDataLine(){
         return this.props.ramLineDatas ? this.props.ramLineDatas : {};
     }
-    
+
     getDataKLine(){
         return this.state.dataKLine?this.state.dataKLine:{};
     }
@@ -300,9 +300,9 @@ class RamSale extends BaseComponent {
             }
             this.props.dispatch({type: 'transaction/getRamBigTradeLog',payload: {}, callback: () => {
                 this.setState({logRefreshing: false});
-            }});    
+            }});
         }else{
-            // EasyToast.show('开发中，查询区块持仓大户前10名记录');   
+            // EasyToast.show('开发中，查询区块持仓大户前10名记录');
             if(!onRefreshing){
                 this.setState({logRefreshing: true});
             }
@@ -363,7 +363,7 @@ class RamSale extends BaseComponent {
                         logRefreshing: false
                     });
                 }
-            }}); 
+            }});
         }
     }
 
@@ -388,37 +388,37 @@ class RamSale extends BaseComponent {
                 }
             })
         } catch (error) {
-            
+
         }
     }
 
-  
-    // 更新"买，卖，交易记录，大单追踪"按钮的状态  
-    _updateBtnState(currentPressed, array) { 
-        if (currentPressed === 'undefined' || currentPressed === null || array === 'undefined' || array === null ) {  
-            return;  
-        }  
-        let newState = {...this.state};  
-        for (let type of array) {  
-            if (currentPressed == type) {  
-                newState[type] ? {} : newState[type] = !newState[type];  
-                this.setState(newState);  
-            } else {  
-                newState[type] ? newState[type] = !newState[type] : {};  
-                this.setState(newState);  
-            }  
-        } 
-        this.setSelectedTransactionRecord(this.state.selectedTransactionRecord);
-    }  
 
-    businesButton(style, selectedSate, stateType, buttonTitle) {  
-        let BTN_SELECTED_STATE_ARRAY = ['isBuy', 'isSell'];  
-        return(  
-            <TouchableOpacity style={[style, selectedSate ? {backgroundColor:UColor.tintColor} : {backgroundColor: UColor.secdColor}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
-                <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.tintColor}]}>{buttonTitle}</Text>  
-            </TouchableOpacity>  
-        );  
-    } 
+    // 更新"买，卖，交易记录，大单追踪"按钮的状态
+    _updateBtnState(currentPressed, array) {
+        if (currentPressed === 'undefined' || currentPressed === null || array === 'undefined' || array === null ) {
+            return;
+        }
+        let newState = {...this.state};
+        for (let type of array) {
+            if (currentPressed == type) {
+                newState[type] ? {} : newState[type] = !newState[type];
+                this.setState(newState);
+            } else {
+                newState[type] ? newState[type] = !newState[type] : {};
+                this.setState(newState);
+            }
+        }
+        this.setSelectedTransactionRecord(this.state.selectedTransactionRecord);
+    }
+
+    businesButton(style, selectedSate, stateType, buttonTitle) {
+        let BTN_SELECTED_STATE_ARRAY = ['isBuy', 'isSell'];
+        return(
+            <TouchableOpacity style={[style, selectedSate ? {backgroundColor:UColor.tintColor} : {backgroundColor: UColor.secdColor}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>
+                <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.tintColor}]}>{buttonTitle}</Text>
+            </TouchableOpacity>
+        );
+    }
 
     transformColor(currentPressed) {
         if(currentPressed == 'isBuy'){
@@ -442,7 +442,7 @@ class RamSale extends BaseComponent {
             }
             if(j >= charmap.length){
                 //非法字符
-                obj = obj.replace(tmp, ""); 
+                obj = obj.replace(tmp, "");
                 EasyToast.show('请输入正确的账号');
             }
         }
@@ -505,7 +505,7 @@ class RamSale extends BaseComponent {
         return obj;
     }
 
-  
+
     chkAmountIsZero(amount,errInfo){
         var tmp;
         try {
@@ -521,7 +521,7 @@ class RamSale extends BaseComponent {
     }
 
   // 购买内存
-  buyram = (rowData) => { 
+  buyram = (rowData) => {
     if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
         //EasyToast.show('请先创建并激活钱包');
         this.setState({ error: true,errortext: '请先创建并激活钱包' });
@@ -553,11 +553,11 @@ class RamSale extends BaseComponent {
                 actions: [
                     {
                         account: "eosio",
-                        name: "buyram", 
+                        name: "buyram",
                         authorization: [{
                         actor: this.props.defaultWallet.account,
                         permission: authInfo.permission,
-                        }], 
+                        }],
                         data: {
                             payer: this.props.defaultWallet.account,
                             receiver: this.props.defaultWallet.account,
@@ -577,9 +577,9 @@ class RamSale extends BaseComponent {
                             if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
                                 || errcode == 3081001)
                             {
-                                this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
+                                this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{
                                 if(resp.code == 608)
-                                { 
+                                {
                                     //弹出提示框,可申请免费抵押功能
                                     const view =
                                     <View style={styles.Explainout}>
@@ -587,7 +587,7 @@ class RamSale extends BaseComponent {
                                         <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                     </View>
                                     EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                        
+
                                     const { navigate } = this.props.navigation;
                                     navigate('FreeMortgage', {});
                                     // EasyShowLD.dialogClose();
@@ -605,7 +605,7 @@ class RamSale extends BaseComponent {
                         EasyToast.show("购买失败");
                     }
                 }
-            });    
+            });
         } catch (error) {
             EasyShowLD.loadingClose();
             EasyToast.show('未知异常');
@@ -646,11 +646,11 @@ class RamSale extends BaseComponent {
                 actions: [
                     {
                         account: "eosio",
-                        name: "sellram", 
+                        name: "sellram",
                         authorization: [{
                         actor: this.props.defaultWallet.account,
                         permission: authInfo.permission,
-                        }], 
+                        }],
                         data: {
                             account: this.props.defaultWallet.account,
                             bytes: (this.state.sellRamBytes * 1024).toFixed(0),
@@ -669,9 +669,9 @@ class RamSale extends BaseComponent {
                             if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
                                 || errcode == 3081001)
                             {
-                                this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
+                                this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{
                                 if(resp.code == 608)
-                                { 
+                                {
                                     //弹出提示框,可申请免费抵押功能
                                     const view =
                                     <View style={styles.Explainout}>
@@ -679,7 +679,7 @@ class RamSale extends BaseComponent {
                                         <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                     </View>
                                     EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                        
+
                                     const { navigate } = this.props.navigation;
                                     navigate('FreeMortgage', {});
                                     // EasyShowLD.dialogClose();
@@ -704,7 +704,7 @@ class RamSale extends BaseComponent {
         }
     });
   };
-  
+
     dismissKeyboardClick() {
         dismissKeyboard();
     }
@@ -718,7 +718,7 @@ class RamSale extends BaseComponent {
         {
             ret = '0';
         }
-        return ret; 
+        return ret;
     }
 
     kbToEos(kb, currentPrice){
@@ -729,7 +729,7 @@ class RamSale extends BaseComponent {
         if(ret == 'NaN')
         {
             ret = '0';
-        } 
+        }
         return ret;
     }
 
@@ -754,7 +754,7 @@ class RamSale extends BaseComponent {
     dismissKeyboardClick() {
         dismissKeyboard();
     }
-    
+
     transferTimeZone(time){
         var timezone;
         try {
@@ -765,15 +765,15 @@ class RamSale extends BaseComponent {
         return timezone;
     }
 
-    openbusiness() {  
-        let business = this.state.business;  
-        this.setState({  
+    openbusiness() {
+        let business = this.state.business;
+        this.setState({
             business:!business,
             buyRamAmount: '0',
-            sellRamBytes: '0',  
-        });  
-    }  
-  
+            sellRamBytes: '0',
+        });
+    }
+
     onMoveLineView() {
         this.setState({scrollEnabled: false});
         return true;
@@ -833,8 +833,8 @@ class RamSale extends BaseComponent {
                         <Text style={[styles.toptext,{color: UColor.btnColor}]}>价格</Text>
                     </View>
                     <View style={styles.titleout}>
-                        <Text style={[styles.cupcdo,{color: '#C2E1FF'}]}> 
-                            {this.props.ramInfo ? (this.props.ramInfo.increase > 0 ? '+' + (this.props.ramInfo.increase * 100).toFixed(2) : 
+                        <Text style={[styles.cupcdo,{color: '#C2E1FF'}]}>
+                            {this.props.ramInfo ? (this.props.ramInfo.increase > 0 ? '+' + (this.props.ramInfo.increase * 100).toFixed(2) :
                                 (this.props.ramInfo.increase * 100).toFixed(2)): '0.00'}%</Text>
                         <Text style={[styles.Increasetext,{color:UColor.btnColor}]}>涨幅</Text>
                     </View>
@@ -847,18 +847,18 @@ class RamSale extends BaseComponent {
             </View>
         </TouchableOpacity>
         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
-            <ScrollView {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})} 
+            <ScrollView {...this.isIos11({contentInsetAdjustmentBehavior:'automatic'})}
                 scrollEnabled={this.state.scrollEnabled} keyboardShouldPersistTaps="always"
-                refreshControl={Platform.OS == 'ios' ? <RefreshControl refreshing={false} onRefresh={() => this.onRefreshing()} 
+                refreshControl={Platform.OS == 'ios' ? <RefreshControl refreshing={false} onRefresh={() => this.onRefreshing()}
                 tintColor={UColor.transport} colors={[UColor.transport]} progressBackgroundColor={UColor.transport}
                 style={{backgroundColor: UColor.transport}}/>
                 :
-                <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} 
+                <RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
                 tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}
                 style={{backgroundColor: UColor.transport}}/>
                 }
             >
-            {Platform.OS == 'ios' && <ActivityIndicator size="large" color={UColor.tintColor} animating={this.state.logRefreshing} 
+            {Platform.OS == 'ios' && <ActivityIndicator size="large" color={UColor.tintColor} animating={this.state.logRefreshing}
              style={[styles.loganimat, {height:this.state.logRefreshing? ScreenUtil.autoheight(60):0}]}/>}
                 <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
                     <View style={styles.timetabout}>
@@ -866,21 +866,21 @@ class RamSale extends BaseComponent {
                             <View style={[styles.timeview,{backgroundColor: this.state.selectedSegment == "5分"?UColor.tintColor:UColor.invalidbtn}]}>
                                 <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>5分</Text>
                             </View>
-                        </Button> 
+                        </Button>
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"15分")}>
                             <View style={[styles.timeview,{backgroundColor: this.state.selectedSegment == "15分"?UColor.tintColor:UColor.invalidbtn}]}>
                                 <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>15分</Text>
                             </View>
-                        </Button> 
+                        </Button>
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"30分")}>
                             <View style={[styles.timeview,{backgroundColor: this.state.selectedSegment == "30分"?UColor.tintColor:UColor.invalidbtn}]}>
                                 <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>30分</Text>
                             </View>
-                        </Button> 
+                        </Button>
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"更多")}>
@@ -889,60 +889,60 @@ class RamSale extends BaseComponent {
                                 <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>{this.state.showMoreTitle}</Text>
                                 <Ionicons name={this.state.showMore ? "md-arrow-dropdown" : "md-arrow-dropright"} size={ScreenUtil.autowidth(20)} color={UColor.btnColor}/>
                             </View>
-                        </Button> 
+                        </Button>
                     </View>
                     <View style={styles.timetabout}>
                         <Button disabled={true}>
                             <View style={styles.timeview} >
                                 <Text style={[styles.timeinitial,{color: UColor.btnColor}]}></Text>
                             </View>
-                        </Button> 
+                        </Button>
                     </View>
-                </View> 
-                {this.state.showMore &&       
+                </View>
+                {this.state.showMore &&
                 <View style={[styles.timeout,{backgroundColor:UColor.secdColor}]}>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"1小时")}>
                             <View style={[styles.timeview,{backgroundColor: this.state.showMoreTitle == "1小时"?UColor.tintColor:UColor.invalidbtn}]} >
                             <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1小时</Text>
                             </View>
-                        </Button> 
+                        </Button>
                     </View>
                     <View style={{flexDirection:"column",flex:1}}>
                         <Button onPress={this.onClickTimeType.bind(this,"1天")}>
                             <View style={[styles.timeview,{backgroundColor: this.state.showMoreTitle == "1天"?UColor.tintColor:UColor.invalidbtn}]} >
                             <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1天</Text>
                             </View>
-                        </Button> 
+                        </Button>
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"1周")}>
                             <View style={[styles.timeview,{backgroundColor: this.state.showMoreTitle == "1周"?UColor.tintColor:UColor.invalidbtn}]} >
                             <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1周</Text>
                             </View>
-                        </Button> 
+                        </Button>
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"1月")}>
                             <View style={[styles.timeview,{backgroundColor: this.state.showMoreTitle == "1月"?UColor.tintColor:UColor.invalidbtn}]} >
                             <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>1月</Text>
                             </View>
-                        </Button> 
+                        </Button>
                     </View>
                     <View style={styles.timetabout}>
                         <Button onPress={this.onClickTimeType.bind(this,"时分")}>
                             <View style={[styles.timeview,{backgroundColor: this.state.showMoreTitle == "时分"?UColor.tintColor:UColor.invalidbtn}]}>
                                 <Text style={[styles.timeinitial,{color: UColor.btnColor}]}>时分</Text>
                             </View>
-                        </Button>   
+                        </Button>
                     </View>
-                </View> 
-                }  
-                {this.state.isKLine ? 
+                </View>
+                }
+                {this.state.isKLine ?
                     <View style={{backgroundColor: UColor.bgEchar}} onStartShouldSetResponderCapture={this.onMoveLineView.bind(this)} onResponderRelease={this.onMoveLineViewEnd.bind(this)} onResponderEnd={this.onMoveLineViewEnd.bind(this)}>
                         {<Echarts option={this.getDataKLine()} width={ScreenWidth} height={ScreenUtil.autoheight(300)} />}
                     </View>
-                : 
+                :
                     <View style={{backgroundColor: UColor.bgEchar}}>
                         {<Echarts option={this.getDataLine()} width={ScreenWidth} height={ScreenUtil.autoheight(180)} />}
                     </View>
@@ -951,10 +951,10 @@ class RamSale extends BaseComponent {
                     <SegmentedControls tint= {UColor.tintColor} selectedTint= {UColor.btnColor} onSelection={this.selectedTransactionRecord.bind(this) }
                         selectedOption={ this.state.selectedTransactionRecord } backTint= {UColor.secdColor} options={transactionOption} />
                 </View>
-                {this.state.selectedTransactionRecord == transactionOption[0] || this.state.selectedTransactionRecord == transactionOption[1] ? 
+                {this.state.selectedTransactionRecord == transactionOption[0] || this.state.selectedTransactionRecord == transactionOption[1] ?
                     <View style={{flex: 1,}}>
                         {(this.state.newramTradeLog  != null &&  this.state.newramTradeLog.length == 0) ? <View style={{paddingTop: ScreenUtil.autoheight(50), justifyContent: 'center', alignItems: 'center'}}><Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor}}>还没有交易哟~</Text></View> :
-                        <ListView style={{flex: 1,}} renderRow={this.renderRow} enableEmptySections={true} 
+                        <ListView style={{flex: 1,}} renderRow={this.renderRow} enableEmptySections={true}
                                 renderHeader = {()=>
                                 <View style={styles.formout}>
                                     <Text style={[styles.formName,{flex: 3,color: UColor.lightgray}]}>账号</Text>
@@ -963,11 +963,11 @@ class RamSale extends BaseComponent {
                                     <Text style={[styles.formName,{paddingLeft: ScreenUtil.autowidth(10),flex: 2.7,color: UColor.lightgray}]}>时间</Text>
                                 </View>
                             }
-                            dataSource={this.state.dataSource.cloneWithRows(this.state.newramTradeLog == null ? [] : this.state.newramTradeLog)} 
-                            renderRow={(rowData, sectionID, rowID) => (                 
+                            dataSource={this.state.dataSource.cloneWithRows(this.state.newramTradeLog == null ? [] : this.state.newramTradeLog)}
+                            renderRow={(rowData, sectionID, rowID) => (
                             <Button onPress={this.openQuery.bind(this,rowData.payer)}>
                                 <View style={[styles.businessout,{backgroundColor: UColor.mainColor}]}>
-                                    {rowData.action_name == 'sellram' ? 
+                                    {rowData.action_name == 'sellram' ?
                                     <View style={styles.liststrip}>
                                         <Text style={[styles.payertext,{flex: 3,color: UColor.fontColor}]} numberOfLines={1}>{rowData.payer}</Text>
                                         <Text style={[styles.selltext,{flex: 4,color: UColor.riseColor}]} numberOfLines={1}>卖 {(rowData.price == null || rowData.price == '0') ? rowData.ram_qty : rowData.eos_qty.replace("EOS", "")}</Text>
@@ -985,16 +985,16 @@ class RamSale extends BaseComponent {
                                     </View>
                                     }
                                 </View>
-                            </Button>         
-                            )}                
-                        /> 
+                            </Button>
+                            )}
+                        />
                         }
-                    </View>: 
+                    </View>:
                     <View style={{flex: 1,}}>
-                    {this.state.selectedTransactionRecord == transactionOption[2] ?  
+                    {this.state.selectedTransactionRecord == transactionOption[2] ?
                         <View style={{flex: 1,}}>
                             {(this.props.ramBigTradeLog != null &&  this.props.ramBigTradeLog.length == 0) ? <View style={{paddingTop: ScreenUtil.autoheight(50), justifyContent: 'center', alignItems: 'center'}}><Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor}}>还没有交易哟~</Text></View> :
-                                <ListView style={{flex: 1,}} renderRow={this.renderRow} enableEmptySections={true} 
+                                <ListView style={{flex: 1,}} renderRow={this.renderRow} enableEmptySections={true}
                                     renderHeader = {()=>
                                     <View style={styles.formout}>
                                         <Text style={[styles.formName,{flex: 3,color: UColor.lightgray}]}>账号</Text>
@@ -1003,11 +1003,11 @@ class RamSale extends BaseComponent {
                                         <Text style={[styles.formName,{paddingLeft: ScreenUtil.autowidth(10),flex: 2.7,color: UColor.lightgray}]}>时间</Text>
                                     </View>
                                     }
-                                    dataSource={this.state.dataSource.cloneWithRows(this.props.ramBigTradeLog == null ? [] : this.props.ramBigTradeLog)} 
-                                    renderRow={(rowData, sectionID, rowID) => (                 
+                                    dataSource={this.state.dataSource.cloneWithRows(this.props.ramBigTradeLog == null ? [] : this.props.ramBigTradeLog)}
+                                    renderRow={(rowData, sectionID, rowID) => (
                                         <Button onPress={this.openQuery.bind(this,rowData.payer)}>
                                             <View style={[styles.businessout,{backgroundColor: UColor.mainColor}]}>
-                                                {rowData.action_name == 'sellram' ? 
+                                                {rowData.action_name == 'sellram' ?
                                                 <View style={styles.liststrip}>
                                                     <Text style={[styles.payertext,{flex: 3,color: UColor.fontColor}]} numberOfLines={1}>{rowData.payer}</Text>
                                                     <Text style={[styles.selltext,{flex: 4,color: UColor.riseColor}]} numberOfLines={1}>卖 {(rowData.price == null || rowData.price == '0') ? rowData.ram_qty : rowData.eos_qty.replace("EOS", "")}</Text>
@@ -1025,15 +1025,15 @@ class RamSale extends BaseComponent {
                                                 </View>
                                                 }
                                             </View>
-                                        </Button>      
-                                    )}                
-                                /> 
+                                        </Button>
+                                    )}
+                                />
                             }
                         </View> :
                         <View style={{flex: 1,}}>
-                            <ListView style={{flex: 1,}} renderRow={this.renderRow} enableEmptySections={true} 
-                                dataSource={this.state.dataSource.cloneWithRows(this.props.bigRamRank == null ? [] : this.props.bigRamRank)} 
-                                renderRow={(rowData, sectionID, rowID) => (                 
+                            <ListView style={{flex: 1,}} renderRow={this.renderRow} enableEmptySections={true}
+                                dataSource={this.state.dataSource.cloneWithRows(this.props.bigRamRank == null ? [] : this.props.bigRamRank)}
+                                renderRow={(rowData, sectionID, rowID) => (
                                     <Button onPress={this.openQuery.bind(this,rowData.account)}>
                                         <View style={[styles.businessRan,{backgroundColor: UColor.mainColor}]}>
                                             <View style={styles.Rankleftout}>
@@ -1041,7 +1041,7 @@ class RamSale extends BaseComponent {
                                                 <Text style={[styles.numtext,{color: UColor.arrow}]}>排名 {rowData.num}</Text>
                                             </View>
                                             <View style={styles.Rankcenterout}>
-                                                <Text style={[styles.profitLoss,{color: UColor.arrow}]}>盈亏 
+                                                <Text style={[styles.profitLoss,{color: UColor.arrow}]}>盈亏
                                                     <Text style={[styles.profittext,{color: rowData.profit.indexOf('-') != -1 ? UColor.riseColor : UColor.fallColor}]}> {rowData.profit}</Text>
                                                 </Text>
                                                 <Text style={[styles.costout,{color: UColor.arrow}]}>成本价<Text style={[styles.costtext,{color: UColor.fontColor}]}> {rowData.historyAverageCost}</Text></Text>
@@ -1052,25 +1052,25 @@ class RamSale extends BaseComponent {
                                             </View>
                                         </View>
                                     </Button>
-                                )}                
-                            /> 
+                                )}
+                            />
                         </View>
                     }
                 </View>}
-            </ScrollView>  
-        </KeyboardAvoidingView> 
+            </ScrollView>
+        </KeyboardAvoidingView>
 
         <Modal style={[styles.businesmodal,{backgroundColor: UColor.tintColor}]} animationType={'slide'} transparent={true} onRequestClose={() => {this.setState({business: false}) }} visible={this.state.business}>
-            <TouchableOpacity onPress={this.openTradePanel.bind(this)} style={[styles.businestouchable,{backgroundColor: UColor.mask}]} activeOpacity={1.0}> 
+            <TouchableOpacity onPress={this.openTradePanel.bind(this)} style={[styles.businestouchable,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
                 <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                     <TouchableOpacity style={styles.busines} activeOpacity={1.0}>
                         <View style={[styles.businesout,{backgroundColor: UColor.secdColor}]}>
                             <View style={styles.headbusines}>
-                                <View style={[styles.businestab,{backgroundColor: UColor.secdColor}]}>  
-                                    {this.businesButton([styles.buytab,{borderColor: UColor.tintColor}], this.state.isBuy, 'isBuy', '买')}  
-                                    {this.businesButton([styles.selltab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '卖')}  
+                                <View style={[styles.businestab,{backgroundColor: UColor.secdColor}]}>
+                                    {this.businesButton([styles.buytab,{borderColor: UColor.tintColor}], this.state.isBuy, 'isBuy', '买')}
+                                    {this.businesButton([styles.selltab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '卖')}
                                 </View>
-                                <View style={{flex: 1,flexDirection: 'row',}}> 
+                                <View style={{flex: 1,flexDirection: 'row',}}>
                                     <TouchableOpacity onPress={this.openQuery.bind(this,'busines')} style={styles.busrecord} activeOpacity={0.8}>
                                         <Image source={ UImage.record } style={styles.busrecordimg} resizeMode= 'contain'/>
                                         <Text style={[styles.busrecordtext,{color: UColor.tintColor}]}> 我的记录</Text>
@@ -1080,20 +1080,20 @@ class RamSale extends BaseComponent {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            
+
                             {this.state.isBuy?<View>
                                 <View style={styles.greeninptout}>
                                     <View style={{flex: 1, flexDirection: 'column',alignItems: 'flex-start',}}>
                                         <Text style={[styles.greenText,{color: UColor.fallColor}]}>单价: {this.props.ramInfo ? (this.props.ramInfo.price * 1).toFixed(4) : '0.0000'} EOS/KB</Text>
                                         <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>余额: {this.state.balance==""? "0.0000" :this.state.balance} EOS</Text>
                                     </View>
-                                    {this.state.error&&<Text style={[styles.errortext,{color: UColor.showy}]}>{this.state.errortext}</Text>} 
+                                    {this.state.error&&<Text style={[styles.errortext,{color: UColor.showy}]}>{this.state.errortext}</Text>}
                                 </View>
                                 <View style={[styles.inputout,{backgroundColor: UColor.mainColor}]}>
-                                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount + ''} returnKeyType="go" 
-                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.fontColor}]}  placeholderTextColor={UColor.inputtip} 
+                                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount + ''} returnKeyType="go"
+                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.fontColor}]}  placeholderTextColor={UColor.inputtip}
                                     placeholder="输入购买的额度" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
-                                    onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkBuyEosQuantity(buyRamAmount), 
+                                    onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkBuyEosQuantity(buyRamAmount),
                                         eosToKB: this.eosToKB(buyRamAmount, this.props.ramInfo?this.props.ramInfo.price:'')})}
                                     />
                                     <Text style={[styles.unittext,{color: UColor.btnColor}]}>EOS</Text>
@@ -1111,16 +1111,16 @@ class RamSale extends BaseComponent {
                                             />
                                             <View style={styles.paragraph}>
                                                 <Text style={[styles.subsection,{color: UColor.arrow}]}>0</Text>
-                                                <Text style={[styles.subsection,{color: UColor.arrow}]}>1/3</Text>     
+                                                <Text style={[styles.subsection,{color: UColor.arrow}]}>1/3</Text>
                                                 <Text style={[styles.subsection,{color: UColor.arrow}]}>2/3</Text>
-                                                <Text style={[styles.subsection,{color: UColor.arrow}]}>ALL</Text>                                
-                                            </View>    
+                                                <Text style={[styles.subsection,{color: UColor.arrow}]}>ALL</Text>
+                                            </View>
                                         </View>
                                         <Button onPress={this.buyram.bind(this)}>
                                             <View style={[styles.botn,{backgroundColor:UColor.fallColor}]}>
                                                 <Text style={[styles.botText,{color: UColor.btnColor}]}>买入</Text>
                                             </View>
-                                        </Button> 
+                                        </Button>
                                     </View>
                                 </View>
                             </View>
@@ -1131,8 +1131,8 @@ class RamSale extends BaseComponent {
                                     <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>可卖: {(this.state.myRamAvailable == null || this.state.myRamAvailable == '') ? '0' : (this.state.myRamAvailable/1024).toFixed(4)} KB</Text>
                                 </View>
                             <View style={[styles.inputout,{backgroundColor: UColor.mainColor}]}>
-                                <TextInput ref={(ref) => this._rrpass = ref} value={this.state.sellRamBytes + ''} returnKeyType="go" 
-                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.fontColor}]} placeholderTextColor={UColor.inputtip} 
+                                <TextInput ref={(ref) => this._rrpass = ref} value={this.state.sellRamBytes + ''} returnKeyType="go"
+                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.fontColor}]} placeholderTextColor={UColor.inputtip}
                                 placeholder="输入出售数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
                                 onChangeText={(sellRamBytes) => this.setState({ sellRamBytes: this.chkInputSellRamBytes(sellRamBytes), kbToEos: this.kbToEos(sellRamBytes, this.props.ramInfo?this.props.ramInfo.price:'')})}
                                 />
@@ -1151,16 +1151,16 @@ class RamSale extends BaseComponent {
                                                 />
                                             <View style={styles.paragraph}>
                                                 <Text style={[styles.subsection,{color: UColor.arrow}]}>0</Text>
-                                                <Text style={[styles.subsection,{color: UColor.arrow}]}>1/3</Text>     
+                                                <Text style={[styles.subsection,{color: UColor.arrow}]}>1/3</Text>
                                                 <Text style={[styles.subsection,{color: UColor.arrow}]}>2/3</Text>
-                                                <Text style={[styles.subsection,{color: UColor.arrow}]}>ALL</Text>                                
-                                            </View> 
+                                                <Text style={[styles.subsection,{color: UColor.arrow}]}>ALL</Text>
+                                            </View>
                                         </View>
                                         <Button onPress={this.sellram.bind(this)}>
                                             <View style={[styles.botn,{backgroundColor:UColor.showy}]}>
                                                 <Text style={[styles.botText,{color: UColor.btnColor}]}>卖出</Text>
                                             </View>
-                                        </Button> 
+                                        </Button>
                                     </View>
                             </View>
                             </View>}
@@ -1170,14 +1170,14 @@ class RamSale extends BaseComponent {
             </TouchableOpacity>
         </Modal>
 
-        <AuthModalView {...this.props} />
+
     </View>
     }
 }
 const styles = StyleSheet.create({
     passout: {
         alignItems: 'center',
-        flexDirection: 'column', 
+        flexDirection: 'column',
     },
     inptpass: {
         textAlign: 'center',
@@ -1188,11 +1188,11 @@ const styles = StyleSheet.create({
         paddingBottom:  ScreenUtil.autoheight(5),
     },
     loganimat: {
-        zIndex: 999, 
-        position:'absolute', 
+        zIndex: 999,
+        position:'absolute',
         left: 0,
         right: 0,
-        top: ScreenUtil.autoheight(80), 
+        top: ScreenUtil.autoheight(80),
         alignItems: 'center',
         justifyContent: 'center',
         padding: ScreenUtil.autowidth(8),
@@ -1249,7 +1249,7 @@ const styles = StyleSheet.create({
         textAlign:'center',
         fontSize: ScreenUtil.setSpText(20),
     },
-  
+
     Increasetext: {
         textAlign:'center',
         fontSize: ScreenUtil.setSpText(13),
@@ -1269,39 +1269,39 @@ const styles = StyleSheet.create({
         flex:1,
         flexDirection:"column",
     },
-    timeview: { 
-        borderRadius: 3, 
+    timeview: {
+        borderRadius: 3,
         flexDirection:'row',
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        width: ScreenUtil.autowidth(50), 
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: ScreenUtil.autowidth(50),
         height: ScreenUtil.autoheight(25),
     },
     timeinitial: {
-        fontSize: ScreenUtil.setSpText(15), 
+        fontSize: ScreenUtil.setSpText(15),
     },
     toptabout: {
         paddingTop:ScreenUtil.autoheight(10),
         paddingBottom: ScreenUtil.autoheight(5),
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
-    formout: { 
-        flexDirection: "row", 
+    formout: {
+        flexDirection: "row",
         marginVertical: ScreenUtil.autoheight(2),
         marginHorizontal: ScreenUtil.autowidth(5),
         paddingHorizontal: ScreenUtil.autowidth(5),
     },
-    formName: { 
+    formName: {
         textAlign: 'left',
-        paddingLeft: ScreenUtil.autowidth(8), 
+        paddingLeft: ScreenUtil.autowidth(8),
     },
-    businessout: { 
+    businessout: {
         borderRadius: 5,
         flexDirection: "row",
         height: ScreenUtil.autoheight(40),
         marginVertical: ScreenUtil.autoheight(2),
         marginHorizontal: ScreenUtil.autowidth(5),
-        paddingHorizontal: ScreenUtil.autowidth(5), 
+        paddingHorizontal: ScreenUtil.autowidth(5),
     },
     liststrip: {
         flex: 1,
@@ -1310,7 +1310,7 @@ const styles = StyleSheet.create({
     },
     payertext: {
         textAlign: 'left',
-        fontSize: ScreenUtil.setSpText(14), 
+        fontSize: ScreenUtil.setSpText(14),
     },
     selltext: {
         textAlign: 'left',
@@ -1345,7 +1345,7 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(14),
     },
     profittext: {
-        fontSize: ScreenUtil.setSpText(14), 
+        fontSize: ScreenUtil.setSpText(14),
     },
     costout: {
         fontSize: ScreenUtil.setSpText(14),
@@ -1372,19 +1372,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     toptext: {
-        textAlign: 'center', 
-        fontSize: ScreenUtil.setSpText(13), 
-        marginTop: ScreenUtil.autoheight(2), 
-        marginLeft: ScreenUtil.autowidth(5), 
+        textAlign: 'center',
+        fontSize: ScreenUtil.setSpText(13),
+        marginTop: ScreenUtil.autoheight(2),
+        marginLeft: ScreenUtil.autowidth(5),
         marginRight: ScreenUtil.autowidth(2),
     },
     present: {
         textAlign:'center',
         fontSize: ScreenUtil.setSpText(20),
     },
-   
+
     inptoutsource: {
-        flexDirection: 'row',  
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: ScreenUtil.autoheight(10),
@@ -1392,7 +1392,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
     outsource: {
-        flexDirection: 'row',  
+        flexDirection: 'row',
         alignItems: 'center',
     },
     progressbar: {
@@ -1400,10 +1400,10 @@ const styles = StyleSheet.create({
         paddingRight: ScreenUtil.autowidth(20),
     },
     inpt: {
-        flex: 1, 
-        height: ScreenUtil.autoheight(45), 
-        fontSize: ScreenUtil.setSpText(15), 
-        paddingLeft: ScreenUtil.autowidth(10), 
+        flex: 1,
+        height: ScreenUtil.autoheight(45),
+        fontSize: ScreenUtil.setSpText(15),
+        paddingLeft: ScreenUtil.autowidth(10),
     },
     paragraph: {
         flexDirection: 'row',
@@ -1416,13 +1416,13 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(12),
     },
     errortext: {
-        textAlign: 'left', 
-        fontSize: ScreenUtil.setSpText(12), 
+        textAlign: 'left',
+        fontSize: ScreenUtil.setSpText(12),
     },
     greeninptout: {
         flexDirection: 'row',
         alignItems: 'center',
-        height: ScreenUtil.autoheight(50),    
+        height: ScreenUtil.autoheight(50),
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
     greenText: {
@@ -1459,15 +1459,15 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(15),
     },
     botn: {
-        borderRadius: 3, 
+        borderRadius: 3,
         alignItems: 'center',
-        justifyContent: 'center', 
-        width: ScreenUtil.autowidth(70), 
-        height: ScreenUtil.autoheight(30),  
-        marginLeft: ScreenUtil.autowidth(10), 
+        justifyContent: 'center',
+        width: ScreenUtil.autowidth(70),
+        height: ScreenUtil.autoheight(30),
+        marginLeft: ScreenUtil.autowidth(10),
     },
     botText: {
-        fontSize: ScreenUtil.setSpText(17), 
+        fontSize: ScreenUtil.setSpText(17),
     },
 
     businesmodal: {
@@ -1476,20 +1476,20 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     businestouchable: {
-        flex: 1, 
-        justifyContent: 'flex-end', 
+        flex: 1,
+        justifyContent: 'flex-end',
     },
     busines: {
-        width: ScreenWidth , 
+        width: ScreenWidth ,
         height:ScreenUtil.autoheight(280),
     },
     businesout: {
         flex: 1,
-        alignItems: 'center', 
+        alignItems: 'center',
     },
     businestab: {
         flex: 1,
-        flexDirection: 'row',  
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         height: ScreenUtil.autoheight(40),
@@ -1498,7 +1498,7 @@ const styles = StyleSheet.create({
     buytab: {
         flex: 1,
         borderWidth: 1,
-        alignItems: 'center',   
+        alignItems: 'center',
         justifyContent: 'center',
         borderTopLeftRadius: 5,
         borderBottomLeftRadius: 5,
@@ -1507,8 +1507,8 @@ const styles = StyleSheet.create({
     selltab: {
         flex: 1,
         borderWidth: 1,
-        alignItems: 'center',   
-        justifyContent: 'center', 
+        alignItems: 'center',
+        justifyContent: 'center',
         borderTopRightRadius: 5,
         borderBottomRightRadius: 5,
         height: ScreenUtil.autoheight(26),
@@ -1536,11 +1536,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         height: ScreenUtil.autoheight(40),
     },
-    transactiontou: { 
-        right: 0, 
-        zIndex: 999, 
-        position:'absolute', 
-        bottom: ScreenUtil.autoheight(45), 
+    transactiontou: {
+        right: 0,
+        zIndex: 999,
+        position:'absolute',
+        bottom: ScreenUtil.autoheight(45),
     },
     transactionout: {
         alignItems: "center",
@@ -1551,7 +1551,7 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(35),
     },
     paneltext: {
-        fontSize: ScreenUtil.setSpText(14), 
+        fontSize: ScreenUtil.setSpText(14),
     },
     systemSettingTip: {
         width: ScreenWidth,
@@ -1565,12 +1565,12 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(14)
     },
     Explainout: {
-        flexDirection: 'column', 
+        flexDirection: 'column',
         alignItems: 'flex-start'
     },
     Explaintext: {
         fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autoheight(30), 
+        lineHeight: ScreenUtil.autoheight(30),
     },
     tab: {
         flex: 1,
@@ -1709,7 +1709,7 @@ function combineRamKLine(data) {
         ],
         xAxis: [
             {
-                type: 'category', 
+                type: 'category',
                 data:  data.categoryData,
                 scale: true,
                 boundaryGap : true,
@@ -1853,7 +1853,7 @@ function combineRamKLine(data) {
                             // '最低:' + param.data[2] + '<br/>',
                             // '最高:' + param.data[3] + '<br/>'
                         ].join('');
-    
+
                     }
                 },
             },
@@ -1913,11 +1913,11 @@ function combineRamKLine(data) {
                         opacity: 1,
                         color: "#4b7793",
                         width: 1,
-                    }                
+                    }
                 }
             },
         ]
-        
+
     };
 }
 

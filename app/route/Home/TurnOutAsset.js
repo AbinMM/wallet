@@ -26,17 +26,17 @@ var dismissKeyboard = require('dismissKeyboard');
 class TurnOutAsset extends BaseComponent {
     static navigationOptions = {
         headerTitle: '转账' ,
-        header:null, 
+        header:null,
     };
 
-     // 构造函数  
+     // 构造函数
      constructor(props) {
         super(props);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             isMultiAccount: false, //批量转账
             dataSource: ds.cloneWithRows([]),
-            show: false, 
+            show: false,
             toAccount: '', // 账户名称
             amount: '', // 转账金额
             memo: '', // 备注
@@ -51,7 +51,7 @@ class TurnOutAsset extends BaseComponent {
             getbalance: this.props.navigation.state.params.getbalance, // 扫码and页面进来
         };
     }
-    
+
     //扫码
     _rightTopClick = () =>{
         const { navigate } = this.props.navigation;
@@ -80,7 +80,7 @@ class TurnOutAsset extends BaseComponent {
                 name: params.symbol,
             })
         }
-     
+
         //点击本页面的扫码返回的参数
         DeviceEventEmitter.addListener('scan_result', (data) => {
             this.getBalance(data);
@@ -89,7 +89,7 @@ class TurnOutAsset extends BaseComponent {
                 amount: data.amount,
                 name: data.symbol,
             })
-        });  
+        });
 
         //选择联系人返回的参数
         DeviceEventEmitter.addListener('transfer_scan_result', (data) => {
@@ -101,7 +101,7 @@ class TurnOutAsset extends BaseComponent {
             this.setState({
                 balance: data.balance.replace(data.asset.name, ""),
                 name:data.asset.name,
-                tokenvalue: data.asset.value, 
+                tokenvalue: data.asset.value,
                 tokenicon:data.asset.icon,
                 contractAccount: data.asset.contractAccount,
                 precisionNumber: data.asset.precisionNumber,
@@ -122,7 +122,7 @@ class TurnOutAsset extends BaseComponent {
                 this.setState({
                     balance: data.balance.replace(data.asset.name, ""),
                     name: data.asset.name,
-                    tokenvalue: data.asset.value, 
+                    tokenvalue: data.asset.value,
                     tokenicon: data.asset.icon,
                     contractAccount: data.asset.contractAccount,
                     precisionNumber: data.asset.precisionNumber,
@@ -130,7 +130,7 @@ class TurnOutAsset extends BaseComponent {
             }
         })
     }
-   
+
 
     //选择联系人
     openAddressBook() {
@@ -151,20 +151,20 @@ class TurnOutAsset extends BaseComponent {
     }
     deleteAccount(){
 
-      
+
     }
-    
+
     //选择代币
     openChoiceToken() {
         const { navigate } = this.props.navigation;
         navigate('ChoiceToken', {isTurnOut:true,coinType:this.state.name});
     }
-    
+
     //下一步
     _rightButtonClick() {
         if (this.state.toAccount == null || this.state.toAccount == "") {
             EasyToast.show('请输入收款账号');
-            return;  
+            return;
         }
         if (this.state.amount == null || this.state.amount == "") {
             EasyToast.show('请输入转账金额');
@@ -192,7 +192,7 @@ class TurnOutAsset extends BaseComponent {
         this.clearFoucs();
     }
 
-    // 显示/隐藏 modal  
+    // 显示/隐藏 modal
     _setModalVisible() {
         let isShow = this.state.show;
         this.setState({
@@ -228,11 +228,11 @@ class TurnOutAsset extends BaseComponent {
                     actions: [
                         {
                             account: this.state.contractAccount,
-                            name: "transfer", 
+                            name: "transfer",
                             authorization: [{
                                 actor: this.props.defaultWallet.account,
                                 permission: authInfo.permission,
-                            }], 
+                            }],
                             data: {
                                 from: this.props.defaultWallet.account,
                                 to: this.state.toAccount,
@@ -257,9 +257,9 @@ class TurnOutAsset extends BaseComponent {
                                 if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
                                     || errcode == 3081001)
                                 {
-                                  this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
+                                  this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{
                                     if(resp.code == 608)
-                                    { 
+                                    {
                                         //弹出提示框,可申请免费抵押功能
                                         const view =
                                         <View style={styles.Explainout}>
@@ -267,7 +267,7 @@ class TurnOutAsset extends BaseComponent {
                                             <Text style={[styles.Explain,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
                                         </View>
                                         EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                            
+
                                         const { navigate } = this.props.navigation;
                                         navigate('FreeMortgage', {});
                                         // EasyShowLD.dialogClose();
@@ -310,7 +310,7 @@ class TurnOutAsset extends BaseComponent {
             }
             if(j >= charmap.length){
                 //非法字符
-                obj = obj.replace(tmp, ""); 
+                obj = obj.replace(tmp, "");
                 EasyToast.show('请输入正确的账号');
             }
         }
@@ -320,7 +320,7 @@ class TurnOutAsset extends BaseComponent {
         }
         return obj;
     }
-  
+
     chkPrice(obj) {
         obj = obj.replace(/[^\d.]/g, "");  //清除 "数字"和 "."以外的字符
         obj = obj.replace(/^\./g, "");  //验证第一个字符是否为数字
@@ -372,26 +372,26 @@ class TurnOutAsset extends BaseComponent {
             <ScrollView  keyboardShouldPersistTaps="always">
                 <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                     <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-                        
+
                         <View style={styles.taboutsource}>
                             <View style={[styles.outsource,{}]}>
                                 <View style={styles.accountoue} >
                                     <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>收款账户</Text>
                                     <View style={styles.scanning}>
-                                        <Button onPress={() => this._rightTopClick()}>                                  
-                                            <Image source={UImage.scanning} style={styles.scanningimg} />                                 
+                                        <Button onPress={() => this._rightTopClick()}>
+                                            <Image source={UImage.scanning} style={styles.scanningimg} />
                                         </Button>
                                     </View>
                                 </View>
                                 <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
-                                    <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"   
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}      
+                                    <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                                         placeholder="请输入收款账户" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
-                                        onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})} 
+                                        onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})}
                                     />
                                     <View style={styles.scanning}>
-                                        <Button onPress={() => this.openAddressBook()}>                                  
-                                            <Image source={UImage.al} style={styles.alningimg} />                                 
+                                        <Button onPress={() => this.openAddressBook()}>
+                                            <Image source={UImage.al} style={styles.alningimg} />
                                         </Button>
                                     </View>
                                 </View>
@@ -400,40 +400,40 @@ class TurnOutAsset extends BaseComponent {
                                 <View style={{ flex: 1,paddingBottom: ScreenUtil.autoheight(50),}}>
                                 <ListView style={{flex:1}} renderRow={this.renderRow} enableEmptySections={true} onEndReachedThreshold = {50}
                                         onEndReached={() => this.onEndReached()}
-                                        dataSource={this.state.dataSource.cloneWithRows((this.props.addressBook == null ? [] : this.props.addressBook))} 
-                                        renderRow={(rowData, sectionID, rowID) => (                 
+                                        dataSource={this.state.dataSource.cloneWithRows((this.props.addressBook == null ? [] : this.props.addressBook))}
+                                        renderRow={(rowData, sectionID, rowID) => (
                                         <View>
                                             <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
-                                                <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"   
-                                                    selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}      
+                                                <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"
+                                                    selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                                                     placeholder="请输入收款账户" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
-                                                    onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})} 
+                                                    onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})}
                                                 />
                                                 <View style={styles.scanning}>
-                                                    <Button onPress={() => this.deleteAccount()}>                                  
-                                                        <Image source={UImage.turnout_delete} style={styles.alningimg} />                                 
+                                                    <Button onPress={() => this.deleteAccount()}>
+                                                        <Image source={UImage.turnout_delete} style={styles.alningimg} />
                                                     </Button>
                                                 </View>
                                             </View>
-                                    </View>)}                
-                                    /> 
+                                    </View>)}
+                                    />
                                 </View>
                                 }
                                 { this.state.isMultiAccount && <View style={[styles.addStyle]}>
-                                    <Button  onPress={() => this.addMultiAccount()}>  
-                                        <Image source={UImage.turnout_add} style={{width: ScreenUtil.autowidth(30),height: ScreenUtil.autoheight(15),margin: ScreenUtil.autowidth(0)}} />  
+                                    <Button  onPress={() => this.addMultiAccount()}>
+                                        <Image source={UImage.turnout_add} style={{width: ScreenUtil.autowidth(30),height: ScreenUtil.autoheight(15),margin: ScreenUtil.autowidth(0)}} />
                                     </Button>
                                   </View>
                                 }
 
                                 { this.state.isMultiAccount== false &&
                                 <View style={[styles.headerMulti]}>
-                                    <Button style={{backgroundColor: UColor.mainColor,width: ScreenUtil.autowidth(60),height: ScreenUtil.autoheight(30),}} onPress={() => this.popAddMultiAccount()}>  
-                                        <Image source={UImage.turnout_pop} style={{width: ScreenUtil.autowidth(30),height: ScreenUtil.autoheight(15),margin: ScreenUtil.autowidth(0)}} />  
+                                    <Button style={{backgroundColor: UColor.mainColor,width: ScreenUtil.autowidth(60),height: ScreenUtil.autoheight(30),}} onPress={() => this.popAddMultiAccount()}>
+                                        <Image source={UImage.turnout_pop} style={{width: ScreenUtil.autowidth(30),height: ScreenUtil.autoheight(15),margin: ScreenUtil.autowidth(0)}} />
                                     </Button>
                                   </View>
                                 }
-                              
+
                                 <View style={styles.accountoue} >
                                     <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(56),color: UColor.fontColor}]}>转账金额</Text>
                                     <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
@@ -441,9 +441,9 @@ class TurnOutAsset extends BaseComponent {
                                 </View>
                                 <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
                                     <View style={{paddingRight: ScreenUtil.autowidth(20),borderRightColor: UColor.secdColor,borderRightWidth: 1,}} >
-                                        {this.state.Choicesymbol ? 
-                                            <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>    
-                                                <View style={{flexDirection: 'row',paddingVertical: ScreenUtil.autowidth(10),}}>                              
+                                        {this.state.Choicesymbol ?
+                                            <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>
+                                                <View style={{flexDirection: 'row',paddingVertical: ScreenUtil.autowidth(10),}}>
                                                     <Text style={{fontSize: ScreenUtil.setSpText(15),color: UColor.arrow, marginRight: ScreenUtil.autowidth(5),}}>{this.state.name}</Text>
                                                     <Ionicons color={UColor.fontColor} name="ios-arrow-down-outline" size={20} />
                                                 </View>
@@ -454,9 +454,9 @@ class TurnOutAsset extends BaseComponent {
                                             </View>
                                         }
                                     </View>
-                                    <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} selectionColor={UColor.tintColor} 
-                                        style={[styles.textinpt,{paddingLeft: ScreenUtil.autowidth(15),color: UColor.arrow}]} maxLength = {15} 
-                                        placeholderTextColor={UColor.inputtip}  underlineColorAndroid="transparent"   keyboardType="numeric"  
+                                    <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} selectionColor={UColor.tintColor}
+                                        style={[styles.textinpt,{paddingLeft: ScreenUtil.autowidth(15),color: UColor.arrow}]} maxLength = {15}
+                                        placeholderTextColor={UColor.inputtip}  underlineColorAndroid="transparent"   keyboardType="numeric"
                                         onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })} returnKeyType="next"
                                     />
                                 </View>
@@ -467,7 +467,7 @@ class TurnOutAsset extends BaseComponent {
                                 <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
                                     <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
                                         selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
-                                        placeholder="备注(Memo)" underlineColorAndroid="transparent" keyboardType="default"  
+                                        placeholder="备注(Memo)" underlineColorAndroid="transparent" keyboardType="default"
                                         onChangeText={(memo) => this.setState({ memo })}
                                     />
                                 </View>
@@ -513,12 +513,12 @@ class TurnOutAsset extends BaseComponent {
                                         <Text style={[styles.contentText,{color: UColor.arrow}]}>{this.props.defaultWallet.account}</Text>
                                     </View>
                                     <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText,{color: UColor.startup}]}>数量：</Text> 
-                                        <Text style={[styles.contentText,{color: UColor.arrow}]} numberOfLines={1}>{this.state.amount + " " + this.state.name}</Text> 
+                                        <Text style={[styles.explainText,{color: UColor.startup}]}>数量：</Text>
+                                        <Text style={[styles.contentText,{color: UColor.arrow}]} numberOfLines={1}>{this.state.amount + " " + this.state.name}</Text>
                                     </View>
                                     <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText,{color: UColor.startup}]}>备注：</Text> 
-                                        <Text style={[styles.contentText,{color: UColor.arrow}]} numberOfLines={1}>{this.state.memo}</Text> 
+                                        <Text style={[styles.explainText,{color: UColor.startup}]}>备注：</Text>
+                                        <Text style={[styles.contentText,{color: UColor.arrow}]} numberOfLines={1}>{this.state.memo}</Text>
                                     </View>
                                     { this.state.memo == '' &&
                                         <View style={[styles.warningoutShow,{borderColor: UColor.showy}]}>
@@ -537,14 +537,14 @@ class TurnOutAsset extends BaseComponent {
                 </Modal>
             </View>
 
-            <AuthModalView {...this.props} />
+
         </View>
         )
     }
 }
 const styles = StyleSheet.create({
     passout: {
-        flexDirection: 'column', 
+        flexDirection: 'column',
         alignItems: 'center',
     },
     inptpass: {
@@ -555,12 +555,12 @@ const styles = StyleSheet.create({
         paddingBottom: ScreenUtil.autoheight(5),
     },
     Explainout: {
-        flexDirection: 'column', 
+        flexDirection: 'column',
         alignItems: 'flex-start'
     },
     Explain: {
         fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autoheight(30), 
+        lineHeight: ScreenUtil.autoheight(30),
     },
     container: {
         flex: 1,
@@ -577,22 +577,22 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(20),
     },
     rowtext: {
-        fontSize: ScreenUtil.setSpText(14), 
+        fontSize: ScreenUtil.setSpText(14),
         marginTop: ScreenUtil.autoheight(5),
     },
     modalStyle: {
-        flex: 1, 
+        flex: 1,
         alignItems: 'center',
-        justifyContent: 'flex-end', 
+        justifyContent: 'flex-end',
     },
     subView: {
-        flexDirection: "row", 
+        flexDirection: "row",
         alignItems: 'center',
-        height: ScreenUtil.autoheight(50), 
+        height: ScreenUtil.autoheight(50),
     },
     buttonView: {
         alignItems: 'center',
-        justifyContent: 'center', 
+        justifyContent: 'center',
     },
     buttontext: {
         textAlign: 'center',
@@ -625,13 +625,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: ScreenUtil.setSpText(25),
         lineHeight: ScreenUtil.autoheight(10),
-        paddingVertical: ScreenUtil.autoheight(15), 
+        paddingVertical: ScreenUtil.autoheight(15),
     },
     unittext: {
         textAlign: 'center',
         fontSize: ScreenUtil.setSpText(13),
         lineHeight: ScreenUtil.autoheight(10),
-        paddingVertical: ScreenUtil.autoheight(10), 
+        paddingVertical: ScreenUtil.autoheight(10),
     },
     btnoutsource: {
         borderRadius: 6,
@@ -651,7 +651,7 @@ const styles = StyleSheet.create({
     outsource: {
         flex: 1,
         flexDirection: 'column',
-        
+
     },
     inptoutsource: {
         flexDirection: 'row',
@@ -719,7 +719,7 @@ const styles = StyleSheet.create({
     warningout: {
         borderWidth: 1,
         borderRadius: 5,
-        alignItems: 'center', 
+        alignItems: 'center',
         flexDirection: "column",
         marginVertical: ScreenUtil.autoheight(10),
         paddingVertical:  ScreenUtil.autoheight(5),
@@ -742,7 +742,7 @@ const styles = StyleSheet.create({
     },
     headtext: {
         fontWeight: "bold",
-        fontSize: ScreenUtil.setSpText(16), 
+        fontSize: ScreenUtil.setSpText(16),
     },
     headtitle: {
         flex: 1,
