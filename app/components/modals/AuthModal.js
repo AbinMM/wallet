@@ -72,7 +72,6 @@ export class AuthModalView extends React.Component {
 
     dimss = () => {
       if(!this.isShow)return;
-      this.AuthModalCallback = null;
       window.currentDialog = null;
       FingerprintScanner.release();
       Animated.parallel([
