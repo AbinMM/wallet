@@ -17,6 +17,9 @@ import {formatEosQua} from '../../utils/FormatUtil';
 
 import CustomWebView from './CustomWebView.android';
 import {DappSignModal,DappSignModalView} from '../../components/modals/DappSignModal'
+import {AuthModal,AuthModalView} from '../../components/modals/AuthModal'
+import {AlertModal,AlertModalView} from '../../components/modals/AlertModal'
+
 
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
@@ -33,19 +36,8 @@ export default class DappWeb extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      showAuth: false,   //授权
-      showTx: false,     //transaction
-      showActions: false,   //actions
-      show: false,      //转账
-      walletArr:null,
-      tranferInfo:{fromAccount:"",toAccount:"","amount":"",memo:""},
-      transactionInfo:{fromAccount:"",op_type:"",actions:"",params:{}},
-      scatterAuth:{privateKey:"",data:"",whatfor:"",isHash:false},
-      name: '',
-      key: '', 
       authTempOwner: [],
       authTempActive: [],
-      password:'',
       progress: new Animated.Value(10),
       error: false,
       transformY: new Animated.Value(200),
@@ -205,18 +197,6 @@ onBackAndroid = () => {
     // EasyToast.show("_renderError!");
   }
 
-  _btnCancelModal(){
-    this._setModalVisible();
-    this.callbackToWebview("");
-  }
-  _btnCancelModalTx(){
-    this._setModalVisible_Tx();
-    this.callbackToWebview("");
-  }
-  _btnCancelModalAuth(){
-    this._setModalVisible_Auth();
-    this.callbackToWebview("");
-  }
         // 显示/隐藏 右上角的更多选项 modal  
     moreOption() {
         let isShow = this.state.optionShow;
@@ -246,149 +226,6 @@ onBackAndroid = () => {
         DeviceEventEmitter.emit('dappShare', this.props.navigation.state.params.url);
     }
 
-    _setModalVisible() {
-        let isShow = this.state.show;
-        this.setState({
-            show: !isShow,
-        });
-    }
-
-    //密码签名验证
-    getSureInputPassword(isTransfer,iPassword){
-        if (iPassword == "" || iPassword.length < Constants.PWD_MIN_LENGTH) {
-            EasyToast.show('密码长度至少4位,请重输');
-            return;
-        }
-        var actions;
-        var permission;
-        var privateKey;
-        //关闭订单详情
-        if(isTransfer){
-            // this._setModalVisible();
-            permission = 'active';  //transfer 用 active
-            actions = [
-                {
-                    account: "eosio.token",
-                    name: "transfer", 
-                    authorization: [{
-                    actor: this.state.tranferInfo.fromAccount,
-                    permission: permission,
-                    }], 
-                    data: {
-                        from: this.state.tranferInfo.fromAccount,
-                        to: this.state.tranferInfo.toAccount,
-                        quantity: formatEosQua(this.state.tranferInfo.amount + " EOS"),
-                        memo: this.state.tranferInfo.memo,
-                    }
-                },
-            ];
-            privateKey = this.state.walletArr.activePrivate;
-        }else{
-            // this._setModalVisible_Tx();
-            actions = this.state.transactionInfo.params.actions;
-
-            permission = this.state.transactionInfo.params.actions[0].authorization[0].permission;
-            if(permission == 'owner')
-            {
-                privateKey = this.state.walletArr.ownerPrivate;
-            }else{
-                privateKey = this.state.walletArr.activePrivate;
-            }
-        }
-        try {
-            var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.state.walletArr.salt);
-            var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-            // if(plaintext_privateKey == "eostoken"){ // active私钥为空时使用owner私钥
-            //     bytes_privateKey = CryptoJS.AES.decrypt(this.state.walletArr.ownerPrivate, this.state.password + this.state.walletArr.salt);
-            //     plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-            //     permission = "owner"; 
-            // }
-
-            if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                // EasyShowLD.loadingShow();
-                plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                Eos.transaction({
-                    actions: actions
-                }, plaintext_privateKey, (r) => {
-                    EasyShowLD.loadingClose();
-
-                    var resp_data = "";
-                    if(r && r.isSuccess){
-                        this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.state.tranferInfo.fromAccount, to: this.state.tranferInfo.toAccount, amount: this.state.tranferInfo.amount + " EOS", memo: this.state.tranferInfo.memo, data: "push"}});
-                        resp_data = r.data;
-                    }else{
-                        if(r && r.data){
-                            if(r.data.msg){
-                                EasyToast.show(r.data.msg);
-                            }else{
-                                EasyToast.show("交易失败");
-                            }
-                        }else{
-                            EasyToast.show("交易失败");
-                        }
-                    }
-                    this.callbackToWebview(resp_data);
-                });
-            } else {
-                EasyShowLD.loadingClose();
-                EasyToast.show('密码错误');
-                this.callbackToWebview("");
-            }
-        } catch (error) {
-            EasyShowLD.loadingClose();
-            EasyToast.show('密码错误');
-            this.callbackToWebview("");
-        }
-    }
-
-justInputPassword(isTransfer){
-    const view =
-    <View style={styles.passout}>
-        <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-            selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
-            style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-            placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-    </View>
-    EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
-        this.getSureInputPassword(isTransfer,this.state.password);
-        EasyShowLD.dialogClose();
-}, () => { EasyShowLD.dialogClose(); this.callbackToWebview("");}); 
-}
-
-
-//输入密码
-    inputPwd = (isTransfer) => {
-        if(isTransfer){
-            this._setModalVisible();
-        }else{
-            this._setModalVisible_Tx();
-        }
- 
-        this.justInputPassword(isTransfer);
-    }
-
-
-
-// 显示/隐藏 modal  
-_setModalVisible_Tx() {
-    let isShow = this.state.showTx;
-    this.setState({
-        showTx: !isShow,
-    });
-}
-_handleActions() {
-    let showActions = this.state.showActions;
-    this.setState({
-        showActions: !showActions,
-    });
-}
-_setModalVisible_Auth() {
-    let isShowAuth = this.state.showAuth;
-    this.setState({
-        showAuth: !isShowAuth,
-    });
-}
-
   sendMessageToWebview(strinfo)
   {
     if(this.refs.refWebview)
@@ -396,14 +233,7 @@ _setModalVisible_Auth() {
         this.refs.refWebview.postMessage(strinfo);
     }
   }
-  callbackToWebview(retResult)
-  {
-    var obj_result = new Object();
-    obj_result.scatter = this.state.name;
-    obj_result.key = this.state.key;
-    obj_result.data = retResult;
-    this.sendMessageToWebview(JSON.stringify(obj_result));
-  }
+ 
   onMessage = (e) =>{
       try {
         let result = JSON.parse(e.nativeEvent.data);
@@ -580,12 +410,7 @@ _setModalVisible_Auth() {
     } });
   }
   eos_transaction(result){
-    this.setState({
-        walletArr: null,
-        transactionInfo:{fromAccount:"",op_type:"",actions:"",params:{}},
-        name: '',
-        key: '',
-    });
+
     if(!result.params.actions || result.params.actions.length < 1
         || !result.params.actions[0].authorization || result.params.actions[0].authorization.length < 1)
     {
@@ -614,22 +439,39 @@ _setModalVisible_Auth() {
               EasyToast.show("actor is not exist or not actived");
               this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             }else{
-              this._setModalVisible_Tx();
-              var actions_detail = "";
-              for(var j = 0;j < result.params.actions.length;j++){
-                  var tmp = JSON.stringify(result.params.actions[j]);
-                  actions_detail += tmp;
-              }
-              this.setState({
-                  walletArr: walletArr[i],
-                  transactionInfo:{
-                      fromAccount:walletArr[i].account,
-                      op_type: result.params.actions[0].account + ' -> ' + result.params.actions[0].name,
-                      actions:actions_detail,
-                      params: result.params},
-                  name: result.scatter,
-                  key: result.key,
-              });
+              DappSignModal.show(result.params.actions,(resp)=>{
+                if(resp){
+                     AuthModal.show(result.params.actions[0].authorization[0].actor,(resp)=>{
+                         if(resp && resp.isOk){
+                            Eos.transaction({
+                                actions: result.params.actions
+                            }, resp.pk, (r) => {
+                                var resp_data = "";
+                                if(r && r.isSuccess){
+                                    // this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.state.tranferInfo.fromAccount, to: this.state.tranferInfo.toAccount, amount: this.state.tranferInfo.amount + " EOS", memo: this.state.tranferInfo.memo, data: "push"}});
+                                    resp_data = r.data;
+                                }else{
+                                    if(r && r.data){
+                                        if(r.data.msg){
+                                            EasyToast.show(r.data.msg);
+                                        }else{
+                                            EasyToast.show("交易失败");
+                                        }
+                                    }else{
+                                        EasyToast.show("交易失败");
+                                    }
+                                }
+                                this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp_data}));
+                            });
+                         }else{
+                            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+                         }
+                     });
+                }else{
+                    this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+                }
+            });
+
             }
           }
         } catch (error) {
@@ -642,12 +484,6 @@ _setModalVisible_Auth() {
   }
 
   eos_transfer(result) {
-    this.setState({
-        walletArr: null,
-        tranferInfo:{fromAccount:'',toAccount:'',amount: '',memo: ''},
-        name: '',
-        key: '',
-    });
     if(!result.params.from || result.params.from == '' 
          || !result.params.to || result.params.to == '' 
          || !result.params.amount || result.params.amount == '' 
@@ -682,18 +518,57 @@ _setModalVisible_Auth() {
                   tmp_amount = tmp_amount.replace("EOS","");
                   tmp_amount = tmp_amount.replace(" eos","");
                   tmp_amount = tmp_amount.replace("eos","");
-                  this.setState({
-                      walletArr: walletArr[i],
-                      tranferInfo:{
-                          fromAccount:result.params.from,
-                          toAccount:result.params.to,
-                          amount: tmp_amount,
-                          memo: result.params.memo,
-                      },
-                      name: result.scatter,
-                      key: result.key,
-                  });
-                  this._setModalVisible();
+                var actions = [
+                    {
+                        account: "eosio.token",
+                        name: "transfer", 
+                        authorization: [{
+                        actor: result.params.from,
+                        permission: 'active',
+                        }], 
+                        data: {
+                            from: result.params.from,
+                            to: result.params.to,
+                            quantity: formatEosQua(tmp_amount + " EOS"),
+                            memo: result.params.memo,
+                        }
+                    },
+                ];
+
+                DappSignModal.show(actions,(resp)=>{
+                    if(resp){
+                         AuthModal.show(result.params.from,(resp)=>{
+                             if(resp && resp.isOk){
+                                Eos.transaction({
+                                    actions: actions
+                                }, resp.pk, (r) => {
+                                    var resp_data = "";
+                                    if(r && r.isSuccess){
+                                        this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: result.params.from, to: result.params.to,
+                                              amount: tmp_amount + " EOS", memo: result.params.memo, data: "push"}});
+                                        resp_data = r.data;
+                                    }else{
+                                        if(r && r.data){
+                                            if(r.data.msg){
+                                                EasyToast.show(r.data.msg);
+                                            }else{
+                                                EasyToast.show("交易失败");
+                                            }
+                                        }else{
+                                            EasyToast.show("交易失败");
+                                        }
+                                    }
+                                    this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp_data}));
+                                });
+                             }else{
+                                this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+                             }
+                         });
+                    }else{
+                        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+                    }
+                });
+
                 }
             }
         } catch (error) {
@@ -732,19 +607,41 @@ _setModalVisible_Auth() {
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             return ;
         }
-    
-        this.setState({
-            walletArr: this.props.defaultWallet,
-            scatterAuth:{
-                privateKey:this.props.defaultWallet.activePrivate,
-                data:result.params.random,
-                whatfor: '',
-                isHash: false,
-            },
-            name: result.scatter,
-            key: result.key,
+
+        var title = '授权';
+        var acc1 = this.props.defaultWallet.account ? this.props.defaultWallet.account : '';
+        var memo1 = '获取您的钱包账户信任';
+        var content = '账户：'+ acc1 + ' Memo:' + memo1;
+        AlertModal.show(title,content,'确认','取消',(resp)=>{
+        if(resp){
+            AuthModal.show(this.props.defaultWallet.account,(resp)=>{
+                if(resp && resp.isOk){
+                    Eos.sign(result.params.random, resp.pk, (r) => {
+                        var resp_data = "";
+                        if(r && r.isSuccess){
+                            resp_data = r.data;
+                        }else{
+                            if(r && r.data){
+                                if(r.data.msg){
+                                    EasyToast.show(r.data.msg);
+                                }else{
+                                    EasyToast.show("交易失败");
+                                }
+                            }else{
+                                EasyToast.show("交易失败");
+                            }
+                        }
+                        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp_data}));
+                    });
+                }else{
+                this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+                }
+            });
+
+        }else{
+            this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+        }
         });
-        this._setModalVisible_Auth();
       }
   }
   scatter_suggestNetwork(result)
@@ -792,49 +689,17 @@ _setModalVisible_Auth() {
         return ;
     }
 
-    this.setState({
-        walletArr: this.props.defaultWallet,
-        scatterAuth:{
-            privateKey:privateKey,
-            data:result.params.data,
-            whatfor: result.params.whatfor,
-            isHash: result.params.isHash,
-        },
-        name: result.scatter,
-        key: result.key,
-    });
-    this._setModalVisible_Auth();
-  }
-
-  inputPwd_getArbitrarySignature = () => {
- 
-    this._setModalVisible_Auth();
-    const view =
-        <View style={styles.passout}>
-            <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH} 
-                style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}  
-                placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent" />
-        </View>
-        EasyShowLD.dialogShow("密码", view, "确认", "取消", () => {
-        if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-            EasyToast.show('密码长度至少4位,请重输');
-            return;
-        }
-        var privateKey = this.state.scatterAuth.privateKey;
-
-        try {
-            var bytes_privateKey = CryptoJS.AES.decrypt(privateKey, this.state.password + this.state.walletArr.salt);
-            var plaintext_privateKey = bytes_privateKey.toString(CryptoJS.enc.Utf8);
-
-            if (plaintext_privateKey.indexOf('eostoken') != -1) {
-                // EasyShowLD.loadingShow();
-                plaintext_privateKey = plaintext_privateKey.substr(8, plaintext_privateKey.length);
-                // if(!this.state.scatterAuth.isHash)
+    var title = '授权';
+    var acc1 = this.props.defaultWallet.account ? this.props.defaultWallet.account : '';
+    var memo1 = result.params.whatfor ? result.params.whatfor : '获取您的钱包账户信任';
+    var content = '账户：'+ acc1 + ' Memo:' + memo1;
+    AlertModal.show(title,content,'确认','取消',(resp)=>{
+      if(resp){
+        AuthModal.show(this.props.defaultWallet.account,(resp)=>{
+            if(resp && resp.isOk){
+                // if(!result.params.isHash)
                 {
-                    Eos.sign(this.state.scatterAuth.data, plaintext_privateKey, (r) => {
-                        EasyShowLD.loadingClose();
-
+                    Eos.sign(result.params.data, resp.pk, (r) => {
                         var resp_data = "";
                         if(r && r.isSuccess){
                             resp_data = r.data;
@@ -849,14 +714,12 @@ _setModalVisible_Auth() {
                                 EasyToast.show("交易失败");
                             }
                         }
-                        this.callbackToWebview(resp_data);
+                        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp_data}));
                     });
                 }
                 // else{
                 //     // hashsign
-                //     Eos.signHash(this.state.scatterAuth.data, plaintext_privateKey, (r) => {
-                //         EasyShowLD.loadingClose();
-
+                //     Eos.signHash(result.params.data, resp.pk, (r) => {
                 //         var resp_data = "";
                 //         if(r && r.isSuccess){
                 //             resp_data = r.data;
@@ -871,22 +734,21 @@ _setModalVisible_Auth() {
                 //                 EasyToast.show("交易失败");
                 //             }
                 //         }
-                //         this.callbackToWebview(resp_data);
+                //         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp_data}));
                 //     });
                 // }
-            } else {
-                EasyShowLD.loadingClose();
-                EasyToast.show('密码错误');
-                this.callbackToWebview("");
+            }else{
+               this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             }
-        } catch (error) {
-            EasyShowLD.loadingClose();
-            EasyToast.show('密码错误');
-            this.callbackToWebview("");
-        }
-        // EasyShowLD.dialogClose();
-    }, () => { EasyShowLD.dialogClose(); this.callbackToWebview("");});
-}
+        });
+
+      }else{
+        this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+      }
+    });
+
+  }
+
 scatter_requestTransfer(result)
 {
     try {
@@ -917,18 +779,57 @@ scatter_requestTransfer(result)
         tmp_amount = tmp_amount.replace("EOS","");
         tmp_amount = tmp_amount.replace(" eos","");
         tmp_amount = tmp_amount.replace("eos","");
-        this.setState({
-            walletArr: this.props.defaultWallet,
-            tranferInfo:{
-                fromAccount:this.props.defaultWallet.account,
-                toAccount:result.params.to,
-                amount: tmp_amount,
-                memo: result.params.tokenDetails.memo,
-            },
-            name: result.scatter,
-            key: result.key,
-        });
-        this._setModalVisible();
+        var actions = [
+          {
+              account: "eosio.token",
+              name: "transfer", 
+              authorization: [{
+              actor: this.props.defaultWallet.account,
+              permission: 'active',
+              }], 
+              data: {
+                  from: this.props.defaultWallet.account,
+                  to: result.params.to,
+                  quantity: formatEosQua(tmp_amount + " EOS"),
+                  memo: result.params.tokenDetails.memo,
+              }
+          },
+      ];
+
+      DappSignModal.show(actions,(resp)=>{
+          if(resp){
+               AuthModal.show(result.params.from,(resp)=>{
+                   if(resp && resp.isOk){
+                      Eos.transaction({
+                          actions: actions
+                      }, resp.pk, (r) => {
+                          var resp_data = "";
+                          if(r && r.isSuccess){
+                              this.props.dispatch({type: 'wallet/pushTransaction', payload: { from: this.props.defaultWallet.account, to: result.params.to,
+                                    amount: tmp_amount + " EOS", memo: result.params.tokenDetails.memo, data: "push"}});
+                              resp_data = r.data;
+                          }else{
+                              if(r && r.data){
+                                  if(r.data.msg){
+                                      EasyToast.show(r.data.msg);
+                                  }else{
+                                      EasyToast.show("交易失败");
+                                  }
+                              }else{
+                                  EasyToast.show("交易失败");
+                              }
+                          }
+                          this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:resp_data}));
+                      });
+                   }else{
+                      this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+                   }
+               });
+          }else{
+              this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
+          }
+      });
+
     } catch (error) {
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
     }
@@ -968,7 +869,9 @@ scatter_linkAccount(result)
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
         <Header {...this.props} onPressLeft={true} onDappBackFalg={true} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
         onPressRight={this.moreOption.bind(this)} onLeftCloseFun={this.onLeftCloseFun.bind(this)} />
-        
+        <DappSignModalView />
+        <AuthModalView {...this.props} />
+        <AlertModalView {...this.props} />
         {
             Platform.OS === 'android' &&   
         <CustomWebView
@@ -1014,109 +917,7 @@ scatter_linkAccount(result)
         <View style={[styles.infoPage,{backgroundColor: UColor.secdColor},this.state.error ? styles.showInfo : {}]}>
           <Text style={{ color: UColor.mainColor }}>{"加载失败"}</Text>
         </View>
-        <View style={{backgroundColor: UColor.riceWhite,}}>
-            <Modal animationType={'slide'} transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => {}} >
-                <TouchableOpacity style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
-                    <View style={{ width: ScreenWidth,backgroundColor: UColor.btnColor,}}>
-                        <View style={styles.subView}>
-                            <Text style={styles.buttontext}/>
-                            <Text style={[styles.titleText,{color: UColor.blackColor}]}>订单详情</Text>
-                            <Button  onPress={this._btnCancelModal.bind(this)} style={styles.buttonView}>
-                                <Text style={[styles.buttontext,{color: UColor.baseline}]}>×</Text>
-                            </Button>
-                        </View>
-                        <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
-                            <Text style={[styles.amounttext,{color:UColor.blackColor}]}>{this.state.tranferInfo.amount} </Text>
-                            <Text style={[styles.unittext,{color:UColor.blackColor}]}> EOS</Text>
-                        </View>
-                        <View >
-                            <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
-                                <Text style={[styles.explainText,{color: UColor.startup}]}>收款账户：</Text>
-                                <Text style={[styles.contentText,{color: UColor.startup}]}>{this.state.tranferInfo.toAccount}</Text>
-                            </View>
-                            <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]}>
-                                <Text style={[styles.explainText,{color: UColor.startup}]}>转出账户：</Text>
-                                <Text style={[styles.contentText,{color: UColor.startup}]}>{this.state.tranferInfo.fromAccount}</Text>
-                            </View>
-                            <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
-                                <Text style={[styles.explainText,{color: UColor.startup}]}>备注：</Text> 
-                                <Text style={[styles.contentText,{color: UColor.startup}]} numberOfLines={1}>{this.state.tranferInfo.memo}</Text> 
-                            </View>
-                            <Button onPress={() => { this.inputPwd(true) }}>
-                                <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
-                                    <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
-                                </View>
-                            </Button>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
-            <Modal animationType={'slide'} transparent={true} visible={this.state.showTx} onShow={() => { }} onRequestClose={() => {}} >
-                <TouchableOpacity style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
-                    <View style={{ width: ScreenWidth,backgroundColor: UColor.btnColor,}}>
-                        <View style={styles.subView}>
-                            <Text style={styles.buttontext}/>
-                            <Text style={[styles.titleText,{color: UColor.blackColor}]}>订单详情</Text>
-                            <Button  onPress={this._btnCancelModalTx.bind(this)} style={styles.buttonView}>
-                                <Text style={[styles.buttontext,{color: UColor.baseline}]}>×</Text>
-                            </Button>
-                        </View>
-                        <View >
-                            <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
-                                <Text style={[styles.explainText,{color: UColor.startup}]}>类型：</Text>
-                                <Text style={[styles.contentText,{color: UColor.startup}]}>actions</Text>
-                            </View>
-                            <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]}>
-                                <Text style={[styles.explainText,{color: UColor.startup}]}>账户：</Text>
-                                <Text style={[styles.contentText,{color: UColor.startup}]}>{this.state.transactionInfo.fromAccount}</Text>
-                            </View>
-                            <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
-                                <Text style={[styles.explainText,{color: UColor.startup}]}>{this.state.transactionInfo.op_type}</Text> 
-                                <Text style={[styles.contentText,{color: UColor.tintColor}]} numberOfLines={1}
-                                    onPress={this._handleActions.bind(this)}>Actions详情</Text> 
-                            </View>
-                            {this.state.showActions == true &&
-                            <View >
-                                <Text style={[styles.actionsdetail,{color: UColor.startup}]}>{this.state.transactionInfo.actions}</Text>
-                            </View>}
-                            <Button onPress={() => { this.inputPwd(false) }}>
-                                <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
-                                    <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
-                                </View>
-                            </Button>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
-            <Modal animationType={'slide'} transparent={true} visible={this.state.showAuth} onShow={() => { }} onRequestClose={() => {}} >
-                <TouchableOpacity style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
-                    <View style={{ width: ScreenWidth,backgroundColor: UColor.btnColor,}}>
-                        <View style={styles.subView}>
-                            <Text style={styles.buttontext}/>
-                            <Text style={[styles.titleText,{color: UColor.blackColor}]}>授权</Text>
-                            <Button  onPress={this._btnCancelModalAuth.bind(this)} style={styles.buttonView}>
-                                <Text style={[styles.buttontext,{color: UColor.baseline}]}>×</Text>
-                            </Button>
-                        </View>
-                        <View >
-                            <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
-                                <Text style={[styles.explainText,{color: UColor.startup}]}>账户：</Text>
-                                <Text style={[styles.contentText,{color: UColor.startup}]}>{this.props.defaultWallet.account ? this.props.defaultWallet.account : ''}</Text>
-                            </View>
-                            <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]}>
-                                <Text style={[styles.explainText,{color: UColor.startup}]}>Memo：</Text>
-                                <Text style={[styles.contentText,{color: UColor.startup}]}>{this.state.scatterAuth.whatfor ? this.state.scatterAuth.whatfor : '获取您的钱包账户信任'}</Text>
-                            </View>
-                            <Button onPress={() => { this.inputPwd_getArbitrarySignature() }}>
-                                <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
-                                    <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
-                                </View>
-                            </Button>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
-        </View>
+        
         <Animated.View style={[styles.progress, {backgroundColor: UColor.fallColor, width: this.state.progress }]}></Animated.View>
      
  <View style={{backgroundColor: UColor.riceWhite,}}>
@@ -1159,18 +960,6 @@ scatter_linkAccount(result)
 }
 
 const styles = StyleSheet.create({
-    passout: {
-        flexDirection: 'column', 
-        alignItems: 'center'
-    },
-    inptpass: {
-        borderBottomWidth: 1,
-        textAlign: "center",
-        width: ScreenWidth-100,
-        height:  ScreenUtil.autoheight(45),
-        fontSize: ScreenUtil.setSpText(16),
-        paddingBottom:  ScreenUtil.autoheight(5),
-    },
     webview_style: {
       flex: 1,
       marginBottom:ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(20):0,
@@ -1266,9 +1055,7 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(16),
     },
     
-    actionsdetail: {
-        fontSize: ScreenUtil.setSpText(10),
-    },
+    
 
     btnnextstep: {
         height:  ScreenUtil.autoheight(85),
