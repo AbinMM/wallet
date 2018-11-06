@@ -118,11 +118,11 @@ export class AuthModalView extends React.Component {
                 this.setState({action:"setFinger"});
                 FingerprintScanner.authenticate({onAttempt:this.handleAuthenticationAttempted}).then(() => {
                   Security.savePayPass(this.state.account,password);
-                  this.AuthModalCallback && this.AuthModalCallback({pk:plaintext_privateKey,permission});
+                  this.AuthModalCallback && this.AuthModalCallback({isOk:true,pk:plaintext_privateKey,permission});
                   this.dimss();
                 });
               }else{
-                this.AuthModalCallback && this.AuthModalCallback({pk:plaintext_privateKey,permission});
+                this.AuthModalCallback && this.AuthModalCallback({isOk:true,pk:plaintext_privateKey,permission});
                 this.dimss();
               }
             }else{
@@ -148,6 +148,7 @@ export class AuthModalView extends React.Component {
 
     cancel = () =>{
       this.dimss();
+      this.AuthModalCallback && this.AuthModalCallback({isOk:false});
     }
 
     render() {
@@ -187,7 +188,7 @@ export class AuthModalView extends React.Component {
                         {
                           this.state.action == "finger" && <View style={{flexDirection:'row'}}>
                             <View style={{width:"50%"}}>
-                              <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
+                              <TextButton onPress={()=>{this.cancel()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
                             </View>
                             <View style={{width:"50%"}}>
                               <TextButton onPress={()=>{this.inputPass()}} bgColor="#6DA0F8" textColor="#fff" text="输入密码" style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
@@ -197,7 +198,7 @@ export class AuthModalView extends React.Component {
                         {
                           this.state.action == "password" && <View style={{flexDirection:'row'}}>
                             <View style={{width:"50%"}}>
-                              <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
+                              <TextButton onPress={()=>{this.cancel()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
                             </View>
                             <View style={{width:"50%"}}>
                               <TextButton onPress={()=>{this.okPass()}} bgColor="#6DA0F8" textColor="#fff" text="确定" style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
