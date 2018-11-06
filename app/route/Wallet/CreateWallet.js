@@ -117,35 +117,48 @@ class createWallet extends BaseComponent {
           EasyToast.show(resp.msg);
         }else{
           // 创建未激活钱包，并进入备份私钥流程
-          var arr_owner = [];
-          var arr_active = [];
-          var words_owner = [];
-          var words_active = [];
-          var wordsStr_owner = '';
-          var wordsStr_active = '';
+          // var arr_owner = [];
+          // var arr_active = [];
+          // var words_owner = [];
+          // var words_active = [];
+          // var wordsStr_owner = '';
+          // var wordsStr_active = '';
+
+          // for (var i = 0; i < 15; i++) {
+          //   var randomNum = this.getx(arr_owner);
+          //   words_owner.push(english[randomNum]);
+          // }
+          // for (var i = 0; i < arr_owner.length; i++) {
+          //   words_owner[i] = english[arr_owner[i]];
+          //   wordsStr_owner = wordsStr_owner + "," + words_owner[i];
+          // }
+          // for (var i = 0; i < 15; i++) {
+          //   var randomNum = this.getx(arr_active);
+          //   words_active.push(english[randomNum]);
+          // }
+          // for (var i = 0; i < arr_active.length; i++) {
+          //   words_active[i] = english[arr_active[i]];
+          //   wordsStr_active = wordsStr_active + "," + words_active[i];
+          // }
+          var arr_key = [];
+          var words_key = [];
+          var wordsStr_key = '';
           for (var i = 0; i < 15; i++) {
-            var randomNum = this.getx(arr_owner);
-            words_owner.push(english[randomNum]);
+            var randomNum = this.getx(arr_key);
+            words_key.push(english[randomNum]);
           }
-          for (var i = 0; i < arr_owner.length; i++) {
-            words_owner[i] = english[arr_owner[i]];
-            wordsStr_owner = wordsStr_owner + "," + words_owner[i];
+          for (var i = 0; i < arr_key.length; i++) {
+            words_key[i] = english[arr_key[i]];
+            wordsStr_key = wordsStr_key + "," + words_key[i];
           }
-          for (var i = 0; i < 15; i++) {
-            var randomNum = this.getx(arr_active);
-            words_active.push(english[randomNum]);
-          }
-          for (var i = 0; i < arr_active.length; i++) {
-            words_active[i] = english[arr_active[i]];
-            wordsStr_active = wordsStr_active + "," + words_active[i];
-          }
-          Eos.seedPrivateKey(wordsStr_owner, wordsStr_active, (result) => {
+          
+          Eos.seedPrivateKey(wordsStr_key, wordsStr_key, (result) => {
             if (result.isSuccess) {
               var salt;
               Eos.randomPrivateKey((r) => {
                 salt = r.data.ownerPrivate.substr(0, 18);
-                result.data.words = wordsStr_owner;
-                result.data.words_active = wordsStr_active;
+                result.data.words = wordsStr_key;
+                result.data.words_active = wordsStr_key;
                 result.password = this.state.walletPassword;
                 result.name = this.state.walletName;
                 result.account = this.state.walletName;
