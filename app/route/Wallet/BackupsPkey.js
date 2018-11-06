@@ -31,6 +31,7 @@ class BackupsPkey extends BaseComponent {
             password: "",
             ownerPk: '',
             activePk: '',
+            samePk:false,
             show: false,
         }
     }
@@ -44,10 +45,18 @@ class BackupsPkey extends BaseComponent {
          var bytes_words_active = CryptoJS.AES.decrypt(activePrivateKey.toString(), this.props.navigation.state.params.password + this.props.navigation.state.params.wallet.salt);
          var plaintext_words_active = bytes_words_active.toString(CryptoJS.enc.Utf8);
         if (plaintext_words_owner.indexOf('eostoken') != - 1) {
-            this.setState({
-                ownerPk: plaintext_words_owner.substr(8, plaintext_words_owner.length),
-                activePk: plaintext_words_active.substr(8, plaintext_words_active.length),
-            })
+            if(plaintext_words_owner==plaintext_words_active){
+                this.setState({
+                    activePk: plaintext_words_active.substr(8, plaintext_words_active.length),
+                    samePk:true,
+                })
+            }else{
+                this.setState({
+                    ownerPk: plaintext_words_owner.substr(8, plaintext_words_owner.length),
+                    activePk: plaintext_words_active.substr(8, plaintext_words_active.length),
+                    samePk:false,
+                })
+            }
         }
     }
 
@@ -124,7 +133,11 @@ class BackupsPkey extends BaseComponent {
         const { navigate } = this.props.navigation; 
         if(key == 'activePk'){
             Clipboard.setString(this.state.activePk);
-            EasyToast.show('Active私钥已复制成功');
+            if(this.state.samePk){
+                EasyToast.show('钱包私钥已复制成功');
+            }else{
+                EasyToast.show('Active私钥已复制成功');
+            }
         } else if(key == 'ownerPk'){
           Clipboard.setString(this.state.ownerPk);
           EasyToast.show('Owner私钥已复制成功');
@@ -159,7 +172,7 @@ class BackupsPkey extends BaseComponent {
                     </View> 
                     {this.state.activePk != ''&& 
                     <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
-                        <Text style={[styles.inptitle,{color: UColor.fontColor}]}>Active私钥</Text>
+                        <Text style={[styles.inptitle,{color: UColor.fontColor}]}>{this.state.samePk?"钱包私钥":"Active私钥"}</Text>
                         <TouchableHighlight style={[styles.inptgo,{backgroundColor: UColor.secdColor}]} underlayColor={UColor.secdColor} onPress={this.prot.bind(this, 'activePk')}>
                             <Text style={[styles.inptext,{color: UColor.arrow}]}>{this.state.activePk}</Text>
                         </TouchableHighlight>

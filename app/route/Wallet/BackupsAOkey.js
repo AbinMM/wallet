@@ -46,6 +46,7 @@ class BackupsAOkey extends BaseComponent {
             txt_active: '',
             PromptOwner: '',
             PromptActtve: '',
+            samePk:false,
             show: false,
         };
     }
@@ -59,10 +60,18 @@ class BackupsAOkey extends BaseComponent {
     var bytes_words_active = CryptoJS.AES.decrypt(activePrivateKey.toString(), this.props.navigation.state.params.password + this.props.navigation.state.params.wallet.salt);
     var plaintext_words_active = bytes_words_active.toString(CryptoJS.enc.Utf8);
     if (plaintext_words_owner.indexOf('eostoken') != - 1) {
-        this.setState({
-            txt_owner: plaintext_words_owner.substr(8, plaintext_words_owner.length),
-            txt_active: plaintext_words_active.substr(8, plaintext_words_active.length),
-        })
+        if(plaintext_words_owner==plaintext_words_active){
+            this.setState({
+                txt_active: plaintext_words_active.substr(8, plaintext_words_active.length),
+                samePk:true,
+            })
+        }else{
+            this.setState({
+                txt_owner: plaintext_words_owner.substr(8, plaintext_words_owner.length),
+                txt_active: plaintext_words_active.substr(8, plaintext_words_active.length),
+                samePk:false,
+            })
+        }
     }
   }
 
@@ -181,7 +190,7 @@ class BackupsAOkey extends BaseComponent {
   backupConfirm() {
     if(this.state.txt_owner == ""){ // 由于导入私钥只导入active, 可能这里备份没有active私钥
         if(this.state.activePk == ""){
-            EasyToast.show('请输入active私钥');
+            EasyToast.show('请输入私钥');
             return;
         }
         if(this.state.activePk != this.state.txt_active){
@@ -189,6 +198,21 @@ class BackupsAOkey extends BaseComponent {
             return;
         }
         if(this.state.activePk == this.state.txt_active ){
+            this.backupOK();
+            return;
+        }
+    }else if(this.state.activePk == ""){
+
+        if (this.state.ownerPk == "") {
+            EasyToast.show('请输入owner私钥');
+            return;
+        }
+
+        if(this.state.ownerPk != this.state.txt_owner){
+            this.setState({PromptOwner: '该私钥内容有误'})
+            return;
+        }
+        if(this.state.ownerPk == this.state.txt_owner){
             this.backupOK();
             return;
         }
@@ -244,14 +268,14 @@ class BackupsAOkey extends BaseComponent {
                         {this.state.txt_active != ''&& 
                         <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
                             <View style={styles.ionicout}>
-                                <Text style={[styles.inptitle,{color: UColor.fontColor}]}>Active私钥</Text>
+                                <Text style={[styles.inptitle,{color: UColor.fontColor}]}>{this.state.samePk?"钱包私钥":"Active私钥"}</Text>
                                 <Text  style={[styles.prompttext,{color: UColor.showy}]}>{this.state.PromptActtve}</Text>
                             </View>
                             <TextInput ref={(ref) => this._lphone = ref} value={this.state.activePk} returnKeyType="next" editable={true}
                                 selectionColor={UColor.tintColor} placeholderTextColor={UColor.inputtip} autoFocus={false} multiline={true}
                                 style={[styles.inptgo,{color: UColor.arrow, backgroundColor: UColor.secdColor}]}
                                 onChangeText={(activePk) => this.setState({ activePk })} keyboardType="default" onChange={this.intensity()} 
-                                placeholder="输入active私钥" underlineColorAndroid="transparent"   />
+                                placeholder={this.state.samePk?"输入钱包私钥":"输入Active私钥"} underlineColorAndroid="transparent"   />
                         </View>
                         }
                          {this.state.txt_owner  != ''&&
