@@ -59,3 +59,4 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 *.apk
+.history/
