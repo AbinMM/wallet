@@ -87,10 +87,6 @@ export class DappSignModalView extends React.Component {
       this.DappSignModalCallback && this.DappSignModalCallback(true);
     }
 
-    componentWillUnmount() {
-      DappSignModal.unBind();
-    }
-
     onCheck = (check) =>{
       this.setState({props:check});
     }

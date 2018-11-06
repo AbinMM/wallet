@@ -70,10 +70,6 @@ export class AlertModalView extends React.Component {
       this.AlertModalCallback && this.AlertModalCallback(true);
     }
 
-    componentWillUnmount() {
-      AlertModal.unBind();
-    }
-
     render() {
         return (
           this.state.modalVisible && <View style={styles.continer}>

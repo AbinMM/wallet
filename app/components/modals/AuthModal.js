@@ -84,7 +84,6 @@ export class AuthModalView extends React.Component {
     }
 
     componentWillUnmount() {
-      AuthModal.unBind();
       FingerprintScanner.release();
     }
 
