@@ -1061,6 +1061,13 @@ class Resources extends BaseComponent {
                                     {this.leaseTransferButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', '过户')}  
                                 </View>}
                                 <Text style={[styles.basctext,{color: UColor.fontColor}]}>余额：{this.state.balance}EOS</Text>
+                                {(this.state.isRedeem) &&
+                                    <Button onPress={this.redemption.bind()}>
+                                    <View style={{ height: ScreenUtil.autoheight(20),justifyContent: 'flex-end', alignItems: 'flex-end'  }}>
+                                        <Text style={[styles.basctextright,{color: UColor.tintColor,borderBottomColor: UColor.tintColor}]}>赎回遇到问题？</Text>
+                                    </View>
+                                    </Button>
+                                }
                             </View>
                 
                             <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
@@ -1318,13 +1325,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: ScreenUtil.autowidth(18), 
         paddingVertical: ScreenUtil.autowidth(10),
     },
-    // basctextright :{
-    //     textAlign: 'right',
-    //     borderBottomWidth: 1,
-    //     flexDirection: 'row',  
-    //     fontSize: ScreenUtil.setSpText(14), 
-    //     lineHeight: ScreenUtil.autoheight(20),
-    // },
+    basctextright :{
+        textAlign: 'right',
+        borderBottomWidth: 1,
+        flexDirection: 'row',  
+        fontSize: ScreenUtil.setSpText(14), 
+        lineHeight: ScreenUtil.autoheight(20),
+    },
     basctext :{
         flex: 1, 
         textAlign: 'left', 
