@@ -28,8 +28,8 @@ export default {
             for (var i = 0; i < mydappBook.length; i++) {
                 if ((mydappBook[i].id == payload.id)
                       && (mydappBook[i].categoryId == payload.categoryId)) {
-                    // EasyToast.show('dapp已存在！');
-                    return;
+                    mydappBook.splice(i,1);
+                    break;
                 }
             }
 
