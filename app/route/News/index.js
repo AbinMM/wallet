@@ -81,7 +81,6 @@ class News extends React.Component {
       logRefreshing: false,
       selecttitle:"",
       selecturl:"",
-      isWriteListFlag:false,
       periodstext: '', //当前进行第几期活动
       periodsseq: '', //当前进行第几期下标
       WHratio: '',

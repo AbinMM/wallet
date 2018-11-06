@@ -10,7 +10,7 @@ import Button from '../../components/Button'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
-import {DappAlertModal,DappAlertModalView} from '../../components/modals/DappAlertModal'
+import {AlertModal,AlertModalView} from '../../components/modals/AlertModal'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -184,9 +184,13 @@ class Discover extends React.Component {
   //点DAPP跳转
   onPressTool(data) {
     const { navigate } = this.props.navigation;
-    DappAlertModal.show(data.name,()=>{
-        navigate('DappWeb', { title: data.name, url:data.url});
-        this.props.dispatch({ type: 'dapp/saveMyDapp', payload: data });
+    var title = '您所访问的页面将跳至第三方DApp' + data.name;
+    var content = '提示：您所访问的页面将跳转至第三方DApp'+ data.name +'。您在第三方DApp上的使用行为将适用该第三方DApp的用户协议和隐私政策，由其直接并单独向您承担责任。';
+    AlertModal.show(title,content,'确认','取消',(resp)=>{
+      if(resp){
+          navigate('DappWeb', { title: data.name, url:data.url});
+          this.props.dispatch({ type: 'dapp/saveMyDapp', payload: data });
+        }
     });
   }
 
@@ -268,7 +272,7 @@ class Discover extends React.Component {
             />
           </View>
         </ScrollView>
-        <DappAlertModalView {...this.props} />
+        <AlertModalView {...this.props} />
       </View>
     );
   }

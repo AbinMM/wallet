@@ -30,7 +30,6 @@ export class EasyShowLD {
       this.map["LoadingDialog"].setState({
         "modalVisible": true,
         "loadingDialogFlag": DailogShow,
-        "writelistFlag": false,
         title,
         content,
         okLable,
