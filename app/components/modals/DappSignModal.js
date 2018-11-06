@@ -104,10 +104,6 @@ export class DappSignModalView extends React.Component {
       return arr;
     }
 
-    componentWillUnmount(){
-      DappSignModal.unBind();
-    }
-
     render() {
         return (
           this.state.modalVisible && <View style={styles.continer}>

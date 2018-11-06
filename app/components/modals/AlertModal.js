@@ -70,13 +70,9 @@ export class AlertModalView extends React.Component {
       this.AlertModalCallback && this.AlertModalCallback(true);
     }
 
-    componentWillUnmount(){
-      AlertModal.unBind();
-    }
-
     render() {
         return (
-          this.state.modalVisible?<View style={styles.continer}>
+          this.state.modalVisible && <View style={styles.continer}>
             <TouchableWithoutFeedback onPress={()=>{this.dimss()}}>
               <View style={styles.content}>
                 <Animated.View style={[styles.mask,{opacity:this.state.mask}]}></Animated.View>
@@ -96,7 +92,7 @@ export class AlertModalView extends React.Component {
                 </View>
               </View>
             </TouchableWithoutFeedback>
-          </View>:null
+          </View>
         )
     }
 }

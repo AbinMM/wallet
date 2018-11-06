@@ -30,26 +30,26 @@ var CryptoJS = require("crypto-js");
 @connect(({wallet, vote}) => ({...wallet, ...vote}))
 class CpuNet extends BaseComponent {
 
-    static navigationOptions = {
+    static navigationOptions = { 
         title: "CPU+NET",
-        header:null,
+        header:null, 
     };
-
-    recordDelegatebw = () =>{
+     
+    recordDelegatebw = () =>{  
         const { navigate } = this.props.navigation;
         navigate('DelegatebwRecord', {account_name: this.props.defaultWallet.account});
-    }
+    }  
 
-  // 构造函数
-  constructor(props) {
+  // 构造函数  
+  constructor(props) { 
     super(props);
     this.state = {
         index: 0,
         routes: [
-            { key: '1', title: "CPU/NET" },
+            { key: '1', title: "CPU/NET" }, 
             { key: '2', title:  "内存" }
         ],
-
+        
         delegateb: "", //计算抵押赎回
         undelegateb: "", //网络抵押赎回
         isOwn: true, // 自己
@@ -63,7 +63,7 @@ class CpuNet extends BaseComponent {
         isLease: true, // 租赁
         isTransfer: false, // 过户
         LeaseTransfer: 0,
-
+        
         cpu_delegateb: "", //抵押cpu
         net_delegateb: "", //抵押net
 
@@ -105,7 +105,7 @@ class CpuNet extends BaseComponent {
             this.props.dispatch({ type: 'wallet/getDefaultWallet',
                 callback: (data) => {
                     if(data != null || data != ''){
-
+                       
                         this.getAccountInfo();
                         this.setState({receiver:  this.props.defaultWallet.account});
                     }
@@ -126,7 +126,7 @@ class CpuNet extends BaseComponent {
                     });
                 }
             });
-
+            
         } catch (error) {
             EasyShowLD.loadingClose();
         }
@@ -144,15 +144,15 @@ class CpuNet extends BaseComponent {
                 callback: (data) => {
                     if(data != null){
                         if(data.display_data){
-                            this.setState({
+                            this.setState({ 
                                 cpu_available: data.display_data.cpu_limit_available,
                                 cpu_AlreadyUsed: (Math.floor((data.display_data.cpu_limit_max - data.display_data.cpu_limit_available)*100)/100).toFixed(2),
                                 cpu_Percentage: (100-data.display_data.cpu_limit_available_percent.replace("%", "")) + '%',
-
+                                
                                 net_available: data.display_data.net_limit_available,
                                 net_AlreadyUsed:  (Math.floor((data.display_data.net_limit_max - data.display_data.net_limit_available)*100)/100).toFixed(2),
                                 net_Percentage: (100-data.display_data.net_limit_available_percent.replace("%", "")) + '%',
-
+    
                             });
                         }
 
@@ -178,11 +178,11 @@ class CpuNet extends BaseComponent {
                     EasyShowLD.loadingClose();
                 }
             })
-
+    
             //EOS余额
-            this.props.dispatch({ type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account , symbol: 'EOS' },
+            this.props.dispatch({ type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account , symbol: 'EOS' }, 
                 callback: (data) => {
-                    this.setState({
+                    this.setState({ 
                         balance: data && data.data?data.data.replace('EOS', "") :'0',
                     });
                 }
@@ -190,78 +190,78 @@ class CpuNet extends BaseComponent {
         } catch (error) {
             EasyShowLD.loadingClose();
         }
-
-    }
+       
+    } 
 
 
     // 返回 抵押 赎回
-    resourceButton(style, selectedSate, stateType, buttonTitle) {
-        let BTN_SELECTED_STATE_ARRAY = ['isMortgage', 'isRedeem', ];
-        return(
-            <TouchableOpacity style={[style, selectedSate ? {backgroundColor: UColor.tintColor} : {backgroundColor: UColor.mainColor,}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>
-                <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.arrow}]}>{buttonTitle}</Text>
-            </TouchableOpacity>
-        );
-    }
+    resourceButton(style, selectedSate, stateType, buttonTitle) {  
+        let BTN_SELECTED_STATE_ARRAY = ['isMortgage', 'isRedeem', ];  
+        return(  
+            <TouchableOpacity style={[style, selectedSate ? {backgroundColor: UColor.tintColor} : {backgroundColor: UColor.mainColor,}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
+                <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.arrow}]}>{buttonTitle}</Text>  
+            </TouchableOpacity>  
+        );  
+    }  
 
-    // 更新"抵押,赎回"按钮的状态
-    _updateBtnState(currentPressed, array) {
-        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {
-            return;
-        }
-        let newState = {...this.state};
-        for (let type of array) {
-            if (currentPressed == type) {
-                newState[type] ? {} : newState[type] = !newState[type];
-                this.setState(newState);
-            } else {
-                newState[type] ? newState[type] = !newState[type] : {};
-                this.setState(newState);
-            }
-        }
+    // 更新"抵押,赎回"按钮的状态  
+    _updateBtnState(currentPressed, array) { 
+        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {  
+            return;  
+        }  
+        let newState = {...this.state};  
+        for (let type of array) {  
+            if (currentPressed == type) {  
+                newState[type] ? {} : newState[type] = !newState[type];  
+                this.setState(newState);  
+            } else {  
+                newState[type] ? newState[type] = !newState[type] : {};  
+                this.setState(newState);  
+            }  
+        } 
         this.Initialization();
-    }
+    }  
 
     // 返回自己,他人
-    businesButton(style, selectedSate, stateType, buttonTitle) {
-        let BTN_SELECTED_STATE_ARRAY = ['isOwn', 'isOthers'];
-        return(
-            <TouchableOpacity style={[style, selectedSate ? {backgroundColor:'#6DA0F8'} : {backgroundColor: '#FFFFFF'}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>
-                <Text style={[{fontSize: ScreenUtil.setSpText(8) }, selectedSate ? {color: '#FFFFFF'} : {color: '#6DA0F8'}]}>{buttonTitle}</Text>
-            </TouchableOpacity>
-        );
-    }
+    businesButton(style, selectedSate, stateType, buttonTitle) {  
+        let BTN_SELECTED_STATE_ARRAY = ['isOwn', 'isOthers'];  
+        return(  
+            <TouchableOpacity style={[style, selectedSate ? {backgroundColor:'#6DA0F8'} : {backgroundColor: '#FFFFFF'}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
+                <Text style={[{fontSize: ScreenUtil.setSpText(8) }, selectedSate ? {color: '#FFFFFF'} : {color: '#6DA0F8'}]}>{buttonTitle}</Text>  
+            </TouchableOpacity>  
+        );  
+    } 
 
     // 返回租赁,过户
-    leaseTransferButton(style, selectedSate, stateType, buttonTitle) {
-        let BTN_SELECTED_STATE_ARRAY = ['isLease','isTransfer'];
-        return(
-          <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-start',alignItems: 'center', flex: 1,}} onPress={ () => {this._updateSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>
+    leaseTransferButton(style, selectedSate, stateType, buttonTitle) {    
+        let BTN_SELECTED_STATE_ARRAY = ['isLease','isTransfer'];  
+        return(  
+          <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-start',alignItems: 'center', flex: 1,}} onPress={ () => {this._updateSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
               <View style={{width: 10, height: 10, marginHorizontal: 8, borderRadius: 10, backgroundColor: UColor.mainColor, alignItems: 'center', justifyContent: 'center',borderColor: UColor.arrow,borderWidth: 1,}}>
                   {selectedSate ?<View style={{width: 10, height: 10, borderRadius: 10, backgroundColor: UColor.tintColor, borderColor: UColor.tintColor, borderWidth: 1, }}/>:null}
               </View>
-              <Text style={{fontSize: 16,color: UColor.fontColor}}>{buttonTitle}</Text>
-          </TouchableOpacity>
-        );
-    }
+              <Text style={{fontSize: 16,color: UColor.fontColor}}>{buttonTitle}</Text>  
+          </TouchableOpacity>  
+        );  
+    }  
 
-    // 更新"购买,出售,租赁,过户"按钮的状态
-    _updateSelectedState(currentPressed, array) {
-        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {
-            return;
-        }
-        let newState = {...this.state};
-        for (let type of array) {
-            if (currentPressed == type) {
-                newState[type] ? {} : newState[type] = !newState[type];
-                this.setState(newState);
-            } else {
-                newState[type] ? newState[type] = !newState[type] : {};
-                this.setState(newState);
-            }
-        }
-    }
-
+    // 更新"购买,出售,租赁,过户"按钮的状态  
+    _updateSelectedState(currentPressed, array) {  
+        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {  
+            return;  
+        }  
+        let newState = {...this.state};  
+        for (let type of array) {  
+            if (currentPressed == type) {  
+                newState[type] ? {} : newState[type] = !newState[type];  
+                this.setState(newState);  
+            } else {  
+                newState[type] ? newState[type] = !newState[type] : {};  
+                this.setState(newState);  
+            }  
+        }  
+    }  
+    
     //初始化输入框
     Initialization() {
         this.setState({
@@ -273,7 +273,7 @@ class CpuNet extends BaseComponent {
             LeaseTransfer: 0,
         })
     }
-
+    
     //校验输入的账户
     chkAccount(obj) {
         var charmap = '.12345abcdefghijklmnopqrstuvwxyz';
@@ -286,7 +286,7 @@ class CpuNet extends BaseComponent {
             }
             if(j >= charmap.length){
                 //非法字符
-                obj = obj.replace(tmp, "");
+                obj = obj.replace(tmp, ""); 
                 EasyToast.show('请输入正确的账号');
             }
         }
@@ -298,7 +298,7 @@ class CpuNet extends BaseComponent {
         }
         return obj;
     }
-
+    
     //校验输入的EOS数量
     chkPrice(obj) {
         obj = obj.replace(/[^\d.]/g, "");  //清除 "数字"和 "."以外的字符
@@ -344,7 +344,7 @@ class CpuNet extends BaseComponent {
         }
         return newtimePercentage
     }
-
+  
     //验证输入EOS数量
     chkAmountIsZero(amount,errInfo){
         var tmp;
@@ -403,11 +403,11 @@ class CpuNet extends BaseComponent {
                     actions: [
                         {
                             account: "eosio",
-                            name: "delegatebw",
+                            name: "delegatebw", 
                             authorization: [{
                             actor: this.props.defaultWallet.account,
                             permission: authInfo.permission,
-                            }],
+                            }], 
                             data: {
                                 from: this.props.defaultWallet.account,
                                 receiver: this.state.receiver,
@@ -428,8 +428,8 @@ class CpuNet extends BaseComponent {
                                 var errcode = r.data.code;
                                 if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
                                     this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},
-                                        callback:(resp)=>{
-                                            if(resp.code == 608){
+                                        callback:(resp)=>{ 
+                                            if(resp.code == 608){ 
                                                 //弹出提示框,可申请免费抵押功能
                                                 const view =
                                                 <View style={styles.passoutsource2}>
@@ -445,13 +445,13 @@ class CpuNet extends BaseComponent {
                                     });
                                 }
                             }
-
+    
                             if(r.data.msg){
                                 EasyToast.show(r.data.msg);
                             }else{
                                 EasyToast.show("抵押失败");
                             }
-
+    
                         }else{
                             EasyToast.show("抵押失败");
                         }
@@ -466,7 +466,7 @@ class CpuNet extends BaseComponent {
     };
 
     //计算网络赎回
-    undelegateb = () => {
+    undelegateb = () => { 
         if(!this.props.defaultWallet){
             EasyToast.show('请先创建钱包');
             return;
@@ -496,11 +496,11 @@ class CpuNet extends BaseComponent {
                     actions: [
                         {
                             account: "eosio",
-                            name: "undelegatebw",
+                            name: "undelegatebw", 
                             authorization: [{
                             actor: this.props.defaultWallet.account,
                             permission: authInfo.permission,
-                            }],
+                            }], 
                             data: {
                                 from: this.props.defaultWallet.account,
                                 receiver: this.state.receiver,
@@ -514,14 +514,14 @@ class CpuNet extends BaseComponent {
                     if(r.isSuccess){
                         this.getAccountInfo();
                         EasyToast.show("赎回成功");
-                    }else{
+                    }else{    
                         if(r.data){
                             if(r.data.code){
                                 var errcode = r.data.code;
                                 if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001) {
                                     this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},
-                                        callback:(resp)=>{
-                                            if(resp.code == 608){
+                                        callback:(resp)=>{ 
+                                            if(resp.code == 608){ 
                                                 //弹出提示框,可申请免费抵押功能
                                                 const view =
                                                 <View style={styles.passoutsource2}>
@@ -553,24 +553,24 @@ class CpuNet extends BaseComponent {
             }
         });
     };
-
+  
     //赎回遇到问题
-    redemption = () => {
+    redemption = () => { 
         const { navigate } = this.props.navigation;
         navigate('undelegated', {});
     }
-
+    
     //收回键盘
     dismissKeyboardClick() {
         dismissKeyboard();
     }
-
+    
     //扫二维码
     scan() {
         const { navigate } = this.props.navigation;
         navigate('BarCode', {isTurnOut:true,coinType:"EOS"});
     }
-
+    
     //通讯录
     openAddressBook() {
         const { navigate } = this.props.navigation;
@@ -581,8 +581,8 @@ class CpuNet extends BaseComponent {
     render() {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-                <Header {...this.props} onPressLeft={true} title="CPU+NET"  onPressRight={this.recordDelegatebw.bind()}
-                avatar={UImage.delegatebw_record} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)} />
+                <Header {...this.props} onPressLeft={true} title="CPU+NET"  onPressRight={this.recordDelegatebw.bind()}  
+                avatar={UImage.delegatebw_record} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)} /> 
 
                 <View style={[styles.inptoutsource,{flex: 1,}]}>
                     <ScrollView  keyboardShouldPersistTaps="always">
@@ -632,13 +632,13 @@ class CpuNet extends BaseComponent {
                                     <Text style={{flex: 1, textAlign: 'left', fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,}}>赎回中</Text>
                                     <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(16), color: UColor.arrow,}}>{this.state.and_redeem} EOS</Text>
                                 </View>
-                                <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>
-                                    {this.resourceButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isMortgage, 'isMortgage', '抵押')}
-                                    {this.resourceButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isRedeem, 'isRedeem', '赎回')}
+                                <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>  
+                                    {this.resourceButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isMortgage, 'isMortgage', '抵押')}  
+                                    {this.resourceButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isRedeem, 'isRedeem', '赎回')}  
                                     {/* <TextButton style={[styles.memorytab,{borderColor: UColor.tintColor}]} text="抵押" onPress={() => {this.setState({isMortgage: true, isRedeem: false})}}></TextButton>
                                     <TextButton style={[styles.networktab,{borderColor: UColor.tintColor}]} text="赎回" onPress={() => {this.setState({isMortgage: false, isRedeem: true})}}></TextButton> */}
 
-                                </View>
+                                </View> 
                                 <View style={[styles.outsource,{height: ScreenUtil.autowidth(65),flexDirection:'column',backgroundColor: UColor.mainColor,}]}>
                                     <View style={styles.inptTitleout}>
                                         <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>CPU</Text>
@@ -649,10 +649,10 @@ class CpuNet extends BaseComponent {
                                         }
                                     </View>
                                     <View style={styles.inptout}>
-                                        <TextInput ref={(ref) => this._rrpass = ref} value={this.state.delegateb} returnKeyType="go"
-                                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
+                                        <TextInput ref={(ref) => this._rrpass = ref} value={this.state.delegateb} returnKeyType="go" 
+                                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
                                         placeholder="请输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
-                                        onChangeText={(delegateb) => this.setState({ delegateb: this.chkPrice(delegateb)})}
+                                        onChangeText={(delegateb) => this.setState({ delegateb: this.chkPrice(delegateb)})} 
                                         />
                                     </View>
                                 </View>
@@ -666,46 +666,46 @@ class CpuNet extends BaseComponent {
                                         }
                                     </View>
                                     <View style={styles.inptout}>
-                                        <TextInput ref={(ref) => this._rrpass = ref} value={this.state.undelegateb} returnKeyType="go"
-                                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
+                                        <TextInput ref={(ref) => this._rrpass = ref} value={this.state.undelegateb} returnKeyType="go" 
+                                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
                                         placeholder="请输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
-                                        onChangeText={(undelegateb) => this.setState({ undelegateb: this.chkPrice(undelegateb)})}
+                                        onChangeText={(undelegateb) => this.setState({ undelegateb: this.chkPrice(undelegateb)})} 
                                         />
                                     </View>
                                 </View>
                                 <View style={[styles.outsource,{height: this.state.isOwn?ScreenUtil.autowidth(30):ScreenUtil.autowidth(65), flexDirection:'column',backgroundColor: UColor.mainColor}]}>
                                     <View style={styles.inptTitleout}>
                                         <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.isMortgage ?　'接收账户' : '赎回账户'}</Text>
-                                        <View style={[styles.businestab]}>
-                                            {this.businesButton([styles.owntab,{borderColor: '#6DA0F8'}], this.state.isOwn, 'isOwn', '自己')}
-                                            {this.businesButton([styles.otherstab,{borderColor: '#6DA0F8'}], this.state.isOthers, 'isOthers', '他人')}
+                                        <View style={[styles.businestab]}>  
+                                            {this.businesButton([styles.owntab,{borderColor: '#6DA0F8'}], this.state.isOwn, 'isOwn', '自己')}  
+                                            {this.businesButton([styles.otherstab,{borderColor: '#6DA0F8'}], this.state.isOthers, 'isOthers', '他人')}  
                                         </View>
                                     </View>
                                     {this.state.isOthers && <View style={styles.inptout}>
-                                        <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"  keyboardType="default"
-                                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
-                                            placeholder={this.state.receiver} underlineColorAndroid="transparent" maxLength={12}
-                                            onChangeText={(receiver) => this.chkAccount(receiver)}
+                                        <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"  keyboardType="default"  
+                                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
+                                            placeholder={this.state.receiver} underlineColorAndroid="transparent" maxLength={12} 
+                                            onChangeText={(receiver) => this.chkAccount(receiver)}  
                                         />
                                         <Button onPress={() => this.openAddressBook()}>
                                             <View style={styles.botnout}>
                                                 <Image source={UImage.al} style={styles.botnimg} />
                                             </View>
-                                        </Button>
+                                        </Button> 
                                     </View>
                                     }
-
+                                   
                                 </View>
-
+                        
                                 <View style={styles.basc}>
                                     {(this.state.isOthers &&  this.state.isMortgage) &&
-                                    <View style={[styles.LeaseTransfer,]}>
-                                        {this.leaseTransferButton(styles.tabbutton, this.state.isLease, 'isLease', '租赁')}
-                                        {this.leaseTransferButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', '过户')}
+                                    <View style={[styles.LeaseTransfer,]}>  
+                                        {this.leaseTransferButton(styles.tabbutton, this.state.isLease, 'isLease', '租赁')}  
+                                        {this.leaseTransferButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', '过户')}  
                                     </View>}
                                     <Text style={[styles.basctext,{color: UColor.fontColor}]}>余额：{this.state.balance}EOS</Text>
                                 </View>
-
+                    
                                 <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
                                     <Button onPress={this.purchaseMortgage.bind(this)} >
                                         <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
@@ -717,6 +717,7 @@ class CpuNet extends BaseComponent {
                         </TouchableOpacity>
                     </ScrollView>
                 </View>
+                <AuthModalView {...this.props} />
             </View>
         )
     }
@@ -724,7 +725,7 @@ class CpuNet extends BaseComponent {
 
 const styles = StyleSheet.create({
     passoutsource: {
-        flexDirection: 'column',
+        flexDirection: 'column', 
         alignItems: 'center'
     },
     inptpass: {
@@ -743,33 +744,33 @@ const styles = StyleSheet.create({
         lineHeight: ScreenUtil.autoheight(25),
     },
 
-    tabbutton: {
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-    },
-    tablayout: {
+    tabbutton: {  
+        alignItems: 'flex-start',   
+        justifyContent: 'flex-start', 
+    },  
+    tablayout: {   
         alignItems: 'center',
-        flexDirection: 'row',
+        flexDirection: 'row',  
         justifyContent: 'center',
         paddingVertical: ScreenUtil.autoheight(9),
-    },
+    },  
     memorytab: {
         borderRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: 'center',   
+        justifyContent: 'center', 
         paddingHorizontal: ScreenUtil.autowidth(22),
         paddingVertical: ScreenUtil.autoheight(5),
     },
     networktab: {
         borderRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: 'center',   
+        justifyContent: 'center', 
         paddingHorizontal: ScreenUtil.autowidth(22),
         paddingVertical: ScreenUtil.autoheight(5),
     },
-    tabText: {
+    tabText: {  
         fontSize: ScreenUtil.setSpText(18),
-    },
+    }, 
 
     container: {
         flex: 1,
@@ -795,38 +796,38 @@ const styles = StyleSheet.create({
     },
     outsource: {
         marginTop: 1,
-        flexDirection: 'row',
+        flexDirection: 'row',  
         alignItems: 'center',
-
+        
         paddingHorizontal: ScreenUtil.autowidth(15),
     },
     inptout: {
-        flexDirection: 'row',
+        flexDirection: 'row', 
         alignItems: 'center',
-        height: ScreenUtil.autoheight(35),
+        height: ScreenUtil.autoheight(35), 
     },
     inpt: {
         flex: 1,
         paddingVertical: 0,
-        fontSize: ScreenUtil.setSpText(16),
+        fontSize: ScreenUtil.setSpText(16), 
     },
     inptTitleout: {
-        flexDirection: 'row',
+        flexDirection: 'row', 
         alignItems: 'center',
-        height: ScreenUtil.autoheight(30),
+        height: ScreenUtil.autoheight(30), 
     },
     inptTitle: {
         flex: 1,
-        fontSize: ScreenUtil.setSpText(16),
+        fontSize: ScreenUtil.setSpText(16),  
     },
     businestab: {
-        flexDirection: 'row',
+        flexDirection: 'row', 
         alignItems: 'center',
         justifyContent: 'center',
     },
     owntab: {
         borderWidth: 1,
-        alignItems: 'center',
+        alignItems: 'center',   
         justifyContent: 'center',
         borderTopLeftRadius: 5,
         borderBottomLeftRadius: 5,
@@ -835,26 +836,26 @@ const styles = StyleSheet.create({
     },
     otherstab: {
         borderWidth: 1,
-        alignItems: 'center',
+        alignItems: 'center',   
         justifyContent: 'center',
         borderTopRightRadius: 5,
         borderBottomRightRadius: 5,
         width: ScreenUtil.autowidth(35),
         height: ScreenUtil.autoheight(18),
     },
-
+   
     inptTitlered: {
-        fontSize: ScreenUtil.setSpText(14),
+        fontSize: ScreenUtil.setSpText(14), 
         lineHeight: ScreenUtil.autoheight(35),
     },
     botnout: {
         alignItems: 'flex-end',
-        justifyContent: 'center',
-        height: ScreenUtil.autoheight(38),
+        justifyContent: 'center', 
+        height: ScreenUtil.autoheight(38), 
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
     botnimg:{
-        width: ScreenUtil.autowidth(17),
+        width: ScreenUtil.autowidth(17), 
         height: ScreenUtil.autowidth(17),
     },
     botn: {
@@ -864,24 +865,24 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(50),
     },
     botText: {
-        fontSize: ScreenUtil.setSpText(18),
+        fontSize: ScreenUtil.setSpText(18), 
     },
 
     basc: {
-        flexDirection: 'row',
-        paddingHorizontal: ScreenUtil.autowidth(18),
+        flexDirection: 'row', 
+        paddingHorizontal: ScreenUtil.autowidth(18), 
         paddingVertical: ScreenUtil.autowidth(10),
     },
     // basctextright :{
     //     textAlign: 'right',
     //     borderBottomWidth: 1,
-    //     flexDirection: 'row',
-    //     fontSize: ScreenUtil.setSpText(14),
+    //     flexDirection: 'row',  
+    //     fontSize: ScreenUtil.setSpText(14), 
     //     lineHeight: ScreenUtil.autoheight(20),
     // },
     basctext :{
-        flex: 1,
-        textAlign: 'left',
+        flex: 1, 
+        textAlign: 'left', 
         fontSize:ScreenUtil.setSpText(12),
     },
 
@@ -925,12 +926,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     passoutsource2: {
-        flexDirection: 'column',
+        flexDirection: 'column', 
         alignItems: 'flex-start',
     },
     Explaintext2: {
         fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autoheight(30),
+        lineHeight: ScreenUtil.autoheight(30), 
     },
 })
 export default CpuNet;

@@ -24,7 +24,7 @@ class AuthChange extends BaseComponent {
 
     static navigationOptions = {
         headerTitle: "Active权限管理",
-        header:null,
+        header:null, 
     }
 
     constructor(props) {
@@ -75,7 +75,7 @@ class AuthChange extends BaseComponent {
             }
             if(j >= charmap.length){
                 //非法字符
-                // obj = obj.replace(tmp, "");
+                // obj = obj.replace(tmp, ""); 
                 ret = false;
                 break;
             }
@@ -84,7 +84,7 @@ class AuthChange extends BaseComponent {
     }
 
     //提交
-    submission = () =>{
+    submission = () =>{  
         if(this.state.isAuth==false){
             EasyToast.show("找不到对应的公钥或账号");
             return
@@ -113,20 +113,20 @@ class AuthChange extends BaseComponent {
         }else if(this.state.inputText.length >= 1){
             if(this.verifyAccount(this.state.inputText)==false){
                 EasyToast.show('请输入正确的账号');
-                return
+                return 
             }
             authTempActive.data.auth.accounts.push({"weight":1,"permission":{"actor":this.state.inputText,"permission":"active"}});
             this.changeAuth(authTempActive);
         }else{
             EasyToast.show('输入数据长度不正确');
         }
-    }
-
+    }  
+  
     componentWillUnmount(){
         //结束页面前，资源释放操作
         super.componentWillUnmount();
     }
-
+ 
     //获取账户信息
     getAuthInfo(){
         this.setState({isRefreshing: true})//开始刷新
@@ -138,11 +138,11 @@ class AuthChange extends BaseComponent {
                 var authFlag=false;
                 var authTempActive={
                     account: "eosio",
-                    name: "updateauth",
+                    name: "updateauth", 
                     authorization: [{
                     actor: '',//操作者 account
                     permission: 'active'// active
-                    }],
+                    }], 
                     data: {
                         account: '',//操作者 account
                         permission: 'active',// active
@@ -154,7 +154,7 @@ class AuthChange extends BaseComponent {
                         }
                     }
                 };
-                //active
+                //active 
                 authTempActive.authorization[0].actor=this.props.navigation.state.params.wallet.name;
                 authTempActive.data.account=this.props.navigation.state.params.wallet.name;
                 authTempActive.data.parent=resp.data.permissions[0].parent;
@@ -172,7 +172,7 @@ class AuthChange extends BaseComponent {
                     // if(authTempActive.data.auth.keys[i].key != this.props.navigation.state.params.wallet.activePublic){
                         temp.push({weight:authTempActive.data.auth.keys[i].weight,key:authTempActive.data.auth.keys[i].key});
                     // }else{
-
+                        
                     // }
                 }
                 authFlag=true;//获取账户成功后可以
@@ -189,9 +189,9 @@ class AuthChange extends BaseComponent {
                 this.setState({isAuth: false});
             }
         } });
-    }
+    } 
 
-    EosUpdateAuth = (account, pvk,authActiveArr, callback) => {
+    EosUpdateAuth = (account, pvk,authActiveArr, callback) => { 
         if (account == null) {
             if(callback) callback("无效账号");
             return;
@@ -231,7 +231,7 @@ class AuthChange extends BaseComponent {
     }
 
     //这个是用来删除当前行的
-    deleteUser = (delKey) =>{
+    deleteUser = (delKey) =>{  
         if(delKey.indexOf("@")!=-1){
             delKey = delKey.replace( /([^@]+)$/, "");  //删除@后面的字符
             delKey = delKey.replace( "@", "");  //删除@后面的字符
@@ -256,12 +256,12 @@ class AuthChange extends BaseComponent {
         }
         // arrAccounts.push({"weight":1,"permission":{"actor":this.state.inputContent}});
         this.changeAuth(authTempActive);
-    }
+    }  
 
     _onRefresh(){
         this.getAuthInfo();//刷新一下
     }
-
+    
     _renderRow(rowData){ // cell样式
         return (
             <View style={[styles.addUserTitle,{ backgroundColor: UColor.mainColor}]}>
@@ -304,7 +304,7 @@ class AuthChange extends BaseComponent {
                 <Text style={[styles.significanttext,{color: UColor.riseColor}]} >请确保您清楚了解Active授权，并确保添加的授权用户是您信任的用户，添加的授权用户将可获得变更权限、转账和投票等操作的权限。</Text>
             </View>
             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "padding" : null} style={styles.tab}>
-                <ScrollView keyboardShouldPersistTaps="handled"
+                <ScrollView keyboardShouldPersistTaps="handled" 
                     refreshControl={
                     <RefreshControl
                         refreshing={this.state.isRefreshing}
@@ -317,7 +317,7 @@ class AuthChange extends BaseComponent {
                     scrollEventThrottle={50}
                     >
                     <FlatList
-                        data={this.state.authKeys.length==null ?[]: this.state.authKeys}
+                        data={this.state.authKeys.length==null ?[]: this.state.authKeys} 
                         extraData={this.state}
                         renderItem={this._renderRow.bind(this)} >
                     </FlatList>
@@ -331,10 +331,10 @@ class AuthChange extends BaseComponent {
                         <View style={{flex:1,flexDirection: "row",}}>
                             <TextInput ref={(ref) => this._lphone = ref} value={this.state.inputText} returnKeyType="next" editable={true}
                                 selectionColor={UColor.tintColor} placeholderTextColor={UColor.inputtip} autoFocus={false}
-                                style={[styles.inptgo,{color: UColor.arrow,backgroundColor: UColor.secdColor, borderColor: UColor.arrow,}]}
-                                onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default"
+                                style={[styles.inptgo,{color: UColor.arrow,backgroundColor: UColor.secdColor, borderColor: UColor.arrow,}]} 
+                                onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default" 
                                 placeholder="请您输入Active公钥 " underlineColorAndroid="transparent"  multiline={true}  />
-
+                        
                             <View style={styles.addButton}>
                                 <Image source={UImage.adminAddA} style={styles.imgBtn} />
                             </View>
@@ -348,7 +348,7 @@ class AuthChange extends BaseComponent {
                 </ScrollView>
             </KeyboardAvoidingView>
 
-
+            <AuthModalView {...this.props} />
 
         </View>);
     }
@@ -380,14 +380,14 @@ const styles = StyleSheet.create({
         paddingVertical: ScreenUtil.autoheight(10),
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
-     //用户添加样式
+     //用户添加样式  
     userAddView: {
         flex: 1,
         flexDirection: "row",
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
     },
-     // 按钮
+     // 按钮  
     buttonView: {
         flex: 1,
         flexDirection: "row",
@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         flexDirection: "column",
-        alignItems: 'center',
+        alignItems: 'center', 
         paddingVertical: ScreenUtil.autoheight(5),
         marginVertical: ScreenUtil.autoheight(10),
         marginHorizontal: ScreenUtil.autowidth(15),
@@ -445,10 +445,10 @@ const styles = StyleSheet.create({
     },
     significanttextHead: {
         fontWeight:"bold",
-        fontSize: ScreenUtil.setSpText(16),
+        fontSize: ScreenUtil.setSpText(16), 
     },
     significanttext: {
-        fontSize: ScreenUtil.setSpText(13),
+        fontSize: ScreenUtil.setSpText(13), 
         lineHeight: ScreenUtil.autoheight(20),
     },
     inptgo: {
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
     },
     passoutsource: {
         alignItems: 'center',
-        flexDirection: 'column',
+        flexDirection: 'column', 
     },
     inptpass: {
         borderBottomWidth: 1,
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(45),
         paddingBottom: ScreenUtil.autoheight(5),
     },
-    // 按钮
+    // 按钮  
     btnoutsource: {
         borderRadius: 5,
         alignItems: 'center',
@@ -490,7 +490,7 @@ const styles = StyleSheet.create({
     tab: {
         flex: 1,
     }
-
+   
 });
 
 export default AuthChange;

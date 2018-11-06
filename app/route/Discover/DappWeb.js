@@ -52,7 +52,7 @@ export default class DappWeb extends Component {
                 if(resp && resp.code == '0'){
                     var authTempOwner=resp.data.permissions[1].required_auth.keys
                     var authTempActive=resp.data.permissions[0].required_auth.keys
-
+                
                     this.setState({
                         authTempOwner: authTempOwner,
                         authTempActive: authTempActive,
@@ -74,7 +74,7 @@ export default class DappWeb extends Component {
     this.addBackAndroidListener(this.props.navigation);
 
   }
-   //根据公钥获取对应的私钥
+   //根据公钥获取对应的私钥 
    getPrivateKeyByPublicKey(publicKey)
    {
        if(this.props.defaultWallet.activePublic == publicKey){
@@ -115,14 +115,14 @@ export default class DappWeb extends Component {
         backButtonEnabled: navState.canGoBack,
     });
 };
-// 显示/隐藏 右上角的更多选项 modal
+// 显示/隐藏 右上角的更多选项 modal  
 onRightFun() {
     // if (this.state.backButtonEnabled) {
         try {
             this.refs['refWebview'].goBack();
 
         } catch (error) {
-
+            
         }
     // } else {//否则返回到上一个页面
     //     this.props.navigation.goBack();
@@ -139,7 +139,7 @@ onLeftCloseFun() {
             this.props.navigation.state.params.callback()
         }
     } catch (error) {
-
+        
     }
 }
 // 监听原生返回键事件
@@ -197,7 +197,7 @@ onBackAndroid = () => {
     // EasyToast.show("_renderError!");
   }
 
-        // 显示/隐藏 右上角的更多选项 modal
+        // 显示/隐藏 右上角的更多选项 modal  
     moreOption() {
         let isShow = this.state.optionShow;
         this.setState({
@@ -233,7 +233,7 @@ onBackAndroid = () => {
         this.refs.refWebview.postMessage(strinfo);
     }
   }
-
+ 
   onMessage = (e) =>{
       try {
         let result = JSON.parse(e.nativeEvent.data);
@@ -250,48 +250,48 @@ onBackAndroid = () => {
             case 'contract':
                 this.eos_getContract(result);
                 break;
-
+    
             case 'getCurrencyBalance':
                 this.eos_getCurrencyBalance(result);
                 break;
-
+            
             case 'getAccount':
                 this.eos_getAccount(result);
                 break;
-
+    
             case 'transaction':
                 this.eos_transaction(result);
                 break;
-
+    
             case 'transfer':
                 this.eos_transfer(result);
                 break;
-
+    
             case 'getTableRows':
                 this.eos_getTableRows(result);
                 break;
-
+    
             case 'noaccount':
                 EasyToast.show('请导入账户');
                 InteractionManager.runAfterInteractions(() => {
                     // WalletList.show(Globle.wallet,false,(select)=>{
-
+                    
                     // });
                 });
-                break;
+                break;    
 
             case 'authenticate':
-                this.scatter_authenticate(result);
+                this.scatter_authenticate(result);    
                 break;
-
+            
             case 'suggestNetwork':
-                this.scatter_suggestNetwork(result);
+                this.scatter_suggestNetwork(result);  
                 break;
 
-            case 'getArbitrarySignature':
+            case 'getArbitrarySignature':    
                 this.scatter_getArbitrarySignature(result);
                 break;
-
+          
             case 'requestTransfer':
                 this.scatter_requestTransfer(result);
                 break;
@@ -304,7 +304,7 @@ onBackAndroid = () => {
                 break;
         }
       } catch (error) {
-
+          
       }
   }
   eos_getInfo(result){
@@ -347,7 +347,7 @@ onBackAndroid = () => {
                 }else{
                     EasyToast.show('合约获取失败');
                     this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
-                }
+                }      
             } catch (error) {
                   EasyToast.show("eos_getContract:" + error.message);
             }
@@ -419,7 +419,7 @@ onBackAndroid = () => {
         return ;
     }
 
-    this.props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{
+    this.props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{ 
         try {
          if (!walletArr || walletArr.length < 1) {
             EasyToast.show("get walletList error");
@@ -433,7 +433,7 @@ onBackAndroid = () => {
                   break;
               }
             }
-
+  
             if(i >= walletArr.length)
             {
               EasyToast.show("actor is not exist or not actived");
@@ -484,9 +484,9 @@ onBackAndroid = () => {
   }
 
   eos_transfer(result) {
-    if(!result.params.from || result.params.from == ''
-         || !result.params.to || result.params.to == ''
-         || !result.params.amount || result.params.amount == ''
+    if(!result.params.from || result.params.from == '' 
+         || !result.params.to || result.params.to == '' 
+         || !result.params.amount || result.params.amount == '' 
          || !result.params.memo)
     {
         EasyToast.show('transfer参数非法');
@@ -494,7 +494,7 @@ onBackAndroid = () => {
         return ;
     }
 
-    this.props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{
+    this.props.dispatch({type:'wallet/walletList',callback:(walletArr)=>{ 
         try {
             if (!walletArr || walletArr.length < 1) {
                 EasyToast.show("get walletList error");
@@ -508,7 +508,7 @@ onBackAndroid = () => {
                       break;
                   }
                 }
-
+      
                 if(i >= walletArr.length)
                 {
                   EasyToast.show("from account is not exist or not actived");
@@ -521,11 +521,11 @@ onBackAndroid = () => {
                 var actions = [
                     {
                         account: "eosio.token",
-                        name: "transfer",
+                        name: "transfer", 
                         authorization: [{
                         actor: result.params.from,
                         permission: 'active',
-                        }],
+                        }], 
                         data: {
                             from: result.params.from,
                             to: result.params.to,
@@ -589,7 +589,7 @@ onBackAndroid = () => {
             if (resp && resp.code == '0') {
                 obj = resp.data;
             } else {
-                obj = null;
+                obj = null;  
             }
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:obj}));
           } catch (error) {
@@ -601,7 +601,7 @@ onBackAndroid = () => {
   }
   scatter_authenticate(result){
     {
-        if(!result.params.random || result.params.random.length != 12)
+        if(!result.params.random || result.params.random.length != 12) 
         {
             EasyToast.show('authenticate参数非法');
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -647,13 +647,13 @@ onBackAndroid = () => {
   scatter_suggestNetwork(result)
   {
       try {
-          if(!result.params.network)
+          if(!result.params.network) 
           {
               EasyToast.show('suggestNetwork参数非法');
               this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:false}));
               return ;
           }
-
+      
           if((result.params.network.blockchain != 'eos') || (result.params.network.chainId != Constants.EosChainId)){
               EasyToast.show('network参数非法');
               this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:false}));
@@ -666,8 +666,8 @@ onBackAndroid = () => {
 }
   scatter_getArbitrarySignature(result)
   {
-    if(!result.params.publicKey || result.params.publicKey == ''
-         || !result.params.data || result.params.data == ''
+    if(!result.params.publicKey || result.params.publicKey == '' 
+         || !result.params.data || result.params.data == '' 
          || !result.params.whatfor || !result.params.isHash)
     {
         EasyToast.show('getArbitrarySignature参数非法');
@@ -678,7 +678,7 @@ onBackAndroid = () => {
     if(result.params.isHash && result.params.data.length != 32){
         EasyToast.show('getArbitrarySignature参数data,不是hash');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
-        return ;
+        return ;   
     }
 
     var privateKey = this.getPrivateKeyByPublicKey(result.params.publicKey);
@@ -754,7 +754,7 @@ scatter_requestTransfer(result)
     try {
         if(!result.params.network || !result.params.to || result.params.to == ''
             || !result.params.amount || result.params.amount == ''
-            || !result.params.tokenDetails
+            || !result.params.tokenDetails 
             || !result.params.tokenDetails.contract
             || !result.params.tokenDetails.symbol
             || !result.params.tokenDetails.memo)
@@ -782,11 +782,11 @@ scatter_requestTransfer(result)
         var actions = [
           {
               account: "eosio.token",
-              name: "transfer",
+              name: "transfer", 
               authorization: [{
               actor: this.props.defaultWallet.account,
               permission: 'active',
-              }],
+              }], 
               data: {
                   from: this.props.defaultWallet.account,
                   to: result.params.to,
@@ -839,7 +839,7 @@ scatter_requestTransfer(result)
 scatter_linkAccount(result)
   {
       try {
-        if(!result.params.publicKey || result.params.publicKey == ''
+        if(!result.params.publicKey || result.params.publicKey == '' 
             || !result.params.network)
         {
             EasyToast.show('linkAccount参数非法');
@@ -851,7 +851,7 @@ scatter_linkAccount(result)
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
             return ;
         }
-
+        
         var privateKey = this.getPrivateKeyByPublicKey(result.params.publicKey);
         if(privateKey != ''){
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:true}));
@@ -867,10 +867,13 @@ scatter_linkAccount(result)
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
-        <Header {...this.props} onPressLeft={true} onDappBackFalg={true} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set}
+        <Header {...this.props} onPressLeft={true} onDappBackFalg={true} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set} 
         onPressRight={this.moreOption.bind(this)} onLeftCloseFun={this.onLeftCloseFun.bind(this)} />
+        <DappSignModalView />
+        <AuthModalView {...this.props} />
+        <AlertModalView {...this.props} />
         {
-            Platform.OS === 'android' &&
+            Platform.OS === 'android' &&   
         <CustomWebView
             ref="refWebview"
             // ref={(ref) => this._refWebview = ref}
@@ -891,7 +894,7 @@ scatter_linkAccount(result)
         </CustomWebView>
         }
         {
-            Platform.OS === 'ios' &&
+            Platform.OS === 'ios' &&   
         <WebView
             ref="refWebview"
             // ref={(ref) => this._refWebview = ref}
@@ -914,9 +917,9 @@ scatter_linkAccount(result)
         <View style={[styles.infoPage,{backgroundColor: UColor.secdColor},this.state.error ? styles.showInfo : {}]}>
           <Text style={{ color: UColor.mainColor }}>{"加载失败"}</Text>
         </View>
-
+        
         <Animated.View style={[styles.progress, {backgroundColor: UColor.fallColor, width: this.state.progress }]}></Animated.View>
-
+     
  <View style={{backgroundColor: UColor.riceWhite,}}>
             <Modal animationType={'slide'} transparent={true} visible={this.state.optionShow} onShow={() => { }} onRequestClose={() => { }} >
                 <TouchableOpacity onPress={() => {{
@@ -925,7 +928,7 @@ scatter_linkAccount(result)
                                     })
                                 }}}
 
-                style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+                style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>  
                     <View style={[styles.head,{ width: ScreenWidth,backgroundColor: UColor.btnColor,}]}>
 
                         <Button onPress={this.pressRefalsh.bind(this)} style={styles.headbtn}>
@@ -987,18 +990,18 @@ const styles = StyleSheet.create({
       ]
     },
     modalStyle: {
-        flex: 1,
+        flex: 1, 
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-end', 
     },
     subView: {
-        flexDirection: "row",
+        flexDirection: "row", 
         alignItems: 'center',
-        height:  ScreenUtil.autoheight(50),
+        height:  ScreenUtil.autoheight(50), 
     },
     buttonView: {
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center', 
     },
     buttontext: {
         textAlign: 'center',
@@ -1007,7 +1010,7 @@ const styles = StyleSheet.create({
     },
     titleText: {
         flex: 1,
-        fontWeight: 'bold',
+        fontWeight: 'bold', 
         textAlign:'center',
         fontSize: ScreenUtil.setSpText(18),
     },
@@ -1032,13 +1035,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: ScreenUtil.setSpText(25),
         lineHeight: ScreenUtil.autoheight(10),
-        paddingVertical: ScreenUtil.autoheight(15),
+        paddingVertical: ScreenUtil.autoheight(15), 
     },
     unittext: {
         textAlign: 'center',
         fontSize: ScreenUtil.setSpText(13),
         lineHeight: ScreenUtil.autoheight(10),
-        paddingVertical: ScreenUtil.autoheight(10),
+        paddingVertical: ScreenUtil.autoheight(10), 
     },
     btnoutsource: {
         borderRadius: 6,
@@ -1051,8 +1054,8 @@ const styles = StyleSheet.create({
     btntext: {
         fontSize: ScreenUtil.setSpText(16),
     },
-
-
+    
+    
 
     btnnextstep: {
         height:  ScreenUtil.autoheight(85),
@@ -1071,7 +1074,7 @@ const styles = StyleSheet.create({
     warningout: {
         borderWidth: 1,
         borderRadius: 5,
-        alignItems: 'center',
+        alignItems: 'center', 
         flexDirection: "column",
         marginVertical: ScreenUtil.autoheight(10),
         paddingVertical:  ScreenUtil.autoheight(5),
@@ -1100,7 +1103,7 @@ const styles = StyleSheet.create({
     },
     headtext: {
         fontWeight: "bold",
-        fontSize: ScreenUtil.setSpText(14),
+        fontSize: ScreenUtil.setSpText(14), 
     },
     headtitle: {
         fontSize: ScreenUtil.setSpText(12),
@@ -1109,19 +1112,19 @@ const styles = StyleSheet.create({
     head: {
         flexDirection: "row",
         borderBottomWidth: 2,
-        height: ScreenUtil.autoheight(70),
+        height: ScreenUtil.autoheight(70), 
         marginBottom:ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(20):0,
       },
     headbtn: {
-        flex: 1,
+        flex: 1, 
         alignItems: 'center',
-        justifyContent: "center",
+        justifyContent: "center", 
         padding: ScreenUtil.autowidth(5),
       },
 
     headbtnout: {
-        flex:1,
-        alignItems: 'center',
+        flex:1, 
+        alignItems: 'center', 
         justifyContent: "center",
     },
     headbtntext: {
@@ -1129,32 +1132,32 @@ const styles = StyleSheet.create({
     },
 
     modalStyleWrite: {
-        flex: 1,
+        flex: 1, 
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center', 
     },
     subViewWrite: {
-        borderRadius: 10,
+        borderRadius: 10,  
         width:ScreenWidth-20,
-        alignSelf: 'stretch',
+        alignSelf: 'stretch',  
         justifyContent:'center',
-        marginHorizontal: ScreenUtil.autowidth(10),
+        marginHorizontal: ScreenUtil.autowidth(10),  
     },
-    titleTextWrite:{
-        fontWeight:'bold',
-        textAlign:'center',
-        fontSize: ScreenUtil.setSpText(18),
-        marginTop: ScreenUtil.autoheight(10),
-        marginBottom: ScreenUtil.autoheight(10),
-    },
-    contextTextWrite:{
-        fontWeight:'normal',
-        textAlign:'left',
-        fontSize: ScreenUtil.setSpText(10),
-        marginTop: ScreenUtil.autoheight(5),
-        marginBottom: ScreenUtil.autoheight(5),
-        marginHorizontal: ScreenUtil.autoheight(10),
-    },
+    titleTextWrite:{   
+        fontWeight:'bold',  
+        textAlign:'center',  
+        fontSize: ScreenUtil.setSpText(18),  
+        marginTop: ScreenUtil.autoheight(10), 
+        marginBottom: ScreenUtil.autoheight(10),  
+    }, 
+    contextTextWrite:{   
+        fontWeight:'normal',  
+        textAlign:'left',  
+        fontSize: ScreenUtil.setSpText(10),  
+        marginTop: ScreenUtil.autoheight(5), 
+        marginBottom: ScreenUtil.autoheight(5),  
+        marginHorizontal: ScreenUtil.autoheight(10), 
+    }, 
     buttonWrite: {
         alignItems: 'center',
         flexDirection: "row",
