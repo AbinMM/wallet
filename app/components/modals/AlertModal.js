@@ -14,8 +14,8 @@ export class AlertModal {
     delete this.map["AlertModal"];
   }
 
-  static show(title,content,ok,callback) {
-    this.map["AlertModal"].show(title,content,ok,callback);
+  static show(title,content,ok,cancel,callback) {
+    this.map["AlertModal"].show(title,content,ok,cancel,callback);
   }
 
 }
@@ -35,13 +35,13 @@ export class AlertModalView extends React.Component {
       AlertModal.bind(this);
     }
 
-    show = (title,content,ok,callback) =>{
+    show = (title,content,ok,cancel,callback) =>{
       if(this.isShow)return;
       this.isShow = true;
       //如果需要支持返回关闭，请添加这句，并且实现dimss方法
       window.currentDialog = this;
       this.AlertModalCallback = callback;
-      this.setState({title,content,ok,modalVisible:true});
+      this.setState({title,content,ok,cancel,modalVisible:true});
       Animated.parallel([
         Animated.timing(this.state.mask,{toValue:0.6,duration:500}),
         Animated.timing(this.state.alert,{toValue:1,duration:200})
@@ -62,7 +62,7 @@ export class AlertModalView extends React.Component {
 
     ok = () =>{
       this.dimss();
-      this.AlertModalCallback && this.AlertModalCallback();
+      this.AlertModalCallback && this.AlertModalCallback(true);
     }
 
     componentWillUnmount() {
@@ -81,7 +81,7 @@ export class AlertModalView extends React.Component {
                     <Text style={styles.ctx}>{this.state.content?this.state.content:""}</Text>
                     <View style={styles.bottom}>
                       <View style={{width:"50%"}}>
-                        <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
+                        <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" text={this.state.cancel?this.state.cancel:"取消"} style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
                       </View>
                       <View style={{width:"50%"}}>
                         <TextButton onPress={()=>{this.ok()}} bgColor="#6DA0F8" textColor="#fff" text={this.state.ok?this.state.ok:"确认"} style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
