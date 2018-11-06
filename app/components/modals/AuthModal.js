@@ -149,10 +149,14 @@ export class AuthModalView extends React.Component {
       this.AuthModalCallback && this.AuthModalCallback({isOk:false});
     }
 
+    componentWillUnmount(){
+      AuthModal.unBind();
+    }
+
     render() {
         return (
           this.state.modalVisible && <View style={styles.continer}>
-            <TouchableWithoutFeedback>
+
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
               <View style={styles.content}>
                 <Animated.View style={[styles.mask,{opacity:this.state.mask}]}></Animated.View>
@@ -216,7 +220,7 @@ export class AuthModalView extends React.Component {
 
               </View>
               </KeyboardAvoidingView>
-            </TouchableWithoutFeedback>
+
           </View>
         )
     }

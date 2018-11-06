@@ -92,7 +92,9 @@ import { redirect } from '../utils/Api'
 import Constants from '../utils/Constants'
 import ScreenUtil from '../utils/ScreenUtil'
 import Security from '../utils/Security';
-
+import {AlertModalView} from '../components/modals/AlertModal';
+import {AuthModalView} from '../components/modals/AuthModal';
+import {DappSignModalView} from '../components/modals/DappSignModal';
 
 require('moment/locale/zh-cn');
 var DeviceInfo = require('react-native-device-info');
@@ -973,6 +975,7 @@ class Route extends React.Component {
 
   render() {
     return (<View style={{ flex: 1 }}>
+
       <Nav ref="nav" onNavigationStateChange={(prevNav, nav, action) => { this.switchRoute(prevNav, nav, action) }} />
       {this.state.showShare ? (
         <View style={{ position: 'absolute', zIndex: 100000, top: 0, left: 0, width: ScreenWidth, height: ScreenHeight, backgroundColor: UColor.mask }}>
@@ -1458,6 +1461,10 @@ class Route extends React.Component {
             </View>
           </View>
         ) : null}
+
+      <AlertModalView />
+      <DappSignModalView />
+      <AuthModalView />
     </View>)
   }
 }

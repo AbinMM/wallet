@@ -36,9 +36,9 @@ class Discover extends React.Component {
     super(props);
     this.state = {
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
-      hotdappList:{name: '', list: [{icon: '',name:'',description:'',url:''}]},  
+      hotdappList:{name: '', list: [{icon: '',name:'',description:'',url:''}]},
       holdallList: [
-        {id:1,name: '',is_there_more:false, data: [{id:1,icon: '',url:'',name:'',description:''}]},  
+        {id:1,name: '',is_there_more:false, data: [{id:1,icon: '',url:'',name:'',description:''}]},
       ],
 
       // holdallList: [
@@ -94,7 +94,7 @@ class Discover extends React.Component {
         } else {
           console.log("dappfindAllHotRecommend error");
         }
-      } 
+      }
     });
 
     this.props.dispatch({ type: 'dapp/dappfindAllRecommend', callback: (resp) => {
@@ -122,7 +122,7 @@ class Discover extends React.Component {
       } else {
         console.log("dappfindAllRecommend error");
       }
-    } 
+    }
   });
 
   }
@@ -216,7 +216,7 @@ class Discover extends React.Component {
               </View>
             <View style={{paddingHorizontal: ScreenUtil.autowidth(16),}}>
               <ListView enableEmptySections = {true} horizontal={true} showsHorizontalScrollIndicator={false}
-                dataSource={this.state.dataSource.cloneWithRows(this.props.mydappBook == null ? [] : this.props.mydappBook)} 
+                dataSource={this.state.dataSource.cloneWithRows(this.props.mydappBook == null ? [] : this.props.mydappBook)}
                 renderRow={(rowData) => (
                   <Button  onPress={this.onPressTool.bind(this, rowData)}  style={styles.headDAPP}>
                     <View style={styles.headbtnout}>
@@ -234,7 +234,7 @@ class Discover extends React.Component {
             </View>
             <ListView enableEmptySections = {true}
               contentContainerStyle={[styles.listViewStyle,{borderBottomColor:UColor.secdColor}]}
-              dataSource={this.state.dataSource.cloneWithRows(this.state.hotdappList.list == null ? [] : this.state.hotdappList.list)} 
+              dataSource={this.state.dataSource.cloneWithRows(this.state.hotdappList.list == null ? [] : this.state.hotdappList.list)}
               renderRow={(rowData) => (
                 <Button  onPress={this.onPressTool.bind(this, rowData)}  style={{width: ScreenWidth/4, paddingBottom: ScreenUtil.autoheight(18),}}>
                   <View style={styles.headbtnout}>
@@ -272,7 +272,7 @@ class Discover extends React.Component {
             />
           </View>
         </ScrollView>
-        <AlertModalView {...this.props} />
+
       </View>
     );
   }

@@ -29,23 +29,23 @@ var CryptoJS = require("crypto-js");
 @connect(({wallet, vote}) => ({...wallet, ...vote}))
 class Resources extends BaseComponent {
 
-    static navigationOptions = { 
+    static navigationOptions = {
         title: "资源管理",
-        header:null, 
+        header:null,
     };
-     
-    recordDelegatebw = () =>{  
+
+    recordDelegatebw = () =>{
         const { navigate } = this.props.navigation;
         navigate('DelegatebwRecord', {account_name: this.props.defaultWallet.account});
-    }  
+    }
 
-  // 构造函数  
-  constructor(props) { 
+  // 构造函数
+  constructor(props) {
     super(props);
     this.state = {
         index: 0,
         routes: [
-            { key: '1', title: "CPU/NET" }, 
+            { key: '1', title: "CPU/NET" },
             { key: '2', title:  "内存" }
         ],
         isOthers: false, //自己，他人
@@ -64,9 +64,9 @@ class Resources extends BaseComponent {
         isTransfer: false, // 过户
         LeaseTransfer: 0,
         currency_surplus: '0.00',
-        
+
         Currentprice: '0',
-       
+
         buyRamAmount: "", //购买数量，抵押数量
         sellRamBytes: "", //出售数量，赎回数量
         receiver: "", //账户（默认自己）
@@ -92,7 +92,7 @@ class Resources extends BaseComponent {
         net_available: '0.00', //网络可用
         net_AlreadyUsed: '0.00', //网络已用
         net_Percentage: '0%', //网络已用百分比
-        
+
         total_ram_used: '0 GB', //全网已用
         total_ram_reserved: '0 GB', //全网可用
         total_ram_used_Percentage: '0%', //全网已用百分比
@@ -105,13 +105,13 @@ class Resources extends BaseComponent {
 
     componentDidMount() {
         try {
-           
+
             //取全网的内存数据
             this.props.dispatch({ type: 'vote/getGlobalInfo', payload: {},
                 callback: (updateGlibal) => {
                     if(updateGlibal != null || updateGlibal != ''){
                         this.setState({
-                            total_ram_used: updateGlibal.used + 'GB', //使用的总内存字节数 
+                            total_ram_used: updateGlibal.used + 'GB', //使用的总内存字节数
                             total_ram_reserved: updateGlibal.reserved + 'GB', //保留的总内存字节数
                             total_ram_used_Percentage: updateGlibal.used_Percentage + '%', //使用百分比
                         })
@@ -132,7 +132,7 @@ class Resources extends BaseComponent {
             this.props.dispatch({ type: 'wallet/getDefaultWallet',
                 callback: (data) => {
                     if(data != null || data != ''){
-                       
+
                         this.getAccountInfo();
                         this.setState({receiver:  this.props.defaultWallet.account});
                     }
@@ -177,7 +177,7 @@ class Resources extends BaseComponent {
                     });
                 }
             });
-            
+
         } catch (error) {
             EasyShowLD.loadingClose();
         }
@@ -194,7 +194,7 @@ class Resources extends BaseComponent {
             this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page: 1, username: this.props.defaultWallet.account},
                 callback: (data) => {
                     if(data != null && data.display_data != null){
-                        this.setState({ 
+                        this.setState({
                             ram_available: data.display_data.ram_left ,
                             ram_AlreadyUsed: data.display_data.ram_usage,
                             ram_Percentage:  data.display_data.ram_usage_percent, //ram_left_percent
@@ -202,7 +202,7 @@ class Resources extends BaseComponent {
                             cpu_available: data.display_data.cpu_limit_available,
                             cpu_AlreadyUsed: Math.floor((data.display_data.cpu_limit_max - data.display_data.cpu_limit_available)*100)/100,
                             cpu_Percentage: (100-data.display_data.cpu_limit_available_percent.replace("%", "")) + '%',
-                            
+
                             net_available: data.display_data.net_limit_available,
                             net_AlreadyUsed:  Math.floor((data.display_data.net_limit_max - data.display_data.net_limit_available)*100)/100,
                             net_Percentage: (100-data.display_data.net_limit_available_percent.replace("%", "")) + '%',
@@ -225,11 +225,11 @@ class Resources extends BaseComponent {
                     EasyShowLD.loadingClose();
                 }
             })
-    
+
             //EOS余额
-            this.props.dispatch({ type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account , symbol: 'EOS' }, 
+            this.props.dispatch({ type: 'wallet/getBalance', payload: { contract: "eosio.token", account: this.props.defaultWallet.account , symbol: 'EOS' },
                 callback: (data) => {
-                    this.setState({ 
+                    this.setState({
                         balance: data && data.data?data.data.replace('EOS', "") :'0',
                     });
                 }
@@ -237,78 +237,78 @@ class Resources extends BaseComponent {
         } catch (error) {
             EasyShowLD.loadingClose();
         }
-       
-    } 
+
+    }
 
 
     // 返回 抵押 赎回
-    resourceButton(style, selectedSate, stateType, buttonTitle) {  
-        let BTN_SELECTED_STATE_ARRAY = ['isMortgage', 'isRedeem', ];  
-        return(  
-            <TouchableOpacity style={[style, selectedSate ? {backgroundColor: UColor.tintColor} : {backgroundColor: UColor.mainColor,}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
-                <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.arrow}]}>{buttonTitle}</Text>  
-            </TouchableOpacity>  
-        );  
-    }  
+    resourceButton(style, selectedSate, stateType, buttonTitle) {
+        let BTN_SELECTED_STATE_ARRAY = ['isMortgage', 'isRedeem', ];
+        return(
+            <TouchableOpacity style={[style, selectedSate ? {backgroundColor: UColor.tintColor} : {backgroundColor: UColor.mainColor,}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>
+                <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.arrow}]}>{buttonTitle}</Text>
+            </TouchableOpacity>
+        );
+    }
 
-    // 更新"抵押,赎回"按钮的状态  
-    _updateBtnState(currentPressed, array) { 
-        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {  
-            return;  
-        }  
-        let newState = {...this.state};  
-        for (let type of array) {  
-            if (currentPressed == type) {  
-                newState[type] ? {} : newState[type] = !newState[type];  
-                this.setState(newState);  
-            } else {  
-                newState[type] ? newState[type] = !newState[type] : {};  
-                this.setState(newState);  
-            }  
-        } 
+    // 更新"抵押,赎回"按钮的状态
+    _updateBtnState(currentPressed, array) {
+        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {
+            return;
+        }
+        let newState = {...this.state};
+        for (let type of array) {
+            if (currentPressed == type) {
+                newState[type] ? {} : newState[type] = !newState[type];
+                this.setState(newState);
+            } else {
+                newState[type] ? newState[type] = !newState[type] : {};
+                this.setState(newState);
+            }
+        }
         this.Initialization();
-    }  
+    }
 
     // 返回购买,出售
-    ownOthersButton(style, selectedSate, stateType, buttonTitle) {    
-        let BTN_SELECTED_STATE_ARRAY = ['isBuy', 'isSell'];  
-        return(  
-            <TouchableOpacity style={[style, selectedSate ? {backgroundColor: UColor.tintColor} : {backgroundColor: UColor.mainColor,}]}  onPress={ () => {this._updateSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
-                <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.arrow}]}>{buttonTitle}</Text>  
-            </TouchableOpacity>  
-        );  
-    }  
+    ownOthersButton(style, selectedSate, stateType, buttonTitle) {
+        let BTN_SELECTED_STATE_ARRAY = ['isBuy', 'isSell'];
+        return(
+            <TouchableOpacity style={[style, selectedSate ? {backgroundColor: UColor.tintColor} : {backgroundColor: UColor.mainColor,}]}  onPress={ () => {this._updateSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>
+                <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.arrow}]}>{buttonTitle}</Text>
+            </TouchableOpacity>
+        );
+    }
 
     // 返回租赁,过户
-    leaseTransferButton(style, selectedSate, stateType, buttonTitle) {    
-        let BTN_SELECTED_STATE_ARRAY = ['isLease','isTransfer'];  
-        return(  
-          <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-start',alignItems: 'center', flex: 1,}} onPress={ () => {this._updateSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
+    leaseTransferButton(style, selectedSate, stateType, buttonTitle) {
+        let BTN_SELECTED_STATE_ARRAY = ['isLease','isTransfer'];
+        return(
+          <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-start',alignItems: 'center', flex: 1,}} onPress={ () => {this._updateSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>
               <View style={{width: 10, height: 10, marginHorizontal: 8, borderRadius: 10, backgroundColor: UColor.mainColor, alignItems: 'center', justifyContent: 'center',borderColor: UColor.arrow,borderWidth: 1,}}>
                   {selectedSate ?<View style={{width: 10, height: 10, borderRadius: 10, backgroundColor: UColor.tintColor, borderColor: UColor.tintColor, borderWidth: 1, }}/>:null}
               </View>
-              <Text style={{fontSize: 16,color: UColor.fontColor}}>{buttonTitle}</Text>  
-          </TouchableOpacity>  
-        );  
-    }  
+              <Text style={{fontSize: 16,color: UColor.fontColor}}>{buttonTitle}</Text>
+          </TouchableOpacity>
+        );
+    }
 
-    // 更新"购买,出售,租赁,过户"按钮的状态  
-    _updateSelectedState(currentPressed, array) {  
-        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {  
-            return;  
-        }  
-        let newState = {...this.state};  
-        for (let type of array) {  
-            if (currentPressed == type) {  
-                newState[type] ? {} : newState[type] = !newState[type];  
-                this.setState(newState);  
-            } else {  
-                newState[type] ? newState[type] = !newState[type] : {};  
-                this.setState(newState);  
-            }  
-        }  
-    }  
-    
+    // 更新"购买,出售,租赁,过户"按钮的状态
+    _updateSelectedState(currentPressed, array) {
+        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {
+            return;
+        }
+        let newState = {...this.state};
+        for (let type of array) {
+            if (currentPressed == type) {
+                newState[type] ? {} : newState[type] = !newState[type];
+                this.setState(newState);
+            } else {
+                newState[type] ? newState[type] = !newState[type] : {};
+                this.setState(newState);
+            }
+        }
+    }
+
     //初始化输入框
     Initialization() {
         this.setState({
@@ -321,7 +321,7 @@ class Resources extends BaseComponent {
             isOthers: false,
         })
     }
-    
+
     //校验输入的账户
     chkAccount(obj) {
         var charmap = '.12345abcdefghijklmnopqrstuvwxyz';
@@ -334,7 +334,7 @@ class Resources extends BaseComponent {
             }
             if(j >= charmap.length){
                 //非法字符
-                obj = obj.replace(tmp, ""); 
+                obj = obj.replace(tmp, "");
                 EasyToast.show('请输入正确的账号');
             }
         }
@@ -346,7 +346,7 @@ class Resources extends BaseComponent {
         }
         return obj;
     }
-    
+
     //校验输入的EOS数量
     chkPrice(obj) {
         obj = obj.replace(/[^\d.]/g, "");  //清除 "数字"和 "."以外的字符
@@ -392,7 +392,7 @@ class Resources extends BaseComponent {
         }
         return newtimePercentage
     }
-  
+
     //验证输入EOS数量
     chkAmountIsZero(amount,errInfo){
         var tmp;
@@ -416,7 +416,7 @@ class Resources extends BaseComponent {
             this.undelegateb();
         }
     }
-    
+
     //内存 购买 出售
     sellRedeem() {
         if(this.state.isBuy) {
@@ -428,8 +428,8 @@ class Resources extends BaseComponent {
 
     // 免费抵押提示
     freeDelegatePrompt(){
-        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{ 
-            if(resp.code == 608){ 
+        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{
+            if(resp.code == 608){
                 //弹出提示框,可申请免费抵押功能
                 const view =
                 <View style={styles.passoutsource2}>
@@ -468,7 +468,7 @@ class Resources extends BaseComponent {
     }
 
     // 购买内存
-    buyram = () => { 
+    buyram = () => {
         if(!this.props.defaultWallet){
             EasyToast.show('请先创建钱包');
             return;
@@ -494,11 +494,11 @@ class Resources extends BaseComponent {
                     actions: [
                         {
                             account: "eosio",
-                            name: "buyram", 
+                            name: "buyram",
                             authorization: [{
                             actor: this.props.defaultWallet.account,
                             permission: authInfo.permission,
-                            }], 
+                            }],
                             data: {
                                 payer: this.props.defaultWallet.account,
                                 receiver: this.state.receiver,
@@ -539,11 +539,11 @@ class Resources extends BaseComponent {
                     actions: [
                         {
                             account: "eosio",
-                            name: "sellram", 
+                            name: "sellram",
                             authorization: [{
                             actor: this.props.defaultWallet.account,
                             permission: authInfo.permission,
-                            }], 
+                            }],
                             data: {
                                 account: this.props.defaultWallet.account,
                                 bytes: (this.state.buyRamAmount * 1024).toFixed(0),
@@ -559,7 +559,7 @@ class Resources extends BaseComponent {
                 EasyToast.show('未知异常');
             }
         });
-   
+
     };
 
     // 计算网络抵押
@@ -596,11 +596,11 @@ class Resources extends BaseComponent {
                     actions: [
                         {
                             account: "eosio",
-                            name: "delegatebw", 
+                            name: "delegatebw",
                             authorization: [{
                             actor: this.props.defaultWallet.account,
                             permission: authInfo.permission,
-                            }], 
+                            }],
                             data: {
                                 from: this.props.defaultWallet.account,
                                 receiver: this.state.receiver,
@@ -622,7 +622,7 @@ class Resources extends BaseComponent {
     };
 
     //计算网络赎回
-    undelegateb = () => { 
+    undelegateb = () => {
         if(!this.props.defaultWallet){
             EasyToast.show('请先创建钱包');
             return;
@@ -652,11 +652,11 @@ class Resources extends BaseComponent {
                     actions: [
                         {
                             account: "eosio",
-                            name: "undelegatebw", 
+                            name: "undelegatebw",
                             authorization: [{
                             actor: this.props.defaultWallet.account,
                             permission: authInfo.permission,
-                            }], 
+                            }],
                             data: {
                                 from: this.props.defaultWallet.account,
                                 receiver: this.state.receiver,
@@ -675,24 +675,24 @@ class Resources extends BaseComponent {
             }
         });
     };
-  
+
     //赎回遇到问题
-    redemption = () => { 
+    redemption = () => {
         const { navigate } = this.props.navigation;
         navigate('undelegatedRefund', {});
     }
-    
+
     //收回键盘
     dismissKeyboardClick() {
         dismissKeyboard();
     }
-    
+
     //扫二维码
     scan() {
         const { navigate } = this.props.navigation;
         navigate('BarCode', {isTurnOut:true,coinType:"EOS"});
     }
-    
+
     //通讯录
     openAddressBook() {
         const { navigate } = this.props.navigation;
@@ -756,10 +756,10 @@ class Resources extends BaseComponent {
                                 <Text style={{flex: 1, textAlign: 'left', fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,}}>赎回中</Text>
                                 <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(16), color: UColor.arrow,}}>{this.state.and_redeem} EOS</Text>
                             </View>
-                            <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>  
-                                {this.resourceButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isMortgage, 'isMortgage', '抵押')}  
-                                {this.resourceButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isRedeem, 'isRedeem', '赎回')}  
-                            </View> 
+                            <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>
+                                {this.resourceButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isMortgage, 'isMortgage', '抵押')}
+                                {this.resourceButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isRedeem, 'isRedeem', '赎回')}
+                            </View>
                             <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor,}]}>
                                 <View style={styles.inptTitleout}>
                                     <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>计算{this.state.isMortgage ? "抵押" : "赎回"}</Text>
@@ -770,10 +770,10 @@ class Resources extends BaseComponent {
                                     }
                                 </View>
                                 <View style={styles.inptout}>
-                                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.delegateb} returnKeyType="go" 
-                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
+                                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.delegateb} returnKeyType="go"
+                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
                                     placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
-                                    onChangeText={(delegateb) => this.setState({ delegateb: this.chkPrice(delegateb)})} 
+                                    onChangeText={(delegateb) => this.setState({ delegateb: this.chkPrice(delegateb)})}
                                     />
                                 </View>
                             </View>
@@ -787,10 +787,10 @@ class Resources extends BaseComponent {
                                     }
                                 </View>
                                 <View style={styles.inptout}>
-                                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.undelegateb} returnKeyType="go" 
-                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
+                                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.undelegateb} returnKeyType="go"
+                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
                                     placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
-                                    onChangeText={(undelegateb) => this.setState({ undelegateb: this.chkPrice(undelegateb)})} 
+                                    onChangeText={(undelegateb) => this.setState({ undelegateb: this.chkPrice(undelegateb)})}
                                     />
                                 </View>
                             </View>
@@ -799,28 +799,28 @@ class Resources extends BaseComponent {
                                     <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
                                 </View>
                                 <View style={styles.inptout}>
-                                    <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"  keyboardType="default"  
-                                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
-                                        placeholder={this.state.receiver} underlineColorAndroid="transparent" maxLength={12} 
-                                        onChangeText={(receiver) => this.chkAccount(receiver)}  
+                                    <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"  keyboardType="default"
+                                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
+                                        placeholder={this.state.receiver} underlineColorAndroid="transparent" maxLength={12}
+                                        onChangeText={(receiver) => this.chkAccount(receiver)}
                                     />
                                     <Button onPress={() => this.openAddressBook()}>
                                         <View style={styles.botnout}>
                                             <Image source={UImage.al} style={styles.botnimg} />
                                         </View>
-                                    </Button> 
+                                    </Button>
                                 </View>
                             </View>
-                    
+
                             <View style={styles.basc}>
                                 {(this.state.isOthers &&  this.state.isMortgage) &&
-                                <View style={[styles.LeaseTransfer,]}>  
-                                    {this.leaseTransferButton(styles.tabbutton, this.state.isLease, 'isLease', '租赁')}  
-                                    {this.leaseTransferButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', '过户')}  
+                                <View style={[styles.LeaseTransfer,]}>
+                                    {this.leaseTransferButton(styles.tabbutton, this.state.isLease, 'isLease', '租赁')}
+                                    {this.leaseTransferButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', '过户')}
                                 </View>}
                                 <Text style={[styles.basctext,{color: UColor.fontColor}]}>余额：{this.state.balance}EOS</Text>
                             </View>
-                
+
                             <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
                                 <Button onPress={this.purchaseMortgage.bind(this)} >
                                     <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
@@ -831,7 +831,7 @@ class Resources extends BaseComponent {
                         </KeyboardAvoidingView>
                     </TouchableOpacity>
                 </ScrollView>
-            </View>)  
+            </View>)
         }else {
             return (<View style={[styles.inptoutsource,{flex: 1,}]}>
                  <ScrollView  keyboardShouldPersistTaps="always">
@@ -877,20 +877,20 @@ class Resources extends BaseComponent {
                                     </View>
                                 </View>
                             </View>
-                            <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>  
-                                {this.ownOthersButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isBuy, 'isBuy', '购买')}  
-                                {this.ownOthersButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '出售')}  
-                            </View> 
+                            <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>
+                                {this.ownOthersButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isBuy, 'isBuy', '购买')}
+                                {this.ownOthersButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '出售')}
+                            </View>
                             <View style={[styles.outsource,{flexDirection:'column',backgroundColor: UColor.mainColor, }]}>
                                 <View style={styles.inptTitleout}>
                                     <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.isBuy ? "购买" : "出售" }内存</Text>
                                     <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>当前价格：{this.state.Currentprice} EOS/kb</Text>
                                 </View>
                                 <View style={styles.inptout}>
-                                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount} returnKeyType="go" 
-                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
+                                    <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount} returnKeyType="go"
+                                    selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
                                     placeholder="输入EOS数量" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
-                                    onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkPrice(buyRamAmount)})} 
+                                    onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkPrice(buyRamAmount)})}
                                     />
                                 </View>
                             </View>
@@ -900,28 +900,28 @@ class Resources extends BaseComponent {
                                     <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
                                 </View>
                                 <View style={styles.inptout}>
-                                    <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go" 
+                                    <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"
                                         selectionColor={UColor.tintColor}  placeholderTextColor={UColor.inputtip} maxLength={12}
-                                        placeholder={this.state.receiver} underlineColorAndroid="transparent" keyboardType="default" 
+                                        placeholder={this.state.receiver} underlineColorAndroid="transparent" keyboardType="default"
                                         onChangeText={(receiver) => this.chkAccount(receiver)} style={[styles.inpt,{color: UColor.arrow}]}
                                     />
                                     <Button onPress={() => this.openAddressBook()}>
                                         <View style={styles.botnout}>
                                             <Image source={UImage.al} style={styles.botnimg} />
                                         </View>
-                                    </Button> 
+                                    </Button>
                                 </View>
                             </View>}
                             <View style={styles.basc}>
                                 <Text style={[styles.basctext,{color: UColor.fontColor}]}>余额：{this.state.balance}EOS</Text>
                             </View>
-               
+
                             <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
                                 <Button onPress={this.sellRedeem.bind(this)} >
                                     <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
                                         <Text style={[styles.botText,{color: UColor.btnColor}]}>{this.state.isSell ? "出售" : "购买"}</Text>
                                     </View>
-                                </Button> 
+                                </Button>
                             </View>
                         </KeyboardAvoidingView>
                     </TouchableOpacity>
@@ -933,20 +933,18 @@ class Resources extends BaseComponent {
     render() {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-                <Header {...this.props} onPressLeft={true} title="资源管理"  onPressRight={this.recordDelegatebw.bind()}  
-                avatar={UImage.delegatebw_record} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)} /> 
+                <Header {...this.props} onPressLeft={true} title="资源管理"  onPressRight={this.recordDelegatebw.bind()}
+                avatar={UImage.delegatebw_record} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)} />
                 <TabViewAnimated lazy={true} navigationState={this.state} renderScene={this.renderScene.bind(this)}
-                    renderHeader={(props) => <TabBar onTabPress={this._handleTabItemPress} 
-                    labelStyle={{ fontSize: ScreenUtil.setSpText(15), margin: 0, marginVertical: ScreenUtil.autowidth(5), color: UColor.tintColor, }} 
-                    indicatorStyle={{ backgroundColor: UColor.tintColor, width: ScreenUtil.autowidth(20), marginHorizontal: (ScreenWidth -  ScreenUtil.autowidth(40))/4 }} 
-                    style={{ backgroundColor: UColor.mainColor, }} 
-                    tabStyle={{ width: ScreenWidth / 2, padding: 0, marginVertical: ScreenUtil.autowidth(10), borderLeftWidth: 0.5, borderRightWidth: 0.5, borderColor: UColor.riceWhite, }} 
+                    renderHeader={(props) => <TabBar onTabPress={this._handleTabItemPress}
+                    labelStyle={{ fontSize: ScreenUtil.setSpText(15), margin: 0, marginVertical: ScreenUtil.autowidth(5), color: UColor.tintColor, }}
+                    indicatorStyle={{ backgroundColor: UColor.tintColor, width: ScreenUtil.autowidth(20), marginHorizontal: (ScreenWidth -  ScreenUtil.autowidth(40))/4 }}
+                    style={{ backgroundColor: UColor.mainColor, }}
+                    tabStyle={{ width: ScreenWidth / 2, padding: 0, marginVertical: ScreenUtil.autowidth(10), borderLeftWidth: 0.5, borderRightWidth: 0.5, borderColor: UColor.riceWhite, }}
                     scrollEnabled={true} {...props} />}
                     onIndexChange={this._handleIndexChange}
                     initialLayout={{ height: 0, width: ScreenWidth }}
                 />
-
-                <AuthModalView {...this.props} />
 
             </View>
         )
@@ -955,7 +953,7 @@ class Resources extends BaseComponent {
 
 const styles = StyleSheet.create({
     passoutsource: {
-        flexDirection: 'column', 
+        flexDirection: 'column',
         alignItems: 'center'
     },
     inptpass: {
@@ -974,33 +972,33 @@ const styles = StyleSheet.create({
         lineHeight: ScreenUtil.autoheight(25),
     },
 
-    tabbutton: {  
-        alignItems: 'flex-start',   
-        justifyContent: 'flex-start', 
-    },  
-    tablayout: {   
+    tabbutton: {
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+    },
+    tablayout: {
         alignItems: 'center',
-        flexDirection: 'row',  
+        flexDirection: 'row',
         justifyContent: 'center',
         paddingVertical: ScreenUtil.autoheight(9),
-    },  
+    },
     memorytab: {
         borderRadius: 5,
-        alignItems: 'center',   
-        justifyContent: 'center', 
+        alignItems: 'center',
+        justifyContent: 'center',
         paddingHorizontal: ScreenUtil.autowidth(22),
         paddingVertical: ScreenUtil.autoheight(5),
     },
     networktab: {
         borderRadius: 5,
-        alignItems: 'center',   
-        justifyContent: 'center', 
+        alignItems: 'center',
+        justifyContent: 'center',
         paddingHorizontal: ScreenUtil.autowidth(22),
         paddingVertical: ScreenUtil.autoheight(5),
     },
-    tabText: {  
+    tabText: {
         fontSize: ScreenUtil.setSpText(18),
-    }, 
+    },
 
     container: {
         flex: 1,
@@ -1026,42 +1024,42 @@ const styles = StyleSheet.create({
     },
     outsource: {
         marginTop: 1,
-        flexDirection: 'row',  
+        flexDirection: 'row',
         alignItems: 'center',
         height: ScreenUtil.autowidth(65),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },
     inptout: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         alignItems: 'center',
-        height: ScreenUtil.autoheight(35), 
+        height: ScreenUtil.autoheight(35),
     },
     inpt: {
         flex: 1,
         paddingVertical: 0,
-        fontSize: ScreenUtil.setSpText(16), 
+        fontSize: ScreenUtil.setSpText(16),
     },
     inptTitleout: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         alignItems: 'center',
-        height: ScreenUtil.autoheight(30), 
+        height: ScreenUtil.autoheight(30),
     },
     inptTitle: {
         flex: 1,
-        fontSize: ScreenUtil.setSpText(16),  
+        fontSize: ScreenUtil.setSpText(16),
     },
     inptTitlered: {
-        fontSize: ScreenUtil.setSpText(14), 
+        fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(35),
     },
     botnout: {
         alignItems: 'flex-end',
-        justifyContent: 'center', 
-        height: ScreenUtil.autoheight(38), 
+        justifyContent: 'center',
+        height: ScreenUtil.autoheight(38),
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
     botnimg:{
-        width: ScreenUtil.autowidth(17), 
+        width: ScreenUtil.autowidth(17),
         height: ScreenUtil.autowidth(17),
     },
     botn: {
@@ -1071,24 +1069,24 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(50),
     },
     botText: {
-        fontSize: ScreenUtil.setSpText(18), 
+        fontSize: ScreenUtil.setSpText(18),
     },
 
     basc: {
-        flexDirection: 'row', 
-        paddingHorizontal: ScreenUtil.autowidth(18), 
+        flexDirection: 'row',
+        paddingHorizontal: ScreenUtil.autowidth(18),
         paddingVertical: ScreenUtil.autowidth(10),
     },
     // basctextright :{
     //     textAlign: 'right',
     //     borderBottomWidth: 1,
-    //     flexDirection: 'row',  
-    //     fontSize: ScreenUtil.setSpText(14), 
+    //     flexDirection: 'row',
+    //     fontSize: ScreenUtil.setSpText(14),
     //     lineHeight: ScreenUtil.autoheight(20),
     // },
     basctext :{
-        flex: 1, 
-        textAlign: 'left', 
+        flex: 1,
+        textAlign: 'left',
         fontSize:ScreenUtil.setSpText(12),
     },
 
@@ -1132,12 +1130,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     passoutsource2: {
-        flexDirection: 'column', 
+        flexDirection: 'column',
         alignItems: 'flex-start',
     },
     Explaintext2: {
         fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autoheight(30), 
+        lineHeight: ScreenUtil.autoheight(30),
     },
 })
 export default Resources;

@@ -24,9 +24,9 @@ class APactivation extends BaseComponent {
 
   static navigationOptions = {
     title: '账号支付激活',
-    header:null, 
+    header:null,
   };
- 
+
   constructor(props) {
     super(props);
     this.state = {
@@ -57,7 +57,7 @@ class APactivation extends BaseComponent {
 
   componentWillUnmount(){
     //结束页面前，资源释放操作
-    super.componentWillUnmount() 
+    super.componentWillUnmount()
   }
 
   confirm(){
@@ -146,7 +146,7 @@ class APactivation extends BaseComponent {
     });
   }
 
-   // 显示/隐藏 modal  
+   // 显示/隐藏 modal
    _setModalVisible() {
     let isShow = this.state.show;
     this.setState({
@@ -176,13 +176,13 @@ class APactivation extends BaseComponent {
                     {this.state.hasErrorInput && <Text style={[styles.falsehints,{color: UColor.showy}]}>*该内容输入有误！</Text>}
                 </View>
                 <View style={styles.rankout}>
-                    <TextInput ref={(ref) => this._raccount = ref} value={this.state.cpu} returnKeyType="next" 
-                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
+                    <TextInput ref={(ref) => this._raccount = ref} value={this.state.cpu} returnKeyType="next"
+                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                         placeholder="最低可输入0.1" underlineColorAndroid="transparent"
-                        keyboardType="default" maxLength={12} onChangeText={(cpu) => this.setState({ cpu })} 
+                        keyboardType="default" maxLength={12} onChangeText={(cpu) => this.setState({ cpu })}
                     />
                     <Text style={[styles.company,{color: UColor.arrow}]}>EOS</Text>
-                </View>    
+                </View>
             </View>
             <View style={[styles.inptout,{borderBottomColor: UColor.mainColor}]} >
                 <View style={styles.rankout}>
@@ -190,13 +190,13 @@ class APactivation extends BaseComponent {
                     {this.state.hasErrorInput && <Text style={[styles.falsehints,{color: UColor.showy}]}>*该内容输入有误！</Text>}
                 </View>
                 <View style={styles.rankout}>
-                    <TextInput ref={(ref) => this._raccount = ref} value={this.state.net} returnKeyType="next" 
-                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
+                    <TextInput ref={(ref) => this._raccount = ref} value={this.state.net} returnKeyType="next"
+                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                         placeholder="最低可输入0.1" underlineColorAndroid="transparent"
-                        keyboardType="default" maxLength={12} onChangeText={(net) => this.setState({ net })} 
+                        keyboardType="default" maxLength={12} onChangeText={(net) => this.setState({ net })}
                     />
                     <Text style={[styles.company,{color: UColor.arrow}]}>EOS</Text>
-                </View>    
+                </View>
             </View>
             <View style={[styles.inptout,{borderBottomColor: UColor.mainColor}]} >
                 <View style={styles.rankout}>
@@ -204,13 +204,13 @@ class APactivation extends BaseComponent {
                     {this.state.hasErrorInput && <Text style={[styles.falsehints,{color: UColor.showy}]}>*该内容输入有误！</Text>}
                 </View>
                 <View style={styles.rankout}>
-                    <TextInput ref={(ref) => this._raccount = ref} value={this.state.ram} returnKeyType="next" 
-                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
+                    <TextInput ref={(ref) => this._raccount = ref} value={this.state.ram} returnKeyType="next"
+                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                         placeholder="最低可输入0.397" underlineColorAndroid="transparent"
-                        keyboardType="default" maxLength={12} onChangeText={(ram) => this.setState({ ram })} 
+                        keyboardType="default" maxLength={12} onChangeText={(ram) => this.setState({ ram })}
                     />
                     <Text style={[styles.company,{color: UColor.arrow}]}>EOS</Text>
-                </View>    
+                </View>
             </View>
           </View>
           :
@@ -279,7 +279,7 @@ class APactivation extends BaseComponent {
                                     <Text style={[styles.contentText,{color: UColor.startup}]}>{this.props.defaultWallet.account}</Text>
                                 </View>
                             </View>
-                          
+
                             <Button onPress={() => { this.createAccount() }}>
                                 <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
                                     <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
@@ -294,14 +294,14 @@ class APactivation extends BaseComponent {
       </TouchableOpacity>
     </ScrollView>
 
-    <AuthModalView {...this.props} />
+
   </View>
   }
 }
 
 const styles = StyleSheet.create({
     passoutsource: {
-        flexDirection: 'column', 
+        flexDirection: 'column',
         alignItems: 'center'
     },
     inptpass: {
@@ -368,9 +368,9 @@ const styles = StyleSheet.create({
     },
 
     acctitleText: {
-        fontSize: ScreenUtil.setSpText(14),  
-        textAlign: 'right', 
-        marginHorizontal: ScreenUtil.autowidth(20), 
+        fontSize: ScreenUtil.setSpText(14),
+        textAlign: 'right',
+        marginHorizontal: ScreenUtil.autowidth(20),
         marginTop: ScreenUtil.autoheight(5),
     },
     inptout: {
@@ -402,11 +402,11 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(14),
     },
     ramnetcputext: {
-        fontSize: ScreenUtil.setSpText(14), 
+        fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(30),
     },
     companytext: {
-        fontSize: ScreenUtil.setSpText(15), 
+        fontSize: ScreenUtil.setSpText(15),
         paddingBottom: ScreenUtil.autoheight(10),
     },
     clauseout: {
@@ -415,10 +415,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: ScreenUtil.autoheight(20),
     },
-    clauseimg: { 
-        width: ScreenUtil.autowidth(20), 
+    clauseimg: {
+        width: ScreenUtil.autowidth(20),
         height: ScreenUtil.autowidth(20),
-        marginHorizontal: ScreenUtil.autowidth(10), 
+        marginHorizontal: ScreenUtil.autowidth(10),
     },
     createWalletout: {
         height: ScreenUtil.autoheight(45),
@@ -432,13 +432,13 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(15),
     },
     modalStyle: {
-        flex: 1, 
+        flex: 1,
         alignItems: 'center',
-        justifyContent: 'flex-end', 
+        justifyContent: 'flex-end',
     },
     subView: {
-        width: ScreenWidth,  
-        height: ScreenHeight*1/2,  
+        width: ScreenWidth,
+        height: ScreenHeight*1/2,
     },
     buttonView: {
         flexDirection: "row",
@@ -449,15 +449,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: ScreenUtil.setSpText(26),
         lineHeight: ScreenUtil.autoheight(10),
-        paddingVertical: ScreenUtil.autoheight(15), 
+        paddingVertical: ScreenUtil.autoheight(15),
     },
     modalcompany: {
         textAlign: 'center',
         fontSize: ScreenUtil.setSpText(13),
         lineHeight: ScreenUtil.autoheight(10),
-        paddingVertical: ScreenUtil.autoheight(10), 
+        paddingVertical: ScreenUtil.autoheight(10),
     },
-    buttontext: { 
+    buttontext: {
         fontSize: ScreenUtil.setSpText(28),
         lineHeight: ScreenUtil.autoheight(25),
     },
@@ -488,7 +488,7 @@ const styles = StyleSheet.create({
         marginBottom: ScreenUtil.autoheight(10),
     },
     accountout: {
-        flex: 1, 
+        flex: 1,
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
     btnoutsource: {

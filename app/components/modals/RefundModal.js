@@ -71,6 +71,10 @@ export class RefundModalView extends React.Component {
       this.RefundModalCallback && this.RefundModalCallback();
     }
 
+    componentWillUnmount(){
+      RefundModal.unBind();
+    }
+
     render() {
         return (
           this.state.modalVisible && <View style={styles.continer}>

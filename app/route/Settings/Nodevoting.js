@@ -28,13 +28,13 @@ class Nodevoting extends BaseComponent {
 
     static navigationOptions =  {
         title: "投票",
-        header:null, 
+        header:null,
     };
 
-    _rightTopClick = () =>{  
-        DeviceEventEmitter.emit('voteShare',""); 
-    }  
-      
+    _rightTopClick = () =>{
+        DeviceEventEmitter.emit('voteShare',"");
+    }
+
     constructor(props) {
         super(props);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -56,7 +56,7 @@ class Nodevoting extends BaseComponent {
     }
 
     componentDidMount() {
-        this.props.dispatch({ type: 'wallet/getDefaultWallet', callback: (data) => {     
+        this.props.dispatch({ type: 'wallet/getDefaultWallet', callback: (data) => {
             this.onRefreshing()
         } })
     }
@@ -73,10 +73,10 @@ class Nodevoting extends BaseComponent {
             this.unapprove();
         }
     }
-    
+
     freeDelegatePrompt(){
-        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{ 
-            if(resp.code == 608){ 
+        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{
+            if(resp.code == 608){
                 //弹出提示框,可申请免费抵押功能
                 const view =
                 <View style={styles.passoutsource2}>
@@ -146,9 +146,9 @@ class Nodevoting extends BaseComponent {
                         var errmsg = "投票失败: "+ r.data.msg;
                         EasyToast.show(errmsg);
                     }
-                }); 
+                });
             } catch (error) {
-                
+
             }
         });
     };
@@ -211,7 +211,7 @@ class Nodevoting extends BaseComponent {
                             var errmsg = "撤票失败: "+ r.data.msg;
                             EasyToast.show(errmsg);
                         }
-                    }); 
+                    });
             } catch (error) {
                 EasyShowLD.loadingClose();
                 EasyToast.show('未知异常');
@@ -221,15 +221,15 @@ class Nodevoting extends BaseComponent {
 
 
 
-    selectItem = (item,section) => { 
+    selectItem = (item,section) => {
         if(this.state.switchButton==buttonSubscript[0]){
             this.props.dispatch({ type: 'vote/up', payload: { item:item} });
             let arr = this.props.voteData;
             var cnt = 0;
-            for(var i = 0; i < arr.length; i++){ 
+            for(var i = 0; i < arr.length; i++){
                 if(arr[i].isChecked == true){
-                    cnt++;              
-                }     
+                    cnt++;
+                }
             }
             if(cnt == 0 && this.props.producers){
                 this.state.arr1 = this.props.producers.length;
@@ -239,7 +239,7 @@ class Nodevoting extends BaseComponent {
         }else if(this.state.switchButton==buttonSubscript[1]){
             this.props.dispatch({ type: 'vote/up', payload: { item:item} });
         }
-       
+
     }
 
     _openAgentInfo(coins) {
@@ -363,29 +363,29 @@ class Nodevoting extends BaseComponent {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
                 <Header {...this.props} onPressLeft={true} title="投票" subName="邀请投票" onPressRight={this._rightTopClick.bind()}/>
-                <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>  
+                <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
                     <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
                         <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
                         <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} selectionColor={UColor.tintColor}
                             style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} autoCorrect={true}
-                            placeholder="输入名称或账号" underlineColorAndroid="transparent" keyboardType="default" 
+                            placeholder="输入名称或账号" underlineColorAndroid="transparent" keyboardType="default"
                             returnKeyType="go" onChangeText={(labelname) => this.setState({ labelname })} />
-                    </View>    
-                    <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>  
+                    </View>
+                    <TouchableOpacity onPress={this._query.bind(this,this.state.labelname)}>
                         <Text style={[styles.canceltext,{color: UColor.fontColor}]}>查询</Text>
-                    </TouchableOpacity>  
-                    <TouchableOpacity   onPress={this._empty.bind(this,this.state.labelname)}>  
+                    </TouchableOpacity>
+                    <TouchableOpacity   onPress={this._empty.bind(this,this.state.labelname)}>
                         <Text style={[styles.canceltext,{color: UColor.fontColor}]}>清空</Text>
-                    </TouchableOpacity>  
-                </View> 
-                <View  style={styles.lockoutsource} > 
+                    </TouchableOpacity>
+                </View>
+                <View  style={styles.lockoutsource} >
                     <View style={{flexDirection: 'row',padding: ScreenUtil.autowidth(10),}}>
                         <View style={styles.locktitleout} />
                         <Image source={UImage.votebc_bj} style={{width:ScreenWidth-ScreenUtil.autowidth(160),height:(ScreenWidth-ScreenUtil.autowidth(160))*0.1963}}/>
                         <TouchableOpacity style={styles.locktitleout} onPress={this.resources.bind(this)}>
                             <Text style={[styles.locktitle,{color:UColor.tintnavigation}]}>资源管理</Text>
                             <Ionicons color={UColor.tintnavigation} name="ios-arrow-forward-outline" size={13}/>
-                        </TouchableOpacity> 
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.locktextout}>
                        <Text style={[styles.locktext,{color: UColor.fontColor}]}>·  参与EOS超级节点投票，需要抵押EOS，投票不消耗EOS数量</Text>
@@ -394,56 +394,56 @@ class Nodevoting extends BaseComponent {
                             <Text style={[styles.locktext,{color: UColor.fontColor}]}>·  </Text>
                             <Text style={[styles.locktext,{color: UColor.fontColor}]}>每次投票最多可选择30个超级节点，撤消或更改再次投票生效有一定的延迟</Text>
                        </View>
-                    </View>     
-                </View>     
+                    </View>
+                </View>
                 <View style={styles.toptabout}>
                     <SegmentedControls tint= {UColor.tintColor} selectedTint= {UColor.btnColor} onSelection={this.setSwitchButton.bind(this) }
                         selectedOption={this.state.switchButton} backTint= {UColor.secdColor} options={buttonSubscript} />
                 </View>
-                <View style={[styles.headout,{backgroundColor: UColor.mainColor}]}>         
-                    <Text style={[styles.nodename,{color: UColor.fontColor}]}>节点名称</Text>           
-                    <Text style={[styles.rankingticket,{color: UColor.fontColor}]}>排名/票数</Text>           
-                    <Text style={[styles.choice,{color: UColor.fontColor}]}>选择</Text>          
+                <View style={[styles.headout,{backgroundColor: UColor.mainColor}]}>
+                    <Text style={[styles.nodename,{color: UColor.fontColor}]}>节点名称</Text>
+                    <Text style={[styles.rankingticket,{color: UColor.fontColor}]}>排名/票数</Text>
+                    <Text style={[styles.choice,{color: UColor.fontColor}]}>选择</Text>
                 </View>
-                <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true} 
-                    refreshControl={<RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()} 
+                <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true}
+                    refreshControl={<RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
                     tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}
                     style={{backgroundColor: UColor.transport}}/>}
-                    dataSource={this.state.dataSource.cloneWithRows(this.state.voteDatalist == null ? [] : this.state.voteDatalist)} 
-                    renderRow={(rowData, sectionID, rowID) => (                  
+                    dataSource={this.state.dataSource.cloneWithRows(this.state.voteDatalist == null ? [] : this.state.voteDatalist)}
+                    renderRow={(rowData, sectionID, rowID) => (
                     <View>
-                        <Button onPress={this._openAgentInfo.bind(this,rowData)}> 
+                        <Button onPress={this._openAgentInfo.bind(this,rowData)}>
                             <View style={styles.outsource} backgroundColor={(parseInt(rowID)%2 == 0) ? UColor.secdColor : UColor.mainColor}>
                                 <View style={[styles.logview,{backgroundColor: UColor.titletop}]}>
                                     <Image source={rowData.icon==null ? UImage.eos : {uri: rowData.icon}} style={styles.logimg}/>
                                 </View>
                                 <View style={styles.nameregion}>
                                     <Text style={[styles.nameranking,{color: UColor.fontColor}]} numberOfLines={1}>{rowData.name}</Text>
-                                    <Text style={[styles.regiontotalvotes,{color: UColor.lightgray}]} numberOfLines={1}>地区：{rowData.region==null ? "未知" : rowData.region}</Text>                                    
+                                    <Text style={[styles.regiontotalvotes,{color: UColor.lightgray}]} numberOfLines={1}>地区：{rowData.region==null ? "未知" : rowData.region}</Text>
                                 </View>
                                 <View style={styles.rankvote}>
                                     <Text style={[styles.nameranking,{color: UColor.fontColor}]}>{rowData.ranking}</Text>
-                                    <Text style={[styles.regiontotalvotes,{color: UColor.lightgray}]}>{parseInt(rowData.total_votes)}</Text> 
+                                    <Text style={[styles.regiontotalvotes,{color: UColor.lightgray}]}>{parseInt(rowData.total_votes)}</Text>
                                 </View>
-                                {this.state.switchButton==buttonSubscript[0] && 
+                                {this.state.switchButton==buttonSubscript[0] &&
                                     <TouchableOpacity style={styles.taboue} onPress={ () => this.selectItem(rowData)}>
                                         <View style={[styles.tabview,{borderColor: UColor.lightgray}]} >
                                             <Image source={this.isvoted(rowData) ? UImage.Tick_h : rowData.isChecked ? UImage.Tick:null} style={styles.tabimg} />
-                                        </View>  
-                                    </TouchableOpacity> 
+                                        </View>
+                                    </TouchableOpacity>
                                 }
-                                {this.state.switchButton==buttonSubscript[1] && 
+                                {this.state.switchButton==buttonSubscript[1] &&
                                     <TouchableOpacity style={styles.taboue} onPress={ () => this.selectItem(rowData)}>
                                         <View style={[styles.tabview,{borderColor: UColor.lightgray}]} >
                                             <Image source={rowData.isChecked ? UImage.Tick:null} style={styles.tabimg} />
-                                        </View>  
-                                    </TouchableOpacity>  
-                                }     
-                            </View> 
-                        </Button>  
-                    </View>             
-                    )}                                   
-                /> 
+                                        </View>
+                                    </TouchableOpacity>
+                                }
+                            </View>
+                        </Button>
+                    </View>
+                    )}
+                />
                 <View style={[styles.footer,{backgroundColor: UColor.secdColor}]}>
                     <Button style={styles.btn}>
                         <View style={[styles.btnnode,{backgroundColor: UColor.mainColor}]}>
@@ -457,18 +457,18 @@ class Nodevoting extends BaseComponent {
                             <Text style={[styles.votetext,{color: UColor.fontColor}]}>{this.state.switchButton==buttonSubscript[0]?'投票':'撤票'}</Text>
                         </View>
                     </Button>
-                </View>         
+                </View>
 
-                <AuthModalView {...this.props} />
+
 
             </View>
         );
     }
 };
-    
+
 const styles = StyleSheet.create({
     passoutsource: {
-        flexDirection: 'column', 
+        flexDirection: 'column',
         alignItems: 'center'
     },
     inptpass: {
@@ -527,15 +527,15 @@ const styles = StyleSheet.create({
     },
 
     lockoutsource: {
-        alignItems: 'center', 
-        flexDirection:'column', 
-        justifyContent: "flex-end", 
+        alignItems: 'center',
+        flexDirection:'column',
+        justifyContent: "flex-end",
     },
     locktitleout: {
         flex: 1,
-        flexDirection:'row', 
+        flexDirection:'row',
         alignItems: 'flex-start',
-        justifyContent: 'flex-end', 
+        justifyContent: 'flex-end',
     },
     locktitle: {
         fontSize:ScreenUtil.setSpText(12),
@@ -545,7 +545,7 @@ const styles = StyleSheet.create({
     locktextout: {
         width: ScreenWidth,
         flexDirection:'column',
-        justifyContent: 'flex-end', 
+        justifyContent: 'flex-end',
         paddingHorizontal: ScreenUtil.autowidth(5),
     },
     locktext: {
@@ -554,13 +554,13 @@ const styles = StyleSheet.create({
     },
 
     headout: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         height: ScreenUtil.autoheight(25),
     },
     nodename:{
-        textAlign:'center', 
-        width: ScreenUtil.autowidth(140), 
-        fontSize: ScreenUtil.setSpText(16),  
+        textAlign:'center',
+        width: ScreenUtil.autowidth(140),
+        fontSize: ScreenUtil.setSpText(16),
         lineHeight: ScreenUtil.autoheight(25),
     },
     rankingticket: {
@@ -576,21 +576,21 @@ const styles = StyleSheet.create({
         lineHeight: ScreenUtil.autoheight(25),
     },
     outsource: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         height: ScreenUtil.autoheight(60),
         paddingVertical: ScreenUtil.autoheight(10),
     },
     logview: {
         borderRadius: 25,
-        alignItems: 'center', 
-        justifyContent: 'center', 
+        alignItems: 'center',
+        justifyContent: 'center',
         width: ScreenUtil.autowidth(30),
-        height: ScreenUtil.autowidth(30), 
+        height: ScreenUtil.autowidth(30),
         margin: ScreenUtil.autowidth(10),
     },
     logimg: {
-        width: ScreenUtil.autowidth(30), 
-        height: ScreenUtil.autowidth(30), 
+        width: ScreenUtil.autowidth(30),
+        height: ScreenUtil.autowidth(30),
     },
     nameregion: {
         alignItems: 'flex-start',
@@ -602,15 +602,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    nameranking: { 
+    nameranking: {
         fontSize: ScreenUtil.setSpText(14),
-    }, 
+    },
     regiontotalvotes: {
         fontSize: ScreenUtil.setSpText(14),
     },
     taboue: {
         alignItems: 'center',
-        justifyContent: 'center', 
+        justifyContent: 'center',
     },
     tabview: {
         borderWidth: 1,
@@ -619,11 +619,11 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autowidth(27),
     },
     tabimg: {
-        width: ScreenUtil.autowidth(25), 
+        width: ScreenUtil.autowidth(25),
         height: ScreenUtil.autowidth(25),
     },
     footer: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         height: ScreenUtil.autoheight(50),
     },
     btn: {
@@ -637,10 +637,10 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     nodenumber: {
-        fontSize: ScreenUtil.setSpText(18), 
+        fontSize: ScreenUtil.setSpText(18),
     },
     nodetext: {
-        fontSize: ScreenUtil.setSpText(14), 
+        fontSize: ScreenUtil.setSpText(14),
     },
     btnvote: {
         flex: 1,
@@ -650,7 +650,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     voteimg: {
-        width: ScreenUtil.autowidth(30), 
+        width: ScreenUtil.autowidth(30),
         height: ScreenUtil.autowidth(30),
     },
     votetext: {
@@ -658,12 +658,12 @@ const styles = StyleSheet.create({
         marginLeft: ScreenUtil.autowidth(20),
     },
     passoutsource2: {
-        flexDirection: 'column', 
+        flexDirection: 'column',
         alignItems: 'flex-start',
     },
     Explaintext2: {
         fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autoheight(30), 
+        lineHeight: ScreenUtil.autoheight(30),
     },
 });
 
