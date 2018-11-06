@@ -14,7 +14,7 @@ export default {
         *mydappInfo({ payload }, { call, put }) {
             try {
                 let mydappBook = yield call(store.get, 'mydappBook');
-                yield put({ type: 'updateAction', payload: { data: mydappBook, ...payload } });
+                yield put({ type: 'updateAction', payload: { data: mydappBook.reverse(), ...payload } });
             } catch (error) {
                 EasyToast.show('获取失败!');
             }
@@ -35,8 +35,9 @@ export default {
 
             mydappBook[mydappBook.length] = payload;
             yield call(store.save, 'mydappBook', mydappBook);
-            yield put({ type: 'updateAction', payload: { data: mydappBook, ...payload } });
-            if(callback) callback(mydappBook);
+            let tmp_dappBook = mydappBook.reverse();
+            yield put({ type: 'updateAction', payload: { data: tmp_dappBook, ...payload } });
+            if(callback) callback(tmp_dappBook);
         },
 
         *getEosTableRows({ payload, callback }, { call, put }) {
