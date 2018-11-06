@@ -185,7 +185,7 @@ class WalletDetail extends BaseComponent {
       this.props.dispatch({
           type: "wallet/isExistAccountNameAndPublicKey", payload: {account_name: c.name, owner: c.ownerPublic, active: c.activePublic}, callback:(result) =>{
             // EasyShowLD.loadingClose();
-            EasyShowLD.loadingClose();
+            // EasyShowLD.loadingClose();
             if(result.code == 0 && result.data == true){
             //msg:success,data:true, code:0 账号已存在
               // EasyShowLD.dialogShow("免责声明",  (<View>
