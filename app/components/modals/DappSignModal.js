@@ -77,9 +77,14 @@ export class DappSignModalView extends React.Component {
       });
     }
 
+    cancel = () =>{
+      this.dimss();
+      this.DappSignModalCallback && this.DappSignModalCallback(false);
+    }
+
     ok = () =>{
       this.dimss();
-      this.DappSignModalCallback && this.DappSignModalCallback();
+      this.DappSignModalCallback && this.DappSignModalCallback(true);
     }
 
     componentWillUnmount() {
@@ -166,7 +171,7 @@ export class DappSignModalView extends React.Component {
                     </View>
                     <View style={styles.bottom}>
                       <View style={{width:"50%"}}>
-                        <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
+                        <TextButton onPress={()=>{this.cancel()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
                       </View>
                       <View style={{width:"50%"}}>
                         <TextButton onPress={()=>{this.ok()}} bgColor="#6DA0F8" textColor="#fff" text="确认" style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />

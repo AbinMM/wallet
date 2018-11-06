@@ -60,6 +60,11 @@ export class AlertModalView extends React.Component {
       });
     }
 
+    cancel = () =>{
+      this.dimss();
+      this.AlertModalCallback && this.AlertModalCallback(false);
+    }
+
     ok = () =>{
       this.dimss();
       this.AlertModalCallback && this.AlertModalCallback(true);
@@ -81,7 +86,7 @@ export class AlertModalView extends React.Component {
                     <Text style={styles.ctx}>{this.state.content?this.state.content:""}</Text>
                     <View style={styles.bottom}>
                       <View style={{width:"50%"}}>
-                        <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" text={this.state.cancel?this.state.cancel:"取消"} style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
+                        <TextButton onPress={()=>{this.cancel()}} bgColor="#fff" text={this.state.cancel?this.state.cancel:"取消"} style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
                       </View>
                       <View style={{width:"50%"}}>
                         <TextButton onPress={()=>{this.ok()}} bgColor="#6DA0F8" textColor="#fff" text={this.state.ok?this.state.ok:"确认"} style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
