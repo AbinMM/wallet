@@ -45,6 +45,8 @@ import DappWeb from './Discover/DappWeb'
 import Dappsearch from './Discover/Dappsearch'
 
 import News from './News'
+import Shareing from './News/Shareing'
+
 import OCTactivity from './Activity/OCTactivity'
 
 import Settings from './Settings'
@@ -323,6 +325,9 @@ const Nav = StackNavigator(
     },
     Boot: {
       screen: Boot
+    },
+    Shareing: {
+      screen: Shareing
     }
   },
   {
@@ -979,14 +984,14 @@ class Route extends React.Component {
       {this.state.showShare ? (
         <View style={{ position: 'absolute', zIndex: 100000, top: 0, left: 0, width: ScreenWidth, height: ScreenHeight, backgroundColor: UColor.mask }}>
           <Animated.View style={{
-            height: ScreenHeight - 180, transform: [
+            height: ScreenHeight, transform: [
               { translateX: 0 },
               { translateY: this.state.transformY1 },
             ]
           }}>
-            <ScrollView style={{ marginTop: 50 }}>
+            <ScrollView style={{}}>
               <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-                <ViewShot ref="viewShot" style={{ left: 20, width: ScreenWidth - 40 }} options={{ format: "jpg", quality: 0.9 }}>
+                <ViewShot ref="viewShot" style={{}} options={{ format: "jpg", quality: 0.9 }}>
                   <View style={{ backgroundColor: UColor.btnColor, flex: 1}}>
                     <Image source={UImage.share_banner} resizeMode="stretch" style={{ width: ScreenWidth - 40, height: (ScreenWidth - 40) * 0.3386 }} />
                    <View style={{ backgroundColor: UColor.btnColor,flexDirection: "row",marginTop: 10,paddingHorizontal: 20,paddingVertical: 5, justifyContent: "flex-start", alignItems:'center', }}>
@@ -1015,39 +1020,47 @@ class Route extends React.Component {
               </View>
             </ScrollView>
           </Animated.View>
-          <View style={{ height: 170, marginTop: 10 }}>
+          <View style={{ height: ScreenUtil.autowidth(200),position: 'absolute', bottom: 0,}}>
             <Animated.View style={{
-              height: 170, flex: 1, backgroundColor: UColor.secdfont, transform: [
+              height: ScreenUtil.autowidth(200), flex: 1, backgroundColor: '#FFFFFF', borderTopLeftRadius: 5,borderTopRightRadius: 5, 
+              shadowColor: '#4A90E2',shadowOffset:{height: -7,width: 0},shadowRadius: 5,shadowOpacity:1,elevation: 12,
+              transform: [
                 { translateX: 0 },
                 { translateY: this.state.transformY },
               ]
             }}>
-              <View style={{ height: 125 }}>
-                <Text style={{ color: UColor.blackColor, marginTop: 10, width: "100%", textAlign: "center" }}>分享到</Text>
-                <View style={{ flexDirection: "row" }}>
-                  <Button onPress={() => { this.shareAction(1) }} >
-                    <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/3, }}>
-                      <Image source={UImage.share_wx} style={styles.shareimg} />
-                      <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微信</Text>
-                    </View>
-                  </Button>
-                  <Button onPress={() => { this.shareAction(2) }} >
-                    <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/3, }}>
-                      <Image source={UImage.share_qq} style={styles.shareimg} />
-                      <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
-                    </View>
-                  </Button>
-                  <Button onPress={() => { this.shareAction(3) }} >
-                    <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/3, }}>
-                      <Image source={UImage.share_pyq} style={styles.shareimg} />
-                      <Text style={[styles.sharetext,{color: UColor.arrow,}]}>朋友圈</Text>
-                    </View>
-                  </Button>
-                </View>
+             
+              <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#333333', marginVertical: ScreenUtil.autowidth(7), width: "100%", textAlign: "center" }}>-分享到-</Text>
+              <View style={{ flexDirection: "row",marginVertical: ScreenUtil.autowidth(14), }}>
+                <Button onPress={() => { this.shareAction(1) }} >
+                  <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/4, }}>
+                    <Image source={UImage.share_wx} style={styles.sharewximg} />
+                    <Text style={[styles.sharetext,{color: '#323232'}]}>微信</Text>
+                  </View>
+                </Button>
+                <Button onPress={() => { this.shareAction(3) }} >
+                  <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/4, }}>
+                    <Image source={UImage.share_pyq} style={styles.sharepyqimg} />
+                    <Text style={[styles.sharetext,{color: '#323232'}]}>朋友圈</Text>
+                  </View>
+                </Button>
+                <Button onPress={() => { this.shareAction(2) }} >
+                  <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/4, }}>
+                    <Image source={UImage.share_qq} style={styles.shareqqimg} />
+                    <Text style={[styles.sharetext,{color: '#323232'}]}>QQ</Text>
+                  </View>
+                </Button>
+                <Button onPress={() => { this.shareAction(4) }} >
+                  <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/4, }}>
+                    <Image source={UImage.share_wb} style={styles.sharewbimg} />
+                    <Text style={[styles.sharetext,{color: '#323232'}]}>微博</Text>
+                  </View>
+                </Button>
               </View>
+              
               <Button onPress={() => { this.setState({ showShare: false }) }}>
-                  <View style={[styles.cancelout,{backgroundColor: UColor.btnColor}]}>
-                    <Text style={[styles.canceltext,{color: UColor.blackColor}]}>取消</Text>
+                  <View style={[styles.cancelout,{backgroundColor: '#D9D9D9'}]}>
+                    <Text style={[styles.canceltext,{color: '#FFFFFF'}]}>取消</Text>
                   </View>
                 </Button>
             </Animated.View>
@@ -1338,19 +1351,19 @@ class Route extends React.Component {
                   <View style={{ flexDirection: "row" }}>
                     <Button onPress={() => { this.shareAction(1) }}>
                       <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/3, }}>
-                        <Image source={UImage.share_wx} style={styles.shareimg} />
+                        <Image source={UImage.share_wx} style={styles.sharewximg} />
                         <Text style={[styles.sharetext,{color: UColor.arrow,}]}>微信</Text>
                       </View>
                     </Button>
                     <Button onPress={() => { this.shareAction(2) }}>
                       <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/3, }}>
-                        <Image source={UImage.share_qq} style={styles.shareimg} />
+                        <Image source={UImage.share_qq} style={styles.shareqqimg} />
                         <Text style={[styles.sharetext,{color: UColor.arrow,}]}>QQ</Text>
                       </View>
                     </Button>
                     <Button onPress={() => { this.shareAction(3) }}>
                       <View style={{ alignSelf: 'center', width: ScreenWidth/3, }}>
-                        <Image source={UImage.share_pyq} style={styles.shareimg} />
+                        <Image source={UImage.share_pyq} style={styles.sharepyqimg} />
                         <Text style={[styles.sharetext,{color: UColor.arrow,}]}>朋友圈</Text>
                       </View>
                     </Button>
@@ -1473,6 +1486,26 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: ScreenUtil.autowidth(10),
   },
+  sharewximg: {
+    alignSelf: 'center',
+    width: ScreenUtil.autowidth(37),
+    height: ScreenUtil.autowidth(30),
+  },
+  sharepyqimg: {
+    alignSelf: 'center',
+    width: ScreenUtil.autowidth(30),
+    height: ScreenUtil.autowidth(30),
+  },
+  shareqqimg: {
+    alignSelf: 'center',
+    width: ScreenUtil.autowidth(26),
+    height: ScreenUtil.autowidth(30),
+  },
+  sharewbimg: {
+    alignSelf: 'center',
+    width: ScreenUtil.autowidth(35),
+    height: ScreenUtil.autowidth(30),
+  },
   shareimg: {
     alignSelf: 'center',
     width: ScreenUtil.autowidth(50),
@@ -1482,18 +1515,21 @@ const styles = StyleSheet.create({
   },
   sharetext: {
     textAlign: 'center',
-    fontSize: ScreenUtil.setSpText(16),
+    fontSize: ScreenUtil.setSpText(12),
+    lineHeight: ScreenUtil.autowidth(17),
   },
 
+  
   cancelout: {
-    width: ScreenWidth,
+    borderRadius: 25,
     alignSelf: 'center' ,
     justifyContent: 'center',
-    height: ScreenUtil.autowidth(45),
+    width: ScreenUtil.autowidth(175),
+    height: ScreenUtil.autowidth(40),
   },
   canceltext: {
     textAlign: "center",
-    fontSize: ScreenUtil.setSpText(18),
+    fontSize: ScreenUtil.setSpText(14),
   },
 
 })

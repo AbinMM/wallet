@@ -20,7 +20,7 @@ export default {
   details: require('../img/day/details.png'),
   fav: require('../img/day/fav.png'),
   free_mortgage: require('../img/day/free_mortgage.png'),
-  home_bg: require('../img/day/home_bg.png'),
+  
   integral_bg: require('../img/day/integral_bg.png'),
   line_bg: require('../img/day/line_bg.png'),
   lock: require('../img/day/lock.png'),
@@ -34,11 +34,11 @@ export default {
   pool_bg: require('../img/day/pool_bg.png'),
   privatekey: require('../img/day/privatekey.png'),
   publickey: require('../img/day/publickey.png'),
-  qr_h: require('../img/day/qr_h.png'),
+  
   qr: require('../img/day/qr.png'),
   redclose:require('../img/day/redclose.png'),
   resources_f: require('../img/day/resources_f.png'),
-  resources_h: require('../img/day/resources_h.png'),
+  
   resources: require('../img/day/resources.png'),
   
 
@@ -50,7 +50,7 @@ export default {
   tokenissue: require('../img/day/tokenissue.png'),
   transactionA: require('../img/day/transactionA.png'),
   transactionB: require('../img/day/transactionB.png'),
-  transfer_h: require('../img/day/transfer_h.png'),
+  
   transfer: require('../img/day/transfer.png'),
   tx_slide0: require('../img/day/tx_slide0.png'),
   tx_slide1: require('../img/day/tx_slide1.png'),
@@ -120,14 +120,14 @@ export default {
   reveal_wallet:require('../img/reveal_wallet.png'),
   scangray: require('../img/scangray.png'),
   scanning: require('../img/scanning.png'),
-  share_banner:require('../img/share_banner.png'),
+  
   share_bottom:require('../img/share_bottom.png'),
   share_img:require('../img/share_img.png'),
-  share_pyq:require('../img/share_pyq.png'),
-  share_qq:require('../img/share_qq.png'),
+ 
+
   share_Size:require('../img/share_Size.png'),
   share_time:require('../img/share_time.png'),
-  share_wx:require('../img/share_wx.png'),
+  
   share:require('../img/share.png'),
   share_jh: require('../img/share_jh.png'), 
   sharebg:require('../img/sharebg.png'),
@@ -186,12 +186,11 @@ export default {
 
 
   //新版图片
-  my_aboutus: require('../img/newimg/my_aboutus.png'),
   my_activity: require('../img/newimg/my_activity.png'),
   my_help: require('../img/newimg/my_help.png'),
-  my_share: require('../img/newimg/my_share.png'),
-  my_system: require('../img/newimg/my_system.png'),
-  my_wallet: require('../img/newimg/my_wallet.png'),
+ 
+  
+  
   transfer: require('../img/newimg/transfer.png'),
   receipt: require('../img/newimg/receipt.png'),
   transfer_float: require('../img/newimg/transfer_float.png'),
@@ -210,11 +209,37 @@ export default {
   tab_2_h: require('../img/newimg/tab_2_h.png'),
   tab_3_h: require('../img/newimg/tab_3_h.png'),
   tab_4_h: require('../img/newimg/tab_4_h.png'),
-  reveal_h:require('../img/newimg/reveal_h.png'),
-  reveal:require('../img/newimg/reveal.png'),
+  
   xin_import: require('../img/newimg/xin_import.png'),
   scan: require('../img/newimg/scan.png'),
   xin_add: require('../img/newimg/xin_add.png'),
   xin_qr: require('../img/newimg/xin_qr.png'),
   
+  
+  //王新版图片
+  home_bg: require('../img/wimg/home_bg.png'),
+  qr_h: require('../img/wimg/qr_h.png'),
+  resources_h: require('../img/wimg/resources_h.png'),
+  transfer_h: require('../img/wimg/transfer_h.png'),
+  account_manage: require('../img/wimg/account_manage.png'),
+  my_aboutus: require('../img/wimg/my_aboutus.png'),
+  my_share: require('../img/wimg/my_share.png'),
+  my_system: require('../img/wimg/my_system.png'),
+  my_wallet: require('../img/wimg/my_wallet.png'),
+  my_footbg: require('../img/wimg/my_footbg.png'),
+  my_record: require('../img/wimg/my_record.png'),
+ 
+  reveal:require('../img/wimg/reveal.png'),
+  reveal_h:require('../img/wimg/reveal_h.png'),
+
+  share_wx:require('../img/wimg/share_wx.png'),
+  share_pyq:require('../img/wimg/share_pyq.png'),
+  share_qq:require('../img/wimg/share_qq.png'),
+  share_wb:require('../img/wimg/share_wb.png'),
+
+  share_banner:require('../img/wimg/share_banner.png'),
+  //转账
+  turnout_pop: require('../img/turnout_pop.png'),
+  turnout_delete: require('../img/turnout_delete.png'),
+  turnout_add: require('../img/turnout_add.png'),
 }

@@ -45,7 +45,8 @@ export default class Item extends Component {
     name: PropTypes.string.isRequired,
     subName: PropTypes.string,
     color: PropTypes.string,
-    first: PropTypes.bool,
+    topfirst: PropTypes.number,
+    first: PropTypes.number,
     avatar: PropTypes.number,
     disable: PropTypes.bool,
     iconSize: PropTypes.number,
@@ -55,18 +56,18 @@ export default class Item extends Component {
   }
 
   _render(){
-    let {swt,icon, iconSize, name, subName, color, first, avatar, disable, font} = this.props
+    let {swt,icon, iconSize, name, subName, color, topfirst, first, avatar, disable, font} = this.props
     font = font||"Ionicons"
  
     return (
-      <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginTop: first?ScreenUtil.autoheight(10):0}]}>
+      <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginTop: topfirst?topfirst:0}]}>
         {icon?(<Icon name={icon} size={iconSize||ScreenUtil.setSpText(20)} style={{width: ScreenUtil.autowidth(22), marginRight:ScreenUtil.autowidth(5), textAlign:"center"}} color={color || UColor.blueDeep} />):null}
-        <View style={[styles.listInfo, {borderTopColor: UColor.secdColor,borderTopWidth: !first?0.5:0}]}>
-          {avatar?(<Image source={avatar} style={{width: ScreenUtil.autowidth(18), height: ScreenUtil.autowidth(18), resizeMode: "contain", overflow:"hidden",marginRight:ScreenUtil.autowidth(13),}}/>):null}
-          <View style={{flex: 1}}><Text style={{color: '#080808', fontSize:ScreenUtil.autowidth(14.5)}}>{name}</Text></View>
+        <View style={[styles.listInfo, first && {borderTopColor: UColor.secdColor,borderTopWidth: first}]}>
+          {avatar?(<Image source={avatar} style={{width: ScreenUtil.autowidth(19), height: ScreenUtil.autowidth(17), resizeMode: "contain", overflow:"hidden",marginRight:ScreenUtil.autowidth(13),}}/>):null}
+          <View style={{flex: 1}}><Text style={{color: '#555555', fontSize:ScreenUtil.autowidth(16)}}>{name}</Text></View>
           <View style={styles.listInfoRight}>
             {subName?(<Text style={{color:UColor.arrow, fontSize:ScreenUtil.autowidth(14)}}>{subName}</Text>):null}            
-            {disable?null:(<Font.Ionicons style={{marginLeft: ScreenUtil.autowidth(10)}} name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(16)} color='#999999' />)}
+            {disable?null:(<Font.Ionicons name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(20)} color='#B5B5B5' />)}
             {!swt?null:( 
             <Switch 
               tintColor={UColor.secdColor}
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
   listInfo: {
     height: itemHeight,
     flex: 1,
-    paddingHorizontal: ScreenUtil.autowidth(16),
+    paddingRight: ScreenUtil.autowidth(35),
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

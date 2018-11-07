@@ -60,7 +60,7 @@ export default {
   mainsecd: "#EDEDED",
   tintfont: "#4CA6FF",
   titletop: '#2279C5', //顶部标题背景色 UColor.navigation
-  secdfont: "#F7F8F9",
+  secdfont: "#F9FAF9",
   mainfont: "#FFFFFF",
   tintstart: '#caccd2',
   fonttint: "#FFFFFF",

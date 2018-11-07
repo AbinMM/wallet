@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, DeviceEventEmitter, NativeModules, ListView, StyleSheet, Image, View, Text, Platform, Modal, Animated, TouchableOpacity, Easing, Clipboard, ImageBackground, ScrollView, RefreshControl,Linking, } from 'react-native';
+import { Dimensions, DeviceEventEmitter, NativeModules, ListView, StyleSheet, Image, View, Text, Platform, Modal, Animated, TouchableOpacity, Easing, Clipboard, ImageBackground, ScrollView, RefreshControl,Linking, TouchableWithoutFeedback, } from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import { Eos } from "react-native-eosjs";
@@ -33,7 +33,7 @@ class Home extends React.Component {
     this.state = {
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
       fadeAnim: new Animated.Value(15),  //设置初始值
-      modal: false,
+      
       balance: '0',
       account: 'xxxx',
       show: false,
@@ -51,6 +51,10 @@ class Home extends React.Component {
       listmodal: false,
       fadeOpacity: new Animated.Value(0),
       zIndex: 0,
+      modalwl: false,
+      mask: new Animated.Value(0),
+      alert: new Animated.Value(0),
+      
     };
   }
 
@@ -269,7 +273,7 @@ class Home extends React.Component {
 
   onRequestClose() {
     this.setState({
-      modal: false
+      modalwl: false
     });
   }
 
@@ -415,18 +419,20 @@ class Home extends React.Component {
   createWallet() {
     const { navigate } = this.props.navigation;
     navigate('CreateWallet', {});
-    this.setState({modal: false,listmodal: false });
+    this._wldimss();
+    this.setState({listmodal: false });
     this._disableTipVisible();
   }
+
   importWallet() {
     const { navigate } = this.props.navigation;
     navigate('ImportEosKey', {});
-    this.setState({ modal: false,listmodal: false });
+    this.setState({ modalwl: false,listmodal: false });
     this._disableTipVisible();
   }
 
   changeWallet(data) {
-    this.setState({ modal: false});
+    this._wldimss();
     if(!data.isactived || !data.hasOwnProperty('isactived')){
       EasyShowLD.dialogShow("温馨提示", "您的账号未激活", "激活", "取消", () => {
         this.WalletDetail(data);
@@ -495,7 +501,7 @@ class Home extends React.Component {
     }
     navigate('WalletDetail', { data,balance:balance,isEye: this.state.isEye});
     this.setState({
-      modal: false
+      modalwl: false
     });
     this._disableTipVisible();
   }
@@ -537,10 +543,10 @@ class Home extends React.Component {
   }
 
   onClickWalletList(){
-    if(!this.state.modal){
+    if(!this.state.modalwl){
       this.getAllWalletEosBalance();
     }
-    this.setState({ modal: !this.state.modal })
+    this.setState({ modalwl: !this.state.modalwl })
   }
 
   onRefresh(){
@@ -602,7 +608,7 @@ class Home extends React.Component {
   }
 
   _onScroll(event) {
-    if(event.nativeEvent.contentOffset.y>150){
+    if(event.nativeEvent.contentOffset.y>50){
       if(this.showMenu){
         return;
       }
@@ -628,103 +634,131 @@ class Home extends React.Component {
     }
   }
 
+  iswlShowDimss () {
+    if(this.state.modalwl){
+      this._wldimss();
+    }else{
+      this._wlshow();
+    }
+  }
+
+  _wlshow () {
+    if(this.isShow)return;
+    this.isShow = true;
+    window.currentDialog = this;
+    this.setState({modalwl:true});
+    Animated.parallel([
+      Animated.timing(this.state.mask,{toValue:0.6,duration:400}),
+      Animated.timing(this.state.alert,{toValue:1,duration:300})
+    ]).start(() => {});
+  }
+
+  _wldimss () {
+    if(!this.isShow)return;
+    window.currentDialog = null;
+    Animated.parallel([
+        Animated.timing(this.state.mask,{toValue:0,duration:400}),
+        Animated.timing(this.state.alert,{toValue:0,duration:300})
+    ]).start(() => {
+        this.setState({modalwl:false});
+        this.isShow = false;
+    });
+  }
+
+  isplusShowDimss () {
+    if(this.state.listmodal){
+      this._plusDimss();
+    }else{
+      this._plusShow();
+    }
+  }
+
+  _plusShow () {
+    if(this.isShow)return;
+    this.isShow = true;
+    window.currentDialog = this;
+    this.setState({listmodal:true});
+    Animated.parallel([
+      Animated.timing(this.state.mask,{toValue:0.6,duration:400}),
+      Animated.timing(this.state.alert,{toValue:1,duration:300})
+    ]).start(() => {});
+  }
+
+  _plusDimss () {
+    if(!this.isShow)return;
+    window.currentDialog = null;
+    Animated.parallel([
+        Animated.timing(this.state.mask,{toValue:0,duration:400}),
+        Animated.timing(this.state.alert,{toValue:0,duration:300})
+    ]).start(() => {
+        this.setState({listmodal:false});
+        this.isShow = false;
+    });
+  }
+
   _renderHeader() {
-    return(<View style={{flex: 1, alignItems: 'center',backgroundColor: UColor.secdfont}}>
-      <View style={{backgroundColor: UColor.mainColor}}>
-        <View style={{borderBottomRightRadius: 15, borderBottomLeftRadius: 15,overflow: 'hidden', justifyContent: 'center',}}>
-          <LinearGradient style={{width: ScreenWidth, height: ScreenUtil.autowidth(200), paddingBottom: ScreenUtil.autowidth(35),}}  paddingTop = {Constants.FitPhone} colors={['#6C9EF8','#5F5DE6']} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
+    return(<View style={{flex: 1, alignItems: 'center',backgroundColor: '#F9FAF9'}}>
+        <View style={{overflow: 'hidden', justifyContent: 'center',}}>
+          <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893, paddingTop: Constants.FitPhone}} source={UImage.home_bg}>
             <View style={[styles.topbtn,]}>
-              <TouchableOpacity onPress={() => this.setState({ modal: !this.state.modal })} style={{flex: 1, height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(20),alignItems: 'flex-start',justifyContent: 'center', }}>
+              <TouchableOpacity onPress={()=>{this.iswlShowDimss()}} style={{flex: 1, height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(20),alignItems: 'flex-start',justifyContent: 'center', }}>
                 <View style={{flexDirection: 'row',alignItems:"center"}}>
-                  <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#FFFFFF', marginRight: ScreenUtil.autowidth(5)}}>{this.props.defaultWallet.account}</Text>
-                  <Ionicons color={'#FFFFFF'} style={{marginTop:4}} name={this.state.modal ? "ios-arrow-down-outline" : "ios-arrow-forward-outline"} size={18} />
+                  <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#FFFFFF', marginRight: ScreenUtil.autowidth(5)}}>{this.props.defaultWallet.account}</Text>
+                  <Ionicons color={'#FFFFFF'} style={{marginTop:4}} name={this.state.modalwl ? "md-arrow-dropdown" : "md-arrow-dropright"} size={18} />
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.setState({ listmodal: !this.state.listmodal })} style={{flex: 1, height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(20), alignItems:'flex-end', justifyContent: 'center', }}>
+              <TouchableOpacity onPress={()=>{this.isplusShowDimss()}} style={{flex: 1, height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(20), alignItems:'flex-end', justifyContent: 'center', }}>
                 <Ionicons color={'#FFFFFF'} name={"ios-add-outline"} size={32} />
               </TouchableOpacity>
             </View>
             <View style={{flex: 1, alignItems: 'center',justifyContent: 'space-around'}}>
-              <Text style={{fontSize: ScreenUtil.setSpText(36), color: '#FEFEFE'}}>{this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : "" + this.state.adjustTotalBalance) : '****'}</Text>
-              <View style={{flexDirection: 'row', alignItems: 'center',}}>
-                <Text style={[styles.cupcdo,{color: UColor.btnColor}]}>{this.state.isEye ? this.getTodayIncrease() : '****'}</Text>
+              <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center'}}>
+                <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#FFF', }}>全部资产</Text>
                 <TouchableOpacity onPress={this.onPressReveal.bind(this,this.state.isEye)}>
-                  <Image resizeMode="contain" source={this.state.isEye ? UImage.reveal : UImage.reveal_h} style={this.state.isEye ? styles.imgTeOy : styles.imgoney}/>
+                  <Image source={this.state.isEye ? UImage.reveal : UImage.reveal_h} style={styles.imgTeOy}/>
                 </TouchableOpacity>
               </View>
-              {(this.props.defaultWallet && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))
-              ?
-              <View style={[styles.backoractivestyle,{borderColor: '#FEFEFE'}]}>
-                <Text style={[styles.notactived,{color: '#FEFEFE'}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未激活</Text>
+              <Text style={{fontSize: ScreenUtil.setSpText(32), color: '#FFFFFF', fontWeight: 'bold',lineHeight: ScreenUtil.autoheight(45),}}>¥ {this.state.isEye ? ((this.props.defaultWallet == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) ? '0.00' : "" + this.state.adjustTotalBalance) : '****'}</Text>
+              <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#FFFFFF',lineHeight: ScreenUtil.autoheight(30),}}>（已抵押 {this.state.mortgage} EOS）</Text>
+              <View style={[styles.head,{flex: 1,}]}>
+                <Button onPress={this.onPress.bind(this, 'transfer')} style={styles.headbtn}>
+                  <View style={styles.headbtnout}>
+                    <Image source={UImage.transfer_h} style={styles.imgBtn} />
+                    <Text style={[styles.headbtntext,{color: '#FEFEFE'}]}>转账</Text>
+                  </View>
+                </Button>
+                <Button onPress={this.onPress.bind(this, 'Receivables')} style={styles.headbtn}>
+                  <View style={styles.headbtnout}>
+                    <Image source={UImage.qr_h} style={styles.imgBtn} />
+                    <Text style={[styles.headbtntext,{color: '#FEFEFE'}]}>收款</Text>
+                  </View>
+                </Button>
+                <Button  onPress={this.onPress.bind(this, 'Resources')}  style={styles.headbtn}>
+                  <View style={styles.headbtnout}>
+                    <Image source={UImage.resources_h} style={styles.imgBtn} />
+                    <Text style={[styles.headbtntext,{color: '#FEFEFE'}]}>资源</Text>
+                  </View>
+                </Button>
               </View>
-              :
-              ((!this.props.defaultWallet || !this.props.defaultWallet.name || (this.props.defaultWallet &&this.props.defaultWallet.isBackups))
-                ?
-                <Text style={styles.notactived} />
-                :
-                <View style={[styles.backoractivestyle,{borderColor: '#FEFEFE'}]}>
-                  <Text style={[styles.notactived,{color: '#FEFEFE'}]} onPress={this.WalletDetail.bind(this,this.props.defaultWallet)}>未备份</Text>
-                </View>) }
             </View>
-          </LinearGradient>
+          </ImageBackground>
         </View>
-        <View style={{paddingHorizontal: ScreenUtil.autowidth(16), paddingTop: ScreenUtil.autowidth(32)}}>
-          <TouchableOpacity onPress={()=>{this.gotoCpuNet()}} style={{height: ScreenUtil.autowidth(50), flexDirection: 'row', alignItems: 'center', borderBottomColor: '#F7F8F9', borderBottomWidth: 0.7,}}>
-            <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#080808',}}>已抵押资源(CPU+NET)</Text>
-            <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(18), color: '#1A1A1A'}}>{this.state.mortgage}</Text>
-            <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#080808'}}> EOS </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={()=>{this.gotoRam()}} style={{height: ScreenUtil.autowidth(50), flexDirection: 'row', alignItems: 'center',}}>
-            <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#080808',}}>内存(RAM)</Text>
-            <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(18), color: '#1A1A1A'}}>{this.state.allowance}</Text>
-            <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#080808'}}> KB </Text>
-          </TouchableOpacity>
-        </View>
-        <View onScroll={this.onScroll} style={{ top: ScreenUtil.autowidth(175),position: "absolute",flexDirection: 'row',width: ScreenWidth-ScreenUtil.autowidth(36), borderRadius: 25,
-          height: ScreenUtil.autowidth(45),marginHorizontal: ScreenUtil.autowidth(16), paddingVertical:ScreenUtil.autowidth(12), backgroundColor: UColor.mainColor,
-          shadowColor: '#6f7bff',shadowOffset:{height: 3,width: 0},shadowRadius: 5,shadowOpacity: 0.16,elevation:0.3}}>
-          <TouchableOpacity onPress={this.onPress.bind(this, 'transfer')} style={[styles.headbtn,{borderRightWidth: 0.5, borderRightColor: '#F7F8F9'}]}>
-            <View style={styles.headbtnout}>
-              <Image source={UImage.transfer} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
-              <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#1A1A1A'}}>转账</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.onPress.bind(this, 'Receivables')} style={[styles.headbtn,{borderLeftWidth: 0.5, borderLeftColor: '#F7F8F9'}]}>
-            <View style={styles.headbtnout}>
-              <Image source={UImage.receipt} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
-              <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#1A1A1A'}}>收款</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
     </View>)
   }
 
-  _renderFooter() {
-    return((this.props.myAssets && this.props.myAssets.length>0) ? <View style={[{marginBottom: ScreenUtil.autowidth(16), backgroundColor: UColor.mainColor,marginHorizontal: ScreenUtil.autowidth(16),borderBottomLeftRadius:4,borderBottomRightRadius:4}]}>
-      <Button onPress={this.onPress.bind(this, 'addAssets')} >
-        <View style={{alignItems: 'center',justifyContent: 'center', height: ScreenUtil.autoheight(50)}}>
-          <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#6DA0F8'}}>添加新资产</Text>
-        </View>
-      </Button>
-    </View>:null);
-  }
-
   _renderRow = (rowData, sectionID, rowID) => {
-    return(<View style={[{borderBottomColor: UColor.secdfont, borderBottomWidth:0.7, marginHorizontal: ScreenUtil.autowidth(16),overflow: 'hidden',},rowID == 0 && {marginTop: ScreenUtil.autowidth(16),borderTopRightRadius:4,borderTopLeftRadius:4}]}>
+    return(<View style={[{marginHorizontal: ScreenUtil.autowidth(15),marginBottom: ScreenUtil.autoheight(15), borderRadius: 8, overflow: 'hidden',},rowID == 0 && {marginTop: ScreenUtil.autowidth(10)}]}>
         <Button onPress={this.assetInfo.bind(this, rowData)}>
           <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
             <View style={styles.lefts}>
-              <View style={[styles.leftimg,{backgroundColor:"#808080",marginRight: ScreenUtil.autowidth(16)}]}>
-                <Image resizeMode="contain" source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
+              <View style={{borderRadius: 25,backgroundColor: UColor.secdfont,marginRight: ScreenUtil.autowidth(15)}}> 
+                <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
               </View>
-              <Text style={[styles.lefttext,{color: UColor.fontColor}]}>{rowData.asset.name}</Text>
+              <Text style={[styles.lefttext,{color: '#262626'}]}>{rowData.asset.name}</Text>
             </View>
             <View style={styles.rights}>
-              <View style={styles.rightout}>
-                  <Text style={[styles.rightbalance,{color: '#1A1A1A'}]}>{this.state.isEye ? (rowData.balance==null || rowData.balance=="" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.0000" : rowData.balance.replace(rowData.asset.name, "") : '****'}</Text>
-                  <Text style={[styles.rightmarket,{color:  '#808080'}]}>{(rowData.balance==null || rowData.balance=="" || rowData.asset.value == null || rowData.asset.value == "" || rowData.asset.value == 0 || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? " " : this.state.isEye ? "≈" + (rowData.balance.replace(rowData.asset.name, "")*rowData.asset.value).toFixed(2) + "￥" : '****'}</Text>
-              </View>
+              <Text style={[styles.rightbalance,{color: '#262626'}]}>{this.state.isEye ? (rowData.balance==null || rowData.balance=="" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.0000" : rowData.balance.replace(rowData.asset.name, "") : '****'}</Text>
+              <Text style={[styles.rightmarket,{color:  '#808080'}]}>{(rowData.balance==null || rowData.balance=="" || rowData.asset.value == null || rowData.asset.value == "" || rowData.asset.value == 0 || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? " " : this.state.isEye ? "≈" + (rowData.balance.replace(rowData.asset.name, "")*rowData.asset.value).toFixed(2) + "￥" : '****'}</Text>
             </View>
           </View>
         </Button>
@@ -763,8 +797,8 @@ class Home extends React.Component {
                     <Ionicons style={[styles.systemSettingArrow,{color: UColor.btnColor}]} name="ios-arrow-forward-outline" size={20} />
                 </View>
           </Button>}
-          <Animated.View style={{zIndex:999,position:"absolute",top:0,left:0,width:ScreenWidth,opacity: this.state.fadeOpacity}}>
-            <LinearGradient style={{width: ScreenWidth, height: Constants.FitPhone + ScreenUtil.autowidth(45), flexDirection: "row", justifyContent: "center",}}  paddingTop = {Constants.FitPhone} colors={['#6C9EF8','#5F5DE6']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} >
+          <Animated.View style={{zIndex:this.state.zIndex,position:"absolute",top:0,left:0,width:ScreenWidth,opacity: this.state.fadeOpacity}}>
+            <LinearGradient style={{width: ScreenWidth, height: Constants.FitPhone + ScreenUtil.autowidth(45), flexDirection: "row", justifyContent: "center",}}  paddingTop = {Constants.FitPhone} colors={['rgba(53,60, 224, 1)', 'rgba(62,160, 254, 1)']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} >
               <TouchableOpacity onPress={this.onPress.bind(this, 'transfer')} style={{flexDirection: "row", alignItems: 'center', paddingHorizontal: ScreenUtil.autowidth(15),}}>
                   <Image resizeMode='contain' source={UImage.transfer_float} style={{width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),marginRight: ScreenUtil.autowidth(7)}} />
                   <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#FFFFFF'}}>转账</Text>
@@ -774,7 +808,7 @@ class Home extends React.Component {
                   <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#FFFFFF'}}>收款</Text>
               </TouchableOpacity>
               <View style={{flex:1}}/>
-              <TouchableOpacity onPress={() => this.setState({ listmodal: !this.state.listmodal })} style={{alignItems: 'center', justifyContent: "center", paddingHorizontal: ScreenUtil.autowidth(20), }}>
+              <TouchableOpacity onPress={()=>{this.isplusShowDimss()}} style={{alignItems: 'center', justifyContent: "center", paddingHorizontal: ScreenUtil.autowidth(20), }}>
                 <Ionicons color={'#FFFFFF'} name={"ios-add-outline"} size={32} />
               </TouchableOpacity>
             </LinearGradient>
@@ -783,10 +817,89 @@ class Home extends React.Component {
             refreshControl={<RefreshControl refreshing={this.state.assetRefreshing} onRefresh={() => this.onRefresh()}
             tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
             onScroll={(event) => this._onScroll(event)}  enableEmptySections={true} initialListSize={10}
-            renderHeader={() => this._renderHeader()}  renderFooter={()=> this._renderFooter()}
+            renderHeader={() => this._renderHeader()}  
             dataSource={this.state.dataSource.cloneWithRows(this.props.myAssets == null ? [] : this.props.myAssets)}
             renderRow={(rowData, sectionID, rowID) => this._renderRow(rowData, sectionID, rowID)}
           />
+
+          {this.state.modalwl && <View style={styles.continer}>
+            <TouchableWithoutFeedback onPress={()=>{this._wldimss()}}>
+              <View style={[styles.content,{backgroundColor: UColor.mask}]}>
+                <Animated.View style={[styles.mask,{opacity:this.state.mask,}]}></Animated.View>
+                <View style={styles.alertContent}>
+                  <Animated.View style={[styles.alert,{opacity:this.state.alert}]}>
+                    <View style={[styles.touchableout,{backgroundColor:UColor.mainColor}]}>
+                      <ListView initialListSize={5} style={[styles.touchablelist,]}
+                        renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 1, backgroundColor: UColor.secdfont }} />}
+                        enableEmptySections={true} dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
+                        renderRow={(rowData) => (
+                          <Button onPress={this.changeWallet.bind(this, rowData)} >
+                            <View style={[styles.walletlist]} backgroundColor={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account) && UColor.secdfont}>
+                              <View style={styles.topout}>
+                                <Text style={[styles.outname,{color: '#6DA0F8'}]}>{rowData.name}</Text>
+                                {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ?
+                                <View style={[styles.stopoutBackupsout,{borderColor: UColor.showy}]}>
+                                  <Text style={[styles.stopoutBackups,{color: UColor.showy}]} onPress={this.WalletDetail.bind(this, rowData)}>未激活</Text>
+                                </View>
+                                :
+                                (rowData.isBackups ? null :
+                                <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
+                                  <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this, rowData)}>未备份</Text>
+                                </View>)}
+                              </View>
+                              <Text style={[styles.walletaccount,{color: '#6DA0F8'}]} numberOfLines={1} ellipsizeMode='middle'>{this.state.isEye ? (rowData.isactived && rowData.balance != null && rowData.balance != ""? rowData.balance : '0.0000') : '****'} EOS</Text>
+                            </View>
+                          </Button>
+                        )}
+                      />
+                      <Button onPress={() => this.createWallet()} style={styles.btnout}>
+                        <View style={styles.estabwallet}>
+                          <Image source={UImage.wallet_1} style={styles.establishimg} />
+                          <Text style={[styles.establishtext,{color: UColor.fontColor}]}>创建钱包</Text>
+                        </View>
+                      </Button>
+                    </View>
+                  </Animated.View>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>}
+
+          {this.state.listmodal && <View style={styles.continer}>
+            <TouchableWithoutFeedback onPress={()=>{this._plusDimss()}} >
+              <View style={{alignItems: 'flex-end', justifyContent: 'flex-start',width: "100%",height:"100%",}}>
+                <Animated.View style={{opacity:this.state.mask,right:ScreenUtil.autowidth(15),top:0,position: 'absolute',zIndex: 0,width:ScreenUtil.autowidth(150),height: ScreenUtil.autoheight(176),borderRadius: 5,backgroundColor:UColor.mainColor, }}></Animated.View>
+                <View style={{width:ScreenUtil.autowidth(150),height: ScreenUtil.autoheight(176), marginRight: ScreenUtil.autowidth(15), backgroundColor:UColor.mainColor, borderRadius: 5,shadowColor: '#999999',shadowOffset:{height: 4,width: 0},shadowRadius: 12,shadowOpacity: 0.3,elevation: 5,}}>
+                  <Animated.View style={{opacity:this.state.alert,}}>
+                    <Button onPress={() => this.scan()} >
+                      <View style={{flexDirection: "row", alignItems: 'center', height: ScreenUtil.autoheight(44), paddingHorizontal: ScreenUtil.autowidth(25) }}>
+                        <Image source={UImage.scan} style={{width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18)}} />
+                        <Text style={[styles.establishtext,{color: '#6DA0F8'}]}>扫一扫</Text>
+                      </View>
+                    </Button>
+                    <Button onPress={this.onPress.bind(this, 'addAssets')} >
+                      <View style={[styles.establishout,{borderTopColor: UColor.secdfont}]}>
+                        <Image source={UImage.xin_add} style={{width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18)}} />
+                        <Text style={[styles.establishtext,{color: '#6DA0F8'}]}>添加资产</Text>
+                      </View>
+                    </Button>
+                    <Button onPress={() => this.createWallet()} >
+                      <View style={[styles.establishout,{borderTopColor: UColor.secdfont}]}>
+                        <Image source={UImage.xin_qr} style={{width: ScreenUtil.autowidth(17),height: ScreenUtil.autowidth(18)}} />
+                        <Text style={[styles.establishtext,{color: '#6DA0F8'}]}>创建钱包</Text>
+                      </View>
+                    </Button>
+                    <Button onPress={() => this.importWallet()} >
+                      <View style={[styles.establishout,{borderTopColor: UColor.secdfont}]}>
+                        <Image source={UImage.xin_import} style={{width: ScreenUtil.autowidth(16),height: ScreenUtil.autowidth(15)}} />
+                        <Text style={[styles.establishtext,{color: '#6DA0F8'}]}>导入钱包</Text>
+                      </View>
+                    </Button>
+                  </Animated.View>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>}
 
           <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.isTipShow()} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
@@ -807,79 +920,6 @@ class Home extends React.Component {
                     </View>
                 </Button>
               </View>
-            </TouchableOpacity>
-          </Modal>
-
-          <Modal style={styles.touchableouts} animationType={'none'} transparent={true} onRequestClose={() => { this.onRequestClose() }} visible={this.state.modal}>
-            <TouchableOpacity onPress={() => this.setState({ modal: false })} style={[styles.touchable,]} activeOpacity={1.0}>
-            <View style={{flex: 1, marginTop:Platform.OS==='android'?ScreenUtil.autoheight(37):ScreenUtil.autoheight(60),alignItems: 'center', justifyContent: 'flex-start',backgroundColor: UColor.mask }}>
-              <TouchableOpacity  activeOpacity={1.0}>
-                <View style={[styles.touchableout,{backgroundColor:UColor.mainColor}]}>
-                  <ListView initialListSize={5} style={[styles.touchablelist,]}
-                    renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 1, backgroundColor: UColor.secdfont }} />}
-                    enableEmptySections={true} dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
-                    renderRow={(rowData) => (
-                      <Button onPress={this.changeWallet.bind(this, rowData)} >
-                        <View style={[styles.walletlist]} backgroundColor={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account) && UColor.secdfont}>
-                          <View style={styles.topout}>
-                            <Text style={[styles.outname,{color: '#6DA0F8'}]}>{rowData.name}</Text>
-                            {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ?
-                            <View style={[styles.stopoutBackupsout,{borderColor: UColor.showy}]}>
-                              <Text style={[styles.stopoutBackups,{color: UColor.showy}]} onPress={this.WalletDetail.bind(this, rowData)}>未激活</Text>
-                            </View>
-                            :
-                            (rowData.isBackups ? null :
-                            <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
-                              <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this, rowData)}>未备份</Text>
-                            </View>)}
-                          </View>
-                          <Text style={[styles.walletaccount,{color: '#6DA0F8'}]} numberOfLines={1} ellipsizeMode='middle'>{this.state.isEye ? (rowData.isactived && rowData.balance != null && rowData.balance != ""? rowData.balance : '0.0000') : '****'} EOS</Text>
-                        </View>
-                      </Button>
-                    )}
-                  />
-                  <Button onPress={() => this.createWallet()} style={styles.btnout}>
-                    <View style={styles.estabwallet}>
-                      <Image source={UImage.wallet_1} style={styles.establishimg} />
-                      <Text style={[styles.establishtext,{color: UColor.fontColor}]}>创建钱包</Text>
-                    </View>
-                  </Button>
-                </View>
-              </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          </Modal>
-
-          <Modal style={styles.touchableouts} animationType={'none'} transparent={true} onRequestClose={() => { this.onRequestClose() }} visible={this.state.listmodal}>
-            <TouchableOpacity onPress={() => this.setState({ listmodal: false })} style={[styles.touchable,]} activeOpacity={1.0}>
-              <TouchableOpacity  activeOpacity={1.0} style={{marginTop:Platform.OS === 'android'?ScreenUtil.autoheight(37): ScreenUtil.autoheight(60),
-                marginRight:ScreenUtil.autowidth(15), alignItems: 'flex-start',backgroundColor:UColor.mainColor,borderRadius: 3,
-                shadowColor: '#999999',shadowOffset:{height: 4,width: 0},shadowRadius: 12,shadowOpacity: 0.2,elevation: 5,}}>
-                  <Button onPress={() => this.scan()} >
-                    <View style={{flexDirection: "row", alignItems: 'center', height: ScreenUtil.autoheight(44), paddingHorizontal: ScreenUtil.autowidth(25) }}>
-                      <Image source={UImage.scan} style={{width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18)}} />
-                      <Text style={[styles.establishtext,{color: '#6DA0F8'}]}>扫一扫</Text>
-                    </View>
-                  </Button>
-                  <Button onPress={this.onPress.bind(this, 'addAssets')} >
-                    <View style={[styles.establishout,{borderTopColor: UColor.secdfont}]}>
-                      <Image source={UImage.xin_add} style={{width: ScreenUtil.autowidth(18),height: ScreenUtil.autowidth(18)}} />
-                      <Text style={[styles.establishtext,{color: '#6DA0F8'}]}>添加资产</Text>
-                    </View>
-                  </Button>
-                  <Button onPress={() => this.createWallet()} >
-                    <View style={[styles.establishout,{borderTopColor: UColor.secdfont}]}>
-                      <Image source={UImage.xin_qr} style={{width: ScreenUtil.autowidth(17),height: ScreenUtil.autowidth(18)}} />
-                      <Text style={[styles.establishtext,{color: '#6DA0F8'}]}>创建钱包</Text>
-                    </View>
-                  </Button>
-                  <Button onPress={() => this.importWallet()} >
-                    <View style={[styles.establishout,{borderTopColor: UColor.secdfont}]}>
-                      <Image source={UImage.xin_import} style={{width: ScreenUtil.autowidth(16),height: ScreenUtil.autowidth(15)}} />
-                      <Text style={[styles.establishtext,{color: '#6DA0F8'}]}>导入钱包</Text>
-                    </View>
-                  </Button>
-              </TouchableOpacity>
             </TouchableOpacity>
           </Modal>
 
@@ -928,6 +968,72 @@ class Home extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  continer:{
+    left:0,
+    top:ScreenUtil.autoheight(45) + Constants.FitPhone,
+    position: 'absolute',
+    zIndex: 99999,
+    flex: 1,
+    width:"100%",
+    height:"100%"
+  },
+  content:{
+    width:"100%",
+    height:"100%",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+   
+  },
+  mask: {
+    flex:1,
+    left:0,
+    top:0,
+    position: 'absolute',
+    zIndex: 0,
+    width:"100%",
+    height:"100%",
+  },
+  alertContent:{
+    width:"100%",
+    height:"100%",
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor:"rgba(0, 0, 0, 0.0)",
+  },
+  alert:{
+    flex:1,
+    flexDirection: 'column',
+    borderRadius:4,
+    width:"100%",
+    //backgroundColor:"#fff"
+  },
+  title:{
+    color:"#1A1A1A",
+    textAlign:"center",
+    lineHeight:ScreenUtil.setSpText(26),
+    fontSize:ScreenUtil.setSpText(16),
+    fontWeight:"bold",
+    marginTop:ScreenUtil.setSpText(18),
+    margin:ScreenUtil.setSpText(10)
+  },
+  ctx:{
+    marginBottom:ScreenUtil.setSpText(10),
+    marginHorizontal:ScreenUtil.setSpText(20),
+    color:"#808080",
+    lineHeight:ScreenUtil.setSpText(24),
+    fontSize:ScreenUtil.setSpText(12.5),
+  },
+  bottom:{
+    flex:1,
+    flexDirection: 'row',
+    maxHeight:ScreenUtil.autowidth(49),
+    marginTop:ScreenUtil.autowidth(10)
+  },
+
+
+
+  
   container: {
     flex: 1,
   },
@@ -935,8 +1041,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: ScreenUtil.autowidth(16),
-    paddingVertical: ScreenUtil.autowidth(10),
+    paddingHorizontal: ScreenUtil.autowidth(20),
+    paddingVertical: ScreenUtil.autowidth(15),
   },
 
   topbtn: {
@@ -961,24 +1067,18 @@ const styles = StyleSheet.create({
   },
   head: {
     flexDirection: "row",
-    height: ScreenUtil.autowidth(194),
-    paddingTop: ScreenUtil.autowidth(90),
-    marginBottom: ScreenUtil.autowidth(15),
+    width: ScreenWidth,
+    alignItems: 'flex-start',
+    justifyContent: 'space-around',
   },
-  headbtn: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: "center",
-
-  },
+  
   headbtnout: {
-    flex:1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'center', 
     justifyContent: "center",
   },
   headbtntext: {
-    fontSize: ScreenUtil.setSpText(16),
+    fontSize: ScreenUtil.setSpText(12),
   },
   resourceout: {
     flex: 1,
@@ -1023,8 +1123,8 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(12),
   },
   imgTeOy: {
-    width: ScreenUtil.autowidth(16),
-    height: ScreenUtil.autowidth(10),
+    width: ScreenUtil.autowidth(19),
+    height: ScreenUtil.autowidth(13),
     margin: ScreenUtil.autowidth(8),
   },
   imgoney: {
@@ -1070,8 +1170,8 @@ const styles = StyleSheet.create({
 
   imgBtn: {
     margin: ScreenUtil.autowidth(10),
-    width: ScreenUtil.autowidth(44),
-    height: ScreenUtil.autowidth(44),
+    width: ScreenUtil.autowidth(30),
+    height: ScreenUtil.autowidth(30),
   },
 
   walletlist: {
@@ -1210,34 +1310,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftimg: {
-    width: ScreenUtil.autowidth(32),
-    height: ScreenUtil.autowidth(32),
-    borderRadius: ScreenUtil.autowidth(16),
+    width: ScreenUtil.autowidth(39), 
+    height: ScreenUtil.autowidth(39),
   },
   lefttext: {
-    fontSize: ScreenUtil.setSpText(14),
+    fontSize: ScreenUtil.setSpText(16),
   },
   rights: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: 'center',
-    justifyContent: "flex-end"
-  },
-  rightout: {
     flex: 1,
     alignItems: 'flex-end',
     flexDirection: "column",
     justifyContent: "center",
   },
+
   rightbalance: {
-    flex: 1,
     textAlign: 'right',
-    fontSize: ScreenUtil.setSpText(16),
+    fontSize: ScreenUtil.setSpText(18), 
   },
   rightmarket: {
-    flex: 1,
     textAlign: 'right',
-    fontSize: ScreenUtil.setSpText(11),
+    fontSize: ScreenUtil.setSpText(10),
   },
 
   incdocupout: {
