@@ -34,7 +34,6 @@ class TurnOutAsset extends BaseComponent {
         super(props);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            isMultiAccount: false, //批量转账
             dataSource: ds.cloneWithRows([]),
             show: false,
             toAccount: '', // 账户名称
@@ -136,22 +135,6 @@ class TurnOutAsset extends BaseComponent {
     openAddressBook() {
         const { navigate } = this.props.navigation;
         navigate('addressManage', {isTurnOut:true,coinType:this.state.name});
-    }
-
-    //批量转账
-    addMultiAccount(){
-       // 增加一行供输入
-
-    }
-    popAddMultiAccount(){
-        var ishow = this.state.isMultiAccount;
-        this.setState({
-            isMultiAccount: !ishow,
-        });
-    }
-    deleteAccount(){
-
-
     }
 
     //选择代币
@@ -395,44 +378,6 @@ class TurnOutAsset extends BaseComponent {
                                         </Button>
                                     </View>
                                 </View>
-                                {
-                                this.state.isMultiAccount &&
-                                <View style={{ flex: 1,paddingBottom: ScreenUtil.autoheight(50),}}>
-                                <ListView style={{flex:1}} renderRow={this.renderRow} enableEmptySections={true} onEndReachedThreshold = {50}
-                                        onEndReached={() => this.onEndReached()}
-                                        dataSource={this.state.dataSource.cloneWithRows((this.props.addressBook == null ? [] : this.props.addressBook))}
-                                        renderRow={(rowData, sectionID, rowID) => (
-                                        <View>
-                                            <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
-                                                <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"
-                                                    selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
-                                                    placeholder="请输入收款账户" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
-                                                    onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})}
-                                                />
-                                                <View style={styles.scanning}>
-                                                    <Button onPress={() => this.deleteAccount()}>
-                                                        <Image source={UImage.turnout_delete} style={styles.alningimg} />
-                                                    </Button>
-                                                </View>
-                                            </View>
-                                    </View>)}
-                                    />
-                                </View>
-                                }
-                                { this.state.isMultiAccount && <View style={[styles.addStyle]}>
-                                    <Button  onPress={() => this.addMultiAccount()}>
-                                        <Image source={UImage.turnout_add} style={{width: ScreenUtil.autowidth(30),height: ScreenUtil.autoheight(15),margin: ScreenUtil.autowidth(0)}} />
-                                    </Button>
-                                  </View>
-                                }
-
-                                { this.state.isMultiAccount== false &&
-                                <View style={[styles.headerMulti]}>
-                                    <Button style={{backgroundColor: UColor.mainColor,width: ScreenUtil.autowidth(60),height: ScreenUtil.autoheight(30),}} onPress={() => this.popAddMultiAccount()}>
-                                        <Image source={UImage.turnout_pop} style={{width: ScreenUtil.autowidth(30),height: ScreenUtil.autoheight(15),margin: ScreenUtil.autowidth(0)}} />
-                                    </Button>
-                                  </View>
-                                }
 
                                 <View style={styles.accountoue} >
                                     <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(56),color: UColor.fontColor}]}>转账金额</Text>
@@ -751,21 +696,7 @@ const styles = StyleSheet.create({
         marginLeft: ScreenUtil.autowidth(10),
     },
 
-    headerMulti: {
-        // borderRadius: 5,
-        alignItems: "center",
-        justifyContent: "center",
-        // margin: ScreenUtil.autowidth(5),
-        // height: ScreenUtil.autoheight(20),
-    },
-    addStyle: {
-        // borderRadius: 5,
-        alignItems: "center",
-        justifyContent: "center",
-        // margin: ScreenUtil.autowidth(5),
-        height: ScreenUtil.autoheight(30),
-        backgroundColor: UColor.mainColor
-    },
+
 
 })
 export default TurnOutAsset;

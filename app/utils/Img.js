@@ -217,8 +217,4 @@ export default {
   xin_add: require('../img/newimg/xin_add.png'),
   xin_qr: require('../img/newimg/xin_qr.png'),
   
-  //转账
-  turnout_pop: require('../img/turnout_pop.png'),
-  turnout_delete: require('../img/turnout_delete.png'),
-  turnout_add: require('../img/turnout_add.png'),
 }
