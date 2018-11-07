@@ -10,6 +10,7 @@ import {NavigationActions} from 'react-navigation';
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
 import BaseComponent from "../../components/BaseComponent";
+
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
@@ -109,47 +110,6 @@ class BackupsAOkey extends BaseComponent {
             }else {
                 EasyShowLD.loadingClose();
                 this.goToPayForActive({parameter:wallet, entry: entry});
-            // this.props.dispatch({
-            //     type: "login/fetchPoint", payload: { uid: Constants.uid }, callback:(data) =>{
-            //       if (data.code == 403) {
-            //         this.props.dispatch({
-            //           type: 'login/logout', payload: {}, callback: () => {}
-            //         });      
-            //         EasyShowLD.loadingClose();
-            //         this.goToPayForActive({parameter:wallet, entry: "backupWallet"})
-            //         return false;   
-            //       }else if(data.code == 0){
-            //         this.props.dispatch({
-            //           type: 'wallet/createAccountService', payload: { username:name, owner: owner, active: active, isact:true}, callback: (data) => {
-            //             EasyShowLD.loadingClose();
-            //             if (data.code == '0') {
-            //               wallet.isactived = true
-            //               this.props.dispatch({
-            //                 type: 'wallet/activeWallet', wallet: wallet, callback: (data, error) => {
-            //                   DeviceEventEmitter.emit('updateDefaultWallet');
-            //                   if (error != null) {
-            //                     this.goToPayForActive({parameter:wallet, entry: "backupWallet"})
-            //                     return false;
-            //                   } else {
-            //                     EasyToast.show('激活账号成功');
-            //                     return true;
-            //                   }
-            //                 }
-            //               });
-            //             }else{
-            //               EasyShowLD.loadingClose();
-            //               this.goToPayForActive({parameter:wallet, entry: "backupWallet"})
-            //               return false;
-            //             }
-            //           }
-            //         });
-            //       }else{
-            //         EasyShowLD.loadingClose();
-            //         this.goToPayForActive({parameter:wallet, entry: "backupWallet"})
-            //         return false;   
-            //       }
-            //     }
-            //   });
             }
         }
     });
@@ -238,8 +198,7 @@ class BackupsAOkey extends BaseComponent {
             return;
         }
     }
-    // const { navigate } = this.props.navigation;
-    // navigate('ActivationAt', {});
+
   }
 
   intensity() {

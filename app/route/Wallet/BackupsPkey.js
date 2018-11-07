@@ -82,43 +82,7 @@ class BackupsPkey extends BaseComponent {
         const { navigate } = this.props.navigation;
         navigate('BackupWords', data);
     }
-
-    decryptWords = () => {
-        const view =
-            <View style={styles.passoutsource}>
-                <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-                    selectionColor={UColor.tintColor} secureTextEntry={true} keyboardType="ascii-capable" maxLength={Constants.PWD_MAX_LENGTH}
-                    style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]}    
-                    placeholderTextColor={UColor.inputtip} placeholder="请输入密码" underlineColorAndroid="transparent"/>
-            </View>
-        EasyShowLD.dialogShow("密码", view, "备份", "取消", () => {
-            if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-                EasyToast.show('密码长度至少4位,请重输');
-                return;
-            }
-            try{
-            var _words = this.props.navigation.state.params.words;
-            var bytes_words = CryptoJS.AES.decrypt(_words.toString(), this.state.password + this.props.navigation.state.params.salt);
-            var plaintext_words = bytes_words.toString(CryptoJS.enc.Utf8);
-            var words_active = this.props.navigation.state.params.words_active;
-            var bytes_words = CryptoJS.AES.decrypt(words_active.toString(), this.state.password + this.props.navigation.state.params.salt);
-            var plaintext_words_active = bytes_words.toString(CryptoJS.enc.Utf8);
-            if (plaintext_words.indexOf('eostoken') != -1) {
-                plaintext_words = plaintext_words.substr(9, plaintext_words.length);
-                var wordsArr = plaintext_words.split(',');
-                plaintext_words_active = plaintext_words_active.substr(9, plaintext_words_active.length);
-                var wordsArr_active = plaintext_words_active.split(',');
-                this.toBackup({ words_owner: wordsArr, words_active: wordsArr_active });
-            } else {
-                EasyToast.show('密码错误');
-            }
-        }catch(e){
-            EasyToast.show('密码错误');
-        }
-            EasyShowLD.dialogClose();
-        }, () => { EasyShowLD.dialogClose() });
-    }
-
+    
     dismissKeyboardClick() {
       dismissKeyboard();
     }

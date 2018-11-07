@@ -13,6 +13,7 @@ import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from '../../components/EasyShow'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
+import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var AES = require("crypto-js/aes");
@@ -76,45 +77,17 @@ class WalletDetail extends BaseComponent {
   goPage(key, data) {
     const { navigate } = this.props.navigation;
     if (key == 'BackupsPkey' ) {
-      const view =
-        <View style={styles.passoutsource}>
-          <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-            selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
-            style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-            placeholderTextColor={UColor.inputtip}  placeholder="请输入密码"  underlineColorAndroid="transparent" />
-        </View>
-      EasyShowLD.dialogShow("密码", view, "确定", "取消", () => {
-        if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-          EasyToast.show('密码长度至少4位,请重输');
-          return;
-        }
+      AuthModal.show(this.props.navigation.state.params.data.account, (authInfo) => {
         try {
-          var ownerPrivateKey = this.props.navigation.state.params.data.ownerPrivate;
-          var bytes_words_owner = CryptoJS.AES.decrypt(ownerPrivateKey.toString(), this.state.password + this.props.navigation.state.params.data.salt);
-          var plaintext_words_owner = bytes_words_owner.toString(CryptoJS.enc.Utf8);
-          var activePrivateKey = this.props.navigation.state.params.data.activePrivate;
-          var bytes_words_active = CryptoJS.AES.decrypt(activePrivateKey.toString(), this.state.password + this.props.navigation.state.params.data.salt);
-          var plaintext_words_active = bytes_words_active.toString(CryptoJS.enc.Utf8);
-          if (plaintext_words_owner.indexOf('eostoken') != - 1) {
-            plaintext_words_active = plaintext_words_active.substr(8, plaintext_words_active.length);
-            plaintext_words_owner = plaintext_words_owner.substr(8, plaintext_words_owner.length);
-            // this.setState({
-            //   txt_active: plaintext_words_active,
-            //   txt_owner: plaintext_words_owner
-            // });
-            // this._setModalVisible();
-            // alert('解锁成功' + plaintext_words);
-            // this.toBackup(wordsArr);
-            navigate('BackupsPkey', { wallet: this.props.navigation.state.params.data, password:this.state.password, entry: "walletDetails"});
-            
-          } else {
-            EasyToast.show('您输入的密码不正确');
-          }
+            if(authInfo.isOk){
+              navigate('BackupsPkey', { wallet: this.props.navigation.state.params.data, password:authInfo.password, entry: "walletDetails"});
+            }
+            EasyShowLD.dialogClose();
         } catch (error) {
-          EasyToast.show('您输入的密码不正确');
+          EasyShowLD.dialogClose();
+          EasyToast.show('未知异常');
         }
-        EasyShowLD.dialogClose();
-      }, () => { EasyShowLD.dialogClose() });
+      });
     } else if(key == 'ExportPublicKey') {
       navigate('ExportPublicKey', { ownerPublicKey: this.props.navigation.state.params.data.ownerPublic, activePublicKey:this.props.navigation.state.params.data.activePublic});
     } else if (key == 'ModifyPassword') {
