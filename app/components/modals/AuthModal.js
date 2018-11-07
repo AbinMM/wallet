@@ -112,11 +112,11 @@ export class AuthModalView extends React.Component {
                 this.setState({action:"setFinger"});
                 FingerprintScanner.authenticate({onAttempt:this.handleAuthenticationAttempted}).then(() => {
                   Security.savePayPass(this.state.account,password);
-                  this.AuthModalCallback && this.AuthModalCallback({isOk:true,pk:plaintext_privateKey,permission});
+                  this.AuthModalCallback && this.AuthModalCallback({isOk:true,pk:plaintext_privateKey,permission,password});
                   this.dimss();
                 });
               }else{
-                this.AuthModalCallback && this.AuthModalCallback({isOk:true,pk:plaintext_privateKey,permission});
+                this.AuthModalCallback && this.AuthModalCallback({isOk:true,pk:plaintext_privateKey,permission,password});
                 this.dimss();
               }
             }else{
@@ -155,7 +155,7 @@ export class AuthModalView extends React.Component {
     }
 
     _keyboardDidShow(e){
-      if(this.isShow){
+      if(this.isShow && Platform.OS=="ios"){
         this.setState({
           keyboardHeight:e.startCoordinates.height
         })
@@ -163,7 +163,7 @@ export class AuthModalView extends React.Component {
     }
 
     _keyboardDidHide(e){
-      if(this.isShow){
+      if(this.isShow && Platform.OS=="ios"){
         this.setState({
           keyboardHeight:0
         });
@@ -175,7 +175,7 @@ export class AuthModalView extends React.Component {
         return (
           this.state.modalVisible && <View style={styles.continer}>
             <TouchableWithoutFeedback>
-            
+
               <View style={styles.content}>
                 <Animated.View style={[styles.mask,{opacity:this.state.mask}]}></Animated.View>
 
@@ -237,7 +237,7 @@ export class AuthModalView extends React.Component {
                   </View>
 
               </View>
-              
+
             </TouchableWithoutFeedback>
           </View>
         )
