@@ -9,7 +9,7 @@ const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
 class Boot extends React.Component {
-  
+
   static navigationOptions = {
     header: null
   };
@@ -26,7 +26,7 @@ class Boot extends React.Component {
   render() {
     return (
         <View style={[styles.container,{backgroundColor: UColor.startup}]}>
-            <ImageBackground source={UImage.boot_bg} resizeMode="cover" style={{width:ScreenWidth,height:ScreenHeight}}>
+            <ImageBackground source={UImage.boot_bg} resizeMode="cover" style={{width:ScreenWidth,height:"100%"}}>
                 <Swiper loop={false} activeDotColor={UColor.tintColor}>
                     <View style={{justifyContent:'center',alignItems:'center',height:'100%'}}>
                         <View style={{height:'30%',justifyContent:'center',alignItems:'center'}}>
@@ -79,5 +79,5 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection:'column',
     }
-});  
+});
 export default Boot;
