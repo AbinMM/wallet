@@ -222,11 +222,13 @@ class Discover extends React.Component {
             // refreshControl={<RefreshControl refreshing={this.state.logRefreshing} onRefresh={() => this.onRefreshing()}
             // tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor} style={{backgroundColor: UColor.transport}}/>}
           >
-          
-          <View style={{backgroundColor: '#FFFFFF', borderBottomLeftRadius: 5, borderBottomRightRadius: 5,paddingHorizontal: ScreenUtil.autowidth(20),}}>
+          <View style={{paddingBottom: 10}}>
+          <View style={{backgroundColor: '#FFFFFF', borderBottomLeftRadius: 5, borderBottomRightRadius: 5,paddingHorizontal: ScreenUtil.autowidth(20),
+            shadowColor: '#3B80F4',shadowOffset:{height: 1,width: 0},shadowRadius: 5,shadowOpacity:1,elevation: 12,}}>
             <View style={{alignItems: 'center',}}>
               <View style={{width:ScreenWidth,  height: (ScreenWidth * 0.436) + ScreenUtil.autoheight(20), borderRadius: 7, overflow: 'hidden',}}>
-                <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth} pageIndicatorContainerStyle={{right: 20, bottom: 20, zIndex: 999}}
+                <Carousel autoplay autoplayTimeout={5000} loop index={0} pageSize={ScreenWidth} 
+                pageIndicatorContainerStyle={{right: ScreenUtil.autowidth(25), bottom: ScreenUtil.autowidth(20), zIndex: 999}}
                 pageIndicatorStyle={{backgroundColor: '#EAEAEA', }} activePageIndicatorStyle={{backgroundColor:'#6DA0F8',}}>
                   {this.renderSwipeView()}
                 </Carousel>
@@ -245,14 +247,14 @@ class Discover extends React.Component {
             </View> 
 
             <View style={{marginVertical:ScreenUtil.autoheight(15),flexDirection: 'row',}}>
-              <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(14),color: '#1A1A1A',fontWeight:'bold',}}>{this.state.mydappBook[0].name}</Text>
+              <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(14),color: '#1A1A1A',fontWeight:'bold',}}>我的DApps</Text>
               <View style={{flexDirection: 'row',}}>
                 <Text style={{fontSize: ScreenUtil.setSpText(12),color: '#3B80F4',paddingRight: ScreenUtil.autowidth(5),}}>更多</Text>
                 <Ionicons name="ios-arrow-forward-outline" size={14} color='#3B80F4' />
               </View>
             </View>
             <ListView enableEmptySections = {true} horizontal={true} showsHorizontalScrollIndicator={false}
-              dataSource={this.state.dataSource.cloneWithRows(this.state.mydappBook == null ? [] : this.state.mydappBook[0].data)} 
+              dataSource={this.state.dataSource.cloneWithRows(this.props.mydappBook == null ? [] : this.props.mydappBook)} 
               renderRow={(rowData) => (
                 <Button  onPress={this.onPressTool.bind(this, rowData)}  style={styles.headDAPP}>
                   <View style={styles.headbtnout}>
@@ -281,25 +283,30 @@ class Discover extends React.Component {
               )}
             />
           </View>
+
+          </View>
+          <View>
+
+          </View>
           <View style={{backgroundColor: '#F9FAF9',}}>
             <SectionList
-              contentContainerStyle={{flexDirection:'row',flexWrap:'wrap',alignItems:'flex-start',paddingBottom: ScreenUtil.autoheight(50)}}
+              contentContainerStyle={{flexDirection:'row',flexWrap:'wrap',alignItems:'flex-start',paddingBottom: ScreenUtil.autoheight(50), paddingHorizontal: ScreenUtil.autowidth(12.5)}}
               initialNumToRender={4}
               keyExtractor={(item, index) => index + item}
               sections={this.state.holdallList}
               renderSectionHeader={(info,index) => (
-                <View style={[{width:ScreenWidth, justifyContent: 'center',paddingHorizontal: ScreenUtil.autowidth(15),paddingTop: ScreenUtil.autoheight(15)}]}>
-                  <Text style={{width:ScreenWidth,color: '#8C8C8C',fontWeight:'bold', fontSize: ScreenUtil.setSpText(14) }}>{info.section.name}</Text>
+                <View style={[{width:ScreenWidth, justifyContent: 'center',paddingHorizontal: ScreenUtil.autowidth(7.5),paddingTop: ScreenUtil.autoheight(15)}]}>
+                  <Text style={{width:ScreenWidth,color: '#B5B5B5',fontWeight:'bold', fontSize: ScreenUtil.setSpText(14) }}>{info.section.name}</Text>
                 </View>
                 )}
               renderItem={ (rowData) => (
-                <Button  onPress={this.onPressTool.bind(this, rowData.item)}  style={{width: (ScreenWidth-ScreenUtil.autowidth(15))/2, paddingLeft: ScreenUtil.autowidth(15),paddingTop: ScreenUtil.autoheight(15)}}>
-                  <View style={{ flexDirection: 'row',alignItems: 'center', justifyContent: "center", backgroundColor: '#FFFFFF',paddingHorizontal:ScreenUtil.autowidth(12),paddingVertical:ScreenUtil.autoheight(15),borderRadius: 5, }}>
-                    <Image source={{uri: rowData.item.icon}} style={{width: ScreenUtil.autowidth(39),height: ScreenUtil.autowidth(39),}} />
+                <Button  onPress={this.onPressTool.bind(this, rowData.item)}  style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2, marginHorizontal: ScreenUtil.autowidth(7.5),marginTop: ScreenUtil.autoheight(15)}}>
+                  <View style={{ flexDirection: 'row',alignItems: 'center', justifyContent: "center", backgroundColor: '#FFFFFF',paddingHorizontal:ScreenUtil.autowidth(13),paddingVertical:ScreenUtil.autoheight(20),borderRadius: 5, }}>
+                    <Image source={{uri: rowData.item.icon}} style={{width: ScreenUtil.autowidth(40),height: ScreenUtil.autowidth(40),}} />
                     {/* <Image source={rowData.item.icon} style={{width: ScreenUtil.autowidth(39),height: ScreenUtil.autowidth(39),}} /> */}
                     <View style={{flex: 1, paddingLeft:  ScreenUtil.autowidth(10),}}>
-                      <Text style={[styles.headbtntext,{color: '#1A1A1A'}]} numberOfLines={1}>{rowData.item.name}</Text>
-                      <Text style={[styles.descriptiontext,{color: '#8C8C8C'}]} numberOfLines={1}>{rowData.item.description}</Text>
+                      <Text style={[styles.headbtntext,{color: '#262626'}]} numberOfLines={1}>{rowData.item.name}</Text>
+                      <Text style={[styles.descriptiontext,{color: '#808080'}]} numberOfLines={1}>{rowData.item.description}</Text>
                     </View>
                   </View>
                 </Button>)
@@ -381,17 +388,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   imgBtnDAPP: {
-    width: ScreenUtil.autowidth(48),
-    height: ScreenUtil.autowidth(48),
-    marginBottom: ScreenUtil.autoheight(7)
+    width: ScreenUtil.autowidth(45),
+    height: ScreenUtil.autowidth(45),
+    marginBottom: ScreenUtil.autoheight(5)
   },
   headbtntext: {
-    fontSize: ScreenUtil.setSpText(12),
+    fontSize: ScreenUtil.setSpText(8),
     lineHeight: ScreenUtil.autoheight(20),
   },
   descriptiontext: {
-    fontSize: ScreenUtil.setSpText(12),
-    lineHeight: ScreenUtil.autoheight(20),
+    fontSize: ScreenUtil.setSpText(10),
+    lineHeight: ScreenUtil.autoheight(14),
   },
   pupuoBackup: {
     flex: 1,
