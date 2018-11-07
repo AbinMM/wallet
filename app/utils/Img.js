@@ -73,6 +73,8 @@ export default {
   authFrame:require('../img/authFrame.png'),
   b:require('../img/b.png'),
   bottom_log:require('../img/bottom_log.png'),
+  bottom_turnin:require('../img/bottom_turnin.png'),
+  
   c:require('../img/c.png'),
   Calculation:require('../img/Calculation.png'),
   character_jh:require('../img/character_jh.png'),
