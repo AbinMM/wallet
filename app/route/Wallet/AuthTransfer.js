@@ -529,8 +529,6 @@ _onRefresh(){
         initialLayout={{height:0,width:ScreenWidth}}
         />}
 
-        <AuthModal {...this.props} />
-
     </View>);
   }
 }
