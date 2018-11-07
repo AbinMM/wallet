@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { DeviceEventEmitter, Clipboard, StyleSheet, Image, ScrollView, View, Text, TextInput, TouchableOpacity } from "react-native";
+import { DeviceEventEmitter, Clipboard, StyleSheet, Image, ImageBackground, View, Text, TextInput, TouchableOpacity } from "react-native";
 import UImage from "../../utils/Img";
 import UColor from "../../utils/Colors";
 import Header from '../../components/Header'
@@ -175,9 +175,11 @@ class TurnInAsset extends BaseComponent {
                 </View>
               </Button>
               <View style={styles.logout}>
-                  <Image source={UImage.bottom_turnin} style={styles.logimg}/>
+                <ImageBackground style={{width: ScreenUtil.screenWidth, height: ScreenUtil.screenWidth*0.7893,}} source={UImage.bottom_turnin}>
+                  {/* <Image source={UImage.bottom_turnin} style={styles.logimg}/> */}
                   <Text style={[styles.logtext,{color: UColor.arrow}]}>我也用ET钱包</Text>
                   <Text style={[styles.logtext,{color: UColor.arrow}]}>eostoken.im</Text>
+                  </ImageBackground>
               </View>
           </View>
         </TouchableOpacity>
