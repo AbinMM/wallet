@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, StyleSheet,Animated, Text, TouchableWithoutFeedback, View,Image,TextInput,KeyboardAvoidingView} from 'react-native';
+import { Platform, StyleSheet,Animated, Text, TouchableWithoutFeedback, View,Image,TextInput,Keyboard} from 'react-native';
 import ScreenUtil from '../../utils/ScreenUtil';
 import TextButton from '../TextButton';
 import Security from '../../utils/Security';
@@ -83,10 +83,6 @@ export class AuthModalView extends React.Component {
       });
     }
 
-    componentWillUnmount() {
-      FingerprintScanner.release();
-    }
-
     //输入密码
     inputPass = () => {
       this.setState({action:"password"});
@@ -149,15 +145,41 @@ export class AuthModalView extends React.Component {
       this.AuthModalCallback && this.AuthModalCallback({isOk:false});
     }
 
+    componentWillMount(){
+      Keyboard.addListener('keyboardDidShow', this._keyboardDidShow.bind(this));
+      Keyboard.addListener('keyboardDidHide', this._keyboardDidHide.bind(this));
+    }
+
+    componentWillUnmount() {
+      FingerprintScanner.release();
+    }
+
+    _keyboardDidShow(e){
+      if(this.isShow){
+        this.setState({
+          keyboardHeight:e.startCoordinates.height
+        })
+      }
+    }
+
+    _keyboardDidHide(e){
+      if(this.isShow){
+        this.setState({
+          keyboardHeight:0
+        });
+      }
+    }
+
+
     render() {
         return (
           this.state.modalVisible && <View style={styles.continer}>
             <TouchableWithoutFeedback>
-            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
+            
               <View style={styles.content}>
                 <Animated.View style={[styles.mask,{opacity:this.state.mask}]}></Animated.View>
 
-                  <View style={styles.alertContent}>
+                  <View style={[styles.alertContent,Platform.OS=="ios"?{marginBottom:this.state.keyboardHeight*0.7}:{}]}>
                     <Animated.View style={[styles.alert,{opacity:this.state.alert}]}>
                       <Text style={styles.title}>{this.state.action == "password"?"身份验证":"指纹验证"}</Text>
                       <View style={styles.ctx}>
@@ -215,7 +237,7 @@ export class AuthModalView extends React.Component {
                   </View>
 
               </View>
-              </KeyboardAvoidingView>
+              
             </TouchableWithoutFeedback>
           </View>
         )
