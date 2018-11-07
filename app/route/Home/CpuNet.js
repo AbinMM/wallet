@@ -19,6 +19,7 @@ import BaseComponent from "../../components/BaseComponent";
 import CountDownReact from '../../components/CountDownReact'
 import TextButton from '../../components/TextButton';
 import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+import {NavigationActions} from 'react-navigation';
 
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -35,6 +36,15 @@ class CpuNet extends BaseComponent {
         header:null,
     };
 
+    //返回上一页面
+    pop(nPage, immediate) {
+        const action = NavigationActions.pop({
+            n: nPage,
+            immediate: immediate,
+        });
+        this.props.navigation.dispatch(action);
+    }
+
     gotoRam = () =>{
         const { navigate } = this.props.navigation;
         // navigate('DelegatebwRecord', {account_name: this.props.defaultWallet.account});
@@ -45,6 +55,8 @@ class CpuNet extends BaseComponent {
             }, () => { EasyShowLD.dialogClose() });
             return;
           }
+
+          this.pop(1, false);
           navigate('Ram', {});    
     }
 

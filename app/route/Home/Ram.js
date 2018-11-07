@@ -18,6 +18,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import BaseComponent from "../../components/BaseComponent";
 import CountDownReact from '../../components/CountDownReact'
 import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+import {NavigationActions} from 'react-navigation';
+
 
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -532,12 +534,29 @@ class Ram extends BaseComponent {
         navigate('addressManage', {isTurnOut: true, coinType: this.props.defaultWallet.account});
     }
 
+    //返回上一页面
+    pop(nPage, immediate) {
+        const action = NavigationActions.pop({
+            n: nPage,
+            immediate: immediate,
+        });
+        this.props.navigation.dispatch(action);
+    }
+
+    goToCpuNet = () => {
+        const { navigate } = this.props.navigation;
+
+        this.pop(1, false);
+        navigate('CpuNet', {});
+    }
+
     //渲染页面
     render() {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-                <Header {...this.props} onPressLeft={true} title="内存"
-                avatar={UImage.delegatebw_record} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)} />
+                <Header {...this.props} onPressLeft={true} title="内存" onPressRight={this.goToCpuNet.bind()}
+                // avatar={UImage.delegatebw_record} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)} />
+                subName="CPU/NET" />
 
                 <View style={[styles.inptoutsource,{flex: 1,}]}>
                     <ScrollView  keyboardShouldPersistTaps="always">
