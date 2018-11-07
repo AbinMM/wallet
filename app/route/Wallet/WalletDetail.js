@@ -158,6 +158,7 @@ class WalletDetail extends BaseComponent {
         //检测账号是否已经激活
         this.props.dispatch({
             type: "wallet/isExistAccountNameAndPublicKey", payload: {account_name: c.name, owner: c.ownerPublic, active: c.activePublic}, callback:(result) =>{
+              EasyShowLD.dialogClose();
               if(result.code == 0 && result.data == true){
                 AlertModal.show("免责声明","系统检测到该账号已经激活!如果执意删除请先导出私钥并保存好，否则删除后无法找回。",'执意删除','返回钱包',(resp)=>{
                   if(resp){
@@ -232,47 +233,40 @@ class WalletDetail extends BaseComponent {
   //已激活账号需要验证密码
   deleteWallet() {
     EasyShowLD.dialogClose();
-    const view =
-      <View style={styles.passoutsource}>
-        <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-          selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
-          style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-          placeholderTextColor={UColor.inputtip}  placeholder="请输入密码"  underlineColorAndroid="transparent" />
-      </View>
-    EasyShowLD.dialogShow("密码", view, "确定", "取消", () => {
-      if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-        EasyToast.show('密码长度至少4位,请重输');
-        return;
-      }
+
+    AuthModal.show(this.props.navigation.state.params.data.account, (authInfo) => {
       try {
-        var data = this.props.navigation.state.params.data;
-        var ownerPrivateKey = this.props.navigation.state.params.data.ownerPrivate;
-        var bytes_words = CryptoJS.AES.decrypt(ownerPrivateKey.toString(), this.state.password + this.props.navigation.state.params.data.salt);
-        var plaintext_words = bytes_words.toString(CryptoJS.enc.Utf8);
-        if (plaintext_words.indexOf('eostoken') != - 1) {
-          plaintext_words = plaintext_words.substr(8, plaintext_words.length);
-          const { dispatch } = this.props;
-          this.props.dispatch({ type: 'wallet/delWallet', payload: { data } });
-          //删除tags
-          JPushModule.deleteTags([data.name],map => {
-            if (map.errorCode === 0) {
-              console.log('Delete tags succeed, tags: ' + map.tags)
-            } else {
-              console.log(map)
-              console.log('Delete tags failed, error code: ' + map.errorCode)
-            }
-          });
-          DeviceEventEmitter.addListener('delete_wallet', (tab) => {
-            this.props.navigation.goBack();
-          });
-        } else {
-          EasyToast.show('您输入的密码不正确');
-        }
+          if(authInfo.isOk){
+              var data = this.props.navigation.state.params.data;
+              var ownerPrivateKey = this.props.navigation.state.params.data.ownerPrivate;
+              var bytes_words = CryptoJS.AES.decrypt(ownerPrivateKey.toString(), authInfo.password + this.props.navigation.state.params.data.salt);
+              var plaintext_words = bytes_words.toString(CryptoJS.enc.Utf8);
+              if (plaintext_words.indexOf('eostoken') != - 1) {
+                plaintext_words = plaintext_words.substr(8, plaintext_words.length);
+                const { dispatch } = this.props;
+                this.props.dispatch({ type: 'wallet/delWallet', payload: { data } });
+                //删除tags
+                JPushModule.deleteTags([data.name],map => {
+                  if (map.errorCode === 0) {
+                    console.log('Delete tags succeed, tags: ' + map.tags)
+                  } else {
+                    console.log(map)
+                    console.log('Delete tags failed, error code: ' + map.errorCode)
+                  }
+                });
+                DeviceEventEmitter.addListener('delete_wallet', (tab) => {
+                  this.props.navigation.goBack();
+                });
+              } else {
+                EasyToast.show('您输入的密码不正确');
+              }
+          }
+          EasyShowLD.dialogClose();
       } catch (error) {
-        EasyToast.show('您输入的密码不正确');
+        EasyShowLD.dialogClose();
+        EasyToast.show('未知异常');
       }
-      EasyShowLD.dialogClose();
-    }, () => { EasyShowLD.dialogClose() });
+    });
   }
 
   activeWalletOnServer(){
@@ -290,11 +284,9 @@ class WalletDetail extends BaseComponent {
             if(result.code == 0 && result.data == true){
                 wallet.isactived = true
                 this.props.dispatch({type: 'wallet/activeWallet', wallet: wallet});
-                //msg:success,data:true, code:0 账号已存在
-                EasyShowLD.dialogShow("恭喜激活成功", (<View>
-                    <Text style={{fontSize: ScreenUtil.setSpText(20), color: UColor.showy, textAlign: 'center',}}>{name}</Text>
-                    {/* <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>您申请的账号已经被***激活成功</Text> */}
-                </View>), "知道了", null,  () => { EasyShowLD.dialogClose() });
+                AlertModal.show("恭喜激活成功",""+name,'知道了',null,(resp)=>{
+                  EasyShowLD.dialogClose();
+                });
             }else if(result.code == 500){ // 网络异常
               EasyToast.show(result.msg);
             }else if(result.code == 515){
@@ -334,46 +326,36 @@ class WalletDetail extends BaseComponent {
   }
 
   backupWords() {
-    const view =
-      <View style={styles.passoutsource}>
-        <TextInput autoFocus={true} onChangeText={(password) => this.setState({ password })} returnKeyType="go" 
-          selectionColor={UColor.tintColor} secureTextEntry={true}  keyboardType="ascii-capable"  maxLength={Constants.PWD_MAX_LENGTH}
-          style={[styles.inptpass,{color: UColor.tintColor,backgroundColor: UColor.btnColor,borderBottomColor: UColor.baseline}]} 
-          placeholderTextColor={UColor.inputtip}  placeholder="请输入密码"  underlineColorAndroid="transparent"/>
-      </View>
 
-    EasyShowLD.dialogShow("密码", view, "备份", "取消", () => {
-
-      if (this.state.password == "" || this.state.password.length < Constants.PWD_MIN_LENGTH) {
-        EasyToast.show('密码长度至少4位,请重输');
-        return;
-      }
-
+    AuthModal.show(this.props.navigation.state.params.data.account, (authInfo) => {
       try {
-        var _words = this.props.navigation.state.params.data.words;
-        var bytes_words = CryptoJS.AES.decrypt(_words.toString(), this.state.password + this.props.navigation.state.params.data.salt);
-        var plaintext_words = bytes_words.toString(CryptoJS.enc.Utf8);
-
-        var words_active = this.props.navigation.state.params.data.words_active;
-        var bytes_words = CryptoJS.AES.decrypt(words_active.toString(), this.state.password + this.props.navigation.state.params.data.salt);
-        var plaintext_words_active = bytes_words.toString(CryptoJS.enc.Utf8);
-
-        if (plaintext_words.indexOf('eostoken') != -1) {
-          plaintext_words = plaintext_words.substr(9, plaintext_words.length);
-          var wordsArr = plaintext_words.split(',');
-
-          plaintext_words_active = plaintext_words_active.substr(9, plaintext_words_active.length);
-          var wordsArr_active = plaintext_words_active.split(',');
-
-          this.toBackup({ words_owner: wordsArr, words_active: wordsArr_active });
-        } else {
-          EasyToast.show('您输入的密码不正确');
-        }
+          if(authInfo.isOk){
+            var _words = this.props.navigation.state.params.data.words;
+            var bytes_words = CryptoJS.AES.decrypt(_words.toString(), authInfo.password + this.props.navigation.state.params.data.salt);
+            var plaintext_words = bytes_words.toString(CryptoJS.enc.Utf8);
+    
+            var words_active = this.props.navigation.state.params.data.words_active;
+            var bytes_words = CryptoJS.AES.decrypt(words_active.toString(), authInfo.password + this.props.navigation.state.params.data.salt);
+            var plaintext_words_active = bytes_words.toString(CryptoJS.enc.Utf8);
+    
+            if (plaintext_words.indexOf('eostoken') != -1) {
+              plaintext_words = plaintext_words.substr(9, plaintext_words.length);
+              var wordsArr = plaintext_words.split(',');
+    
+              plaintext_words_active = plaintext_words_active.substr(9, plaintext_words_active.length);
+              var wordsArr_active = plaintext_words_active.split(',');
+    
+              this.toBackup({ words_owner: wordsArr, words_active: wordsArr_active });
+            }else {
+              EasyToast.show('您输入的密码不正确');
+            }
+          }
+          EasyShowLD.dialogClose();
       } catch (error) {
-        EasyToast.show('您输入的密码不正确');
+        EasyShowLD.dialogClose();
+        EasyToast.show('未知异常');
       }
-      // EasyShowLD.dialogClose();
-    }, () => { EasyShowLD.dialogClose() });
+    });
   }
 
   toBackup = (words) => {
