@@ -351,7 +351,7 @@ class TurnOutAsset extends BaseComponent {
     render() {
         return (
         <View style={[styles.container,{backgroundColor:UColor.secdfont}]}>
-            <Header {...this.props} onPressLeft={true} title={"转账"} />
+            <Header {...this.props} onPressLeft={true} title="转账" avatar={UImage.scanning} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(18)}/> 
             <ScrollView  keyboardShouldPersistTaps="always">
                 <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                     <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
@@ -359,10 +359,10 @@ class TurnOutAsset extends BaseComponent {
                         <View style={styles.taboutsource}>
                             <View style={[styles.outsource,{}]}>
                                 <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>收款账户</Text>
+                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>收款账号</Text>
                                     <View style={styles.scanning}>
-                                        <Button onPress={() => this._rightTopClick()}>
-                                            <Image source={UImage.scanning} style={styles.scanningimg} />
+                                        <Button onPress={() => this.openAddressBook()}>
+                                            <Image source={UImage.al} style={styles.alningimg} />
                                         </Button>
                                     </View>
                                 </View>
@@ -372,33 +372,15 @@ class TurnOutAsset extends BaseComponent {
                                         placeholder="请输入收款账户" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
                                         onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})}
                                     />
-                                    <View style={styles.scanning}>
-                                        <Button onPress={() => this.openAddressBook()}>
-                                            <Image source={UImage.al} style={styles.alningimg} />
-                                        </Button>
-                                    </View>
                                 </View>
 
                                 <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(56),color: UColor.fontColor}]}>转账金额</Text>
+                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(56),color: UColor.fontColor}]}>转账数量</Text>
                                     <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
                                        {lineHeight: ScreenUtil.autoheight(56),color: UColor.arrow,marginRight: ScreenUtil.autowidth(20),}]}>{this.state.balance==""? "余额：0.0000" : "余额：" + this.state.balance +" "+ this.state.name}</Text>
                                 </View>
                                 <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
-                                    <View style={{paddingRight: ScreenUtil.autowidth(20),borderRightColor: UColor.secdColor,borderRightWidth: 1,}} >
-                                        {this.state.Choicesymbol ?
-                                            <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>
-                                                <View style={{flexDirection: 'row',paddingVertical: ScreenUtil.autowidth(10),}}>
-                                                    <Text style={{fontSize: ScreenUtil.setSpText(15),color: UColor.arrow, marginRight: ScreenUtil.autowidth(5),}}>{this.state.name}</Text>
-                                                    <Ionicons color={UColor.fontColor} name="ios-arrow-down-outline" size={20} />
-                                                </View>
-                                            </TouchableOpacity>
-                                        :
-                                            <View style={{alignSelf: 'flex-end',justifyContent: "flex-end",paddingVertical: ScreenUtil.autowidth(10),}}>
-                                                <Text style={[styles.tokenText,{color: UColor.arrow}]}>{this.state.name}</Text>
-                                            </View>
-                                        }
-                                    </View>
+                                
                                     <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} selectionColor={UColor.tintColor}
                                         style={[styles.textinpt,{paddingLeft: ScreenUtil.autowidth(15),color: UColor.arrow}]} maxLength = {15}
                                         placeholderTextColor={UColor.inputtip}  underlineColorAndroid="transparent"   keyboardType="numeric"
@@ -407,12 +389,12 @@ class TurnOutAsset extends BaseComponent {
                                 </View>
 
                                 <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>备注</Text>
+                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>备注(Memo)</Text>
                                 </View>
                                 <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
                                     <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
                                         selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
-                                        placeholder="备注(Memo)" underlineColorAndroid="transparent" keyboardType="default"
+                                        placeholder="备注" underlineColorAndroid="transparent" keyboardType="default"
                                         onChangeText={(memo) => this.setState({ memo })}
                                     />
                                 </View>
