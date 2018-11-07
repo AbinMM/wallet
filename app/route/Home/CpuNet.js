@@ -20,6 +20,7 @@ import CountDownReact from '../../components/CountDownReact'
 import TextButton from '../../components/TextButton';
 import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
 import {NavigationActions} from 'react-navigation';
+import Bar from '../../components/Bar'
 
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -90,10 +91,12 @@ class CpuNet extends BaseComponent {
         cpu_available: '0.00', //计算可用
         cpu_AlreadyUsed: '0.00', //计算已用
         cpu_Percentage: '0%', //计算已用百分比
+        cpu_max: '0.00', //总量
 
         net_available: '0.00', //网络可用
         net_AlreadyUsed: '0.00', //网络已用
         net_Percentage: '0%', //网络已用百分比
+        net_max: '0.00', //总量
 
         cpu_redeem: '0', //计算可赎回EOS
         net_redeem: '0', //网络可赎回EOS
@@ -167,12 +170,15 @@ class CpuNet extends BaseComponent {
                             this.setState({
                                 cpu_available: data.display_data.cpu_limit_available,
                                 cpu_AlreadyUsed: (Math.floor((data.display_data.cpu_limit_max - data.display_data.cpu_limit_available)*100)/100).toFixed(2),
-                                cpu_Percentage: (100-data.display_data.cpu_limit_available_percent.replace("%", "")) + '%',
+                                // cpu_Percentage: (100-data.display_data.cpu_limit_available_percent.replace("%", "")) + '%',
+                                cpu_Percentage: data.display_data.cpu_limit_available_percent.replace("%", ""),
+                                cpu_max: data.display_data.cpu_limit_max,
 
                                 net_available: data.display_data.net_limit_available,
                                 net_AlreadyUsed:  (Math.floor((data.display_data.net_limit_max - data.display_data.net_limit_available)*100)/100).toFixed(2),
-                                net_Percentage: (100-data.display_data.net_limit_available_percent.replace("%", "")) + '%',
-
+                                // net_Percentage: (100-data.display_data.net_limit_available_percent.replace("%", "")) + '%',
+                                net_Percentage: data.display_data.net_limit_available_percent.replace("%", ""),
+                                net_max: data.display_data.net_limit_max, //总量
                             });
                         }
 
@@ -602,7 +608,6 @@ class CpuNet extends BaseComponent {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
                 <Header {...this.props} onPressLeft={true} title="CPU+NET"  onPressRight={this.gotoRam.bind()}
-                // avatar={UImage.delegatebw_record} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)} 
                 subName="内存"
                 />
 
@@ -610,50 +615,42 @@ class CpuNet extends BaseComponent {
                     <ScrollView  keyboardShouldPersistTaps="always">
                         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
                             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
-                                <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(1), }}>
-                                    <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
-                                        <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>CPU</Text>
-                                    </View>
-                                    <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
-                                        <View style={{flexDirection: 'row', alignItems: 'center', }}>
-                                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                                <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
-                                                <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.cpu_AlreadyUsed}ms</Text>
-                                            </View>
-                                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                                <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
-                                                <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.cpu_available}ms</Text>
-                                            </View>
-                                        </View>
-                                        <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
-                                            <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.cpu_Percentage}/>
-                                        </View>
-                                    </View>
+                                <View style={styles.subViewStyle1}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,fontWeight:"bold"}}>CPU</Text>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(10), color: UColor.fontColor,}}>  抵押: {this.state.cpu_weight}</Text>
                                 </View>
-                                <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(1), }}>
-                                    <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
-                                        <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>NET</Text>
-                                    </View>
-                                    <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
-                                        <View style={{flexDirection: 'row', alignItems: 'center', }}>
-                                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                                <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
-                                                <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.net_AlreadyUsed}kb</Text>
-                                            </View>
-                                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                                <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
-                                                <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.net_available}kb</Text>
-                                            </View>
-                                        </View>
-                                        <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
-                                            <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.net_Percentage}/>
-                                        </View>
-                                    </View>
+
+                                <View style={styles.barStyle}>
+                                    <Bar width={300} height={10} current={this.state.cpu_Percentage} max={100} />
                                 </View>
-                                <View style={{height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(15), flexDirection:'row', alignItems: 'center', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(10), }}>
-                                    <Text style={{flex: 1, textAlign: 'left', fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,}}>赎回中</Text>
-                                    <Text style={{flex: 1, textAlign: 'right', fontSize: ScreenUtil.setSpText(16), color: UColor.arrow,}}>{this.state.and_redeem} EOS</Text>
+
+                                <View style={styles.subViewStyle2}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(10), color: UColor.fontColor,}}>  可用: {this.state.cpu_available} ms/总量: {this.state.cpu_max} ms</Text>
                                 </View>
+        
+
+                                <View style={styles.subViewStyle1}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,fontWeight:"bold"}}>NET</Text>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(10), color: UColor.fontColor,}}>  抵押: {this.state.net_weight}</Text>
+                                </View>
+
+                                <View style={styles.barStyle}>
+                                    <Bar width={300} height={10} current={this.state.net_Percentage} max={100} />
+                                </View>
+
+                                <View style={styles.subViewStyle2}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(10), color: UColor.fontColor,}}>  可用: {this.state.net_available} ms/总量: {this.state.net_max} ms</Text>
+                                </View>
+
+                                <View style={{paddingHorizontal: ScreenUtil.autowidth(20),paddingTop: ScreenUtil.autowidth(14),flexDirection:'row',}}>
+                                    <View style={{ flexDirection:'column', alignItems: 'flex-start', }}>
+                                        <Text style={{flex: 1, textAlign: 'left', fontSize: ScreenUtil.setSpText(16),fontWeight:"bold", color: UColor.fontColor,}}>赎回中</Text>
+                                        <Text style={{flex: 1, paddingTop: ScreenUtil.autowidth(14),textAlign: 'left', fontSize: ScreenUtil.setSpText(10), color: UColor.arrow,}}>{this.state.and_redeem} EOS</Text>
+                                    </View>
+                                    
+                               </View>
+ 
+
                                 <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>
                                     {this.resourceButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isMortgage, 'isMortgage', '抵押')}
                                     {this.resourceButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isRedeem, 'isRedeem', '赎回')}
@@ -815,7 +812,56 @@ const styles = StyleSheet.create({
     },
     inptoutsource: {
         justifyContent: 'center',
+        marginHorizontal: ScreenUtil.autowidth(15),
+        marginTop: ScreenUtil.autowidth(10),
+        marginBottom: ScreenUtil.autowidth(23),
+        backgroundColor: UColor.mainColor,
     },
+
+    subViewStyle1:{
+        flex: 1,
+        flexDirection: 'row', 
+        alignItems: 'flex-end', 
+        justifyContent: 'flex-start', 
+        paddingHorizontal: ScreenUtil.autowidth(20), 
+        paddingTop: ScreenUtil.autowidth(12),
+    },
+
+    barStyle:{
+        flex: 1,
+        height: ScreenUtil.autowidth(10), 
+        paddingHorizontal: ScreenUtil.autowidth(20), 
+        paddingTop: ScreenUtil.autowidth(12),
+        paddingBottom: ScreenUtil.autowidth(10),
+        // backgroundColor: UColor.riceWhite,
+    },
+
+    subViewStyle2:{
+        flex: 1,
+        flexDirection: 'row', 
+        alignItems: 'flex-end', 
+        justifyContent: 'flex-end', 
+        paddingHorizontal: ScreenUtil.autowidth(20), 
+        paddingTop: ScreenUtil.autowidth(4),
+    },
+    
+    rectangleStyle: {
+        // flex: 1,
+        // flexDirection:'row',
+        borderWidth: 1,
+        borderRadius: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        // marginHorizontal: ScreenUtil.autowidth(2),
+      },
+      rectangleFontStyle: {
+        textAlign: 'center',
+        fontSize: ScreenUtil.setSpText(10),
+        // paddingVertical: ScreenUtil.autoheight(1),
+        // paddingHorizontal: ScreenUtil.autowidth(8),
+      },
+
+
     outsource: {
         marginTop: 1,
         flexDirection: 'row',
