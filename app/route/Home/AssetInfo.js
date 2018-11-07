@@ -8,13 +8,10 @@ import Button from '../../components/Button'
 import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
-const BTN_SELECTED_STATE_ARRAY = ['isTransfer','isDelegatebw', 'isMemory']; 
-const logOption = ['转账','抵押','内存'];
 @connect(({ wallet, assets}) => ({ ...wallet, ...assets }))
 class AssetInfo extends BaseComponent {
     static navigationOptions = ({ navigation }) => {
@@ -33,10 +30,8 @@ class AssetInfo extends BaseComponent {
             dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
             type: '',
             asset: this.props.navigation.state.params.asset,
-            // detailInfo: "请稍候...",
             logRefreshing: false,
             logId: "-1",
-            isTransfer: true,
             isDelegatebw: false, 
             isMemory: false,
             tradeLog:[],
@@ -188,54 +183,11 @@ class AssetInfo extends BaseComponent {
         this.doRefresh(this.state.logType);
     }
 
-    // 返回转账，抵押记录，内存交易，ET交易  
-    ownOthersButton(style, selectedSate, stateType, buttonTitle) {  
-        return(  
-            <TouchableOpacity style={[style, selectedSate ? {borderBottomWidth: 2,borderBottomColor: UColor.tintColor} : {}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
-                <Text style={[styles.tabText, selectedSate ? {color: UColor.tintColor} : {color: UColor.fontColor}]}>{buttonTitle}</Text>  
-            </TouchableOpacity>  
-        );  
-    }  
-
-    changeLogType(type){
-       this.doRefresh(type);
-    }
-
     checkClick() {
         this.setState({
           isFilter: !this.state.isFilter
         });
       }
-
-
-     // 更新"转账，抵押记录，内存交易，ET交易"按钮的状态  
-     _updateBtnState(currentPressed, array) {  
-        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {  
-            return;  
-        }  
-        let newState = {...this.state};  
-        for (let type of array) {  
-            if (currentPressed == type) {  
-                newState[type] ? {} : newState[type] = !newState[type];  
-                this.setState(newState);  
-            } else {  
-                newState[type] ? newState[type] = !newState[type] : {};  
-                this.setState(newState);  
-            }  
-        }  
-        let action = "transfer";
-        if(currentPressed == BTN_SELECTED_STATE_ARRAY[0]){ // 转账
-            this.setState({logType:"transfer"})
-            action="transfer";
-        }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[1]){
-            this.setState({logType:"delegatebw"})
-            action="delegatebw";
-        }else if(currentPressed == BTN_SELECTED_STATE_ARRAY[2]){
-            this.setState({logType:"ram"})
-            action="ram";
-        }
-        this.changeLogType(action);
-    }  
 
     render() {
         const c = this.props.navigation.state.params.asset;
@@ -259,11 +211,7 @@ class AssetInfo extends BaseComponent {
                 </View>
 
                 <View style={styles.btn}>
-                    <View style={[styles.OwnOthers,{backgroundColor: UColor.mainColor}]}>  
-                        {this.ownOthersButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', logOption[0])}  
-                        {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isMemory, 'isMemory', logOption[2])}  
-                        {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isDelegatebw, 'isDelegatebw', logOption[1])}  
-                    </View>
+              
                     <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} onEndReachedThreshold = {50}
                     onEndReached={() => this.onEndReached()}
                     refreshControl={

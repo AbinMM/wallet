@@ -106,7 +106,7 @@ class Detailsofmoney extends BaseComponent {
             <ScrollView>
                 <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>类型</Text>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>类        型</Text>
                         <Text style={[styles.recordtext,{color:UColor.arrow}]}>分布式底层平台</Text>
                     </View>
                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
@@ -118,7 +118,7 @@ class Detailsofmoney extends BaseComponent {
                         <Text style={[styles.recordtext,{color:UColor.arrow}]} numberOfLines={1}>{this.state.coinInfodata.total}</Text>
                     </View>
                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>流通量</Text>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>流  通  量</Text>
                         <Text style={[styles.recordtext,{color:UColor.arrow}]} numberOfLines={1}>{this.state.coinInfodata.marke}</Text>
                     </View>
                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
@@ -138,7 +138,7 @@ class Detailsofmoney extends BaseComponent {
                         <Text style={[styles.recordtext,{color:UColor.arrow}]} numberOfLines={1}>{this.state.coinInfodata.crowdfundingDate}</Text>
                     </View>
                     <View style={[styles.outsource,{borderBottomColor: UColor.secdColor,}]}>
-                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>白皮书</Text>
+                        <Text style={[styles.nametext,{color:UColor.fontColor}]}>白  皮  书</Text>
                         <Text style={[styles.recordtext,{color:UColor.tintColor}]} numberOfLines={1} onPress={this.prot.bind(this, 'whitePaper')}>查看</Text>
                     </View>
                     <View style={[styles.outsource,{borderBottomColor: UColor.transport,}]}>
