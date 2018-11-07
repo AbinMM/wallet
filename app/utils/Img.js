@@ -240,6 +240,8 @@ export default {
   share_wb:require('../img/wimg/share_wb.png'),
 
   share_banner:require('../img/wimg/share_banner.png'),
+
+  user:require('../img/wimg/user.png'),
   //转账
   turnout_pop: require('../img/turnout_pop.png'),
   turnout_delete: require('../img/turnout_delete.png'),

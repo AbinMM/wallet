@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { StyleSheet, View, Text, ScrollView, Image, TextInput, TouchableOpacity, } from 'react-native';
+import { StyleSheet, Dimensions, View, Text, ScrollView, Image, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import UImage from '../../utils/Img';
 import {kapimg} from '../../utils/Api'
 import UColor from '../../utils/Colors'
@@ -11,9 +11,12 @@ import ScreenUtil from '../../utils/ScreenUtil'
 import {encryptedMsg} from '../../utils/AlgoUtil';
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
+import LinearGradient from 'react-native-linear-gradient'
 import BaseComponent from "../../components/BaseComponent";
 var tick=60;
 var dismissKeyboard = require('dismissKeyboard');
+const ScreenWidth = Dimensions.get('window').width;
+const ScreenHeight = Dimensions.get('window').height;
 
 @connect(({login}) => ({...login}))
 class Forget extends BaseComponent {
@@ -172,58 +175,54 @@ class Forget extends BaseComponent {
   }
 
   render() {
-    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+    return <View style={[styles.container,{backgroundColor: '#FAFAF9'}]}>
       <Header {...this.props} onPressLeft={true} title="忘记密码" />
-      <ScrollView  keyboardShouldPersistTaps="always">
-        <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex: 1,}}>
-          <View style={[styles.outsource,{backgroundColor: UColor.secdColor}]}>
-            <View style={[styles.phoneoue,{backgroundColor: UColor.mainColor}]} >
-                <Text style={[styles.texttitle,{color: UColor.fontColor}]}> 手机号</Text>
-                <TextInput ref={(ref) => this._rphone = ref}  value={this.state.phone}  returnKeyType="next" 
-                  selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
-                  placeholder="请输入您注册时的手机号" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
-                  onChangeText={(phone) => this.setState({phone})}
-                />
-            </View>
-            <View style={[styles.separate,{backgroundColor: UColor.secdColor}]}></View>
-            <View style={[styles.codeoutsource,{backgroundColor: UColor.mainColor}]}>
-                <View style={styles.codeout} >
-                    <Text style={[styles.texttitle,{color: UColor.fontColor}]}> 验证码</Text>
-                    <TextInput  value={this.state.code} ref={(ref) => this._rcode = ref}  returnKeyType="next" 
-                      selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
-                      placeholder="输入验证码" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={6}
-                      onChangeText={(code) => this.setState({code})}
-                    />
-                </View>
-                <View style={styles.btnoutsource}>
-                  <Button onPress={() => this.kcaptrue()}>
-                    <View style={[styles.btnout,{backgroundColor: UColor.tintColor}]}>
-                      <Text style={[styles.btntext,{color: UColor.btnColor}]}>{this.state.capture}</Text>
-                    </View>
-                  </Button>
-                </View>
-            </View>
-            <View style={[styles.separate,{backgroundColor: UColor.secdColor}]}></View>
-            <View style={[styles.phoneoue,{backgroundColor: UColor.mainColor}]} >
-                <Text style={[styles.texttitle,{color: UColor.fontColor}]}> 新密码</Text>
-                <TextInput ref={(ref) => this._rpass = ref}  value={this.state.password} returnKeyType="next" 
-                  selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip} 
-                  placeholder="设置新的登录密码"  underlineColorAndroid="transparent" secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
-                  onChangeText={(password) => this.setState({password})}
-                />
-            </View>
+      <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex: 1,}}>
+        <View style={[styles.outsource,{backgroundColor: '#FFFFFF'}]}>
+          <Text style={[styles.texttitle,{color: '#323232'}]}> 手机号</Text>
+          <TextInput ref={(ref) => this._rphone = ref}  value={this.state.phone}  returnKeyType="next" 
+            selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#D9D9D9',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]}  placeholderTextColor={UColor.inputtip}
+            placeholder="请输入您注册时的手机号" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
+            onChangeText={(phone) => this.setState({phone})}
+          />
+          <View style={[styles.codeoutsource,{backgroundColor: UColor.mainColor}]}>
+              <View style={styles.codeout} >
+                  <Text style={[styles.texttitle,{color: '#323232'}]}> 验证码</Text>
+                  <TextInput  value={this.state.code} ref={(ref) => this._rcode = ref}  returnKeyType="next" 
+                    selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#D9D9D9'}]} placeholderTextColor={UColor.inputtip} 
+                    placeholder="输入验证码" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={6}
+                    onChangeText={(code) => this.setState({code})}
+                  />
+              </View>
+              <View style={styles.btnoutsource}>
+                <Button onPress={() => this.kcaptrue()}>
+                  <View style={[styles.btnout,{borderColor: '#D9D9D9'}]}>
+                    <Text style={[styles.btntext,{color: '#D9D9D9'}]}>{this.state.capture}</Text>
+                  </View>
+                </Button>
+              </View>
           </View>
-          <Button onPress={() => this.regSubmit()}>
-            <View style={[styles.referbtn,{backgroundColor: UColor.tintColor}]}>
-              <Text style={[styles.refertext,{color: UColor.btnColor}]}>提交</Text>
-            </View>
-          </Button>
-          <View style={styles.logout}>
-            <Image source={UImage.bottom_log} style={styles.logimg}/>
-            <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
+          <View style={[styles.separate,{backgroundColor: '#D5D5D5'}]}></View>
+          <Text style={[styles.texttitle,{color: '#323232'}]}> 新密码</Text>
+          <TextInput ref={(ref) => this._rpass = ref}  value={this.state.password} returnKeyType="next" 
+            selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#D9D9D9',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]}  placeholderTextColor={UColor.inputtip} 
+            placeholder="设置新的登录密码"  underlineColorAndroid="transparent" secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
+            onChangeText={(password) => this.setState({password})}
+          />
+          <View style={{paddingVertical: ScreenUtil.autowidth(62), alignItems: 'center',justifyContent: 'center',}}>
+            <Button onPress={() => this.regSubmit()}>
+              <LinearGradient colors={['#3A42F1','#69B6FF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={styles.referbtn} >
+                <Text style={[styles.refertext,{color: UColor.btnColor}]}>提交</Text>
+              </LinearGradient>
+            </Button>
           </View>
-        </TouchableOpacity>
-      </ScrollView>
+        </View>
+        
+        {/* <View style={styles.logout}>
+          <Image source={UImage.bottom_log} style={styles.logimg}/>
+          <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
+        </View> */}
+      </TouchableOpacity>
   </View>
   }
 }
@@ -248,57 +247,62 @@ const styles = StyleSheet.create({
     flexDirection:'column',
   },
   outsource: {
+    borderRadius: 6,
     flexDirection: 'column',
-    paddingBottom: ScreenUtil.autoheight(80),
+    marginHorizontal: ScreenUtil.autowidth(15),
+    marginTop: ScreenUtil.autowidth(15),
+    paddingHorizontal: ScreenUtil.autowidth(20),
   },
   phoneoue: {
-    padding: ScreenUtil.autowidth(20),
-    height: ScreenUtil.autoheight(80),
+    height: ScreenUtil.autoheight(75),
   },
 
   texttitle:{
-    fontSize: ScreenUtil.setSpText(14),
+    marginVertical: ScreenUtil.autowidth(15),
+    fontSize: ScreenUtil.setSpText(16),
   },
   codeoutsource: {
     flexDirection:'row',
   },
   codeout: {
-    width: ScreenUtil.autowidth(200),
-    height: ScreenUtil.autoheight(80),
-    padding: ScreenUtil.autowidth(20),
+    flex: 1,
+    // width: ScreenUtil.autowidth(200),
+    // height: ScreenUtil.autoheight(80),
+    // padding: ScreenUtil.autowidth(20),
   },
   textinpt: {
-    height: ScreenUtil.autoheight(40),
-    fontSize: ScreenUtil.setSpText(15),
+    
+    paddingVertical: 0,
+    //height: ScreenUtil.autoheight(40),
+    fontSize: ScreenUtil.setSpText(14),
     paddingLeft: ScreenUtil.autowidth(2),
+
   },
   btnoutsource: {
-    flex: 1,
-    flexDirection: "row",
-    alignSelf: 'center',
+    alignItems: 'center',
     justifyContent: "flex-end",
-    marginRight: ScreenUtil.autowidth(10),
+    paddingBottom:  ScreenUtil.autowidth(3),
   },
   btnout: {
-    borderRadius: 5,
+    borderRadius: 1,
+    borderWidth: 0.5,
     alignItems: 'center',
     justifyContent: 'center',
-    width: ScreenUtil.autowidth(100),
-    height: ScreenUtil.autoheight(40),
-    marginTop: ScreenUtil.autoheight(15),
+    width: ScreenUtil.autowidth(69),
+    height: ScreenUtil.autoheight(18),
   },
   btntext: {
-    fontSize: ScreenUtil.setSpText(15),
+    fontSize: ScreenUtil.setSpText(12),
   },
   separate: {
     height: 0.5,
   },
   referbtn: {
-    borderRadius: 5,
+    borderRadius: ScreenUtil.autowidth(21),
     alignItems: 'center',
     justifyContent: 'center',
-    height: ScreenUtil.autoheight(45),
-    marginHorizontal: ScreenUtil.autowidth(10),
+    width: ScreenUtil.autowidth(175),
+    height: ScreenUtil.autoheight(42),
   },
   refertext: {
     fontSize: ScreenUtil.setSpText(15),

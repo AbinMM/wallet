@@ -38,6 +38,7 @@ import AssistantQrcode from './Login/AssistantQrcode'
 import Forget from './Login/Forget'
 import Helpcenter from './Login/Helpcenter'
 import ProblemFeedback from './Login/ProblemFeedback'
+import Register from './Login/Register'
 import SignIn from './Login/SignIn'
 
 import Discover from './Discover'
@@ -235,6 +236,9 @@ const Nav = StackNavigator(
     },
     ProblemFeedback: {
       screen: ProblemFeedback
+    },
+    Register: {
+      screen: Register
     },
     Share: {
       screen: Share

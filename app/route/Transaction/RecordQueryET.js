@@ -106,6 +106,7 @@ class RecordQueryET extends React.Component {
 
   // 根据账号查找交易记录
   query = (labelname) =>{
+    
    
     if (labelname == ""||labelname == undefined||labelname==null) {
       EasyToast.show('请输入账号');
