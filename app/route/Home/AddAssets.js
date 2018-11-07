@@ -1,23 +1,28 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import {DeviceEventEmitter,ListView,StyleSheet,Image,View,Text,Switch} from 'react-native';
+import { Dimensions, DeviceEventEmitter, Switch, ListView, StyleSheet, Image, View, Text, Platform, Modal, Animated, TouchableOpacity, Easing, Clipboard, ImageBackground, ScrollView, RefreshControl,Linking, TouchableWithoutFeedback, } from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
-import Header from '../../components/Header'
+import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
+import { EasyToast } from "../../components/Toast"
 import { EasyShowLD } from '../../components/EasyShow'
-import BaseComponent from "../../components/BaseComponent";
 
-@connect(({wallet, assets}) => ({...wallet, ...assets}))
+import Header from '../../components/Header'
+
+import BaseComponent from "../../components/BaseComponent";
+const ScreenWidth = Dimensions.get('window').width;
+const ScreenHeight = Dimensions.get('window').height;
+
+@connect(({ wallet, assets }) => ({ ...wallet, ...assets }))
 class AddAssets extends BaseComponent {
 
   static navigationOptions = {
-      headerTitle: "添加资产",
-      header:null, 
+    tabBarLabel: '添加资产',
+    header: null,
   };
 
-  // 构造函数  
-  constructor(props) { 
+  constructor(props) {
     super(props);
     this.state = {
       show:false,
@@ -62,21 +67,6 @@ class AddAssets extends BaseComponent {
     super.componentWillUnmount();
   }
 
-  onPress(action){
-    EasyShowLD.dialogShow("温馨提示","该功能正在紧急开发中，敬请期待!","知道了",null,()=>{EasyShowLD.dialogClose()});
-  }
-
-  _rightButtonClick() {  
-    this._setModalVisible();  
-  }  
-
-   // 显示/隐藏 modal  
-   _setModalVisible() {  
-    let isShow = this.state.show;  
-    this.setState({  
-      show:!isShow,  
-    });  
-  }  
 
   addAsset(asset, value) {
     if (this.props.defaultWallet == null || this.props.defaultWallet.account == null) {
@@ -118,83 +108,110 @@ class AddAssets extends BaseComponent {
     }
     return false;
   }
-  
-  render() {
-    return (
-      <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-          <Header {...this.props} onPressLeft={true} title="添加资产" avatar={UImage.Magnifier} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(17)} imgHeight={ScreenUtil.autowidth(18)}/> 
-          <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} 
-            dataSource={this.state.dataSource.cloneWithRows(this.props.assetsList == null ? [] : this.props.assetsList)} 
-            renderRow={(rowData, sectionID, rowID) => (      
-            <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
-                <View style={[styles.listInfo,]}>
-                  <View style={{borderRadius: 25,backgroundColor: UColor.secdColor,marginRight: ScreenUtil.autowidth(10),}}>
-                    <Image source={rowData.icon==null ? UImage.eos : { uri: rowData.icon }} style={styles.logimg}/>
-                  </View>
-                  <View style={styles.scrollView}>
-                    <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>{rowData.name}</Text>
-                    <Text style={[styles.quantity,{color: UColor.arrow}]}>{rowData.contractAccount == null ? "" : rowData.contractAccount}</Text>
-                  </View>
-                  <View style={styles.listInfoRight}>
-                    <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontrice}
-                        value={this.isMyAsset(rowData)} onValueChange={(value)=>{
-                          if(this.state.isAdding){ return }
-                          this.setState({isAdding: true});
-                          this.setState({selectasset: rowData, value: value});
-                          this.addAsset(rowData, value);
-                        }}/>
-                  </View>
-                </View>
-                
+
+  _renderHeader() {
+    return(<View style={{flex: 1, alignItems: 'center',backgroundColor: '#F9FAF9'}}>
+        <View style={{overflow: 'hidden', justifyContent: 'center',}}>
+          <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893, paddingTop: Constants.FitPhone}} source={UImage.home_bg}>
+            <View style={[styles.topbtn,]}>
+
+{/*    
+              <TouchableOpacity onPress={()=>{this.isplusShowDimss()}} style={{flex: 1, height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(20), alignItems:'flex-end', justifyContent: 'center', }}>
+                <Ionicons color={'#FFFFFF'} name={"ios-add-outline"} size={32} />
+              </TouchableOpacity> */}
+
             </View>
-            )}                
-          /> 
-      </View>
-    )
+          </ImageBackground>
+        </View>
+    </View>)
+  }
+
+  _renderRow = (rowData, sectionID, rowID) => {
+    return(<View style={[{marginHorizontal: ScreenUtil.autowidth(15),marginBottom: ScreenUtil.autoheight(15), borderRadius: 8, overflow: 'hidden',},rowID == 0 && {marginTop: ScreenUtil.autowidth(10)}]}>
+          <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
+            <View style={styles.lefts}>
+              <View style={{borderRadius: 25,backgroundColor: UColor.secdfont,marginRight: ScreenUtil.autowidth(15)}}> 
+                <Image source={rowData.icon==null ? UImage.eos : { uri: rowData.icon }} style={styles.leftimg} />
+              </View>
+              <Text style={[styles.lefttext,{color: '#262626'}]}>{rowData.name}</Text>
+            </View>
+            <View style={styles.rights}>
+              <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontrice}
+                value={this.isMyAsset(rowData)} onValueChange={(value)=>{
+                  if(this.state.isAdding){ return }
+                  this.setState({isAdding: true});
+                  this.setState({selectasset: rowData, value: value});
+                  this.addAsset(rowData, value);
+                }}/>
+            </View>
+          </View>
+    </View>)
+  }
+
+  render() {
+      return (
+        <View style={[styles.container,{backgroundColor: '#F7F8F9'}]}>
+          <Header {...this.props} onPressLeft={true} title="添加资产" avatar={UImage.Magnifier} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(17)} imgHeight={ScreenUtil.autowidth(18)}/> 
+          <ListView 
+            // refreshControl={<RefreshControl  onRefresh={() => this.onRefresh()}
+            // tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
+            enableEmptySections={true} initialListSize={10}
+            renderHeader={() => this._renderHeader()}  
+            dataSource={this.state.dataSource.cloneWithRows(this.props.assetsList == null ? [] : this.props.assetsList)} 
+            renderRow={(rowData, sectionID, rowID) => this._renderRow(rowData, sectionID, rowID)}
+          />
+        </View>
+      )
   }
 }
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      flexDirection:'column',
-    },
 
-    listItem: {
-      marginBottom: 1,
-      flexDirection: "column",
-      alignItems: "flex-start",
-      justifyContent: "flex-start",
-    },
-    listInfo: {
-      flexDirection: "row",
-      alignItems: "center",
-      height: ScreenUtil.autoheight(60),
-    
-      paddingHorizontal: ScreenUtil.autowidth(16),
-    },
-    logimg: {
-      borderRadius: 10, 
-      overflow:"hidden", 
-      resizeMode: "cover", 
-      width: ScreenUtil.autowidth(40), 
-      height: ScreenUtil.autowidth(40), 
-    },
-    scrollView: {
-      flex: 1,
-      justifyContent: "center",
-      paddingLeft: ScreenUtil.autowidth(10),
-     
-    },
-    listInfoTitle: {
-      fontSize: ScreenUtil.setSpText(16)
-    },
-    listInfoRight: {
-      flexDirection: "row",
-      alignItems: "center"
-    },
-    quantity: {
-      fontSize: ScreenUtil.setSpText(14),
-    },
-   
-})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: ScreenUtil.autowidth(20),
+    paddingVertical: ScreenUtil.autowidth(15),
+  },
+
+  topbtn: {
+    width: ScreenWidth,
+
+    flexDirection: "row",
+    alignItems: 'center',
+    justifyContent: "space-between",
+  },
+  
+  head: {
+    flexDirection: "row",
+    width: ScreenWidth,
+    alignItems: 'flex-start',
+    justifyContent: 'space-around',
+  },
+
+  lefts: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: 'center',
+  },
+  leftimg: {
+    width: ScreenUtil.autowidth(39), 
+    height: ScreenUtil.autowidth(39),
+  },
+  lefttext: {
+    fontSize: ScreenUtil.setSpText(16),
+  },
+  rights: {
+    flex: 1,
+    alignItems: 'flex-end',
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  
+  
+});
+
 export default AddAssets;
