@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { Dimensions, DeviceEventEmitter, Switch, ListView, StyleSheet, Image, View, Text, Platform, Modal, Animated, TouchableOpacity, Easing, Clipboard, ImageBackground, ScrollView, RefreshControl,Linking, TouchableWithoutFeedback, } from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
-import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast"
 import { EasyShowLD } from '../../components/EasyShow'
@@ -26,7 +25,7 @@ class AddAssets extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
-      show:false,
+      // show:false,
       value: false,
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
       selectasset: null,
