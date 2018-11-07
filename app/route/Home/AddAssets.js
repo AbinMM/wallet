@@ -8,7 +8,8 @@ import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast"
 import { EasyShowLD } from '../../components/EasyShow'
 
-import Header from '../../components/Header'
+import HeaderWhite from '../../components/HeaderWhite'
+
 
 import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
@@ -109,23 +110,6 @@ class AddAssets extends BaseComponent {
     return false;
   }
 
-  _renderHeader() {
-    return(<View style={{flex: 1, alignItems: 'center',backgroundColor: '#F9FAF9'}}>
-        <View style={{overflow: 'hidden', justifyContent: 'center',}}>
-          <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893, paddingTop: Constants.FitPhone}} source={UImage.home_bg}>
-            <View style={[styles.topbtn,]}>
-
-{/*    
-              <TouchableOpacity onPress={()=>{this.isplusShowDimss()}} style={{flex: 1, height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(20), alignItems:'flex-end', justifyContent: 'center', }}>
-                <Ionicons color={'#FFFFFF'} name={"ios-add-outline"} size={32} />
-              </TouchableOpacity> */}
-
-            </View>
-          </ImageBackground>
-        </View>
-    </View>)
-  }
-
   _renderRow = (rowData, sectionID, rowID) => {
     return(<View style={[{marginHorizontal: ScreenUtil.autowidth(15),marginBottom: ScreenUtil.autoheight(15), borderRadius: 8, overflow: 'hidden',},rowID == 0 && {marginTop: ScreenUtil.autowidth(10)}]}>
           <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
@@ -151,12 +135,10 @@ class AddAssets extends BaseComponent {
   render() {
       return (
         <View style={[styles.container,{backgroundColor: '#F7F8F9'}]}>
-          <Header {...this.props} onPressLeft={true} title="添加资产" avatar={UImage.Magnifier} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(17)} imgHeight={ScreenUtil.autowidth(18)}/> 
+          <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893,position:'absolute',top: 0,}} source={UImage.home_bg} />
+          <HeaderWhite {...this.props} onPressLeft={true} title="添加资产" backgroundColors={UColor.transport}  avatar={UImage.Magnifier} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(17)} imgHeight={ScreenUtil.autowidth(18)}/> 
           <ListView 
-            // refreshControl={<RefreshControl  onRefresh={() => this.onRefresh()}
-            // tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
             enableEmptySections={true} initialListSize={10}
-            renderHeader={() => this._renderHeader()}  
             dataSource={this.state.dataSource.cloneWithRows(this.props.assetsList == null ? [] : this.props.assetsList)} 
             renderRow={(rowData, sectionID, rowID) => this._renderRow(rowData, sectionID, rowID)}
           />
@@ -177,13 +159,7 @@ const styles = StyleSheet.create({
     paddingVertical: ScreenUtil.autowidth(15),
   },
 
-  topbtn: {
-    width: ScreenWidth,
-
-    flexDirection: "row",
-    alignItems: 'center',
-    justifyContent: "space-between",
-  },
+  
   
   head: {
     flexDirection: "row",
