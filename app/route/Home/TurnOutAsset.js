@@ -357,63 +357,66 @@ class TurnOutAsset extends BaseComponent {
                     <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
 
                         <View style={styles.taboutsource}>
-                            <View style={[styles.outsource,{}]}>
-                                <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>收款账号</Text>
-                                    <View style={styles.scanning}>
-                                        <Button onPress={() => this.openAddressBook()}>
-                                            <Image source={UImage.al} style={styles.alningimg} />
-                                        </Button>
-                                    </View>
-                                </View>
-                                <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
-                                    <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
-                                        placeholder="请输入收款账户" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
-                                        onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})}
-                                    />
-                                </View>
-
-                                <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(56),color: UColor.fontColor}]}>转账数量</Text>
-                                    <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
-                                       {lineHeight: ScreenUtil.autoheight(56),color: UColor.arrow,marginRight: ScreenUtil.autowidth(20),}]}>{this.state.balance==""? "余额：0.0000" : "余额：" + this.state.balance +" "+ this.state.name}</Text>
-                                </View>
-                                <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
-                                
-                                    <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} selectionColor={UColor.tintColor}
-                                        style={[styles.textinpt,{paddingLeft: ScreenUtil.autowidth(15),color: UColor.arrow}]} maxLength = {15}
-                                        placeholderTextColor={UColor.inputtip}  underlineColorAndroid="transparent"   keyboardType="numeric"
-                                        onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })} returnKeyType="next"
-                                    />
-                                </View>
-
-                                <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>备注(Memo)</Text>
-                                </View>
-                                <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
-                                    <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
-                                        placeholder="备注" underlineColorAndroid="transparent" keyboardType="default"
-                                        onChangeText={(memo) => this.setState({ memo })}
-                                    />
+                            <View style={[styles.accountoue]} >
+                                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(48),color: UColor.fontColor}]}>收款账号</Text>
+                                <View style={styles.scanning}>
+                                    <Button onPress={() => this.openAddressBook()}>
+                                        <Image source={UImage.al} style={styles.alningimg} />
+                                    </Button>
                                 </View>
                             </View>
+                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
+                                <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"
+                                    selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
+                                     underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
+                                    onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})}
+                                />
+                            </View>
+
+                            <View style={styles.accountoue} >
+                                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(48),color: UColor.fontColor}]}>转账数量</Text>
+                                <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
+                                    {lineHeight: ScreenUtil.autoheight(48),color: UColor.arrow,marginRight: ScreenUtil.autowidth(20),}]}>EOS ></Text>
+                            </View>
+                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
+                            
+                                <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} selectionColor={UColor.tintColor}
+                                    style={[styles.textinpt,{paddingLeft: ScreenUtil.autowidth(15),color: UColor.arrow}]} maxLength = {15}
+                                    placeholderTextColor={UColor.inputtip}  underlineColorAndroid="transparent"   keyboardType="numeric"
+                                    onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })} returnKeyType="next"
+                                />
+                            </View>
+                            <View style={styles.accountoue} >
+                                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(32),color: UColor.fontColor}]}></Text>
+                                <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
+                                    {lineHeight: ScreenUtil.autoheight(32),color: UColor.arrow,marginRight: ScreenUtil.autowidth(20),}]}>{this.state.balance==""? "余额：0.0000" : "余额：" + this.state.balance +" "+ this.state.name}</Text>
+                            </View>
+
+                            <View style={styles.accountoue} >
+                                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(48),color: UColor.fontColor}]}>备注(Memo)</Text>
+                            </View>
+                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
+                                <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next" maxLength = {40}
+                                    selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
+                                    underlineColorAndroid="transparent" keyboardType="default"
+                                    onChangeText={(memo) => this.setState({ memo })}
+                                />
+                            </View>
+                            <View style={styles.accountoue} >
+                                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(32),color: UColor.fontColor}]}></Text>
+                                <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
+                                    {lineHeight: ScreenUtil.autoheight(32),color: UColor.arrow,marginRight: ScreenUtil.autowidth(20),}]}>转入交易所时请务必填写正确的Memo</Text>
+                            </View>
+                            <Button onPress={this._rightButtonClick.bind(this)} style={styles.btnnextstep}>
+                                <View style={[styles.nextstep,{backgroundColor: UColor.tintColor}]}>
+                                    <Text style={[styles.nextsteptext,{color: UColor.btnColor}]}>确认转账</Text>
+                                </View>
+                            </Button>
                         </View>
                     </TouchableOpacity>
                 </KeyboardAvoidingView>
-                {/* <View style={[styles.warningout,{borderColor: UColor.showy}]}>
-                    <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                        <Image source={UImage.warning} style={styles.imgBtn} />
-                        <Text style={[styles.headtext,{color: UColor.showy}]} >温馨提示</Text>
-                    </View>
-                    <Text style={[styles.headtitle,{color: UColor.showy}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
-                </View> */}
-                <Button onPress={this._rightButtonClick.bind(this)} style={styles.btnnextstep}>
-                    <View style={[styles.nextstep,{backgroundColor: UColor.tintColor}]}>
-                        <Text style={[styles.nextsteptext,{color: UColor.btnColor}]}>下一步</Text>
-                    </View>
-                </Button>
+             
+               
             </ScrollView>
             <View style={{backgroundColor: UColor.riceWhite,}}>
                 <Modal animationType={'slide'} transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
@@ -574,12 +577,13 @@ const styles = StyleSheet.create({
     taboutsource: {
         flex: 1,
         flexDirection: 'column',
+        backgroundColor: UColor.mainColor,
+        marginTop:ScreenUtil.autoheight(20),
+        marginLeft:ScreenUtil.autowidth(10),
+        marginRight:ScreenUtil.autowidth(10),
+        borderRadius: 5,
     },
-    outsource: {
-        flex: 1,
-        flexDirection: 'column',
 
-    },
     inptoutsource: {
         flexDirection: 'row',
         borderBottomWidth: 1,
@@ -626,13 +630,16 @@ const styles = StyleSheet.create({
     },
     textinpt: {
         flex: 1,
-        height: ScreenUtil.autoheight(60),
+        height: ScreenUtil.autoheight(40),
         fontSize: ScreenUtil.setSpText(16),
     },
     btnnextstep: {
         marginTop: ScreenUtil.autoheight(44),
         marginBottom: ScreenUtil.autowidth(25),
-        marginHorizontal: ScreenUtil.autowidth(16),
+        // marginHorizontal: ScreenUtil.autowidth(16),
+        // width:ScreenUtil.screenWidth/2,
+        // justifyContent: 'center',
+        alignItems: 'center',
     },
     nextstep: {
         borderRadius: 5,
