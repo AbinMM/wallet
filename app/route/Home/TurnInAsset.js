@@ -179,7 +179,7 @@ class TurnInAsset extends BaseComponent {
                   {/* <Image source={UImage.bottom_turnin} style={styles.logimg}/> */}
                   <Text style={[styles.logtext,{color: UColor.arrow}]}>我也用ET钱包</Text>
                   <Text style={[styles.logtext,{color: UColor.arrow}]}>eostoken.im</Text>
-                  </ImageBackground>
+                </ImageBackground>
               </View>
           </View>
         </TouchableOpacity>
