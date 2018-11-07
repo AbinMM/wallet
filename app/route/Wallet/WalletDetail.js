@@ -14,6 +14,7 @@ import { EasyShowLD } from '../../components/EasyShow'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+import {AlertModal,AlertModalView} from '../../components/modals/AlertModal'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var AES = require("crypto-js/aes");
@@ -150,51 +151,46 @@ class WalletDetail extends BaseComponent {
   }
 
   deleteWarning(c,data){
-    EasyShowLD.dialogShow("免责声明",  (<View> 
-      <Text style={{color: UColor.arrow,fontSize: 14,}}>删除过程中会检测您的账号是否已激活，如果您没有备份私钥，删除后将无法找回！请确保该账号不再使用后再删除！</Text>
-    </View>),"下一步","返回钱包",  () => {
-      EasyShowLD.loadingShow();
-       //检测账号是否已经激活
-      this.props.dispatch({
-          type: "wallet/isExistAccountNameAndPublicKey", payload: {account_name: c.name, owner: c.ownerPublic, active: c.activePublic}, callback:(result) =>{
-            // EasyShowLD.loadingClose();
-            // EasyShowLD.loadingClose();
-            if(result.code == 0 && result.data == true){
-            //msg:success,data:true, code:0 账号已存在
-              // EasyShowLD.dialogShow("免责声明",  (<View>
-              EasyShowLD.dialogShow("免责声明",  (<View>
-                <Text style={{color: UColor.arrow,fontSize: ScreenUtil.setSpText(14),}}>系统检测到该账号<Text style={{color: UColor.showy,fontSize: 15,}}>已经激活</Text>！如果执意删除请先导出私钥并保存好，否则删除后无法找回</Text>
-              </View>),"执意删除","返回钱包",  () => {
-                  this.deleteWallet();
-                  EasyShowLD.dialogClose()
-              }, () => { EasyShowLD.dialogClose() });
-            }else if(result.code == 521){
-                //msg:账号不存在,data:null,code:521
-                EasyShowLD.dialogShow("免责声明",  (<View>
-                <Text style={{color: UColor.arrow,fontSize: ScreenUtil.setSpText(14),}}>系统检测到该账号还没激活，如果您不打算激活此账号，建议删除。</Text>
-              </View>),"删除","取消",  () => {
-                  this.deletionDirect();
-                  EasyShowLD.dialogClose()
-              }, () => { EasyShowLD.dialogClose() });
-            }else if(result.code == 515){
-              //msg:账号不存在,data:null,code:521
-              EasyShowLD.dialogShow("免责声明",  (<View>
-              <Text style={{color: UColor.arrow,fontSize: ScreenUtil.setSpText(14),}}>系统检测到该账号已经被别人抢注，强烈建议删除。</Text>
-            </View>),"删除","取消",  () => {
-                this.deletionDirect();
-                EasyShowLD.dialogClose()
-            }, () => { EasyShowLD.dialogClose() });
-            }else {
-              EasyShowLD.dialogShow("免责声明",  (<View>
-                <Text style={{color: UColor.arrow,fontSize: ScreenUtil.setSpText(14),}}>网络异常, 暂不能检测到账号是否已经激活, 建议暂不删除此账号, 如果执意删除请先导出私钥并保存好，否则删除后无法找回。</Text>
-              </View>),"执意删除","取消",  () => {
-                  this.deletionDirect();
-                  EasyShowLD.dialogClose()
-              }, () => { EasyShowLD.dialogClose() });
+    
+    AlertModal.show("免责声明","删除过程中会检测您的账号是否已激活，如果您没有备份私钥，删除后将无法找回！请确保该账号不再使用后再删除！",'下一步','返回钱包',(resp)=>{
+      if(resp){
+        EasyShowLD.loadingShow();
+        //检测账号是否已经激活
+        this.props.dispatch({
+            type: "wallet/isExistAccountNameAndPublicKey", payload: {account_name: c.name, owner: c.ownerPublic, active: c.activePublic}, callback:(result) =>{
+              if(result.code == 0 && result.data == true){
+                AlertModal.show("免责声明","系统检测到该账号已经激活!如果执意删除请先导出私钥并保存好，否则删除后无法找回。",'执意删除','返回钱包',(resp)=>{
+                  if(resp){
+                      this.deleteWallet();
+                    }
+                    EasyShowLD.dialogClose();
+                  });
+              }else if(result.code == 521){
+                AlertModal.show("免责声明","系统检测到该账号还没激活，如果您不打算激活此账号，建议删除。",'删除','取消',(resp)=>{
+                  if(resp){
+                    this.deletionDirect();
+                    }
+                    EasyShowLD.dialogClose();
+                  });
+              }else if(result.code == 515){
+                AlertModal.show("免责声明","系统检测到该账号已经被别人抢注，强烈建议删除。",'删除','取消',(resp)=>{
+                  if(resp){
+                    this.deletionDirect();
+                    }
+                    EasyShowLD.dialogClose();
+                  });
+              }else {
+                AlertModal.show("免责声明","网络异常, 暂不能检测到账号是否已经激活, 建议暂不删除此账号, 如果执意删除请先导出私钥并保存好，否则删除后无法找回。",'执意删除','取消',(resp)=>{
+                  if(resp){
+                    this.deletionDirect();
+                    }
+                    EasyShowLD.dialogClose();
+                  });
+              }
             }
-          }
-      })
-    }, () => { EasyShowLD.dialogClose() });
+        })
+      }
+    });
   }
 
   deleteAccount(c,data){
@@ -204,15 +200,14 @@ class WalletDetail extends BaseComponent {
       this.deleteWarning(c,data);
     }
     else{
-      //msg:success,data:true, code:0 账号已存在
-      EasyShowLD.dialogShow("免责声明",  (<View>
-       <Text style={{color: UColor.arrow,fontSize: ScreenUtil.setSpText(14),}}>系统检测到该账号<Text style={{color: UColor.showy,fontSize: ScreenUtil.setSpText(15),}}>已经激活</Text>！如果执意删除请先导出私钥并保存好，否则删除后无法找回</Text>
-     </View>),"执意删除","返回钱包",  () => {
-         this.deleteWallet();
-        //  EasyShowLD.dialogClose()
-     }, () => { EasyShowLD.dialogClose() });
+
+     AlertModal.show("免责声明","系统检测到该账号已经激活!如果执意删除请先导出私钥并保存好，否则删除后无法找回。",'执意删除','返回钱包',(resp)=>{
+      if(resp){
+          this.deleteWallet();
+        }
+        // EasyShowLD.dialogClose();
+      });
     }
-  
   }
 
   //未激活账号直接删除
@@ -306,51 +301,6 @@ class WalletDetail extends BaseComponent {
               EasyToast.show("账号已被别人占用，请换个账号吧！");
             }else{
               navigate('ActivationAt', {parameter:wallet, entry: "activeWallet"});
-
-              // this.props.dispatch({
-              //   type: "login/fetchPoint", payload: { uid: Constants.uid }, callback:(data) =>{
-              //     if (data.code == 403) {
-              //       this.props.dispatch({
-              //         type: 'login/logout', payload: {}, callback: () => {}
-              //       });      
-              //       EasyShowLD.loadingClose();
-              //       navigate('ActivationAt', {parameter:wallet});
-              //       return false;   
-              //     }else if(data.code == 0){
-              //       this.props.dispatch({
-              //         type: 'wallet/createAccountService', payload: { username: name, owner: owner, active: active, isact:true}, callback: (data) => {
-              //           EasyShowLD.loadingClose();
-              //           if (data.code == '0') {
-              //             wallet.isactived = true
-              //             this.props.dispatch({
-              //               type: 'wallet/activeWallet', wallet: wallet, callback: (data, error) => {
-              //                 DeviceEventEmitter.emit('updateDefaultWallet');
-              //                 if (error != null) {
-              //                   navigate('ActivationAt', {parameter:wallet});
-              //                   return false;
-              //                 } else {
-              //                   EasyShowLD.dialogShow("创建账号成功", (<View>
-              //                     <Text style={{fontSize: 20, color: UColor.showy, textAlign: 'center',}}>{name}</Text>
-              //                     <Text style={{fontSize: 16, color: UColor.lightgray,}}>恭喜！您的EosToken账号积分获得免费创建账号权益，该账号已完成激活，建议您在使用转账功能时先小额尝试，成功后再正常使用钱包。</Text>
-              //                 </View>), "确认", null,  () => { EasyShowLD.dialogClose() });
-              //                   return true;
-              //                 }
-              //               }
-              //             });
-              //           }else{
-              //             EasyShowLD.loadingClose();
-              //             navigate('ActivationAt', {parameter:wallet});
-              //             return false;
-              //           }
-              //         }
-              //       });
-              //     }else{
-              //       EasyShowLD.loadingClose();
-              //       navigate('ActivationAt', {parameter:wallet});
-              //       return false;   
-              //     }
-              //   }
-              // });
             }
         }
     });
