@@ -14,6 +14,7 @@ import {NavigationActions} from 'react-navigation';
 import { EasyShowLD } from "../../components/EasyShow"
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
+import {AlertModal,AlertModalView} from '../../components/modals/AlertModal'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var WeChat = require('react-native-wechat');
@@ -105,10 +106,10 @@ class ActivationAt extends BaseComponent {
 
                         wallet.isactived = true;
                         this.props.dispatch({type: 'wallet/activeWallet', wallet: wallet});
-                        //msg:success,data:true, code:0 账号已存在
-                        EasyShowLD.dialogShow("恭喜激活成功", (<View>
-                            <Text style={{fontSize: ScreenUtil.setSpText(20), color: UColor.showy, textAlign: 'center',}}>{name}</Text>
-                        </View>), "知道了", null,  () => { EasyShowLD.dialogClose() });
+                        AlertModal.show("恭喜激活成功",""+name,'知道了',null,(resp)=>{
+                            EasyShowLD.dialogClose();
+                        });
+
                     }else {
                         this.props.dispatch({
                             type: "wallet/getcheckBy", payload: {accountName: this.state.name, ownerPublicKey: this.state.ownerPublic}, 
@@ -118,19 +119,16 @@ class ActivationAt extends BaseComponent {
                                 if(result && result.code == 0){ // 创建账号成功, 修改钱包状态
                                     wallet.isactived = true;
                                     this.props.dispatch({type: 'wallet/activeWallet', wallet: wallet});
-                                    //msg:success,data:true, code:0 账号已存在
-                                    EasyShowLD.dialogShow("恭喜激活成功", (<View>
-                                        <Text style={{fontSize: ScreenUtil.setSpText(20), color: UColor.showy, textAlign: 'center',}}>{name}</Text>
-                                    </View>), "知道了", null,  () => { EasyShowLD.dialogClose() });
-
+                                    AlertModal.show("恭喜激活成功",""+name,'知道了',null,(resp)=>{
+                                        EasyShowLD.dialogClose();
+                                    });
                                     return;
                                 }
 
                                 // 未成功创建账号情况, 包括支付成功但未创建
-                                // alert(result.msg);
-                                EasyShowLD.dialogShow("温馨提示", (<View>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(20), color: UColor.showy, textAlign: 'center',}}>{result.msg}</Text>
-                                </View>), "知道了", null,  () => { EasyShowLD.dialogClose() });
+                                AlertModal.show("温馨提示",""+result.msg,'知道了',null,(resp)=>{
+                                    EasyShowLD.dialogClose();
+                                });
                             }
                         })
                     }
