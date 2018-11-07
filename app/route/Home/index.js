@@ -733,7 +733,7 @@ class Home extends React.Component {
                     <Text style={[styles.headbtntext,{color: '#FEFEFE'}]}>收款</Text>
                   </View>
                 </Button>
-                <Button  onPress={this.onPress.bind(this, 'Resources')}  style={styles.headbtn}>
+                <Button  onPress={this.onPress.bind(this, 'CpuNet')}  style={styles.headbtn}>
                   <View style={styles.headbtnout}>
                     <Image source={UImage.resources_h} style={styles.imgBtn} />
                     <Text style={[styles.headbtntext,{color: '#FEFEFE'}]}>资源</Text>
