@@ -67,5 +67,6 @@ export default {
   tintnavigation: '#2279C5',
   fontrice: "#EDEDED",
   inputtip: "#b2b2b2",
+  turnout_eos: "#3B80F4",
   Navigation: ['#4CA6FF', '#7CBEFF'],
 }

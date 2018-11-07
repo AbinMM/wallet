@@ -6,7 +6,6 @@ import UColor from '../../utils/Colors'
 import { Eos } from "react-native-eosjs";
 import Button from '../../components/Button'
 import Header from '../../components/Header'
-import Constants from '../../utils/Constants';
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import {formatEosQua} from '../../utils/FormatUtil';
@@ -16,10 +15,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
 
+import TextButton from '../../components/TextButton';
+
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
-var AES = require("crypto-js/aes");
-var CryptoJS = require("crypto-js");
 var dismissKeyboard = require('dismissKeyboard');
 
 @connect(({ wallet, assets,addressBook }) => ({ ...wallet, ...assets,...addressBook }))
@@ -32,9 +31,9 @@ class TurnOutAsset extends BaseComponent {
      // 构造函数
      constructor(props) {
         super(props);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        // const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource: ds.cloneWithRows([]),
+            // dataSource: ds.cloneWithRows([]),
             show: false,
             toAccount: '', // 账户名称
             amount: '', // 转账金额
@@ -42,7 +41,6 @@ class TurnOutAsset extends BaseComponent {
             balance: '0', // 代币余额
             name: '', // 代币名称
             tokenvalue: '', // 代币兑换比率
-            password:'',  //密码
             tokenicon: "http://news.eostoken.im/images/20180319/1521432637907.png", // 代币图标
             contractAccount: "eosio.token", // 契约帐户
             precisionNumber: '0', // 代币经度
@@ -150,7 +148,7 @@ class TurnOutAsset extends BaseComponent {
             return;
         }
         if (this.state.amount == null || this.state.amount == "") {
-            EasyToast.show('请输入转账金额');
+            EasyToast.show('请输入转账数量');
             return;
         }
         var value;
@@ -163,7 +161,7 @@ class TurnOutAsset extends BaseComponent {
           }
         if(value <= 0){
             this.setState({ amount: "" })
-            EasyToast.show('请输入转账金额');
+            EasyToast.show('请输入转账数量');
             return ;
         }
         if(value > floatbalance){
@@ -204,7 +202,9 @@ class TurnOutAsset extends BaseComponent {
 
     inputPwd = () => {
         this._setModalVisible();
-        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
+        AuthModal.show(this.props.defaultWallet.account, (resp) => {
+            if(resp && resp.isOk)
+            {
             try {
                 EasyShowLD.loadingShow();
                 Eos.transaction({
@@ -214,7 +214,7 @@ class TurnOutAsset extends BaseComponent {
                             name: "transfer",
                             authorization: [{
                                 actor: this.props.defaultWallet.account,
-                                permission: authInfo.permission,
+                                permission: resp.permission,
                             }],
                             data: {
                                 from: this.props.defaultWallet.account,
@@ -224,7 +224,7 @@ class TurnOutAsset extends BaseComponent {
                             }
                         },
                     ]
-                }, authInfo.pk, (r) => {
+                }, resp.pk, (r) => {
                     EasyShowLD.loadingClose();
                     if(r && r.isSuccess){
                         this.addToAddressManage();
@@ -273,13 +273,9 @@ class TurnOutAsset extends BaseComponent {
                 EasyToast.show('未知异常');
                 EasyShowLD.loadingClose();
             }
-        });
-    }
+            }
 
-    chkLast(obj) {
-        if (obj.substr((obj.length - 1), 1) == '.') {
-            obj = obj.substr(0, (obj.length - 1));
-        }
+        });
     }
 
     chkAccount(obj) {
@@ -345,9 +341,7 @@ class TurnOutAsset extends BaseComponent {
     dismissKeyboardClick() {
         dismissKeyboard();
     }
-    onEndReached(){
-        this.props.dispatch({ type: 'addressBook/addressInfo'});
-    }
+
     render() {
         return (
         <View style={[styles.container,{backgroundColor:UColor.secdfont}]}>
@@ -375,8 +369,8 @@ class TurnOutAsset extends BaseComponent {
 
                             <View style={styles.accountoue} >
                                 <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(48),color: UColor.fontColor}]}>转账数量</Text>
-                                <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
-                                    {lineHeight: ScreenUtil.autoheight(48),color: UColor.arrow,marginRight: ScreenUtil.autowidth(20),}]}>EOS ></Text>
+                                <Text onPress={()=>{this.openChoiceToken()}}  style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
+                                    {lineHeight: ScreenUtil.autoheight(48),color: UColor.turnout_eos,marginRight: ScreenUtil.autowidth(20),}]}>{this.state.name} ></Text>
                             </View>
                             <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
                             
@@ -429,17 +423,13 @@ class TurnOutAsset extends BaseComponent {
                                     <Text style={[styles.titleText,{color: UColor.blackColor}]}>订单详情</Text>
                                     <Text style={styles.buttontext}/>
                                 </View>
-                                {/* <View style={[styles.separationline,{borderBottomColor: UColor.mainsecd}]} >
-                                    <Text style={[styles.amounttext,{color:UColor.blackColor}]}>{this.state.amount} </Text>
-                                    <Text style={[styles.unittext,{color:UColor.blackColor}]}> {this.state.name}</Text>
-                                </View> */}
                                 <View>
                                     <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText,{color: UColor.startup}]}>收款账户：</Text>
+                                        <Text style={[styles.explainText,{color: UColor.startup}]}>收款账号：</Text>
                                         <Text style={[styles.contentText,{color: UColor.arrow}]}>{this.state.toAccount}</Text>
                                     </View>
                                     <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText,{color: UColor.startup}]}>转出账户：</Text>
+                                        <Text style={[styles.explainText,{color: UColor.startup}]}>转出账号：</Text>
                                         <Text style={[styles.contentText,{color: UColor.arrow}]}>{this.props.defaultWallet.account}</Text>
                                     </View>
                                     <View style={[styles.separationline,]} >
