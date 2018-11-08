@@ -1,6 +1,3 @@
-/**
- * Created by zhuang.haipeng on 2017/9/12.
- */
 import React from 'react';
 import { connect } from 'react-redux'
 import {Platform,DeviceEventEmitter,StyleSheet,Image,View,Text, TextInput,Dimensions,TouchableOpacity,KeyboardAvoidingView,ScrollView} from 'react-native';
@@ -11,10 +8,12 @@ import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from '../../components/EasyShow'
+import TextButton from '../../components/TextButton';
 import BaseComponent from "../../components/BaseComponent";
 var dismissKeyboard = require('dismissKeyboard');
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
+
 
 @connect(({addressBook}) => ({...addressBook}))
 class addressCreate extends BaseComponent {
@@ -110,42 +109,37 @@ class addressCreate extends BaseComponent {
         }
     };
 
-    btnRightSelect() { 
-        //取消
-        this.props.navigation.goBack();  //正常返回上一个页面
-    }
     dismissKeyboardClick() {
         dismissKeyboard();
     }
     render() {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-                <Header {...this.props} onPressLeft={true} title="新建联系人" subName={"取消"} onPressRight={this.btnRightSelect.bind(this)} imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(18)}/>
+            <Header {...this.props} onPressLeft={true} title="新建联系人" imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(18)}/>
             <ScrollView  keyboardShouldPersistTaps="always">
              
             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                     <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
                         
                         <View style={styles.taboutsource}>
-                            <View style={[styles.outsource,{}]}>
                                 <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>名字</Text>
+                                    <Text style={[styles.inptitle]}>名字</Text>
                                 </View>
-                                <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
+                                <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
                                     <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.labelName} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt]}  placeholderTextColor={UColor.inputtip}
                                         placeholder="请输入联系人名字" underlineColorAndroid="transparent" keyboardType="default"  maxLength={12}
                                         onChangeText={(labelName) => this.setState({ labelName })}
                                     />
                                 </View>
                           
                                 <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(56),color: UColor.fontColor}]}>账户名称</Text>
+                                    <Text style={[styles.inptitle]}>账户名称</Text>
                                 </View>
 
-                                <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
+                                <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
                                     <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"   
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}      
+                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1}]} placeholderTextColor={UColor.inputtip}      
                                         placeholder="输入a-z小写字符和1-5数字组合字符" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
                                         onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})} 
                                     />
@@ -158,9 +152,9 @@ class addressCreate extends BaseComponent {
                                 
 
                                 <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(64),color: UColor.fontColor}]}>备注</Text>
+                                    <Text style={[styles.inptitle]}>备注(可不填)</Text>
                                 </View>
-                                <View style={[styles.accountoue,{backgroundColor:UColor.mainColor}]} >
+                                <View style={[styles.accountoue,{marginBottom:ScreenUtil.autoheight(5),borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
                                     <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
                                         selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
                                         placeholder="备注(Memo)" underlineColorAndroid="transparent" keyboardType="default"  maxLength={20}
@@ -168,7 +162,6 @@ class addressCreate extends BaseComponent {
                                     />
                                 </View>
 
-                            </View>
                         </View>
                     </TouchableOpacity>
                 </KeyboardAvoidingView>
@@ -176,8 +169,10 @@ class addressCreate extends BaseComponent {
                 <View style={[styles.replace,{backgroundColor: UColor.secdColor}]}>
                     <TouchableOpacity onPress={() => this.saveAddress(this)} style={[styles.editClickout,{backgroundColor: UColor.tintColor}]}>
                         <Text style={[styles.address,{color:UColor.btnColor}]}>保存</Text>
-                    </TouchableOpacity>                 
-                </View>
+                    </TouchableOpacity>     
+                {/* <TextButton style={[styles.networktab,{borderColor: UColor.tintColor}]} text="保存" onPress={() => {this.saveAddress()}}></TextButton>  */}
+                </View> 
+           
             </ScrollView>
             </View>
         );
@@ -192,12 +187,12 @@ const styles = StyleSheet.create({
     taboutsource: {
         flex: 1,
         flexDirection: 'column',
+        top:ScreenUtil.autoheight(12),
+        marginLeft:ScreenUtil.autowidth(10),
+        marginRight:ScreenUtil.autowidth(10),
+        backgroundColor:UColor.mainColor,
     },
-    outsource: {
-        flex: 1,
-        flexDirection: 'column',
-        
-    },
+
     accountoue: {
         flexDirection: "row",
         alignItems: 'center',
@@ -208,11 +203,14 @@ const styles = StyleSheet.create({
     inptitle: {
         flex: 1,
         fontSize: ScreenUtil.setSpText(16),
+        lineHeight: ScreenUtil.autowidth(40),
+        color: UColor.fontColor,
     },
     textinpt: {
         flex: 1,
-        height: ScreenUtil.autoheight(60),
-        fontSize: ScreenUtil.setSpText(16),
+        height: ScreenUtil.autoheight(40),
+        fontSize: ScreenUtil.setSpText(14),
+        color: UColor.arrow,
     },
     scanning: {
         alignSelf: 'center',
@@ -229,6 +227,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         flexDirection: 'column',
         justifyContent: "space-between",
+        marginTop:ScreenUtil.autowidth(25),
     },
     editClickout: {
         borderRadius: 5,
@@ -237,6 +236,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         margin: ScreenUtil.autowidth(10),
         height: ScreenUtil.autoheight(45),
+    },
+
+    networktab: {
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: ScreenUtil.autowidth(22),
+        paddingVertical: ScreenUtil.autoheight(5),
     },
     address: {
         fontSize: ScreenUtil.setSpText(17),

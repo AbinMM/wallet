@@ -1,9 +1,6 @@
-/**
- * Created by zhuang.haipeng on 2017/9/12.
- */
 import React from 'react';
 import { connect } from 'react-redux'
-import {DeviceEventEmitter,ListView,StyleSheet,Image,View,Text, Switch,Dimensions,Modal,TouchableOpacity,ScrollView} from 'react-native';
+import {DeviceEventEmitter,ListView,StyleSheet,Image,View,Text, Switch,Dimensions,TouchableHighlight,Modal,TouchableOpacity,ScrollView} from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Header from '../../components/Header'
@@ -16,6 +13,8 @@ var dismissKeyboard = require('dismissKeyboard');
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
+
+import Ionicons from 'react-native-vector-icons/Ionicons'
 @connect(({addressBook}) => ({...addressBook}))
 class addressManage extends BaseComponent {
 
@@ -143,10 +142,12 @@ class addressManage extends BaseComponent {
     onEndReached(){
         this.props.dispatch({ type: 'addressBook/addressInfo'});
     }
-    _openDetails(trade) {  
 
-    }
-
+    checkClick() {
+        // this.setState({
+        //   isChecked: !this.state.isChecked
+        // });
+      }
     render() {
         let temp = [...this.state.selectMap.values()];
         let isChecked = temp.length === this.state.dataSource._cachedRowCount;
@@ -160,28 +161,20 @@ class addressManage extends BaseComponent {
                     onEndReached={() => this.onEndReached()}
                     dataSource={this.state.dataSource.cloneWithRows((this.props.addressBook == null ? [] : this.props.addressBook))} 
                     renderRow={(rowData, sectionID, rowID) => (                 
-                    <View>
-                        <Button onPress={this._openDetails.bind(this, rowData)}> 
-                            <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
-                                <View style={styles.top}>
-                                    <View style={styles.timequantity}>
-                                        <Text style={[styles.quantity,{color: UColor.fontColor}]}>{rowData.labelName}</Text>
-                                        <Text style={[styles.timetext,{color: UColor.arrow}]}>{rowData.address}</Text>
-                                    </View>
-                                    <View style={styles.typedescription}>
-                                    
-                                        <Switch 
-                                        tintColor={UColor.secdColor}
-                                        onTintColor={UColor.tintColor}
-                                        thumbTintColor={UColor.fontrice}
-                                      
-                                        />
-                                       
-                                    </View>
-                                </View>
+                    
+                        <View style={styles.top}>
+                        <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
+                            <View style={[{width: ScreenUtil.autowidth(12), height: ScreenUtil.autowidth(12),marginRight: ScreenUtil.autowidth(5), marginTop: ScreenUtil.autowidth(10), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
+                        </TouchableHighlight>
+                            <View style={styles.timequantity}>
+                                <Text style={[styles.quantity,{color: UColor.fontColor}]}>{rowData.labelName}</Text>
+                                <Text style={[styles.timetext,{color: UColor.arrow}]}>{rowData.address}</Text>
                             </View>
-                        </Button>  
-                    </View>)}                
+                            <View style={styles.typedescription}>
+                                <Ionicons name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(20)} color='#B5B5B5' />
+                            </View>
+                        </View>
+                   )}                
                  /> 
                 </View>
 
@@ -281,6 +274,10 @@ const styles = StyleSheet.create({
 
     tab: {
         flex: 1,
+        top:ScreenUtil.autoheight(12),
+        marginLeft:ScreenUtil.autowidth(10),
+        marginRight:ScreenUtil.autowidth(10),
+        backgroundColor:UColor.mainColor,
     },
     btn: {
         flex: 1,
@@ -311,19 +308,14 @@ const styles = StyleSheet.create({
         paddingVertical: ScreenUtil.autoheight(5),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },  
-    row: {
-        //borderRadius: 5,
-        flexDirection: "row",
-        paddingVertical: ScreenUtil.autoheight(10),
-        //marginHorizontal: ScreenUtil.autowidth(5),
-        marginTop: ScreenUtil.autowidth(0.5),
-        paddingHorizontal: ScreenUtil.autowidth(15),
-    },
+
   top: {
         flex: 1,
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: "center",
+        marginLeft:ScreenUtil.autowidth(10),
+        marginRight:ScreenUtil.autowidth(10),
     },
     timequantity: {
         flex: 4,
@@ -334,7 +326,7 @@ const styles = StyleSheet.create({
     },
     timetext: {
         textAlign: 'left',
-        fontSize: ScreenUtil.setSpText(12),
+        fontSize: ScreenUtil.setSpText(10),
     },
     quantity: {
         textAlign: 'left',
