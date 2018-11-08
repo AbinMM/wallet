@@ -134,8 +134,8 @@ class AddAssets extends BaseComponent {
   render() {
       return (
         <View style={[styles.container,{backgroundColor: '#F7F8F9'}]}>
-          <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893,position:'absolute',top: 0,}} source={UImage.home_bg} />
           <HeaderWhite {...this.props} onPressLeft={true} title="添加资产" backgroundColors={UColor.transport}  avatar={UImage.Magnifier} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(17)} imgHeight={ScreenUtil.autowidth(18)}/> 
+          <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893,position:'absolute',top: 0,}} source={UImage.home_bg} />
           <ListView 
             enableEmptySections={true} initialListSize={10}
             dataSource={this.state.dataSource.cloneWithRows(this.props.assetsList == null ? [] : this.props.assetsList)} 
