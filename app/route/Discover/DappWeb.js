@@ -355,7 +355,7 @@ onBackAndroid = () => {
       })
   }
   eos_getCurrencyBalance(result){
-    if(!result.params.contract  || !result.params.account || !result.params.symbol)
+    if(!result.params.code  || !result.params.account || !result.params.symbol)
     {
         EasyToast.show('getCurrencyBalance参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -363,26 +363,13 @@ onBackAndroid = () => {
     }
 
     this.props.dispatch({
-        type: 'wallet/getBalance', payload: { contract: result.params.contract, account: result.params.account, symbol: result.params.symbol }, callback: (resp) => {
-          try {
-                var tmp_balance = "0.0000";
-                if (resp && resp.code == '0') {
-                    if (resp.data == "") {
-                        tmp_balance = '0.0000';
-                    } else {
-                        tmp_balance = resp.data;
-                    }
-                } else {
-                    var errmsg = ((resp.data && resp.data.msg) ? resp.data.msg : "");
-                    EasyToast.show("eos_getCurrencyBalance:" +errmsg);
-                }
-                var unit = ' ' + result.params.symbol;
-                if(tmp_balance.indexOf(unit) < 0)
-                {
-                    tmp_balance = tmp_balance + unit;
-                }
+        type: 'dapp/getBalance', payload: { code: result.params.code, account: result.params.account, symbol: result.params.symbol }, callback: (resp) => {
+         
+            try {
                 var array = new Array();
-                array[0] = tmp_balance;
+                if (resp) {
+                    array = resp;
+                } 
                  this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:array}));
             } catch (error) {
                 EasyToast.show("eos_getCurrencyBalance:" +error.message);

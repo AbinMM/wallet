@@ -294,7 +294,7 @@ export default function RenderScatter(props) {
                             tmp_account = account;
                             tmp_symbol = symbol;
                         }
-                        window.postMessage(JSON.stringify({key,scatter:"getCurrencyBalance",params:{contract:tmp_code,account:tmp_account,symbol:tmp_symbol}}));
+                        window.postMessage(JSON.stringify({key,scatter:"getCurrencyBalance",params:{code:tmp_code,account:tmp_account,symbol:tmp_symbol}}));
                         document.addEventListener("message",function(msg){
                             document.removeEventListener("message",this);
                             var obj = eval("(" + msg.data + ")");
