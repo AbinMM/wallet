@@ -284,18 +284,18 @@ class Register extends BaseComponent {
         <View style={[styles.outsource,{backgroundColor: '#FFFFFF'}]}>
           <Text style={[styles.inptitle,{color: '#323232'}]}>手机号</Text>
           <TextInput ref={(ref) => this._rphone = ref} value={this.state.phone} returnKeyType="next" 
-            selectionColor={UColor.tintColor} style={[styles.inpt,{color: '#D9D9D9',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]} placeholderTextColor={UColor.inputtip} 
+            selectionColor={UColor.tintColor} style={[styles.inpt,{color: '#808080',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]} placeholderTextColor={'#D9D9D9'} 
             placeholder="输入手机号" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
             onChangeText={(phone) => this.setState({ phone })}/>
 
-            <PasswordInput password={this.state.password} onCallbackFun={(password) => this.setState({ password })} 
+          <PasswordInput password={this.state.password} onCallbackFun={(password) => this.setState({ password })} 
             repeatpassword={this.state.repeatpassword} onCallbackFunRepeat={(repeatpassword) => this.setState({ repeatpassword })}/>
         
           <View style={[styles.vfanout,]}>
             <View style={styles.vfantext} >
               <Text style={[styles.inptitle,{color: '#323232'}]}>验证码</Text>
               <TextInput ref={(ref) => this._rcode = ref} value={this.state.code} returnKeyType="next" 
-                selectionColor={UColor.tintColor} style={[styles.inpt,{color: '#D9D9D9'}]} placeholderTextColor={UColor.inputtip}
+                selectionColor={UColor.tintColor} style={[styles.inpt,{color: '#808080'}]} placeholderTextColor={'#D9D9D9'}
                 placeholder="请输入验证码" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={6}
                 onChangeText={(code) => this.setState({ code })}/>
             </View>
@@ -362,9 +362,9 @@ const styles = StyleSheet.create({
     paddingLeft: ScreenUtil.autowidth(2),
   },
   inptitle: {
+    fontWeight:"bold",
     fontSize: ScreenUtil.setSpText(16), 
     marginVertical: ScreenUtil.autowidth(20),
-    fontWeight:"bold"
   },
   separate: {
     height: 0.5,

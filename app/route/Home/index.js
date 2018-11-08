@@ -4,10 +4,11 @@ import { Dimensions, DeviceEventEmitter, NativeModules, ListView, StyleSheet, Im
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import { Eos } from "react-native-eosjs";
-import Button from '../../components/Button'
+import Button from '../../components/Button' 
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import NativeUtil from '../../utils/NativeUtil'
+import TextButton from '../../components/TextButton'
 import CheckMarkCircle from '../../components/CheckMarkCircle'
 import { EasyToast } from "../../components/Toast"
 import { EasyShowLD } from '../../components/EasyShow'
@@ -172,7 +173,7 @@ class Home extends React.Component {
 
   componentWillUnmount(){
     this.listener.remove();
-    this.setState({listmodal: false,})
+    this._plusDimss ();
   }
 
   getMyAssetsInfo(getAssetsInfoCallback, init = false){
@@ -272,12 +273,6 @@ class Home extends React.Component {
     }});
   }
 
-  onRequestClose() {
-    this.setState({
-      modalwl: false
-    });
-  }
-
   // 显示/隐藏
   _setModalInvalid() {
     this.props.dispatch({ type: 'wallet/updateInvalidState', payload: {Invalid: false}});
@@ -324,7 +319,7 @@ class Home extends React.Component {
   }
 
   onPress(key, data = {}) {
-    this.setState({ listmodal: false });
+    this._plusDimss ();
     const { navigate } = this.props.navigation;
     if(this.props.defaultWallet != null && this.props.defaultWallet.name != null && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
       EasyShowLD.dialogShow("温馨提示", "您的账号未激活", "激活", "取消", () => {
@@ -378,7 +373,7 @@ class Home extends React.Component {
   }
 
   scan() {
-    this.setState({ listmodal: false });
+    this._plusDimss ();
     if(this.props.defaultWallet != null && this.props.defaultWallet.name != null && (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
       EasyShowLD.dialogShow("温馨提示", "您的账号未激活", "激活", "取消", () => {
         this.WalletDetail(this.props.defaultWallet);
@@ -421,14 +416,15 @@ class Home extends React.Component {
     const { navigate } = this.props.navigation;
     navigate('CreateWallet', {});
     this._wldimss();
-    this.setState({listmodal: false });
+    this._plusDimss ();
     this._disableTipVisible();
   }
 
   importWallet() {
     const { navigate } = this.props.navigation;
     navigate('ImportEosKey', {});
-    this.setState({ modalwl: false,listmodal: false });
+    this._wldimss ();
+    this._plusDimss ();
     this._disableTipVisible();
   }
 
@@ -501,9 +497,7 @@ class Home extends React.Component {
       balance = "0.0000";
     }
     navigate('WalletDetail', { data,balance:balance,isEye: this.state.isEye});
-    this.setState({
-      modalwl: false
-    });
+    this._wldimss ()
     this._disableTipVisible();
   }
 
@@ -541,13 +535,6 @@ class Home extends React.Component {
         isEye:reveal.reveal,
       });
     }});
-  }
-
-  onClickWalletList(){
-    if(!this.state.modalwl){
-      this.getAllWalletEosBalance();
-    }
-    this.setState({ modalwl: !this.state.modalwl })
   }
 
   onRefresh(){
@@ -747,6 +734,15 @@ class Home extends React.Component {
     </View>)
   }
 
+  _renderFooter () {
+    return(
+      <View style={{marginBottom: ScreenUtil.autowidth(27), alignItems: 'center',justifyContent: 'center',}}>
+        <TextButton onPress={this.onPress.bind(this, 'addAssets')} textColor="#FFFFFF" text="添加资产"  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+      </View>
+      
+    )
+  }
+
   _renderRow = (rowData, sectionID, rowID) => {
     return(<View style={[{marginHorizontal: ScreenUtil.autowidth(15),marginBottom: ScreenUtil.autoheight(15), borderRadius: 8, overflow: 'hidden',},rowID == 0 && {marginTop: ScreenUtil.autowidth(10)}]}>
         <Button onPress={this.assetInfo.bind(this, rowData)}>
@@ -822,7 +818,7 @@ class Home extends React.Component {
             refreshControl={<RefreshControl refreshing={this.state.assetRefreshing} onRefresh={() => this.onRefresh()}
             tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
             onScroll={(event) => this._onScroll(event)}  enableEmptySections={true} initialListSize={10}
-            renderHeader={() => this._renderHeader()}  
+            renderHeader={() => this._renderHeader()}  renderFooter={() => this._renderFooter()}
             dataSource={this.state.dataSource.cloneWithRows(this.props.myAssets == null ? [] : this.props.myAssets)}
             renderRow={(rowData, sectionID, rowID) => this._renderRow(rowData, sectionID, rowID)}
           />
@@ -830,36 +826,37 @@ class Home extends React.Component {
           {this.state.modalwl && <View style={styles.continer}>
             <TouchableWithoutFeedback onPress={()=>{this._wldimss()}}>
               <View style={[styles.content,]}>
-                <Animated.View style={[styles.mask,{opacity:this.state.mask,}]}></Animated.View>
+                <Animated.View style={[styles.mask,{opacity:this.state.mask,}]} />
                 <View style={styles.alertContent}>
                   <Animated.View style={[styles.alert,{opacity:this.state.alert}]}>
-                    <Ionicons color={'#FFFFFF'} style={{position: 'absolute', top: -18, left: 20,}} name={'md-arrow-dropup'} size={30} />
-                    <View style={[styles.touchableout,{backgroundColor:'#F9FAF9'}]}>
-                      <ListView initialListSize={5} style={[styles.touchablelist,]}
-                        renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 1, backgroundColor: UColor.secdfont }} />}
-                        enableEmptySections={true} dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
-                        renderRow={(rowData) => (
-                          <Button onPress={this.changeWallet.bind(this, rowData)} >
-                            <View style={[styles.walletlist]}>
-                              <CheckMarkCircle markSize={ScreenUtil.autowidth(10)} width={ScreenUtil.autowidth(14)} height={ScreenUtil.autowidth(14)} 
-                              selected={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account)} onPress={this.changeWallet.bind(this, rowData)}/>
-                              <View style={styles.topout}>
-                                <Text style={[styles.outname,{color: '#262626'}]}>{rowData.name}</Text>
-                                {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ?
-                                <View style={[styles.stopoutBackupsout,{borderColor: UColor.showy}]}>
-                                  <Text style={[styles.stopoutBackups,{color: UColor.showy}]} onPress={this.WalletDetail.bind(this, rowData)}>未激活</Text>
+                    <View style={{paddingTop: ScreenUtil.autowidth(10),}}>
+                     <Ionicons color={'#FFFFFF'} style={{position: 'absolute', top: Platform.OS === 'ios' ? - ScreenUtil.autowidth(7) : - ScreenUtil.autowidth(9), left: ScreenUtil.autowidth(15),}} name={'md-arrow-dropup'} size={30} />
+                      <View style={[styles.touchableout,{backgroundColor:'#F9FAF9'}]}>
+                        <ListView initialListSize={5} style={[styles.touchablelist,]}
+                          enableEmptySections={true} dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
+                          renderRow={(rowData) => (
+                            <Button onPress={this.changeWallet.bind(this, rowData)} >
+                              <View style={[styles.walletlist]}>
+                                <CheckMarkCircle markSize={ScreenUtil.autowidth(10)} width={ScreenUtil.autowidth(14)} height={ScreenUtil.autowidth(14)} 
+                                selected={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account)} onPress={this.changeWallet.bind(this, rowData)}/>
+                                <View style={styles.topout}>
+                                  <Text style={[styles.outname,{color: '#262626'}]}>{rowData.name}</Text>
+                                  {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ?
+                                  <View style={[styles.stopoutBackupsout,{borderColor: UColor.showy}]}>
+                                    <Text style={[styles.stopoutBackups,{color: UColor.showy}]} onPress={this.WalletDetail.bind(this, rowData)}>未激活</Text>
+                                  </View>
+                                  :
+                                  (rowData.isBackups ? null :
+                                  <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
+                                    <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this, rowData)}>未备份</Text>
+                                  </View>)}
                                 </View>
-                                :
-                                (rowData.isBackups ? null :
-                                <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
-                                  <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this, rowData)}>未备份</Text>
-                                </View>)}
+                                <Text style={[styles.walletaccount,{color: '#808080'}]} numberOfLines={1} ellipsizeMode='middle'>{this.state.isEye ? (rowData.isactived && rowData.balance != null && rowData.balance != ""? rowData.balance : '0.0000') : '****'} EOS</Text>
                               </View>
-                              <Text style={[styles.walletaccount,{color: '#808080'}]} numberOfLines={1} ellipsizeMode='middle'>{this.state.isEye ? (rowData.isactived && rowData.balance != null && rowData.balance != ""? rowData.balance : '0.0000') : '****'} EOS</Text>
-                            </View>
-                          </Button>
-                        )}
-                      />
+                            </Button>
+                          )}
+                        />
+                      </View>
                     </View>
                   </Animated.View>
                 </View>
@@ -870,34 +867,38 @@ class Home extends React.Component {
           {this.state.listmodal && <View style={styles.continer}>
             <TouchableWithoutFeedback onPress={()=>{this._plusDimss()}} >
               <View style={{alignItems: 'flex-end', justifyContent: 'flex-start',width: "100%",height:"100%",}}>
-                <Animated.View style={[styles.mask,{opacity:this.state.mask,}]}></Animated.View>
-                <View style={{width:ScreenUtil.autowidth(90),height: ScreenUtil.autoheight(120), marginRight: ScreenUtil.autowidth(15), backgroundColor:UColor.mainColor, borderRadius: 5,shadowColor: '#999999',shadowOffset:{height: 4,width: 0},shadowRadius: 12,shadowOpacity: 0.3,elevation: 5,}}>
+                <Animated.View style={[styles.mask,{opacity:this.state.mask,}]} />
+                <View style={{width:ScreenUtil.autowidth(100),height: ScreenUtil.autoheight(130), marginRight: ScreenUtil.autowidth(15), shadowColor: '#999999',shadowOffset:{height: 4,width: 0},shadowRadius: 12,shadowOpacity: 0.3,elevation: 5,}}>
                   <Animated.View style={{opacity:this.state.alert,}}>
-                    <Ionicons color={'#FFFFFF'} style={{position: 'absolute', top: -18, right: 6,}} name={'md-arrow-dropup'} size={30} />
-                    <Button onPress={() => this.scan()} >
-                      <View style={[styles.establishout,{}]}>
-                        <Image source={UImage.scan} style={{width: ScreenUtil.autowidth(11),height: ScreenUtil.autowidth(11)}} />
-                        <Text style={[styles.establishtext,{color: '#262626'}]}>扫一扫</Text>
+                    <View style={{paddingTop: ScreenUtil.autowidth(10),}}>
+                      <Ionicons color={'#FFFFFF'} style={{position: 'absolute', top: Platform.OS === 'ios' ? - ScreenUtil.autowidth(7) : - ScreenUtil.autowidth(9), right: ScreenUtil.autowidth(6)}} name={'md-arrow-dropup'} size={30} />
+                      <View style={{width:ScreenUtil.autowidth(100),height: ScreenUtil.autoheight(120),backgroundColor: '#FFFFFF',borderRadius: 5,}}>
+                        <Button onPress={() => this.scan()} >
+                          <View style={[styles.establishout,{}]}>
+                            <Image source={UImage.scan} style={{width: ScreenUtil.autowidth(11),height: ScreenUtil.autowidth(11)}} />
+                            <Text style={[styles.establishtext,{color: '#262626'}]}>扫一扫</Text>
+                          </View>
+                        </Button>
+                        <Button onPress={this.onPress.bind(this, 'addAssets')} >
+                          <View style={[styles.establishout,{borderTopWidth: 0.5,borderTopColor: '#F0F0F0'}]}>
+                            <Image source={UImage.xin_add} style={{width: ScreenUtil.autowidth(11),height: ScreenUtil.autowidth(11)}} />
+                            <Text style={[styles.establishtext,{color: '#262626'}]}>添加资产</Text>
+                          </View>
+                        </Button>
+                        <Button onPress={() => this.createWallet()} >
+                          <View style={[styles.establishout,{borderTopWidth: 0.5,borderTopColor: '#F0F0F0'}]}>
+                            <Image source={UImage.xin_qr} style={{width: ScreenUtil.autowidth(11),height: ScreenUtil.autowidth(11)}} />
+                            <Text style={[styles.establishtext,{color: '#262626'}]}>创建钱包</Text>
+                          </View>
+                        </Button>
+                        <Button onPress={() => this.importWallet()} >
+                          <View style={[styles.establishout,{borderTopWidth: 0.5,borderTopColor: '#F0F0F0'}]}>
+                            <Image source={UImage.xin_import} style={{width: ScreenUtil.autowidth(11),height: ScreenUtil.autowidth(11)}} />
+                            <Text style={[styles.establishtext,{color: '#262626'}]}>导入钱包</Text>
+                          </View>
+                        </Button>
                       </View>
-                    </Button>
-                    <Button onPress={this.onPress.bind(this, 'addAssets')} >
-                      <View style={[styles.establishout,{borderTopWidth: 0.5,borderTopColor: '#F0F0F0'}]}>
-                        <Image source={UImage.xin_add} style={{width: ScreenUtil.autowidth(11),height: ScreenUtil.autowidth(11)}} />
-                        <Text style={[styles.establishtext,{color: '#262626'}]}>添加资产</Text>
-                      </View>
-                    </Button>
-                    <Button onPress={() => this.createWallet()} >
-                      <View style={[styles.establishout,{borderTopWidth: 0.5,borderTopColor: '#F0F0F0'}]}>
-                        <Image source={UImage.xin_qr} style={{width: ScreenUtil.autowidth(11),height: ScreenUtil.autowidth(11)}} />
-                        <Text style={[styles.establishtext,{color: '#262626'}]}>创建钱包</Text>
-                      </View>
-                    </Button>
-                    <Button onPress={() => this.importWallet()} >
-                      <View style={[styles.establishout,{borderTopWidth: 0.5,borderTopColor: '#F0F0F0'}]}>
-                        <Image source={UImage.xin_import} style={{width: ScreenUtil.autowidth(11),height: ScreenUtil.autowidth(11)}} />
-                        <Text style={[styles.establishtext,{color: '#262626'}]}>导入钱包</Text>
-                      </View>
-                    </Button>
+                    </View>
                   </Animated.View>
                 </View>
               </View>
@@ -973,7 +974,7 @@ class Home extends React.Component {
 const styles = StyleSheet.create({
   continer:{
     left:0,
-    top:ScreenUtil.autoheight(45) + Constants.FitPhone,
+    top:ScreenUtil.autoheight(34) + Constants.FitPhone,
     position: 'absolute',
     zIndex: 99999,
     flex: 1,
@@ -999,30 +1000,30 @@ const styles = StyleSheet.create({
   alertContent:{
     width:"100%",
     height:"100%",
-    justifyContent: 'flex-start',
     alignItems: 'center',
+    justifyContent: 'flex-start',
     backgroundColor:"rgba(0, 0, 0, 0.0)",
   },
   alert:{
     flex:1,
-    flexDirection: 'column',
-    borderRadius:4,
     width:"100%",
+    borderRadius:4,
     alignItems: 'center',
+    flexDirection: 'column',
   },
   title:{
     color:"#1A1A1A",
+    fontWeight:"bold",
     textAlign:"center",
     lineHeight:ScreenUtil.setSpText(26),
     fontSize:ScreenUtil.setSpText(16),
-    fontWeight:"bold",
     marginTop:ScreenUtil.setSpText(18),
     margin:ScreenUtil.setSpText(10)
   },
   ctx:{
+    color:"#808080",
     marginBottom:ScreenUtil.setSpText(10),
     marginHorizontal:ScreenUtil.setSpText(20),
-    color:"#808080",
     lineHeight:ScreenUtil.setSpText(24),
     fontSize:ScreenUtil.setSpText(12.5),
   },
@@ -1033,9 +1034,6 @@ const styles = StyleSheet.create({
     marginTop:ScreenUtil.autowidth(10)
   },
 
-
-
-  
   container: {
     flex: 1,
   },
@@ -1163,10 +1161,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   touchableout: {
-    alignItems: 'center',
     borderRadius: 3,
+    alignItems: 'center',
+    paddingBottom: ScreenUtil.autowidth(1),
     width: ScreenWidth - ScreenUtil.autowidth(30),
-    paddingBottom: ScreenUtil.autowidth(3),
   },
   touchablelist: {
     width: '100%',

@@ -182,15 +182,15 @@ class Forget extends BaseComponent {
         <View style={[styles.outsource,{backgroundColor: '#FFFFFF'}]}>
           <Text style={[styles.texttitle,{color: '#323232'}]}> 手机号</Text>
           <TextInput ref={(ref) => this._rphone = ref}  value={this.state.phone}  returnKeyType="next" keyboardType="phone-pad"
-             style={[styles.textinpt,{color: '#D9D9D9',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]}  maxLength={11}
+             style={[styles.textinpt,{color: '#808080',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]}  maxLength={11}
             placeholder="请输入您的手机号" underlineColorAndroid="transparent" selectionColor={UColor.tintColor} 
-            onChangeText={(phone) => this.setState({phone})} placeholderTextColor={UColor.inputtip}
+            onChangeText={(phone) => this.setState({phone})} placeholderTextColor={'#D9D9D9'}
           />
           <View style={{flexDirection: 'row'}}>
               <View style={styles.codeout} >
                   <Text style={[styles.texttitle,{color: '#323232'}]}> 验证码</Text>
                   <TextInput  value={this.state.code} ref={(ref) => this._rcode = ref}  returnKeyType="next" 
-                    selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#D9D9D9'}]} placeholderTextColor={UColor.inputtip} 
+                    selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#808080'}]} placeholderTextColor={'#D9D9D9'} 
                     placeholder="请输入验证码" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={6}
                     onChangeText={(code) => this.setState({code})}
                   />
@@ -205,8 +205,8 @@ class Forget extends BaseComponent {
           </View>
           <View style={[styles.separate,{backgroundColor: '#D5D5D5'}]} />
           <Text style={[styles.texttitle,{color: '#323232'}]}> 新密码</Text>
-          <TextInput ref={(ref) => this._rpass = ref}  value={this.state.password} returnKeyType="next" 
-            selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#D9D9D9',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]}  placeholderTextColor={UColor.inputtip} 
+          <TextInput ref={(ref) => this._rpass = ref}  value={this.state.password} returnKeyType="next"  placeholderTextColor={'#D9D9D9'} 
+            selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#808080',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]}  
             placeholder="请设置新密码"  underlineColorAndroid="transparent" secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
             onChangeText={(password) => this.setState({password})}
           />
@@ -248,8 +248,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: ScreenUtil.autowidth(20),
   },
   texttitle:{
-    marginVertical: ScreenUtil.autowidth(18),
+    fontWeight:"bold",
     fontSize: ScreenUtil.setSpText(16),
+    marginVertical: ScreenUtil.autowidth(18),
   },
   codeout: {
     flex: 1,

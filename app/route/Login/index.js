@@ -162,7 +162,7 @@ class Login extends BaseComponent {
                 <Text style={[styles.inptitle,{color: '#323232'}]}>手机号</Text>
                 <TextInput ref={(ref) => this._lphone = ref} autoFocus={false} editable={true} 
                   value={this.state.loginPhone} returnKeyType="next"  placeholder="输入手机号" 
-                  selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.inputtip}
+                  selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={'#D9D9D9'}
                   underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
                   onChangeText={(loginPhone) => this.setState({ loginPhone })} />
 
@@ -170,7 +170,7 @@ class Login extends BaseComponent {
                 <TextInput ref={(ref) => this._lpass = ref}  
                   value={this.state.loginPwd} returnKeyType="go" autoFocus={false} editable={true} 
                   selectionColor={UColor.tintColor} style={styles.inpt} placeholder="输入密码" 
-                  underlineColorAndroid="transparent" secureTextEntry={true} maxLength={20}
+                  underlineColorAndroid="transparent" secureTextEntry={true} maxLength={20} placeholderTextColor={'#D9D9D9'}
                   onSubmitEditing={() => this.loginKcaptrue()} onChangeText={(loginPwd) => this.setState({ loginPwd })}
                 />
               <View style={styles.forgetpass}>
@@ -213,11 +213,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: ScreenUtil.autowidth(20),
   },
   inptitle: {
+    fontWeight:"bold",
     fontSize: ScreenUtil.setSpText(16), 
     marginVertical: ScreenUtil.autowidth(18),
   },
   inpt: {
-    color: '#D9D9D9',
+    color: '#808080',
     paddingVertical: 0,
     borderBottomWidth:0.5, 
     borderBottomColor: '#D5D5D5',

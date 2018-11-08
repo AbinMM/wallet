@@ -7,6 +7,7 @@ import Button from '../../components/Button'
 import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
+import TextButton from '../../components/TextButton'
 import { EasyShowLD } from '../../components/EasyShow'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
@@ -126,42 +127,35 @@ class WalletManage extends BaseComponent {
   }
 
   render() {
-    return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>  
+    return (<View style={[styles.container,{backgroundColor: '#FAFAF9'}]}>  
       <Header {...this.props} onPressLeft={true} title="钱包管理" onPressRight={this._rightTopClick.bind()} avatar={this.state.isEye ? UImage.reveal_h_wallet : UImage.reveal_wallet} imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(12)}/>
-      <View style={{paddingBottom: 50}}>
-        <ListView initialListSize={10} style={{ marginBottom: ScreenUtil.autoheight(50), backgroundColor: UColor.secdColor, }} enableEmptySections={true}
-          renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={{ height: 0.5, backgroundColor: UColor.secdColor }} />}
+      <View style={{flex: 1, paddingTop: ScreenUtil.autowidth(12),}}>
+        <ListView initialListSize={10}  enableEmptySections={true} 
           refreshControl={<RefreshControl refreshing={false} tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor} />}
           dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
           renderRow={(rowData, sectionID, rowID) => (
-            <Button onPress={this.onPress.bind(this, rowData, sectionID, rowID)}>
-              <View style={[styles.row,{backgroundColor:UColor.mainColor}]} > 
-                <View style={{flex: 1,}}>
-                  <View style={styles.topout}>
+            <TouchableOpacity onPress={this.onPress.bind(this, rowData, sectionID, rowID)}>
+              <View style={[styles.row,{backgroundColor:'#FFFFFF',shadowColor: '#EFF4F8',shadowOffset:{height: 5,width: 0},shadowRadius: 5,shadowOpacity: 0.5,elevation: 5,}]} > 
+                  <View style={styles.topout}> 
                       <Button onPress={this.copyname.bind(this,rowData)} underlayColor={UColor.mainColor}>
                         <View style={{flexDirection: "row",}}>
-                          <Text style={[styles.outname,{color: UColor.fontColor}]}>{"地址 : "+rowData.name}</Text>
+                          <Text style={[styles.outname,{color: '#262626'}]}>{rowData.name}</Text>
                           <Image source={UImage.copy} style={styles.imgBtn} />
                         </View>
                       </Button>
-                      {(!rowData.isactived|| !rowData.hasOwnProperty('isactived')) ? <View style={[styles.notactivedout,{borderColor: UColor.showy}]}><Text style={[styles.notactived,{color: UColor.showy}]}>未激活</Text></View>:(rowData.isBackups ? null : <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}><Text style={[styles.stopoutBackups,{color: UColor.tintColor}]}>未备份</Text></View>) }   
-                      {(rowData.ownerPublic==null || rowData.ownerPublic=="" )&&(rowData.activePublic !=null && rowData.activePublic.length==53 ) ? <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}><Text style={[styles.stopoutBackups,{color: UColor.tintColor}]}>Active</Text></View>:null}
-                      {(rowData.ownerPublic!=null && rowData.ownerPublic.length==53 )&&(rowData.activePublic==null || rowData.activePublic=="" )? <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}><Text style={[styles.stopoutBackups,{color: UColor.tintColor}]}>Owner</Text></View>:null  }
                   </View>
-                  <View style={styles.topout}>               
-                    <Text style={[styles.outaccount,{color: UColor.fontColor}]} numberOfLines={1} ellipsizeMode='middle'>{this.getAssertDisp(rowData)}<Text style={[styles.topouttext,{color: UColor.arrow}]}> EOS</Text></Text>
-                  </View>
-                </View> 
-                <View style={styles.bomout}> 
-                    <Ionicons color={UColor.fontColor} name="ios-arrow-forward-outline" size={ScreenUtil.setSpText(20)} />     
-                </View>
+                  <Text style={[styles.outaccount,{color: '#808080'}]} numberOfLines={1} ellipsizeMode='middle'>{this.getAssertDisp(rowData)} EOS</Text>
+                  <Ionicons color={'#808080'} name="ios-arrow-forward-outline" size={ScreenUtil.setSpText(20)} />     
               </View>
-            </Button>          
+            </TouchableOpacity>          
           )}
         /> 
-      </View> 
-      <View style={[styles.footer,{backgroundColor:UColor.secdColor}]}>
-          <Button  onPress={() => this.createWallet()} style={{flex:1}}>
+      </View>
+        <View style={[styles.footer,{backgroundColor:'#FAFAF9'}]}>
+          <View style={{paddingBottom: ScreenUtil.autowidth(20), alignItems: 'center',justifyContent: 'center',}}>
+            <TextButton onPress={this.importWallet.bind(this)} textColor="#FFFFFF" text="添加钱包"  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+          </View>
+          {/* <Button  onPress={() => this.createWallet()} style={{flex:1}}>
               <View style={[styles.footoutsource,{marginRight:0.5,backgroundColor:UColor.mainColor}]}>
                   <Image source={UImage.xin1} style={styles.footimg}/>
                   <Text style={[styles.footText,{color:UColor.fontColor}]}>创建账户</Text>
@@ -172,8 +166,9 @@ class WalletManage extends BaseComponent {
                   <Image source={UImage.xin0} style={styles.footimg}/>
                   <Text style={[styles.footText,{color:UColor.fontColor}]}>导入钱包</Text>
               </View>
-          </Button>
-      </View> 
+          </Button> */}
+        </View> 
+       
     </View>);
   }
 }
@@ -211,14 +206,13 @@ const styles = StyleSheet.create({
   },
 
   row:{
-    borderRadius: 5,
+    borderRadius: 6,
     flexDirection:"row",
     justifyContent:"center",
-    height: ScreenUtil.autoheight(80),
-    marginTop: ScreenUtil.autoheight(10),
-    marginHorizontal: ScreenUtil.autowidth(10),
-    paddingVertical: ScreenUtil.autoheight(10),
-    paddingHorizontal: ScreenUtil.autowidth(15),
+    marginVertical: ScreenUtil.autoheight(7.5),
+    marginHorizontal: ScreenUtil.autowidth(15),
+    paddingVertical: ScreenUtil.autoheight(24),
+    paddingHorizontal: ScreenUtil.autowidth(20),
   },
   topout: {
       flex: 1,
@@ -227,7 +221,7 @@ const styles = StyleSheet.create({
   },
   outname: {
     textAlign: 'left',
-    fontSize: ScreenUtil.setSpText(14),
+    fontSize: ScreenUtil.setSpText(16),
   },
   imgBtn: {
     width: ScreenUtil.autowidth(20),
@@ -263,28 +257,22 @@ const styles = StyleSheet.create({
   },
  
   outaccount: {
-    flex: 1,
-    textAlign: 'left',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: ScreenUtil.setSpText(18),
+    flex:1, 
+    textAlign: 'right',
+    fontSize: ScreenUtil.setSpText(16),
+    paddingHorizontal: ScreenUtil.autowidth(10),
   },
   topouttext: {
     fontSize: ScreenUtil.setSpText(18),
-  },
-  bomout: {
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    width: ScreenUtil.autowidth(40),
   },
 
   footer:{
     left: 0,
     right: 0,
     bottom: 0,
-    flexDirection:'row',  
+    alignItems: 'center', 
     position:'absolute',
-    height: ScreenUtil.autoheight(50),   
+    height: ScreenUtil.autoheight(62),   
     paddingTop: ScreenUtil.autoheight(1),
   },
   footoutsource:{

@@ -96,13 +96,13 @@ repeatpassword={this.state.repeatpassword} onCallbackFunRepeat={(repeatpassword)
           </View>
         </View>
         <TextInput ref={(ref) => this._lpass = ref} value={password} returnKeyType="next" editable={true}
-          selectionColor={UColor.tintColor} style={[styles.inpt,{color: '#D9D9D9',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]} 
-          onChangeText={(password) => {this.setState({ password });if(onCallbackFun)onCallbackFun(password);}} onChange={this.intensity()} autoFocus={false} placeholderTextColor={UColor.inputtip} 
+          selectionColor={UColor.tintColor} style={[styles.inpt,{color: '#808080',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]} 
+          onChangeText={(password) => {this.setState({ password });if(onCallbackFun)onCallbackFun(password);}} onChange={this.intensity()} autoFocus={false} placeholderTextColor={'#D9D9D9'} 
           placeholder="输入密码至少8位，建议大小写字母混合" underlineColorAndroid="transparent" secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH} 
           />
 
         <TextInput ref={(ref) => this._rpass = ref} value={repeatpassword} returnKeyType="next"  
-          selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#D9D9D9', borderBottomColor: '#D5D5D5'}]} placeholderTextColor={UColor.inputtip}
+          selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#808080', borderBottomColor: '#D5D5D5'}]} placeholderTextColor={'#D9D9D9'}
           onChangeText={(repeatpassword) => {this.setState({ repeatpassword });if(onCallbackFunRepeat)onCallbackFunRepeat(repeatpassword); }}  onChange={this.intensity()} autoFocus={false}
           placeholder="重复输入密码" underlineColorAndroid="transparent" secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
           />

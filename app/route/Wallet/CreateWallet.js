@@ -326,12 +326,12 @@ class createWallet extends BaseComponent {
 
           <View >
             <View style={styles.inptout} >
-              <Text style={[styles.inptitle,{color: UColor.fontColor}]}>账号名称</Text>
+              <Text style={[styles.inptitle,{color: '#323232'}]}>账号名称</Text>
             </View>
             <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]} >
               <View style={{flexDirection: 'row',justifyContent: 'center',alignItems: 'center',}}>
                 <TextInput ref={(ref) => this._raccount = ref} value={this.state.walletName} returnKeyType="next" 
-                  selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.inputtip} 
+                  selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={'#D9D9D9'} 
                   placeholder="输入a-z小写字母和1-5数字组合字符" underlineColorAndroid="transparent" onChange={this.intensity()} 
                   keyboardType="default" maxLength={12} onChangeText={(walletName) => this.setState({ walletName:this.chkAccount(walletName) })} />
                 {/* <Button onPress={() => this.random()}>
@@ -345,14 +345,14 @@ class createWallet extends BaseComponent {
             <View style={styles.inptout} >
               <PasswordInput password={this.state.walletPassword} onCallbackFun={(walletPassword) => this.setState({ walletPassword })} 
               repeatpassword={this.state.reWalletPassword} onCallbackFunRepeat={(reWalletPassword) => this.setState({ reWalletPassword })}/>
-          </View>
+            </View>
 
             <View style={[styles.inptout,]} >
-              <Text style={[styles.inptitle,{color: UColor.fontColor}]}>设置密码提示</Text>
+              <Text style={[styles.inptitle,{color: '#323232'}]}>设置密码提示</Text>
             </View>
             <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]} >
               <TextInput ref={(ref) => this._lnote = ref} value={this.state.passwordNote} selectionColor={UColor.tintColor} maxLength={40}
-                returnKeyType="go" placeholderTextColor={UColor.inputtip} placeholder="密码提示信息(可不填)"  style={styles.inpt} 
+                returnKeyType="go" placeholderTextColor={'#D9D9D9'} placeholder="密码提示信息(可不填)"  style={styles.inpt} 
                 underlineColorAndroid="transparent" onChangeText={(passwordNote) => this.setState({ passwordNote })}  />
             </View>
           </View>
@@ -447,7 +447,7 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(14),
     paddingLeft: ScreenUtil.autowidth(2),
     paddingTop: ScreenUtil.autowidth(24), 
-    color: '#D9D9D9',
+    color: '#808080',
     borderBottomColor: '#D5D5D5'
   },
 
