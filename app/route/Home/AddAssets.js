@@ -7,7 +7,7 @@ import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast"
 import { EasyShowLD } from '../../components/EasyShow'
 
-import HeaderWhite from '../../components/HeaderWhite'
+import Header from '../../components/Header'
 
 
 import BaseComponent from "../../components/BaseComponent";
@@ -134,8 +134,7 @@ class AddAssets extends BaseComponent {
   render() {
       return (
         <View style={[styles.container,{backgroundColor: '#F7F8F9'}]}>
-          <HeaderWhite {...this.props} onPressLeft={true} title="添加资产" backgroundColors={UColor.transport}  avatar={UImage.Magnifier} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(17)} imgHeight={ScreenUtil.autowidth(18)}/> 
-          <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893,position:'absolute',top: 0,}} source={UImage.home_bg} />
+          <Header {...this.props} onPressLeft={true} title="添加资产" avatar={UImage.Magnifier_ash} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(17)} imgHeight={ScreenUtil.autowidth(18)}/> 
           <ListView 
             enableEmptySections={true} initialListSize={10}
             dataSource={this.state.dataSource.cloneWithRows(this.props.assetsList == null ? [] : this.props.assetsList)} 
