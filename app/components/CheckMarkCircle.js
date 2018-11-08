@@ -11,7 +11,7 @@ export default class CheckMarkCircle extends Component {
   }
 
   render(){
-    let {backgroundColors, title, onPress, imgWidth, imgHeight} = this.props
+    let {backgroundColors, onPress, width, height, markSize} = this.props
 
     return (
         <View >
@@ -19,15 +19,15 @@ export default class CheckMarkCircle extends Component {
 
             </View> */}
             {!this.props.selected ? 
-            <TouchableOpacity onPress={onPress ? onPress: ()=>{}} style={{flexDirection: "row", alignItems: 'center',justifyContent:'center', paddingHorizontal: ScreenUtil.autowidth(15),}}>
-              <View style={{width: ScreenUtil.autowidth(18), height: ScreenUtil.autowidth(18), borderRadius:25,backgroundColor: '#D9D9D9',alignItems: 'center',justifyContent:'center',}}>
-                <Ionicons color={'#FFF'}  name="md-checkmark" size={ScreenUtil.autowidth(12)} />
+            <TouchableOpacity onPress={onPress ? onPress: ()=>{}} style={{flexDirection: "row", alignItems: 'center',justifyContent:'center'}}>
+              <View style={{width: width ? width : ScreenUtil.autowidth(18), height: height ? height : ScreenUtil.autowidth(18), borderRadius:25,backgroundColor: '#D9D9D9',alignItems: 'center',justifyContent:'center',}}>
+                <Ionicons color={'#FFF'}  name="md-checkmark" size={markSize ? markSize : ScreenUtil.autowidth(12)} />
               </View>
             </TouchableOpacity>
             :
-            <TouchableOpacity onPress={onPress ? onPress: ()=>{}} style={{flexDirection: "row", alignItems: 'center',justifyContent:'center', paddingHorizontal: ScreenUtil.autowidth(15),}}>
-              <LinearGradient colors={['#3A42F1','#69B6FF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}}  style={{width: ScreenUtil.autowidth(18), height: ScreenUtil.autowidth(18), borderRadius:25,alignItems: 'center', justifyContent:'center',}}>
-                <Ionicons color={'#FFF'}  name="md-checkmark" size={ScreenUtil.autowidth(12)} />
+            <TouchableOpacity onPress={onPress ? onPress: ()=>{}} style={{flexDirection: "row", alignItems: 'center',justifyContent:'center'}}>
+              <LinearGradient colors={['#3A42F1','#69B6FF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}}  style={{width: width ? width : ScreenUtil.autowidth(18), height: height ? height : ScreenUtil.autowidth(18), borderRadius:25,alignItems: 'center', justifyContent:'center',}}>
+                <Ionicons color={'#FFF'}  name="md-checkmark" size={markSize ? markSize : ScreenUtil.autowidth(12)} />
               </LinearGradient>
             </TouchableOpacity>
 
