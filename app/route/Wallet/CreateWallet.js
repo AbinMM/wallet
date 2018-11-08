@@ -15,6 +15,7 @@ import BaseComponent from "../../components/BaseComponent";
 import Constants from '../../utils/Constants'
 import PasswordInput from '../../components/PasswordInput'
 import TextButton from '../../components/TextButton'
+import CheckMarkCircle from '../../components/CheckMarkCircle'
 
 var dismissKeyboard = require('dismissKeyboard');
 @connect(({ wallet }) => ({ ...wallet }))
@@ -340,8 +341,8 @@ class createWallet extends BaseComponent {
             </View>
 
             <View style={styles.inptout} >
-              <PasswordInput password={this.state.password} onCallbackFun={(password) => this.setState({ password })} 
-              repeatpassword={this.state.repeatpassword} onCallbackFunRepeat={(repeatpassword) => this.setState({ repeatpassword })}/>
+              <PasswordInput password={this.state.walletPassword} onCallbackFun={(walletPassword) => this.setState({ walletPassword })} 
+              repeatpassword={this.state.reWalletPassword} onCallbackFunRepeat={(reWalletPassword) => this.setState({ reWalletPassword })}/>
           </View>
 
             <View style={[styles.inptout,]} >
@@ -354,11 +355,10 @@ class createWallet extends BaseComponent {
             </View>
           </View>
           <View style={styles.clauseout}>
-            <TouchableHighlight  onPress={() => this.checkClick()} activeOpacity={0.5} underlayColor={UColor.secdColor}>
-              <View style={[{width: ScreenUtil.autowidth(12), height: ScreenUtil.autowidth(12),marginLeft: ScreenUtil.autowidth(5),marginTop: ScreenUtil.autowidth(13), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
-            </TouchableHighlight>
+            <CheckMarkCircle  width={ScreenUtil.autowidth(13)} height={ScreenUtil.autowidth(13)} selected={this.state.isChecked} onPress={() => this.checkClick()}/>
             <Text style={[styles.welcome,{color: UColor.arrow}]} > 我已经仔细阅读并同意 <Text onPress={() => this.prot()} style={[styles.clausetext,{color: UColor.arrow}]}>【服务及隐私条款】</Text></Text>
           </View>
+
 
           <View style={[styles.significantout,{backgroundColor: UColor.mainColor}]}>
             <Text style={[styles.significanttext,{color: UColor.turnout_eos}]} >• 密码用于保护私钥和交易授权，建议设置高强度密码；</Text>
@@ -397,6 +397,7 @@ const styles = StyleSheet.create({
     marginBottom: ScreenUtil.autowidth(23),
     borderRadius: 12,
     backgroundColor: UColor.mainColor,
+    paddingBottom:ScreenUtil.autowidth(55),
 
   },
   Becarefultext: {
@@ -421,8 +422,9 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(16), 
   },
   significanttext: {
+    marginLeft: ScreenUtil.autowidth(10),
     fontSize: ScreenUtil.setSpText(10), 
-    lineHeight: ScreenUtil.autoheight(18),
+    lineHeight: ScreenUtil.autoheight(25),
   },
   inptout: {
     paddingHorizontal: ScreenUtil.autowidth(15),
@@ -454,9 +456,9 @@ const styles = StyleSheet.create({
 
   clauseout: {
     flexDirection: 'row',
-    marginTop: ScreenUtil.autowidth(5),
+    marginTop: ScreenUtil.autowidth(15),
     marginBottom: ScreenUtil.autowidth(10),
-    marginHorizontal: ScreenUtil.autowidth(10),
+    marginHorizontal: ScreenUtil.autowidth(20),
   },
   clauseimg: { 
     width: ScreenUtil.autowidth(20), 
@@ -465,7 +467,7 @@ const styles = StyleSheet.create({
   },
   welcome: {
     fontSize: ScreenUtil.setSpText(12),
-    lineHeight: ScreenUtil.autoheight(40),
+    lineHeight: ScreenUtil.autoheight(14),
   },
   clausetext: {
     fontSize: ScreenUtil.setSpText(12),
