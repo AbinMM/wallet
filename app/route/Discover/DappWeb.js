@@ -313,7 +313,7 @@ onBackAndroid = () => {
 
   }
   eos_getKeyAccounts(result){
-    if(!result.params.publicKey || result.params.publicKey == '')
+    if(!result.params.publicKey)
     {
         EasyToast.show('getKeyAccounts参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -331,7 +331,7 @@ onBackAndroid = () => {
   }
 
   eos_getContract(result){
-    if(!result.params.contract || result.params.contract == '')
+    if(!result.params.contract)
     {
         EasyToast.show('getContract参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -355,9 +355,7 @@ onBackAndroid = () => {
       })
   }
   eos_getCurrencyBalance(result){
-    if(!result.params.contract || result.params.contract == ''
-       || !result.params.account || result.params.account == ''
-       || !result.params.symbol || result.params.symbol == '')
+    if(!result.params.contract  || !result.params.account || !result.params.symbol)
     {
         EasyToast.show('getCurrencyBalance参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -394,7 +392,7 @@ onBackAndroid = () => {
       })
   }
   eos_getAccount(result){
-    if(!result.params.account || result.params.account == '')
+    if(!result.params.account)
     {
         EasyToast.show('getAccount参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -484,10 +482,7 @@ onBackAndroid = () => {
   }
 
   eos_transfer(result) {
-    if(!result.params.from || result.params.from == ''
-         || !result.params.to || result.params.to == ''
-         || !result.params.amount || result.params.amount == ''
-         || !result.params.memo)
+    if(!result.params.from || !result.params.to || !result.params.amount || !result.params.memo)
     {
         EasyToast.show('transfer参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -666,9 +661,8 @@ onBackAndroid = () => {
 }
   scatter_getArbitrarySignature(result)
   {
-    if(!result.params.publicKey || result.params.publicKey == ''
-         || !result.params.data || result.params.data == ''
-         || !result.params.whatfor || !result.params.isHash)
+    if(!result.params.publicKey || !result.params.data || 
+        !result.params.hasOwnProperty('whatfor') || !result.params.hasOwnProperty('isHash'))
     {
         EasyToast.show('getArbitrarySignature参数非法');
         this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -752,12 +746,12 @@ onBackAndroid = () => {
 scatter_requestTransfer(result)
 {
     try {
-        if(!result.params.network || !result.params.to || result.params.to == ''
-            || !result.params.amount || result.params.amount == ''
+        if(!result.params.network || !result.params.to 
+            || !result.params.amount 
             || !result.params.tokenDetails
             || !result.params.tokenDetails.contract
             || !result.params.tokenDetails.symbol
-            || !result.params.tokenDetails.memo)
+            || !result.params.tokenDetails.hasOwnProperty('memo'))
         {
             EasyToast.show('requestTransfer参数非法');
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
@@ -839,8 +833,7 @@ scatter_requestTransfer(result)
 scatter_linkAccount(result)
   {
       try {
-        if(!result.params.publicKey || result.params.publicKey == ''
-            || !result.params.network)
+        if(!result.params.publicKey || !result.params.network)
         {
             EasyToast.show('linkAccount参数非法');
             this.sendMessageToWebview(JSON.stringify({key:result.key,scatter:result.scatter,data:null}));
