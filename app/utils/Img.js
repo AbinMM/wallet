@@ -195,9 +195,8 @@ export default {
   
   transfer: require('../img/newimg/transfer.png'),
   receipt: require('../img/newimg/receipt.png'),
-  transfer_float: require('../img/newimg/transfer_float.png'),
-  receipt_float: require('../img/newimg/receipt_float.png'),
-  share_bright:require('../img/newimg/share_bright.png'),
+ 
+ 
   up: require('../img/newimg/up.png'),
   up_h:require('../img/newimg/up_h.png'),
   down: require('../img/newimg/down.png'),
@@ -212,10 +211,7 @@ export default {
   tab_3_h: require('../img/newimg/tab_3_h.png'),
   tab_4_h: require('../img/newimg/tab_4_h.png'),
   
-  xin_import: require('../img/newimg/xin_import.png'),
-  scan: require('../img/newimg/scan.png'),
-  xin_add: require('../img/newimg/xin_add.png'),
-  xin_qr: require('../img/newimg/xin_qr.png'),
+  
   
   
   //王新版图片
@@ -242,6 +238,17 @@ export default {
   share_banner:require('../img/wimg/share_banner.png'),
 
   user:require('../img/wimg/user.png'),
+
+  share_bright:require('../img/wimg/share_bright.png'),
+
+  xin_import: require('../img/wimg/xin_import.png'),
+  scan: require('../img/wimg/scan.png'),
+  xin_add: require('../img/wimg/xin_add.png'),
+  xin_qr: require('../img/wimg/xin_qr.png'),
+
+  transfer_float: require('../img/wimg/transfer_float.png'),
+  receipt_float: require('../img/wimg/receipt_float.png'),
+  resources_float: require('../img/wimg/resources_float.png'),
   //转账
   turnout_pop: require('../img/turnout_pop.png'),
   turnout_delete: require('../img/turnout_delete.png'),

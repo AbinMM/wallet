@@ -7,6 +7,8 @@ export const bannerList = rootaddr + '/news/banner';
 export const newsTypes = rootaddr + '/news/type';
 export const address = rootaddr + '/coins/address';
 export const newsList = rootaddr + '/news/';
+export const findAllNews = rootaddr + '/news/findAllNews';
+
 export const sticker = rootaddr + '/coins/deep';
 export const line = rootaddr + '/coins/line/';
 export const existRegisteredUser = rootaddr + '/existRegisteredUser';

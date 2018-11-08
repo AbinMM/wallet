@@ -1,5 +1,5 @@
 import Request from '../utils/RequestUtil';
-import {newsList,newsDown,newsUp,newsShare,newsView,shareAddPoint,atcgetInfo,getActivityStages,getWinActivityStageUsers,getActivityStageUsers} from '../utils/Api';
+import {newsList,findAllNews,newsDown,newsUp,newsShare,newsView,shareAddPoint,atcgetInfo,getActivityStages,getWinActivityStageUsers,getActivityStageUsers} from '../utils/Api';
 import store from 'react-native-simple-store';
 import { EasyToast } from '../components/Toast';
 import Constants from '../utils/Constants'
@@ -11,6 +11,22 @@ export default {
         updateTime:"",
     },
     effects: {
+        *newlists({payload,callback},{call,put}) {
+            try{
+                const resp = yield call(Request.request, findAllNews, 'post', payload);
+             
+                //alert(''+JSON.stringify(resp));
+                // if(resp && resp.code=='0'){               
+                //     yield put({ type: 'updateAccountInfo', payload: { accountInfo:resp.data } });
+                // }else{
+                //     EasyToast.show(resp.msg);
+                // }
+                if (callback) callback(resp);
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });
+            }
+        },
         *list({payload},{call,put}) {
             try{
                 if(payload.page==1){

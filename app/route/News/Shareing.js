@@ -120,13 +120,16 @@ class Shareing extends BaseComponent {
               <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893, justifyContent: 'center', alignItems: 'center'}} source={UImage.home_bg}>
                 <Image source={UImage.share_banner} resizeMode="stretch" style={{ width: ScreenWidth - ScreenUtil.autowidth(120), height: (ScreenWidth - ScreenUtil.autowidth(120))*0.5275}} />
               </ImageBackground>
-              <View style={{minHeight: ScreenUtil.autoheight(400), marginHorizontal: ScreenUtil.autowidth(25), paddingVertical: ScreenUtil.autoheight(20), borderBottomWidth: 0.5, borderBottomColor: '#D9D9D9',}}>
+              <View style={{minHeight: ScreenUtil.autoheight(200), marginHorizontal: ScreenUtil.autowidth(25), paddingVertical: ScreenUtil.autoheight(20), borderBottomWidth: 0.5, borderBottomColor: '#D9D9D9',}}>
                 <View style={{flexDirection: 'column',}}>
                   <Text style={[styles.pastTime,{color: '#808080'}]}>{moment(this.state.news.createdate).format('YYYY.MM.DD HH:mm')}</Text>
-                  <LinearGradient colors={['#69B6FF','#3A42F1']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={{width: ScreenUtil.autowidth(20),height: 1}}/>
+                  <LinearGradient colors={['#3A42F1','#69B6FF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={{width: ScreenUtil.autowidth(20),height: 1}}/>
                 </View>
                 <Text style={{ color: '#323232', fontSize: ScreenUtil.setSpText(14),lineHeight: ScreenUtil.autoheight(20)}} >{this.state.news.title}</Text>
                 <Text style={{ color: '#555555', fontSize: ScreenUtil.setSpText(12), marginTop: ScreenUtil.autoheight(10) ,lineHeight: ScreenUtil.autoheight(17)}} ellipsizeMode='tail'>{this.state.news.content}</Text>
+                {this.state.news.imgurl != null &&<View style={{justifyContent: 'center',alignItems: 'center',marginVertical:  ScreenUtil.autoheight(10) }}>
+                    <Image style={{width: ScreenWidth - ScreenUtil.autoheight(60),height: ScreenUtil.autoheight(150)}} source={{uri: this.state.news.imgurl}} resizeMode='contain'/>
+                </View>}
               </View>
               <View style={{ backgroundColor: UColor.btnColor, width: '100%', paddingTop: ScreenUtil.autowidth(18), paddingHorizontal: ScreenUtil.autowidth(25), flexDirection: 'row', justifyContent: 'space-between', alignSelf: 'center' }}>
                 <View style={{justifyContent: 'center', alignSelf: 'center', paddingRight: ScreenUtil.setSpText(15), }}>

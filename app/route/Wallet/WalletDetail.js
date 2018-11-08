@@ -63,7 +63,6 @@ class WalletDetail extends BaseComponent {
     this.props.dispatch({ type: 'wallet/getintegral', payload:{},callback: (data) => { 
       this.setState({integral: data.data});
     } });
-    alert(JSON.stringify(this.props.navigation.state.params.data));
   }
 
   componentWillUnmount(){
