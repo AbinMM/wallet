@@ -69,7 +69,9 @@ class createWallet extends BaseComponent {
   backupWallet(wallet) {
      // 备份私钥
      const { navigate } = this.props.navigation;
-     navigate('BackupsPkey', {wallet: wallet, password: this.state.walletPassword, entry: "createWallet"});
+     navigate('BackupsWarning', {wallet: wallet, password: this.state.walletPassword, entry: "createWallet"});
+    //  navigate('BackupsPkey', {wallet: wallet, password: this.state.walletPassword, entry: "createWallet"});
+     
   }
   importAPkey() {
      // 账号支付激活
@@ -366,14 +368,9 @@ class createWallet extends BaseComponent {
           </View>
 
         <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(16), marginTop: ScreenUtil.autowidth(24),}}>
-          {/* <Button onPress={() => this.checkAccountAndCreateWallet()} > */}
-            {/* <View style={styles.createWalletout} backgroundColor = {this.state.CreateButton}>
-              <Text style={[styles.createWallet,{color: UColor.btnColor}]}>创建钱包</Text>
-            </View> */}
             <View style={{paddingVertical: ScreenUtil.autowidth(16), alignItems: 'center',justifyContent: 'center',}}>
             <TextButton onPress={() => this.checkAccountAndCreateWallet()} textColor="#FFFFFF" text="确认"  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
           </View>
-          {/* </Button> */}
         </View>
         </View>
       </TouchableOpacity>

@@ -253,4 +253,7 @@ export default {
   turnout_pop: require('../img/turnout_pop.png'),
   turnout_delete: require('../img/turnout_delete.png'),
   turnout_add: require('../img/turnout_add.png'),
+
+  nophone: require('../img/nophone.png'),
+  
 }
