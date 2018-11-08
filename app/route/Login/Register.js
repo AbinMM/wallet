@@ -13,6 +13,8 @@ import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
 import LinearGradient from 'react-native-linear-gradient'
 import BaseComponent from "../../components/BaseComponent";
+
+import PasswordInput from '../../components/PasswordInput'
 var tick=60;
 var dismissKeyboard = require('dismissKeyboard');
 const ScreenWidth = Dimensions.get('window').width;
@@ -327,32 +329,9 @@ class Register extends BaseComponent {
             selectionColor={UColor.tintColor} style={[styles.inpt,{color: '#D9D9D9',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]} placeholderTextColor={UColor.inputtip} 
             placeholder="输入手机号" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
             onChangeText={(phone) => this.setState({ phone })}/>
-
-          <View style={[styles.inptout,{flexDirection: 'row'}]}>
-            <Text style={{flex: 1,fontSize: ScreenUtil.setSpText(16), color: '#323232'}}>设置密码</Text>
-            <View style={{flexDirection: 'row',alignItems: 'center'}}>
-              <Text style={{fontSize: ScreenUtil.setSpText(10), color: '#3B80F4', paddingHorizontal: ScreenUtil.autowidth(5),}}>{this.state.statetext}</Text>
-              <View style={{width: ScreenUtil.autowidth(10), flexDirection: 'column',}}>
-                <View style={{height: 2,marginVertical: 0.5,backgroundColor: this.state.strong ? '#3B80F4' : '#D8D8D8',}}/>
-                <View style={{height: 2,marginVertical: 0.5,backgroundColor: this.state.strong ? '#3B80F4' : '#D8D8D8',}}/>
-                <View style={{height: 2,marginVertical: 0.5,backgroundColor: this.state.medium ? '#3B80F4' : '#D8D8D8',}}/>
-                <View style={{height: 2,marginVertical: 0.5,backgroundColor: this.state.medium ? '#3B80F4' : '#D8D8D8',}}/>
-                <View style={{height: 2,marginVertical: 0.5,backgroundColor: this.state.weak ? '#3B80F4' : '#D8D8D8',}}/>
-                <View style={{height: 2,marginVertical: 0.5,backgroundColor: this.state.weak ? '#3B80F4' : '#D8D8D8',}}/>
-              </View>
-            </View>
-          </View>
-          <TextInput ref={(ref) => this._lpass = ref} value={this.state.password} returnKeyType="next" editable={true}
-            selectionColor={UColor.tintColor} style={[styles.inpt,{color: '#D9D9D9',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]} 
-            onChangeText={(password) => this.setState({ password })} onChange={this.intensity()} autoFocus={false} placeholderTextColor={UColor.inputtip} 
-            placeholder="输入密码至少8位，建议大小写字母混合" underlineColorAndroid="transparent" secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH} 
-            />
-
-          <TextInput ref={(ref) => this._rpass = ref} value={this.state.repeatpassword} returnKeyType="next"  
-            selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#D9D9D9', borderBottomColor: '#D5D5D5'}]} placeholderTextColor={UColor.inputtip}
-            onChangeText={(repeatpassword) => this.setState({ repeatpassword })}  onChange={this.intensity()} autoFocus={false}
-            placeholder="重复输入密码" underlineColorAndroid="transparent" secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
-            />
+            
+            <PasswordInput password={this.state.password} onCallbackFun={(password) => this.setState({ password })} 
+            repeatpassword={this.state.repeatpassword} onCallbackFunRepeat={(repeatpassword) => this.setState({ repeatpassword })}/>
         
           <View style={[styles.vfanout,]}>
             <View style={styles.vfantext} >
