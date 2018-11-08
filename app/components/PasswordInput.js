@@ -82,7 +82,7 @@ repeatpassword={this.state.repeatpassword} onCallbackFunRepeat={(repeatpassword)
     return (
         <View>
           <View style={[styles.inptout,{flexDirection: 'row'}]}>
-          <Text style={{flex: 1,fontSize: ScreenUtil.setSpText(16), color: '#323232'}}>设置密码</Text>
+          <Text style={{flex: 1,fontSize: ScreenUtil.setSpText(16), fontWeight:"bold", color: '#323232'}}>设置密码</Text>
           <View style={{flexDirection: 'row',alignItems: 'center'}}>
             <Text style={{fontSize: ScreenUtil.setSpText(10), color: '#3B80F4', paddingHorizontal: ScreenUtil.autowidth(5),}}>{this.state.statetext}</Text>
             <View style={{width: ScreenUtil.autowidth(10), flexDirection: 'column',}}>

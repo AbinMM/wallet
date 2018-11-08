@@ -39,10 +39,6 @@ class Register extends BaseComponent {
     kcode:"",
     captureState: false,
 
-    weak: false,
-    medium: false,
-    strong: false,
-    statetext: "",
   }
 
   constructor(props) {
@@ -270,44 +266,7 @@ class Register extends BaseComponent {
     })
   }
 
-  intensity() {
-    let string = this.state.password;
-    if(string.length >=7) {
-      if(/[a-zA-Z]+/.test(string) && /[0-9]+/.test(string) && /\W+\D+/.test(string)) {
-        this.state.statetext = '很棒';
-        this.state.strong = true;
-        this.state.medium = true;
-        this.state.weak = true;
-      }else if(/[a-zA-Z]+/.test(string) || /[0-9]+/.test(string) || /\W+\D+/.test(string)) {
-        if(/[a-zA-Z]+/.test(string) && /[0-9]+/.test(string)) {
-          this.state.statetext = '不错';
-          this.state.strong = false;
-          this.state.medium = true;
-          this.state.weak = true;
-        }else if(/\[a-zA-Z]+/.test(string) && /\W+\D+/.test(string)) {
-          this.state.statetext = '不错';
-          this.state.strong = false;
-          this.state.medium = true;
-          this.state.weak = true;
-        }else if(/[0-9]+/.test(string) && /\W+\D+/.test(string)) {
-          this.state.statetext = '不错';
-          this.state.strong = false;
-          this.state.medium = true;
-          this.state.weak = true;
-        }else{
-          this.state.statetext = '还行';
-          this.state.strong = false;
-          this.state.medium = false;
-          this.state.weak = true;
-        }
-      }
-    }else{
-      this.state.statetext = "";
-      this.state.strong = false;
-      this.state.medium = false;
-      this.state.weak = false;
-    }
-  }
+ 
 
   prot = () => {
     const { navigate } = this.props.navigation;
@@ -328,7 +287,7 @@ class Register extends BaseComponent {
             selectionColor={UColor.tintColor} style={[styles.inpt,{color: '#D9D9D9',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]} placeholderTextColor={UColor.inputtip} 
             placeholder="输入手机号" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
             onChangeText={(phone) => this.setState({ phone })}/>
-            
+
             <PasswordInput password={this.state.password} onCallbackFun={(password) => this.setState({ password })} 
             repeatpassword={this.state.repeatpassword} onCallbackFunRepeat={(repeatpassword) => this.setState({ repeatpassword })}/>
         
@@ -405,6 +364,7 @@ const styles = StyleSheet.create({
   inptitle: {
     fontSize: ScreenUtil.setSpText(16), 
     marginVertical: ScreenUtil.autowidth(20),
+    fontWeight:"bold"
   },
   separate: {
     height: 0.5,
