@@ -10,8 +10,8 @@ import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import {encryptedMsg} from '../../utils/AlgoUtil';
 import { EasyToast } from '../../components/Toast';
+import TextButton from '../../components/TextButton'
 import { EasyShowLD } from "../../components/EasyShow"
-import LinearGradient from 'react-native-linear-gradient'
 import BaseComponent from "../../components/BaseComponent";
 
 import PasswordInput from '../../components/PasswordInput'
@@ -307,7 +307,6 @@ class Register extends BaseComponent {
       this.state.medium = false;
       this.state.weak = false;
     }
-   
   }
 
   prot = () => {
@@ -351,11 +350,7 @@ class Register extends BaseComponent {
           </View>
           <View style={[styles.separate,{backgroundColor: '#D5D5D5'}]} />
           <View style={{paddingVertical: ScreenUtil.autowidth(16), alignItems: 'center',justifyContent: 'center',}}>
-              <Button onPress={() => this.regSubmit()}>
-                <LinearGradient colors={['#3A42F1','#69B6FF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={styles.butout} >
-                  <Text style={[styles.buttext,{color: '#FFFFFF'}]}>注册</Text>
-                </LinearGradient>
-              </Button>
+            <TextButton onPress={() => this.regSubmit()} textColor="#FFFFFF" text="注册"  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
           </View>
           <View style={styles.readout}>
             <Text style={[styles.readtext,{color: '#808080'}]}>注册即表示同意</Text>

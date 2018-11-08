@@ -9,6 +9,7 @@ import Header from '../../components/Header'
 import JPushModule from 'jpush-react-native';
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
+import TextButton from '../../components/TextButton'
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from '../../components/EasyShow'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -34,13 +35,15 @@ class WalletDetail extends BaseComponent {
   constructor(props) {
     super(props);
     this.config = [
-      { avatar:UImage.lock, name: "修改密码", onPress: this.goPage.bind(this, "ModifyPassword") },
-      { avatar:UImage.privatekey, name: "备份私钥", onPress: this.goPage.bind(this, "BackupsPkey") },
-      { avatar:UImage.publickey, name: "导出公钥", onPress: this.goPage.bind(this, "ExportPublicKey") },
-      { avatar:UImage.resources_f, name: "资源管理", onPress: this.goPage.bind(this, "Resources") },
-      { avatar:UImage.details, name: "账户详细信息", onPress: this.goPage.bind(this, "SeeBlockBrowser") },
-      { avatar:UImage.authExchangeBlue, name: "交易授权", onPress: this.goPage.bind(this, "AuthExchange") },
-      { avatar:UImage.adminA, name: "权限管理", onPress: this.goPage.bind(this, "AuthManage") },
+      {  name: "资源管理", onPress: this.goPage.bind(this, "Resources") },
+      {  name: "账户详细信息", onPress: this.goPage.bind(this, "SeeBlockBrowser") },
+      {  name: "交易授权", onPress: this.goPage.bind(this, "AuthExchange") },
+
+      {name: "导出公钥", onPress: this.goPage.bind(this, "ExportPublicKey") },
+
+      {name: "更改密码",  onPress: this.goPage.bind(this, "ModifyPassword") },
+      {name: "备份私钥", onPress: this.goPage.bind(this, "BackupsPkey") },
+      {name: "权限管理", onPress: this.goPage.bind(this, "AuthManage") },
     ];
     this.state = {
       password: '',
@@ -60,6 +63,7 @@ class WalletDetail extends BaseComponent {
     this.props.dispatch({ type: 'wallet/getintegral', payload:{},callback: (data) => { 
       this.setState({integral: data.data});
     } });
+    alert(JSON.stringify(this.props.navigation.state.params.data));
   }
 
   componentWillUnmount(){
@@ -379,11 +383,11 @@ class WalletDetail extends BaseComponent {
     const c = this.props.navigation.state.params.data
     const balance = this.props.navigation.state.params.balance ? this.props.navigation.state.params.balance : "0.0000";
     const isEye = this.props.navigation.state.params.isEye
-    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>    
-      <Header {...this.props} onPressLeft={true} title={"账户管理"} />
-      <ScrollView style={styles.scrollView}>
+    return <View style={[styles.container,{backgroundColor: '#FAFAF9'}]}>    
+      <Header {...this.props} onPressLeft={true} title={"账户详情"} />
+      <ScrollView>
         <View style={[styles.walletout,{backgroundColor: UColor.mainColor}]}>
-          <View style={styles.accountout} >
+          {/* <View style={styles.accountout} >
             <Text style={[styles.accounttext,{color: UColor.fontColor}]}>{isEye ? (c.isactived && c.balance != null && c.balance != ""? c.balance : balance) : "******"}</Text>
               <Text style={[styles.company,{color: UColor.fontColor}]}> EOS</Text>
           </View>
@@ -400,11 +404,33 @@ class WalletDetail extends BaseComponent {
             </View>:(c.isBackups ? null : <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
             <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]}>未备份</Text>
             </View>) }   
+          </View> */}
+           <View style={{borderRadius: 6,}}>
+            <Item first={1} name="账户名" onPress={this.copyname.bind(this,c)} disable={true} subName={c.name}/>
+            <Item first={1} name="余额" onPress={this.copyname.bind(this,c)} disable={true} subName={(isEye ? (c.isactived && c.balance != null && c.balance != ""? c.balance : balance) : "******") + ' EOS'}/>
+            
+            <Item first={1} name="导出公钥" onPress={this.goPage.bind(this, "ExportPublicKey")} />
+            <Item first={1} name="资源管理" onPress={this.goPage.bind(this, "Resources")} />
+            <Item first={1} name="账户详细信息" onPress={this.goPage.bind(this, "SeeBlockBrowser")} />
+            <Item first={1} name="交易授权" onPress={this.goPage.bind(this, "AuthExchange")} />
+
+            <Item first={1} name="已抵押资源" onPress={this.copyname.bind(this,c)} subName={c.name}/>
+            <Item first={1} name="RAM" onPress={this.copyname.bind(this,c)} subName={c.name}/>
+
+            <Item first={1} name="更改密码" onPress={this.goPage.bind(this, "ModifyPassword")}  />
+            <Item first={1} name="导出私钥" onPress={this.goPage.bind(this, "BackupsPkey")}  />
+            <Item first={1} name="权限管理" onPress={this.goPage.bind(this, "AuthManage")}  />
           </View>
         </View>
-        <View>{this._renderListItem()}</View>
+       
+        {/* <View>{this._renderListItem()}</View> */}
+      
+      <View style={{flex: 1, alignItems: 'center',justifyContent: 'flex-end', paddingBottom: ScreenUtil.autoheight(20),}}>
+        <TextButton onPress={this.deleteAccount.bind(this, c)} textColor="#fff" text="删除账户"  shadow={true} 
+          style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+      </View>
       </ScrollView>
-      {(!c.isactived || !c.hasOwnProperty('isactived'))?
+      {/* {(!c.isactived || !c.hasOwnProperty('isactived'))?
         <View style={[styles.footer,{backgroundColor:UColor.secdColor}]}>
           <Button onPress={this.activeWallet.bind(this, c)} style={{flex:1}}>
               <View style={[styles.footoutsource,{marginRight:0.5,backgroundColor:UColor.mainColor}]}>
@@ -425,7 +451,7 @@ class WalletDetail extends BaseComponent {
             <Text style={[styles.delete,{color: UColor.tintColor}]}>删除账户</Text>
           </View>
         </Button>
-      }
+      } */}
       <View style={{backgroundColor: UColor.riceWhite}}>
         <Modal animationType='slide' transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
           <View style={[styles.modalStyle,{backgroundColor: UColor.mask}]}>
@@ -482,10 +508,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   walletout: { 
-    borderRadius: 5, 
-    margin: ScreenUtil.autowidth(10), 
-    padding: ScreenUtil.autowidth(20), 
-    height: ScreenUtil.autoheight(100), 
+    borderRadius: 6, 
+    margin: ScreenUtil.autowidth(15), 
+    paddingHorizontal: ScreenUtil.autowidth(10), 
+    paddingBottom: ScreenUtil.autowidth(15), 
   },
   accountout: { 
     flexDirection: "row",

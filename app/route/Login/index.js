@@ -11,9 +11,9 @@ import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import {encryptedMsg} from '../../utils/AlgoUtil';
 import { EasyToast } from '../../components/Toast';
+import TextButton from '../../components/TextButton'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import { EasyShowLD } from "../../components/EasyShow"
-import LinearGradient from 'react-native-linear-gradient'
 import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -158,36 +158,31 @@ class Login extends BaseComponent {
       <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
         <Header {...this.props} onPressLeft={true} title="登陆" />
           <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex: 1,}}>
-              <View style={[styles.outsource,{backgroundColor: '#FFFFFF'}]}>
-                  <Text style={[styles.inptitle,{color: '#323232'}]}>手机号</Text>
-                  <TextInput ref={(ref) => this._lphone = ref} autoFocus={false} editable={true} 
-                    value={this.state.loginPhone} returnKeyType="next"  placeholder="输入手机号" 
-                    selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.inputtip}
-                    underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
-                    onChangeText={(loginPhone) => this.setState({ loginPhone })} />
+            <View style={[styles.outsource,{backgroundColor: '#FFFFFF'}]}>
+                <Text style={[styles.inptitle,{color: '#323232'}]}>手机号</Text>
+                <TextInput ref={(ref) => this._lphone = ref} autoFocus={false} editable={true} 
+                  value={this.state.loginPhone} returnKeyType="next"  placeholder="输入手机号" 
+                  selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={UColor.inputtip}
+                  underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
+                  onChangeText={(loginPhone) => this.setState({ loginPhone })} />
 
-                  <Text style={[styles.inptitle,{color: '#323232'}]}>密码</Text>
-                  <TextInput ref={(ref) => this._lpass = ref}  
-                    value={this.state.loginPwd} returnKeyType="go" autoFocus={false} editable={true} 
-                    selectionColor={UColor.tintColor} style={styles.inpt} placeholder="输入密码" 
-                    underlineColorAndroid="transparent" secureTextEntry={true} maxLength={20}
-                    onSubmitEditing={() => this.loginKcaptrue()} onChangeText={(loginPwd) => this.setState({ loginPwd })}
-                  />
-                <View style={styles.forgetpass}>
-                  <Text style={[styles.forgettext,{color: '#3B80F4'}]} onPress={() => this.forget()}>忘记密码?</Text>
-                </View>
-                <Button onPress={() => this.loginKcaptrue()} style={styles.readout}>
-                  <LinearGradient colors={['#3A42F1','#69B6FF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={styles.butout} >
-                    <Text style={[styles.buttext,{color: '#FFFFFF'}]}>登陆</Text>
-                  </LinearGradient>
-                </Button>
-                <Button onPress={() => this.regSubmit()} style={styles.submitout}>
-                  <View style={{ alignItems: 'center',justifyContent: 'center',width: ScreenUtil.autowidth(60),height: ScreenUtil.autoheight(20),}}>
-                    <Text style={[styles.buttext,{color: '#3B80F4'}]}>注册</Text>
-                  </View>
-                </Button>
-                
+                <Text style={[styles.inptitle,{color: '#323232'}]}>密码</Text>
+                <TextInput ref={(ref) => this._lpass = ref}  
+                  value={this.state.loginPwd} returnKeyType="go" autoFocus={false} editable={true} 
+                  selectionColor={UColor.tintColor} style={styles.inpt} placeholder="输入密码" 
+                  underlineColorAndroid="transparent" secureTextEntry={true} maxLength={20}
+                  onSubmitEditing={() => this.loginKcaptrue()} onChangeText={(loginPwd) => this.setState({ loginPwd })}
+                />
+              <View style={styles.forgetpass}>
+                <Text style={[styles.forgettext,{color: '#3B80F4'}]} onPress={() => this.forget()}>忘记密码?</Text>
               </View>
+              <View style={styles.readout}>
+                <TextButton onPress={() => this.loginKcaptrue()} textColor="#FFFFFF" text="登陆"  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+              </View>
+              <View style={styles.submitout}>
+                <TextButton onPress={() => this.regSubmit()} textColor='#3B80F4' text="注册"  style={{width: ScreenUtil.autowidth(60),height: ScreenUtil.autoheight(20),}} />
+              </View>
+            </View>
           </TouchableOpacity>
       </View>
     );
@@ -217,12 +212,6 @@ const styles = StyleSheet.create({
     marginHorizontal: ScreenUtil.autowidth(15),
     paddingHorizontal: ScreenUtil.autowidth(20),
   },
-
-  inptout: {
-    padding: ScreenUtil.autowidth(20), 
-    height: ScreenUtil.autoheight(80), 
-  },
-
   inptitle: {
     fontSize: ScreenUtil.setSpText(16), 
     marginVertical: ScreenUtil.autowidth(18),
@@ -255,46 +244,6 @@ const styles = StyleSheet.create({
     marginTop: ScreenUtil.autowidth(17), 
     marginBottom: ScreenUtil.autowidth(26), 
   },
-  butout: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: ScreenUtil.autowidth(175),
-    height: ScreenUtil.autoheight(42),
-    borderRadius: ScreenUtil.autowidth(21),
-  },
-  buttext: {
-    fontSize: ScreenUtil.setSpText(15),
-  },
-
-
- 
-  readtext: {
-    fontSize: ScreenUtil.setSpText(14),
-  },
-  servicetext: {
-    fontSize: ScreenUtil.setSpText(14),
-    paddingLeft: ScreenUtil.autowidth(5),
-  },
-
-  logoutone:{
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    height: ScreenUtil.autoheight(320),
-    paddingBottom: ScreenUtil.autoheight(100),
-  },
-  logouttow:{
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: ScreenUtil.autoheight(100),
-  },
-  logimg: {
-    width: ScreenUtil.autowidth(50), 
-    height: ScreenUtil.autowidth(50)
-  },
-  logtext: {
-    fontSize: ScreenUtil.setSpText(14),
-    lineHeight: ScreenUtil.autoheight(30),
-  }
 });
 
 export default Login;

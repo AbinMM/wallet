@@ -62,12 +62,12 @@ export default class Item extends Component {
     return (
       <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginTop: topfirst?topfirst:0}]}>
         {icon?(<Icon name={icon} size={iconSize||ScreenUtil.setSpText(20)} style={{width: ScreenUtil.autowidth(22), marginRight:ScreenUtil.autowidth(5), textAlign:"center"}} color={color || UColor.blueDeep} />):null}
-        <View style={[styles.listInfo, first && {borderTopColor: UColor.secdColor,borderTopWidth: first}]}>
+        <View style={[styles.listInfo, first && {borderBottomColor: '#F9FAF9',borderBottomWidth: first}]}>
           {avatar?(<Image source={avatar} style={{width: ScreenUtil.autowidth(19), height: ScreenUtil.autowidth(17), resizeMode: "contain", overflow:"hidden",marginRight:ScreenUtil.autowidth(13),}}/>):null}
           <View style={{flex: 1}}><Text style={{color: '#555555', fontSize:ScreenUtil.autowidth(16)}}>{name}</Text></View>
           <View style={styles.listInfoRight}>
-            {subName?(<Text style={{color:UColor.arrow, fontSize:ScreenUtil.autowidth(14)}}>{subName}</Text>):null}            
-            {disable?null:(<Font.Ionicons name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(20)} color='#B5B5B5' />)}
+            {subName?(<Text style={{color: '#808080', fontSize:ScreenUtil.autowidth(16),}}>{subName}</Text>):null}            
+            {disable?null:(<Font.Ionicons name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(20)} color='#B5B5B5' style={{paddingLeft: ScreenUtil.autowidth(20),}} />)}
             {!swt?null:( 
             <Switch 
               tintColor={UColor.secdColor}
@@ -107,13 +107,13 @@ const styles = StyleSheet.create({
   listInfo: {
     height: itemHeight,
     flex: 1,
-    paddingRight: ScreenUtil.autowidth(35),
+    paddingHorizontal: ScreenUtil.autowidth(10),
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
   listInfoRight: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   }
 })

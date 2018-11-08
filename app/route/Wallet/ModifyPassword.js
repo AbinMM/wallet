@@ -8,6 +8,7 @@ import Header from '../../components/Header'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
+import TextButton from '../../components/TextButton'
 import BaseComponent from "../../components/BaseComponent";
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
@@ -24,13 +25,13 @@ class ModifyPassword extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {
+            weak: false,
+            medium: false,
+            strong: false,
+            statetext: "",
             password: "",
             newPassword: "",
             newRePassword: "",
-            weak: UColor.arrow,
-            medium: UColor.arrow,
-            strong: UColor.arrow,
-            CreateButton:  UColor.mainColor,
         }
     }
     componentWillUnmount(){
@@ -134,91 +135,89 @@ class ModifyPassword extends BaseComponent {
 
     intensity() {
         let string = this.state.newPassword;
-        if(string.length >=8) {
+        if(string.length >=7) {
           if(/[a-zA-Z]+/.test(string) && /[0-9]+/.test(string) && /\W+\D+/.test(string)) {
-            this.state.strong = UColor.tintColor;
-            this.state.medium = UColor.arrow;
-            this.state.weak = UColor.arrow;
+            this.state.statetext = '很棒';
+            this.state.strong = true;
+            this.state.medium = true;
+            this.state.weak = true;
           }else if(/[a-zA-Z]+/.test(string) || /[0-9]+/.test(string) || /\W+\D+/.test(string)) {
             if(/[a-zA-Z]+/.test(string) && /[0-9]+/.test(string)) {
-              this.state.strong = UColor.arrow;
-              this.state.medium = UColor.tintColor;
-              this.state.weak = UColor.arrow;
+              this.state.statetext = '不错';
+              this.state.strong = false;
+              this.state.medium = true;
+              this.state.weak = true;
             }else if(/\[a-zA-Z]+/.test(string) && /\W+\D+/.test(string)) {
-              this.state.strong = UColor.arrow;
-              this.state.medium = UColor.tintColor;
-              this.state.weak = UColor.arrow;
+              this.state.statetext = '不错';
+              this.state.strong = false;
+              this.state.medium = true;
+              this.state.weak = true;
             }else if(/[0-9]+/.test(string) && /\W+\D+/.test(string)) {
-              this.state.strong = UColor.arrow;
-              this.state.medium = UColor.tintColor;
-              this.state.weak = UColor.arrow;
+              this.state.statetext = '不错';
+              this.state.strong = false;
+              this.state.medium = true;
+              this.state.weak = true;
             }else{
-              this.state.strong = UColor.arrow;
-              this.state.medium = UColor.arrow;
-              this.state.weak = UColor.tintColor;
+              this.state.statetext = '还行';
+              this.state.strong = false;
+              this.state.medium = false;
+              this.state.weak = true;
             }
           }
-         }else{
-          this.state.strong = UColor.arrow;
-          this.state.medium = UColor.arrow;
-          this.state.weak = UColor.arrow;
-         }
-        if(this.state.password != "" && this.state.newPassword != "" && this.state.newRePassword != ""){
-          this.state.CreateButton = UColor.tintColor;
         }else{
-          this.state.CreateButton = UColor.invalidbtn;
+          this.state.statetext = "";
+          this.state.strong = false;
+          this.state.medium = false;
+          this.state.weak = false;
         }
-    }
+      }
 
     render() {
-        return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-            <Header {...this.props} onPressLeft={true} title="修改密码" />
+        return <View style={[styles.container,{backgroundColor: '#FAFAF9'}]}>
+            <Header {...this.props} onPressLeft={true} title="更改密码" />
             <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex:1}}>
-                    <View style={[styles.outsource,{backgroundColor: UColor.mainColor}]}>
-                        <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
-                            <TextInput ref={(ref) => this._lphone = ref} value={this.state.password} returnKeyType="next"
-                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
-                                secureTextEntry={true} placeholder="当前密码"  underlineColorAndroid="transparent" autoFocus={false} maxLength = {20}
-                                editable={true} onChangeText={(password) => this.setState({ password })}   onChange={this.intensity()} />
-                        </View>
-                        <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
-                            <TextInput ref={(ref) => this._lpass = ref} value={this.state.newPassword} returnKeyType="next" onChange={this.intensity()}
-                                style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={Constants.PWD_MAX_LENGTH}
-                                secureTextEntry={true}  placeholder="新密码" underlineColorAndroid="transparent" selectionColor={UColor.tintColor}
-                                editable={true} onChangeText={(newPassword) => this.setState({ newPassword })} autoFocus={false} />
-                            <View style={{flexDirection: 'row', height: ScreenUtil.autoheight(50), alignItems: 'center', }}>
-                                <Text style={{color:this.state.weak, fontSize: ScreenUtil.setSpText(15), padding: ScreenUtil.autowidth(5),}}>弱</Text>
-                                <Text style={{color:this.state.medium, fontSize: ScreenUtil.setSpText(15), padding: ScreenUtil.autowidth(5),}}>中</Text>
-                                <Text style={{color:this.state.strong, fontSize: ScreenUtil.setSpText(15), padding: ScreenUtil.autowidth(5),}}>强</Text>
+                <View style={[styles.outsource,{backgroundColor: '#FFFFFF'}]}>
+                    <Text style={[styles.texttitle,{color: '#323232'}]}>当前密码</Text>
+                    <TextInput ref={(ref) => this._lphone = ref} value={this.state.password} returnKeyType="next"
+                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#D9D9D9'}]} placeholderTextColor={UColor.inputtip}
+                        secureTextEntry={true} placeholder="请输入您当前的密码"  underlineColorAndroid="transparent" autoFocus={false} maxLength = {20}
+                        editable={true} onChangeText={(password) => this.setState({ password })}   onChange={this.intensity()} />
+
+                    <View style={{marginBottom: ScreenUtil.autowidth(20),marginTop: ScreenUtil.autowidth(50),flexDirection: 'row'}}>
+                        <Text style={{flex: 1,fontSize: ScreenUtil.setSpText(16), color: '#323232'}}>设置密码</Text>
+                        <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                            <Text style={{fontSize: ScreenUtil.setSpText(10), color: '#3B80F4', paddingHorizontal: ScreenUtil.autowidth(5),}}>{this.state.statetext}</Text>
+                            <View style={{width: ScreenUtil.autowidth(10), flexDirection: 'column',}}>
+                                <View style={{height: 2,marginVertical: 0.5,backgroundColor: this.state.strong ? '#3B80F4' : '#D8D8D8',}}/>
+                                <View style={{height: 2,marginVertical: 0.5,backgroundColor: this.state.strong ? '#3B80F4' : '#D8D8D8',}}/>
+                                <View style={{height: 2,marginVertical: 0.5,backgroundColor: this.state.medium ? '#3B80F4' : '#D8D8D8',}}/>
+                                <View style={{height: 2,marginVertical: 0.5,backgroundColor: this.state.medium ? '#3B80F4' : '#D8D8D8',}}/>
+                                <View style={{height: 2,marginVertical: 0.5,backgroundColor: this.state.weak ? '#3B80F4' : '#D8D8D8',}}/>
+                                <View style={{height: 2,marginVertical: 0.5,backgroundColor: this.state.weak ? '#3B80F4' : '#D8D8D8',}}/>
                             </View>
                         </View>
-                        <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
-                            <TextInput ref={(ref) => this._lpass = ref} autoFocus={false} editable={true} underlineColorAndroid="transparent"
-                                value={this.state.newRePassword} onChangeText={(newRePassword) => this.setState({ newRePassword })} returnKeyType="next"
-                                selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
-                                placeholder="重复密码"  secureTextEntry={true}  onChange={this.intensity()}  maxLength={Constants.PWD_MAX_LENGTH}/>
-                        </View>
-                        <View style={[styles.inptoutsource,{borderBottomColor: UColor.secdColor}]} >
-                            <TextInput ref={(ref) => this._lpass = ref} autoFocus={false} editable={true} underlineColorAndroid="transparent" 
-                                style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} onChange={this.intensity()} 
-                                placeholder="密码提示(可不填)" returnKeyType="next" />
-                        </View>
                     </View>
-                    <View style={{paddingTop:  ScreenUtil.autoheight(20),paddingHorizontal: ScreenUtil.autowidth(20),paddingBottom: ScreenUtil.autoheight(60),}}>
-                        <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.arrow, textAlign: 'left',paddingBottom: ScreenUtil.autoheight(10),}} >忘记密码? 导入助记词或私钥可重置密码。</Text>
-                        <View style={{alignItems: "flex-end"}}>
-                            <Text onPress={() => this.importEosKey()}  style={[styles.servicetext,{color: UColor.tintColor}]}>马上导入</Text>
-                        </View>
+                    <TextInput ref={(ref) => this._lpass = ref} value={this.state.newPassword} returnKeyType="next" onChange={this.intensity()}
+                        style={[styles.textinpt,{color: '#D9D9D9'}]} placeholderTextColor={UColor.inputtip} maxLength={Constants.PWD_MAX_LENGTH}
+                        secureTextEntry={true}  placeholder="输入密码至少8位，建议大小写字母混合" underlineColorAndroid="transparent" selectionColor={UColor.tintColor}
+                        editable={true} onChangeText={(newPassword) => this.setState({ newPassword })} autoFocus={false} />
+                    <TextInput ref={(ref) => this._lpass = ref} autoFocus={false} editable={true} underlineColorAndroid="transparent"
+                        value={this.state.newRePassword} onChangeText={(newRePassword) => this.setState({ newRePassword })} returnKeyType="next"
+                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: '#D9D9D9', borderBottomColor: '#D5D5D5'}]} placeholderTextColor={UColor.inputtip} 
+                        placeholder="重复输入密码"  secureTextEntry={true}  onChange={this.intensity()}  maxLength={Constants.PWD_MAX_LENGTH}/>
+
+                    <Text style={[styles.texttitle,{marginTop: ScreenUtil.autowidth(50), color: '#323232'}]}>设置密码提示</Text>
+                    <TextInput ref={(ref) => this._lpass = ref} autoFocus={false} editable={true} underlineColorAndroid="transparent" 
+                        style={[styles.textinpt,{color: '#D9D9D9'}]} placeholderTextColor={UColor.inputtip} onChange={this.intensity()} 
+                        placeholder="密码提示信息（可不填）" returnKeyType="next" />
+                    <View style={styles.btnout}>
+                        <Text style={[styles.servicetext,{color: '#808080'}]}>忘记密码? 导入私钥可重置密码 </Text>
+                        <Text onPress={() => this.importEosKey()}  style={[styles.servicetext,{paddingLeft: ScreenUtil.autowidth(5),color: '#3B80F4'}]}>马上导入</Text>
                     </View>
-                    <Button onPress={() => this.updatePassword()}>
-                        <View style={styles.btnout} backgroundColor = {this.state.CreateButton}>
-                            <Text style={[styles.buttext,{color: UColor.btnColor}]}>确认</Text>
-                        </View>
-                    </Button>
-                    <View style={styles.logout}>
-                        <Image source={UImage.bottom_log} style={styles.logimg}/>
-                        <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
-                    </View>
+                </View>
+                <View style={{flex: 1,alignItems: 'center',justifyContent: 'center',}}>
+                    <TextButton onPress={() => this.updatePassword()} textColor="#FFFFFF" text="确认更改"  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+                </View>
             </TouchableOpacity>
         </View>
     }
@@ -230,47 +229,40 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     outsource: {
-        marginTop: ScreenUtil.autoheight(30), 
+        borderRadius: 6,
+        flexDirection: 'column',
+        marginHorizontal: ScreenUtil.autowidth(15),
+        marginTop: ScreenUtil.autowidth(15),
+        paddingHorizontal: ScreenUtil.autowidth(20),
     },
-    inptoutsource: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        paddingHorizontal: ScreenUtil.autowidth(20), 
+    texttitle:{
+        fontSize: ScreenUtil.setSpText(16),
+        marginVertical: ScreenUtil.autowidth(20),
+    },
+    textinpt: {
+        paddingVertical: 0,
+        borderBottomWidth:0.5, 
+        borderBottomColor: '#D5D5D5',
+        fontSize: ScreenUtil.setSpText(14),
+        paddingLeft: ScreenUtil.autowidth(2),
     },
     inpt: {
-        flex: 1,
-        height: ScreenUtil.autoheight(50),
-        fontSize: ScreenUtil.setSpText(15), 
+        paddingVertical: 0,
+        borderBottomWidth:0.5,
+        fontSize: ScreenUtil.setSpText(14),
+        paddingLeft: ScreenUtil.autowidth(2),
+        paddingTop: ScreenUtil.autowidth(24), 
     },
     btnout: {
-        borderRadius: 5,
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        height: ScreenUtil.autoheight(45), 
-        marginHorizontal: ScreenUtil.autowidth(30),  
-    },
-    buttext: {
-        fontSize: ScreenUtil.setSpText(15),
+        flexDirection: 'row', 
+        justifyContent: 'center',
+        paddingTop: ScreenUtil.autoheight(20),
+        paddingBottom: ScreenUtil.autoheight(50),
     },
     servicetext: {
-        textAlign: 'right',
-        fontSize: ScreenUtil.setSpText(14),
+        fontSize: ScreenUtil.setSpText(12),
     },
-    logout:{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        height: ScreenUtil.autoheight(130),
-        paddingBottom: ScreenUtil.autoheight(20),
-    },
-    logimg: {
-        width: ScreenUtil.autowidth(50), 
-        height: ScreenUtil.autowidth(50),
-    },
-    logtext: {
-        fontSize: ScreenUtil.setSpText(14),
-        lineHeight: ScreenUtil.autoheight(30),
-    }
+   
 });
 
 export default ModifyPassword;

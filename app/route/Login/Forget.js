@@ -10,6 +10,7 @@ import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import {encryptedMsg} from '../../utils/AlgoUtil';
 import { EasyToast } from '../../components/Toast';
+import TextButton from '../../components/TextButton'
 import { EasyShowLD } from "../../components/EasyShow"
 import LinearGradient from 'react-native-linear-gradient'
 import BaseComponent from "../../components/BaseComponent";
@@ -180,17 +181,17 @@ class Forget extends BaseComponent {
       <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex: 1,}}>
         <View style={[styles.outsource,{backgroundColor: '#FFFFFF'}]}>
           <Text style={[styles.texttitle,{color: '#323232'}]}> 手机号</Text>
-          <TextInput ref={(ref) => this._rphone = ref}  value={this.state.phone}  returnKeyType="next" 
-            selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#D9D9D9',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]}  placeholderTextColor={UColor.inputtip}
-            placeholder="请输入您注册时的手机号" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
-            onChangeText={(phone) => this.setState({phone})}
+          <TextInput ref={(ref) => this._rphone = ref}  value={this.state.phone}  returnKeyType="next" keyboardType="phone-pad"
+             style={[styles.textinpt,{color: '#D9D9D9',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]}  maxLength={11}
+            placeholder="请输入您的手机号" underlineColorAndroid="transparent" selectionColor={UColor.tintColor} 
+            onChangeText={(phone) => this.setState({phone})} placeholderTextColor={UColor.inputtip}
           />
-          <View style={[styles.codeoutsource,{backgroundColor: UColor.mainColor}]}>
+          <View style={{flexDirection: 'row'}}>
               <View style={styles.codeout} >
                   <Text style={[styles.texttitle,{color: '#323232'}]}> 验证码</Text>
                   <TextInput  value={this.state.code} ref={(ref) => this._rcode = ref}  returnKeyType="next" 
                     selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#D9D9D9'}]} placeholderTextColor={UColor.inputtip} 
-                    placeholder="输入验证码" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={6}
+                    placeholder="请输入验证码" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={6}
                     onChangeText={(code) => this.setState({code})}
                   />
               </View>
@@ -202,26 +203,19 @@ class Forget extends BaseComponent {
                 </Button>
               </View>
           </View>
-          <View style={[styles.separate,{backgroundColor: '#D5D5D5'}]}></View>
+          <View style={[styles.separate,{backgroundColor: '#D5D5D5'}]} />
           <Text style={[styles.texttitle,{color: '#323232'}]}> 新密码</Text>
           <TextInput ref={(ref) => this._rpass = ref}  value={this.state.password} returnKeyType="next" 
             selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#D9D9D9',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]}  placeholderTextColor={UColor.inputtip} 
-            placeholder="设置新的登录密码"  underlineColorAndroid="transparent" secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
+            placeholder="请设置新密码"  underlineColorAndroid="transparent" secureTextEntry={true} maxLength={Constants.PWD_MAX_LENGTH}
             onChangeText={(password) => this.setState({password})}
           />
-          <View style={{paddingVertical: ScreenUtil.autowidth(62), alignItems: 'center',justifyContent: 'center',}}>
-            <Button onPress={() => this.regSubmit()}>
-              <LinearGradient colors={['#3A42F1','#69B6FF']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={styles.referbtn} >
-                <Text style={[styles.refertext,{color: UColor.btnColor}]}>提交</Text>
-              </LinearGradient>
-            </Button>
+          <View style={styles.referbtn}>
+            <TextButton onPress={() => this.regSubmit()} textColor="#FFFFFF" text="提交"  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
           </View>
         </View>
         
-        {/* <View style={styles.logout}>
-          <Image source={UImage.bottom_log} style={styles.logimg}/>
-          <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
-        </View> */}
+      
       </TouchableOpacity>
   </View>
   }
@@ -253,30 +247,17 @@ const styles = StyleSheet.create({
     marginTop: ScreenUtil.autowidth(15),
     paddingHorizontal: ScreenUtil.autowidth(20),
   },
-  phoneoue: {
-    height: ScreenUtil.autoheight(75),
-  },
-
   texttitle:{
-    marginVertical: ScreenUtil.autowidth(15),
+    marginVertical: ScreenUtil.autowidth(18),
     fontSize: ScreenUtil.setSpText(16),
-  },
-  codeoutsource: {
-    flexDirection:'row',
   },
   codeout: {
     flex: 1,
-    // width: ScreenUtil.autowidth(200),
-    // height: ScreenUtil.autoheight(80),
-    // padding: ScreenUtil.autowidth(20),
   },
   textinpt: {
-    
     paddingVertical: 0,
-    //height: ScreenUtil.autoheight(40),
     fontSize: ScreenUtil.setSpText(14),
     paddingLeft: ScreenUtil.autowidth(2),
-
   },
   btnoutsource: {
     alignItems: 'center',
@@ -298,29 +279,13 @@ const styles = StyleSheet.create({
     height: 0.5,
   },
   referbtn: {
-    borderRadius: ScreenUtil.autowidth(21),
     alignItems: 'center',
     justifyContent: 'center',
-    width: ScreenUtil.autowidth(175),
-    height: ScreenUtil.autoheight(42),
+    paddingVertical: ScreenUtil.autowidth(62), 
   },
   refertext: {
     fontSize: ScreenUtil.setSpText(15),
   },
-  logout:{
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    height: ScreenUtil.autoheight(300),
-    paddingBottom: ScreenUtil.autoheight(100),
-  },
-  logimg: {
-    width: ScreenUtil.autowidth(50), 
-    height: ScreenUtil.autowidth(50)
-  },
-  logtext: {
-    fontSize: ScreenUtil.setSpText(14),
-    lineHeight: ScreenUtil.autoheight(30),
-  }
 });
 
 export default Forget;

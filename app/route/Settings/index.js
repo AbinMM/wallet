@@ -43,12 +43,12 @@ class Setting extends React.Component {
       //{ avatar: this.state.status ? UImage.my_activityh : UImage.my_activity, first: true, name: "活动中心", onPress: this.goPage.bind(this, "activity") },
       // { avatar:UImage.my_help, name: "帮助中心", onPress: this.goPage.bind(this, "Helpcenter") },
       // { avatar:UImage.my_community, name: "ET社区", onPress: this.goPage.bind(this, "Community") },
-      { avatar:UImage.my_wallet, name: "钱包管理", onPress: this.goPage.bind(this, "WalletManage") },
-      {first: 0.3, avatar:UImage.my_record, name: "交易记录",  },
-      {first: 0.3, avatar:UImage.my_share, name: "有奖邀请", onPress: this.goPage.bind(this, "share") },
-      {first: 0.3, avatar:UImage.account_manage, name: "通讯录", onPress: this.goPage.bind(this, "AccountManage") },
-      {first: 0.3, avatar:UImage.my_system, name: "系统设置",  onPress: this.goPage.bind(this, "set") },
-      {first: 0.3, avatar:UImage.my_aboutus, name: "关于我们", onPress: this.goPage.bind(this, "Community") },
+      {first: 1, avatar:UImage.my_wallet, name: "钱包管理", onPress: this.goPage.bind(this, "WalletManage") },
+      {first: 1, avatar:UImage.my_record, name: "交易记录",  },
+      {first: 1, avatar:UImage.my_share, name: "有奖邀请", onPress: this.goPage.bind(this, "share") },
+      {first: 1, avatar:UImage.account_manage, name: "通讯录", onPress: this.goPage.bind(this, "AccountManage") },
+      {first: 1, avatar:UImage.my_system, name: "系统设置",  onPress: this.goPage.bind(this, "set") },
+      {avatar:UImage.my_aboutus, name: "关于我们", onPress: this.goPage.bind(this, "Community") },
     ];
   }
 
@@ -173,7 +173,7 @@ class Setting extends React.Component {
           </TouchableOpacity>
         </View>
         
-        <View style={{backgroundColor: UColor.mainColor,paddingLeft: ScreenUtil.autowidth(35),paddingBottom: ScreenUtil.autoheight(20),}}>
+        <View style={{backgroundColor: UColor.mainColor,paddingHorizontal: ScreenUtil.autowidth(25),paddingBottom: ScreenUtil.autoheight(20),}}>
           {this._renderListItem()}
         </View>
       </View>
