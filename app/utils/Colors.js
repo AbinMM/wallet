@@ -68,5 +68,6 @@ export default {
   fontrice: "#EDEDED",
   inputtip: "#b2b2b2",
   turnout_eos: "#3B80F4",
+  tradedetail_prompt: "#323232",
   Navigation: ['#4CA6FF', '#7CBEFF'],
 }

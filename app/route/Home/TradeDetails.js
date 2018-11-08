@@ -5,7 +5,7 @@ import moment from 'moment';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from  '../../components/Button'
-import Header from '../../components/Header'
+import HeaderWhite from '../../components/HeaderWhite'
 import QRCode from 'react-native-qrcode-svg';
 import ViewShot from "react-native-view-shot";
 import ScreenUtil from '../../utils/ScreenUtil'
@@ -14,10 +14,8 @@ import { EasyShowLD } from '../../components/EasyShow'
 import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
-var WeChat = require('react-native-wechat');
 const UrlHead = "https://eoseco.com/search?q=";
 
-@connect(({login}) => ({...login}))
 class TradeDetails extends BaseComponent {
 
   static navigationOptions = {
@@ -79,28 +77,12 @@ class TradeDetails extends BaseComponent {
       paramtrade.to = "";
       paramtrade.blockNum = 0;  
     }
-    WeChat.registerApp('wxc5eefa670a40cc46');
-    this.props.navigation.setParams({ onPress: this._rightTopClick });
     this.state = {
       trade: paramtrade,
     };
   }
 
-  _rightTopClick = () =>{
-    this.refs.viewShot.capture().then(uri => {
-      WeChat.isWXAppInstalled().then((isInstalled) => {
-          EasyShowLD.dialogClose();
-          if (isInstalled) {
-            WeChat.shareToSession({ type: 'imageFile', imageUrl: uri })
-              .catch((error) => {
-                EasyToast.show(error.message);
-              });
-          } else {
-            EasyToast.show('没有安装微信软件，请您安装微信之后再试');
-          }
-        });
-    });
-  }
+
 
   componentDidMount() {
     //alert('trade: '+JSON.stringify(this.props.navigation.state.params));
@@ -149,73 +131,63 @@ class TradeDetails extends BaseComponent {
   
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-       <Header {...this.props} onPressLeft={true} title="交易详情" avatar={UImage.share_i} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(18)}/>
-      <ViewShot ref="viewShot" style={{backgroundColor:UColor.secdfont}}> 
-        <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
-          {this.state.trade.disptype == 0 && <ImageBackground style={[styles.bgtopout,ScreenUtil.isIphoneX()?{minHeight:(ScreenWidth-ScreenUtil.autowidth(60))*0.3974}:{height:(ScreenWidth-ScreenUtil.autowidth(60))*0.3974}]} source={UImage.home_bg} resizeMode="stretch">
-              <View style={[styles.headout]}>
-                  {/* <Text style={[styles.quantitytext,{color: UColor.fontColor}]}>{this.state.trade.type=='转出'?'-':'+'} </Text> */}
-                  <Text style={[styles.quantitytext,{color: UColor.fontColor}]}>{this.state.trade.quantity.replace(this.state.trade.code, "")} </Text>
-                  {/* <Text style={[styles.headtext,{color: UColor.arrow}]}> {this.state.trade.code}</Text> */}
-              </View>
-              <Text style={[styles.description,{color: UColor.arrow}]}>({this.state.trade.description}{this.state.trade.bytes? this.state.trade.bytes + " bytes":""})</Text>
-            </ImageBackground>
+       <HeaderWhite {...this.props} onPressLeft={true} title="交易详情" backgroundColors={UColor.transport} imgWidth={ScreenUtil.autowidth(21)} imgHeight={ScreenUtil.autowidth(21)}/>  
+       <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893,position:'absolute',top: 0,}} source={UImage.home_bg}/>
+        <View style={[styles.header,]}>
+          <View style={[styles.headout]}>
+              <Text style={[styles.quantitytext,{color: UColor.mainColor}]}>{this.state.trade.quantity.replace(this.state.trade.code, "")} </Text>
+          </View>
+          {this.state.trade.disptype == 0 && 
+              <Text style={[styles.description,{color: UColor.mainColor}]}>({this.state.trade.description}{this.state.trade.bytes? this.state.trade.bytes + " bytes":""})</Text>
           }
-          {this.state.trade.disptype == 1 && <ImageBackground style={[styles.bgtopout,ScreenUtil.isIphoneX()?{minHeight:(ScreenWidth-ScreenUtil.autowidth(60))*0.3974}:{height:(ScreenWidth-ScreenUtil.autowidth(60))*0.3974}]} source={UImage.home_bg} resizeMode="stretch">
-              <View style={[styles.headout]}>
-                  <Text style={[styles.quantitytext,{color: UColor.fontColor}]}>{this.state.trade.quantity}</Text>
-              </View>
-              <Text style={[styles.description,{color: UColor.arrow}]}>{this.state.trade.type == 'selltoken'?'(卖)':'(买)'}</Text>
-            </ImageBackground>
+          {this.state.trade.disptype == 1 && 
+              <Text style={[styles.description,{color: UColor.mainColor}]}>{this.state.trade.type == 'selltoken'?'(卖)':'(买)'}</Text>
           }
-          {this.state.trade.disptype == 2 && <ImageBackground style={[styles.bgtopout,ScreenUtil.isIphoneX()?{minHeight:(ScreenWidth-ScreenUtil.autowidth(60))*0.3974}:{height:(ScreenWidth-ScreenUtil.autowidth(60))*0.3974}]} source={UImage.home_bg} resizeMode="stretch">
-              <View style={[styles.headout]}>
-                  <Text style={[styles.quantitytext,{color: UColor.fontColor}]}>{this.state.trade.quantity} </Text>
-              </View>
-              <Text style={[styles.description,{color: UColor.arrow}]}>{this.state.trade.type == 'buyram'?'(买)':'(卖)'}</Text>
-            </ImageBackground>
+          {this.state.trade.disptype == 2 && 
+              <Text style={[styles.description,{color: UColor.mainColor}]}>{this.state.trade.type == 'buyram'?'(买)':'(卖)'}</Text>
           }
         </View>
-        
-        <View style={[styles.tradehint,]}>
-          <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
-            <Text style={[styles.contwotext,{color: UColor.arrow}]}>付款账户</Text>
+      <View style={styles.taboutsource}>
+          <View style={[styles.conouttext]}>
+            <Text style={[styles.contwotext]}>{this.state.trade.receivertitle}</Text>
             <View style={{flex: 7,flexDirection: 'row'}}>
-              <Text style={[styles.blocktext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'from')} onLongPress={this.copyaccount.bind(this, 'from')}>{this.state.trade.from}</Text>
+              <Text style={[styles.blocktext]} onPress={this.prot.bind(this, 'to')} onLongPress={this.copyaccount.bind(this, 'to')}>{this.state.trade.to}</Text>
               <View style={{flex: 1}}/>
             </View>
           </View>
-          <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
-            <Text style={[styles.contwotext,{color: UColor.arrow}]}>{this.state.trade.receivertitle}</Text>
+          <View style={[styles.conouttext]}>
+            <Text style={[styles.contwotext]}>付款账户</Text>
             <View style={{flex: 7,flexDirection: 'row'}}>
-              <Text style={[styles.blocktext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'to')} onLongPress={this.copyaccount.bind(this, 'to')}>{this.state.trade.to}</Text>
+              <Text style={[styles.blocktext]} onPress={this.prot.bind(this, 'from')} onLongPress={this.copyaccount.bind(this, 'from')}>{this.state.trade.from}</Text>
               <View style={{flex: 1}}/>
             </View>
           </View>
           <View style={{height: ScreenUtil.autowidth(88), paddingVertical: ScreenUtil.autowidth(11), marginTop: 1,flexDirection: "row", alignItems: 'flex-start', justifyContent: 'center', backgroundColor: UColor.mainColor}}>
-            <Text style={[styles.contwotext,{color: UColor.arrow}]}>备注(Memo)</Text>
+            <Text style={[styles.contwotext]}>备注(Memo)</Text>
             <Text style={[styles.blocktext,{flex: 7,lineHeight: ScreenUtil.autowidth(22), paddingRight: ScreenUtil.autowidth(15),color: UColor.arrow}]} numberOfLines={3} >{this.state.trade.memo}</Text>
           </View>
-        </View>
-        <View style={{flexDirection: "row", }}>
-          <View style={styles.conout}>
-            <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
-              <Text style={[styles.context,{color: UColor.arrow}]}>交易号</Text> 
+          {/* <View style={styles.conout}> */}
+            <View style={[styles.conouttext,{  marginTop: 10,}]}>
+              <Text style={[styles.contwotext]}>交易号</Text> 
               <View style={{flex: 4,}}>
                 <Text style={[styles.tintext,{color: UColor.tintColor}]} onPress={this.prot.bind(this, 'transactionId')}>{this.state.trade.transactionId.substring(0, 6) +"..."+ this.state.trade.transactionId.substr(this.state.trade.transactionId.length-6) }</Text>
               </View>
             </View>
-            <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}> 
-              <Text style={[styles.context,{color: UColor.arrow}]}>是否确认</Text>
+            <View style={[styles.conouttext]}> 
+              <Text style={[styles.contwotext]}>区块高度</Text>
               <Text style={[styles.tintext,{flex: 4,color: (this.state.trade.blockNum != null || this.state.trade.blockNum != "") ? UColor.startup : UColor.showy}]}>{(this.state.trade.blockNum != null || this.state.trade.blockNum != "") ? "已确认" : "未确认"}</Text>
             </View>
-            <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
-              <Text style={[styles.context,{color: UColor.arrow}]}>交易时间</Text>
+            <View style={[styles.conouttext,]}>
+              <Text style={[styles.contwotext]}>交易时间</Text>
               <Text style={[styles.tintext,{flex: 4,color: UColor.startup}]}>{moment(this.state.trade.blockTime).add(8,'hours').format('YYYY-MM-DD HH:mm')}</Text>
             </View>
-          </View>
-        
-          <View style={[styles.codeout,{backgroundColor: UColor.mainColor}]}>
+          {/* </View> */}
+        <View style={[styles.conouttext]}>
+          <Text style={[styles.contwotext]}>提示</Text>
+          <Text style={[styles.blocktext,{flex: 7,color: UColor.startup}]}>扫码可获取区块交易状态</Text>
+        </View>
+
+        <View style={[styles.logout]}>
             <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
               <QRCode size={ScreenUtil.setSpText(80)}  value={UrlHead + this.state.trade.transactionId } 
                 logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(20)} logoBorderRadius={5}/>
@@ -225,19 +197,8 @@ class TradeDetails extends BaseComponent {
                 <Text style={{ fontSize: ScreenUtil.setSpText(12),color: UColor.btnColor,paddingHorizontal: ScreenUtil.autowidth(15),paddingVertical: ScreenUtil.autoheight(5),}}>复制链接</Text>
               </View>
             </Button>
-          </View>
         </View>
-        <View style={[styles.conouttext,{backgroundColor: UColor.mainColor}]}>
-          <Text style={[styles.contwotext,{color: UColor.arrow}]}>提示</Text>
-          <Text style={[styles.blocktext,{flex: 7,color: UColor.startup}]}>扫码可获取区块交易状态</Text>
-        </View>
-        
-
-        {/* <View style={styles.logout}>
-            <Image source={UImage.bottom_log} style={styles.logimg}/>
-            <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
-        </View> */}
-      </ViewShot>
+      </View>
     </View>
   }
 }
@@ -256,18 +217,19 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center', 
     justifyContent: 'center',
-    paddingVertical: ScreenUtil.autowidth(20),
+    // paddingVertical: ScreenUtil.autowidth(5),
+    top:ScreenUtil.autoheight(15),
   },
 
   headout: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: ScreenUtil.autowidth(10),
+    // paddingVertical: ScreenUtil.autowidth(10),
   },
   quantitytext: {
     fontWeight: 'bold',
-    fontSize: ScreenUtil.setSpText(28),
+    fontSize: ScreenUtil.setSpText(32),
   },
   headtext: {
     fontSize: ScreenUtil.setSpText(15),
@@ -275,7 +237,7 @@ const styles = StyleSheet.create({
   },
   description: {
     height: ScreenUtil.autoheight(35),
-    fontSize: ScreenUtil.setSpText(14),
+    fontSize: ScreenUtil.setSpText(12),
   },
   conout: {
     flex: 1,
@@ -283,30 +245,30 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   conouttext: {
-    marginTop: 1,
+    marginTop: 0,
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: 'center',
-    height: ScreenUtil.autowidth(44),
+    height: ScreenUtil.autowidth(36),
   },
   context: {
     flex: 2.5,
     textAlign: 'left',
     paddingLeft: ScreenUtil.autowidth(15),
     fontSize: ScreenUtil.setSpText(16),
-    
+    color: UColor.arrow,
   },
   contwotext: {
     flex: 2.7,
     textAlign: 'left',
     fontSize: ScreenUtil.setSpText(16),
     paddingLeft: ScreenUtil.autowidth(15),
+    color: UColor.tradedetail_prompt,
   },
-  tradehint: {
-    marginVertical: ScreenUtil.autowidth(20),
-  },
+
   blocktext: {
     fontSize: ScreenUtil.setSpText(14),
+    color: UColor.arrow,
   },
   showytext: {
     
@@ -331,7 +293,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    paddingBottom: ScreenUtil.autoheight(20),
+    paddingBottom: ScreenUtil.autoheight(2),
   },
   logimg: {
     width: ScreenUtil.autowidth(50), 
@@ -340,7 +302,17 @@ const styles = StyleSheet.create({
   logtext: {
     fontSize: ScreenUtil.setSpText(14),
     lineHeight: ScreenUtil.autoheight(30),
-  }
+  },
+
+  taboutsource: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: UColor.mainColor,
+    marginTop:ScreenUtil.autoheight(24),
+    marginLeft:ScreenUtil.autowidth(10),
+    marginRight:ScreenUtil.autowidth(10),
+    borderRadius: 5,
+},
 });
 
 export default TradeDetails;
