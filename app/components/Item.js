@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Text, View, Image, StyleSheet, Dimensions, Platform, TouchableHighlight, AlertIOS, SwitchIOS, Switch, TouchableNativeFeedback} from 'react-native'
+import {Text, View, Image, StyleSheet, Dimensions, Platform, TouchableHighlight, TouchableOpacity, AlertIOS, SwitchIOS, Switch, TouchableNativeFeedback} from 'react-native'
 import ScreenUtil from '../utils/ScreenUtil'
 import UColor from '../utils/Colors'
 import Button from './Button'
@@ -8,7 +8,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
-const itemHeight = ScreenUtil.autoheight(55)
 
 const Font = {
   Ionicons,
@@ -21,11 +20,11 @@ class ItemButton extends Component {
     }
     render(){
       return (
-        <Button style={{marginTop: this.props.first?10:0}} onPress={this.props.onPress}>
-          <View style={styles.button}>
+        <TouchableOpacity style={{marginTop: this.props.first?10:0}} onPress={this.props.onPress}>
+          <View style={[styles.button,{height: itemHeight?itemHeight: ScreenUtil.autoheight(55)}]}>
             <Text style={{color: this.props.color || UColor.riseColor}}>{this.props.name}</Text>
           </View>
-        </Button>
+        </TouchableOpacity>
       )
     }
   }
@@ -41,6 +40,7 @@ export default class Item extends Component {
     super(props)
   }
   static propTypes = {
+    itemHeight: PropTypes.number,
     icon: PropTypes.string,
     name: PropTypes.string.isRequired,
     subName: PropTypes.string,
@@ -56,13 +56,13 @@ export default class Item extends Component {
   }
 
   _render(){
-    let {swt,icon, iconSize, name, subName, color, topfirst, first, avatar, disable, font} = this.props
+    let {itemHeight, swt,icon, iconSize, name, subName, color, topfirst, first, avatar, disable, font} = this.props
     font = font||"Ionicons"
  
     return (
-      <View style={[styles.listItem,{backgroundColor: UColor.mainColor,marginTop: topfirst?topfirst:0}]}>
+      <View style={[styles.listItem,{height: itemHeight?itemHeight: ScreenUtil.autoheight(55),backgroundColor: UColor.mainColor,marginTop: topfirst?topfirst:0}]}>
         {icon?(<Icon name={icon} size={iconSize||ScreenUtil.setSpText(20)} style={{width: ScreenUtil.autowidth(22), marginRight:ScreenUtil.autowidth(5), textAlign:"center"}} color={color || UColor.blueDeep} />):null}
-        <View style={[styles.listInfo, first && {borderBottomColor: '#F9FAF9',borderBottomWidth: first}]}>
+        <View style={[styles.listInfo, first && {borderBottomColor: '#F9FAF9',borderBottomWidth: first},{height: itemHeight?itemHeight: ScreenUtil.autoheight(55),}]}>
           {avatar?(<Image source={avatar} style={{width: ScreenUtil.autowidth(19), height: ScreenUtil.autowidth(17), resizeMode: "contain", overflow:"hidden",marginRight:ScreenUtil.autowidth(13),}}/>):null}
           <View style={{flex: 1}}><Text style={{color: '#555555', fontSize:ScreenUtil.autowidth(16)}}>{name}</Text></View>
           <View style={styles.listInfoRight}>
@@ -87,25 +87,22 @@ export default class Item extends Component {
     onPress = onPress || (() => {})
     return disable?
       this._render():
-      <Button onPress={onPress}>{this._render()}</Button>
+      <TouchableOpacity onPress={onPress}>{this._render()}</TouchableOpacity>
   }
 }
 Item.Button = ItemButton
 const styles = StyleSheet.create({
   listItem: {
-    height: itemHeight,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
   button:{
-    height: itemHeight,
     backgroundColor: UColor.mainColor,
     justifyContent: "center",
     alignItems: "center"
   },
   listInfo: {
-    height: itemHeight,
     flex: 1,
     paddingHorizontal: ScreenUtil.autowidth(10),
     flexDirection: "row",

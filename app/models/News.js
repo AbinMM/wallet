@@ -14,7 +14,6 @@ export default {
         *newlists({payload,callback},{call,put}) {
             try{
                 const resp = yield call(Request.request, findAllNews, 'post', payload);
-             
                 //alert(''+JSON.stringify(resp));
                 // if(resp && resp.code=='0'){               
                 //     yield put({ type: 'updateAccountInfo', payload: { accountInfo:resp.data } });

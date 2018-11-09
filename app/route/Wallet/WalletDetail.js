@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, DeviceEventEmitter, StyleSheet, View, Clipboard, Text, ScrollView, Image, Linking, TextInput, Modal } from 'react-native';
+import { Dimensions, Platform, DeviceEventEmitter, StyleSheet, View, Clipboard, Text, ScrollView, Image, Linking, TextInput, Modal, TouchableWithoutFeedback, Animated, TouchableOpacity } from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Item from '../../components/Item'
@@ -21,13 +21,12 @@ const ScreenHeight = Dimensions.get('window').height;
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
 
-@connect(({ wallet, login }) => ({ ...wallet, ...login }))
+@connect(({ wallet, login, vote }) => ({ ...wallet, ...login, ...vote }))
 class WalletDetail extends BaseComponent {
+
   static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {};
     return {
-      // headerTitle: params.data.name,
-      headerTitle: "账户管理",
+      headerTitle: "账户详情",
       header:null,  
     };
   };
@@ -38,20 +37,26 @@ class WalletDetail extends BaseComponent {
       {  name: "资源管理", onPress: this.goPage.bind(this, "Resources") },
       {  name: "账户详细信息", onPress: this.goPage.bind(this, "SeeBlockBrowser") },
       {  name: "交易授权", onPress: this.goPage.bind(this, "AuthExchange") },
-
       {name: "导出公钥", onPress: this.goPage.bind(this, "ExportPublicKey") },
-
       {name: "更改密码",  onPress: this.goPage.bind(this, "ModifyPassword") },
       {name: "备份私钥", onPress: this.goPage.bind(this, "BackupsPkey") },
       {name: "权限管理", onPress: this.goPage.bind(this, "AuthManage") },
     ];
+    paramsdata = this.props.navigation.state.params.data,
     this.state = {
+      mortgage: '0.00EOS',
+      ram_available: '0.00kb',
       password: '',
-      show: false,
       txt_owner: '',
       txt_active: '',
-      integral: 0,
       accumulative: 0,
+      modalwl: false,
+      keytitle: '',
+      PublicPrivate: false,
+      ownerPk: '',
+      activePk: '',
+      mask: new Animated.Value(0),
+      alert: new Animated.Value(0),
     }
     DeviceEventEmitter.addListener('modify_password', () => {
       this.props.navigation.goBack();
@@ -60,9 +65,17 @@ class WalletDetail extends BaseComponent {
 
   //组件加载完成
   componentDidMount() {
-    this.props.dispatch({ type: 'wallet/getintegral', payload:{},callback: (data) => { 
-      this.setState({integral: data.data});
-    } });
+    //获取已抵押资源和RAM
+    this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: paramsdata.name},callback: (resources) => {
+      if(resources != null){
+        this.setState({
+          assetRefreshing: false,
+          mortgage: resources.self_delegated_bandwidth ? Math.floor(resources.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100 + resources.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100 + 'EOS' : '0.00EOS',
+          allowance: resources.display_data ? resources.display_data.ram_left.replace("kb", "") : '0',
+          ram_available: resources.display_data ? resources.display_data.ram_left : 'O.00kb' ,
+        })
+      }
+    }});
   }
 
   componentWillUnmount(){
@@ -70,21 +83,51 @@ class WalletDetail extends BaseComponent {
     super.componentWillUnmount();
   }
 
-  // 显示/隐藏 modal  
-  _setModalVisible() {
-    let isShow = this.state.show;
-    this.setState({
-      show: !isShow,
-    });
-  }
-
   goPage(key, data) {
     const { navigate } = this.props.navigation;
-    if (key == 'BackupsPkey' ) {
-      AuthModal.show(this.props.navigation.state.params.data.account, (authInfo) => {
+    if(key=="CpuNet"){
+      navigate('CpuNet', {});
+    }else if(key=="Ram"){
+      navigate('Ram', {});
+    }else if (key == 'ModifyPassword') {
+      navigate('ModifyPassword', paramsdata);
+    }else if(key == 'PublicKey') {
+      if(paramsdata != null && paramsdata != ''){
+        this.setState({
+          PublicPrivate: false,
+          ownerPk: paramsdata.ownerPublic,
+          activePk: paramsdata.activePublic,
+        });
+        this._wlshow ();
+      }
+    }else if (key == 'PrivateKey' ) {
+      AuthModal.show(paramsdata.account, (authInfo) => {
         try {
             if(authInfo.isOk){
-              navigate('BackupsPkey', { wallet: this.props.navigation.state.params.data, password:authInfo.password, entry: "walletDetails"});
+              var ownerPrivateKey = paramsdata.ownerPrivate;
+              var bytes_words_owner = CryptoJS.AES.decrypt(ownerPrivateKey.toString(), authInfo.password + paramsdata.salt);
+              var plaintext_words_owner = bytes_words_owner.toString(CryptoJS.enc.Utf8);
+              var activePrivateKey = paramsdata.activePrivate;
+              var bytes_words_active = CryptoJS.AES.decrypt(activePrivateKey.toString(), authInfo.password + paramsdata.salt);
+              var plaintext_words_active = bytes_words_active.toString(CryptoJS.enc.Utf8);
+              if (plaintext_words_owner.indexOf('eostoken') != - 1) {
+                  if(plaintext_words_owner==plaintext_words_active){
+                      this.setState({
+                          activePk: plaintext_words_active.substr(8, plaintext_words_active.length),
+                          PublicPrivate: true,
+                          samePk:true,
+                      });
+                      this._wlshow ();
+                  }else{
+                      this.setState({
+                          ownerPk: plaintext_words_owner.substr(8, plaintext_words_owner.length),
+                          activePk: plaintext_words_active.substr(8, plaintext_words_active.length),
+                          PublicPrivate: true,
+                          samePk:false,
+                      });
+                      this._wlshow ();
+                  }
+              }
             }
             EasyShowLD.dialogClose();
         } catch (error) {
@@ -92,69 +135,42 @@ class WalletDetail extends BaseComponent {
           EasyToast.show('未知异常');
         }
       });
-    } else if(key == 'ExportPublicKey') {
-      navigate('ExportPublicKey', { ownerPublicKey: this.props.navigation.state.params.data.ownerPublic, activePublicKey:this.props.navigation.state.params.data.activePublic});
-    } else if (key == 'ModifyPassword') {
-      navigate('ModifyPassword', this.props.navigation.state.params.data);
-    } else if (key == 'Resources') {
-      if(this.props.navigation.state.params.data.isactived){
-        navigate('Resources', {account_name:this.props.navigation.state.params.data.name});
-      }else{
-        EasyToast.show("该账号还没激活，激活之后才能进入资源管理")
-      }
-      
-    } else if(key == 'SeeBlockBrowser'){
-      if(this.props.navigation.state.params.data.isactived){
-        this.setState({ show: true,})
-      }else{
-        EasyToast.show("该账号还没激活，激活之后才能查看详细信息")
-      }
     }else if(key == 'AuthManage'){
-      if(this.props.navigation.state.params.data.isactived){     
-        navigate('AuthManage', {wallet: this.props.navigation.state.params.data});
+      if(paramsdata.isactived){     
+        navigate('AuthManage', {wallet: paramsdata});
       }else{
         EasyToast.show("该账号还没激活，激活之后才能进入权限管理")
       }
+    }else if(key == 'Resources') {
+      if(paramsdata.isactived){
+        navigate('Resources', {account_name:paramsdata.name});
+      }else{
+        EasyToast.show("该账号还没激活，激活之后才能进入资源管理")
+      }
     }else if(key=="AuthExchange"){
-      if(this.props.navigation.state.params.data.isactived){     
-        navigate('AuthExchange', {wallet: this.props.navigation.state.params.data});
+      if(paramsdata.isactived){     
+        navigate('AuthExchange', {wallet: paramsdata});
       }else{
         EasyToast.show("该账号还没激活，激活之后才能进入交易授权")
       }
     }
-    else{
-
+  }
+  
+  //删除账户
+  deleteAccount = (c,data) => {
+    if(!c.isactived || !c.hasOwnProperty('isactived')){
+      //未激活
+      this.deleteWarning(c,data);
+    }else{
+      AlertModal.show("免责声明","系统检测到该账号已经激活!如果执意删除请先导出私钥并保存好，否则删除后无法找回。",'执意删除','返回钱包',(resp)=>{
+        if(resp){
+            this.deleteWallet();
+        }
+      });
     }
   }
- 
-  eospark() {
-    this._setModalVisible();
-    EasyShowLD.dialogClose()
-    Linking.openURL("https://eosmonitor.io/account/" + this.props.navigation.state.params.data.name);
-  }
 
-  eoseco() {
-    this._setModalVisible();
-    EasyShowLD.dialogClose()
-    Linking.openURL("https://eoseco.com/accounts/" + this.props.navigation.state.params.data.name);
-  }
-
-  importWallet() {
-    const { navigate, goBack } = this.props.navigation;
-    navigate('ImportKey', this.props.navigation.state.params.data);
-  }
-
-  copy() {
-    let isShow = this.state.show;
-    this.setState({
-      show: !isShow,
-    });
-    Clipboard.setString('OwnerPrivateKey: ' + this.state.txt_owner + "\n" + 'ActivePrivateKey: ' + this.state.txt_active);
-    EasyToast.show("复制成功")
-  }
-
-  deleteWarning(c,data){
-    
+  deleteWarning = (c,data) => {
     AlertModal.show("免责声明","删除过程中会检测您的账号是否已激活，如果您没有备份私钥，删除后将无法找回！请确保该账号不再使用后再删除！",'下一步','返回钱包',(resp)=>{
       if(resp){
         EasyShowLD.loadingShow();
@@ -197,52 +213,15 @@ class WalletDetail extends BaseComponent {
     });
   }
 
-  deleteAccount(c,data){
-    if(!c.isactived || !c.hasOwnProperty('isactived'))
-    {
-      //未激活
-      this.deleteWarning(c,data);
-    }
-    else{
-
-     AlertModal.show("免责声明","系统检测到该账号已经激活!如果执意删除请先导出私钥并保存好，否则删除后无法找回。",'执意删除','返回钱包',(resp)=>{
-      if(resp){
-          this.deleteWallet();
-        }
-        // EasyShowLD.dialogClose();
-      });
-    }
-  }
-
-  //未激活账号直接删除
-  deletionDirect() {
-    EasyShowLD.dialogClose();
-    var data = this.props.navigation.state.params.data;
-    this.props.dispatch({ type: 'wallet/delWallet', payload: { data } });
-    //删除tags
-    JPushModule.deleteTags([data.name],map => {
-      if (map.errorCode === 0) {
-        console.log('Delete tags succeed, tags: ' + map.tags)
-      } else {
-        console.log(map)
-        console.log('Delete tags failed, error code: ' + map.errorCode)
-      }
-    });
-    DeviceEventEmitter.addListener('delete_wallet', (tab) => {
-      this.props.navigation.goBack();
-    });
-  }
-
   //已激活账号需要验证密码
-  deleteWallet() {
+  deleteWallet () {
     EasyShowLD.dialogClose();
-
-    AuthModal.show(this.props.navigation.state.params.data.account, (authInfo) => {
+    AuthModal.show(paramsdata.account, (authInfo) => {
       try {
           if(authInfo.isOk){
-              var data = this.props.navigation.state.params.data;
-              var ownerPrivateKey = this.props.navigation.state.params.data.ownerPrivate;
-              var bytes_words = CryptoJS.AES.decrypt(ownerPrivateKey.toString(), authInfo.password + this.props.navigation.state.params.data.salt);
+              var data = paramsdata;
+              var ownerPrivateKey = paramsdata.ownerPrivate;
+              var bytes_words = CryptoJS.AES.decrypt(ownerPrivateKey.toString(), authInfo.password + paramsdata.salt);
               var plaintext_words = bytes_words.toString(CryptoJS.enc.Utf8);
               if (plaintext_words.indexOf('eostoken') != - 1) {
                 plaintext_words = plaintext_words.substr(8, plaintext_words.length);
@@ -272,219 +251,226 @@ class WalletDetail extends BaseComponent {
     });
   }
 
-  activeWalletOnServer(){
-    const { navigate } = this.props.navigation;
-    let wallet = this.props.navigation.state.params.data
-    let name = wallet.account;
-    let owner = wallet.ownerPublic;
-    let active = wallet.activePublic;
-    try {
-      EasyShowLD.loadingShow('正在请求');
-      //检测账号是否已经激活
-      this.props.dispatch({
-        type: "wallet/isExistAccountNameAndPublicKey", payload: {account_name: name, owner: owner, active: active}, callback:(result) =>{
-          EasyShowLD.loadingClose();
-            if(result.code == 0 && result.data == true){
-                wallet.isactived = true
-                this.props.dispatch({type: 'wallet/activeWallet', wallet: wallet});
-                AlertModal.show("恭喜激活成功",""+name,'知道了',null,(resp)=>{
-                  EasyShowLD.dialogClose();
-                });
-            }else if(result.code == 500){ // 网络异常
-              EasyToast.show(result.msg);
-            }else if(result.code == 515){
-              EasyToast.show("账号已被别人占用，请换个账号吧！");
-            }else{
-              navigate('ActivationAt', {parameter:wallet, entry: "activeWallet"});
-            }
-        }
-    });
-    } catch (error) {
-      EasyShowLD.loadingClose();
-      navigate('ActivationAt', {parameter:wallet});
-      return false;
-    }
-  
-  }
-
-  activeWallet(data) {
-    const { navigate } = this.props.navigation;
-    if(data.name.length != 12){
-      EasyToast.show('该账号格式无效，无法进行激活！');
-    }else{
-      // 通过后台激活账号
-      this.activeWalletOnServer();
-    }
-  }
-
-  prot(data = {}, key){
-    const { navigate } = this.props.navigation;
-    if (key == 'Explain') {
-      EasyShowLD.dialogClose()
-    navigate('Web', { title: "积分说明", url: "http://news.eostoken.im/html/20180703/1530587725565.html" });
-    }else  if (key == 'EOS-TOKEN') {
-      EasyShowLD.dialogClose()
-      navigate('AssistantQrcode', key);
-    }
-  }
-
-  backupWords() {
-
-    AuthModal.show(this.props.navigation.state.params.data.account, (authInfo) => {
-      try {
-          if(authInfo.isOk){
-            var _words = this.props.navigation.state.params.data.words;
-            var bytes_words = CryptoJS.AES.decrypt(_words.toString(), authInfo.password + this.props.navigation.state.params.data.salt);
-            var plaintext_words = bytes_words.toString(CryptoJS.enc.Utf8);
-    
-            var words_active = this.props.navigation.state.params.data.words_active;
-            var bytes_words = CryptoJS.AES.decrypt(words_active.toString(), authInfo.password + this.props.navigation.state.params.data.salt);
-            var plaintext_words_active = bytes_words.toString(CryptoJS.enc.Utf8);
-    
-            if (plaintext_words.indexOf('eostoken') != -1) {
-              plaintext_words = plaintext_words.substr(9, plaintext_words.length);
-              var wordsArr = plaintext_words.split(',');
-    
-              plaintext_words_active = plaintext_words_active.substr(9, plaintext_words_active.length);
-              var wordsArr_active = plaintext_words_active.split(',');
-    
-              this.toBackup({ words_owner: wordsArr, words_active: wordsArr_active });
-            }else {
-              EasyToast.show('您输入的密码不正确');
-            }
-          }
-          EasyShowLD.dialogClose();
-      } catch (error) {
-        EasyShowLD.dialogClose();
-        EasyToast.show('未知异常');
+  //未激活账号直接删除
+  deletionDirect () {
+    EasyShowLD.dialogClose();
+    var data = paramsdata;
+    this.props.dispatch({ type: 'wallet/delWallet', payload: { data } });
+    //删除tags
+    JPushModule.deleteTags([data.name],map => {
+      if (map.errorCode === 0) {
+        console.log('Delete tags succeed, tags: ' + map.tags)
+      } else {
+        console.log(map)
+        console.log('Delete tags failed, error code: ' + map.errorCode)
       }
     });
+    DeviceEventEmitter.addListener('delete_wallet', (tab) => {
+      this.props.navigation.goBack();
+    });
   }
 
-  toBackup = (words) => {
-    this.props.navigation.goBack();
-    const { navigate } = this.props.navigation;
-    navigate('BackupWords', { words_owner: words.words_owner, words_active: words.words_active, wallet: this.props.navigation.state.params });
+  _wlshow () {
+    if(this.isShow)return;
+    this.isShow = true;
+    window.currentDialog = this;
+    this.setState({modalwl:true,});
+    Animated.parallel([
+      Animated.timing(this.state.mask,{toValue:0.6,duration:400}),
+      Animated.timing(this.state.alert,{toValue:1,duration:300})
+    ]).start(() => {});
   }
 
-  _renderListItem() {
-    return this.config.map((item, i) => {
-      return (<Item key={i} {...item} />)
-    })
+  _wldimss () {
+    if(!this.isShow)return;
+    window.currentDialog = null;
+    Animated.parallel([
+        Animated.timing(this.state.mask,{toValue:0,duration:400}),
+        Animated.timing(this.state.alert,{toValue:0,duration:300})
+    ]).start(() => {
+        this.setState({modalwl:false});
+        this.isShow = false;
+    });
   }
-  
-  copyname(c) {
-    Clipboard.setString(c.name);
-    EasyToast.show('账号复制成功');
+
+  prot (key) {
+    const { navigate } = this.props.navigation; 
+    if(key == 'activePk'){
+        Clipboard.setString(this.state.activePk);
+        if(this.state.PublicPrivate){
+          if(this.state.samePk){
+              EasyToast.show('钱包私钥已复制成功');
+          }else{
+              EasyToast.show('Active私钥已复制成功');
+          }
+        }else{
+          EasyToast.show('Active公钥已复制成功');
+        }
+    } else if(key == 'ownerPk'){
+      Clipboard.setString(this.state.ownerPk);
+      if(this.state.PublicPrivate){
+        EasyToast.show('Owner私钥已复制成功');
+      }else{
+        EasyToast.show('Owner公钥已复制成功');
+      }
+    }else  if(key == 'problem') {
+      navigate('Web', { title: "什么是私钥", url: "http://news.eostoken.im/html/Keystore.html" });   
+    }
   }
 
   render() {
-    const c = this.props.navigation.state.params.data
     const balance = this.props.navigation.state.params.balance ? this.props.navigation.state.params.balance : "0.0000";
     const isEye = this.props.navigation.state.params.isEye
-    return <View style={[styles.container,{backgroundColor: '#FAFAF9'}]}>    
+    return (<View style={[styles.container,{backgroundColor: '#FAFAF9'}]}>    
       <Header {...this.props} onPressLeft={true} title={"账户详情"} />
-      <ScrollView>
-        <View style={[styles.walletout,{backgroundColor: UColor.mainColor}]}>
-          {/* <View style={styles.accountout} >
-            <Text style={[styles.accounttext,{color: UColor.fontColor}]}>{isEye ? (c.isactived && c.balance != null && c.balance != ""? c.balance : balance) : "******"}</Text>
-              <Text style={[styles.company,{color: UColor.fontColor}]}> EOS</Text>
-          </View>
-          <View style={styles.topout}>
-            <Text style={[styles.category,{color:  UColor.fontColor}]}>账户名称：</Text>
-              <Button onPress={this.copyname.bind(this,c)} underlayColor={UColor.mainColor}>
-                <View style={{flexDirection: "row",}}>
-                  <Text style={[styles.outname,{color: UColor.arrow}]}>{c.name}</Text>
-                  <Image source={UImage.copy} style={styles.imgBtn} />
-                </View>
-              </Button>
-            {(!c.isactived || !c.hasOwnProperty('isactived')) ? <View style={[styles.notactivedout,{borderColor: UColor.showy}]}>
-            <Text style={[styles.notactived,{color: UColor.showy}]}>未激活</Text>
-            </View>:(c.isBackups ? null : <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
-            <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]}>未备份</Text>
-            </View>) }   
-          </View> */}
-           <View style={{borderRadius: 6,}}>
-            <Item first={1} name="账户名" onPress={this.copyname.bind(this,c)} disable={true} subName={c.name}/>
-            <Item first={1} name="余额" onPress={this.copyname.bind(this,c)} disable={true} subName={(isEye ? (c.isactived && c.balance != null && c.balance != ""? c.balance : balance) : "******") + ' EOS'}/>
-            
-            <Item first={1} name="导出公钥" onPress={this.goPage.bind(this, "ExportPublicKey")} />
-            <Item first={1} name="资源管理" onPress={this.goPage.bind(this, "Resources")} />
-            <Item first={1} name="账户详细信息" onPress={this.goPage.bind(this, "SeeBlockBrowser")} />
-            <Item first={1} name="交易授权" onPress={this.goPage.bind(this, "AuthExchange")} />
-
-            <Item first={1} name="已抵押资源" onPress={this.copyname.bind(this,c)} subName={c.name}/>
-            <Item first={1} name="RAM" onPress={this.copyname.bind(this,c)} subName={c.name}/>
-
-            <Item first={1} name="更改密码" onPress={this.goPage.bind(this, "ModifyPassword")}  />
-            <Item first={1} name="导出私钥" onPress={this.goPage.bind(this, "BackupsPkey")}  />
-            <Item first={1} name="权限管理" onPress={this.goPage.bind(this, "AuthManage")}  />
-          </View>
+      <View style={[styles.walletout,{backgroundColor: UColor.mainColor}]}>
+          <View style={{borderRadius: 6,}}>
+          <Item first={1} itemHeight={ScreenUtil.autoheight(40)} topfirst={ScreenUtil.autowidth(7)} name="账户名" disable={true} subName={paramsdata.name}/>
+          <Item first={1} itemHeight={ScreenUtil.autoheight(40)} name="余额" disable={true} subName={(isEye ? (paramsdata.isactived && paramsdata.balance != null && paramsdata.balance != ""? paramsdata.balance : balance) : "******") + 'EOS'}/>
+          <Item first={1} itemHeight={ScreenUtil.autoheight(40)} topfirst={ScreenUtil.autowidth(17)} name="已抵押资源" subName={this.state.mortgage + ''} onPress={this.goPage.bind(this, "CpuNet")}/>
+          <Item first={1} itemHeight={ScreenUtil.autoheight(40)} name="RAM" subName={this.state.ram_available} onPress={this.goPage.bind(this, "Ram")}/>
+          <Item first={1} itemHeight={ScreenUtil.autoheight(40)} topfirst={ScreenUtil.autowidth(17)} name="更改密码" onPress={this.goPage.bind(this, "ModifyPassword")} />
+          <Item first={1} itemHeight={ScreenUtil.autoheight(40)} name="查看公钥" onPress={this.goPage.bind(this, "PublicKey")} />
+          <Item first={1} itemHeight={ScreenUtil.autoheight(40)} name="导出私钥" onPress={this.goPage.bind(this, "PrivateKey")}   />
+          <Item first={1} itemHeight={ScreenUtil.autoheight(40)} name="权限管理" onPress={this.goPage.bind(this, "AuthManage")}  />
         </View>
-       
-        {/* <View>{this._renderListItem()}</View> */}
+      </View>
       
       <View style={{flex: 1, alignItems: 'center',justifyContent: 'flex-end', paddingBottom: ScreenUtil.autoheight(20),}}>
-        <TextButton onPress={this.deleteAccount.bind(this, c)} textColor="#fff" text="删除账户"  shadow={true} 
+        <TextButton onPress={this.deleteAccount.bind(this, paramsdata)} textColor="#fff" text="删除账户"  shadow={true} 
           style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
       </View>
-      </ScrollView>
-      {/* {(!c.isactived || !c.hasOwnProperty('isactived'))?
-        <View style={[styles.footer,{backgroundColor:UColor.secdColor}]}>
-          <Button onPress={this.activeWallet.bind(this, c)} style={{flex:1}}>
-              <View style={[styles.footoutsource,{marginRight:0.5,backgroundColor:UColor.mainColor}]}>
-                <Image source={UImage.activation_wallet} style={styles.activationimg}/>
-                <Text style={[styles.delete,{color:UColor.showy}]}>激活账户</Text>
-              </View>
-          </Button>
-          <Button  onPress={this.deleteAccount.bind(this, c)} style={{flex:1}}>
-              <View style={[styles.footoutsource,{marginLeft: 0.5, backgroundColor:UColor.mainColor}]}>
-                <Image source={UImage.delete_wallet} style={styles.deleteimg}/>
-                <Text style={[styles.delete,{color:UColor.tintColor}]}>删除账户</Text>
-              </View>
-          </Button>
-        </View> 
-        :
-        <Button onPress={this.deleteAccount.bind(this, c)} style={{flex: 1,}}>
-          <View style={[styles.deleteout,{backgroundColor: UColor.mainColor}]}>
-            <Text style={[styles.delete,{color: UColor.tintColor}]}>删除账户</Text>
-          </View>
-        </Button>
-      } */}
-      <View style={{backgroundColor: UColor.riceWhite}}>
-        <Modal animationType='slide' transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
-          <View style={[styles.modalStyle,{backgroundColor: UColor.mask}]}>
-            <View style={[styles.subView,{borderColor: UColor.baseline,backgroundColor: UColor.btnColor}]} >
-              <Button style={{ alignItems: 'flex-end',}} onPress={this._setModalVisible.bind(this)}>
-                <View style={styles.closeText}>
-                    <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={28} />
-                </View>
-              </Button>
-              <View style={[styles.eosparkout,{borderColor: UColor.tintColor}]}>
-                <Text style={[styles.titletext,{color: UColor.arrow}]}>eosmonitor.io</Text>
-                <Button onPress={() => { this.eospark() }}>
-                  <View style={[styles.eosparktext,{backgroundColor: UColor.tintColor}]}>
-                  <Text style={[styles.buttonText,{color: UColor.btnColor}]}>查看</Text>
-                  </View> 
-                </Button>
-              </View>
-              <View style={[styles.eosecoout,{borderColor: UColor.tintColor}]}>
-                <Text style={[styles.titletext,{color: UColor.arrow}]}>eoseco.com</Text>
-                <Button onPress={() => { this.eoseco() }}>
-                  <View style={[styles.eosecotext,{backgroundColor: UColor.tintColor}]}>
-                    <Text style={[styles.buttonText,{color: UColor.btnColor}]}>查看</Text>
+
+      {this.state.modalwl && <View style={styles.continer}>
+        <TouchableWithoutFeedback onPress={()=>{this._wldimss()}}>
+          <View style={[styles.content,]}>
+            <Animated.View style={[styles.mask,{opacity:this.state.mask,}]} />
+            <View style={styles.alertContent}>
+              <Animated.View style={[styles.alert,{opacity:this.state.alert}]}>
+                <View style={[styles.touchableout,{backgroundColor:'#FFFFFF'}]}>
+                  <View style={{paddingHorizontal: ScreenUtil.autowidth(22),paddingBottom:ScreenUtil.autowidth(18), alignItems: 'center',}}>
+                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#3B80F4', fontWeight: 'bold',marginBottom: ScreenUtil.autowidth(6),}}>{this.state.PublicPrivate ? '导出私钥' : '查看公钥'}</Text>
+                    {this.state.PublicPrivate && <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#3B80F4'}}>• 安全警告：私钥未经加密，请妥善保管！</Text>}
                   </View>
-                </Button>
-              </View>
+                  {this.state.activePk != "" && <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
+                    <View style={{flexDirection: 'row',alignItems: 'center',}}>
+                      <Text style={[styles.inptitle,{color: '#555555'}]}>{this.state.PublicPrivate ? 'Active私钥' : 'Active公钥'}</Text>
+                      <TouchableOpacity  onPress={this.prot.bind(this, 'activePk')}>
+                        <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#3B80F4', paddingHorizontal: ScreenUtil.autowidth(33), }}>复制</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={[styles.inptgo,{borderColor: '#D9D9D9'}]}> 
+                      <Text style={[styles.inptext,{color: '#808080',borderColor: '#D9D9D9'}]}>{this.state.activePk}</Text>
+                    </View>
+                  </View>}
+                  {this.state.ownerPk != "" && <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
+                    <View style={{flexDirection: 'row',alignItems: 'center',}}>
+                      <Text style={[styles.inptitle,{color: '#555555',}]}>{this.state.PublicPrivate ? 'Owner私钥' : 'Owner公钥'}</Text>
+                      <TouchableOpacity   onPress={this.prot.bind(this, 'ownerPk')}>
+                        <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#3B80F4', paddingHorizontal: ScreenUtil.autowidth(33), }}>复制</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={[styles.inptgo,{borderColor: '#D9D9D9'}]}>
+                      <Text style={[styles.inptext,{color: '#808080',borderColor: '#D9D9D9'}]}>{this.state.ownerPk}</Text>
+                    </View>
+                  </View> }
+                  <View style={{position: 'absolute', bottom: -ScreenUtil.autowidth(21), alignItems: 'center',justifyContent: 'center',}}>
+                    <TextButton onPress={() => this._wldimss()} textColor="#FFFFFF" text="完成"  bgColor={'#3B80F4'} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+                  </View>
+                </View>
+              </Animated.View>
             </View>
           </View>
-        </Modal>
-      </View>
-    </View>
+        </TouchableWithoutFeedback>
+      </View>}
+    </View>)
   }
 }
 
+
 const styles = StyleSheet.create({
+  continer:{
+    left:0,
+    top:0,
+    position: 'absolute',
+    zIndex: 99999,
+    flex: 1,
+    width:"100%",
+    height:"100%"
+  },
+  content:{
+    width:"100%",
+    height:"100%",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mask: {
+    flex:1,
+    left:0,
+    top:0,
+    position: 'absolute',
+    zIndex: 0,
+    width:"100%",
+    height:"100%",
+  },
+  alertContent:{
+    width:"100%",
+    height:"100%",
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor:"rgba(0, 0, 0, 0.54)",
+  },
+  alert:{
+    flex:1,
+    width:"100%",
+    borderRadius:4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+  },
+  title:{
+    color:"#1A1A1A",
+    fontWeight:"bold",
+    textAlign:"center",
+    lineHeight:ScreenUtil.setSpText(26),
+    fontSize:ScreenUtil.setSpText(16),
+    marginTop:ScreenUtil.setSpText(18),
+    margin:ScreenUtil.setSpText(10)
+  },
+  touchableout: {
+    borderRadius: 5,
+    alignItems: 'center',
+    width: ScreenWidth - ScreenUtil.autowidth(92),
+    paddingVertical: ScreenUtil.autowidth(22),
+  },
+
+
+  inptoutgo: {
+    alignItems: 'center',
+    width: ScreenWidth - ScreenUtil.autowidth(92),
+    paddingBottom: ScreenUtil.autoheight(15),
+  },
+  inptitle: {
+    flex: 1,
+    fontSize: ScreenUtil.setSpText(12),
+    lineHeight: ScreenUtil.autoheight(23),
+    paddingHorizontal: ScreenUtil.autowidth(33), 
+  },
+  inptgo: {
+    borderWidth: 1,
+    borderRadius: 2,
+    paddingHorizontal: ScreenUtil.autowidth(10),
+    paddingVertical: ScreenUtil.autowidth(8),
+    width: ScreenWidth - ScreenUtil.autowidth(144),
+  },
+  inptext: {
+    flexWrap: 'wrap',
+    fontSize: ScreenUtil.setSpText(12),
+    lineHeight: ScreenUtil.autoheight(23),
+  },
+
+
   inptpasstext: {
     fontSize: ScreenUtil.setSpText(12),
     lineHeight: ScreenUtil.autoheight(20),
@@ -510,6 +496,7 @@ const styles = StyleSheet.create({
     borderRadius: 6, 
     margin: ScreenUtil.autowidth(15), 
     paddingHorizontal: ScreenUtil.autowidth(10), 
+    paddingTop: ScreenUtil.autowidth(7), 
     paddingBottom: ScreenUtil.autowidth(15), 
   },
   accountout: { 

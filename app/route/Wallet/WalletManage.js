@@ -134,7 +134,7 @@ class WalletManage extends BaseComponent {
           refreshControl={<RefreshControl refreshing={false} tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor} />}
           dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
           renderRow={(rowData, sectionID, rowID) => (
-            <TouchableOpacity onPress={this.onPress.bind(this, rowData, sectionID, rowID)}>
+            <TouchableOpacity onPress={this.onPress.bind(this, rowData, sectionID, rowID)} >
               <View style={[styles.row,{backgroundColor:'#FFFFFF',shadowColor: '#EFF4F8',shadowOffset:{height: 5,width: 0},shadowRadius: 5,shadowOpacity: 0.5,elevation: 5,}]} > 
                   <View style={styles.topout}> 
                       <Button onPress={this.copyname.bind(this,rowData)} underlayColor={UColor.mainColor}>
