@@ -272,14 +272,12 @@ class AuthChange extends BaseComponent {
                         }
                     </View>
                     <View style={styles.buttonView}>
-                        <Text style={[styles.weightText,{color: UColor.arrow}]}>{'权重阀值  '+rowData.item.weight}</Text>
+                        <Text style={[styles.weightText,{color: UColor.arrow}]}>{'权重阀值 '+rowData.item.weight}</Text>
                         <Text style={[styles.weightText,{color: UColor.turnout_eos}]} onPress={() => { this.deleteUser(rowData.item.key) }}>  删除</Text>
                     </View>
                 </View>
-                <View style={{flex:1,flexDirection: "row",backgroundColor: '#D9D9D9'}}>
-                    <View style={[styles.showPkStyle,{borderColor: UColor.arrow,}]}>
-                        <Text style={[styles.pktext,{color: UColor.arrow}]}>{rowData.item.key}</Text>
-                    </View>
+                <View style={[styles.showPkStyle,{borderColor: UColor.arrow,}]}>
+                    <Text style={[styles.pktext,{color: UColor.arrow}]}>{rowData.item.key}</Text>
                 </View>
             </View>
         )
@@ -309,24 +307,26 @@ class AuthChange extends BaseComponent {
                         renderItem={this._renderRow.bind(this)} >
                     </FlatList>
                     <View style={[styles.addUserTitle,{ backgroundColor: UColor.mainColor}]}>
-                        <View style={styles.titleStyle}>
-                            <View style={styles.buttonView}>
-                                <Text style={[styles.weightText,{color: UColor.arrow}]}>权重阀值  </Text>
-                                <Text style={[styles.buttonText,{color:  UColor.fontColor}]}>1</Text>
-                            </View>
+                        <View style={[{flex: 1,flexDirection: "row",
+                            marginTop: ScreenUtil.autoheight(5),
+                            marginLeft: ScreenUtil.autowidth(11),
+                            marginRight: ScreenUtil.autowidth(40),
+                            alignItems: 'flex-end',justifyContent: 'flex-end',
+                            marginBottom:ScreenUtil.autoheight(4),}]}>
+                            <Text style={[styles.weightText,{color: UColor.arrow}]}>权重阀值 1</Text>
                         </View>
-                        <View style={{flex:1,flexDirection: "row",backgroundColor: '#D9D9D9'}}>
+                        <View style={{flex:1,flexDirection: "row", marginHorizontal:ScreenUtil.autowidth(11),}}>
                             <TextInput ref={(ref) => this._lphone = ref} value={this.state.inputText} returnKeyType="next" editable={true}
                                 selectionColor={UColor.tintColor} placeholderTextColor={UColor.inputtip} autoFocus={false}
-                                style={[styles.inptgo,{color: UColor.arrow,backgroundColor: UColor.secdColor, borderColor: UColor.arrow,}]}
+                                style={[styles.inptgo,{color: UColor.arrow,backgroundColor: '#FFFFFF', borderColor: UColor.arrow,}]}
                                 onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default"
                                 placeholder="请您输入Active公钥 " underlineColorAndroid="transparent"  multiline={true}  />
                         </View>
                     </View>
             <View style={[styles.significantout]}>
+                <Text style={[styles.significanttext,{color: UColor.turnout_eos}]} >安全警告</Text>
                 <Text style={[styles.significanttext,{color: UColor.turnout_eos}]} >请确保您清楚了解Active授权，并确保添加的授权用户是您信任的用户，添加的授权用户将可获得变更权限、转账和投票等操作的权限。</Text>
             </View>
-
                     <Button onPress={ this.submission.bind(this) }>
                         <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
                             <Text style={[styles.btntext,{color: UColor.btnColor}]}>授权</Text>
@@ -347,6 +347,7 @@ const styles = StyleSheet.create({
     addUserTitle: {
         flex: 1,
         marginTop: 1,
+        // marginHorizontal:ScreenUtil.autowidth(11),
         paddingBottom: ScreenUtil.autoheight(10),
     },
     titleStyle:{
@@ -354,16 +355,18 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         marginTop: ScreenUtil.autoheight(5),
         marginLeft: ScreenUtil.autowidth(11),
-        marginRight: ScreenUtil.autowidth(42),
+        marginRight: ScreenUtil.autowidth(11),
+       
     },
     showPkStyle: {
         flex: 1,
         borderWidth: 1,
         borderRadius: 5,
-        marginLeft: ScreenUtil.autowidth(15),
-        marginRight: ScreenUtil.autowidth(5),
         paddingVertical: ScreenUtil.autoheight(10),
         paddingHorizontal: ScreenUtil.autowidth(10),
+        backgroundColor: '#FFFFFF',
+        flexDirection: "row",
+        marginHorizontal:ScreenUtil.autowidth(11),
     },
      //用户添加样式
     userAddView: {
@@ -378,6 +381,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: 'flex-end',
         justifyContent: 'flex-end',
+        marginBottom:ScreenUtil.autoheight(4),
     },
     buttonText: {
         fontSize: ScreenUtil.setSpText(12),
@@ -435,9 +439,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         textAlignVertical: 'top',
         height: ScreenUtil.autoheight(57),
-        fontSize: ScreenUtil.setSpText(15),
-        marginLeft: ScreenUtil.autowidth(15),
-        marginRight: ScreenUtil.autowidth(5),
+        fontSize: ScreenUtil.setSpText(16),
         paddingVertical: ScreenUtil.autoheight(10),
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
