@@ -158,8 +158,8 @@ render() {
         <Text style={this.props.minsStyle}>{isNaN(this.leadingZeros(countDown.min)) ? "00" : this.leadingZeros(countDown.min)}</Text>
         <Text style={this.props.secondColonStyle}>{this.props.mins}</Text>
         <Text style={this.props.secsStyle}>{ isNaN(this.leadingZeros(countDown.sec)) ? "00" : this.leadingZeros(countDown.sec)}</Text>
+        <Text style={this.props.secondColonStyle}>{this.props.segs}</Text>
         </View>}
-        {/* <Text style={this.props.secondColonStyle}>{this.props.segs}</Text> */}
       </View>
 
 

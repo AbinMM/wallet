@@ -40,7 +40,7 @@ export default {
   secdColor: '#EDEDED', //副色调 UColor.secdColor
   tintColor: '#4CA6FF', //字体浅色调 UColor.tintColor
   blueDeep: '#3baaff', //蓝背景色 UColor.blueDeep
-  fontColor: '#1A1A1A', //字体颜色 UColor.fontColor
+  fontColor: '#323232', //字体颜色 UColor.fontColor
   btnColor: '#ffffff', //按钮字体颜色 UColor.btnColor
   riceWhite: '#ECECF0', //米白色 UColor.riceWhite
   arrow: '#808080', //深字体色 UColor.arrow
