@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { DeviceEventEmitter, StyleSheet, Image, ScrollView, View, Text, TextInput, Platform, Dimensions, Modal,ListView, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { DeviceEventEmitter, StyleSheet, Image, ScrollView, View, Text, TextInput, Platform, Dimensions, Modal,TouchableHighlight, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import { Eos } from "react-native-eosjs";
@@ -359,7 +359,7 @@ class TurnOutAsset extends BaseComponent {
                                     </Button>
                                 </View>
                             </View>
-                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
+                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(1)}]} >
                                 <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"
                                     selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
                                      underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
@@ -372,7 +372,7 @@ class TurnOutAsset extends BaseComponent {
                                 <Text onPress={()=>{this.openChoiceToken()}}  style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
                                     {lineHeight: ScreenUtil.autoheight(48),color: UColor.turnout_eos,marginRight: ScreenUtil.autowidth(20),}]}>{this.state.name} ></Text>
                             </View>
-                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
+                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(1)}]} >
                             
                                 <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} selectionColor={UColor.tintColor}
                                     style={[styles.textinpt,{paddingLeft: ScreenUtil.autowidth(15),color: UColor.arrow}]} maxLength = {15}
@@ -389,7 +389,7 @@ class TurnOutAsset extends BaseComponent {
                             <View style={styles.accountoue} >
                                 <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(48),color: UColor.fontColor}]}>备注(Memo)</Text>
                             </View>
-                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
+                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(1)}]} >
                                 <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next" maxLength = {40}
                                     selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
                                     underlineColorAndroid="transparent" keyboardType="default"
@@ -417,38 +417,38 @@ class TurnOutAsset extends BaseComponent {
                     <TouchableOpacity style={[styles.modalStyle,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
                         <View style={{ width: ScreenWidth, backgroundColor: UColor.btnColor,}}>
                                 <View style={styles.subView}>
-                                    <Button  onPress={this._setModalVisible.bind(this)} style={styles.buttonView}>
-                                        <Text style={[styles.buttontext,{color: UColor.baseline}]}>×</Text>
-                                    </Button>
-                                    <Text style={[styles.titleText,{color: UColor.blackColor}]}>订单详情</Text>
-                                    <Text style={styles.buttontext}/>
+                                <TouchableOpacity style={styles.LeftBack} onPress={() => this._setModalVisible()}>
+                                    <Ionicons style={{color:'#080808'}} name="ios-arrow-back" size={ScreenUtil.setSpText(25)}/>
+                                </TouchableOpacity>
+                                 <Text style={[styles.titleText]}>订单详情</Text>
                                 </View>
+
                                 <View>
                                     <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText,{color: UColor.startup}]}>收款账号：</Text>
-                                        <Text style={[styles.contentText,{color: UColor.arrow}]}>{this.state.toAccount}</Text>
+                                        <Text style={[styles.explainText]}>收款账号：</Text>
+                                        <Text style={[styles.contentText]}>{this.state.toAccount}</Text>
                                     </View>
                                     <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText,{color: UColor.startup}]}>转出账号：</Text>
-                                        <Text style={[styles.contentText,{color: UColor.arrow}]}>{this.props.defaultWallet.account}</Text>
+                                        <Text style={[styles.explainText]}>转出账号：</Text>
+                                        <Text style={[styles.contentText]}>{this.props.defaultWallet.account}</Text>
                                     </View>
                                     <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText,{color: UColor.startup}]}>数量：</Text>
-                                        <Text style={[styles.contentText,{color: UColor.arrow}]} numberOfLines={1}>{this.state.amount + " " + this.state.name}</Text>
+                                        <Text style={[styles.explainText]}>数        量：</Text>
+                                        <Text style={[styles.contentText]} numberOfLines={1}>{this.state.amount + " " + this.state.name}</Text>
                                     </View>
                                     <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText,{color: UColor.startup}]}>备注：</Text>
-                                        <Text style={[styles.contentText,{color: UColor.arrow}]} numberOfLines={1}>{this.state.memo}</Text>
+                                        <Text style={[styles.explainText]}>备        注：</Text>
+                                        <Text style={[styles.contentText]} numberOfLines={1}>{this.state.memo}</Text>
                                     </View>
                                     { this.state.memo == '' &&
                                         <View style={[styles.warningoutShow,{borderColor: UColor.showy}]}>
-                                            <Text style={[styles.headtext,{color: UColor.showy}]} >温馨提示:</Text>
-                                            <Text style={[styles.headtitle,{color: UColor.showy}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
+                                            <Text style={[styles.headtext,{color: UColor.turnout_eos}]} >温馨提示:</Text>
+                                            <Text style={[styles.headtitle,{color: UColor.turnout_eos}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
                                         </View>
                                     }
                                     <Button onPress={() => { this.inputPwd() }}>
-                                        <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
-                                            <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认</Text>
+                                        <View style={[styles.btnoutsource,{backgroundColor: UColor.turnout_eos}]}>
+                                            <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认支付</Text>
                                         </View>
                                     </Button>
                                 </View>
@@ -514,25 +514,25 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    buttontext: {
-        textAlign: 'center',
-        width: ScreenUtil.autowidth(50),
-        fontSize: ScreenUtil.setSpText(28),
-    },
+    
     titleText: {
-        flex: 1,
+        flex: 2,
         textAlign:'center',
-        fontSize: ScreenUtil.setSpText(18),
+        fontSize: ScreenUtil.setSpText(16.5),
+        color: UColor.tradedetail_prompt,
     },
+
     explainText: {
         flex: 1.5,
         textAlign: 'left',
         fontSize: ScreenUtil.setSpText(16),
+        color: UColor.tradedetail_prompt,
     },
     contentText: {
         flex: 3.5,
         textAlign: 'left',
         fontSize: ScreenUtil.setSpText(16),
+        color: UColor.arrow,
     },
     separationline: {
         alignItems: 'center',
@@ -560,6 +560,7 @@ const styles = StyleSheet.create({
         height:  ScreenUtil.autoheight(45),
         marginVertical: ScreenUtil.autowidth(10),
         marginHorizontal: ScreenUtil.autoheight(15),
+        width: ScreenUtil.screenWidth/2,
     },
     btntext: {
         fontSize: ScreenUtil.setSpText(16),
@@ -666,15 +667,20 @@ const styles = StyleSheet.create({
     },
     headtext: {
         fontWeight: "bold",
-        fontSize: ScreenUtil.setSpText(16),
+        fontSize: ScreenUtil.setSpText(10),
     },
     headtitle: {
         flex: 1,
-        fontSize: ScreenUtil.setSpText(12),
+        fontSize: ScreenUtil.setSpText(10),
         lineHeight: ScreenUtil.autoheight(18),
         marginLeft: ScreenUtil.autowidth(10),
     },
 
+    LeftBack: {
+        flex: 1, 
+        paddingLeft:ScreenUtil.autowidth(10), 
+        alignItems:"flex-start",
+    },
 
 
 })
