@@ -1,18 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { DeviceEventEmitter, Dimensions, TouchableOpacity,TouchableHighlight, ListView, StyleSheet, Image, View, RefreshControl, Text, ImageBackground} from 'react-native';
+import { DeviceEventEmitter, Dimensions,TouchableHighlight, TouchableOpacity,ListView, StyleSheet, Image, View, RefreshControl, Text, ImageBackground} from 'react-native';
 import moment from 'moment';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
-import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyShowLD } from '../../components/EasyShow'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 import HeaderWhite from '../../components/HeaderWhite'
+
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const BTN_SELECTED_STATE_ARRAY = ['isTransfer','isDelegatebw', 'isMemory']; 
 const logOption = ['转账','抵押','内存'];
@@ -91,16 +91,6 @@ class AssetInfo extends BaseComponent {
         }else{
             this.setState({logId: "-1"});
         }
-        // if(resp == null || resp.code == null){
-        //     return;
-        // }
-        // if(resp.code != '0'){
-        //     // this.setState({detailInfo: "暂未找到交易哟~"});
-        // }else if((resp.code == '0') && (this.props.tradeLog.length == 0)){
-        //     this.setState({logId: this.props.tradeLog[tradeLog.length - 1]._id});
-        // }else if((resp.code == '0') && (this.props.tradeLog.length > 0)){
-        //     this.setState({logId: this.props.tradeLog[tradeLog.length - 1]._id});
-        // }
     }
 
     turnInAsset(coins) {
@@ -191,8 +181,8 @@ class AssetInfo extends BaseComponent {
    // 返回转账，抵押记录，内存交易，ET交易  
    ownOthersButton(style, selectedSate, stateType, buttonTitle) {  
         return(  
-            <TouchableOpacity style={[style, selectedSate ? {borderBottomWidth: 2,borderBottomColor: UColor.tintColor} : {}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
-                <Text style={[styles.tabText, selectedSate ? {color: UColor.tintColor} : {color: UColor.fontColor}]}>{buttonTitle}</Text>  
+            <TouchableOpacity style={[style, selectedSate ? {borderBottomWidth: 1,borderBottomColor: UColor.tintColor} : {}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
+                <Text style={[styles.tabText, selectedSate ? {color: UColor.turnout_eos} : {color: UColor.tradedetail_prompt}]}>{buttonTitle}</Text>  
             </TouchableOpacity>  
         );  
     }  
@@ -250,10 +240,10 @@ class AssetInfo extends BaseComponent {
                 <View style={styles.Subcolumn}>
                     <Text style={[styles.recordText,{color: UColor.mainColor}]}>交易记录</Text>
                     <View style={styles.filterView}>
-                        <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
-                            <View style={[{width: ScreenUtil.autowidth(12), height: ScreenUtil.autowidth(12), marginRight: ScreenUtil.autowidth(1), borderColor: this.state.isFilter?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isFilter?UColor.tintColor:UColor.mainColor}]}/>
+                       <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
+                            <Ionicons color={'#FFF'}  name={this.state.isFilter ? "md-checkmark-circle-outline" : "md-radio-button-off"} size={ScreenUtil.autowidth(12)} />
                         </TouchableHighlight>
-                        <Text style={[styles.filterText,{color: UColor.mainColor}]} > 过滤小额交易 </Text> 
+                        <Text style={[styles.filterText,{color: UColor.mainColor}]} > 过滤垃圾交易 </Text> 
                     </View>
                 </View>
 
@@ -285,7 +275,7 @@ class AssetInfo extends BaseComponent {
                                         <Text style={[styles.timetext,{color: UColor.arrow}]}>{this.transferTimeZone(rowData.blockTime)}</Text>
                                     </View>
                                     <View style={styles.typedescription}>
-                                        <Text style={[styles.typeto,{color:rowData.type=='转出'?UColor.warningRed:UColor.fallColor}]}>{(rowData.type=='转出'?'-':'+') +  Math.floor(rowData.quantity.replace(c.asset.name, "")*10000)/10000}</Text>
+                                        <Text style={[styles.typeto,{color:rowData.type=='转出'?UColor.tradedetail_prompt:'#FFB02E'}]}>{(rowData.type=='转出'?'-':'+') +  Math.floor(rowData.quantity.replace(c.asset.name, "")*10000)/10000 + c.asset.name}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -336,13 +326,13 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(12),
     },
     tab: {
-        flex: 1,
-        marginLeft:ScreenUtil.autowidth(15),
-        marginRight:ScreenUtil.autowidth(15),
+        
     },
     btn: {
         flex: 1,
         paddingBottom: ScreenUtil.autoheight(50),
+        marginLeft:ScreenUtil.autowidth(15),
+        marginRight:ScreenUtil.autowidth(15),
     },
 
 
@@ -355,7 +345,7 @@ const styles = StyleSheet.create({
     },  
    
     tabText: {  
-        fontSize: ScreenUtil.setSpText(14),
+        fontSize: ScreenUtil.setSpText(16),
     }, 
     tablayout: {   
         alignItems: 'center',
@@ -364,16 +354,10 @@ const styles = StyleSheet.create({
         paddingVertical: ScreenUtil.autoheight(5),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },  
-
-
   
     OwnOthers: {
         flexDirection: 'row',
-        // marginHorizontal: ScreenUtil.autowidth(10),
-        // marginVertical: ScreenUtil.autoheight(10),
     },
-
-
 
     nothave: {
         borderRadius: 5,
@@ -407,7 +391,7 @@ const styles = StyleSheet.create({
     },
     timetext: {
         textAlign: 'left',
-        fontSize: ScreenUtil.setSpText(12),
+        fontSize: ScreenUtil.setSpText(8),
     },
     quantity: {
         textAlign: 'left',
@@ -418,17 +402,8 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(16),
         marginTop: ScreenUtil.autoheight(3),
     },
-    unconfirmedout: { 
-        flex: 2,
-        alignItems: 'center',
-        flexDirection: "column",
-        justifyContent: "space-between",
-    },
-    unconfirmed: {
-        textAlign: 'center',
-        fontSize: ScreenUtil.setSpText(14),
-        marginTop:  ScreenUtil.autoheight(3),
-    },
+
+
     typedescription: {
         flex: 2,
         alignItems: 'flex-end',
@@ -480,14 +455,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: "row",
         height:  ScreenUtil.autoheight(38),
-        marginHorizontal: ScreenUtil.autowidth(18),
-        marginLeft:ScreenUtil.autowidth(20),
-        marginRight:ScreenUtil.autowidth(20),
+        marginHorizontal: ScreenUtil.autowidth(36),
+        // marginLeft:ScreenUtil.autowidth(20),
+        // marginRight:ScreenUtil.autowidth(20),
     },
     
     recordText: {
         textAlign: 'left',
-        fontSize: ScreenUtil.setSpText(16),
+        fontSize: ScreenUtil.setSpText(12),
     },
     filterView: {
         flex: 1,
@@ -498,7 +473,7 @@ const styles = StyleSheet.create({
 
     filterText: {
         textAlign: 'right',
-        fontSize: ScreenUtil.setSpText(14),
+        fontSize: ScreenUtil.setSpText(12),
     },
 
 })
