@@ -605,8 +605,8 @@ class ImportEosKey extends BaseComponent {
                 </View>
 
                 <View style={styles.inptout} >
-                <PasswordInput password={this.state.walletPassword} onCallbackFun={(walletPassword) => this.setState({ walletPassword })} 
-                repeatpassword={this.state.reWalletPassword} onCallbackFunRepeat={(reWalletPassword) => this.setState({ reWalletPassword })}/>
+                <PasswordInput password={this.state.walletpwd} onCallbackFun={(walletpwd) => this.setState({ walletpwd })} 
+                reWalletpwd={this.state.reWalletpwd} onCallbackFunRepeat={(reWalletpwd) => this.setState({ reWalletpwd })}/>
             </View>
 
               <View style={[styles.inptout,]} >
@@ -630,7 +630,7 @@ class ImportEosKey extends BaseComponent {
                 
               </View>
 
-              <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(16), marginTop: ScreenUtil.autowidth(80),}}>
+              <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(16), marginTop: ScreenUtil.autowidth(40),}}>
                   <View style={{paddingVertical: ScreenUtil.autowidth(16), alignItems: 'center',justifyContent: 'center',} }>
                   <TextButton onPress={() => this.importPriKey()} textColor="#FFFFFF" text="导入钱包"  shadow={true}  style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
                 </View>
