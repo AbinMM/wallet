@@ -88,18 +88,18 @@ class AuthManage extends BaseComponent {
     }
 
   render() {
-    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+    return <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
         <Header {...this.props} onPressLeft={true} title="权限管理" />
-        <View style={[styles.inptoutbg,{backgroundColor: UColor.secdColor}]}>
+        <View style={[styles.inptoutbg,]}>
             {this.state.ownerPk != '' && <TouchableHighlight onPress={() => { this.transferByOwner() }} activeOpacity={0.5} underlayColor={UColor.mainColor}>
                 <View style={[styles.addUserTitle,{backgroundColor: UColor.mainColor}]} >
                     <View style={{flex:1,flexDirection: "column",}}>
                         <View style={styles.titleStyle}>
-                            <Text style={[styles.inptitle,{color: UColor.fontColor}]}> Owner关联公钥（拥有者）</Text>
-                            <Text style={[styles.weightText,{color: UColor.arrow}]}>权重阀值  </Text>
-                            <Text style={[styles.buttonText,{color: UColor.fontColor}]}>{this.state.activeThreshold}</Text>
+                            <Text style={[styles.inptitle]}> Owner关联公钥（拥有者）</Text>
+                            <Text style={[styles.weightText]}>权重阀值  </Text>
+                            <Text style={[styles.weightText]}>{this.state.activeThreshold}</Text>
                         </View>
-                        <Text style={[styles.inptext,{color: UColor.arrow}]}>{this.state.ownerPk}</Text>
+                        <Text style={[styles.inptext]}>{this.state.ownerPk}</Text>
                     </View>
                     <View style={styles.enterButton}> 
                         <Ionicons color={UColor.fontColor} name="ios-arrow-forward-outline" size={ScreenUtil.setSpText(21)} color={UColor.arrow} />     
@@ -110,11 +110,11 @@ class AuthManage extends BaseComponent {
                 <View style={[styles.addUserTitle,{backgroundColor: UColor.mainColor}]} >
                     <View style={{flex:1,flexDirection: "column",}}>
                         <View style={styles.titleStyle}>
-                            <Text style={[styles.inptitle,{color: UColor.fontColor}]}> Active关联公钥（管理者）</Text>
-                            <Text style={[styles.weightText,{color: UColor.arrow}]}>权重阀值 </Text>
-                            <Text style={[styles.buttonText,{color: UColor.fontColor}]}>{this.state.activeThreshold}</Text>
+                            <Text style={[styles.inptitle,{}]}> Active关联公钥（管理者）</Text>
+                            <Text style={[styles.weightText]}>权重阀值 </Text>
+                            <Text style={[styles.weightText]}>{this.state.activeThreshold}</Text>
                         </View>
-                        <Text style={[styles.inptext,{color: UColor.arrow}]}>{this.state.activePk}</Text>
+                        <Text style={[styles.inptext]}>{this.state.activePk}</Text>
                     </View>
                     <View style={styles.enterButton}> 
                         <Ionicons color={UColor.fontColor} name="ios-arrow-forward-outline" size={ScreenUtil.setSpText(21)} color={UColor.arrow} />     
@@ -123,12 +123,12 @@ class AuthManage extends BaseComponent {
             </TouchableHighlight>}
         </View>
         <View style={styles.textout}>
-            <Text style={[styles.titletext,{color: UColor.fontColor}]}>什么是拥有者权限（Owner）？</Text>
-            <Text style={[styles.explaintext,{color: UColor.arrow}]}>Owner 代表了对账户的所有权，可以对权限进行设置，管理Active和其他角色。</Text>
-            <Text style={[styles.titletext,{color: UColor.fontColor}]}>什么是管理者权限（Active）？</Text>
-            <Text style={[styles.explaintext,{color: UColor.arrow}]}>Active 用于日常使用，比如转账，投票等。</Text>
-            <Text style={[styles.titletext,{color: UColor.fontColor}]}>什么是权重阈值？</Text>
-            <Text style={[styles.explaintext,{color: UColor.arrow}]}>权重阈值是使用该权限的最低权重要求。</Text>
+            <Text style={[styles.titletext,{color: UColor.turnout_eos}]}>什么是拥有者权限（Owner）？</Text>
+            <Text style={[styles.explaintext,{color: UColor.turnout_eos}]}>Owner 代表了对账户的所有权，可以对权限进行设置，管理Active和其他角色。</Text>
+            <Text style={[styles.titletext,{color: UColor.turnout_eos}]}>什么是管理者权限（Active）？</Text>
+            <Text style={[styles.explaintext,{color: UColor.turnout_eos}]}>Active 用于日常使用，比如转账，投票等。</Text>
+            <Text style={[styles.titletext,{color: UColor.turnout_eos}]}>什么是权重阈值？</Text>
+            <Text style={[styles.explaintext,{color: UColor.turnout_eos}]}>权重阈值是使用该权限的最低权重要求。</Text>
         </View>
     </View>
   }
@@ -145,8 +145,8 @@ const styles = StyleSheet.create({
     addUserTitle: {
         borderRadius: 5,
         flexDirection: "row",
-        marginTop: ScreenUtil.autoheight(10),
-        marginHorizontal: ScreenUtil.autowidth(5),
+        marginTop: ScreenUtil.autoheight(15),
+        marginHorizontal: ScreenUtil.autowidth(10),
         paddingVertical: ScreenUtil.autoheight(10),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },
@@ -155,20 +155,23 @@ const styles = StyleSheet.create({
     },
     inptitle: {
         flex: 1,
-        fontSize: ScreenUtil.setSpText(15),
+        fontSize: ScreenUtil.setSpText(14),
         lineHeight: ScreenUtil.autoheight(30),
+        color: '#262626',
     },
     weightText: {
         fontSize: ScreenUtil.setSpText(12),
         lineHeight: ScreenUtil.autoheight(30),
+        color: UColor.arrow,
     },
     buttonText: {
         fontSize: ScreenUtil.setSpText(12),
         lineHeight: ScreenUtil.autoheight(30),
     },
     inptext: {
-        fontSize: ScreenUtil.setSpText(14),
+        fontSize: ScreenUtil.setSpText(12),
         lineHeight: ScreenUtil.autoheight(25),
+        color: UColor.arrow,
     },
     enterButton: {
         alignItems: 'center',
@@ -181,12 +184,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
     titletext: {
-        fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autoheight(35),
+        fontSize: ScreenUtil.setSpText(10),
+        // lineHeight: ScreenUtil.autoheight(35),
     },
     explaintext: {
-        fontSize: ScreenUtil.setSpText(13),
-        lineHeight: ScreenUtil.autoheight(20),
+        fontSize: ScreenUtil.setSpText(10),
+        // lineHeight: ScreenUtil.autoheight(20),
     },
 });
 
