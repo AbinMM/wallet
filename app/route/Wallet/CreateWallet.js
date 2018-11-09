@@ -424,6 +424,7 @@ const styles = StyleSheet.create({
     lineHeight: ScreenUtil.autoheight(25),
   },
   inptout: {
+    paddingTop:ScreenUtil.autowidth(15),
     paddingHorizontal: ScreenUtil.autowidth(15),
   },
   Strengthout: {
@@ -437,7 +438,7 @@ const styles = StyleSheet.create({
   inptitle: {
     flex: 1,
     fontSize: ScreenUtil.setSpText(16),
-    lineHeight: ScreenUtil.autoheight(55),
+    lineHeight: ScreenUtil.autoheight(23),
     fontWeight:"bold"
   },
   inpt: {
@@ -446,7 +447,7 @@ const styles = StyleSheet.create({
     borderBottomWidth:0.5,
     fontSize: ScreenUtil.setSpText(14),
     paddingLeft: ScreenUtil.autowidth(2),
-    paddingTop: ScreenUtil.autowidth(24), 
+    paddingTop: ScreenUtil.autowidth(10), 
     color: '#808080',
     borderBottomColor: '#D5D5D5'
   },
