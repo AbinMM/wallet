@@ -142,7 +142,7 @@ class BackupsPkey extends BaseComponent {
                 </TouchableHighlight>
             </View>
 
-            <View style={{flex: 1, marginHorizontal: ScreenUtil.autowidth(16), paddingTop:ScreenUtil.autowidth(50)}}>
+            <View style={{flex: 1, marginHorizontal: ScreenUtil.autowidth(16), paddingTop:ScreenUtil.autowidth(150)}}>
                 <View style={{paddingVertical: ScreenUtil.autowidth(16), alignItems: 'center',justifyContent: 'center',} }>
                     <TextButton onPress={() => this.nextStep()} textColor="#FFFFFF" text="下一步"  shadow={true}  style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
                 </View>

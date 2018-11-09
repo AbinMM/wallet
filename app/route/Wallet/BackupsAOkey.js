@@ -150,7 +150,7 @@ class BackupsAOkey extends BaseComponent {
   }
 
   backupConfirm() {
-    if(this.state.txt_owner == ""){ // 由于导入私钥只导入active, 可能这里备份没有active私钥
+    // if(this.state.txt_owner == ""){ // 由于导入私钥只导入active, 可能这里备份没有active私钥
         if(this.state.activePk == ""){
             EasyToast.show('请输入私钥');
             return;
@@ -163,43 +163,43 @@ class BackupsAOkey extends BaseComponent {
             this.backupOK();
             return;
         }
-    }else if(this.state.activePk == ""){
+    // }else if(this.state.activePk == ""){
 
-        if (this.state.ownerPk == "") {
-            EasyToast.show('请输入owner私钥');
-            return;
-        }
+    //     if (this.state.ownerPk == "") {
+    //         EasyToast.show('请输入owner私钥');
+    //         return;
+    //     }
 
-        if(this.state.ownerPk != this.state.txt_owner){
-            this.setState({PromptOwner: '该私钥内容有误'})
-            return;
-        }
-        if(this.state.ownerPk == this.state.txt_owner){
-            this.backupOK();
-            return;
-        }
-    }else{
-        if (this.state.activePk == "") {
-            EasyToast.show('请输入active私钥');
-            return;
-        }
-        if (this.state.ownerPk == "") {
-            EasyToast.show('请输入owner私钥');
-            return;
-        }
-        if(this.state.activePk != this.state.txt_active){
-            this.setState({PromptActtve: '该私钥内容有误'})
-            return;
-        }
-        if(this.state.ownerPk != this.state.txt_owner){
-            this.setState({PromptOwner: '该私钥内容有误'})
-            return;
-        }
-        if(this.state.activePk == this.state.txt_active && this.state.ownerPk == this.state.txt_owner){
-            this.backupOK();
-            return;
-        }
-    }
+    //     if(this.state.ownerPk != this.state.txt_owner){
+    //         this.setState({PromptOwner: '该私钥内容有误'})
+    //         return;
+    //     }
+    //     if(this.state.ownerPk == this.state.txt_owner){
+    //         this.backupOK();
+    //         return;
+    //     }
+    // }else{
+    //     if (this.state.activePk == "") {
+    //         EasyToast.show('请输入active私钥');
+    //         return;
+    //     }
+    //     if (this.state.ownerPk == "") {
+    //         EasyToast.show('请输入owner私钥');
+    //         return;
+    //     }
+    //     if(this.state.activePk != this.state.txt_active){
+    //         this.setState({PromptActtve: '该私钥内容有误'})
+    //         return;
+    //     }
+    //     if(this.state.ownerPk != this.state.txt_owner){
+    //         this.setState({PromptOwner: '该私钥内容有误'})
+    //         return;
+    //     }
+    //     if(this.state.activePk == this.state.txt_active && this.state.ownerPk == this.state.txt_owner){
+    //         this.backupOK();
+    //         return;
+    //     }
+    // }
 
   }
 
@@ -239,10 +239,10 @@ class BackupsAOkey extends BaseComponent {
                 </TouchableHighlight>
             </View> */}
             <View style={{paddingTop: ScreenUtil.autowidth(50),marginHorizontal: ScreenUtil.autowidth(16), flexDirection: 'row',alignContent: 'center',justifyContent: 'center',} }>
-                <TextInput ref={(ref) => this._lphone = ref} value={this.state.ownerPk} returnKeyType="next" editable={true}
+                <TextInput ref={(ref) => this._lphone = ref} value={this.state.activePk} returnKeyType="next" editable={true}
                     selectionColor={UColor.tintColor} placeholderTextColor={'#D9D9D9'} autoFocus={false} maxLength={64}
                     style={[styles.inpt,{color: UColor.arrow}]} 
-                    onChangeText={(ownerPk) => this.setState({ ownerPk })}  onChange={this.intensity()} keyboardType="default"
+                    onChangeText={(activePk) => this.setState({ activePk })}  onChange={this.intensity()} keyboardType="default"
                     placeholder="请输入或粘贴您的私钥" underlineColorAndroid="transparent"  multiline={true}  />
             </View>
 
