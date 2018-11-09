@@ -268,25 +268,18 @@ class AuthChange extends BaseComponent {
                 <View style={styles.titleStyle}>
                     <View style={styles.userAddView}>
                         {(this.state.authKeys[0].key == rowData.item.key) &&
-                            <Text style={[styles.authText,{color: UColor.fontColor}]}>授权的Active用户</Text>
+                            <Text style={[styles.authText,{color: '#262626'}]}>授权的Active用户</Text>
                         }
                     </View>
                     <View style={styles.buttonView}>
-                        <Text style={[styles.weightText,{color: UColor.arrow}]}>权重  </Text>
-                        <Text style={[styles.buttonText,{color:  UColor.fontColor}]}>{rowData.item.weight}</Text>
+                        <Text style={[styles.weightText,{color: UColor.arrow}]}>{'权重阀值  '+rowData.item.weight}</Text>
+                        <Text style={[styles.weightText,{color: UColor.turnout_eos}]} onPress={() => { this.deleteUser(rowData.item.key) }}>  删除</Text>
                     </View>
                 </View>
-                <View style={{flex:1,flexDirection: "row",}}>
+                <View style={{flex:1,flexDirection: "row",backgroundColor: '#D9D9D9'}}>
                     <View style={[styles.showPkStyle,{borderColor: UColor.arrow,}]}>
                         <Text style={[styles.pktext,{color: UColor.arrow}]}>{rowData.item.key}</Text>
                     </View>
-                    {/* {(this.state.activeAuth.data.auth.keys.length>1 || rowData.item.key.length<50) && */}
-                    <TouchableHighlight onPress={() => { this.deleteUser(rowData.item.key) }}  >
-                        <View style={styles.delButton}>
-                            <Image source={UImage.delicon} style={styles.imgBtn} />
-                        </View>
-                    </TouchableHighlight>
-                    {/* } */}
                 </View>
             </View>
         )
@@ -294,15 +287,9 @@ class AuthChange extends BaseComponent {
 
     render() {
         return (
-        <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-            <Header {...this.props} onPressLeft={true} title="Active权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scangray} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)}/>
-            <View style={[styles.significantout,{backgroundColor: UColor.secdColor,borderColor: UColor.riseColor}]}>
-                <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                    <Image source={UImage.warning} style={styles.imgBtnWarning} />
-                    <Text style={[styles.significanttextHead,{color: UColor.riseColor}]} >温馨提示</Text>
-                </View>
-                <Text style={[styles.significanttext,{color: UColor.riseColor}]} >请确保您清楚了解Active授权，并确保添加的授权用户是您信任的用户，添加的授权用户将可获得变更权限、转账和投票等操作的权限。</Text>
-            </View>
+        <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
+            <Header {...this.props} onPressLeft={true} title="Active权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scanning} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)}/>
+          
             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "padding" : null} style={styles.tab}>
                 <ScrollView keyboardShouldPersistTaps="handled"
                     refreshControl={
@@ -324,22 +311,22 @@ class AuthChange extends BaseComponent {
                     <View style={[styles.addUserTitle,{ backgroundColor: UColor.mainColor}]}>
                         <View style={styles.titleStyle}>
                             <View style={styles.buttonView}>
-                                <Text style={[styles.weightText,{color: UColor.arrow}]}>权重  </Text>
+                                <Text style={[styles.weightText,{color: UColor.arrow}]}>权重阀值  </Text>
                                 <Text style={[styles.buttonText,{color:  UColor.fontColor}]}>1</Text>
                             </View>
                         </View>
-                        <View style={{flex:1,flexDirection: "row",}}>
+                        <View style={{flex:1,flexDirection: "row",backgroundColor: '#D9D9D9'}}>
                             <TextInput ref={(ref) => this._lphone = ref} value={this.state.inputText} returnKeyType="next" editable={true}
                                 selectionColor={UColor.tintColor} placeholderTextColor={UColor.inputtip} autoFocus={false}
                                 style={[styles.inptgo,{color: UColor.arrow,backgroundColor: UColor.secdColor, borderColor: UColor.arrow,}]}
                                 onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default"
                                 placeholder="请您输入Active公钥 " underlineColorAndroid="transparent"  multiline={true}  />
-
-                            <View style={styles.addButton}>
-                                <Image source={UImage.adminAddA} style={styles.imgBtn} />
-                            </View>
                         </View>
                     </View>
+            <View style={[styles.significantout]}>
+                <Text style={[styles.significanttext,{color: UColor.turnout_eos}]} >请确保您清楚了解Active授权，并确保添加的授权用户是您信任的用户，添加的授权用户将可获得变更权限、转账和投票等操作的权限。</Text>
+            </View>
+
                     <Button onPress={ this.submission.bind(this) }>
                         <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
                             <Text style={[styles.btntext,{color: UColor.btnColor}]}>授权</Text>
@@ -347,8 +334,6 @@ class AuthChange extends BaseComponent {
                     </Button>
                 </ScrollView>
             </KeyboardAvoidingView>
-
-
 
         </View>);
     }
@@ -398,7 +383,7 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(12),
     },
     authText: {
-        fontSize: ScreenUtil.setSpText(12),
+        fontSize: ScreenUtil.setSpText(16),
         lineHeight: ScreenUtil.autoheight(30),
     },
     imgBtn: {
@@ -406,7 +391,7 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autowidth(24),
     },
     pktext: {
-        fontSize: ScreenUtil.setSpText(14),
+        fontSize: ScreenUtil.setSpText(12),
     },
     weightText: {
         fontSize: ScreenUtil.setSpText(12),
@@ -429,8 +414,8 @@ const styles = StyleSheet.create({
     },
     //警告样式
     significantout: {
-        borderWidth: 1,
-        borderRadius: 5,
+        // borderWidth: 1,
+        // borderRadius: 5,
         flexDirection: "column",
         alignItems: 'center',
         paddingVertical: ScreenUtil.autoheight(5),
@@ -438,17 +423,10 @@ const styles = StyleSheet.create({
         marginHorizontal: ScreenUtil.autowidth(15),
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
-    imgBtnWarning: {
-        width: ScreenUtil.autowidth(23),
-        height: ScreenUtil.autowidth(20),
-        marginRight: ScreenUtil.autowidth(10),
-    },
-    significanttextHead: {
-        fontWeight:"bold",
-        fontSize: ScreenUtil.setSpText(16),
-    },
+ 
+    
     significanttext: {
-        fontSize: ScreenUtil.setSpText(13),
+        fontSize: ScreenUtil.setSpText(10),
         lineHeight: ScreenUtil.autoheight(20),
     },
     inptgo: {
