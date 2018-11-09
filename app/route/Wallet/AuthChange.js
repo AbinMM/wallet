@@ -286,7 +286,7 @@ class AuthChange extends BaseComponent {
     render() {
         return (
         <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-            <Header {...this.props} onPressLeft={true} title="Active权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scanning} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)}/>
+            <Header {...this.props} onPressLeft={true} title="Active权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scan} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)}/>
           
             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "padding" : null} style={styles.tab}>
                 <ScrollView keyboardShouldPersistTaps="handled"
@@ -347,7 +347,6 @@ const styles = StyleSheet.create({
     addUserTitle: {
         flex: 1,
         marginTop: 1,
-        // marginHorizontal:ScreenUtil.autowidth(11),
         paddingBottom: ScreenUtil.autoheight(10),
     },
     titleStyle:{

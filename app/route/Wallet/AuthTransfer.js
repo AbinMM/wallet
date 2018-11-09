@@ -352,26 +352,17 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
         <View style={[styles.addUserTitle,{backgroundColor: UColor.mainColor}]}>
             <View style={styles.titleStyle}>
                 <View style={styles.userAddView}>
-                    {/* <Image source={UImage.adminAddA} style={styles.imgBtn} /> */}
                     {((this.state.index==OWNER_MODE?this.state.authOwnerKeys[0].key:this.state.authActiveKeys[0].key) == rowData.item.key) &&
-                        <Text style={[styles.authText,{color: UColor.fontColor}]}>{this.state.index==OWNER_MODE?"管理者用户(Owner)":"管理者用户(Active)"}</Text>
+                        <Text style={[styles.authText,{color: '#262626'}]}>{this.state.index==OWNER_MODE?"管理者用户(Owner)":"管理者用户(Active)"}</Text>
                     }
                 </View>
                 <View style={styles.buttonView}>
-                    <Text style={[styles.weightText,{color: UColor.arrow}]}>权重  </Text>
-                    <Text style={[styles.buttonText,{color: UColor.fontColor}]}>{rowData.item.weight}</Text>
+                    <Text style={[styles.weightText,{color: UColor.arrow}]}>{'权重阀值 '+rowData.item.weight}</Text>
+                    <Text style={[styles.weightText,{color: UColor.turnout_eos}]} onPress={() => { this.deleteUser(rowData.item.key) }}>  删除</Text>
                 </View>
             </View>
-            <View style={{flex:1,flexDirection: "row",}}>
-                <View style={[styles.showPkStyle,{borderColor: UColor.arrow}]}>
+            <View style={[styles.showPkStyle,{borderColor: UColor.arrow,}]}>
                     <Text style={[styles.pktext,{color: UColor.arrow}]}>{rowData.item.key}</Text>
-                </View>
-                <TouchableHighlight onPress={() => { this.deleteUser(rowData.item.key) }}  >
-                    <View style={styles.delButton}>
-                        <Image source={UImage.delicon} style={styles.imgBtn} />
-                    </View>
-                </TouchableHighlight>
-                {/* } */}
             </View>
        </View>
     )
@@ -402,21 +393,24 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
                 renderItem={this._renderRow.bind(this)} >
             </FlatList>
             <View style={[styles.addUserTitle,{backgroundColor: UColor.mainColor}]}>
-                <View style={styles.titleStyle}>
-                    <View style={styles.buttonView}>
-                        <Text style={[styles.weightText,{color: UColor.arrow}]}>权重  </Text>
-                        <Text style={[styles.buttonText,{color: UColor.fontColor}]}>1</Text>
-                    </View>
+                <View style={[{flex: 1,flexDirection: "row",
+                    marginTop: ScreenUtil.autoheight(5),
+                    marginLeft: ScreenUtil.autowidth(11),
+                    marginRight: ScreenUtil.autowidth(40),
+                    alignItems: 'flex-end',justifyContent: 'flex-end',
+                    marginBottom:ScreenUtil.autoheight(4),}]}>
+                    <Text style={[styles.weightText,{color: UColor.arrow}]}>权重阀值 1</Text>
                 </View>
-                <View style={{flex:1,flexDirection: "row",}}>
+                <View style={{flex:1,flexDirection: "row", marginHorizontal:ScreenUtil.autowidth(11),}}>
                     <TextInput ref={(ref) => this._lphone = ref} value={this.state.inputText} returnKeyType="next" editable={true} autoFocus={false}
-                        selectionColor={UColor.tintColor} style={[styles.inptgo,{color: UColor.arrow,backgroundColor: UColor.secdColor,borderColor: UColor.arrow}]}  
+                        selectionColor={UColor.tintColor} style={[styles.inptgo,{color: UColor.arrow,backgroundColor:  '#FFFFFF',borderColor: UColor.arrow}]}  
                         onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default" placeholderTextColor={UColor.inputtip} 
                         placeholder={this.state.index==OWNER_MODE?"请您输入Owner公钥":"请您输入Active公钥 "} underlineColorAndroid="transparent"  multiline={true}  />
-                    <View style={styles.addButton}>
-                        <Image source={UImage.adminAddA} style={styles.imgBtn} />
-                    </View>
                 </View>
+            </View>
+            <View style={[styles.significantout]}>
+                <Text style={[styles.significanttext,{color: UColor.turnout_eos}]} >安全警告</Text>
+                <Text style={[styles.significanttext,{color: UColor.turnout_eos}]} >请确保您清楚了解owner授权,并确保添加的授权用户是您信任的用户,添加的授权用户将获得账号的全部权限(包括变更权限和转账投票)。</Text>
             </View>
             <Button onPress={ this.submission.bind(this) }>
                 <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
@@ -441,21 +435,24 @@ EosUpdateAuth = (account, pvk,authArr, callback) => {
                 renderItem={this._renderRow.bind(this)} >
             </FlatList>
             <View style={[styles.addUserTitle,{backgroundColor: UColor.mainColor}]}>
-                <View style={styles.titleStyle}>
-                    <View style={styles.buttonView}>
-                        <Text style={[styles.weightText,{color: UColor.arrow}]}>权重  </Text>
-                        <Text style={[styles.buttonText,{color: UColor.fontColor}]}>1</Text>
+                   <View style={[{flex: 1,flexDirection: "row",
+                        marginTop: ScreenUtil.autoheight(5),
+                        marginLeft: ScreenUtil.autowidth(11),
+                        marginRight: ScreenUtil.autowidth(40),
+                        alignItems: 'flex-end',justifyContent: 'flex-end',
+                        marginBottom:ScreenUtil.autoheight(4),}]}>
+                        <Text style={[styles.weightText,{color: UColor.arrow}]}>权重阀值 1</Text>
                     </View>
-                </View>
-                <View style={{flex:1,flexDirection: "row",}}>
+                <View style={{flex:1,flexDirection: "row", marginHorizontal:ScreenUtil.autowidth(11),}}>
                     <TextInput ref={(ref) => this._lphone = ref} value={this.state.inputText} returnKeyType="next" editable={true} autoFocus={false}
-                        selectionColor={UColor.tintColor} style={[styles.inptgo,{color: UColor.arrow,backgroundColor: UColor.secdColor,borderColor: UColor.arrow}]}  
+                        selectionColor={UColor.tintColor} style={[styles.inptgo,{color: UColor.arrow,backgroundColor: '#FFFFFF',borderColor: UColor.arrow}]}  
                         onChangeText={(inputText) => this.setState({ inputText: inputText})}   keyboardType="default" placeholderTextColor={UColor.inputtip} 
                         placeholder={this.state.index==OWNER_MODE?"请您输入Owner公钥":"请您输入Active公钥 "} underlineColorAndroid="transparent"  multiline={true}  />
-                    <View style={styles.addButton}>
-                        <Image source={UImage.adminAddA} style={styles.imgBtn} />
-                    </View>
                 </View>
+            </View>
+            <View style={[styles.significantout]}>
+                <Text style={[styles.significanttext,{color: UColor.turnout_eos}]} >安全警告</Text>
+                <Text style={[styles.significanttext,{color: UColor.turnout_eos}]} >请确保您清楚了解owner授权,并确保添加的授权用户是您信任的用户,添加的授权用户将获得账号的全部权限(包括变更权限和转账投票)。</Text>
             </View>
             <Button onPress={ this.submission.bind(this) }>
                 <View style={[styles.btnoutsource,{backgroundColor: UColor.tintColor}]}>
@@ -476,13 +473,6 @@ _onRefresh(){
 
     <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
         <Header {...this.props} onPressLeft={true} title="Owner权限管理" onPressRight={this._rightTopClick.bind()} avatar={UImage.scan}/>
-        <View style={[styles.significantout,{backgroundColor: UColor.secdColor,borderColor: UColor.riseColor}]}>
-            <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                <Image source={UImage.warning} style={styles.imgBtnWarning} />
-                <Text style={[styles.significanttextHead,{color: UColor.warningRed}]} >安全警告</Text>
-            </View>
-            <Text style={[styles.significanttext,{color: UColor.warningRed}]} >请确保您清楚了解owner授权,并确保添加的授权用户是您信任的用户,添加的授权用户将获得账号的全部权限(包括变更权限和转账投票)。</Text>
-        </View>
 
 {   Platform.OS == 'ios' ? 
         <KeyboardAvoidingView behavior={"position"} style={styles.tab}>
@@ -551,16 +541,17 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         marginTop: ScreenUtil.autoheight(5),
         marginLeft: ScreenUtil.autowidth(11),
-        marginRight: ScreenUtil.autowidth(42),
+        marginRight: ScreenUtil.autowidth(11),
     },
     showPkStyle: {
         flex: 1,
         borderWidth: 1,
         borderRadius: 5,
-        marginRight: ScreenUtil.autoheight(5),
-        marginLeft: ScreenUtil.autoheight(15),
-        paddingVertical: ScreenUtil.autoheight(10),  
+        paddingVertical: ScreenUtil.autoheight(10),
         paddingHorizontal: ScreenUtil.autowidth(10),
+        backgroundColor: '#FFFFFF',
+        flexDirection: "row",
+        marginHorizontal:ScreenUtil.autowidth(11),
     },
     userAddView: {
         flex: 1,
@@ -573,6 +564,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: 'flex-end',
         justifyContent: 'flex-end',
+        marginBottom:ScreenUtil.autoheight(4),
     },
     buttonText: {
         fontSize: ScreenUtil.setSpText(12),
@@ -604,28 +596,21 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         paddingHorizontal: ScreenUtil.autowidth(5),
     },
-    //警告样式
-    significantout: {
-        borderWidth: 1,
-        borderRadius: 5,
+     //警告样式
+     significantout: {
+        // borderWidth: 1,
+        // borderRadius: 5,
         flexDirection: "column",
-        alignItems: 'center', 
+        alignItems: 'center',
         paddingVertical: ScreenUtil.autoheight(5),
         marginVertical: ScreenUtil.autoheight(10),
         marginHorizontal: ScreenUtil.autowidth(15),
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
-    imgBtnWarning: {
-        width: ScreenUtil.autowidth(23),
-        height: ScreenUtil.autowidth(20),
-        marginRight: ScreenUtil.autowidth(10),
-    },
-    significanttextHead: {
-        fontWeight:"bold",
-        fontSize: ScreenUtil.setSpText(16), 
-    },
+
+
     significanttext: {
-        fontSize: ScreenUtil.setSpText(13), 
+        fontSize: ScreenUtil.setSpText(10),
         lineHeight: ScreenUtil.autoheight(20),
     },
     inptgo: {
@@ -634,9 +619,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         textAlignVertical: 'top',
         height: ScreenUtil.autoheight(57),
-        fontSize: ScreenUtil.setSpText(15),
-        marginLeft: ScreenUtil.autoheight(15),
-        marginRight: ScreenUtil.autoheight(5),
+        fontSize: ScreenUtil.setSpText(16),
         paddingVertical: ScreenUtil.autoheight(10),
         paddingHorizontal: ScreenUtil.autowidth(10),
     },
