@@ -10,10 +10,10 @@ export default {
     state: {
     },
     effects: {
-
-        *mydappInfo({ payload }, { call, put }) {
+        *mydappInfo({ payload,callback }, { call, put }) {
             try {
                 let mydappBook = yield call(store.get, 'mydappBook');
+                if(callback) callback(mydappBook);
                 yield put({ type: 'updateAction', payload: { data: mydappBook.reverse(), ...payload } });
             } catch (error) {
                 EasyToast.show('获取失败!');
@@ -38,6 +38,35 @@ export default {
             let tmp_dappBook = mydappBook.reverse();
             yield put({ type: 'updateAction', payload: { data: tmp_dappBook, ...payload } });
             if(callback) callback(tmp_dappBook);
+        },
+
+        *collectionDappInfo({ payload,callback }, { call, put }) {
+            try {
+                let collectionDapp = yield call(store.get, 'collectionDapp');
+                if(callback) callback(collectionDapp);
+                yield put({ type: 'updateCollection', payload: { data: collectionDapp.reverse(), ...payload } });
+            } catch (error) {
+                EasyToast.show('获取失败!');
+            }
+        },
+        *saveCollectionDapp({ payload,callback}, { call, put }) {
+            var collectionDapp = yield call(store.get, 'collectionDapp');        
+            if (collectionDapp == null) {
+                collectionDapp = [];              
+            }
+
+            for (var i = 0; i < collectionDapp.length; i++) {
+                if ((collectionDapp[i].id == payload.id) && (collectionDapp[i].categoryId == payload.categoryId)) {
+                        collectionDapp.splice(i,1);
+                    break;
+                }
+            }
+
+            collectionDapp[collectionDapp.length] = payload;
+            yield call(store.save, 'collectionDapp', collectionDapp);
+            let tmp_collectionDapp = collectionDapp.reverse();
+            yield put({ type: 'updateCollection', payload: { data: tmp_collectionDapp, ...payload } });
+            if(callback) callback(tmp_collectionDapp);
         },
 
         *getEosTableRows({ payload, callback }, { call, put }) {
@@ -104,6 +133,10 @@ export default {
         updateAction(state, action) {
             let mydappBook = action.payload.data;
             return { ...state, mydappBook };
+        },
+        updateCollection(state, action) {
+            let collectionDapp = action.payload.data;
+            return { ...state, collectionDapp };
         },
     }
 }

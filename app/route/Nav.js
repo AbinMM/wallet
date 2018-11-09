@@ -44,6 +44,7 @@ import SignIn from './Login/SignIn'
 import Discover from './Discover'
 import DappWeb from './Discover/DappWeb'
 import Dappsearch from './Discover/Dappsearch'
+import HistoryCollection from './Discover/HistoryCollection'
 
 import News from './News'
 import Shareing from './News/Shareing'
@@ -271,6 +272,9 @@ const Nav = StackNavigator(
     },
     Dappsearch: {
       screen: Dappsearch
+    },
+    HistoryCollection: {
+      screen: HistoryCollection
     },
     DappWeb: {
       screen: DappWeb

@@ -14,7 +14,7 @@ import Button from '../../components/Button'
 import Header from '../../components/Header'
 import Constants from '../../utils/Constants'
 import {formatEosQua} from '../../utils/FormatUtil';
-
+import TextButton from '../../components/TextButton'
 import CustomWebView from './CustomWebView.android';
 import {DappSignModal,DappSignModalView} from '../../components/modals/DappSignModal'
 import {AuthModal,AuthModalView} from '../../components/modals/AuthModal'
@@ -217,14 +217,24 @@ onBackAndroid = () => {
     //
     pressCopyUrl(){
         this.moreOption();
-        Clipboard.setString(this.props.navigation.state.params.url);
+        Clipboard.setString(this.props.navigation.state.params.data.url);
         EasyToast.show("复制成功!");
     }
 
     pressShare(){
         this.moreOption();
-        DeviceEventEmitter.emit('dappShare', this.props.navigation.state.params.url);
+        DeviceEventEmitter.emit('dappShare', this.props.navigation.state.params.data.url);
     }
+
+    pressBrowser() {
+
+    }
+
+    pressCollection(){
+        this.setState({ optionShow:false })
+        EasyToast.show("已收藏!");
+        this.props.dispatch({ type: 'dapp/saveCollectionDapp', payload: this.props.navigation.state.params.data }, );
+    } 
 
   sendMessageToWebview(strinfo)
   {
@@ -847,14 +857,14 @@ scatter_linkAccount(result)
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: UColor.btnColor }}>
-        <Header {...this.props} onPressLeft={true} onDappBackFalg={true} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.title} avatar={UImage.dapp_set}
+        <Header {...this.props} onPressLeft={true} onDappBackFalg={true} onPressRightFun={this.onRightFun.bind(this)} title={this.props.navigation.state.params.data.name} avatar={UImage.dapp_set}
         onPressRight={this.moreOption.bind(this)} onLeftCloseFun={this.onLeftCloseFun.bind(this)} />
         {
             Platform.OS === 'android' &&
         <CustomWebView
             ref="refWebview"
             // ref={(ref) => this._refWebview = ref}
-            source={{uri:this.props.navigation.state.params.url}}
+            source={{uri:this.props.navigation.state.params.data.url}}
             domStorageEnabled={true}
             javaScriptEnabled={true}
             scalesPageToFit={Platform.OS === 'ios'? true : false}
@@ -875,7 +885,7 @@ scatter_linkAccount(result)
         <WebView
             ref="refWebview"
             // ref={(ref) => this._refWebview = ref}
-            source={{uri:this.props.navigation.state.params.url}}
+            source={{uri:this.props.navigation.state.params.data.url}}
             domStorageEnabled={true}
             javaScriptEnabled={true}
             scalesPageToFit={Platform.OS === 'ios'? true : false}
@@ -897,37 +907,38 @@ scatter_linkAccount(result)
 
         <Animated.View style={[styles.progress, {backgroundColor: UColor.fallColor, width: this.state.progress }]}></Animated.View>
 
- <View style={{backgroundColor: UColor.riceWhite,}}>
+        <View style={{backgroundColor: UColor.riceWhite,}}>
             <Modal animationType={'slide'} transparent={true} visible={this.state.optionShow} onShow={() => { }} onRequestClose={() => { }} >
-                <TouchableOpacity onPress={() => {{
-                                    this.setState({
-                                        optionShow:false
-                                    })
-                                }}}
-
+                <TouchableOpacity onPress={() => {{ this.setState({ optionShow:false }) }}}
                 style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>
-                    <View style={[styles.head,{ width: ScreenWidth,backgroundColor: UColor.btnColor,}]}>
-
-                        <Button onPress={this.pressRefalsh.bind(this)} style={styles.headbtn}>
-                        <View style={styles.headbtnout}>
+                <View style={{width: ScreenWidth, backgroundColor: '#FFFFFF',paddingTop:  ScreenUtil.autoheight(5), borderTopLeftRadius: 6, borderTopRightRadius: 6,}}>
+                    <Text style={{fontSize: ScreenUtil.setSpText(12),color: '#808080', lineHeight: ScreenUtil.autoheight(17),textAlign: 'center',}}>此服务由eostoken.com提供</Text> 
+                    <View style={[styles.head,{paddingVertical:  ScreenUtil.autoheight(28),}]}>
+                        <TouchableOpacity onPress={this.pressRefalsh.bind(this)} style={styles.headbtnout}>
                             <Image source={UImage.refresh_dapp} style={styles.imgBtnBig} />
-                            <Text style={[styles.headbtntext,{color: UColor.arrow}]}>刷新</Text>
-                        </View>
-                        </Button>
-                        <Button onPress={this.pressCopyUrl.bind(this)} style={styles.headbtn}>
-                        <View style={styles.headbtnout}>
+                            <Text style={[styles.headbtntext,{color: '#808080'}]}>刷新</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={this.pressCopyUrl.bind(this)} style={styles.headbtnout}>
                             <Image source={UImage.copy_dapp} style={styles.imgBtnBig} />
-                            <Text style={[styles.headbtntext,{color: UColor.arrow}]}>复制URL</Text>
-                        </View>
-                        </Button>
-                        <Button  onPress={this.pressShare.bind(this)}  style={styles.headbtn}>
-                        <View style={styles.headbtnout}>
+                            <Text style={[styles.headbtntext,{color: '#808080'}]}>复制URL</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity  onPress={this.pressShare.bind(this)}  style={styles.headbtnout}>
                             <Image source={UImage.share_dapp} style={styles.imgBtnBig} />
-                            <Text style={[styles.headbtntext,{color: UColor.arrow}]}>分享</Text>
-                        </View>
-                        </Button>
-
+                            <Text style={[styles.headbtntext,{color: '#808080'}]}>分享</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity  onPress={this.pressBrowser.bind(this)}  style={styles.headbtnout}>
+                            <Image source={UImage.browser_dapp} style={styles.imgBtnBig} />
+                            <Text style={[styles.headbtntext,{color: '#808080'}]}>浏览器打开</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity  onPress={this.pressCollection.bind(this)}  style={styles.headbtnout}>
+                            <Image source={UImage.collection} style={styles.imgBtnBig} />
+                            <Text style={[styles.headbtntext,{color: '#808080'}]}>收藏</Text>
+                        </TouchableOpacity>
                     </View>
+                    <View style={{paddingBottom: ScreenUtil.autowidth(30), alignItems: 'center',justifyContent: 'center',}}>
+                        <TextButton onPress={() => {{ this.setState({ optionShow:false }) }}} textColor="#FFFFFF" text="取消"  bgColor="#D9D9D9" style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+                    </View>
+                </View>
                 </TouchableOpacity>
             </Modal>
         </View>
@@ -1076,7 +1087,7 @@ const styles = StyleSheet.create({
     imgBtnBig: {
         width: ScreenUtil.autowidth(30),
         height: ScreenUtil.autowidth(30),
-        margin: ScreenUtil.autowidth(5),
+        marginBottom: ScreenUtil.autoheight(5),
     },
     headtext: {
         fontWeight: "bold",
@@ -1084,28 +1095,25 @@ const styles = StyleSheet.create({
     },
     headtitle: {
         fontSize: ScreenUtil.setSpText(12),
-        lineHeight:  ScreenUtil.autoheight(20),
+        lineHeight: ScreenUtil.autoheight(20),
     },
     head: {
+        width: ScreenWidth,
         flexDirection: "row",
-        borderBottomWidth: 2,
-        height: ScreenUtil.autoheight(70),
-        marginBottom:ScreenUtil.isIphoneX() ? ScreenUtil.autoheight(20):0,
-      },
+        justifyContent: "space-around",
+    },
     headbtn: {
-        flex: 1,
         alignItems: 'center',
         justifyContent: "center",
-        padding: ScreenUtil.autowidth(5),
-      },
+    },
 
     headbtnout: {
-        flex:1,
         alignItems: 'center',
         justifyContent: "center",
     },
     headbtntext: {
         fontSize: ScreenUtil.setSpText(12),
+        lineHeight: ScreenUtil.autoheight(17),
     },
 
     modalStyleWrite: {

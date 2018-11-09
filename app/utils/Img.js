@@ -101,7 +101,7 @@ export default {
   Invitation_vote:require('../img/Invitation_vote.png'),
   link:require('../img/link.png'),
   Magnifier:require('../img/Magnifier.png'),
-  Magnifier_ash:require('../img/Magnifier_ash.png'),
+  
   Magnifier_me:require('../img/Magnifier_me.png'),
   ManualSearch: require('../img/ManualSearch.png'),
   Memory:require('../img/Memory.png'),
@@ -178,12 +178,7 @@ export default {
   app18: require('../img/activity/app18.png'),
   app19: require('../img/activity/app19.png'),
   app20: require('../img/activity/app20.png'),
-  //DAPP
-  share_dapp:require('../img/share_dapp.png'),
-  copy_dapp:require('../img/copy_dapp.png'),
-  refresh_dapp:require('../img/refresh_dapp.png'),
-  dapp_set:require('../img/dapp_set.png'),
-  icon_vote: require('../img/icon_vote.png'),
+ 
 
 
 
@@ -252,6 +247,20 @@ export default {
 
   qrcode_public: require('../img/wimg/qrcode_public.png'),
   qrcode_wechat: require('../img/wimg/qrcode_wechat.png'),
+
+  Magnifier_ash: require('../img/wimg/Magnifier_ash.png'),
+
+
+  //DAPP
+  share_dapp:require('../img/wimg/share_dapp.png'),
+  copy_dapp:require('../img/wimg/copy_dapp.png'),
+  refresh_dapp:require('../img/wimg/refresh_dapp.png'),
+  browser_dapp: require('../img/wimg/browser_dapp.png'),
+  collection: require('../img/wimg/collection.png'),
+  collection_h: require('../img/wimg/collection_h.png'),
+  
+  dapp_set:require('../img/dapp_set.png'),
+  icon_vote: require('../img/icon_vote.png'),
   //转账
   turnout_pop: require('../img/turnout_pop.png'),
   turnout_delete: require('../img/turnout_delete.png'),
