@@ -15,6 +15,10 @@ import { EasyShowLD } from "../../components/EasyShow"
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 import {AlertModal,AlertModalView} from '../../components/modals/AlertModal'
+import TextButton from '../../components/TextButton'
+import CheckMarkCircle from '../../components/CheckMarkCircle'
+
+
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var WeChat = require('react-native-wechat');
@@ -195,47 +199,53 @@ class ActivationAt extends BaseComponent {
                         <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
                             <QRCode size={ScreenUtil.setSpText(109)} value = {this.getQRCode()} logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(29)} logoBorderRadius={5}/>
                         </View>
-                        <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.fontColor }}>使用ET钱包扫一扫可激活此钱包</Text>
+                        <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.fontColor }}>使用ET钱包扫一扫可激活此账号</Text>
                     </View> 
                     <View style={{paddingHorizontal: ScreenUtil.autowidth(18),paddingVertical: ScreenUtil.autowidth(20),}}>
-                        <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor}}>说明：</Text>
+                        <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor}}>激活说明：</Text>
                         <View style={{paddingTop: ScreenUtil.autoheight(20),paddingHorizontal: ScreenUtil.autowidth(18),flexDirection: 'row'}}>
-                            <Image source={UImage.account_jh} style={styles.accountimg}/>
+                            {/* <Image source={UImage.account_jh} style={styles.accountimg}/> */}
                             <View style={styles.headout}>
-                                <Text style={[styles.inptitle,{paddingBottom: ScreenUtil.autoheight(5),color: UColor.fontColor}]}>激活账号，消耗EOS</Text>
-                                <Text style={[styles.headtitle,{color: UColor.lightgray}]}>根据EOS规则，激活主网账号需要消耗一定量的eos，其成本随着eos和ram的价格波动而变化。</Text>
+                                {/* <Text style={[styles.inptitle,{paddingBottom: ScreenUtil.autoheight(5),color: UColor.fontColor}]}>激活账号，消耗EOS</Text> */}
+                                <Text style={[styles.headtitle,{color: UColor.lightgray}]}>根据EOS规则，激活主网账号会消耗一定量的EOS，具体数额会根据EOS和RAM的价格波动而变化。</Text>
                             </View>  
                         </View>
                         <View style={{paddingTop: ScreenUtil.autoheight(20),paddingHorizontal: ScreenUtil.autowidth(18),flexDirection: 'row'}}>
-                            <Image source={UImage.character_jh} style={styles.characterimg}/>
+                            {/* <Image source={UImage.character_jh} style={styles.characterimg}/> */}
                             <View style={styles.headout}>
-                                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(25),color: UColor.fontColor}]}>微信支付，官方激活</Text>
-                                <Text style={[styles.headtitle,{color: UColor.lightgray}]}>为了方便广大ET用户，可以通过微信支付一定的费用，由官方代为激活。</Text>
+                                {/* <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(25),color: UColor.fontColor}]}>微信支付，官方激活</Text> */}
+                                <Text style={[styles.headtitle,{color: UColor.lightgray}]}>您可以通过点击下方的“微信支付激活”按钮，支付购买资源的费用，ET会帮您完成激活。</Text>
                             </View>  
                         </View>
                         <View style={{paddingTop: ScreenUtil.autoheight(20),paddingHorizontal: ScreenUtil.autowidth(18),flexDirection: 'row'}}>
-                            <Image source={UImage.share_jh} style={styles.shareimg}/>
+                            {/* <Image source={UImage.share_jh} style={styles.shareimg}/> */}
                             <View style={styles.headout}>
-                                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(25),color: UColor.fontColor}]}>分享二维码给好友，协助注册</Text>
-                                <Text style={[styles.headtitle,{color: UColor.lightgray}]}>您也可以发送二维码给朋友，请朋友使用ET钱包扫描二维码激活。(发送二维码让朋友激活请点击右上角的转发按钮。)</Text>
+                                {/* <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(25),color: UColor.fontColor}]}>分享二维码给好友，协助注册</Text> */}
+                                <Text style={[styles.headtitle,{color: UColor.lightgray}]}>您也可以点击屏幕右上角的分享按钮，请朋友使用ET钱包扫描二维码，完成激活。</Text>
                             </View>  
                         </View>
-                    </View>
+
+  {/* lookup: require('../img/lookup.png'),
+  Icons_WeChat: require('../img/Icons_WeChat.png'), */}
+
+                        <View style={{flex: 1, marginHorizontal: ScreenUtil.autowidth(16), paddingTop:ScreenUtil.autowidth(35)}}>
+                            <View style={{paddingVertical: ScreenUtil.autowidth(16), alignItems: 'center',justifyContent: 'center',} }>
+                                <TextButton onPress={() => this.contactWeChataide()} avatar={UImage.Icons_WeChat}  textColor="#FFFFFF" text="微信支付激活"  shadow={true}  style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+                            </View>
+                        </View>
+
+                        <View style={{flex: 1, marginHorizontal: ScreenUtil.autowidth(16), paddingTop:ScreenUtil.autowidth(20)}}>
+                            <View style={{ alignItems: 'center',justifyContent: 'center',} }>
+                                <TextButton onPress={() => this.checkAccountActive()} avatar={UImage.lookup} textColor="#3B80F4" text="查询激活状态"  shadow={false}  style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+                            </View>
+                        </View>
+
+  
+                    </View> 
                 </View> 
             </TouchableOpacity>
         </ScrollView> 
-        <View style={[styles.footer,{backgroundColor:UColor.secdColor}]}>
-            <Button onPress={() => this.contactWeChataide()} style={{flex:1}}>
-                <View style={[styles.footoutsource,{marginRight:0.5,backgroundColor:UColor.mainColor}]}>
-                    <Text style={[styles.delete,{color:UColor.showy}]}>微信支付激活</Text>
-                </View>
-            </Button>
-            <Button  onPress={() => this.checkAccountActive()} style={{flex:1}}>
-                <View style={[styles.footoutsource,{marginLeft: 0.5, backgroundColor:UColor.mainColor}]}>
-                    <Text style={[styles.delete,{color:UColor.tintColor}]}>查询激活状态</Text>
-                </View>
-            </Button>
-        </View> 
+     
     </View>)
     }
 }
@@ -258,6 +268,14 @@ const styles = StyleSheet.create({
     },
     inptoutbg: {
         //paddingHorizontal: ScreenUtil.autowidth(20),
+        // flex: 1,
+        // justifyContent: 'center',
+        marginHorizontal: ScreenUtil.autowidth(15),
+        // marginTop: ScreenUtil.autowidth(10),
+        // marginBottom: ScreenUtil.autowidth(23),
+        // borderRadius: 12,
+        // backgroundColor: UColor.mainColor,
+        // paddingBottom:ScreenUtil.autowidth(55),
     },
 
 

@@ -260,4 +260,7 @@ export default {
   nophone: require('../img/nophone.png'),
   love: require('../img/love.png'),
   walletIcon: require('../img/walletIcon.png'),
+  lookup: require('../img/lookup.png'),
+  Icons_WeChat: require('../img/Icons_WeChat.png'),
+
 }
