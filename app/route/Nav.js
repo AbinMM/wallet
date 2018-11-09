@@ -78,6 +78,7 @@ import BackupsPkey from './Wallet/BackupsPkey'
 import BackupsWarning from './Wallet/BackupsWarning'
 import BarCode from './Wallet/BarcodeTest'
 import CreateWallet from './Wallet/CreateWallet'
+import createWalletWelcome from './Wallet/createWalletWelcome'
 import ExportPublicKey from './Wallet/ExportPublicKey'
 import ImportEosKey from './Wallet/ImportEosKey'
 import ModifyPassword from './Wallet/ModifyPassword'
@@ -180,6 +181,9 @@ const Nav = StackNavigator(
     },
     CreateWallet: {
       screen: CreateWallet
+    },
+    createWalletWelcome: {
+      screen: createWalletWelcome
     },
     BackupsAOkey: {
       screen: BackupsAOkey

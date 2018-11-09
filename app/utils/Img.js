@@ -255,5 +255,6 @@ export default {
   turnout_add: require('../img/turnout_add.png'),
 
   nophone: require('../img/nophone.png'),
-  
+  love: require('../img/love.png'),
+  walletIcon: require('../img/walletIcon.png'),
 }

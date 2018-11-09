@@ -414,7 +414,8 @@ class Home extends React.Component {
 
   createWallet() {
     const { navigate } = this.props.navigation;
-    navigate('CreateWallet', {});
+    // navigate('CreateWallet', {});
+    navigate('createWalletWelcome', {});
     this._wldimss();
     this._plusDimss ();
     this._disableTipVisible();
@@ -504,7 +505,8 @@ class Home extends React.Component {
   Establish() {
     this._disableTipVisible();
     const { navigate } = this.props.navigation;
-    navigate('CreateWallet', {entry: "wallet_home"});
+    // navigate('CreateWallet', {entry: "wallet_home"});
+    navigate('createWalletWelcome', {entry: "wallet_home"});
   }
 
   Import() {
