@@ -249,6 +249,9 @@ export default {
   transfer_float: require('../img/wimg/transfer_float.png'),
   receipt_float: require('../img/wimg/receipt_float.png'),
   resources_float: require('../img/wimg/resources_float.png'),
+
+  qrcode_public: require('../img/wimg/qrcode_public.png'),
+  qrcode_wechat: require('../img/wimg/qrcode_wechat.png'),
   //转账
   turnout_pop: require('../img/turnout_pop.png'),
   turnout_delete: require('../img/turnout_delete.png'),

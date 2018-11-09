@@ -43,6 +43,7 @@ export default class Item extends Component {
     itemHeight: PropTypes.number,
     icon: PropTypes.string,
     name: PropTypes.string.isRequired,
+    nameColor: PropTypes.string,
     subName: PropTypes.string,
     color: PropTypes.string,
     topfirst: PropTypes.number,
@@ -56,7 +57,7 @@ export default class Item extends Component {
   }
 
   _render(){
-    let {itemHeight, swt,icon, iconSize, name, subName, color, topfirst, first, avatar, disable, font} = this.props
+    let {itemHeight, swt,icon, iconSize, name, nameColor, subName, color, topfirst, first, avatar, disable, font} = this.props
     font = font||"Ionicons"
  
     return (
@@ -64,7 +65,7 @@ export default class Item extends Component {
         {icon?(<Icon name={icon} size={iconSize||ScreenUtil.setSpText(20)} style={{width: ScreenUtil.autowidth(22), marginRight:ScreenUtil.autowidth(5), textAlign:"center"}} color={color || UColor.blueDeep} />):null}
         <View style={[styles.listInfo, first && {borderBottomColor: '#F9FAF9',borderBottomWidth: first},{height: itemHeight?itemHeight: ScreenUtil.autoheight(55),}]}>
           {avatar?(<Image source={avatar} style={{width: ScreenUtil.autowidth(19), height: ScreenUtil.autowidth(17), resizeMode: "contain", overflow:"hidden",marginRight:ScreenUtil.autowidth(13),}}/>):null}
-          <View style={{flex: 1}}><Text style={{color: '#555555', fontSize:ScreenUtil.autowidth(16)}}>{name}</Text></View>
+          <View style={{flex: 1}}><Text style={{color:nameColor? nameColor : '#555555', fontSize:ScreenUtil.autowidth(16)}}>{name}</Text></View>
           <View style={styles.listInfoRight}>
             {subName?(<Text style={{color: '#808080', fontSize:ScreenUtil.autowidth(16),}}>{subName}</Text>):null}            
             {disable?null:(<Font.Ionicons name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(20)} color='#B5B5B5' style={{paddingLeft: ScreenUtil.autowidth(20),}} />)}

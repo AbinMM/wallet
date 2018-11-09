@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import {DeviceEventEmitter,StyleSheet,View,Text,Dimensions,Image,Platform,Linking,Switch} from 'react-native';
+import {DeviceEventEmitter,StyleSheet,View,Text,Dimensions,Image,Platform,Linking,Switch,TouchableOpacity} from 'react-native';
 import UImage from '../../utils/Img'
 import JPush from 'jpush-react-native'
 import UColor from '../../utils/Colors'
@@ -11,6 +11,7 @@ import Button from  '../../components/Button'
 import ScreenUtil from '../../utils/ScreenUtil'
 import Upgrade from 'react-native-upgrade-android';
 import { EasyToast } from '../../components/Toast';
+import TextButton from '../../components/TextButton'
 import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import { EasyShowLD } from '../../components/EasyShow'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -144,84 +145,52 @@ class Set extends BaseComponent {
   }
 
   render() {
-    return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+    return <View style={[styles.container,{backgroundColor:'#FAFAF9'}]}>
       <Header {...this.props} onPressLeft={true} title="系统设置" />
-      <View style={styles.scrollView}>
-          <Button onPress={() => this.gesturepass()}>
-            <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
-                <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
-                  <View style={styles.scrollView}>
-                    <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>货币单位</Text>
-                  </View>
-                  <View style={styles.listInfoRight}>            
-                    <Font.Ionicons name="ios-arrow-forward-outline" size={16} color={UColor.arrow} />
-                  </View>
-                </View>
-              </View>
-          </Button>
-          <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
-              <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
-                <View style={styles.scrollView}>
-                  <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>手势密码</Text>
-                </View>
-                <View style={styles.listInfoRight}>
-                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontrice}
-                  value={this.state.gesture} onValueChange={(gesture)=>{this.setState({gesture:gesture,});this.gesturepass(gesture);}}/>
-                </View>
-              </View>
+      <View style={[styles.scrollView,{backgroundColor: '#FFFFFF'}]}>
+        <View style={[styles.listItem,{borderBottomColor: '#FAFAF9'}]}>
+          <Text style={[styles.listInfoTitle,{color:'#323232'}]}>消息推送</Text>
+          <View style={styles.listInfoRight}>
+            <Switch  tintColor={'#D9D9D9'} onTintColor={'#3B80F4'} thumbTintColor={'#EDEDED'}
+            value={this.state.value} onValueChange={(value)=>{ this.setState({ value:value, });this.changeJpush(value);}}/>
           </View>
-          <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
-              <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
-                <View style={styles.scrollView}>
-                  <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>消息推送</Text>
-                </View>
-                <View style={styles.listInfoRight}>
-                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontrice}
-                  value={this.state.value} onValueChange={(value)=>{ this.setState({ value:value, });this.changeJpush(value);}}/>
-                </View>
-              </View>
-          </View>
-          
-          <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
-              <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
-                <View style={styles.scrollView}>
-                  <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>夜间模式</Text>
-                </View>
-                <View style={styles.listInfoRight}>
-                  <Switch  tintColor={UColor.secdColor} onTintColor={UColor.tintColor} thumbTintColor={UColor.fontrice}
-                    value={this.state.skin} 
-                    onValueChange={(value)=>{ 
-                      this.setState({skin:value});
-                      this.changeTheme(value);
-                    }}
-                  />
-                </View>
-              </View>
-          </View>
-          <Button onPress={() => this.checkVersion()}>
-            <View style={[styles.listItem,{backgroundColor: UColor.mainColor}]}>
-                <View style={[styles.listInfo,{borderTopColor: UColor.secdColor}]}>
-                  <View style={styles.scrollView}>
-                    <Text style={[styles.listInfoTitle,{color:UColor.fontColor}]}>检查新版本</Text>
-                  </View>
-                  {/* <View style={styles.listInfoRight}>            
-                    <Font.Ionicons name="ios-arrow-forward-outline" size={16} color={UColor.arrow} />
-                  </View> */}
-                </View>
-              </View>
-          </Button>
-      </View>
-      <View style={{flex: 1,}}>
-        <View style={styles.btnout}>
-          <Button onPress={() => this.logout()}>
-            <View style={[styles.btnloginUser,{backgroundColor: UColor.tintColor}]}>
-              <Text style={[styles.btntext,{color: UColor.btnColor}]}>{this.props.loginUser?"退出登陆":"登陆"}</Text>
-            </View>
-          </Button>
         </View>
-        <View style={styles.logout}>
-          <Image source={UImage.bottom_log} style={styles.logimg}/>
-          <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
+         
+        <View style={[styles.listItem,{borderBottomColor: '#FAFAF9'}]}>
+          <Text style={[styles.listInfoTitle,{color:'#323232'}]}>夜间模式</Text>
+          <View style={styles.listInfoRight}>
+            <Switch  tintColor={'#D9D9D9'} onTintColor={'#3B80F4'} thumbTintColor={'#EDEDED'}
+              value={this.state.skin} onValueChange={(value)=>{this.setState({skin:value}); this.changeTheme(value);}}
+            />
+          </View>
+        </View>
+        <View style={[styles.listItem,{borderBottomColor: '#FAFAF9'}]}>
+          <Text style={[styles.listInfoTitle,{color:'#323232'}]}>手势密码</Text>
+          <View style={styles.listInfoRight}>
+            <Switch  tintColor={'#D9D9D9'} onTintColor={'#3B80F4'} thumbTintColor={'#EDEDED'}
+            value={this.state.gesture} onValueChange={(gesture)=>{this.setState({gesture:gesture,});this.gesturepass(gesture);}}/>
+          </View>
+        </View>
+        <View style={[styles.listItem,{borderBottomColor: '#FAFAF9'}]}>
+            <Text style={[styles.listInfoTitle,{color:'#323232'}]}>指纹支付</Text>
+          <View style={styles.listInfoRight}>
+            <Switch  tintColor={'#D9D9D9'} onTintColor={'#3B80F4'} thumbTintColor={'#EDEDED'}
+            value={this.state.fingerprint} onValueChange={(fingerprint)=>{this.setState({fingerprint:fingerprint,});this.gesturepass(fingerprint);}}/>
+          </View>
+        </View>
+         
+        <TouchableOpacity onPress={() => this.checkVersion()}>
+          <View style={[styles.listItem,{borderBottomColor: '#FAFAF9'}]}>
+            <Text style={[styles.listInfoTitle,{color:'#323232'}]}>检查新版本</Text>
+            {/* <View style={styles.listInfoRight}>            
+              <Font.Ionicons name="ios-arrow-forward-outline" size={16} color={UColor.arrow} />
+            </View> */}
+          </View>
+        </TouchableOpacity>
+      </View>
+      <View style={{flex: 1,alignItems: 'center',justifyContent: 'flex-end',}}>
+        <View style={{paddingBottom: ScreenUtil.autowidth(20), alignItems: 'center',justifyContent: 'center',}}>
+          <TextButton onPress={() => this.logout()} textColor="#FFFFFF" text={this.props.loginUser?"退出登陆":"登陆"}  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
         </View>
       </View>
   </View>
@@ -235,23 +204,20 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    paddingTop: ScreenUtil.autoheight(8),
+    paddingBottom: ScreenUtil.autoheight(99),
   },
   listItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  listInfo: {
-    borderTopWidth:1,
+    borderBottomWidth:0.5,
     width: ScreenWidth,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    height:  ScreenUtil.autoheight(55),
-    paddingHorizontal: ScreenUtil.autowidth(16),
-   
+    height: ScreenUtil.autoheight(50),
+    paddingHorizontal: ScreenUtil.autowidth(30),
   },
   listInfoTitle: {
+    flex: 1,
     fontSize: ScreenUtil.setSpText(16),
   },
   listInfoRight: {
@@ -272,20 +238,6 @@ const styles = StyleSheet.create({
   btntext: {
     fontSize: ScreenUtil.setSpText(15),
   },
-  logout:{
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: ScreenUtil.autoheight(20),
-  },
-  logimg: {
-    width: ScreenUtil.autowidth(50), 
-    height: ScreenUtil.autowidth(50)
-  },
-  logtext: {
-    fontSize: ScreenUtil.setSpText(14),
-    lineHeight: ScreenUtil.autoheight(30),
-  }
   
 });
 
