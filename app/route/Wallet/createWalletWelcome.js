@@ -91,7 +91,7 @@ class createWalletWelcome extends BaseComponent {
             <Button onPress={()=>this.goCreateWallet()}>
                 <View style={{marginTop: ScreenUtil.autowidth(15),marginHorizontal:ScreenUtil.autowidth(15),height: ScreenUtil.autowidth(70),borderRadius: 8,flexDirection: 'row',backgroundColor: "#FFFFFF"}}>
                     <View style={{paddingLeft:ScreenUtil.autowidth(18),flexDirection: "row",alignItems: "center",}}>  
-                        <Image source={UImage.love} style={ {width: ScreenUtil.autowidth(41),height: ScreenUtil.autowidth(35),}} />
+                        <Image source={UImage.love} style={ {width: ScreenUtil.autowidth(40),height: ScreenUtil.autowidth(38),}} />
                     </View> 
                     <View style={{paddingVertical:ScreenUtil.autowidth(16),paddingLeft:ScreenUtil.autowidth(24),flexDirection: 'column',justifyContent: "space-between",}}>
                         <Text style={{fontSize: ScreenUtil.setSpText(16),lineHeight: ScreenUtil.autoheight(23),fontWeight:"bold",color: "#323232"}}>1分钟快速创建</Text>
