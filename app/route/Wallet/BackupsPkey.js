@@ -11,6 +11,9 @@ import {NavigationActions} from 'react-navigation';
 import { EasyToast } from '../../components/Toast';
 import { EasyShowLD } from "../../components/EasyShow"
 import BaseComponent from "../../components/BaseComponent";
+import TextButton from '../../components/TextButton'
+import CheckMarkCircle from '../../components/CheckMarkCircle'
+
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var AES = require("crypto-js/aes");
@@ -61,10 +64,10 @@ class BackupsPkey extends BaseComponent {
     }
 
     componentWillUnmount(){
-        var entry = this.props.navigation.state.params.entry;
-        if(entry == "createWallet"){
-            this.pop(1, true);
-        }
+        // var entry = this.props.navigation.state.params.entry;
+        // if(entry == "createWallet"){
+        //     this.pop(1, true);
+        // }
         //结束页面前，资源释放操作
         super.componentWillUnmount();
     }
@@ -122,45 +125,29 @@ class BackupsPkey extends BaseComponent {
         return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
          <Header {...this.props} onPressLeft={true} title="备份私钥" />
         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={styles.scrollView}>
-            <View style={[styles.header,{backgroundColor: UColor.secdColor}]}>
-                <View style={[styles.inptoutbg,{backgroundColor: UColor.mainColor}]}>
-                    <View style={styles.headout}>
-                        <Text style={[styles.inptitle,{color: UColor.fontColor}]}>请立即备份您的私钥</Text>
-                        <View style={[styles.warningout,{borderColor: UColor.showy}]}>
-                            <View style={{flexDirection: 'row',alignItems: 'center',}}>
-                                <Image source={UImage.warning} style={styles.imgBtn} />
-                                <Text style={[styles.significanttextHead,{color: UColor.showy}]} >安全警告</Text>
-                            </View>
-                            <Text style={[styles.headtitle,{color: UColor.showy}]}>私钥相当于您的银行卡密码，请妥善保管！（切勿截图、存储到网络硬盘、微信等传输！）</Text>
-                        </View>
-                    </View> 
-                    {this.state.activePk != ''&& 
-                    <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
-                        <Text style={[styles.inptitle,{color: UColor.fontColor}]}>{this.state.samePk?"钱包私钥":"Active私钥"}</Text>
-                        <TouchableHighlight style={[styles.inptgo,{backgroundColor: UColor.secdColor}]} underlayColor={UColor.secdColor} onPress={this.prot.bind(this, 'activePk')}>
-                            <Text style={[styles.inptext,{color: UColor.arrow}]}>{this.state.activePk}</Text>
-                        </TouchableHighlight>
-                    </View>}  
-                    {this.state.ownerPk != ''&&
-                    <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
-                        <Text style={[styles.inptitle,{color: UColor.fontColor}]}>Owner私钥</Text>
-                        <TouchableHighlight style={[styles.inptgo,{backgroundColor: UColor.secdColor}]} underlayColor={UColor.secdColor} onPress={this.prot.bind(this, 'ownerPk')}>
-                            <Text style={[styles.inptext,{color: UColor.arrow}]}>{this.state.ownerPk}</Text>
-                        </TouchableHighlight>
-                    </View>}
+            <View style={styles.header}>
+            {/* <View style={{flexDirection: 'row'}}> */}
+            <View style={{paddingTop: ScreenUtil.autowidth(20), flexDirection: 'row', alignItems: 'center',justifyContent: 'center',} }>
+                <Text style={{fontSize: ScreenUtil.setSpText(18),lineHeight: ScreenUtil.autoheight(25),fontWeight:"bold", 
+                color: "#262626"}}>抄写下您的钱包私钥</Text>
+            </View>
+       
+            <Text style={{fontSize: ScreenUtil.setSpText(13),lineHeight: ScreenUtil.autoheight(18),paddingHorizontal:ScreenUtil.autowidth(15), 
+            paddingTop: ScreenUtil.autowidth(15),color: "#808080"}}>私钥用于回复钱包或充值钱包密码，请将它准确抄写在之上，并存放在只有你知道的安全的地方。</Text>
+
+            <View style={{paddingTop: ScreenUtil.autowidth(20), flexDirection: 'row',alignContent: 'center',justifyContent: 'center',} }>
+                <TouchableHighlight style={{flexDirection: 'row',alignContent: 'center',justifyContent: 'center',}} onPress={this.prot.bind(this, 'activePk')}>
+                    <Text style={{fontSize: ScreenUtil.setSpText(18),lineHeight: ScreenUtil.autoheight(25),paddingHorizontal:ScreenUtil.autowidth(16), 
+                    color: "#323232"}}>{""+this.state.activePk.replace(/(.{4})/g,'$1 ')}</Text>
+                </TouchableHighlight>
+            </View>
+
+            <View style={{flex: 1, marginHorizontal: ScreenUtil.autowidth(16), paddingTop:ScreenUtil.autowidth(50)}}>
+                <View style={{paddingVertical: ScreenUtil.autowidth(16), alignItems: 'center',justifyContent: 'center',} }>
+                    <TextButton onPress={() => this.nextStep()} textColor="#FFFFFF" text="下一步"  shadow={true}  style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
                 </View>
-                <Button onPress={this.prot.bind(this, 'problem')}>
-                    <Text style={[styles.readtext,{color: UColor.tintColor}]} >什么是私钥？</Text> 
-                </Button> 
-                <Button onPress={() => this.nextStep()}>
-                    <View style={[styles.importPriout,{backgroundColor: UColor.tintColor}]}>
-                        <Text style={[styles.importPritext,{color: UColor.btnColor}]}>下一步(已经抄好)</Text>
-                    </View>
-                </Button>
-                <View style={styles.logout}>
-                    <Image source={UImage.bottom_log} style={styles.logimg}/>
-                    <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
-                </View>
+            </View>
+       
             </View>
         </TouchableOpacity>
          
@@ -190,7 +177,13 @@ const styles = StyleSheet.create({
     },
     header: {
         flex: 1,
-        marginTop: ScreenUtil.autoheight(10),
+        justifyContent: 'center',
+        marginHorizontal: ScreenUtil.autowidth(15),
+        marginTop: ScreenUtil.autowidth(10),
+        marginBottom: ScreenUtil.autowidth(23),
+        borderRadius: 12,
+        backgroundColor: UColor.mainColor,
+        paddingBottom:ScreenUtil.autowidth(55),
     },
     inptoutbg: {
         marginBottom: ScreenUtil.autoheight(10),
