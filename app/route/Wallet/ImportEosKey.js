@@ -574,7 +574,7 @@ class ImportEosKey extends BaseComponent {
     let {feedBackText, selection} = this.state;
     return (
       <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-      <Header {...this.props} onPressLeft={true} title="导入EOS钱包" onPressRight={this.seniorImport.bind()} subName={this.props.navigation.state.params.isSenior?"":"高级导入"}/>
+      <Header {...this.props} onPressLeft={true} title={this.state.isSenior==true?"高级导入":"导入EOS钱包"} onPressRight={this.seniorImport.bind()} subName={this.props.navigation.state.params.isSenior?"":"高级导入"}/>
       <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "padding" : null} style={styles.tab}>
       <ScrollView keyboardShouldPersistTaps="always" >
         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex: 1,}}>
@@ -727,7 +727,7 @@ const styles = StyleSheet.create({
     marginBottom: ScreenUtil.autowidth(23),
     borderRadius: 12,
     backgroundColor: UColor.mainColor,
-    paddingBottom:ScreenUtil.autowidth(55),
+    // paddingBottom:ScreenUtil.autowidth(55),
   },
   headout: {
     paddingTop: ScreenUtil.autowidth(10),
@@ -740,11 +740,11 @@ const styles = StyleSheet.create({
     lineHeight: ScreenUtil.autowidth(25),
   },
   biginptout: {
-    paddingVertical: ScreenUtil.autowidth(10), 
+    // paddingVertical: ScreenUtil.autowidth(10), 
     paddingHorizontal: ScreenUtil.autowidth(18),
   },
   inptout: {
-    paddingTop:ScreenUtil.autowidth(15),
+    paddingTop:ScreenUtil.autowidth(10),
     paddingHorizontal: ScreenUtil.autowidth(15),
   },
   inptitle: {
@@ -761,7 +761,7 @@ const styles = StyleSheet.create({
     borderBottomWidth:0.5,
     fontSize: ScreenUtil.setSpText(14),
     paddingLeft: ScreenUtil.autowidth(2),
-    paddingTop: ScreenUtil.autowidth(10), 
+    // paddingTop: ScreenUtil.autowidth(10), 
     color: '#808080',
     borderBottomColor: '#D5D5D5'
   },
