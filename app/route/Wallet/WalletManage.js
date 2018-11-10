@@ -134,6 +134,7 @@ class WalletManage extends BaseComponent {
           refreshControl={<RefreshControl refreshing={false} tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor} />}
           dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
           renderRow={(rowData, sectionID, rowID) => (
+            (!rowData.isactived || !rowData.hasOwnProperty('isactived'))?null:
             <TouchableOpacity onPress={this.onPress.bind(this, rowData, sectionID, rowID)} >
               <View style={[styles.row,{backgroundColor:'#FFFFFF',shadowColor: '#EFF4F8',shadowOffset:{height: 5,width: 0},shadowRadius: 5,shadowOpacity: 0.5,elevation: 5,}]} > 
                   <View style={styles.topout}> 
@@ -147,7 +148,7 @@ class WalletManage extends BaseComponent {
                   <Text style={[styles.outaccount,{color: '#808080'}]} numberOfLines={1} ellipsizeMode='middle'>{this.getAssertDisp(rowData)} EOS</Text>
                   <Ionicons color={'#808080'} name="ios-arrow-forward-outline" size={ScreenUtil.setSpText(20)} />     
               </View>
-            </TouchableOpacity>          
+            </TouchableOpacity>    
           )}
         /> 
       </View>
