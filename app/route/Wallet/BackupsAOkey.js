@@ -218,11 +218,9 @@ class BackupsAOkey extends BaseComponent {
 
     render() {
         return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>      
-            <Header {...this.props} onPressLeft={true} title="备份私钥" onPressRight={this._rightTopClick.bind()} subName="跳过"/>   
+            <Header {...this.props} onPressLeft={true} title="备份私钥" />   
             <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={styles.scrollView}>
                 <View style={styles.header}>
-
-
 
            <View style={{paddingTop: ScreenUtil.autowidth(20), flexDirection: 'row', alignItems: 'center',justifyContent: 'center',} }>
                 <Text style={{fontSize: ScreenUtil.setSpText(18),lineHeight: ScreenUtil.autoheight(25),fontWeight:"bold", 
@@ -232,12 +230,6 @@ class BackupsAOkey extends BaseComponent {
             <Text style={{fontSize: ScreenUtil.setSpText(13),lineHeight: ScreenUtil.autoheight(18),paddingHorizontal:ScreenUtil.autowidth(40), 
             paddingTop: ScreenUtil.autowidth(15),color: "#808080"}}>请输入钱包私钥，验证备份的私钥是否正确</Text>
 
-            {/* <View style={{paddingTop: ScreenUtil.autowidth(20), flexDirection: 'row',alignContent: 'center',justifyContent: 'center',} }>
-                <TouchableHighlight style={{flexDirection: 'row',alignContent: 'center',justifyContent: 'center',}} onPress={this.prot.bind(this, 'activePk')}>
-                    <Text style={{fontSize: ScreenUtil.setSpText(18),lineHeight: ScreenUtil.autoheight(25),paddingHorizontal:ScreenUtil.autowidth(16), 
-                    color: "#323232"}}>{""+this.state.activePk.replace(/(.{4})/g,'$1 ')}</Text>
-                </TouchableHighlight>
-            </View> */}
             <View style={{paddingTop: ScreenUtil.autowidth(50),marginHorizontal: ScreenUtil.autowidth(16), flexDirection: 'row',alignContent: 'center',justifyContent: 'center',} }>
                 <TextInput ref={(ref) => this._lphone = ref} value={this.state.activePk} returnKeyType="next" editable={true}
                     selectionColor={UColor.tintColor} placeholderTextColor={'#D9D9D9'} autoFocus={false} maxLength={64}
@@ -252,46 +244,6 @@ class BackupsAOkey extends BaseComponent {
                 </View>
             </View>
 
-                    {/* <View style={[styles.inptoutbg,{backgroundColor: UColor.mainColor}]}>
-                        <View style={styles.headout}>
-                            <Text style={[styles.inptitle,{color: UColor.fontColor}]}>确认您的钱包私钥</Text>
-                            <Text style={[styles.headtitle,{color: UColor.arrow}]}>请填入您所抄写的私钥，确保您填入无误后，按下一步。</Text>
-                        </View>  
-                        {this.state.txt_active != ''&& 
-                        <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
-                            <View style={styles.ionicout}>
-                                <Text style={[styles.inptitle,{color: UColor.fontColor}]}>{this.state.samePk?"钱包私钥":"Active私钥"}</Text>
-                                <Text  style={[styles.prompttext,{color: UColor.showy}]}>{this.state.PromptActtve}</Text>
-                            </View>
-                            <TextInput ref={(ref) => this._lphone = ref} value={this.state.activePk} returnKeyType="next" editable={true}
-                                selectionColor={UColor.tintColor} placeholderTextColor={UColor.inputtip} autoFocus={false} multiline={true}
-                                style={[styles.inptgo,{color: UColor.arrow, backgroundColor: UColor.secdColor}]}
-                                onChangeText={(activePk) => this.setState({ activePk })} keyboardType="default" onChange={this.intensity()} 
-                                placeholder={this.state.samePk?"输入钱包私钥":"输入Active私钥"} underlineColorAndroid="transparent"   />
-                        </View>
-                        }
-                         {this.state.txt_owner  != ''&&
-                        <View style={[styles.inptoutgo,{backgroundColor: UColor.mainColor}]} >
-                            <View style={styles.ionicout}>
-                                <Text style={[styles.inptitle,{color: UColor.fontColor}]}>Owner私钥</Text>
-                                <Text style={[styles.prompttext,{color: UColor.showy}]}>{this.state.PromptOwner}</Text>
-                            </View>
-                            <TextInput ref={(ref) => this._lphone = ref} value={this.state.ownerPk} returnKeyType="next" editable={true}
-                                selectionColor={UColor.tintColor} placeholderTextColor={UColor.inputtip} autoFocus={false}  multiline={true}
-                                style={[styles.inptgo,{color: UColor.arrow, backgroundColor: UColor.secdColor}]} 
-                                onChangeText={(ownerPk) => this.setState({ ownerPk })} keyboardType="default" onChange={this.intensity()} 
-                                placeholder="输入owner私钥" underlineColorAndroid="transparent"    />
-                        </View>}
-                    </View>
-                    <Button onPress={() => this.backupConfirm()}>
-                        <View style={[styles.importPriout,{backgroundColor: UColor.tintColor}]}>
-                            <Text style={[styles.importPritext,{color: UColor.btnColor}]}>下一步</Text>
-                        </View>
-                    </Button>
-                    <View style={styles.logout}>
-                        <Image source={UImage.bottom_log} style={styles.logimg}/>
-                        <Text style={[styles.logtext,{color: UColor.arrow}]}>EosToken 专注柚子生态</Text>
-                    </View> */}
                 </View>
             </TouchableOpacity>
         </View>)

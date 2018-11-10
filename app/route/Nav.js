@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackNavigator, TabNavigator } from 'react-navigation';
-import { CameraRoll, Image, View, BackHandler, Text, Platform, DeviceEventEmitter, BackAndroid, AppState, Linking, Dimensions, ScrollView, Animated, Easing, NetInfo, StyleSheet, } from 'react-native';
+import { CameraRoll, Image, View, BackHandler, Text, Platform, DeviceEventEmitter, BackAndroid, AppState, Linking, Dimensions, ScrollView,ImageBackground, Animated, Easing, NetInfo, StyleSheet, } from 'react-native';
 import moment from 'moment';
 import { connect } from 'react-redux'
 import QRCode from 'react-native-qrcode-svg';
@@ -1335,19 +1335,22 @@ class Route extends React.Component {
                           <QRCode size={120}  logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(26)} logoBorderRadius={5}
                           value={'{"action":"' + 'activeWallet'  + '","account":"' + this.state.turnintoaccount + '","owner":"' + this.state.turninamount + '","active":"' + this.state.turninsymbol  + '","cpu":"' + this.state.cpu  + '","net":"' + this.state.net  + '","ram":"' + this.state.ram + '"}'}/>
                         </View>
-                        <Text style={{ color: UColor.arrow, fontSize: 15, textAlign: 'center',}}>使用ET钱包扫一扫支付EOS激活此账号</Text>
+                        <Text style={{ color: "#323232", fontSize: 16, textAlign: 'center',}}>使用ET钱包扫描二维码激活此账号</Text>
                         <View style={{paddingVertical: 10, paddingHorizontal: 20,}}>
                             <View style={{ flexDirection: 'row', alignItems: 'center',marginVertical: 5,}}>
-                              <Text style={{fontSize: 20, color: UColor.blackColor, }}>账号：</Text>
-                              <Text style={{fontSize: 18, color: UColor.blackColor,}}>{this.state.turnintoaccount}</Text>
+                              <Text style={{fontSize: 16, color: "#323232", }}>账号名称：</Text>
+                              <Text style={{fontSize: 16, color: "#323232",}}>{this.state.turnintoaccount}</Text>
                             </View>
-                            <Text style={{fontSize: 15, color:UColor.arrow, marginVertical: 5,}}>Active公钥：</Text>
-                            <Text style={{fontSize: 14, color: UColor.blackColor,}}>{this.state.turninsymbol}</Text>
-                            <Text style={{fontSize: 15, color: UColor.arrow, marginVertical: 5, }}>Owner公钥：</Text>
-                            <Text style={{fontSize: 14, color: UColor.blackColor,}}>{this.state.turninamount}</Text>
+                            <Text style={{fontSize: 16, color:"#323232", marginVertical: 5,}}>Active公钥：</Text>
+                            <Text style={{fontSize: 12, color: "#808080",}}>{this.state.turninsymbol}</Text>
+                            <Text style={{fontSize: 16, color: "#323232", marginVertical: 5, }}>Owner公钥：</Text>
+                            <Text style={{fontSize: 12, color: "#808080",}}>{this.state.turninamount}</Text>
                         </View>
-                        <View style={{backgroundColor: UColor.riceWhite, paddingHorizontal: 18, paddingVertical: 8,}}>
-                            <Text style={{color: UColor.fontColor, fontSize: 12, lineHeight: 25,}}>该好友正在使用EosToken钱包激活账号并向您发出代付求助，建议帮助他支付激活前先联系确认清楚！</Text>
+                        
+                        <View style={{paddingHorizontal: 15, paddingVertical: 50,}}>
+                            <ImageBackground source={UImage.cardbule} style={{width: ScreenWidth - 70, height: (ScreenWidth - 70)*0.232}}>
+                              <Text style={{color: UColor.mainColor, paddingLeft:120,paddingRight:2,paddingTop:40, fontSize: 10, lineHeight: 14,}}>    您的好友正在使用ET钱包激活账户 请您在确认之后，帮他支付，完成激活</Text>
+                            </ImageBackground>
                         </View>
                       </View>
                     </View>

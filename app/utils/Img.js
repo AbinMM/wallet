@@ -272,5 +272,6 @@ export default {
   walletIcon: require('../img/walletIcon.png'),
   lookup: require('../img/lookup.png'),
   Icons_WeChat: require('../img/Icons_WeChat.png'),
-
+  cardbule: require('../img/cardbule.png'),
+  
 }

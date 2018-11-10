@@ -137,7 +137,7 @@ class BackupsPkey extends BaseComponent {
 
             <View style={{paddingTop: ScreenUtil.autowidth(20), flexDirection: 'row',alignContent: 'center',justifyContent: 'center',} }>
                 <TouchableHighlight style={{flexDirection: 'row',alignContent: 'center',justifyContent: 'center',}} onPress={this.prot.bind(this, 'activePk')}>
-                    <Text style={{fontSize: ScreenUtil.setSpText(18),lineHeight: ScreenUtil.autoheight(25),paddingHorizontal:ScreenUtil.autowidth(16), 
+                    <Text style={{fontSize: ScreenUtil.setSpText(18),lineHeight: ScreenUtil.autoheight(25),paddingHorizontal:ScreenUtil.autowidth(16), textAlign: 'center',
                     color: "#323232"}}>{""+this.state.activePk.replace(/(.{4})/g,'$1 ')}</Text>
                 </TouchableHighlight>
             </View>
