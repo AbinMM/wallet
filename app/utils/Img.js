@@ -260,7 +260,10 @@ export default {
   browser_dapp: require('../img/wimg/browser_dapp.png'),
   collection: require('../img/wimg/collection.png'),
   collection_h: require('../img/wimg/collection_h.png'),
-  
+
+  gg_bg01: require('../img/wimg/gg_bg01.jpg'),
+  gg_bg02: require('../img/wimg/gg_bg02.jpg'),
+
   dapp_set:require('../img/dapp_set.png'),
   icon_vote: require('../img/icon_vote.png'),
   //转账

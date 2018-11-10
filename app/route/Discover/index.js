@@ -37,17 +37,31 @@ class Discover extends React.Component {
     this.state = {
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
       hotdappList:[],
-      advertisdapplist: [],
+      advertisdapplist: [
+        {adPhoto: UImage.gg_bg01},
+        {adPhoto: UImage.gg_bg02},
+      ],
       holdallList: [],
+      mydappBook: [],
     }
   }
-
+  
   //组件加载完成
   componentDidMount() {
     //获取banner图
     this.props.dispatch({ type: 'banner/list', payload: {} });
     //获取我的Dapp
-    this.props.dispatch({ type: 'dapp/mydappInfo', payload: {} });
+    this.props.dispatch({ type: 'dapp/mydappInfo', callback: (resp) => {
+      if (resp && resp.code == '0') {
+        if(resp.data){
+          this.setState({
+            mydappBook: resp.data,
+          });
+        }
+      } else {
+        console.log("dappfindAllHotRecommend error");
+      }
+    } });
     //获取热门推荐
     this.props.dispatch({ type: 'dapp/dappfindAllHotRecommend', 
       callback: (resp) => {
@@ -63,19 +77,19 @@ class Discover extends React.Component {
       }
     });
     //获取两个广告位
-    this.props.dispatch({ type: 'dapp/dappAdvertisement', payload: {adPositionId: '1'},
-      callback: (resp) => {
-        if (resp && resp.code == '0') {
-          if(resp.data){
-            this.setState({
-              advertisdapplist: resp.data,
-            });
-          }
-        } else {
-          console.log("dappAdvertisement error");
-        }
-      } 
-    });
+    // this.props.dispatch({ type: 'dapp/dappAdvertisement', payload: {adPositionId: '1'},
+    //   callback: (resp) => {
+    //     if (resp && resp.code == '0') {
+    //       if(resp.data){
+    //         this.setState({
+    //           advertisdapplist: resp.data,
+    //         });
+    //       }
+    //     } else {
+    //       console.log("dappAdvertisement error");
+    //     }
+    //   } 
+    // });
     //获取DAPP树状列表
     this.props.dispatch({ type: 'dapp/dappfindAllRecommend', 
       callback: (resp) => {
@@ -98,6 +112,7 @@ class Discover extends React.Component {
 
   //点击banner图跳转
   bannerPress(banner) {
+   
     if (banner && banner.url && banner.url != "") {
       const { navigate } = this.props.navigation;
       let url = banner.url.replace(/^\s+|\s+$/g, "");
@@ -125,9 +140,6 @@ class Discover extends React.Component {
 
       navigate('Web', { title: banner.title, url: url });
     }
-    
-   
-
   }
 
 
@@ -203,39 +215,42 @@ class Discover extends React.Component {
                 <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
                 <Text style={{fontSize: ScreenUtil.setSpText(12),color: '#D9D9D9'}}>HASH FUN</Text>
               </TouchableOpacity> 
-
-              <View style={{marginVertical:ScreenUtil.autoheight(15),flexDirection: 'row',marginHorizontal: ScreenUtil.autowidth(20),}}>
-                <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(14),color: '#323232',fontWeight:'bold',}}>我的DApps</Text>
-                <TouchableOpacity onPress={this.onHistoryCollection.bind(this)} style={{flexDirection: 'row',}} >
-                  <Text style={{fontSize: ScreenUtil.setSpText(12),color: '#3B80F4',paddingRight: ScreenUtil.autowidth(5),}}>更多</Text>
-                  <Ionicons name="ios-arrow-forward-outline" size={14} color='#3B80F4' />
-                </TouchableOpacity>
-              </View>
-              <ListView enableEmptySections = {true} contentContainerStyle={{flexDirection:'row',paddingHorizontal: ScreenUtil.autowidth(6),}}
-                dataSource={this.state.dataSource.cloneWithRows(this.props.mydappBook == null ? [] : this.props.mydappBook)} 
-                renderRow={(rowData) => (
-                  <Button  onPress={this.onPressTool.bind(this, rowData)}  style={{width: (ScreenWidth -ScreenUtil.autowidth(14))/5, paddingBottom: ScreenUtil.autoheight(18),}}>
-                    <View style={styles.headbtnout}>
-                      <Image source={{uri: rowData.icon}}  style={styles.imgBtnDAPP} resizeMode='stretch' />
-                      <Text numberOfLines={1} style={[{fontSize: ScreenUtil.setSpText(10), color: '#323232',textAlign: 'center',paddingHorizontal:ScreenUtil.autowidth(8)}]}>{rowData.name}</Text>
-                    </View>
-                  </Button>
-                )}
-              />
-              <View style={{marginVertical:ScreenUtil.autoheight(15),marginHorizontal: ScreenUtil.autowidth(20),}}>
-                <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#323232',fontWeight:'bold',}}>{this.state.hotdappList.name}</Text>
-              </View>
-              <ListView enableEmptySections = {true} contentContainerStyle={{flexDirection:'row', paddingHorizontal: ScreenUtil.autowidth(6),}}
-                dataSource={this.state.dataSource.cloneWithRows(this.state.hotdappList.list == null ? [] : this.state.hotdappList.list)}
-                renderRow={(rowData) => (
-                  <Button  onPress={this.onPressTool.bind(this, rowData)}  style={{width: (ScreenWidth -ScreenUtil.autowidth(14))/5, paddingBottom: ScreenUtil.autoheight(18),}}>
-                    <View style={styles.headbtnout}>
-                      <Image source={{uri: rowData.icon}} style={styles.imgBtnDAPP} resizeMode='stretch'/>
-                      <Text numberOfLines={1} style={[{fontSize: ScreenUtil.setSpText(10), color: '#323232',textAlign: 'center',paddingHorizontal:ScreenUtil.autowidth(8)}]}>{rowData.name}</Text>
-                    </View>
-                  </Button>
-                )}
-              />
+              {this.state.mydappBook != '' && this.state.mydappBook != [] &&<View>
+                <View style={{marginVertical:ScreenUtil.autoheight(15),flexDirection: 'row',marginHorizontal: ScreenUtil.autowidth(20),}}>
+                  <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(14),color: '#323232',fontWeight:'bold',}}>我的DApps</Text>
+                  <TouchableOpacity onPress={this.onHistoryCollection.bind(this)} style={{flexDirection: 'row',}} >
+                    <Text style={{fontSize: ScreenUtil.setSpText(12),color: '#3B80F4',paddingRight: ScreenUtil.autowidth(5),}}>更多</Text>
+                    <Ionicons name="ios-arrow-forward-outline" size={14} color='#3B80F4' />
+                  </TouchableOpacity>
+                </View>
+                <ListView enableEmptySections = {true} contentContainerStyle={{flexDirection:'row',paddingHorizontal: ScreenUtil.autowidth(6),}}
+                  dataSource={this.state.dataSource.cloneWithRows(this.state.mydappBook == null ? [] : this.state.mydappBook)} 
+                  renderRow={(rowData) => (
+                    <Button  onPress={this.onPressTool.bind(this, rowData)}  style={{width: (ScreenWidth -ScreenUtil.autowidth(14))/5, paddingBottom: ScreenUtil.autoheight(18),}}>
+                      <View style={styles.headbtnout}>
+                        <Image source={{uri: rowData.icon}}  style={styles.imgBtnDAPP} resizeMode='stretch' />
+                        <Text numberOfLines={1} style={[{fontSize: ScreenUtil.setSpText(10), color: '#323232',textAlign: 'center',paddingHorizontal:ScreenUtil.autowidth(8)}]}>{rowData.name}</Text>
+                      </View>
+                    </Button>
+                  )}
+                />
+              </View>}
+              {this.state.hotdappList.list != '' && this.state.hotdappList.list != [] &&<View>
+                <View style={{marginVertical:ScreenUtil.autoheight(15),marginHorizontal: ScreenUtil.autowidth(20),}}>
+                  <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#323232',fontWeight:'bold',}}>{this.state.hotdappList.name}</Text>
+                </View>
+                <ListView enableEmptySections = {true} contentContainerStyle={{flexDirection:'row', paddingHorizontal: ScreenUtil.autowidth(6),}}
+                  dataSource={this.state.dataSource.cloneWithRows(this.state.hotdappList.list == null ? [] : this.state.hotdappList.list)}
+                  renderRow={(rowData) => (
+                    <Button  onPress={this.onPressTool.bind(this, rowData)}  style={{width: (ScreenWidth -ScreenUtil.autowidth(14))/5, paddingBottom: ScreenUtil.autoheight(18),}}>
+                      <View style={styles.headbtnout}>
+                        <Image source={{uri: rowData.icon}} style={styles.imgBtnDAPP} resizeMode='stretch'/>
+                        <Text numberOfLines={1} style={[{fontSize: ScreenUtil.setSpText(10), color: '#323232',textAlign: 'center',paddingHorizontal:ScreenUtil.autowidth(8)}]}>{rowData.name}</Text>
+                      </View>
+                    </Button>
+                  )}
+                />
+              </View>}
             </View>
           </View>
          
@@ -245,13 +260,13 @@ class Discover extends React.Component {
               renderRow={(rowData) => (
                 <Button  onPress={this.onPressTool.bind(this, rowData)}  style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2, marginHorizontal: ScreenUtil.autowidth(7.5)}}>
                   <View style={{alignItems: 'center', justifyContent: "center", backgroundColor: '#FFFFFF',borderRadius: 5,}}>
-                    <Image source={{uri: rowData.adPhoto}} style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2,height: (ScreenWidth-ScreenUtil.autowidth(55))/2*0.5,marginBottom: ScreenUtil.autoheight(10),}} resizeMode='contain'/>
+                    <Image source={rowData.adPhoto} style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2,height: (ScreenWidth-ScreenUtil.autowidth(55))/2*0.5,}} resizeMode='stretch'/>
                   </View>
                 </Button>
               )}
             />
             <SectionList
-              contentContainerStyle={{flexDirection:'row',flexWrap:'wrap',alignItems:'flex-start',paddingBottom: ScreenUtil.autoheight(50), paddingHorizontal: ScreenUtil.autowidth(12.5)}}
+              contentContainerStyle={{flexDirection:'row',flexWrap:'wrap',alignItems:'flex-start',paddingBottom: ScreenUtil.autoheight(50),width: ScreenWidth,paddingHorizontal: ScreenUtil.autowidth(12.5),}}
               initialNumToRender={4}
               keyExtractor={(item, index) => index + item}
               sections={this.state.holdallList}
@@ -261,16 +276,15 @@ class Discover extends React.Component {
                 </View>
                 )}
               renderItem={ (rowData) => (
-                <Button  onPress={this.onPressTool.bind(this, rowData.item)}  style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2, marginHorizontal: ScreenUtil.autowidth(7.5),marginTop: ScreenUtil.autoheight(15)}}>
+                <TouchableOpacity  onPress={this.onPressTool.bind(this, rowData.item)}  style={{width: (ScreenWidth - ScreenUtil.autowidth(25))/2, paddingHorizontal: ScreenUtil.autowidth(7.5),paddingTop: ScreenUtil.autoheight(15),}}>
                   <View style={{ flexDirection: 'row',alignItems: 'center', justifyContent: "center", backgroundColor: '#FFFFFF',paddingHorizontal:ScreenUtil.autowidth(13),paddingVertical:ScreenUtil.autoheight(20),borderRadius: 5, }}>
                     <Image source={{uri: rowData.item.icon}} style={{width: ScreenUtil.autowidth(40),height: ScreenUtil.autowidth(40),}} resizeMode='stretch'/>
-                    {/* <Image source={rowData.item.icon} style={{width: ScreenUtil.autowidth(39),height: ScreenUtil.autowidth(39),}} /> */}
                     <View style={{flex: 1, paddingLeft:  ScreenUtil.autowidth(10),}}>
                       <Text style={[styles.headbtntext,{color: '#262626'}]} numberOfLines={1}>{rowData.item.name}</Text>
                       <Text style={[styles.descriptiontext,{color: '#808080'}]} numberOfLines={1}>{rowData.item.description}</Text>
                     </View>
                   </View>
-                </Button>)
+                </TouchableOpacity>)
               }
             />
           </View>
