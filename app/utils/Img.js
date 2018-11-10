@@ -121,7 +121,7 @@ export default {
   reveal_h_wallet:require('../img/reveal_h_wallet.png'),
   reveal_wallet:require('../img/reveal_wallet.png'),
   scangray: require('../img/scangray.png'),
-  scanning: require('../img/scanning.png'),
+
   
   share_bottom:require('../img/share_bottom.png'),
   share_img:require('../img/share_img.png'),
@@ -251,6 +251,7 @@ export default {
 
   Magnifier_ash: require('../img/wimg/Magnifier_ash.png'),
 
+  scanning: require('../img/wimg/scanning.png'),
 
   //DAPP
   share_dapp:require('../img/wimg/share_dapp.png'),

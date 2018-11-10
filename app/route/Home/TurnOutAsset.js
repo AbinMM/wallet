@@ -348,65 +348,45 @@ class TurnOutAsset extends BaseComponent {
 
     render() {
         return (
-        <View style={[styles.container,{backgroundColor:UColor.secdfont}]}>
+        <View style={[styles.container,{backgroundColor:'#F9FAF9'}]}>
             <Header {...this.props} onPressLeft={true} title="转账" avatar={UImage.scan} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(18)}/> 
             <ScrollView  keyboardShouldPersistTaps="always">
                 <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                     <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-
                         <View style={styles.taboutsource}>
-                            <View style={[styles.accountoue]} >
-                                <Text style={[styles.inptitle]}>收款账号</Text>
-                                <View style={styles.scanning}>
-                                    <Button onPress={() => this.openAddressBook()}>
-                                        <Image source={UImage.accountmange_01} style={styles.alningimg} />
-                                    </Button>
-                                </View>
+                            <View style={styles.accountoue} >
+                                <Text style={[styles.inptitle,{flex: 1,}]}>收款账号</Text>
+                                <TouchableOpacity onPress={() => this.openAddressBook()} style={styles.scanning}>
+                                    <Image source={UImage.accountmange_01} style={styles.alningimg} />
+                                </TouchableOpacity>
                             </View>
-                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(1)}]} >
-                                <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"
-                                    selectionColor={UColor.tintColor} style={[styles.textinpt]} placeholderTextColor={UColor.inputtip}
-                                     underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
-                                    onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})}
-                                />
-                            </View>
+                            <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"
+                                selectionColor={UColor.tintColor} style={[styles.textinpt]} placeholderTextColor={UColor.inputtip}
+                                placeholder="请输入收款账号"   underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
+                                onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})}
+                            />
 
                             <View style={styles.accountoue} >
-                                <Text style={[styles.inptitle]}>转账数量</Text>
-                                <Text onPress={()=>{this.openChoiceToken()}}  style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
-                                    {lineHeight: ScreenUtil.autoheight(48),color: UColor.turnout_eos,marginRight: ScreenUtil.autowidth(20),}]}>{this.state.name} ></Text>
+                                <Text style={[styles.inptitle,{flex: 1,}]}>转账数量</Text>
+                                <Text onPress={()=>{this.openChoiceToken()}}  style={[{fontSize: ScreenUtil.setSpText(12),},
+                                    {lineHeight: ScreenUtil.autoheight(17),color: '#3B80F4',}]}>{this.state.name} ></Text>
                             </View>
-                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(1)}]} >
-                            
-                                <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} selectionColor={UColor.tintColor}
-                                    style={[styles.textinpt]} maxLength = {15}
-                                    placeholderTextColor={UColor.inputtip}  underlineColorAndroid="transparent"   keyboardType="numeric"
-                                    onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })} returnKeyType="next"
-                                />
-                            </View>
-                            <View style={styles.accountoue} >
-                                <Text style={[styles.inptitle]}></Text>
-                                <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(10),},
-                                    {lineHeight: ScreenUtil.autoheight(32),color: UColor.arrow,marginRight: ScreenUtil.autowidth(20),}]}>{this.state.balance==""? "余额：0.0000" : "余额：" + this.state.balance +" "+ this.state.name}</Text>
-                            </View>
+                            <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} selectionColor={UColor.tintColor}
+                                style={[styles.textinpt]} maxLength = {15}  placeholder="请输入转账数量" 
+                                placeholderTextColor={UColor.inputtip}  underlineColorAndroid="transparent"   keyboardType="numeric"
+                                onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })} returnKeyType="next"
+                            />
+                            <Text style={{textAlign: 'right', fontSize: ScreenUtil.setSpText(10),lineHeight: ScreenUtil.autoheight(14),color: '#808080',marginTop: 2}}>{this.state.balance==""? "余额：0.0000" : "余额：" + this.state.balance +" "+ this.state.name}</Text>
+                          
+                            <Text style={[styles.inptitle]}>备注(Memo)</Text>
+                            <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next" maxLength = {40}
+                                selectionColor={UColor.tintColor} style={[styles.textinpt]}  placeholderTextColor={UColor.inputtip}
+                                underlineColorAndroid="transparent" keyboardType="default"  placeholder="备注(Memo)" 
+                                onChangeText={(memo) => this.setState({ memo })}
+                            />
+                            <Text style={{fontSize: ScreenUtil.setSpText(10),lineHeight: ScreenUtil.autoheight(14),color: '#808080', textAlign: 'right',marginTop: 2}}>转入交易所时请务必填写正确的Memo</Text>
 
-                            <View style={styles.accountoue} >
-                                <Text style={[styles.inptitle]}>备注(Memo)</Text>
-                            </View>
-                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(1)}]} >
-                                <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next" maxLength = {40}
-                                    selectionColor={UColor.tintColor} style={[styles.textinpt]}  placeholderTextColor={UColor.inputtip}
-                                    underlineColorAndroid="transparent" keyboardType="default"
-                                    onChangeText={(memo) => this.setState({ memo })}
-                                />
-                            </View>
-                            <View style={styles.accountoue} >
-                                <Text style={[styles.inptitle]}></Text>
-                                <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
-                                    {lineHeight: ScreenUtil.autoheight(32),color: UColor.arrow,marginRight: ScreenUtil.autowidth(20),}]}>转入交易所时请务必填写正确的Memo</Text>
-                            </View>
-                            <View style={{flex: 1, justifyContent: 'center', alignItems:'center', 
-                                      marginHorizontal: ScreenUtil.autowidth(15),marginTop:ScreenUtil.autoheight(25), marginBottom: ScreenUtil.autoheight(15),}}>
+                            <View style={{justifyContent: 'center', alignItems:'center',   marginHorizontal: ScreenUtil.autowidth(15),marginTop:ScreenUtil.autoheight(36), marginBottom: ScreenUtil.autoheight(20),}}>
                                 <TextButton text="确认转账" onPress={this._rightButtonClick.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
                             </View>
                         </View>
@@ -417,7 +397,7 @@ class TurnOutAsset extends BaseComponent {
             </ScrollView>
             <View style={{backgroundColor: UColor.riceWhite,}}>
                 <Modal animationType={'slide'} transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
-                    <TouchableOpacity style={[styles.modalStyle,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
+                    <TouchableOpacity style={[styles.modalStyle,{backgroundColor: UColor.mask}]} activeOpacity={1.0} onPress={() => this._setModalVisible()}>
                         <View style={{ width: ScreenWidth, backgroundColor: UColor.btnColor,}}>
                             <View style={styles.subView}>
                                 <TouchableOpacity style={styles.LeftBack} onPress={() => this._setModalVisible()}>
@@ -427,33 +407,33 @@ class TurnOutAsset extends BaseComponent {
                                  <View style={{width: ScreenUtil.autowidth(40),}}/>
                             </View>
 
-                                <View>
-                                    <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText]}>收款账户：</Text>
-                                        <Text style={[styles.contentText]}>{this.state.toAccount}</Text>
-                                    </View>
-                                    <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText]}>付款账户：</Text>
-                                        <Text style={[styles.contentText]}>{this.props.defaultWallet.account}</Text>
-                                    </View>
-                                    <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText]}>数        量：</Text>
-                                        <Text style={[styles.contentText]} numberOfLines={1}>{this.state.amount + " " + this.state.name}</Text>
-                                    </View>
-                                    <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText]}>备        注：</Text>
-                                        <Text style={[styles.contentText]} numberOfLines={1}>{this.state.memo}</Text>
-                                    </View>
-                                    { this.state.memo == '' &&
-                                        <View style={[styles.warningoutShow,{borderColor: UColor.showy}]}>
-                                            <Text style={[styles.headtext,{color: UColor.turnout_eos}]} >.</Text>
-                                            <Text style={[styles.headtitle,{color: UColor.turnout_eos}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
-                                        </View>
-                                    }
-                            <View style={[styles.btnoutsource]}>  
-                                <TextButton text="确认支付" onPress={this.inputPwd.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
-                            </View>
+                            <View>
+                                <View style={[styles.separationline,]} >
+                                    <Text style={[styles.explainText]}>收款账户：</Text>
+                                    <Text style={[styles.contentText]}>{this.state.toAccount}</Text>
                                 </View>
+                                <View style={[styles.separationline,]} >
+                                    <Text style={[styles.explainText]}>付款账户：</Text>
+                                    <Text style={[styles.contentText]}>{this.props.defaultWallet.account}</Text>
+                                </View>
+                                <View style={[styles.separationline,]} >
+                                    <Text style={[styles.explainText]}>数        量：</Text>
+                                    <Text style={[styles.contentText]} numberOfLines={1}>{this.state.amount + " " + this.state.name}</Text>
+                                </View>
+                                <View style={[styles.separationline,]} >
+                                    <Text style={[styles.explainText]}>备        注：</Text>
+                                    <Text style={[styles.contentText]} numberOfLines={1}>{this.state.memo}</Text>
+                                </View>
+                                { this.state.memo == '' &&
+                                    <View style={[styles.warningoutShow,{borderColor: UColor.showy}]}>
+                                        <Text style={[styles.headtitle,{color: '#3B80F4'}]}>• </Text>
+                                        <Text style={[styles.headtitle,{flex: 1, marginLeft: ScreenUtil.autowidth(5),color: '#3B80F4'}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
+                                    </View>
+                                }
+                                <View style={[styles.btnoutsource]}>  
+                                    <TextButton text="确认支付" onPress={this.inputPwd.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
+                                </View>
+                            </View>
                         </View>
                     </TouchableOpacity>
                 </Modal>
@@ -526,20 +506,22 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontWeight: '600',
         fontSize: ScreenUtil.setSpText(20),
-        color: UColor.tradedetail_prompt,
+        color: '#323232',
     },
 
     explainText: {
         flex: 1.5,
         textAlign: 'left',
         fontSize: ScreenUtil.setSpText(16),
-        color: UColor.tradedetail_prompt,
+        lineHeight: ScreenUtil.autoheight(23),
+        color: '#323232',
     },
     contentText: {
         flex: 3.5,
         textAlign: 'left',
         fontSize: ScreenUtil.setSpText(16),
-        color: UColor.arrow,
+        lineHeight: ScreenUtil.autoheight(23),
+        color: '#808080',
     },
     separationline: {
         alignItems: 'center',
@@ -572,9 +554,10 @@ const styles = StyleSheet.create({
     taboutsource: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: UColor.secdfont,
-        marginTop:ScreenUtil.autoheight(20),
-        marginHorizontal:ScreenUtil.autowidth(10),
+        backgroundColor: '#FFFFFF',
+        marginTop: ScreenUtil.autoheight(20),
+        marginHorizontal: ScreenUtil.autowidth(15),
+        paddingHorizontal: ScreenUtil.autowidth(20),
         borderRadius: 5,
     },
 
@@ -588,7 +571,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingLeft: ScreenUtil.autowidth(20),
     },
     inpt: {
         flex: 1,
@@ -602,12 +584,10 @@ const styles = StyleSheet.create({
     scanningimg: {
         width: ScreenUtil.autowidth(19),
         height: ScreenUtil.autowidth(19),
-        margin: ScreenUtil.autowidth(20),
     },
     alningimg: {
         width: ScreenUtil.autowidth(17),
-        height: ScreenUtil.autowidth(17),
-        margin: ScreenUtil.autowidth(20),
+        height: ScreenUtil.autowidth(15),
     },
     tokenText: {
         fontSize: ScreenUtil.setSpText(15),
@@ -619,17 +599,20 @@ const styles = StyleSheet.create({
         paddingHorizontal: ScreenUtil.autowidth(5),
     },
     inptitle: {
-        flex: 1,
+        color: '#323232',
         fontWeight: '600',
-        fontSize: ScreenUtil.setSpText(14),
-        lineHeight: ScreenUtil.autoheight(32),
-        color: UColor.fontColor,
+        fontSize: ScreenUtil.setSpText(16),
+        lineHeight: ScreenUtil.autoheight(23),
+        marginVertical: ScreenUtil.autoheight(18),
     },
     textinpt: {
         flex: 1,
-        height: ScreenUtil.autoheight(36),
-        fontSize: ScreenUtil.setSpText(16),
-        color: UColor.arrow,
+        color: '#808080',
+        paddingVertical: 0,
+        fontSize: ScreenUtil.setSpText(14),
+        lineHeight: ScreenUtil.autoheight(20),
+        borderBottomColor: '#D5D5D5',
+        borderBottomWidth:ScreenUtil.autowidth(1)
     },
     btnnextstep: {
         marginTop: ScreenUtil.autoheight(44),
@@ -662,10 +645,8 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         flexDirection: "row",
         justifyContent: 'flex-start',
-        marginTop: ScreenUtil.autoheight(10),
-        marginHorizontal: ScreenUtil.autowidth(20),
-        // paddingVertical:  ScreenUtil.autoheight(5),
-        // paddingHorizontal: ScreenUtil.autowidth(10),
+        paddingVertical:  ScreenUtil.autoheight(15),
+        paddingHorizontal: ScreenUtil.autowidth(15),
     },
     imgBtn: {
         width: ScreenUtil.autowidth(20),
@@ -677,10 +658,9 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(10),
     },
     headtitle: {
-        flex: 1,
         fontSize: ScreenUtil.setSpText(10),
-        lineHeight: ScreenUtil.autoheight(18),
-        marginLeft: ScreenUtil.autowidth(10),
+        lineHeight: ScreenUtil.autoheight(14),
+       
     },
   
   

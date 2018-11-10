@@ -186,39 +186,37 @@ class addressManage extends BaseComponent {
         let isChecked = temp.length === this.state.dataSource._cachedRowCount;
         console.log(temp, '......')
         return (
-            <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
+            <View style={[styles.container,{backgroundColor: '#FAFAF9'}]}>
                 <Header {...this.props} onPressLeft={true} title="联系人" subName={this.state.isShowSelect == false ?"选择":"取消"} onPressRight={this.btnRightSelect.bind(this)} imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(18)}/>
-            <ScrollView  keyboardShouldPersistTaps="always">
-            <View style={styles.btn}>
-               <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} onEndReachedThreshold = {50}
-                    onEndReached={() => this.onEndReached()}
-                    dataSource={this.state.dataSource.cloneWithRows((this.state.addressBook == null ? [] : this.state.addressBook))} 
-                    renderRow={(rowData, sectionID, rowID) => (                 
-
-                    <View style={styles.top}>
-                        {this.state.isShowSelect == true &&
-                            <CheckMarkCircle selected={rowData.isChecked} onPress={() => {this.checkClick(rowData,sectionID, rowID);}}/>
-                        }
-                        <View style={styles.timequantity}>
-                            <Text style={[styles.quantity,{color: UColor.fontColor}]}>{rowData.labelName}</Text>
-                            <Text style={[styles.timetext,{color: UColor.arrow}]}>{rowData.address}</Text>
-                        </View>
-                        <View style={styles.typedescription}>
-                            <Ionicons name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(20)} color='#B5B5B5' />
-                        </View>
-                    </View>
-                   )}                
-                 /> 
+                <View style={styles.tablayout}>
+                    <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} onEndReachedThreshold = {50}
+                        onEndReached={() => this.onEndReached()}
+                        dataSource={this.state.dataSource.cloneWithRows((this.state.addressBook == null ? [] : this.state.addressBook))} 
+                        renderRow={(rowData, sectionID, rowID) => (                 
+                            <View style={styles.top}>
+                                {this.state.isShowSelect == true &&
+                                <View style={{paddingRight: ScreenUtil.autowidth(18),}}>
+                                    <CheckMarkCircle selected={rowData.isChecked} width={ScreenUtil.autowidth(13)} height={ScreenUtil.autowidth(13)} onPress={() => {this.checkClick(rowData,sectionID, rowID);}}/>
+                                </View>
+                                }
+                                <View style={styles.timequantity}>
+                                    <Text style={[styles.quantity,{color: '#323232'}]}>{rowData.labelName}</Text>
+                                    <Text style={[styles.timetext,{color: '#808080'}]}>{rowData.address}</Text>
+                                </View>
+                                <View style={styles.typedescription}>
+                                    <Ionicons name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(20)} color='#B5B5B5' />
+                                </View>
+                            </View>
+                        )}                
+                    /> 
                 </View>
-                        
+                
+                
                 <View style={[styles.footer,{backgroundColor:'#FAFAF9'}]}>
                     <View style={{paddingBottom: ScreenUtil.autowidth(20), alignItems: 'center',justifyContent: 'center',}}>
                         <TextButton onPress={this.selectedClick.bind(this,this.state.isShowSelect)} textColor="#FFFFFF" text={this.state.isShowSelect ? "确认" : "新建联系人"}  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
                     </View>
                 </View>
-                
-                   
-            </ScrollView>
             </View>
         );
     }
@@ -298,11 +296,10 @@ const styles = StyleSheet.create({
 
 
     tab: {
-        flex: 1,
-        top:ScreenUtil.autoheight(12),
-        marginLeft:ScreenUtil.autowidth(10),
-        marginRight:ScreenUtil.autowidth(10),
-        backgroundColor:UColor.mainColor,
+        width: ScreenWidth - ScreenUtil.autowidth(30),
+        backgroundColor:'#FFFFFF',
+        borderRadius: 6,
+        paddingVertical: ScreenUtil.autowidth(15),
     },
     btn: {
         flex: 1,
@@ -326,41 +323,40 @@ const styles = StyleSheet.create({
     tabText: {  
         fontSize: ScreenUtil.setSpText(14),
     }, 
-    tablayout: {   
+    tablayout: {  
         alignItems: 'center',
-        flexDirection: 'row',  
         justifyContent: 'center',
-        paddingVertical: ScreenUtil.autoheight(5),
+        paddingVertical: ScreenUtil.autoheight(15),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },  
 
-  top: {
-        flex: 1,
+    top: {
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: "center",
-        marginLeft:ScreenUtil.autowidth(10),
-        marginRight:ScreenUtil.autowidth(10),
+        borderBottomColor: '#F9FAF9',
+        borderBottomWidth: ScreenUtil.autoheight(1), 
+        marginHorizontal: ScreenUtil.autowidth(20),
     },
     timequantity: {
-        flex: 4,
+        flex: 1,
         flexDirection: "column",
         alignItems: 'flex-start',
         justifyContent: "space-between",
-        height: ScreenUtil.autoheight(40),
     },
     timetext: {
         textAlign: 'left',
         fontSize: ScreenUtil.setSpText(10),
+        lineHeight:  ScreenUtil.autoheight(14),
     },
     quantity: {
         fontWeight: '600',
         textAlign: 'left',
-        fontSize: ScreenUtil.setSpText(14),
+        fontSize: ScreenUtil.setSpText(16),
+        lineHeight: ScreenUtil.autoheight(23),
     },
 
     typedescription: {
-        flex: 2,
         alignItems: 'flex-end',
         flexDirection: "column",
         justifyContent: "space-around",
