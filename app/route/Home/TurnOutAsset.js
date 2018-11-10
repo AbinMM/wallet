@@ -600,7 +600,7 @@ const styles = StyleSheet.create({
     },
     inptitle: {
         color: '#323232',
-        fontWeight: '600',
+        fontWeight: '300',
         fontSize: ScreenUtil.setSpText(16),
         lineHeight: ScreenUtil.autoheight(23),
         marginVertical: ScreenUtil.autoheight(18),
@@ -654,7 +654,7 @@ const styles = StyleSheet.create({
         marginRight: ScreenUtil.autowidth(10),
     },
     headtext: {
-        fontWeight: "bold",
+        fontWeight: "300",
         fontSize: ScreenUtil.setSpText(10),
     },
     headtitle: {
