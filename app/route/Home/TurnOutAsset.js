@@ -415,20 +415,21 @@ class TurnOutAsset extends BaseComponent {
                 <Modal animationType={'slide'} transparent={true} visible={this.state.show} onShow={() => { }} onRequestClose={() => { }} >
                     <TouchableOpacity style={[styles.modalStyle,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
                         <View style={{ width: ScreenWidth, backgroundColor: UColor.btnColor,}}>
-                                <View style={styles.subView}>
+                            <View style={styles.subView}>
                                 <TouchableOpacity style={styles.LeftBack} onPress={() => this._setModalVisible()}>
                                     <Ionicons style={{color:'#080808'}} name="ios-arrow-back" size={ScreenUtil.setSpText(25)}/>
                                 </TouchableOpacity>
-                                 <Text style={[styles.titleText]}>订单详情</Text>
-                                </View>
+                                 <Text style={styles.modualTitle}>订单详情</Text>
+                                 <View style={{width: ScreenUtil.autowidth(40),}}/>
+                            </View>
 
                                 <View>
                                     <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText]}>收款账号：</Text>
+                                        <Text style={[styles.explainText]}>收款账户：</Text>
                                         <Text style={[styles.contentText]}>{this.state.toAccount}</Text>
                                     </View>
                                     <View style={[styles.separationline,]} >
-                                        <Text style={[styles.explainText]}>转出账号：</Text>
+                                        <Text style={[styles.explainText]}>付款账户：</Text>
                                         <Text style={[styles.contentText]}>{this.props.defaultWallet.account}</Text>
                                     </View>
                                     <View style={[styles.separationline,]} >
@@ -441,15 +442,13 @@ class TurnOutAsset extends BaseComponent {
                                     </View>
                                     { this.state.memo == '' &&
                                         <View style={[styles.warningoutShow,{borderColor: UColor.showy}]}>
-                                            <Text style={[styles.headtext,{color: UColor.turnout_eos}]} >温馨提示:</Text>
+                                            <Text style={[styles.headtext,{color: UColor.turnout_eos}]} >.</Text>
                                             <Text style={[styles.headtitle,{color: UColor.turnout_eos}]}>如果您是向交易所转账，请务必填写相应的备注（MEMO）信息，否则可能无法到账。</Text>
                                         </View>
                                     }
-                                    <Button onPress={() => { this.inputPwd() }}>
-                                        <View style={[styles.btnoutsource,{backgroundColor: UColor.turnout_eos}]}>
-                                            <Text style={[styles.btntext,{color: UColor.btnColor}]}>确认支付</Text>
-                                        </View>
-                                    </Button>
+                            <View style={[styles.btnoutsource]}>  
+                                <TextButton text="确认支付" onPress={this.inputPwd.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
+                            </View>
                                 </View>
                         </View>
                     </TouchableOpacity>
@@ -505,19 +504,24 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     subView: {
+        width: ScreenWidth,
         flexDirection: "row",
         alignItems: 'center',
-        height: ScreenUtil.autoheight(50),
-    },
-    buttonView: {
-        alignItems: 'center',
         justifyContent: 'center',
+        height: ScreenUtil.autoheight(50),
+        marginTop:ScreenUtil.autoheight(2),
     },
-    
-    titleText: {
-        flex: 2,
-        textAlign:'center',
-        fontSize: ScreenUtil.setSpText(16.5),
+    LeftBack: {
+        width: ScreenUtil.autowidth(40), 
+        paddingLeft:ScreenUtil.autowidth(20), 
+        alignItems:"flex-start",
+    },
+
+    modualTitle: {
+        flex: 1,  
+        textAlign: "center",
+        fontWeight: '600',
+        fontSize: ScreenUtil.setSpText(20),
         color: UColor.tradedetail_prompt,
     },
 
@@ -553,13 +557,10 @@ const styles = StyleSheet.create({
         paddingVertical: ScreenUtil.autoheight(10),
     },
     btnoutsource: {
-        borderRadius: 6,
         alignItems: 'center',
         justifyContent: 'center',
-        height:  ScreenUtil.autoheight(45),
-        marginVertical: ScreenUtil.autowidth(10),
-        marginHorizontal: ScreenUtil.autoheight(15),
-        width: ScreenUtil.screenWidth/2,
+        // marginVertical: ScreenUtil.autowidth(10),
+        marginBottom:ScreenUtil.autoheight(10),
     },
     btntext: {
         fontSize: ScreenUtil.setSpText(16),
@@ -677,13 +678,7 @@ const styles = StyleSheet.create({
         lineHeight: ScreenUtil.autoheight(18),
         marginLeft: ScreenUtil.autowidth(10),
     },
-
-    LeftBack: {
-        flex: 1, 
-        paddingLeft:ScreenUtil.autowidth(10), 
-        alignItems:"flex-start",
-    },
-
-
+  
+  
 })
 export default TurnOutAsset;
