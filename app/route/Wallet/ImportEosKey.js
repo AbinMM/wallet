@@ -751,7 +751,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: ScreenUtil.setSpText(16),
     lineHeight: ScreenUtil.autoheight(23),
-    fontWeight:"bold"
+    // fontWeight:"bold"
     
   },
 

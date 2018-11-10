@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     paddingLeft: ScreenUtil.autowidth(2),
   },
   inptitle: {
-    fontWeight:"bold",
+    // fontWeight:"bold",
     fontSize: ScreenUtil.setSpText(16), 
     marginVertical: ScreenUtil.autowidth(20),
   },

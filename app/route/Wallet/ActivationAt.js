@@ -226,16 +226,16 @@ class ActivationAt extends BaseComponent {
                         </View>
 
 
-                        <View style={{flex: 1, marginHorizontal: ScreenUtil.autowidth(16), paddingTop:ScreenUtil.autowidth(35)}}>
+                        <View style={{flex: 1, marginHorizontal: ScreenUtil.autowidth(16), paddingTop:ScreenUtil.autowidth(20)}}>
                             <View style={{paddingVertical: ScreenUtil.autowidth(16), alignItems: 'center',justifyContent: 'center',} }>
                                 <TextButton onPress={() => this.contactWeChataide()} avatar={UImage.Icons_WeChat}  textColor="#FFFFFF" text="微信支付激活"  shadow={true}  style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
                             </View>
                         </View>
 
-                        <View style={{flex: 1, marginHorizontal: ScreenUtil.autowidth(16), paddingTop:ScreenUtil.autowidth(20)}}>
+                        <View style={{flex: 1, marginHorizontal: ScreenUtil.autowidth(16), paddingTop:ScreenUtil.autowidth(10)}}>
                             <View style={{alignItems: 'center',justifyContent: 'center',} }>
                                 <View style={{borderRadius: 25,borderWidth: 1,alignItems: 'center',justifyContent: 'center',width: ScreenUtil.autowidth(175),height:ScreenUtil.autowidth(42),borderColor: '#3B80F4'} }>
-                                    <TextButton onPress={() => this.checkAccountActive()} avatar={UImage.lookup} textColor="#3B80F4" text="查询激活状态"  shadow={false}  style={{width: ScreenUtil.autowidth(173), height: ScreenUtil.autowidth(40),borderRadius: 25}} />
+                                    <TextButton onPress={() => this.checkAccountActive()} avatar={UImage.lookup} textColor="#3B80F4" text="查询激活状态"  shadow={false}  style={{width: ScreenUtil.autowidth(171), height: ScreenUtil.autowidth(38),borderRadius: 25}} />
                                 </View>
                             </View>
                         </View>
