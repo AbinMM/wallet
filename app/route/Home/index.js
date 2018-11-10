@@ -837,13 +837,14 @@ class Home extends React.Component {
                         <ListView initialListSize={5} style={[styles.touchablelist,]}
                           enableEmptySections={true} dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
                           renderRow={(rowData) => (
+                            (!rowData.isactived || !rowData.hasOwnProperty('isactived'))?null:
                             <Button onPress={this.changeWallet.bind(this, rowData)} >
                               <View style={[styles.walletlist]}>
                                 <CheckMarkCircle markSize={ScreenUtil.autowidth(10)} width={ScreenUtil.autowidth(14)} height={ScreenUtil.autowidth(14)} 
                                 selected={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account)} onPress={this.changeWallet.bind(this, rowData)}/>
                                 <View style={styles.topout}>
                                   <Text style={[styles.outname,{color: '#262626'}]}>{rowData.name}</Text>
-                                  {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ?
+                                  {/* {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ?
                                   <View style={[styles.stopoutBackupsout,{borderColor: UColor.showy}]}>
                                     <Text style={[styles.stopoutBackups,{color: UColor.showy}]} onPress={this.WalletDetail.bind(this, rowData)}>未激活</Text>
                                   </View>
@@ -851,7 +852,7 @@ class Home extends React.Component {
                                   (rowData.isBackups ? null :
                                   <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
                                     <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this, rowData)}>未备份</Text>
-                                  </View>)}
+                                  </View>)} */}
                                 </View>
                                 <Text style={[styles.walletaccount,{color: '#808080'}]} numberOfLines={1} ellipsizeMode='middle'>{this.state.isEye ? (rowData.isactived && rowData.balance != null && rowData.balance != ""? rowData.balance : '0.0000') : '****'} EOS</Text>
                               </View>
