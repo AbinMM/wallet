@@ -742,7 +742,8 @@ class CpuNet extends BaseComponent {
                                             <Text style={[{color: UColor.arrow, paddingHorizontal: ScreenUtil.autowidth(12)}]}>他人</Text>
                                      </View>
                                     </View>
-                                    {this.state.isOthers && <View style={[styles.inptout, {borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]}>
+                                    {this.state.isOthers && 
+                                    <View style={[styles.inptout, {borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]}>
                                         <Button onPress={() => this.openAddressBook()}>
                                             <View style={styles.botnout}>
                                                 <Image source={UImage.al} style={styles.botnimg} />

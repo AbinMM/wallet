@@ -7,6 +7,8 @@ import Header from '../../components/Header'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast"
 import { EasyShowLD } from '../../components/EasyShow'
+import TextButton from '../../components/TextButton';
+
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 var dismissKeyboard = require('dismissKeyboard');
@@ -116,38 +118,55 @@ class FreeMortgage extends React.Component {
   render() {
     return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
     <Header {...this.props} onPressLeft={true} title="EOS免费抵押" />
-    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} style={styles.tab}>
-    <ScrollView  keyboardShouldPersistTaps="always">
-     <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
-        <View style={styles.head}>
-            <ImageBackground style={styles.bgout} source={UImage.freemortgage_bg} resizeMode="cover">
-                <Text style={[styles.Explaintext,{color: UColor.arrow}]}>本功能由EosToken提供，用于免费帮助用户临时抵押资源,使其账户能正常使用。</Text>
-                <Text style={[styles.Explaintextmiddle,{color: UColor.arrow}]}>温馨提示：成功申请免费抵押后，为了让账号持续正常使用，请尽快自行抵押。(官方将定期赎回抵押的资源)</Text>
-                <Text style={[styles.Tipstext,{color: UColor.tintColor}]}>条件：计算资源{"<="}5ms或网络资源{"<="}10kb</Text>
-                <Text style={[styles.Tipstext2,{ color: UColor.tintColor}]}>可获：计算资源2.5EOS、网络资源0.5EOS</Text>
-            </ImageBackground>
+        <View style={[styles.inptoutsource,{flex: 1,}]}>
+
+            <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={styles.tab}>
+                <View style={styles.btnout}>
+                    <Text style={[styles.Applytext,{color: UColor.fontColor}]}>输入EOS账号</Text>
+                </View>
+
+                <View style={styles.header}>  
+                    <View style={[styles.inptout,{backgroundColor: UColor.mainColor, borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
+                        <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
+                            selectionColor={UColor.tintColor} style={[styles.inpt,{color: '#D9D9D9'}]} placeholderTextColor={UColor.inputtip} maxLength={12} 
+                            placeholder="输入账号名" underlineColorAndroid="transparent" keyboardType="default"
+                            onChangeText={(labelname) => this.setState({ labelname: this.chkAccount(labelname)})}   
+                            />  
+                        <TouchableOpacity onPress={this.Scan.bind(this,this.state.labelname)}>  
+                            <Image source={UImage.account_scan} style={styles.headleftimg} />
+                        </TouchableOpacity>     
+                    </View>    
+                </View> 
+
+                <View style={styles.head}>
+                    {/* <ImageBackground style={styles.bgout} source={UImage.freemortgage_bg} resizeMode="cover"> */}
+                        <Text style={[styles.Explaintext,{color: '#555555'}]}>本功能由EosToken提供，用于免费帮助用户临时抵押资源,使其账户能正常使用。</Text>
+                        <Text style={[styles.Explaintextmiddle,{color: '#555555'}]}>温馨提示：成功申请免费抵押后，为了让账号持续正常使用，请尽快自行抵押。(官方将定期赎回抵押的资源)</Text>
+                        <Text style={[styles.Tipstext,{color: '#3B80F4'}]}>• 条件：计算资源{"<="}5ms或网络资源{"<="}10kb</Text>
+                        <Text style={[styles.Tipstext2,{ color: '#3B80F4'}]}>• 可获：计算资源2.5EOS、网络资源0.5EOS</Text>
+                    {/* </ImageBackground> */}
+                </View>
+                <View style={{flex: 1, justifyContent: 'center', alignItems:'center', marginHorizontal: ScreenUtil.autowidth(15), marginTop: ScreenUtil.autowidth(15),}}>
+                    <TextButton text="提交申请" onPress={this.delegatebw.bind(this,this.state.labelname)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
+                </View>
+                {/* <View style={styles.header}>  
+                <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]} >
+                    <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
+                        selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={12} 
+                        placeholder="输入账号名" underlineColorAndroid="transparent" keyboardType="default"
+                        onChangeText={(labelname) => this.setState({ labelname: this.chkAccount(labelname)})}   
+                        />  
+                    <TouchableOpacity onPress={this.Scan.bind(this,this.state.labelname)}>  
+                        <Image source={UImage.account_scan} style={styles.headleftimg} />
+                    </TouchableOpacity>     
+                </View>    
+                <TouchableOpacity onPress={this.delegatebw.bind(this,this.state.labelname)} style={[styles.Applyout,{backgroundColor: UColor.tintColor}]}>  
+                    <Text style={[styles.canceltext,{color: UColor.btnColor}]}>提交申请</Text>
+                </TouchableOpacity>   
+                </View>  */}
+            </TouchableOpacity>
+           
         </View>
-        <View style={styles.btnout}>
-            <Text style={[styles.Applytext,{color: UColor.fontColor}]}>输入EOS账号</Text>
-        </View>
-        <View style={styles.header}>  
-          <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]} >
-              <TextInput ref={(ref) => this._raccount = ref} value={this.state.labelname} returnKeyType="go"
-                  selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} maxLength={12} 
-                  placeholder="输入账号名" underlineColorAndroid="transparent" keyboardType="default"
-                  onChangeText={(labelname) => this.setState({ labelname: this.chkAccount(labelname)})}   
-                  />  
-              <TouchableOpacity onPress={this.Scan.bind(this,this.state.labelname)}>  
-                  <Image source={UImage.account_scan} style={styles.headleftimg} />
-              </TouchableOpacity>     
-          </View>    
-          <TouchableOpacity onPress={this.delegatebw.bind(this,this.state.labelname)} style={[styles.Applyout,{backgroundColor: UColor.tintColor}]}>  
-              <Text style={[styles.canceltext,{color: UColor.btnColor}]}>提交申请</Text>
-          </TouchableOpacity>   
-      </View> 
-      </TouchableOpacity>
-    </ScrollView>
-    </KeyboardAvoidingView>
     </View>
     );
   }
@@ -159,10 +178,17 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
     },
+    inptoutsource: {
+        justifyContent: 'center',
+        marginHorizontal: ScreenUtil.autowidth(15),
+        marginTop: ScreenUtil.autowidth(10),
+        marginBottom: ScreenUtil.autowidth(20),
+        backgroundColor: UColor.mainColor,
+    },
     head: {
-        flexDirection: "row",
-        paddingVertical: ScreenUtil.autoheight(30),
-        paddingHorizontal: ScreenUtil.autowidth(10)
+        flexDirection: "column",
+        // paddingVertical: ScreenUtil.autoheight(30),
+        paddingHorizontal: ScreenUtil.autowidth(20)
     },
     bgout: {
         justifyContent: 'space-around',
@@ -173,18 +199,23 @@ const styles = StyleSheet.create({
         height: (ScreenWidth - ScreenUtil.autowidth(20))*0.8437,
     },
     Explaintext: {
-        fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autowidth(25), 
+        fontSize: ScreenUtil.setSpText(10),
+        paddingBottom: ScreenUtil.autowidth(15),
+        paddingTop: ScreenUtil.autowidth(29),
+        lineHeight: ScreenUtil.autowidth(23),
     },
     Explaintextmiddle: {
-        fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autowidth(25), 
+        fontSize: ScreenUtil.setSpText(10),
+        paddingBottom: ScreenUtil.autowidth(15),
+        lineHeight: ScreenUtil.autowidth(23), 
     },
     Tipstext: {
-        fontSize: ScreenUtil.setSpText(12),
+        fontSize: ScreenUtil.setSpText(10),
+        paddingBottom: ScreenUtil.autowidth(10),
     },
     Tipstext2: {
-        fontSize: ScreenUtil.setSpText(12),
+        fontSize: ScreenUtil.setSpText(10),
+        paddingBottom: ScreenUtil.autowidth(10),
     },
     btnout: {
         flexDirection: "row",
@@ -192,6 +223,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         height: ScreenUtil.autoheight(20),
         marginHorizontal: ScreenUtil.autowidth(20),
+        marginTop: ScreenUtil.autowidth(26),
     },
     Applyout: {
         borderRadius: 5,
@@ -202,19 +234,20 @@ const styles = StyleSheet.create({
         marginHorizontal: ScreenUtil.autowidth(20),
     },
     Applytext: {
-        fontSize: ScreenUtil.setSpText(15),
+        fontSize: ScreenUtil.setSpText(16),
     },
     header: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
         paddingVertical: ScreenUtil.autoheight(7),
+        marginHorizontal: ScreenUtil.autowidth(20),
     },
       
     headleftimg: {
-        width: ScreenUtil.autowidth(20),
-        height: ScreenUtil.autowidth(20),
-        marginHorizontal: ScreenUtil.autowidth(10),
+        width: ScreenUtil.autowidth(15),
+        height: ScreenUtil.autowidth(15),
+        marginHorizontal: ScreenUtil.autowidth(20),
     },
     inptout: {
         flex: 1,
@@ -223,13 +256,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center',
         height: ScreenUtil.autoheight(35),
-        marginLeft: ScreenUtil.autowidth(15),
-        paddingLeft: ScreenUtil.autowidth(10),
+        // marginLeft: ScreenUtil.autowidth(15),
+        // paddingLeft: ScreenUtil.autowidth(10),
     },
     inpt: {
         flex: 1,
         height: ScreenUtil.autoheight(40),
-        fontSize: ScreenUtil.setSpText(15),
+        fontSize: ScreenUtil.setSpText(14),
     },
     canceltext: {
         textAlign: 'center',
