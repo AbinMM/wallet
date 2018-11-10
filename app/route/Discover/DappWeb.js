@@ -73,6 +73,8 @@ export default class DappWeb extends Component {
     // 添加返回键监听(对Android原生返回键的处理)
     this.addBackAndroidListener(this.props.navigation);
 
+    //保存我的dapp
+    this.props.dispatch({ type: 'dapp/saveMyDapp', payload: this.props.navigation.state.params.data });
   }
    //根据公钥获取对应的私钥
    getPrivateKeyByPublicKey(publicKey)

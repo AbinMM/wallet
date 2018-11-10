@@ -30,21 +30,12 @@ class Dappsearch extends BaseComponent {
             showgoDapp: false,
             dappList: [],
             dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
-            holdallList: [
-              {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
-              {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
-              {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
-              {icon: UImage.Currency_my,name:'一键发币',description:'帮助大家自助地发行基于EOS代币。价格比大家自己发币便宜了13倍！'},
-            ],
         }
     }
 
     componentDidMount() {
         //获取搜索历史记录
         this.setDapplist();
-        //alert(this.state.showgoDapp)
-
-
     }
 
     componentWillUnmount(){
@@ -56,8 +47,8 @@ class Dappsearch extends BaseComponent {
     setDapplist() {
         this.props.dispatch({ type: 'dapp/historyDappInfo', payload: {}, 
             callback: (historyDappInfo) => {
-                if(historyDappInfo != '' && historyDappInfo != null){
-                this.setState({dappList: historyDappInfo})
+                if(historyDappInfo){
+                    this.setState({dappList: historyDappInfo});
                 }
             }  
         });
@@ -84,8 +75,6 @@ class Dappsearch extends BaseComponent {
                 }
                 }
             });
-            // const { navigate } = this.props.navigation;
-            // navigate('DappWeb', { name: 'CustomDapp', url: labelname ,callback:(()=>{this._raccount.focus();})});
         }
     }
 
@@ -97,12 +86,19 @@ class Dappsearch extends BaseComponent {
             EasyToast.show('请输入DAPP网址');
             return;
         }else{
-            //Linking.openURL(labelname);
-            const { navigate } = this.props.navigation;
-            navigate('Web', { title: "注册协议", url: 'http://' + labelname + '/'});
-        }
-      
+            var index = labelname.indexOf('http://');
+            var indexHttps = labelname.indexOf('https://');
 
+            var tmpUrl;
+            if(index == 0 || indexHttps == 0){
+                tmpUrl = labelname;
+            }else{
+                tmpUrl = 'http://' + labelname;
+            }
+
+            const { navigate } = this.props.navigation;
+            navigate('DappWeb', { data: {name: labelname, url: tmpUrl,icon:"http://static.eostoken.im/images/20181025/1540434919469.png"}});
+        }
     }
  
     //清空历史记录

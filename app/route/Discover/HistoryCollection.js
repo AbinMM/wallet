@@ -34,30 +34,14 @@ class HistoryCollection extends BaseComponent {
       isHistory: true,
       isCollection: false,
       dappList: [],
+      dappListCollection: [], //收藏列表
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
-      holdallList: [
-        {icon: UImage.ManualSearch,name:'手动搜索DAPP',description:'手动搜索DAPP,可添加到收藏夹'},
-        {icon: UImage.eospark,name:'eospark',description:'eos区块浏览器'},
-        {icon: UImage.Freemortgage,name:'免费抵押',description:'免费抵押：计算资源,网络资源'},
-        {icon: UImage.Currency_my,name:'一键发币',description:'帮助大家自助地发行基于EOS代币。价格比大家自己发币便宜了13倍！'},
-      ],
     };
   }
 
   //组件加载完成
   componentDidMount() {
-    // this.props.dispatch({ type: 'wallet/dappfindAllRecommend', callback: (resp) => {
-    //     if (resp && resp.code == '0') {
-    //       if(resp.data && resp.data.length > 0){
-    //         this.setState({dappList : resp.data,logRefreshing: false});
-    //       }
-    //     } else {
-    //       this.setState({logRefreshing: false});
-    //       console.log("dappfindAllRecommend error");
-    //     }
-    // } });
     this.setDapplist('isHistory');
-    
   }
 
   componentWillUnmount(){
@@ -81,7 +65,7 @@ class HistoryCollection extends BaseComponent {
 
   // 更新"历史记录 我的收藏"按钮的状态
   _updateBtnState(currentPressed, array) {
-    if (currentPressed === 'undefined' || currentPressed === null || array === 'undefined' || array === null ) {
+    if (!currentPressed || !array) {
         return;
     }
     let newState = {...this.state};
@@ -101,7 +85,7 @@ class HistoryCollection extends BaseComponent {
     if(currentPressed == "isHistory") {
       this.props.dispatch({ type: 'dapp/mydappInfo', payload: {}, 
         callback: (mydappBook) => {
-          if(mydappBook != '' && mydappBook != null){
+          if(mydappBook){
             this.setState({dappList: mydappBook})
           }
         }  
@@ -109,8 +93,8 @@ class HistoryCollection extends BaseComponent {
     }else if(currentPressed == "isCollection"){
       this.props.dispatch({ type: 'dapp/collectionDappInfo', payload: {},
         callback: (collectionDapp) => {
-          if(collectionDapp != '' && collectionDapp != null){
-            this.setState({dappList: collectionDapp})
+          if(collectionDapp){
+            this.setState({dappListCollection: collectionDapp})
           }
         } 
       });
@@ -130,6 +114,14 @@ class HistoryCollection extends BaseComponent {
     });
   }
 
+  showDappList()
+  {
+    if(this.state.isCollection){
+      return this.state.dappListCollection == null ? [] : this.state.dappListCollection;
+    }else{
+      return this.state.dappList == null ? [] : this.state.dappList;
+    }
+  }
   render() {
     return (
       <View style={[styles.container,{backgroundColor: '#FAFAF9'}]}>
@@ -140,7 +132,7 @@ class HistoryCollection extends BaseComponent {
         </View>
         <View style={{flex: 1,}}>
           <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{backgroundColor:'#FFFFFF'}]}
-            dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
+            dataSource={this.state.dataSource.cloneWithRows(this.showDappList())} 
             renderRow={(rowData) => (  
               <TouchableOpacity  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headDAPP}>
                   <View style={styles.headbtnout}>

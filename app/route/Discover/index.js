@@ -168,7 +168,6 @@ class Discover extends React.Component {
     AlertModal.show(title,content,'确认','取消',(resp)=>{
       if(resp){
         navigate('DappWeb', { data: data});
-        this.props.dispatch({ type: 'dapp/saveMyDapp', payload: data });
       }
     });
   }

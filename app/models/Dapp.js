@@ -17,7 +17,7 @@ export default {
                 if(callback) callback(mydappBook);
                 yield put({ type: 'updateAction', payload: { data: mydappBook.reverse(), ...payload } });
             } catch (error) {
-                EasyToast.show('获取失败!');
+                // EasyToast.show('获取失败!');
             }
         },
         *saveMyDapp({ payload,callback}, { call, put }) {
@@ -47,7 +47,7 @@ export default {
                 if(callback) callback(collectionDapp);
                 yield put({ type: 'updateCollection', payload: { data: collectionDapp.reverse(), ...payload } });
             } catch (error) {
-                EasyToast.show('获取失败!');
+                // EasyToast.show('获取失败!');
             }
         },
         *saveCollectionDapp({ payload,callback}, { call, put }) {
@@ -77,7 +77,7 @@ export default {
                 if(callback) callback(historyDapp);
                 yield put({ type: 'updatehistory', payload: { data: historyDapp.reverse(), ...payload } });
             } catch (error) {
-                EasyToast.show('获取失败!');
+                // EasyToast.show('获取失败!');
             }
         },
         //添加到历史记录里
