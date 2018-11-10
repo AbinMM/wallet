@@ -510,7 +510,7 @@ class Ram extends BaseComponent {
                         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
                             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                                 <View style={styles.subViewStyle1}>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,fontWeight:"bold"}}>可用内存</Text>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,}}>可用内存</Text>
                                 </View>
 
                                 <View style={styles.barStyle}>
@@ -523,7 +523,7 @@ class Ram extends BaseComponent {
         
 
                                 <View style={styles.subViewStyle1}>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,fontWeight:"bold"}}>全网内存</Text>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,}}>全网内存</Text>
                                 </View>
 
                                 <View style={styles.barStyle}>

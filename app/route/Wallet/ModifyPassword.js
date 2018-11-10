@@ -142,7 +142,7 @@ class ModifyPassword extends BaseComponent {
                         secureTextEntry={true} placeholder="请输入您当前的密码"  underlineColorAndroid="transparent" autoFocus={false} maxLength = {20}
                         editable={true} onChangeText={(password) => this.setState({ password })}  />
 
-                    <View style={{marginTop: ScreenUtil.autowidth(50), }} >
+                    <View style={{marginTop: ScreenUtil.autowidth(30), }} >
                         <PasswordInput password={this.state.newPassword} onCallbackFun={(newPassword) => this.setState({ newPassword })} 
                         repeatpassword={this.state.newRePassword} onCallbackFunRepeat={(newRePassword) => this.setState({ newRePassword })}/>
                     </View>

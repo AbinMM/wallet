@@ -635,8 +635,8 @@ class CpuNet extends BaseComponent {
                         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
                             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                                 <View style={styles.subViewStyle1}>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,fontWeight:"bold"}}>CPU</Text>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(10), color: UColor.fontColor,}}>  抵押: {this.state.cpu_weight}</Text>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,}}>CPU</Text>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(10), color: UColor.fontColor,}}>   抵押: {this.state.cpu_weight}</Text>
                                 </View>
 
                                 <View style={styles.barStyle}>
@@ -649,8 +649,8 @@ class CpuNet extends BaseComponent {
         
 
                                 <View style={styles.subViewStyle3}>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,fontWeight:"bold"}}>NET</Text>
-                                    <Text style={{fontSize: ScreenUtil.setSpText(10), color: UColor.fontColor,}}>  抵押: {this.state.net_weight}</Text>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor}}>NET</Text>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(10), color: UColor.fontColor,}}>   抵押: {this.state.net_weight}</Text>
                                 </View>
 
                                 <View style={styles.barStyle}>
@@ -662,7 +662,7 @@ class CpuNet extends BaseComponent {
                                 </View>
 
                                 <View style={{paddingHorizontal: ScreenUtil.autowidth(20),paddingTop: ScreenUtil.autowidth(14),flexDirection:'row',}}>
-                                    <Text style={{flex: 1, textAlign: 'left', fontSize: ScreenUtil.setSpText(16),fontWeight:"bold", color: UColor.fontColor,}}>赎回中</Text>
+                                    <Text style={{flex: 1, textAlign: 'left', fontSize: ScreenUtil.setSpText(16),color: UColor.fontColor,}}>赎回中</Text>
                                </View>
                                <View style={{paddingHorizontal: ScreenUtil.autowidth(20),paddingTop: ScreenUtil.autowidth(6),flexDirection:'row',}}>
                                     <Text style={{flex: 1, textAlign: 'left', fontSize: ScreenUtil.setSpText(10), color: UColor.tradedetail_prompt,}}>{this.state.and_redeem} EOS</Text>
