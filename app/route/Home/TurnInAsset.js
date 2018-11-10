@@ -10,6 +10,8 @@ import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from "../../components/Toast";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
+import TextButton from '../../components/TextButton';
+
 let dismissKeyboard = require("dismissKeyboard");
 
 @connect(({ wallet }) => ({ ...wallet }))
@@ -147,7 +149,7 @@ class TurnInAsset extends BaseComponent {
                   {this.state.Choicesymbol ? 
                   <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>    
                       <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center',}}>                              
-                          <Text style={{fontSize: ScreenUtil.setSpText(15),color: UColor.arrow, marginRight: ScreenUtil.autowidth(5),lineHeight: ScreenUtil.autowidth(36),}}>{this.state.symbol}</Text>
+                          <Text style={{fontSize: ScreenUtil.setSpText(14),color: UColor.fontColor, marginRight: ScreenUtil.autowidth(5),lineHeight: ScreenUtil.autowidth(36),}}>{this.state.symbol}</Text>
                           <Ionicons color={UColor.fontColor} name="ios-arrow-down-outline" size={20} />
                       </View>
                   </TouchableOpacity>
@@ -169,17 +171,22 @@ class TurnInAsset extends BaseComponent {
                 </View>
               </View>
                 <Text style={[styles.prompttext,{color: UColor.fontColor}]}>{this.state.toAccount}</Text>
-              <Button onPress={this.copy.bind()} style={styles.btnnextstep}>
+              {/* <Button onPress={this.copy.bind()} style={styles.btnnextstep}>
                 <View style={[styles.nextstep,{backgroundColor: '#6DA0F8'}]}>
                   <Text style={[styles.nextsteptext,{color: UColor.btnColor}]}>复制收款账号</Text>
                 </View>
-              </Button>
+              </Button> */}
+              <View style={{marginTop: ScreenUtil.autowidth(19),justifyContent: 'center', alignItems:'center'}}>
+                  <TextButton text='复制收款账号' onPress={this.copy.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
+              </View>
               <View style={styles.logout}>
-                <ImageBackground style={{width: ScreenUtil.screenWidth, height: ScreenUtil.screenWidth*0.7893,}} source={UImage.bottom_turnin}>
+                <ImageBackground style={{width: ScreenUtil.autoheight(345), height: ScreenUtil.autoheight(87)}} source={UImage.bottom_turnin}>
                   {/* <Image source={UImage.bottom_turnin} style={styles.logimg}/> */}
-                  <Text style={[styles.logtext,{color: UColor.arrow}]}>我也用ET钱包</Text>
-                  <Text style={[styles.logtext,{color: UColor.arrow}]}>eostoken.im</Text>
-                  </ImageBackground>
+                  <View style={styles.logout}>
+                    <Text style={[styles.logtext,{color: UColor.mainfont, textAlign:"right"}]}>我也用ET钱包</Text>
+                    <Text style={[styles.logtext,{color: UColor.mainfont, textAlign:"right", paddingBottom: ScreenUtil.autowidth(14),}]}>eostoken.im</Text>
+                  </View>
+                </ImageBackground>
               </View>
           </View>
         </TouchableOpacity>
@@ -195,12 +202,12 @@ const styles = StyleSheet.create({
   },
   taboutsource: {
     flex: 1,
-    flexDirection: "column",
+    justifyContent: 'center',
+    marginHorizontal: ScreenUtil.autowidth(15),
+    marginTop: ScreenUtil.autowidth(10),
+    marginBottom: ScreenUtil.autowidth(20),
     backgroundColor: UColor.mainColor,
-    marginTop:ScreenUtil.autoheight(20),
-    marginLeft:ScreenUtil.autowidth(10),
-    marginRight:ScreenUtil.autowidth(10),
-    borderRadius: 5,
+    borderRadius: 6,
   },
   accountoue: {
     flexDirection: "row",
@@ -235,7 +242,7 @@ inptitle: {
     textAlign: "center",
     height: ScreenUtil.autoheight(30),
     fontSize: ScreenUtil.setSpText(18),
-    marginTop: ScreenUtil.autoheight(50),
+    marginTop: ScreenUtil.autoheight(36),
   },
   inptoutsource: {
     flexDirection: "row",
@@ -275,15 +282,13 @@ inptitle: {
     flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
-    paddingBottom: ScreenUtil.autoheight(20),
   },
   logimg: {
     // width: ScreenUtil.autowidth(50), 
     height: ScreenUtil.autowidth(50)
   },
   logtext: {
-    fontSize: ScreenUtil.setSpText(14),
-    lineHeight: ScreenUtil.autoheight(30),
+    fontSize: ScreenUtil.setSpText(10),
     paddingRight: ScreenUtil.autowidth(15),
   },
   tab: {
