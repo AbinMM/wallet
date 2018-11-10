@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Clipboard, Dimensions, StyleSheet, View, Text, Image, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { Clipboard, Dimensions, DeviceEventEmitter, StyleSheet, View, Text, Image, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
 import UImage from '../../utils/Img'
 import UColor from '../../utils/Colors'
 import Button from '../../components/Button'
@@ -14,6 +14,8 @@ import BaseComponent from "../../components/BaseComponent";
 import TextButton from '../../components/TextButton'
 import CheckMarkCircle from '../../components/CheckMarkCircle'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import {AlertModal,AlertModalView} from '../../components/modals/AlertModal'
+import JPushModule from 'jpush-react-native';
 
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -39,33 +41,102 @@ class createWalletWelcome extends BaseComponent {
     }
 
     componentWillUnmount(){
-        // var entry = this.props.navigation.state.params.entry;
-        // if(entry == "createWallet"){
-        //     this.pop(1, true);
-        // }
-        //结束页面前，资源释放操作
         super.componentWillUnmount();
     }
-    // app/route/Wallet/CreateWallet.js
 
-    goCreateWallet(){
+
+    activeWalletOnServer(walletUnactive){
         const { navigate } = this.props.navigation;
-        navigate('CreateWallet', {});
-        // navigate('BackupsPkey', {wallet: wallet, password: this.state.walletPassword, entry: "createWallet"});
+        // let wallet = this.props.navigation.state.params.data
+        var wallet=walletUnactive;
+        let name = walletUnactive.account;
+        let owner = walletUnactive.ownerPublic;
+        let active = walletUnactive.activePublic;
+        try {
+          EasyShowLD.loadingShow('正在请求');
+          //检测账号是否已经激活
+          this.props.dispatch({
+            type: "wallet/isExistAccountNameAndPublicKey", payload: {account_name: name, owner: owner, active: active}, callback:(result) =>{
+              EasyShowLD.loadingClose();
+                if(result.code == 0 && result.data == true){
+                    wallet.isactived = true
+                    this.props.dispatch({type: 'wallet/activeWallet', wallet: wallet});
+                    //msg:success,data:true, code:0 账号已存在
+                    EasyShowLD.dialogShow("恭喜激活成功", (<View>
+                        <Text style={{fontSize: ScreenUtil.setSpText(20), color: UColor.showy, textAlign: 'center',}}>{name}</Text>
+                        {/* <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>您申请的账号已经被***激活成功</Text> */}
+                    </View>), "知道了", null,  () => { EasyShowLD.dialogClose() });
+                }else if(result.code == 500){ // 网络异常
+                  EasyToast.show(result.msg);
+                }else if(result.code == 515){
+                  EasyToast.show("账号已被别人占用，请换个账号吧！");
+                }else{
+                  navigate('ActivationAt', {parameter:wallet, entry: "activeWallet"});
+                }
+            }
+        });
+        } catch (error) {
+          EasyShowLD.loadingClose();
+          navigate('ActivationAt', {parameter:wallet});
+          return false;
+        }
+      
+      }
+
+
+    //未激活账号直接删除
+    deletionDirect (paramsdata) {
+        EasyShowLD.dialogClose();
+        var data = paramsdata;
+        this.props.dispatch({ type: 'wallet/delWallet', payload: { data } });
+        //删除tags
+        JPushModule.deleteTags([data.name],map => {
+            if (map.errorCode === 0) {
+                console.log('Delete tags succeed, tags: ' + map.tags)
+            } else {
+                console.log(map)
+                console.log('Delete tags failed, error code: ' + map.errorCode)
+            }
+        });
+        DeviceEventEmitter.addListener('delete_wallet', (tab) => {
+            this.props.navigation.goBack();
+        });
     }
 
-  // 导入钱包
-  importWallet() {
-    const { navigate } = this.props.navigation;
-    navigate('ImportEosKey',{});
-  }
+    // 创建钱包
+    goCreateWallet() {
+        if(this.props.walletList != null){
+            for(var i = 0; i < this.props.walletList.length; i++){
+            if(!this.props.walletList[i].isactived){
+                var unActiveWallet=this.props.walletList[i];
+            //   EasyToast.show("您已有未激活钱包,不能再创建!");
+                AlertModal.show("提示","当前有末激活的EOS账号，是否前往激活",'确认','删除',(resp)=>{
+                if(resp){
+                    this.activeWalletOnServer(unActiveWallet);
+                    }else{
+                    // this.deleteWarning(this.props.walletList[i]);
+                    this.deletionDirect(unActiveWallet);
+                    }
+                });
+                return;
+            }
+            }
+        }
+        const { navigate } = this.props.navigation;
+        navigate('CreateWallet', {});
+    }
+
+    // 导入钱包
+    importWallet() {
+        const { navigate } = this.props.navigation;
+        navigate('ImportEosKey',{});
+    }
+
     prot = () => {
         const { navigate } = this.props.navigation;
         navigate('Web', { title: "服务及隐私条款", url: "http://news.eostoken.im/html/reg.html" });
-      }
-    
-    // love
-    // walletIcon
+    }
+
     render() {
         return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
          <Header {...this.props} onPressLeft={true} title="创建钱包" />
@@ -78,7 +149,7 @@ class createWalletWelcome extends BaseComponent {
                     </View> 
                     <View style={{paddingVertical:ScreenUtil.autowidth(16),paddingHorizontal: ScreenUtil.autowidth(24),flexDirection: 'column',justifyContent: "space-between",}}>
                         <Text style={{fontSize: ScreenUtil.setSpText(16),lineHeight: ScreenUtil.autoheight(23),fontWeight:"bold",color: "#323232"}}>导入已有钱包</Text>
-                        <Text style={{fontSize: ScreenUtil.setSpText(10),lineHeight: ScreenUtil.autoheight(14),color: "##808080"}}>通过私钥导入您的现有钱包</Text>
+                        <Text style={{fontSize: ScreenUtil.setSpText(10),lineHeight: ScreenUtil.autoheight(14),color: "#808080"}}>通过私钥导入您的现有钱包</Text>
                     </View>
                     <View style={{paddingLeft:ScreenUtil.autowidth(80),flexDirection: "row",alignItems: "center",}}>  
                         <Ionicons color={'#808080'} name="ios-arrow-forward-outline" size={ScreenUtil.setSpText(20)} />  
@@ -95,7 +166,7 @@ class createWalletWelcome extends BaseComponent {
                     </View> 
                     <View style={{paddingVertical:ScreenUtil.autowidth(16),paddingLeft:ScreenUtil.autowidth(24),flexDirection: 'column',justifyContent: "space-between",}}>
                         <Text style={{fontSize: ScreenUtil.setSpText(16),lineHeight: ScreenUtil.autoheight(23),fontWeight:"bold",color: "#323232"}}>1分钟快速创建</Text>
-                        <Text style={{fontSize: ScreenUtil.setSpText(10),lineHeight: ScreenUtil.autoheight(14),color: "##808080"}}>填写关键信息后，让好友帮忙或微信支付来创建</Text>
+                        <Text style={{fontSize: ScreenUtil.setSpText(10),lineHeight: ScreenUtil.autoheight(14),color: "#808080"}}>填写关键信息后，让好友帮忙或微信支付来创建</Text>
                     </View>
                     <View style={{paddingLeft:ScreenUtil.autowidth(10),flexDirection: "row",alignItems: "center",}}>  
                         <Ionicons color={'#808080'} name="ios-arrow-forward-outline" size={ScreenUtil.setSpText(20)} />  
