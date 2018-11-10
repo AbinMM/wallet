@@ -201,7 +201,7 @@ class ActivationAt extends BaseComponent {
                         </View>
                         <Text style={{fontSize: ScreenUtil.setSpText(14), color: UColor.fontColor }}>使用ET钱包扫一扫可激活此账号</Text>
                     </View> 
-                    <View style={{paddingHorizontal: ScreenUtil.autowidth(18),paddingVertical: ScreenUtil.autowidth(20),borderBottomLeftRadius:12,borderBottomRightRadius:12,}}>
+                    <View style={{paddingHorizontal: ScreenUtil.autowidth(18),paddingVertical: ScreenUtil.autowidth(20)}}>
                         <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor}}>激活说明：</Text>
                         <View style={{paddingTop: ScreenUtil.autoheight(20),paddingHorizontal: ScreenUtil.autowidth(18),flexDirection: 'row'}}>
                             {/* <Image source={UImage.account_jh} style={styles.accountimg}/> */}
@@ -271,8 +271,9 @@ const styles = StyleSheet.create({
         marginHorizontal: ScreenUtil.autowidth(15),
         // marginTop: ScreenUtil.autowidth(10),
         // marginBottom: ScreenUtil.autowidth(23),
-        borderTopLeftRadius:12,
-        borderTopRightRadius:12,
+        borderRadius:12,
+        // borderTopLeftRadius:12,
+        // borderTopRightRadius:12,
         // backgroundColor: UColor.mainColor,
         // paddingBottom:ScreenUtil.autowidth(55),
     },

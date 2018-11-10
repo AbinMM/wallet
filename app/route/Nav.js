@@ -1366,8 +1366,8 @@ class Route extends React.Component {
                 ]
               }}>
                 <View style={{ height: 125 }}>
-                  <Text style={[styles.sharetitle,{color: UColor.blackColor}]}>分享到</Text>
-                  <View style={{ flexDirection: "row" }}>
+                  <Text style={[styles.sharetitle,{color:"#333333"}]}>-分享到-</Text>
+                  <View style={{ flexDirection: "row" ,paddingVertical:20}}>
                     <Button onPress={() => { this.shareAction(1) }}>
                       <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/3, }}>
                         <Image source={UImage.share_wx} style={styles.sharewximg} />
