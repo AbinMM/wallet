@@ -19,6 +19,7 @@ import BaseComponent from "../../components/BaseComponent";
 import CountDownReact from '../../components/CountDownReact'
 import TextButton from '../../components/TextButton';
 import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+import {AlertModal, AlertModalView} from '../../components/modals/AlertModal'
 import {NavigationActions} from 'react-navigation';
 import Bar from '../../components/Bar'
 import CheckMarkCircle from '../../components/CheckMarkCircle'
@@ -228,7 +229,7 @@ class CpuNet extends BaseComponent {
     }
 
     //初始化输入框
-    Initialization() {
+    init() {
         this.setState({
             buyRamAmount: "",
             sellRamBytes: "",
@@ -338,16 +339,14 @@ class CpuNet extends BaseComponent {
     freeDelegatePrompt(){
         this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{
             if(resp.code == 608){
-                //弹出提示框,可申请免费抵押功能
-                const view =
-                <View style={styles.passoutsource2}>
-                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                </View>
-                EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                    const { navigate } = this.props.navigation;
-                    navigate('FreeMortgage', {});
-                }, () => { EasyShowLD.dialogClose() });
+                var title = '资源受限';
+                var content = '该账号资源(NET/CPU)不足！EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。';
+                AlertModal.show(title, content, '申请免费抵押', '放弃', (isOk)=>{
+                    if(isOk){
+                        const { navigate } = this.props.navigation;
+                        navigate('FreeMortgage', {});
+                    }
+                });
             }
         }});
     }
@@ -380,7 +379,7 @@ class CpuNet extends BaseComponent {
             this.state.receiver=this.props.defaultWallet.account;
         }
 
-        this. dismissKeyboardClick();
+        this.dismissKeyboardClick();
 
         AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
@@ -470,7 +469,7 @@ class CpuNet extends BaseComponent {
             this.state.receiver=this.props.defaultWallet.account;
         }
 
-        this. dismissKeyboardClick();
+        this.dismissKeyboardClick();
 
         AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
@@ -611,9 +610,9 @@ class CpuNet extends BaseComponent {
                                     {this.ownOthersButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '出售')} */}
                                     <View style={{width:ScreenUtil.autowidth(48),}}/>
                                     <View style={{flex:1,flexDirection:'row', alignItems: 'center',justifyContent: 'center',}}>
-                                        <CheckMarkCircle selected={this.state.isMortgage} onPress={() => {this.setState({isMortgage: true, isRedeem:false}); this.Initialization()}}/>
+                                        <CheckMarkCircle selected={this.state.isMortgage} onPress={() => {this.setState({isMortgage: true, isRedeem:false}); this.init()}}/>
                                         <Text style={[styles.tabText, {color: UColor.fontColor, paddingLeft: ScreenUtil.autowidth(5), paddingRight: ScreenUtil.autowidth(24)}]}>抵押</Text>
-                                        <CheckMarkCircle selected={this.state.isRedeem} onPress={() => {this.setState({isMortgage: false, isRedeem:true}); this.Initialization()}}/>
+                                        <CheckMarkCircle selected={this.state.isRedeem} onPress={() => {this.setState({isMortgage: false, isRedeem:true}); this.init()}}/>
                                         <Text style={[styles.tabText, {color: UColor.fontColor, paddingLeft: ScreenUtil.autowidth(5)}]}>赎回</Text>
                                     </View>            
                                     <TextButton onPress={this.recordDelegatebw.bind()} text='租借列表' textColor='#3B80F4' fontSize={ScreenUtil.setSpText(12)} style={{width:ScreenUtil.autowidth(48), height: ScreenUtil.autowidth(17)}}/>                             
@@ -663,9 +662,9 @@ class CpuNet extends BaseComponent {
                                     <View style={styles.inptTitleout}>
                                         <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.isMortgage ?　'接收账户' : '赎回账户'}</Text>
                                         <View style={[styles.businestab]}>
-                                            <CheckPointCircle selected={this.state.isOwn} onPress={() => {this.setState({isOwn:true, isOthers:false}); this.Initialization();}}/>
+                                            <CheckPointCircle selected={this.state.isOwn} onPress={() => {this.setState({isOwn:true, isOthers:false}); this.init();}}/>
                                             <Text style={[{color: UColor.arrow, paddingHorizontal: ScreenUtil.autowidth(12)}]}>自己</Text>
-                                            <CheckPointCircle selected={this.state.isOthers} onPress={() => {this.setState({isOwn:false, isOthers:true}); this.Initialization();}}/>
+                                            <CheckPointCircle selected={this.state.isOthers} onPress={() => {this.setState({isOwn:false, isOthers:true}); this.init();}}/>
                                             <Text style={[{color: UColor.arrow, paddingHorizontal: ScreenUtil.autowidth(12)}]}>他人</Text>
                                      </View>
                                     </View>
@@ -708,6 +707,7 @@ class CpuNet extends BaseComponent {
                     </ScrollView>
                 </View>
 
+                <AlertModalView />
             </View>
         )
     }

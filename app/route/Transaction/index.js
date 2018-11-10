@@ -17,6 +17,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import BaseComponent from "../../components/BaseComponent";
 import { SegmentedControls } from 'react-native-radio-buttons';
 import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+import {AlertModal, AlertModalView} from '../../components/modals/AlertModal'
 
 var AES = require("crypto-js/aes");
 var CryptoJS = require("crypto-js");
@@ -596,20 +597,16 @@ class Transaction extends BaseComponent {
     }
 
     freeDelegatePrompt(){
-        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{
-            if(resp.code == 608)
-            {
-                //弹出提示框,可申请免费抵押功能
-                const view =
-                <View style={styles.Explainout}>
-                    <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                    <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                </View>
-                EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                const { navigate } = this.props.navigation;
-                navigate('FreeMortgage', {wallet: this.props.defaultWallet});
-                // EasyShowLD.dialogClose();
-                }, () => { EasyShowLD.dialogClose() });
+        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{
+            if(resp.code == 608){
+                var title = '资源受限';
+                var content = '该账号资源(NET/CPU)不足！EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。';
+                AlertModal.show(title, content, '申请免费抵押', '放弃', (isOk)=>{
+                    if(isOk){
+                        const { navigate } = this.props.navigation;
+                        navigate('FreeMortgage', {});
+                    }
+                });
             }
         }});
     }
@@ -1391,6 +1388,7 @@ class Transaction extends BaseComponent {
     </Modal>
 
 
+        <AlertModalView />
 
   </View>
   }

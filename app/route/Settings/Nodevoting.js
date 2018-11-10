@@ -15,6 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 import { SegmentedControls } from 'react-native-radio-buttons'
 import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+import {AlertModal, AlertModalView} from '../../components/modals/AlertModal'
 
 var dismissKeyboard = require('dismissKeyboard');
 const ScreenWidth = Dimensions.get('window').width;
@@ -75,18 +76,16 @@ class Nodevoting extends BaseComponent {
     }
 
     freeDelegatePrompt(){
-        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{
+        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{
             if(resp.code == 608){
-                //弹出提示框,可申请免费抵押功能
-                const view =
-                <View style={styles.passoutsource2}>
-                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                </View>
-                EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                    const { navigate } = this.props.navigation;
-                    navigate('FreeMortgage', {});
-                }, () => { EasyShowLD.dialogClose() });
+                var title = '资源受限';
+                var content = '该账号资源(NET/CPU)不足！EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。';
+                AlertModal.show(title, content, '申请免费抵押', '放弃', (isOk)=>{
+                    if(isOk){
+                        const { navigate } = this.props.navigation;
+                        navigate('FreeMortgage', {});
+                    }
+                });
             }
         }});
     }
@@ -460,6 +459,7 @@ class Nodevoting extends BaseComponent {
                 </View>
 
 
+                <AlertModalView />
 
             </View>
         );
