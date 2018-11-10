@@ -136,7 +136,7 @@ class ModifyPassword extends BaseComponent {
             <Header {...this.props} onPressLeft={true} title="更改密码" />
             <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex:1}}>
                 <View style={[styles.outsource,{backgroundColor: '#FFFFFF'}]}>
-                    <Text style={[styles.texttitle,{fontWeight:"bold", color: '#323232'}]}>当前密码</Text>
+                    <Text style={[styles.texttitle,{color: '#323232'}]}>当前密码</Text>
                     <TextInput ref={(ref) => this._lphone = ref} value={this.state.password} returnKeyType="next"
                         selectionColor={UColor.tintColor} style={[styles.textinpt,{color: '#808080'}]} placeholderTextColor={'#D9D9D9'}
                         secureTextEntry={true} placeholder="请输入您当前的密码"  underlineColorAndroid="transparent" autoFocus={false} maxLength = {20}
@@ -147,7 +147,7 @@ class ModifyPassword extends BaseComponent {
                         repeatpassword={this.state.newRePassword} onCallbackFunRepeat={(newRePassword) => this.setState({ newRePassword })}/>
                     </View>
 
-                    <Text style={[styles.texttitle,{marginTop: ScreenUtil.autowidth(50), fontWeight:"bold", color: '#323232'}]}>设置密码提示</Text>
+                    <Text style={[styles.texttitle,{marginTop: ScreenUtil.autowidth(50), color: '#323232'}]}>设置密码提示</Text>
                     <TextInput ref={(ref) => this._lpass = ref} autoFocus={false} editable={true} returnKeyType="next" 
                         style={[styles.textinpt,{color: '#808080'}]}  underlineColorAndroid="transparent"   
                         placeholder="密码提示信息（可不填" placeholderTextColor={'#D9D9D9'} />

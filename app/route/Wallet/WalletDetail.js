@@ -347,7 +347,7 @@ class WalletDetail extends BaseComponent {
             <Animated.View style={[styles.mask,{opacity:this.state.mask,}]} />
             <View style={styles.alertContent}>
               <Animated.View style={[styles.alert,{opacity:this.state.alert}]}>
-                <View style={[styles.touchableout,{backgroundColor:'#FFFFFF'}]}>
+                <View style={[styles.touchableout,{backgroundColor:'#FFFFFF',}]}>
                   <View style={{paddingHorizontal: ScreenUtil.autowidth(22),paddingBottom:ScreenUtil.autowidth(18), alignItems: 'center',}}>
                     <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#3B80F4', fontWeight: 'bold',marginBottom: ScreenUtil.autowidth(6),}}>{this.state.PublicPrivate ? '导出私钥' : '查看公钥'}</Text>
                     {this.state.PublicPrivate && <Text style={{fontSize: ScreenUtil.setSpText(12), color: '#3B80F4'}}>• 安全警告：私钥未经加密，请妥善保管！</Text>}
@@ -374,7 +374,7 @@ class WalletDetail extends BaseComponent {
                       <Text style={[styles.inptext,{color: '#808080',borderColor: '#D9D9D9'}]}>{this.state.ownerPk}</Text>
                     </View>
                   </View> }
-                  <View style={{position: 'absolute', bottom: -ScreenUtil.autowidth(21), alignItems: 'center',justifyContent: 'center',}}>
+                  <View style={{alignItems: 'center',justifyContent: 'center',}}>
                     <TextButton onPress={() => this._wldimss()} textColor="#FFFFFF" text="完成"  bgColor={'#3B80F4'} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
                   </View>
                 </View>
@@ -428,6 +428,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
+    marginBottom:ScreenUtil.autowidth(21),
   },
   title:{
     color:"#1A1A1A",
