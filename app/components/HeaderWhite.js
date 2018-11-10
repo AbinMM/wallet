@@ -24,7 +24,7 @@ class HeaderWhite extends BaseComponent {
         onPressRight: PropTypes.func,
         avatar: PropTypes.number,
         subName: PropTypes.string,
-        backgroundColors: PropTypes.array,
+        backgroundColors: PropTypes.string,
         imgWidth: PropTypes.number,
         imgHeight: PropTypes.number,
         onDappBackFalg:PropTypes.bool,//DAPP返回

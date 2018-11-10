@@ -171,8 +171,8 @@ class TradeDetails extends BaseComponent {
         <View style={[styles.header,]}>
           <View style={[styles.headout]}>
               <View style={ {flexDirection: 'row'}}>
-              <Text style={[styles.quantitytext,{color: UColor.mainColor}]}>{this.getValueFromQuantity(this.state.trade.quantity)} </Text>
-              <Text style={[{marginTop: ScreenUtil.autoheight(15),fontSize: ScreenUtil.setSpText(16),color: UColor.mainColor}]}>{this.getUnitFromQuantity(this.state.trade.quantity)} </Text>
+                <Text style={[styles.quantitytext,{color: UColor.mainColor}]}>{this.getValueFromQuantity(this.state.trade.quantity)} </Text>
+                <Text style={[{marginTop: ScreenUtil.autoheight(15),fontSize: ScreenUtil.setSpText(16),color: UColor.mainColor}]}>{this.getUnitFromQuantity(this.state.trade.quantity)} </Text>
               </View>
           </View>
           {this.state.trade.disptype == 0 && 
@@ -185,45 +185,45 @@ class TradeDetails extends BaseComponent {
               <Text style={[styles.description,{color: UColor.mainColor}]}>{this.state.trade.type == 'buyram'?'(买)':'(卖)'}</Text>
           }
         </View>
-      <View style={styles.taboutsource}>
+        <View style={styles.taboutsource}>
           <View style={[styles.conouttext]}>
-            <Text style={[styles.contwotext]}>{this.state.trade.receivertitle}</Text>
+            <Text style={[styles.contwotext,{ fontSize: ScreenUtil.setSpText(16)}]}>{this.state.trade.receivertitle}</Text>
             <Text style={[styles.blocktext,{flex: 7}]} onPress={this.prot.bind(this, 'to')} onLongPress={this.copyaccount.bind(this, 'to')}>{this.state.trade.to}</Text>
           </View>
           <View style={[styles.conouttext]}>
-            <Text style={[styles.contwotext]}>付款账户</Text>
+            <Text style={[styles.contwotext,{ fontSize: ScreenUtil.setSpText(16)}]}>付款账户</Text>
             <Text style={[styles.blocktext,{flex: 7}]} onPress={this.prot.bind(this, 'from')} onLongPress={this.copyaccount.bind(this, 'from')}>{this.state.trade.from}</Text>
           </View>
           <View style={{height: ScreenUtil.autowidth(88), paddingVertical: ScreenUtil.autowidth(11), marginTop: 1,flexDirection: "row", alignItems: 'flex-start', justifyContent: 'center', backgroundColor: UColor.mainColor}}>
-            <Text style={[styles.contwotext]}>备注(Memo)</Text>
+            <Text style={[styles.contwotext,{ fontSize: ScreenUtil.setSpText(16)},]}>备注(Memo)</Text>
             <Text style={[styles.blocktext,{flex: 7,lineHeight: ScreenUtil.autowidth(22), paddingRight: ScreenUtil.autowidth(15),color: UColor.arrow}]} numberOfLines={3} >{this.state.trade.memo}</Text>
           </View>
           <View style={[styles.conouttext,{  marginTop: 10,}]}>
-            <Text style={[styles.contwotext,{ fontSize: ScreenUtil.setSpText(12),}]}>交易号</Text> 
+            <Text style={[styles.contwotext,{ fontSize: ScreenUtil.setSpText(14)}]}>交易号</Text> 
             <Text style={[styles.tintext]} onPress={this.prot.bind(this, 'transactionId')}>{this.state.trade.transactionId.substring(0, 6) +"..."+ this.state.trade.transactionId.substr(this.state.trade.transactionId.length-6) }</Text>
           </View>
-          <View style={[styles.conouttext,{ fontSize: ScreenUtil.setSpText(12),}]}> 
-            <Text style={[styles.contwotext,{ fontSize: ScreenUtil.setSpText(12),}]}>区块高度</Text>
+          <View style={[styles.conouttext,]}> 
+            <Text style={[styles.contwotext,{ fontSize: ScreenUtil.setSpText(14)}]}>区块高度</Text>
             <Text style={[styles.tintext]}>{(this.state.trade.blockNum != null || this.state.trade.blockNum != "") ? this.state.trade.blockNum : ""}</Text>
           </View>
           <View style={[styles.conouttext,]}>
-            <Text style={[styles.contwotext,{ fontSize: ScreenUtil.setSpText(12),}]}>交易时间</Text>
+            <Text style={[styles.contwotext,{ fontSize: ScreenUtil.setSpText(14)}]}>交易时间</Text>
             <Text style={[styles.tintext]}>{moment(this.state.trade.blockTime).add(8,'hours').format('YYYY-MM-DD HH:mm')}</Text>
           </View>
           <View style={[styles.conouttext]}>
-            <Text style={[styles.contwotext,{ fontSize: ScreenUtil.setSpText(12),}]}>提示</Text>
+            <Text style={[styles.contwotext,{ fontSize: ScreenUtil.setSpText(14)}]}>提示</Text>
             <Text style={[styles.tintext]}>扫码可获取区块交易状态</Text>
           </View>
 
-        <View style={[styles.logout]}>
+          <View style={[styles.logout]}>
             <View style={[styles.qrcode,{backgroundColor: UColor.btnColor}]}>
               <QRCode size={ScreenUtil.setSpText(60)}  value={UrlHead + this.state.trade.transactionId } 
                 logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(10)} logoBorderRadius={5}/>
             </View>
-            <Text style={{ fontSize: ScreenUtil.setSpText(10),color: '#3B80F4',paddingHorizontal: ScreenUtil.autowidth(15),paddingVertical: ScreenUtil.autoheight(5),}}
+            <Text style={{ fontSize: ScreenUtil.setSpText(10),color: '#3B80F4',paddingHorizontal: ScreenUtil.autowidth(15),}}
                 onPress={this.copy.bind(this,this.state.trade)}>复制链接</Text>
+          </View>
         </View>
-      </View>
     </View>
   }
 }
@@ -232,6 +232,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection:'column',
+    paddingBottom: ScreenUtil.autoheight(20),
   },
   bgtopout: {
     alignItems: 'center',
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'center',
     // paddingVertical: ScreenUtil.autowidth(5),
-    top:ScreenUtil.autoheight(15),
+    marginTop:ScreenUtil.autoheight(45),
   },
 
   headout: {
@@ -256,10 +257,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: ScreenUtil.setSpText(32),
   },
-  headtext: {
-    fontSize: ScreenUtil.setSpText(15),
-    paddingTop: ScreenUtil.autoheight(10),
-  },
+  
   description: {
     height: ScreenUtil.autoheight(35),
     fontSize: ScreenUtil.setSpText(12),
@@ -285,15 +283,14 @@ const styles = StyleSheet.create({
   },
   contwotext: {
     fontWeight: '600',
-    flex: 2.7,
+    flex: 4,
     textAlign: 'left',
-    fontSize: ScreenUtil.setSpText(14),
     paddingLeft: ScreenUtil.autowidth(15),
     color: UColor.tradedetail_prompt,
   },
 
   blocktext: {
-    fontSize: ScreenUtil.setSpText(14),
+    fontSize: ScreenUtil.setSpText(16),
     color: UColor.arrow,
   },
   showytext: {
@@ -301,9 +298,9 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(14),
   },
   tintext: {
-    fontSize: ScreenUtil.setSpText(12),
+    fontSize: ScreenUtil.setSpText(14),
     lineHeight: ScreenUtil.autowidth(44),
-    flex: 9,
+    flex: 8,
     color: UColor.arrow,
   },
   codeout: {
@@ -313,12 +310,12 @@ const styles = StyleSheet.create({
     paddingRight: ScreenUtil.autowidth(15),
   },
   qrcode: {
+    marginTop: ScreenUtil.autoheight(20),
     marginBottom: ScreenUtil.autoheight(5),
     paddingVertical: ScreenUtil.autowidth(5),
     paddingHorizontal:ScreenUtil.autowidth(5),
   },
   logout:{
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -336,8 +333,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: UColor.mainColor,
     marginTop:ScreenUtil.autoheight(24),
-    marginHorizontal:ScreenUtil.autowidth(12),
-    marginBottom:ScreenUtil.autowidth(16),
+    marginLeft: ScreenUtil.autowidth(20),
+    marginRight:ScreenUtil.autowidth(14),
+    marginBottom:ScreenUtil.autowidth(6),
     borderRadius: 5,
 },
 });

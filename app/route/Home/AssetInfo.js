@@ -181,9 +181,10 @@ class AssetInfo extends BaseComponent {
    // 返回转账，抵押记录，内存交易，ET交易  
    ownOthersButton(style, selectedSate, stateType, buttonTitle) {  
         return(  
-            <TouchableOpacity style={[style, selectedSate ? {borderBottomWidth: 1,borderBottomColor: UColor.tintColor} : {}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>  
-                <Text style={[styles.tabText, selectedSate ? {color: UColor.turnout_eos} : {color: UColor.tradedetail_prompt}]}>{buttonTitle}</Text>  
-            </TouchableOpacity>  
+            <TouchableOpacity style={[style, ]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>
+                <Text style={[styles.tabText, {color: selectedSate ? '#3B80F4' : '#323232'}]}>{buttonTitle}</Text>
+                <View style={[{width: 5, height: 5, borderRadius: 5,backgroundColor:selectedSate ? '#3B80F4' : 'rgba(0, 0, 0, 0.0)'}]}/>
+            </TouchableOpacity>
         );  
     }  
 
@@ -226,34 +227,42 @@ class AssetInfo extends BaseComponent {
         this.changeLogType(action);
     }  
 
+    _renderHeader() {
+        const c = this.props.navigation.state.params.asset;
+        return(<View>
+             <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893,position:'absolute',top: 0,}} source={UImage.home_bg} />
+            <HeaderWhite {...this.props} onPressLeft={true} title={c.asset.name} backgroundColors={UColor.transport} avatar={UImage.pool_explain} onPressRight={this._rightTopClick.bind(this)} imgWidth={ScreenUtil.autowidth(21)} imgHeight={ScreenUtil.autowidth(21)}/>  
+            <View style={[{alignItems: "center",justifyContent: "center",}]}>
+                <Text style={[styles.headbalance,{color: UColor.mainColor,}]}>{this.state.balance==""? "0.0000" :this.state.balance.replace(c.asset.name, "")} <Text style={{fontSize: ScreenUtil.setSpText(20),color: UColor.mainColor, }}>{c.asset.name}</Text></Text>
+                <Text style={[styles.headmarket,{color: UColor.mainColor,}]}>(≈￥{(this.state.balance == null || c.asset.value == null) ? "0.00" : (this.state.balance.replace(c.asset.name, "") * c.asset.value).toFixed(2)})</Text>
+                
+            </View>
+            <View style={styles.Subcolumn}>
+                <Text style={[styles.recordText,{color: UColor.mainColor}]}>交易记录</Text>
+                <View style={styles.filterView}>
+                    <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()} >
+                        <View style={{flexDirection: 'row'}}>
+                            <Ionicons color={'#FFF'}  name={this.state.isFilter ? "ios-checkmark-circle-outline" : "ios-radio-button-off"} size={ScreenUtil.autowidth(18)} />
+                            <Text style={[styles.filterText,{color: UColor.mainColor}]} > 过滤垃圾交易 </Text> 
+                        </View>
+                    </TouchableHighlight>
+                </View>
+            </View>
+            <View style={[styles.OwnOthers,{backgroundColor: '#FFFFFF'}]}>  
+                {this.ownOthersButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', logOption[0])}  
+                {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isMemory, 'isMemory', logOption[2])}  
+                {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isDelegatebw, 'isDelegatebw', logOption[1])}  
+            </View>
+        </View>)
+    }
+
     render() {
         const c = this.props.navigation.state.params.asset;
         return (
-            <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-                <HeaderWhite {...this.props} onPressLeft={true} title={c.asset.name} backgroundColors={UColor.transport} avatar={UImage.pool_explain} onPressRight={this._rightTopClick.bind(this)} imgWidth={ScreenUtil.autowidth(21)} imgHeight={ScreenUtil.autowidth(21)}/>  
-                <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893,position:'absolute',top: 0,}} source={UImage.home_bg}>
-                </ImageBackground>
-                 <View style={[{alignItems: "center",justifyContent: "center",}]}>
-                    <Text style={[styles.headbalance,{color: UColor.mainColor,}]}>{this.state.balance==""? "0.0000" :this.state.balance.replace(c.asset.name, "")} </Text>
-                    <Text style={[styles.headmarket,{color: UColor.mainColor,}]}>(≈￥{(this.state.balance == null || c.asset.value == null) ? "0.00" : (this.state.balance.replace(c.asset.name, "") * c.asset.value).toFixed(2)})</Text>
-                 </View>
-                <View style={styles.Subcolumn}>
-                    <Text style={[styles.recordText,{color: UColor.mainColor}]}>交易记录</Text>
-                    <View style={styles.filterView}>
-                       <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
-                            <Ionicons color={'#FFF'}  name={this.state.isFilter ? "md-checkmark-circle-outline" : "md-radio-button-off"} size={ScreenUtil.autowidth(12)} />
-                        </TouchableHighlight>
-                        <Text style={[styles.filterText,{color: UColor.mainColor}]} > 过滤垃圾交易 </Text> 
-                    </View>
-                </View>
-
+            <View style={[styles.container,{backgroundColor: '#FAFAF9'}]}>
                 <View style={styles.btn}>
-                    <View style={[styles.OwnOthers,{backgroundColor: UColor.mainColor}]}>  
-                        {this.ownOthersButton(styles.tabbutton, this.state.isTransfer, 'isTransfer', logOption[0])}  
-                        {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isMemory, 'isMemory', logOption[2])}  
-                        {this.state.asset.asset.name == "EOS" && this.ownOthersButton(styles.tabbutton, this.state.isDelegatebw, 'isDelegatebw', logOption[1])}  
-                    </View>
                     <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} onEndReachedThreshold = {50}
+                    renderHeader={() => this._renderHeader()}
                     onEndReached={() => this.onEndReached()}
                     refreshControl={
                     <RefreshControl
@@ -266,9 +275,9 @@ class AssetInfo extends BaseComponent {
                     }
                     dataSource={this.state.dataSource.cloneWithRows(this.props.tradeLog == null ? [] : this.props.tradeLog)} 
                     renderRow={(rowData, sectionID, rowID) => (                 
-                    <View>
+                    <View style={{paddingHorizontal: ScreenUtil.autowidth(15),}}>
                         <Button onPress={this._openDetails.bind(this, rowData)}> 
-                            <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
+                            <View style={[styles.row,{backgroundColor: UColor.mainColor,borderBottomWidth: ScreenUtil.autowidth(1),borderBottomColor: '#F9FAF9'}]}>
                                 <View style={styles.top}>
                                     <View style={styles.timequantity}>
                                         <Text style={[styles.quantity,{color: UColor.fontColor}]}>{rowData.type=='转出'? rowData.to : rowData.from}</Text>
@@ -326,26 +335,25 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(12),
     },
     tab: {
-        
+        backgroundColor: '#FFFFFF',
     },
     btn: {
         flex: 1,
         paddingBottom: ScreenUtil.autoheight(50),
-        marginLeft:ScreenUtil.autowidth(15),
-        marginRight:ScreenUtil.autowidth(15),
+       
     },
 
 
     tabbutton: {  
         flex: 1,
-        
         alignItems: 'center',   
         justifyContent: 'center', 
-        height: ScreenUtil.autoheight(33),
+        height: ScreenUtil.autoheight(50),
     },  
    
     tabText: {  
         fontSize: ScreenUtil.setSpText(16),
+        lineHeight:  ScreenUtil.autoheight(23),
     }, 
     tablayout: {   
         alignItems: 'center',
@@ -357,6 +365,9 @@ const styles = StyleSheet.create({
   
     OwnOthers: {
         flexDirection: 'row',
+        marginHorizontal: ScreenUtil.autowidth(15),
+        borderTopLeftRadius: 6,
+        borderTopRightRadius: 6,
     },
 
     nothave: {
@@ -369,11 +380,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: ScreenUtil.autowidth(20),
     },
     row: {
-        //borderRadius: 5,
         flexDirection: "row",
         paddingVertical: ScreenUtil.autoheight(10),
-        //marginHorizontal: ScreenUtil.autowidth(5),
-        marginTop: ScreenUtil.autowidth(0.5),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },
     top: {
@@ -391,11 +399,11 @@ const styles = StyleSheet.create({
     },
     timetext: {
         textAlign: 'left',
-        fontSize: ScreenUtil.setSpText(8),
+        fontSize: ScreenUtil.setSpText(10),
     },
     quantity: {
         textAlign: 'left',
-        fontSize: ScreenUtil.setSpText(14),
+        fontSize: ScreenUtil.setSpText(16),
     },
     description: {
         textAlign: 'center',
@@ -474,6 +482,7 @@ const styles = StyleSheet.create({
     filterText: {
         textAlign: 'right',
         fontSize: ScreenUtil.setSpText(12),
+        paddingLeft: ScreenUtil.autowidth(5),
     },
 
 })

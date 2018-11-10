@@ -199,7 +199,7 @@ class Discover extends React.Component {
             // tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor} style={{backgroundColor: UColor.transport}}/>}
           >
           <View style={{paddingBottom: ScreenUtil.autoheight(15), }}>
-            <View style={{paddingTop: ScreenUtil.autoheight(10) +Constants.FitPhone,backgroundColor: '#FFFFFF', borderBottomLeftRadius: 6, borderBottomRightRadius: 6,
+            <View style={{paddingTop: ScreenUtil.autoheight(10) +Constants.FitPhone,paddingBottom: ScreenUtil.autoheight(15), backgroundColor: '#FFFFFF', borderBottomLeftRadius: 6, borderBottomRightRadius: 6,
                shadowColor: '#EFF4F8',shadowOffset:{height: 2,width: 0},shadowRadius: 5,shadowOpacity:1,elevation: 12,}}>
               <View style={{alignItems: 'center',paddingHorizontal: ScreenUtil.autowidth(20),}}>
                 <View style={{width:ScreenWidth,  height: (ScreenWidth * 0.436) + ScreenUtil.autoheight(20), borderRadius: 7, overflow: 'hidden',}}>
