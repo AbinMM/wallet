@@ -105,7 +105,8 @@ class addressCreate extends BaseComponent {
         this.props.dispatch({ type: 'addressBook/saveAddress', payload: { address: this.state.toAccount, labelName: this.state.labelName,memo: this.state.memo } });
         this.props.navigation.goBack();  //正常返回上一个页面
         if(this.props.navigation.state.params.callback){
-            this.props.navigation.state.params.callback();
+            var resp = { address: this.state.toAccount, labelName: this.state.labelName,memo: this.state.memo };
+            this.props.navigation.state.params.callback(resp);
         }
     };
 
@@ -116,64 +117,63 @@ class addressCreate extends BaseComponent {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
             <Header {...this.props} onPressLeft={true} title="新建联系人" imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(18)}/>
-            <ScrollView  keyboardShouldPersistTaps="always">
-             
-            <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
-                    <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
+            <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null} >
+                <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} >
+                    <View style={styles.taboutsource}>
+                            <View style={styles.accountoue} >
+                                <Text style={[styles.inptitle]}>名字</Text>
+                            </View>
+                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
+                                <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.labelName} returnKeyType="next"
+                                    selectionColor={UColor.tintColor} style={[styles.textinpt]}  placeholderTextColor={UColor.inputtip}
+                                    placeholder="请输入联系人名字" underlineColorAndroid="transparent" keyboardType="default"  maxLength={12}
+                                    onChangeText={(labelName) => this.setState({ labelName })}
+                                />
+                            </View>
                         
-                        <View style={styles.taboutsource}>
-                                <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle]}>名字</Text>
-                                </View>
-                                <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
-                                    <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.labelName} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt]}  placeholderTextColor={UColor.inputtip}
-                                        placeholder="请输入联系人名字" underlineColorAndroid="transparent" keyboardType="default"  maxLength={12}
-                                        onChangeText={(labelName) => this.setState({ labelName })}
-                                    />
-                                </View>
-                          
-                                <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle]}>账户名称</Text>
-                                </View>
+                            <View style={styles.accountoue} >
+                                <Text style={[styles.inptitle]}>账户名称</Text>
+                            </View>
 
-                                <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
-                                    <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"   
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1}]} placeholderTextColor={UColor.inputtip}      
-                                        placeholder="输入a-z小写字符和1-5数字组合字符" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
-                                        onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})} 
-                                    />
-                                   <View style={styles.scanning}>
-                                        <Button onPress={() => this.scan()}>                                  
-                                            <Image source={UImage.scanning} style={styles.scanningimg} />                                 
-                                        </Button>
-                                    </View>
+                            <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
+                                <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"   
+                                    selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1}]} placeholderTextColor={UColor.inputtip}      
+                                    placeholder="输入a-z小写字符和1-5数字组合字符" underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
+                                    onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})} 
+                                />
+                                <View style={styles.scanning}>
+                                    <Button onPress={() => this.scan()}>                                  
+                                        <Image source={UImage.scanning} style={styles.scanningimg} />                                 
+                                    </Button>
                                 </View>
-                                
+                            </View>
+                            
 
-                                <View style={styles.accountoue} >
-                                    <Text style={[styles.inptitle]}>备注(可不填)</Text>
-                                </View>
-                                <View style={[styles.accountoue,{marginBottom:ScreenUtil.autoheight(5),borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
-                                    <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
-                                        selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
-                                        placeholder="备注(Memo)" underlineColorAndroid="transparent" keyboardType="default"  maxLength={20}
-                                        onChangeText={(memo) => this.setState({ memo })}
-                                    />
-                                </View>
-
+                            <View style={styles.accountoue} >
+                                <Text style={[styles.inptitle]}>备注(可不填)</Text>
+                            </View>
+                            <View style={[styles.accountoue,{marginBottom:ScreenUtil.autoheight(15),borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]} >
+                                <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next"
+                                    selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
+                                    placeholder="备注(Memo)" underlineColorAndroid="transparent" keyboardType="default"  maxLength={20}
+                                    onChangeText={(memo) => this.setState({ memo })}
+                                />
+                            </View>
+                    </View>
+                        <View style={[styles.footer,]}>
+                            <View style={{paddingBottom: ScreenUtil.autowidth(20), alignItems: 'center',justifyContent: 'center',}}>
+                                <TextButton onPress={this.saveAddress.bind(this)} textColor="#FFFFFF" text="保存"  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+                            </View>
                         </View>
                     </TouchableOpacity>
                 </KeyboardAvoidingView>
 
-                <View style={[styles.replace,{backgroundColor: UColor.secdColor}]}>
-                    <TouchableOpacity onPress={() => this.saveAddress(this)} style={[styles.editClickout,{backgroundColor: UColor.tintColor}]}>
-                        <Text style={[styles.address,{color:UColor.btnColor}]}>保存</Text>
-                    </TouchableOpacity>     
-                {/* <TextButton style={[styles.networktab,{borderColor: UColor.tintColor}]} text="保存" onPress={() => {this.saveAddress()}}></TextButton>  */}
-                </View> 
+                {/* <View style={[styles.replace]}>
+                    <TextButton text="保存" onPress={this.saveAddress.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
+                </View>  */}
+              
+
            
-            </ScrollView>
             </View>
         );
     }
@@ -185,31 +185,33 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     taboutsource: {
-        flex: 1,
+        borderRadius: 6,
         flexDirection: 'column',
-        top:ScreenUtil.autoheight(12),
-        marginLeft:ScreenUtil.autowidth(10),
-        marginRight:ScreenUtil.autowidth(10),
-        backgroundColor:UColor.mainColor,
+        marginTop: ScreenUtil.autoheight(15),
+        marginHorizontal: ScreenUtil.autowidth(15),
+        paddingHorizontal: ScreenUtil.autowidth(20),
+        backgroundColor:UColor.secdfont,
     },
 
     accountoue: {
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingLeft: ScreenUtil.autowidth(20),
     },
 
     inptitle: {
-        flex: 1,
+        fontWeight: '600',
         fontSize: ScreenUtil.setSpText(16),
-        lineHeight: ScreenUtil.autowidth(40),
+        lineHeight: ScreenUtil.autowidth(23),
+        marginBottom: ScreenUtil.autowidth(17),
+        marginTop:  ScreenUtil.autowidth(20),
         color: UColor.fontColor,
     },
     textinpt: {
         flex: 1,
-        height: ScreenUtil.autoheight(40),
+        paddingVertical: 0,
         fontSize: ScreenUtil.setSpText(14),
+        lineHeight: ScreenUtil.autoheight(20),
         color: UColor.arrow,
     },
     scanning: {
@@ -227,7 +229,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         flexDirection: 'column',
         justifyContent: "space-between",
-        marginTop:ScreenUtil.autowidth(25),
+        marginTop:ScreenUtil.screenHeith/3,
     },
     editClickout: {
         borderRadius: 5,
@@ -248,6 +250,12 @@ const styles = StyleSheet.create({
     address: {
         fontSize: ScreenUtil.setSpText(17),
     },
+
+    footer:{
+       flex: 1,
+        alignItems: 'center', 
+        paddingBottom:   ScreenUtil.autoheight(20), 
+      },
 })
 
 export default addressCreate;

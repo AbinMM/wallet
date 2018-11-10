@@ -13,7 +13,8 @@ var dismissKeyboard = require('dismissKeyboard');
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
-
+import CheckMarkCircle from '../../components/CheckMarkCircle'
+import TextButton from '../../components/TextButton';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 @connect(({addressBook}) => ({...addressBook}))
 class addressManage extends BaseComponent {
@@ -33,6 +34,7 @@ class addressManage extends BaseComponent {
             isEdit: false,
             isChecked: false,
             isAllSelect: false,
+            addressBook:[],
             isShowSelect: false, //新建联系人
             selectMap: new Map(),
             labelName:'',
@@ -46,9 +48,24 @@ class addressManage extends BaseComponent {
 
     componentDidMount() {
         const { dispatch } = this.props;
-        this.props.dispatch({ type: 'addressBook/addressInfo'});
+        this.getAddressBook();
     }
 
+    getAddressBook(){
+        this.props.dispatch({ type: 'addressBook/addressInfo',callback:(resp)=>{
+            if(resp){
+                var result = new Array();
+                for(var i=0;i<resp.length;i++){
+                    var elemnt = resp[i];
+                    elemnt.isChecked = false;
+
+                    result[i] = elemnt;
+                }
+                this.setState({addressBook:result});
+            }
+        }
+     });
+    }
     componentWillUnmount(){
         //结束页面前，资源释放操作
         super.componentWillUnmount();
@@ -66,18 +83,47 @@ class addressManage extends BaseComponent {
         }
     }
 
-    createAddr = () => { 
-        //跳转到 新
-        const { navigate } = this.props.navigation;
-        navigate('addressCreate', {callback:(()=>{
-            this.props.dispatch({ type: 'addressBook/addressInfo'});
-        })});
-    };
+    selectedClick = (choose) => { 
+        if(choose)
+        {
+            //确认选择
+            this.props.navigation.goBack();  //正常返回上一个页面
+            if(this.props.navigation.state.params.callback){
+                var resp = new Array();
+                var index = 0;
+                for(var i = 0;i < this.state.addressBook.length;i++)
+                {
+                    if(this.state.addressBook[i].isChecked){
+                        resp[index] = this.state.addressBook[i];
+                    }
+                }
+                this.props.navigation.state.params.callback(resp);
+            }
+        }else{
+            //跳转到 新
+            const { navigate } = this.props.navigation;
+            navigate('addressCreate', {callback:((resp)=>{
+                if(resp && resp.address)
+                {
+                    var obj_resp = resp;
 
-    selectedClick = () => { 
+                    var result = this.state.addressBook;
+                    for(var i = 0;i < result.length;i++)
+                    {
+                        if(obj_resp.address == result[i].address){
+                            break;
+                        }
+                    }
+                    if(i >= result.length)
+                    {   //新创建加入
+                        obj_resp.isChecked = false;
+                        result[result.length] = obj_resp;
 
-        //确认选择
-        this.props.navigation.goBack();  //正常返回上一个页面
+                        this.setState({addressBook:result});
+                    }
+                }
+            })});
+        }
     };
 
     deleteItem = () => { // 删除地址
@@ -86,7 +132,7 @@ class addressManage extends BaseComponent {
         let keyArr = [...selectMap.keys()];
         const { dispatch } = this.props;
         this.props.dispatch({ type: 'addressBook/delAddress', payload: { keyArr: keyArr},callback: (data) => {
-            this.props.dispatch({ type: 'addressBook/addressInfo'});   
+            this.getAddressBook();
         }});
     };
 
@@ -108,22 +154,6 @@ class addressManage extends BaseComponent {
     //     }
     // }
 
-    selectItem = (key, value, isChecked) => { // 单选
-        this.setState({
-            isChecked: !this.state.isChecked,
-            // preIndex: key  //  **** 单选逻辑 ****
-        }, () => {
-            let map = this.state.selectMap;
-            if (isChecked) {
-                map.delete(key, value) // 再次点击的时候,将map对应的key,value删除
-            } else {
-                // map = new Map() // ------>   **** 单选逻辑 ****
-                map.set(key, value) // 勾选的时候,重置一下map的key和value
-            }
-            this.setState({selectMap: map})
-        })
-    }
-
     btnRightSelect() { 
          //选择
          let isShow = this.state.isShowSelect;  
@@ -143,55 +173,50 @@ class addressManage extends BaseComponent {
         this.props.dispatch({ type: 'addressBook/addressInfo'});
     }
 
-    checkClick() {
-        // this.setState({
-        //   isChecked: !this.state.isChecked
-        // });
+    checkClick(rowData,sectionID, rowID) {
+        let tmparray = this.state.addressBook;
+        tmparray[rowID].isChecked = !tmparray[rowID].isChecked;
+        this.setState({
+            addressBook: tmparray
+        });
+
       }
     render() {
         let temp = [...this.state.selectMap.values()];
         let isChecked = temp.length === this.state.dataSource._cachedRowCount;
         console.log(temp, '......')
         return (
-            <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
+            <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
                 <Header {...this.props} onPressLeft={true} title="联系人" subName={this.state.isShowSelect == false ?"选择":"取消"} onPressRight={this.btnRightSelect.bind(this)} imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(18)}/>
             <ScrollView  keyboardShouldPersistTaps="always">
             <View style={styles.btn}>
                <ListView style={styles.tab} renderRow={this.renderRow} enableEmptySections={true} onEndReachedThreshold = {50}
                     onEndReached={() => this.onEndReached()}
-                    dataSource={this.state.dataSource.cloneWithRows((this.props.addressBook == null ? [] : this.props.addressBook))} 
+                    dataSource={this.state.dataSource.cloneWithRows((this.state.addressBook == null ? [] : this.state.addressBook))} 
                     renderRow={(rowData, sectionID, rowID) => (                 
-                    
-                        <View style={styles.top}>
-                        <TouchableHighlight underlayColor={'transparent'} onPress={() => this.checkClick()}>
-                            <View style={[{width: ScreenUtil.autowidth(12), height: ScreenUtil.autowidth(12),marginRight: ScreenUtil.autowidth(5), marginTop: ScreenUtil.autowidth(10), borderColor: this.state.isChecked?UColor.tintColor:UColor.arrow,borderRadius: 25,borderWidth: 0.5,backgroundColor:this.state.isChecked?UColor.tintColor:UColor.mainColor}]}/>
-                        </TouchableHighlight>
-                            <View style={styles.timequantity}>
-                                <Text style={[styles.quantity,{color: UColor.fontColor}]}>{rowData.labelName}</Text>
-                                <Text style={[styles.timetext,{color: UColor.arrow}]}>{rowData.address}</Text>
-                            </View>
-                            <View style={styles.typedescription}>
-                                <Ionicons name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(20)} color='#B5B5B5' />
-                            </View>
+
+                    <View style={styles.top}>
+                        {this.state.isShowSelect == true &&
+                            <CheckMarkCircle selected={rowData.isChecked} onPress={() => {this.checkClick(rowData,sectionID, rowID);}}/>
+                        }
+                        <View style={styles.timequantity}>
+                            <Text style={[styles.quantity,{color: UColor.fontColor}]}>{rowData.labelName}</Text>
+                            <Text style={[styles.timetext,{color: UColor.arrow}]}>{rowData.address}</Text>
                         </View>
+                        <View style={styles.typedescription}>
+                            <Ionicons name="ios-arrow-forward-outline" size={ScreenUtil.autowidth(20)} color='#B5B5B5' />
+                        </View>
+                    </View>
                    )}                
                  /> 
                 </View>
-
-                { this.state.isShowSelect == false ? 
-                <View style={[styles.replace,{backgroundColor: UColor.secdColor}]}>
-                    <TouchableOpacity onPress={() => this.createAddr(this)} style={[styles.editClickout,{backgroundColor: UColor.tintColor}]}>
-                        <Text style={[styles.address,{color:UColor.btnColor}]}>新建联系人</Text>
-                    </TouchableOpacity>                 
-                </View> : null
-                }             
-                { this.state.isShowSelect == true ? 
-                <View style={[styles.replace,{backgroundColor: UColor.secdColor}]}>
-                    <TouchableOpacity onPress={() => this.selectedClick(this)} style={[styles.editClickout,{backgroundColor: UColor.tintColor}]}>
-                        <Text style={[styles.address,{color:UColor.btnColor}]}>确定</Text>
-                    </TouchableOpacity>                 
-                </View> : null
-                }   
+                        
+                <View style={[styles.footer,{backgroundColor:'#FAFAF9'}]}>
+                    <View style={{paddingBottom: ScreenUtil.autowidth(20), alignItems: 'center',justifyContent: 'center',}}>
+                        <TextButton onPress={this.selectedClick.bind(this,this.state.isShowSelect)} textColor="#FFFFFF" text={this.state.isShowSelect ? "确认" : "新建联系人"}  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+                    </View>
+                </View>
+                
                    
             </ScrollView>
             </View>
@@ -329,6 +354,7 @@ const styles = StyleSheet.create({
         fontSize: ScreenUtil.setSpText(10),
     },
     quantity: {
+        fontWeight: '600',
         textAlign: 'left',
         fontSize: ScreenUtil.setSpText(14),
     },
@@ -340,6 +366,16 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         height: ScreenUtil.autoheight(50),
     },
+
+    footer:{
+        left: 0,
+        right: 0,
+        bottom: 0,
+        alignItems: 'center', 
+        position:'absolute',
+        height: ScreenUtil.autoheight(62),   
+        paddingTop: ScreenUtil.autoheight(1),
+      },
 })
 
 export default addressManage;

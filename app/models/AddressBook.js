@@ -14,11 +14,11 @@ export default {
         totalOpt: {}
     },
     effects: {
-        *addressInfo({ payload }, { call, put }) {
+        *addressInfo({ payload,callback}, { call, put }) {
             try {
                     let addressBook = yield call(store.get, 'addressBook');
                     yield put({ type: 'updateAction', payload: { data: addressBook, ...payload } });
-
+                    if(callback) callback(addressBook);
             } catch (error) {
                 EasyToast.show('刷新失败!');
             }

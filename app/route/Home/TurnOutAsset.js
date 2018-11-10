@@ -132,7 +132,11 @@ class TurnOutAsset extends BaseComponent {
     //选择联系人
     openAddressBook() {
         const { navigate } = this.props.navigation;
-        navigate('addressManage', {isTurnOut:true,coinType:this.state.name});
+        navigate('addressManage', {isTurnOut:true,coinType:this.state.name,callback:(resp)=>{
+            if(resp && resp.length > 0){
+                this.setState({ toAccount: resp[0].address});
+            }
+        }});
     }
 
     //选择代币
