@@ -334,7 +334,7 @@ class DelegatebwRecord extends React.Component {
         <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true}
           dataSource={this.state.dataSource.cloneWithRows(this.state.delegateLoglist == null ? [] : this.state.delegateLoglist)}
           renderRow={(rowData, sectionID, rowID) => (
-            <View style={{flex:1,flexDirection:'row', alignItems: 'center',justifyContent: 'center', marginHorizontal: ScreenUtil.autoheight(15)}} >
+            <View style={{flex:1,flexDirection:'row', alignItems: 'center',justifyContent: 'center', marginHorizontal: ScreenUtil.autoheight(15),borderBottomWidth: ScreenUtil.autowidth(1),borderBottomColor: '#F9FAF9'}} >
             {!this.state.cancelSelect && 
               <CheckMarkCircle selected={rowData.selected} onPress={this.changeListSelectState.bind(this, rowID)} width={ScreenUtil.autowidth(13)} height={ScreenUtil.autowidth(13)} markSize={ScreenUtil.autowidth(10)} /> 
             }
@@ -392,6 +392,7 @@ const styles = StyleSheet.create({
       marginTop: ScreenUtil.autowidth(10),
       marginBottom: ScreenUtil.autowidth(20),
       backgroundColor: UColor.mainColor,
+      borderRadius: 6,
   },
     inptout: {
       flex: 1,
@@ -415,6 +416,7 @@ const styles = StyleSheet.create({
     },
     btn: {
       flex: 1,
+      borderRadius: 6,
     },
     nothave: {
       borderRadius: 5,

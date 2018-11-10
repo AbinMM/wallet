@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
     inptoutsource: {
+        borderRadius: 6,
         justifyContent: 'center',
         marginHorizontal: ScreenUtil.autowidth(15),
         marginTop: ScreenUtil.autowidth(10),

@@ -535,14 +535,14 @@ class Ram extends BaseComponent {
                                 </View>
 
                                <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>
-                                    {/* <View style={{width:ScreenUtil.autowidth(48),}}/> */}
-                                    <View style={{flex:1,flexDirection:'row', alignItems: 'center',justifyContent: 'center',}}>
-                                        <CheckMarkCircle selected={this.state.isBuy} onPress={() => {this.setState({isBuy: true, isSell:false}); this.init()}}/>
+                                    <TouchableOpacity style={{flexDirection:'row', alignItems: 'center',justifyContent: 'center',}} onPress={() => {this.setState({isBuy: true, isSell:false}); this.init()}}>
+                                        <CheckMarkCircle selected={this.state.isBuy} />
                                         <Text style={[styles.tabText, {color: UColor.fontColor, paddingLeft: ScreenUtil.autowidth(5), paddingRight: ScreenUtil.autowidth(24)}]}>购买</Text>
-                                        <CheckMarkCircle selected={this.state.isSell} onPress={() => {this.setState({isBuy: false, isSell:true}); this.init()}}/>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{flexDirection:'row', alignItems: 'center',justifyContent: 'center',}} onPress={() => {this.setState({isBuy: false, isSell:true}); this.init()}}>
+                                        <CheckMarkCircle selected={this.state.isSell} />
                                         <Text style={[styles.tabText, {color: UColor.fontColor, paddingLeft: ScreenUtil.autowidth(5)}]}>出售</Text>
-                                    </View>            
-                                    {/* <TextButton onPress={this.recordDelegatebw.bind()} text='价格走势' textColor='#3B80F4' fontSize={ScreenUtil.setSpText(12)} style={{width:ScreenUtil.autowidth(48), height: ScreenUtil.autowidth(17)}}/>                              */}
+                                    </TouchableOpacity>
                                 </View>
                                 
                                 <View style={[styles.outsource,{height: ScreenUtil.autowidth(65),flexDirection:'column',backgroundColor: UColor.mainColor,}]}>
@@ -550,7 +550,7 @@ class Ram extends BaseComponent {
                                         <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.isBuy ? '购买内存' : '出售内存'}</Text>
                                         <Text style={{marginLeft:ScreenUtil.setSpText(5), flex:1, textAlign: 'left', fontSize:ScreenUtil.setSpText(10), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>价格: {this.state.Currentprice} EOS/KB</Text>
                                     </View>
-                                    <View style={[styles.inptout, {borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]}>
+                                    <View style={[styles.inptout, {borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(1)}]}>
                                         <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount} returnKeyType="go"
                                         selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
                                         placeholder="" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
@@ -569,13 +569,17 @@ class Ram extends BaseComponent {
                                     <View style={styles.inptTitleout}>
                                         <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
                                         <View style={[styles.businestab]}>
-                                            <CheckPointCircle selected={this.state.isOwn} onPress={() => {this.setState({isOwn:true, isOthers:false}); this.init();}}/>
-                                            <Text style={[{color: UColor.arrow, paddingHorizontal: ScreenUtil.autowidth(5)}]}>自己</Text>
-                                            <CheckPointCircle selected={this.state.isOthers} onPress={() => {this.setState({isOwn:false, isOthers:true}); this.init();}}/>
-                                            <Text style={[{color: UColor.arrow, paddingHorizontal: ScreenUtil.autowidth(5)}]}>他人</Text>
-                                     </View>
+                                            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center',marginRight: ScreenUtil.autowidth(6)}}  onPress={() => {this.setState({isOwn:true, isOthers:false}); this.init();}}>
+                                                <CheckPointCircle selected={this.state.isOwn} />
+                                                <Text style={[{color: UColor.arrow, paddingLeft: ScreenUtil.autowidth(5)}]}>自己</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center',marginLeft: ScreenUtil.autowidth(6)}}  onPress={() => {this.setState({isOwn:false, isOthers:true}); this.init();}}>
+                                                <CheckPointCircle selected={this.state.isOthers} />
+                                                <Text style={[{color: UColor.arrow, paddingLeft: ScreenUtil.autowidth(5)}]}>他人</Text>
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
-                                    {this.state.isOthers && <View style={[styles.inptout, {borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]}>
+                                    {this.state.isOthers && <View style={[styles.inptout, {borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(1)}]}>
                                         <Button onPress={() => this.openAddressBook()}>
                                             <View style={styles.botnout}>
                                                 <Image source={UImage.al} style={styles.botnimg} />
@@ -692,6 +696,7 @@ const styles = StyleSheet.create({
         marginTop: ScreenUtil.autowidth(10),
         marginBottom: ScreenUtil.autowidth(20),
         backgroundColor: UColor.mainColor,
+        borderRadius: 6,
     },
     outsource: {
         marginTop: 1,
