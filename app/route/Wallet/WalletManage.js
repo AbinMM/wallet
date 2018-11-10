@@ -110,6 +110,11 @@ class WalletManage extends BaseComponent {
     navigate('ImportEosKey',{});
   }
 
+  addWallet(){
+    const { navigate } = this.props.navigation;
+    navigate('createWalletWelcome', {});
+  }
+
   updateState(state) {
     alert(state);
   }
@@ -154,7 +159,7 @@ class WalletManage extends BaseComponent {
       </View>
         <View style={[styles.footer,{backgroundColor:'#FAFAF9'}]}>
           <View style={{paddingBottom: ScreenUtil.autowidth(20), alignItems: 'center',justifyContent: 'center',}}>
-            <TextButton onPress={this.importWallet.bind(this)} textColor="#FFFFFF" text="添加钱包"  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+            <TextButton onPress={this.addWallet.bind(this)} textColor="#FFFFFF" text="添加钱包"  shadow={true} style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
           </View>
           {/* <Button  onPress={() => this.createWallet()} style={{flex:1}}>
               <View style={[styles.footoutsource,{marginRight:0.5,backgroundColor:UColor.mainColor}]}>
