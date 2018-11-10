@@ -19,7 +19,10 @@ import BaseComponent from "../../components/BaseComponent";
 import CountDownReact from '../../components/CountDownReact'
 import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
 import {NavigationActions} from 'react-navigation';
-
+import Bar from '../../components/Bar'
+import CheckMarkCircle from '../../components/CheckMarkCircle'
+import CheckPointCircle from '../../components/CheckPointCircle'
+import TextButton from '../../components/TextButton';
 
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -76,7 +79,7 @@ class Ram extends BaseComponent {
         net_delegateb: "", //抵押net
 
         ram_available: '0.00', //内存可用
-        ram_AlreadyUsed: '0.00', //内存已用
+        ram_bytes: '0.00', //总内存
         ram_Percentage: '0%', //内存已用百分比
 
         cpu_available: '0.00', //计算可用
@@ -90,6 +93,7 @@ class Ram extends BaseComponent {
         total_ram_used: '0 GB', //全网已用
         total_ram_reserved: '0 GB', //全网可用
         total_ram_used_Percentage: '0%', //全网已用百分比
+        total_ram: '0 GB', // 全网内存
 
         cpu_redeem: '0', //计算可赎回EOS
         net_redeem: '0', //网络可赎回EOS
@@ -99,15 +103,15 @@ class Ram extends BaseComponent {
 
     componentDidMount() {
         try {
-
             //取全网的内存数据
             this.props.dispatch({ type: 'vote/getGlobalInfo', payload: {},
                 callback: (updateGlibal) => {
                     if(updateGlibal != null || updateGlibal != ''){
                         this.setState({
+                            total_ram: updateGlibal.total + 'GB',
                             total_ram_used: updateGlibal.used + 'GB', //使用的总内存字节数
                             total_ram_reserved: updateGlibal.reserved + 'GB', //保留的总内存字节数
-                            total_ram_used_Percentage: updateGlibal.used_Percentage + '%', //使用百分比
+                            total_ram_used_Percentage: updateGlibal.used_Percentage, //使用百分比
                         })
                     }
                 }
@@ -166,8 +170,8 @@ class Ram extends BaseComponent {
                     if(data != null && data.display_data != null){
                         this.setState({
                             ram_available: data.display_data.ram_left ,
-                            ram_AlreadyUsed: data.display_data.ram_usage,
-                            ram_Percentage:  data.display_data.ram_usage_percent, //ram_left_percent
+                            ram_bytes: data.display_data.ram_bytes,
+                            ram_Percentage:  data.display_data.ram_left_percent.replace("%", "")
 
                         });
                     }
@@ -188,68 +192,12 @@ class Ram extends BaseComponent {
         }
     }
 
-    // 返回购买,出售
-    ownOthersButton(style, selectedSate, stateType, buttonTitle) {
-        let BTN_SELECTED_STATE_ARRAY = ['isBuy', 'isSell'];
-        return(
-            <TouchableOpacity style={[style, selectedSate ? {backgroundColor: UColor.tintColor} : {backgroundColor: UColor.mainColor,}]}  onPress={ () => {this._updateSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>
-                <Text style={[styles.tabText, selectedSate ? {color: UColor.btnColor} : {color: UColor.arrow}]}>{buttonTitle}</Text>
-            </TouchableOpacity>
-        );
-    }
-
-    // 更新"购买,出售,租赁,过户"按钮的状态
-    _updateSelectedState(currentPressed, array) {
-        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {
-            return;
-        }
-        let newState = {...this.state};
-        for (let type of array) {
-            if (currentPressed == type) {
-                newState[type] ? {} : newState[type] = !newState[type];
-                this.setState(newState);
-            } else {
-                newState[type] ? newState[type] = !newState[type] : {};
-                this.setState(newState);
-            }
-        }
-        this.Initialization();
-    }
-
-    // 返回自己,他人
-    businesButton(style, selectedSate, stateType, buttonTitle) {
-        let BTN_SELECTED_STATE_ARRAY = ['isOwn', 'isOthers'];
-        return(
-            <TouchableOpacity style={[style, selectedSate ? {backgroundColor:'#6DA0F8'} : {backgroundColor: '#FFFFFF'}]}  onPress={ () => {this._updateBtnState(stateType, BTN_SELECTED_STATE_ARRAY)}}>
-                <Text style={[{fontSize: ScreenUtil.setSpText(8) }, selectedSate ? {color: '#FFFFFF'} : {color: '#6DA0F8'}]}>{buttonTitle}</Text>
-            </TouchableOpacity>
-        );
-    }
-
-    // 更新"自己,他人"按钮的状态
-    _updateBtnState(currentPressed, array) {
-        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {
-            return;
-        }
-        let newState = {...this.state};
-        for (let type of array) {
-            if (currentPressed == type) {
-                newState[type] ? {} : newState[type] = !newState[type];
-                this.setState(newState);
-            } else {
-                newState[type] ? newState[type] = !newState[type] : {};
-                this.setState(newState);
-            }
-        }
-        this.Initialization();
-    }
-
     //初始化输入框
-    Initialization() {
+    init() {
         this.setState({
             buyRamAmount: "",
             sellRamBytes: "",
-            receiver: this.props.defaultWallet.account,
+            receiver: "",
             delegateb: "",
             undelegateb: "",
             LeaseTransfer: 0,
@@ -343,12 +291,30 @@ class Ram extends BaseComponent {
     }
 
     //内存 购买 出售
-    sellRedeem() {
+    startTrans() {
         if(this.state.isBuy) {
             this.buyram();
         }else{
             this.sellram();
         }
+    }
+
+    // 免费抵押提示
+    freeDelegatePrompt(){
+        this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{
+            if(resp.code == 608){
+                //弹出提示框,可申请免费抵押功能
+                const view =
+                <View style={styles.passoutsource2}>
+                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
+                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
+                </View>
+                EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
+                    const { navigate } = this.props.navigation;
+                    navigate('FreeMortgage', {});
+                }, () => { EasyShowLD.dialogClose() });
+            }
+        }});
     }
 
     // 购买内存
@@ -365,14 +331,21 @@ class Ram extends BaseComponent {
             this.setState({ buyRamAmount: "" })
             return ;
         }
-        if(this.state.receiver == ""){
+        if(this.state.isOthers && this.state.receiver == ""){
             EasyToast.show('请输入接收账户');
             return;
         }
+        if(this.state.isOwn){
+            this.state.receiver = this.props.defaultWallet.account;
+        }
+
         this. dismissKeyboardClick();
 
         AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
+                if(!authInfo.isOk){ // 密码取消
+                    return;
+                }
                 EasyShowLD.loadingShow();
                 if(this.state.isOwn){
                     this.state.receiver = this.props.defaultWallet.account;
@@ -403,20 +376,7 @@ class Ram extends BaseComponent {
                             if(r.data.code){
                                 var errcode = r.data.code;
                                 if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                    this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{
-                                    if(resp.code == 608){
-                                        //弹出提示框,可申请免费抵押功能
-                                        const view =
-                                        <View style={styles.passoutsource2}>
-                                            <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                            <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                        </View>
-                                        EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                            const { navigate } = this.props.navigation;
-                                            navigate('FreeMortgage', {});
-                                        }, () => { EasyShowLD.dialogClose() });
-                                    }
-                                }});
+                                    this.freeDelegatePrompt();
                                 }
                             }
                             if(r.data.msg){
@@ -454,6 +414,9 @@ class Ram extends BaseComponent {
 
         AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
             try {
+                if(!authInfo.isOk){ // 密码取消
+                    return;
+                }
                 EasyShowLD.loadingShow();
                 Eos.transaction({
                     actions: [
@@ -480,22 +443,7 @@ class Ram extends BaseComponent {
                             if(r.data.code){
                                 var errcode = r.data.code;
                                 if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005 || errcode == 3081001){
-                                    this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},
-                                        callback:(resp)=>{
-                                            if(resp.code == 608){
-                                                //弹出提示框,可申请免费抵押功能
-                                                const view =
-                                                <View style={styles.passoutsource2}>
-                                                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                                                    <Text style={[styles.Explaintext2,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                                                </View>
-                                                EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-                                                    const { navigate } = this.props.navigation;
-                                                    navigate('FreeMortgage', {});
-                                                }, () => { EasyShowLD.dialogClose() });
-                                            }
-                                        }
-                                    });
+                                    this.freeDelegatePrompt();
                                 }
                             }
 
@@ -554,109 +502,103 @@ class Ram extends BaseComponent {
     render() {
         return (
             <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-                <Header {...this.props} onPressLeft={true} title="内存" onPressRight={this.goToCpuNet.bind()}
-                // avatar={UImage.delegatebw_record} imgWidth={ScreenUtil.autowidth(20)} imgHeight={ScreenUtil.autowidth(20)} />
-                subName="CPU/NET" />
+                <Header {...this.props} onPressLeft={true} title="内存"  onPressRight={this.goToCpuNet.bind()}
+                subName="CPU/NET"
+                />
 
                 <View style={[styles.inptoutsource,{flex: 1,}]}>
                     <ScrollView  keyboardShouldPersistTaps="always">
                         <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
                             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
-                                <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(1), }}>
-                                    <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
-                                        <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>内存资源</Text>
-                                    </View>
-                                    <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
-                                        <View style={{flexDirection: 'row', alignItems: 'center', }}>
-                                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                                <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
-                                                <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.ram_AlreadyUsed}</Text>
-                                            </View>
-                                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                                <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
-                                                <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.ram_available}</Text>
-                                            </View>
-                                        </View>
-                                        <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
-                                            <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.ram_Percentage}/>
-                                        </View>
-                                    </View>
+                                <View style={styles.subViewStyle1}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,fontWeight:"bold"}}>可用内存</Text>
                                 </View>
-                                <View style={{height: ScreenUtil.autowidth(70), flexDirection:'row', backgroundColor: UColor.mainColor, marginBottom: ScreenUtil.autowidth(10), }}>
-                                    <View style={{ alignItems: 'center', justifyContent: 'center', padding: ScreenUtil.autowidth(15), }}>
-                                        <Text style={{fontSize: ScreenUtil.setSpText(18), color: UColor.fontColor,}}>全网内存</Text>
-                                    </View>
-                                    <View style={{flex: 1,padding: ScreenUtil.autowidth(15), justifyContent: 'space-around',}}>
-                                        <View style={{flexDirection: 'row', alignItems: 'center', }}>
-                                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                                <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.tintColor,}}/>
-                                                <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.fontColor}}>已用{this.state.total_ram_used}</Text>
-                                            </View>
-                                            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                                <View style={{width: ScreenUtil.autowidth(6), height: ScreenUtil.autowidth(6), marginHorizontal: ScreenUtil.autowidth(5), borderRadius: 25, backgroundColor: UColor.arrow,}}/>
-                                                <Text style={{fontSize: ScreenUtil.setSpText(12), color: UColor.arrow}}>可用{this.state.total_ram_reserved}</Text>
-                                            </View>
-                                        </View>
-                                        <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.riceWhite, borderRadius: 10,}}>
-                                            <View style={{height: ScreenUtil.autowidth(10), backgroundColor: UColor.tintColor, borderRadius: 10,}} width={this.state.total_ram_used_Percentage}/>
-                                        </View>
-                                    </View>
+
+                                <View style={styles.barStyle}>
+                                    <Bar width={ScreenUtil.autowidth(305)} height={ScreenUtil.autoheight(10)} current={this.state.ram_Percentage} max={100} />
                                 </View>
-                                <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>
-                                    {this.ownOthersButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isBuy, 'isBuy', '购买')}
-                                    {this.ownOthersButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '出售')}
+
+                                <View style={styles.subViewStyle2}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(10), color: UColor.fontColor,}}>  {this.state.ram_available} KB / {this.state.ram_bytes} KB</Text>
                                 </View>
-                                <View style={[styles.outsource,{height: ScreenUtil.autowidth(65), flexDirection:'column',backgroundColor: UColor.mainColor, }]}>
+        
+
+                                <View style={styles.subViewStyle1}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,fontWeight:"bold"}}>全网内存</Text>
+                                </View>
+
+                                <View style={styles.barStyle}>
+                                    <Bar width={ScreenUtil.autowidth(305)} height={ScreenUtil.autoheight(10)} current={this.state.total_ram_used_Percentage} max={100} />
+                                </View>
+
+                                <View style={styles.subViewStyle2}>
+                                    <Text style={{fontSize: ScreenUtil.setSpText(10), color: UColor.fontColor,}}>   {this.state.total_ram_used} / {this.state.total_ram}</Text>
+                                </View>
+
+                               <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>
+                                    {/* <View style={{width:ScreenUtil.autowidth(48),}}/> */}
+                                    <View style={{flex:1,flexDirection:'row', alignItems: 'center',justifyContent: 'center',}}>
+                                        <CheckMarkCircle selected={this.state.isBuy} onPress={() => {this.setState({isBuy: true, isSell:false}); this.init()}}/>
+                                        <Text style={[styles.tabText, {color: UColor.fontColor, paddingLeft: ScreenUtil.autowidth(5), paddingRight: ScreenUtil.autowidth(24)}]}>购买</Text>
+                                        <CheckMarkCircle selected={this.state.isSell} onPress={() => {this.setState({isBuy: false, isSell:true}); this.init()}}/>
+                                        <Text style={[styles.tabText, {color: UColor.fontColor, paddingLeft: ScreenUtil.autowidth(5)}]}>出售</Text>
+                                    </View>            
+                                    {/* <TextButton onPress={this.recordDelegatebw.bind()} text='价格走势' textColor='#3B80F4' fontSize={ScreenUtil.setSpText(12)} style={{width:ScreenUtil.autowidth(48), height: ScreenUtil.autowidth(17)}}/>                              */}
+                                </View>
+                                
+                                <View style={[styles.outsource,{height: ScreenUtil.autowidth(65),flexDirection:'column',backgroundColor: UColor.mainColor,}]}>
                                     <View style={styles.inptTitleout}>
-                                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.isBuy ? "购买" : "出售" }内存</Text>
-                                        <Text style={{fontSize:ScreenUtil.setSpText(12), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>当前价格：{this.state.Currentprice} EOS/kb</Text>
+                                        <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>{this.state.isBuy ? '购买内存' : '出售内存'}</Text>
+                                        <Text style={{marginLeft:ScreenUtil.setSpText(5), flex:1, textAlign: 'left', fontSize:ScreenUtil.setSpText(10), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>价格: {this.state.Currentprice} EOS/KB</Text>
                                     </View>
-                                    <View style={styles.inptout}>
+                                    <View style={[styles.inptout, {borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]}>
                                         <TextInput ref={(ref) => this._rrpass = ref} value={this.state.buyRamAmount} returnKeyType="go"
                                         selectionColor={UColor.tintColor} style={[styles.inpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
-                                        placeholder={this.state.isBuy ? "请输入EOS数量" : "请输入内存额度kb"} underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
+                                        placeholder="" underlineColorAndroid="transparent" keyboardType="numeric"  maxLength = {15}
                                         onChangeText={(buyRamAmount) => this.setState({ buyRamAmount: this.chkPrice(buyRamAmount)})}
                                         />
+                                        {this.state.isSell ?
+                                        <Text style={{marginLeft:ScreenUtil.setSpText(5), flex:1, textAlign: 'right', fontSize:ScreenUtil.setSpText(10), color: UColor.fontColor, lineHeight: ScreenUtil.autowidth(30)}}>可出售：{this.state.ram_available} KB</Text>
+                                            :
+                                        <Text style={{marginLeft:ScreenUtil.setSpText(5), flex:1, textAlign: 'right', fontSize:ScreenUtil.setSpText(10), color: UColor.arrow, lineHeight: ScreenUtil.autowidth(30)}}>余额：{this.state.balance} EOS</Text>
+                                         }
                                     </View>
                                 </View>
-                                {this.state.isBuy&&
+
+                                {this.state.isBuy &&
                                 <View style={[styles.outsource,{height: this.state.isOwn?ScreenUtil.autowidth(30):ScreenUtil.autowidth(65), flexDirection:'column',backgroundColor: UColor.mainColor}]}>
                                     <View style={styles.inptTitleout}>
                                         <Text style={[styles.inptTitle,{color: UColor.fontColor}]}>接收账户</Text>
                                         <View style={[styles.businestab]}>
-                                            {this.businesButton([styles.owntab,{borderColor: '#6DA0F8'}], this.state.isOwn, 'isOwn', '自己')}
-                                            {this.businesButton([styles.otherstab,{borderColor: '#6DA0F8'}], this.state.isOthers, 'isOthers', '他人')}
-                                        </View>
+                                            <CheckPointCircle selected={this.state.isOwn} onPress={() => {this.setState({isOwn:true, isOthers:false}); this.init();}}/>
+                                            <Text style={[{color: UColor.arrow, paddingHorizontal: ScreenUtil.autowidth(5)}]}>自己</Text>
+                                            <CheckPointCircle selected={this.state.isOthers} onPress={() => {this.setState({isOwn:false, isOthers:true}); this.init();}}/>
+                                            <Text style={[{color: UColor.arrow, paddingHorizontal: ScreenUtil.autowidth(5)}]}>他人</Text>
+                                     </View>
                                     </View>
-                                    {this.state.isOthers && <View style={styles.inptout}>
-                                        <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"
-                                            selectionColor={UColor.tintColor}  placeholderTextColor={UColor.inputtip} maxLength={12}
-                                            placeholder={this.state.receiver} underlineColorAndroid="transparent" keyboardType="default"
-                                            onChangeText={(receiver) => this.chkAccount(receiver)} style={[styles.inpt,{color: UColor.arrow}]}
-                                        />
+                                    {this.state.isOthers && <View style={[styles.inptout, {borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]}>
                                         <Button onPress={() => this.openAddressBook()}>
                                             <View style={styles.botnout}>
                                                 <Image source={UImage.al} style={styles.botnimg} />
                                             </View>
                                         </Button>
-                                    </View>}
-                                </View>}
-                                <View style={styles.basc}>
-                                    <Text style={[styles.basctext,{color: UColor.fontColor}]}>余额：{this.state.balance}EOS</Text>
+                                        <TextInput ref={(ref) => this._account = ref} value={this.state.receiver} returnKeyType="go"  keyboardType="default"
+                                            selectionColor={UColor.tintColor} style={[styles.inpt,{paddingHorizontal: ScreenUtil.autowidth(10), color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
+                                            placeholder='' underlineColorAndroid="transparent" maxLength={12}
+                                            onChangeText={(receiver) => this.chkAccount(receiver)}
+                                        />
+                                    </View>
+                                    }
                                 </View>
-
-                                <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
-                                    <Button onPress={this.sellRedeem.bind(this)} >
-                                        <View style={[styles.botn,{backgroundColor: UColor.tintColor}]}>
-                                            <Text style={[styles.botText,{color: UColor.btnColor}]}>{this.state.isSell ? "出售" : "购买"}</Text>
-                                        </View>
-                                    </Button>
+                                }
+                                
+                                <View style={{marginTop: ScreenUtil.autowidth(96),justifyContent: 'center', alignItems:'center'}}>
+                                    <TextButton text={this.state.isBuy ? '购买' : '出售'} onPress={this.startTrans.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
                                 </View>
                             </KeyboardAvoidingView>
                         </TouchableOpacity>
                     </ScrollView>
                 </View>
-
 
             </View>
         )
@@ -733,6 +675,10 @@ const styles = StyleSheet.create({
     },
     inptoutsource: {
         justifyContent: 'center',
+        marginHorizontal: ScreenUtil.autowidth(15),
+        marginTop: ScreenUtil.autowidth(10),
+        marginBottom: ScreenUtil.autowidth(23),
+        backgroundColor: UColor.mainColor,
     },
     outsource: {
         marginTop: 1,
@@ -756,14 +702,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: ScreenUtil.autoheight(30),
     },
-    inptTitle: {
-        flex: 1,
+    inptTitle: {     
         fontSize: ScreenUtil.setSpText(16),
     },
     businestab: {
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
     },
     owntab: {
         borderWidth: 1,
@@ -871,6 +817,30 @@ const styles = StyleSheet.create({
     Explaintext2: {
         fontSize: ScreenUtil.setSpText(15),
         lineHeight: ScreenUtil.autoheight(30),
+    },
+    subViewStyle1:{
+        flex: 1,
+        flexDirection: 'row', 
+        alignItems: 'flex-end', 
+        justifyContent: 'flex-start', 
+        paddingHorizontal: ScreenUtil.autowidth(20), 
+        paddingTop: ScreenUtil.autowidth(12),
+    },
+    subViewStyle2:{
+        flex: 1,
+        flexDirection: 'row', 
+        alignItems: 'flex-end', 
+        justifyContent: 'flex-end', 
+        paddingHorizontal: ScreenUtil.autowidth(20), 
+        paddingTop: ScreenUtil.autowidth(4),
+    },
+    barStyle:{
+        flex: 1,
+        height: ScreenUtil.autowidth(10), 
+        paddingHorizontal: ScreenUtil.autowidth(15), 
+        paddingTop: ScreenUtil.autowidth(12),
+        paddingBottom: ScreenUtil.autowidth(10),
+        // backgroundColor: UColor.riceWhite,
     },
 })
 export default Ram;

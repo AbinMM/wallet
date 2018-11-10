@@ -527,9 +527,9 @@ class CpuNet extends BaseComponent {
     };
 
     //赎回遇到问题
-    redemption = () => {
+    undelegatedRefund = () => {
         const { navigate } = this.props.navigation;
-        navigate('undelegated', {});
+        navigate('undelegatedRefund', {});
     }
 
     //收回键盘
@@ -605,6 +605,7 @@ class CpuNet extends BaseComponent {
                                     secondColonStyle={[styles.ratiotext,{color: UColor.arrow}]}
                                     />
                                </View>
+
                                <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>
                                     {/* {this.ownOthersButton([styles.memorytab,{borderColor: UColor.tintColor}], this.state.isBuy, 'isBuy', '购买')}
                                     {this.ownOthersButton([styles.networktab,{borderColor: UColor.tintColor}], this.state.isSell, 'isSell', '出售')} */}
@@ -696,7 +697,10 @@ class CpuNet extends BaseComponent {
                                    </View>}
                                 </View>
                                 
-                                <View style={{flex: 1, justifyContent: 'center', alignItems:'center', marginHorizontal: ScreenUtil.autowidth(15), marginBottom: ScreenUtil.autowidth(15),}}>
+                                <View style={{alignItems: 'center',justifyContent: 'center', marginHorizontal:ScreenUtil.autowidth(15)}}>
+                                    <Text style={{color: '#3B80F4',textAlign: 'right', fontSize: ScreenUtil.setSpText(), }} onPress={this.undelegatedRefund.bind()} >赎回遇到问题？</Text>
+                               </View>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems:'center', marginHorizontal: ScreenUtil.autowidth(15), marginTop: ScreenUtil.autowidth(15),}}>
                                     <TextButton text="提交" onPress={this.startTrans.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
                                 </View>
                             </KeyboardAvoidingView>
@@ -738,8 +742,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'center',
-        paddingTop: ScreenUtil.autoheight(36),
-        paddingBottom: ScreenUtil.autoheight(24),
+        paddingVertical: ScreenUtil.autoheight(18),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },
     memorytab: {
@@ -859,7 +862,7 @@ const styles = StyleSheet.create({
     businestab: {
         flex: 1,
         flexDirection: 'row',
-        alignItems: 'flex-end',
+        alignItems: 'center',
         justifyContent: 'flex-end',
     },
     owntab: {
@@ -908,7 +911,8 @@ const styles = StyleSheet.create({
     basc: {
         flexDirection: 'row',
         paddingHorizontal: ScreenUtil.autowidth(18),
-        paddingVertical: ScreenUtil.autowidth(10),
+        paddingTop: ScreenUtil.autowidth(10),
+        paddingBottom: ScreenUtil.autowidth(5),
     },
     // basctextright :{
     //     textAlign: 'right',
