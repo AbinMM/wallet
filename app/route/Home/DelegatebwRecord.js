@@ -13,6 +13,8 @@ import {formatEosQua} from '../../utils/FormatUtil'
 import { EasyShowLD } from '../../components/EasyShow'
 import {RefundModal,RefundModalView} from '../../components/modals/RefundModal'
 import {AuthModal, AuthModalView} from '../../components/modals/AuthModal'
+import CheckMarkCircle from '../../components/CheckMarkCircle'
+import TextButton from '../../components/TextButton';
 
 var AES = require("crypto-js/aes")
 var CryptoJS = require("crypto-js")
@@ -36,13 +38,22 @@ class DelegatebwRecord extends React.Component {
       show: false,
       password: "",
       labelname: '',
+      mutilSelect: false,
+      allSelect: false,
+      cancelSelect: true,
+      maxOnce: 10, // 一次多选最多数量
     }
   }
 
   //加载地址数据
   componentDidMount() {
-    this.getAccountInfo();
-    this.props.dispatch({type: 'wallet/info',payload: { address: "1111"}});
+    try{
+      this.getAccountInfo();
+      this.props.dispatch({type: 'wallet/info',payload: { address: "1111"}});
+    }catch(e){
+      EasyShowLD.loadingClose();
+    }
+
     DeviceEventEmitter.addListener('scan_result', (data) => {
       if(data.toaccount){
           this.setState({labelname:data.toaccount})
@@ -61,6 +72,9 @@ class DelegatebwRecord extends React.Component {
         if(resp == null || resp.data == null ||  resp.data.rows == null || resp.data.rows.length == 0){
           this.setState({show: true, delegateLoglist: []});
         }else{
+          for(var i=0; i < resp.data.rows.length; i++){
+            resp.data.rows[i].selected = false;
+          }
           this.setState({show: false, delegateLoglist: resp.data.rows});
         }
       }
@@ -102,70 +116,104 @@ class DelegatebwRecord extends React.Component {
     })
   }
 
+  // 免费抵押提示
+  freeDelegatePrompt(){
+    this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username: this.props.defaultWallet.account},callback:(resp)=>{
+        if(resp.code == 608){
+            var title = '资源受限';
+            var content = '该账号资源(NET/CPU)不足！EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。';
+            AlertModal.show(title, content, '申请免费抵押', '放弃', (isOk)=>{
+                if(isOk){
+                    const { navigate } = this.props.navigation;
+                    navigate('FreeMortgage', {});
+                }
+            });
+        }
+    }});
+  }
+
+  getUndelegateActions(permission, redeem){
+    var actions = [];
+    if(redeem){ // 单个的
+      var action = {
+        account: "eosio",
+        name: "undelegatebw",
+        authorization: [{
+        actor: redeem.from,
+        permission: permission,
+        }],
+        data: {
+            from: redeem.from,
+            receiver: redeem.to,
+            unstake_net_quantity: formatEosQua(redeem.net_weight),
+            unstake_cpu_quantity: formatEosQua(redeem.cpu_weight),
+        }
+      };
+      actions.push(action);
+
+      return actions;
+    }
+
+    // 多个的
+    for(var i = 0; i < this.state.delegateLoglist.length; i++){
+      if(this.state.delegateLoglist[i].selected){
+        var action = {
+          account: "eosio",
+          name: "undelegatebw",
+          authorization: [{
+          actor: this.state.delegateLoglist[i].from,
+          permission: permission,
+          }],
+          data: {
+              from: this.state.delegateLoglist[i].from,
+              receiver: this.state.delegateLoglist[i].to,
+              unstake_net_quantity: formatEosQua(this.state.delegateLoglist[i].net_weight),
+              unstake_cpu_quantity: formatEosQua(this.state.delegateLoglist[i].cpu_weight),
+          }
+        };
+        actions.push(action);
+      }
+    }
+
+    return actions;
+  }
+
   //赎回
   undelegateb = (redeem) => {
-    AuthModal.show(redeem.from, (authInfo)=>{
+    AuthModal.show(this.props.defaultWallet.account, (authInfo)=>{
       try {
-        EasyShowLD.loadingShow();
-        // 解除抵押
-        Eos.transaction({
-          actions: [
-              {
-                  account: "eosio",
-                  name: "undelegatebw",
-                  authorization: [{
-                  actor: redeem.from,
-                  permission: authInfo.permission,
-                  }],
-                  data: {
-                      from: redeem.from,
-                      receiver: redeem.to,
-                      unstake_net_quantity: formatEosQua(redeem.net_weight),
-                      unstake_cpu_quantity: formatEosQua(redeem.cpu_weight),
-                  }
-              },
-          ]
-      }, authInfo.pk, (r) => {
-        EasyShowLD.loadingClose();
-        if(r.isSuccess){
-            this.getAccountInfo();
-            EasyToast.show("赎回成功");
-        }else{
-            if(r.data){
-              if(r.data.code){
-                var errcode = r.data.code;
-                if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
-                    || errcode == 3081001)
-                {
-                  this.props.dispatch({type:'wallet/getFreeMortgage',payload:{username:this.props.defaultWallet.account},callback:(resp)=>{
-                    if(resp.code == 608)
-                    {
-                        //弹出提示框,可申请免费抵押功能
-                        const view =
-                        <View style={styles.Explainout}>
-                          <Text style={[styles.Explaintext,{color: UColor.arrow}]}>该账号资源(NET/CPU)不足！</Text>
-                          <Text style={[styles.Explaintext,{color: UColor.arrow}]}>EosToken官方提供免费抵押功能,您可以使用免费抵押后再进行该操作。</Text>
-                        </View>
-                        EasyShowLD.dialogShow("资源受限", view, "申请免费抵押", "放弃", () => {
-
-                        const { navigate } = this.props.navigation;
-                        navigate('FreeMortgage', {});
-                        // EasyShowLD.dialogClose();
-                        }, () => { EasyShowLD.dialogClose() });
-                    }
-                }});
-                }
-            　　}
-                if(r.data.msg){
-                    EasyToast.show(r.data.msg);
-                }else{
-                    EasyToast.show("赎回失败");
-                }
-            }else{
-                EasyToast.show("赎回失败");
-            }
+        if(!authInfo.isOk){ // 密码取消
+          return;
         }
-      });
+
+        EasyShowLD.loadingShow();
+        var actions = this.getUndelegateActions(authInfo.permission, redeem);
+        // 解除抵押
+        Eos.transaction({actions: actions}, authInfo.pk, (r) => {
+          EasyShowLD.loadingClose();
+          if(r.isSuccess){
+              this.getAccountInfo();
+              EasyToast.show("赎回成功");
+          }else{
+              if(r.data){
+                if(r.data.code){
+                  var errcode = r.data.code;
+                  if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
+                      || errcode == 3081001)
+                  {
+                    this.freeDelegatePrompt();
+                  }
+              　　}
+                  if(r.data.msg){
+                      EasyToast.show(r.data.msg);
+                  }else{
+                      EasyToast.show("赎回失败");
+                  }
+              }else{
+                  EasyToast.show("赎回失败");
+              }
+          }
+        });
       } catch (error) {
         EasyShowLD.loadingClose();
         EasyToast.show('未知异常');
@@ -212,11 +260,55 @@ class DelegatebwRecord extends React.Component {
     return obj;
   }
 
+  changeSelecteState = () => { // 状态切换: 空选 -> 多选 -> 全选 -> 空选
+    if(this.state.mutilSelect){ // 多选 -> 全选
+      this.setState({mutilSelect: false, allSelect:true, cancelSelect:false});
+      if(this.state.delegateLoglist.length > this.state.maxOnce){
+        EasyToast.show("每次最多只能选择"+this.state.maxOnce + "个");
+      }
+      var cnt = (this.state.delegateLoglist.length > this.state.maxOnce) ? this.state.maxOnce : this.state.delegateLoglist.length
+      for(var i=0; i < cnt; i++){
+        this.state.delegateLoglist[i].selected = true;
+      }
+      this.setState({delegateLoglist : this.state.delegateLoglist});
+    }else if(this.state.allSelect){  // 全选 -> 空选
+      this.setState({mutilSelect: false, allSelect:false, cancelSelect:true});
+      for(var i=0; i < this.state.delegateLoglist.length; i++){
+        this.state.delegateLoglist[i].selected = false;
+      }
+      this.setState({delegateLoglist : this.state.delegateLoglist});
+    }else{ // 空选 -> 多选
+      this.setState({mutilSelect: true, allSelect:false, cancelSelect:false});
+    }
+  }
 
+  // 超出选择数量限制
+  isOutLimit(){
+    var selectedCnt = 0;
+    for(var i=0; i < this.state.delegateLoglist.length; i++){
+      if(this.state.delegateLoglist[i].selected){
+        selectedCnt++;
+      }
+    }
+
+    if(selectedCnt >= this.state.maxOnce){
+      EasyToast.show("每次最多只能选择"+this.state.maxOnce + "个");
+      return true;
+    }
+
+    return false
+  }
+  changeListSelectState = (rowID) => {
+    if(!this.state.delegateLoglist[rowID].selected && this.isOutLimit()){ // 如果是由没选中变成选中则需要检测是否超出选择数量限制
+      return;
+    }
+    this.state.delegateLoglist[rowID].selected = !this.state.delegateLoglist[rowID].selected;
+    this.setState({delegateLoglist : this.state.delegateLoglist});
+  }
 
   render() {
     return (<View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-     <Header {...this.props} onPressLeft={true} title="抵押赎回" />
+     <Header {...this.props} onPressLeft={true} title="抵押赎回" subName={this.state.cancelSelect ? "多选" : (this.state.mutilSelect ? "全选" : "取消") } onPressRight={this.changeSelecteState.bind()}/>
       {/* <View style={[styles.header,{backgroundColor: UColor.mainColor}]}>
           <View style={[styles.inptout,{borderColor:UColor.riceWhite,backgroundColor:UColor.btnColor}]} >
               <Image source={UImage.Magnifier_ash} style={styles.headleftimg}/>
@@ -237,23 +329,36 @@ class DelegatebwRecord extends React.Component {
           </TouchableOpacity>
       </View>   */}
 
-      {this.state.show && <View style={[styles.nothave,{backgroundColor: UColor.mainColor}]}><Text style={[styles.copytext,{color: UColor.fontColor}]}>还没有抵押记录哟~</Text></View>}
-      <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true}
-        dataSource={this.state.dataSource.cloneWithRows(this.state.delegateLoglist == null ? [] : this.state.delegateLoglist)}
-        renderRow={(rowData, sectionID, rowID) => (
-          <Button onPress={this._setModalVisible.bind(this,rowData)} style={{flex: 1,}}>
-            <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
-              <View style={styles.leftout}>
-                <Text style={[styles.fromtotext,{color: UColor.fontColor}]} onLongPress={this.copyaccount.bind(this,rowData)}>{rowData.to}</Text>
+      <View style={[styles.inptoutsource,{flex: 1,}]}>
+        {this.state.show && <View style={[styles.nothave,{backgroundColor: UColor.mainColor}]}><Text style={[styles.copytext,{color: UColor.fontColor}]}>还没有抵押记录哟~</Text></View>}
+        <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true}
+          dataSource={this.state.dataSource.cloneWithRows(this.state.delegateLoglist == null ? [] : this.state.delegateLoglist)}
+          renderRow={(rowData, sectionID, rowID) => (
+            <View style={{flex:1,flexDirection:'row', alignItems: 'center',justifyContent: 'center', marginHorizontal: ScreenUtil.autoheight(15)}} >
+            {!this.state.cancelSelect && 
+              <CheckMarkCircle selected={rowData.selected} onPress={this.changeListSelectState.bind(this, rowID)} width={ScreenUtil.autowidth(13)} height={ScreenUtil.autowidth(13)} markSize={ScreenUtil.autowidth(10)} /> 
+            }
+            <Button onPress={this._setModalVisible.bind(this,rowData)} style={{flex: 1,}}>
+              <View style={[styles.outsource,{backgroundColor: UColor.mainColor,}]}>
+                <View style={styles.leftout}>
+                  <Text style={[styles.fromtotext,{color: UColor.fontColor}]} onLongPress={this.copyaccount.bind(this,rowData)}>{rowData.to}</Text>
+                </View>
+                <View style={styles.rightout}>
+                  <Text style={[styles.payernet,{color: UColor.arrow}]}>{"[CPU] " +rowData.cpu_weight}</Text>
+                  <Text style={[styles.payernet,{color: UColor.arrow}]}>{"[NET] " +rowData.net_weight}</Text>
+                </View>
               </View>
-              <View style={styles.rightout}>
-                <Text style={[styles.payernet,{color: UColor.arrow}]}>{"[CPU] " +rowData.cpu_weight}</Text>
-                <Text style={[styles.payernet,{color: UColor.arrow}]}>{"[NET] " +rowData.net_weight}</Text>
-              </View>
+            </Button>
             </View>
-          </Button>
-        )}
-      />
+          )}
+        />
+        {!this.state.cancelSelect &&
+          <View style={{flex: 1, justifyContent: 'center', alignItems:'center', marginHorizontal: ScreenUtil.autowidth(15), marginTop: ScreenUtil.autowidth(15),}}>
+            <TextButton text="确定" onPress={()=>{this.undelegateb()}} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
+          </View>
+        }
+
+      </View>
       <RefundModalView />
 
     </View>
@@ -281,6 +386,13 @@ const styles = StyleSheet.create({
       height: ScreenUtil.autowidth(18),
       marginHorizontal: ScreenUtil.autowidth(10),
     },
+    inptoutsource: {
+      justifyContent: 'center',
+      marginHorizontal: ScreenUtil.autowidth(15),
+      marginTop: ScreenUtil.autowidth(10),
+      marginBottom: ScreenUtil.autowidth(20),
+      backgroundColor: UColor.mainColor,
+  },
     inptout: {
       flex: 1,
       borderWidth: 1,
