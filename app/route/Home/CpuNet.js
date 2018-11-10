@@ -525,10 +525,84 @@ class CpuNet extends BaseComponent {
         });
     };
 
-    //赎回遇到问题
+    getUndelegatedRefundActions(account, authInfo){
+        var actions = [];
+        var action = {
+            account: "eosio",
+            name: "refund",
+            authorization: [{
+            actor: account,
+            permission: authInfo.permission
+            }],
+            data: {
+                owner: account,
+            }
+        };
+        actions.push(action);
+        return actions;
+    }
+
     undelegatedRefund = () => {
-        const { navigate } = this.props.navigation;
-        navigate('undelegatedRefund', {});
+        if (this.props.defaultWallet == null || this.props.defaultWallet.account == null || !this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')) {
+           this.setState({ error: true,errortext: '请先创建并激活钱包' });
+           EasyToast.show("请先创建并激活钱包");
+           return;
+        };
+        this.dismissKeyboardClick();
+    
+        AuthModal.show(this.props.defaultWallet.account, (authInfo) => {
+          try {
+            if(!authInfo.isOk){ // 密码取消
+                return;
+            }
+            EasyShowLD.loadingShow();
+            var actions = this.getUndelegatedRefundActions(this.props.defaultWallet.account, authInfo);
+            Eos.transaction({actions: actions}, authInfo.pk, (r) => {
+                EasyShowLD.loadingClose();
+                if(r.isSuccess){
+                    EasyToast.show("赎回成功");
+                }else{
+                    if(r.data){
+                      if(r.data.code){
+                        var errcode = r.data.code;
+                        if(errcode == 3080002 || errcode == 3080003|| errcode == 3080004 || errcode == 3080005
+                            || errcode == 3081001)
+                        {
+                            this.freeDelegatePrompt();
+                        }
+                   　　 }
+                        if(r.data.msg){
+                            EasyToast.show(r.data.msg);
+                        }else{
+                            EasyToast.show("赎回失败");
+                        }
+                    }else{
+                        EasyToast.show("赎回失败");
+                    }
+                }
+            });
+          } catch (error) {
+            EasyShowLD.loadingClose();
+            EasyToast.show('未知异常');
+          }
+        });
+    };
+
+    //赎回遇到问题
+    undelegatedRefundPrompt = () => {
+        // const { navigate } = this.props.navigation;
+        // navigate('undelegatedRefund', {});
+        var title = '温馨提示';
+        var content = '由于存在资源冲突问题，可能导致您赎回的EOS不能及时正常到帐，如遇此情况请点击确认按钮取回您赎回的EOS!';
+        AlertModal.show(title, content, '确认赎回', '取消', (isOk)=>{
+            if(isOk){
+                try {
+                    this.undelegatedRefund();
+                } catch (error) {
+                    EasyToast.show("赎回异常，请确认你存在未赎回的EOS!");
+                }
+            }
+        });    
     }
 
     //收回键盘
@@ -703,7 +777,7 @@ class CpuNet extends BaseComponent {
                                 }
                                 
                                 <View style={{alignItems: 'center',justifyContent: 'center', marginHorizontal:ScreenUtil.autowidth(15)}}>
-                                    <Text style={{color: '#3B80F4',textAlign: 'right', fontSize: ScreenUtil.setSpText(12), }} onPress={this.undelegatedRefund.bind()} >赎回遇到问题？</Text>
+                                    <Text style={{color: '#3B80F4',textAlign: 'right', fontSize: ScreenUtil.setSpText(12), }} onPress={this.undelegatedRefundPrompt.bind()} >赎回遇到问题？</Text>
                                </View>
                                 <View style={{flex: 1, justifyContent: 'center', alignItems:'center', marginHorizontal: ScreenUtil.autowidth(15), marginTop: ScreenUtil.autowidth(15),}}>
                                     <TextButton text="提交" onPress={this.startTrans.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
