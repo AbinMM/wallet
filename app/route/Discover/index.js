@@ -36,11 +36,9 @@ class Discover extends React.Component {
     super(props);
     this.state = {
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
-      mydapplist: [],
-      hotdappList:{name: '', list: [{icon: '',name:'',description:'',url:''}]},
-      holdallList: [
-        {id:1,name: '',is_there_more:false, data: [{id:1,icon: '',url:'',name:'',description:''}]},
-      ],
+      hotdappList:[],
+      advertisdapplist: [],
+      holdallList: [],
     }
   }
 
@@ -50,9 +48,9 @@ class Discover extends React.Component {
     this.props.dispatch({ type: 'banner/list', payload: {} });
     //获取我的Dapp
     this.props.dispatch({ type: 'dapp/mydappInfo', payload: {} });
-    //获取DAPP列表
-    this.props.dispatch({ type: 'dapp/dappfindAllHotRecommend', callback: (resp) => {
-       //alert(JSON.stringify(resp));
+    //获取热门推荐
+    this.props.dispatch({ type: 'dapp/dappfindAllHotRecommend', 
+      callback: (resp) => {
         if (resp && resp.code == '0') {
           if(resp.data){
             this.setState({
@@ -64,35 +62,34 @@ class Discover extends React.Component {
         }
       }
     });
-
-    this.props.dispatch({ type: 'dapp/dappfindAllRecommend', callback: (resp) => {
-     //alert(JSON.stringify(resp));
-      if (resp && resp.code == '0') {
-        if(resp.data && resp.data.length > 0){
-          this.setState({
-            holdallList: resp.data,
-          });
-          // //debug
-          // for(var i = 0; i < resp.data.length;i++)
-          // {
-          //   if( resp.data[i].is_there_more)
-          //   {
-          //     var tid=resp.data[i].id;
-          //     this.props.dispatch({ type: 'dapp/dappfindAllByType', payload: {tid:tid,page:1,pageSize:20},callback:(resp) =>{
-          //       if (resp && resp.code == '0'){
-          //         var tt = resp.data;
-          //       }
-          //     } });
-          //     break;
-          //   }
-          // }
+    //获取两个广告位
+    this.props.dispatch({ type: 'dapp/dappAdvertisement', payload: {adPositionId: '1'},
+      callback: (resp) => {
+        if (resp && resp.code == '0') {
+          if(resp.data){
+            this.setState({
+              advertisdapplist: resp.data,
+            });
+          }
+        } else {
+          console.log("dappAdvertisement error");
         }
-      } else {
-        console.log("dappfindAllRecommend error");
+      } 
+    });
+    //获取DAPP树状列表
+    this.props.dispatch({ type: 'dapp/dappfindAllRecommend', 
+      callback: (resp) => {
+        if (resp && resp.code == '0') {
+          if(resp.data && resp.data.length > 0){
+            this.setState({
+              holdallList: resp.data,
+            });
+          }
+        } else {
+          console.log("dappfindAllRecommend error");
+        }
       }
-    }
-  });
-
+    });
   }
 
   componentWillUnmount() {
@@ -219,21 +216,21 @@ class Discover extends React.Component {
                 renderRow={(rowData) => (
                   <Button  onPress={this.onPressTool.bind(this, rowData)}  style={{width: (ScreenWidth -ScreenUtil.autowidth(14))/5, paddingBottom: ScreenUtil.autoheight(18),}}>
                     <View style={styles.headbtnout}>
-                      <Image source={{uri: rowData.icon}}  style={styles.imgBtnDAPP} resizeMode='contain' />
+                      <Image source={{uri: rowData.icon}}  style={styles.imgBtnDAPP} resizeMode='stretch' />
                       <Text numberOfLines={1} style={[{fontSize: ScreenUtil.setSpText(10), color: '#323232',textAlign: 'center',paddingHorizontal:ScreenUtil.autowidth(8)}]}>{rowData.name}</Text>
                     </View>
                   </Button>
                 )}
               />
               <View style={{marginVertical:ScreenUtil.autoheight(15),marginHorizontal: ScreenUtil.autowidth(20),}}>
-                <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#323232',fontWeight:'bold',}}>热门推荐</Text>
+                <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#323232',fontWeight:'bold',}}>{this.state.hotdappList.name}</Text>
               </View>
               <ListView enableEmptySections = {true} contentContainerStyle={{flexDirection:'row', paddingHorizontal: ScreenUtil.autowidth(6),}}
-                dataSource={this.state.dataSource.cloneWithRows(this.state.holdallList[2] == null ? [] : this.state.holdallList[2].data)}
+                dataSource={this.state.dataSource.cloneWithRows(this.state.hotdappList.list == null ? [] : this.state.hotdappList.list)}
                 renderRow={(rowData) => (
                   <Button  onPress={this.onPressTool.bind(this, rowData)}  style={{width: (ScreenWidth -ScreenUtil.autowidth(14))/5, paddingBottom: ScreenUtil.autoheight(18),}}>
                     <View style={styles.headbtnout}>
-                      <Image source={{uri: rowData.icon}} style={styles.imgBtnDAPP} resizeMode='contain'/>
+                      <Image source={{uri: rowData.icon}} style={styles.imgBtnDAPP} resizeMode='stretch'/>
                       <Text numberOfLines={1} style={[{fontSize: ScreenUtil.setSpText(10), color: '#323232',textAlign: 'center',paddingHorizontal:ScreenUtil.autowidth(8)}]}>{rowData.name}</Text>
                     </View>
                   </Button>
@@ -244,11 +241,11 @@ class Discover extends React.Component {
          
           <View style={{backgroundColor: '#F9FAF9',}}>
             <ListView enableEmptySections = {true} contentContainerStyle={{flexDirection:'row',paddingHorizontal: ScreenUtil.autowidth(12.5)}}
-              dataSource={this.state.dataSource.cloneWithRows(this.state.holdallList[1] == null ? [] : this.state.holdallList[1].data)}
+              dataSource={this.state.dataSource.cloneWithRows(this.state.advertisdapplist == null ? [] : this.state.advertisdapplist)}
               renderRow={(rowData) => (
                 <Button  onPress={this.onPressTool.bind(this, rowData)}  style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2, marginHorizontal: ScreenUtil.autowidth(7.5)}}>
                   <View style={{alignItems: 'center', justifyContent: "center", backgroundColor: '#FFFFFF',borderRadius: 5,}}>
-                    <Image source={{uri: rowData.icon}} style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2,height: (ScreenWidth-ScreenUtil.autowidth(55))/2*0.5,marginBottom: ScreenUtil.autoheight(10),}} resizeMode='stretch'/>
+                    <Image source={{uri: rowData.adPhoto}} style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2,height: (ScreenWidth-ScreenUtil.autowidth(55))/2*0.5,marginBottom: ScreenUtil.autoheight(10),}} resizeMode='contain'/>
                   </View>
                 </Button>
               )}
@@ -266,7 +263,7 @@ class Discover extends React.Component {
               renderItem={ (rowData) => (
                 <Button  onPress={this.onPressTool.bind(this, rowData.item)}  style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2, marginHorizontal: ScreenUtil.autowidth(7.5),marginTop: ScreenUtil.autoheight(15)}}>
                   <View style={{ flexDirection: 'row',alignItems: 'center', justifyContent: "center", backgroundColor: '#FFFFFF',paddingHorizontal:ScreenUtil.autowidth(13),paddingVertical:ScreenUtil.autoheight(20),borderRadius: 5, }}>
-                    <Image source={{uri: rowData.item.icon}} style={{width: ScreenUtil.autowidth(40),height: ScreenUtil.autowidth(40),}} />
+                    <Image source={{uri: rowData.item.icon}} style={{width: ScreenUtil.autowidth(40),height: ScreenUtil.autowidth(40),}} resizeMode='stretch'/>
                     {/* <Image source={rowData.item.icon} style={{width: ScreenUtil.autowidth(39),height: ScreenUtil.autowidth(39),}} /> */}
                     <View style={{flex: 1, paddingLeft:  ScreenUtil.autowidth(10),}}>
                       <Text style={[styles.headbtntext,{color: '#262626'}]} numberOfLines={1}>{rowData.item.name}</Text>

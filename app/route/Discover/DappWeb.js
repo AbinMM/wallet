@@ -232,7 +232,7 @@ onBackAndroid = () => {
 
     pressCollection(){
         this.setState({ optionShow:false })
-        EasyToast.show("已收藏!");
+        EasyToast.show("已收藏");
         this.props.dispatch({ type: 'dapp/saveCollectionDapp', payload: this.props.navigation.state.params.data }, );
     } 
 

@@ -1,5 +1,5 @@
 import Request from '../utils/RequestUtil';
-import {getEosTableRows, dappfindAllHotRecommend,dappfindAllRecommend,dappfindAllByType} from '../utils/Api';
+import {getEosTableRows, dappfindAllHotRecommend, dappfindAllRecommend, dappAdvertisement, dappfindByName, dappfindAllByType} from '../utils/Api';
 import { EasyToast } from '../components/Toast';
 
 import store from 'react-native-simple-store';
@@ -10,6 +10,7 @@ export default {
     state: {
     },
     effects: {
+        //我的Dapps 历史记录
         *mydappInfo({ payload,callback }, { call, put }) {
             try {
                 let mydappBook = yield call(store.get, 'mydappBook');
@@ -39,7 +40,7 @@ export default {
             yield put({ type: 'updateAction', payload: { data: tmp_dappBook, ...payload } });
             if(callback) callback(tmp_dappBook);
         },
-
+        //我的收藏
         *collectionDappInfo({ payload,callback }, { call, put }) {
             try {
                 let collectionDapp = yield call(store.get, 'collectionDapp');
@@ -67,6 +68,42 @@ export default {
             let tmp_collectionDapp = collectionDapp.reverse();
             yield put({ type: 'updateCollection', payload: { data: tmp_collectionDapp, ...payload } });
             if(callback) callback(tmp_collectionDapp);
+        },
+
+        //搜索的历史记录History
+        *historyDappInfo({ payload,callback }, { call, put }) {
+            try {
+                let historyDapp = yield call(store.get, 'historyDapp');
+                if(callback) callback(historyDapp);
+                yield put({ type: 'updatehistory', payload: { data: historyDapp.reverse(), ...payload } });
+            } catch (error) {
+                EasyToast.show('获取失败!');
+            }
+        },
+        //添加到历史记录里
+        *savehistoryDapp({ payload,callback}, { call, put }) {
+            var historyDapp = yield call(store.get, 'historyDapp');        
+            if (historyDapp == null) {
+                historyDapp = [];              
+            }
+
+            for (var i = 0; i < historyDapp.length; i++) {
+                if ((historyDapp[i].id == payload.id)
+                      && (historyDapp[i].categoryId == payload.categoryId)) {
+                        historyDapp.splice(i,1);
+                    break;
+                }
+            }
+
+            historyDapp[historyDapp.length] = payload;
+            yield call(store.save, 'historyDapp', historyDapp);
+            let tmp_historyDapp = historyDapp.reverse();
+            yield put({ type: 'updatehistory', payload: { data: tmp_historyDapp, ...payload } });
+            if(callback) callback(tmp_historyDapp);
+        },
+        *deletehistoryDapp({ payload,callback}, { call, put }) {
+            yield call(store.save, 'historyDapp', []);
+            yield put({ type: 'updatehistory', payload: { data: [], ...payload } });
         },
 
         *getEosTableRows({ payload, callback }, { call, put }) {
@@ -102,13 +139,34 @@ export default {
         },
         *dappfindAllHotRecommend({ payload, callback }, { call, put }) {
             try{
-                const resp = yield call(Request.request, dappfindAllHotRecommend, 'post');
+                const resp = yield call(Request.request,  dappfindAllHotRecommend, 'get');
                 if (callback) callback(resp);                
             } catch (error) {
                 EasyToast.show('网络繁忙,请稍后!');
                 if (callback) callback({ code: 500, msg: "网络异常" });                
             }
         },
+        *dappAdvertisement({ payload, callback }, { call, put }) {
+            try{
+                const resp = yield call(Request.request,  dappAdvertisement, 'post', payload);
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
+        *dappfindByName({ payload, callback }, { call, put }) {
+            try{
+                const resp = yield call(Request.request,  dappfindByName, 'post', payload);
+                if (callback) callback(resp);                
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });                
+            }
+        },
+
+
+        
         *dappfindAllRecommend({ payload, callback }, { call, put }) {
             try{
                 const resp = yield call(Request.request, dappfindAllRecommend, 'post');
@@ -137,6 +195,10 @@ export default {
         updateCollection(state, action) {
             let collectionDapp = action.payload.data;
             return { ...state, collectionDapp };
+        },
+        updatehistory(state, action) {
+            let historyDapp = action.payload.data;
+            return { ...state, historyDapp };
         },
     }
 }

@@ -144,12 +144,16 @@ class HistoryCollection extends BaseComponent {
             renderRow={(rowData) => (  
               <TouchableOpacity  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headDAPP}>
                   <View style={styles.headbtnout}>
-                      <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} />
+                      <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} resizeMode='stretch'/>
                       <View style={{flex: 1}}>
                           <Text style={[styles.headbtntext,{color: '#323232'}]}>{rowData.name}</Text>
                           <Text style={[styles.descriptiontext,{color: '#808080'}]} numberOfLines={1}>{rowData.description}</Text>
                       </View>
-
+                      {this.state.isCollection &&
+                      <TouchableOpacity onPress={() => {}}>
+                        <Image source={UImage.collection_h} style={{ width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),margin: ScreenUtil.autowidth(15),}} resizeMode='stretch'/>
+                      </TouchableOpacity>
+                      }
                   </View>
               </TouchableOpacity>
             )}                
@@ -192,7 +196,7 @@ const styles = StyleSheet.create({
   }, 
   headDAPP: {
     paddingVertical: ScreenUtil.autoheight(8),
-    paddingHorizontal: ScreenUtil.autowidth(15),
+    
   },
   headbtnout: {
     flexDirection: 'row',
