@@ -145,6 +145,7 @@ export default {
   trade_bg: require('../img/trade_bg.png'),
   Tick_h:require('../img/Tick_h.png'),
   Tick:require('../img/Tick.png'),
+  accountmange_01:require('../img/accountmange_01.png'),
   turn_out:require('../img/turn_out.png'),
   turninhead:require('../img/turninhead.png'),
   unconfirm:require('../img/unconfirm.png'),

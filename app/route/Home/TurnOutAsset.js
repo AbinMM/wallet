@@ -345,67 +345,66 @@ class TurnOutAsset extends BaseComponent {
     render() {
         return (
         <View style={[styles.container,{backgroundColor:UColor.secdfont}]}>
-            <Header {...this.props} onPressLeft={true} title="转账" avatar={UImage.scanning} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(18)}/> 
+            <Header {...this.props} onPressLeft={true} title="转账" avatar={UImage.scan} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(18)}/> 
             <ScrollView  keyboardShouldPersistTaps="always">
                 <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "position" : null}>
                     <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)}>
 
                         <View style={styles.taboutsource}>
                             <View style={[styles.accountoue]} >
-                                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(48),color: UColor.fontColor}]}>收款账号</Text>
+                                <Text style={[styles.inptitle]}>收款账号</Text>
                                 <View style={styles.scanning}>
                                     <Button onPress={() => this.openAddressBook()}>
-                                        <Image source={UImage.al} style={styles.alningimg} />
+                                        <Image source={UImage.accountmange_01} style={styles.alningimg} />
                                     </Button>
                                 </View>
                             </View>
                             <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(1)}]} >
                                 <TextInput ref={(ref) => this._raccount = ref}  value={this.state.toAccount} returnKeyType="next"
-                                    selectionColor={UColor.tintColor} style={[styles.textinpt,{flex: 1, color: UColor.arrow}]} placeholderTextColor={UColor.inputtip}
+                                    selectionColor={UColor.tintColor} style={[styles.textinpt]} placeholderTextColor={UColor.inputtip}
                                      underlineColorAndroid="transparent" keyboardType="default"  maxLength = {12}
                                     onChangeText={(toAccount) => this.setState({ toAccount: this.chkAccount(toAccount)})}
                                 />
                             </View>
 
                             <View style={styles.accountoue} >
-                                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(48),color: UColor.fontColor}]}>转账数量</Text>
+                                <Text style={[styles.inptitle]}>转账数量</Text>
                                 <Text onPress={()=>{this.openChoiceToken()}}  style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
                                     {lineHeight: ScreenUtil.autoheight(48),color: UColor.turnout_eos,marginRight: ScreenUtil.autowidth(20),}]}>{this.state.name} ></Text>
                             </View>
                             <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(1)}]} >
                             
                                 <TextInput  ref={ (ref) => this._ramount = ref} value={this.state.amount} selectionColor={UColor.tintColor}
-                                    style={[styles.textinpt,{paddingLeft: ScreenUtil.autowidth(15),color: UColor.arrow}]} maxLength = {15}
+                                    style={[styles.textinpt]} maxLength = {15}
                                     placeholderTextColor={UColor.inputtip}  underlineColorAndroid="transparent"   keyboardType="numeric"
                                     onChangeText={(amount) => this.setState({ amount: this.chkPrice(amount) })} returnKeyType="next"
                                 />
                             </View>
                             <View style={styles.accountoue} >
-                                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(32),color: UColor.fontColor}]}></Text>
-                                <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
+                                <Text style={[styles.inptitle]}></Text>
+                                <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(10),},
                                     {lineHeight: ScreenUtil.autoheight(32),color: UColor.arrow,marginRight: ScreenUtil.autowidth(20),}]}>{this.state.balance==""? "余额：0.0000" : "余额：" + this.state.balance +" "+ this.state.name}</Text>
                             </View>
 
                             <View style={styles.accountoue} >
-                                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(48),color: UColor.fontColor}]}>备注(Memo)</Text>
+                                <Text style={[styles.inptitle]}>备注(Memo)</Text>
                             </View>
                             <View style={[styles.accountoue,{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(1)}]} >
                                 <TextInput  ref={(ref) => this._rnote = ref}  value={this.state.memo} returnKeyType="next" maxLength = {40}
-                                    selectionColor={UColor.tintColor} style={[styles.textinpt,{color: UColor.arrow}]}  placeholderTextColor={UColor.inputtip}
+                                    selectionColor={UColor.tintColor} style={[styles.textinpt]}  placeholderTextColor={UColor.inputtip}
                                     underlineColorAndroid="transparent" keyboardType="default"
                                     onChangeText={(memo) => this.setState({ memo })}
                                 />
                             </View>
                             <View style={styles.accountoue} >
-                                <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(32),color: UColor.fontColor}]}></Text>
+                                <Text style={[styles.inptitle]}></Text>
                                 <Text style={[{alignSelf: 'center',justifyContent: "center",fontSize: ScreenUtil.setSpText(12),},
                                     {lineHeight: ScreenUtil.autoheight(32),color: UColor.arrow,marginRight: ScreenUtil.autowidth(20),}]}>转入交易所时请务必填写正确的Memo</Text>
                             </View>
-                            <Button onPress={this._rightButtonClick.bind(this)} style={styles.btnnextstep}>
-                                <View style={[styles.nextstep,{backgroundColor: UColor.tintColor}]}>
-                                    <Text style={[styles.nextsteptext,{color: UColor.btnColor}]}>确认转账</Text>
-                                </View>
-                            </Button>
+                            <View style={{flex: 1, justifyContent: 'center', alignItems:'center', 
+                                      marginHorizontal: ScreenUtil.autowidth(15),marginTop:ScreenUtil.autoheight(25), marginBottom: ScreenUtil.autoheight(15),}}>
+                                <TextButton text="确认转账" onPress={this._rightButtonClick.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
+                            </View>
                         </View>
                     </TouchableOpacity>
                 </KeyboardAvoidingView>
@@ -568,10 +567,9 @@ const styles = StyleSheet.create({
     taboutsource: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: UColor.mainColor,
+        backgroundColor: UColor.secdfont,
         marginTop:ScreenUtil.autoheight(20),
-        marginLeft:ScreenUtil.autowidth(10),
-        marginRight:ScreenUtil.autowidth(10),
+        marginHorizontal:ScreenUtil.autowidth(10),
         borderRadius: 5,
     },
 
@@ -617,12 +615,16 @@ const styles = StyleSheet.create({
     },
     inptitle: {
         flex: 1,
-        fontSize: ScreenUtil.setSpText(16),
+        fontWeight: '600',
+        fontSize: ScreenUtil.setSpText(14),
+        lineHeight: ScreenUtil.autoheight(32),
+        color: UColor.fontColor,
     },
     textinpt: {
         flex: 1,
-        height: ScreenUtil.autoheight(40),
+        height: ScreenUtil.autoheight(36),
         fontSize: ScreenUtil.setSpText(16),
+        color: UColor.arrow,
     },
     btnnextstep: {
         marginTop: ScreenUtil.autoheight(44),
