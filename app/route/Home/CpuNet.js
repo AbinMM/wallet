@@ -574,7 +574,7 @@ class CpuNet extends BaseComponent {
                                 </View>
         
 
-                                <View style={styles.subViewStyle1}>
+                                <View style={styles.subViewStyle3}>
                                     <Text style={{fontSize: ScreenUtil.setSpText(16), color: UColor.fontColor,fontWeight:"bold"}}>NET</Text>
                                     <Text style={{fontSize: ScreenUtil.setSpText(10), color: UColor.fontColor,}}>  抵押: {this.state.net_weight}</Text>
                                 </View>
@@ -696,8 +696,14 @@ class CpuNet extends BaseComponent {
                                    </View>}
                                 </View>
                                 
+                                {this.state.isRedeem &&
                                 <View style={{alignItems: 'center',justifyContent: 'center', marginHorizontal:ScreenUtil.autowidth(15)}}>
-                                    <Text style={{color: '#3B80F4',textAlign: 'right', fontSize: ScreenUtil.setSpText(), }} onPress={this.undelegatedRefund.bind()} >赎回遇到问题？</Text>
+                                    <Text style={{color: UColor.arrow,textAlign: 'right', fontSize: ScreenUtil.setSpText(12), }} >余额：{this.state.balance} EOS</Text>
+                                </View>
+                                }
+                                
+                                <View style={{alignItems: 'center',justifyContent: 'center', marginHorizontal:ScreenUtil.autowidth(15)}}>
+                                    <Text style={{color: '#3B80F4',textAlign: 'right', fontSize: ScreenUtil.setSpText(12), }} onPress={this.undelegatedRefund.bind()} >赎回遇到问题？</Text>
                                </View>
                                 <View style={{flex: 1, justifyContent: 'center', alignItems:'center', marginHorizontal: ScreenUtil.autowidth(15), marginTop: ScreenUtil.autowidth(15),}}>
                                     <TextButton text="提交" onPress={this.startTrans.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
@@ -742,7 +748,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'center',
-        paddingVertical: ScreenUtil.autoheight(18),
+        paddingTop:ScreenUtil.autoheight(16),
+        paddingBottom:ScreenUtil.autoheight(8),
         paddingHorizontal: ScreenUtil.autowidth(15),
     },
     memorytab: {
@@ -786,7 +793,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginHorizontal: ScreenUtil.autowidth(15),
         marginTop: ScreenUtil.autowidth(10),
-        marginBottom: ScreenUtil.autowidth(23),
+        marginBottom: ScreenUtil.autowidth(20),
         backgroundColor: UColor.mainColor,
     },
 
@@ -803,8 +810,8 @@ const styles = StyleSheet.create({
         flex: 1,
         height: ScreenUtil.autowidth(10), 
         paddingHorizontal: ScreenUtil.autowidth(15), 
-        paddingTop: ScreenUtil.autowidth(12),
-        paddingBottom: ScreenUtil.autowidth(10),
+        paddingTop: ScreenUtil.autowidth(8),
+        paddingBottom: ScreenUtil.autowidth(8),
         // backgroundColor: UColor.riceWhite,
     },
 
@@ -817,6 +824,16 @@ const styles = StyleSheet.create({
         paddingTop: ScreenUtil.autowidth(4),
     },
     
+
+    subViewStyle3:{
+        flex: 1,
+        flexDirection: 'row', 
+        alignItems: 'flex-end', 
+        justifyContent: 'flex-start', 
+        paddingHorizontal: ScreenUtil.autowidth(20), 
+        paddingTop: ScreenUtil.autowidth(4),
+    },
+
     rectangleStyle: {
         // flex: 1,
         // flexDirection:'row',
@@ -844,7 +861,7 @@ const styles = StyleSheet.create({
     inptout: {
         flexDirection: 'row',
         alignItems: 'center',
-        height: ScreenUtil.autoheight(35),
+        height: ScreenUtil.autoheight(30),
     },
     inpt: {
         flex: 1,
@@ -911,8 +928,8 @@ const styles = StyleSheet.create({
     basc: {
         flexDirection: 'row',
         paddingHorizontal: ScreenUtil.autowidth(18),
-        paddingTop: ScreenUtil.autowidth(10),
-        paddingBottom: ScreenUtil.autowidth(5),
+        paddingTop: ScreenUtil.autowidth(4),
+        paddingBottom: ScreenUtil.autowidth(3),
     },
     // basctextright :{
     //     textAlign: 'right',

@@ -591,9 +591,21 @@ class Ram extends BaseComponent {
                                 </View>
                                 }
                                 
+                                {this.state.isSell &&
+                                    <View style={{alignItems: 'center',justifyContent: 'center', marginTop: ScreenUtil.autowidth(91), marginHorizontal:ScreenUtil.autowidth(15)}}>
+                                        <Text style={{color: UColor.arrow,textAlign: 'right', fontSize: ScreenUtil.setSpText(12), }}>余额：{this.state.balance} EOS</Text>
+                                        <View style={{marginTop: ScreenUtil.autowidth(35),justifyContent: 'center', alignItems:'center'}}>
+                                            <TextButton text='出售' onPress={this.startTrans.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
+                                        </View>
+                                    </View>
+                                }
+   
+                                {this.state.isBuy &&
                                 <View style={{marginTop: ScreenUtil.autowidth(96),justifyContent: 'center', alignItems:'center'}}>
-                                    <TextButton text={this.state.isBuy ? '购买' : '出售'} onPress={this.startTrans.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
+                                    <TextButton text='购买' onPress={this.startTrans.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
                                 </View>
+                                }
+  
                             </KeyboardAvoidingView>
                         </TouchableOpacity>
                     </ScrollView>
@@ -678,7 +690,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginHorizontal: ScreenUtil.autowidth(15),
         marginTop: ScreenUtil.autowidth(10),
-        marginBottom: ScreenUtil.autowidth(23),
+        marginBottom: ScreenUtil.autowidth(20),
         backgroundColor: UColor.mainColor,
     },
     outsource: {
