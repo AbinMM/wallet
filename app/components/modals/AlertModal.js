@@ -82,10 +82,10 @@ export class AlertModalView extends React.Component {
                     <Text style={styles.ctx}>{this.state.content?this.state.content:""}</Text>
                     <View style={styles.bottom}>
                       <View style={{width:"50%"}}>
-                        <TextButton onPress={()=>{this.cancel()}} bgColor="#fff" text={this.state.cancel?this.state.cancel:"取消"} style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
+                        <TextButton onPress={()=>{this.cancel()}} textColor="#D9D9D9" bgColor="#fff" text={this.state.cancel?this.state.cancel:"取消"} style={{height:ScreenUtil.setSpText(44),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
                       </View>
                       <View style={{width:"50%"}}>
-                        <TextButton onPress={()=>{this.ok()}} bgColor="#6DA0F8" textColor="#fff" text={this.state.ok?this.state.ok:"确认"} style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
+                        <TextButton onPress={()=>{this.ok()}} bgColor="#3B80F4" textColor="#fff" text={this.state.ok?this.state.ok:"确认"} style={{height:ScreenUtil.setSpText(44),borderBottomRightRadius:4}} />
                       </View>
                     </View>
                   </Animated.View>
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor:"#fff"
   },
   title:{
-    color:"#1A1A1A",
+    color:"#3B80F4",
     textAlign:"center",
     lineHeight:ScreenUtil.setSpText(26),
     fontSize:ScreenUtil.setSpText(16),
@@ -155,12 +155,12 @@ const styles = StyleSheet.create({
     marginHorizontal:ScreenUtil.setSpText(20),
     color:"#808080",
     lineHeight:ScreenUtil.setSpText(24),
-    fontSize:ScreenUtil.setSpText(12.5),
+    fontSize:ScreenUtil.setSpText(12),
   },
   bottom:{
     flex:1,
     flexDirection: 'row',
-    maxHeight:ScreenUtil.autowidth(49),
+    maxHeight:ScreenUtil.autowidth(44),
     marginTop:ScreenUtil.autowidth(10)
   }
 });

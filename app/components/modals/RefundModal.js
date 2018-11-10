@@ -96,10 +96,10 @@ export class RefundModalView extends React.Component {
                     </View>
                     <View style={styles.bottom}>
                       <View style={{width:"50%"}}>
-                        <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
+                        <TextButton onPress={()=>{this.dimss()}} bgColor="#fff" textColor="#D9D9D9" text="取消" style={{height:ScreenUtil.setSpText(44),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
                       </View>
                       <View style={{width:"50%"}}>
-                        <TextButton onPress={()=>{this.ok()}} bgColor="#6DA0F8" textColor="#fff" text="确认" style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
+                        <TextButton onPress={()=>{this.ok()}} bgColor="#3B80F4" textColor="#fff" text="确认" style={{height:ScreenUtil.setSpText(44),borderBottomRightRadius:4}} />
                       </View>
                     </View>
                   </Animated.View>
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor:"#fff"
   },
   title:{
-    color:"#1A1A1A",
+    color:"#3B80F4",
     textAlign:"center",
     lineHeight:ScreenUtil.setSpText(26),
     fontSize:ScreenUtil.setSpText(16),
@@ -173,30 +173,30 @@ const styles = StyleSheet.create({
     justifyContent:"space-between"
   },
   ctx_txt:{
-    color:"#1A1A1A",
+    color:"#555555",
     marginHorizontal:ScreenUtil.autowidth(10),
     fontSize:ScreenUtil.setSpText(14),
   },
   input:{
     marginBottom:ScreenUtil.autowidth(11),
-    borderColor:"#E6E6E6",
+    borderColor:"#D9D9D9",
     borderWidth:ScreenUtil.autowidth(0.4),
     borderRadius:4,
-    backgroundColor:"#F7F8F9",
+    backgroundColor:"#fff",
     flexDirection:"row",
     justifyContent:"space-between",
     alignItems:"center",
-    height:ScreenUtil.autowidth(45),
+    height:ScreenUtil.autowidth(42),
   },
   input_right:{
-    color:"#808080",
+    color:"#555555",
     marginRight:ScreenUtil.autowidth(10),
     fontSize:ScreenUtil.setSpText(12.5),
   },
   bottom:{
     flex:1,
     flexDirection: 'row',
-    maxHeight:ScreenUtil.autowidth(49),
+    maxHeight:ScreenUtil.autowidth(44),
     marginTop:ScreenUtil.autowidth(10)
   }
 });

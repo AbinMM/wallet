@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
       zIndex: 9999999999,
       width:"100%",
       height:ScreenUtil.autowidth(ScreenUtil.isIphoneX()?88:66),
-      backgroundColor:"#6DA0F8",
+      backgroundColor:"#3B80F4",
       elevation:4,
       shadowColor:"rgba(0,0,0,0.5)",
       shadowOffset:{width:3,height:3},

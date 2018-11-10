@@ -208,27 +208,27 @@ export class AuthModalView extends React.Component {
                         {
                           this.state.action == "finger" && <View style={{flexDirection:'row'}}>
                             <View style={{width:"50%"}}>
-                              <TextButton onPress={()=>{this.cancel()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
+                              <TextButton onPress={()=>{this.cancel()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(44),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
                             </View>
                             <View style={{width:"50%"}}>
-                              <TextButton onPress={()=>{this.inputPass()}} bgColor="#6DA0F8" textColor="#fff" text="输入密码" style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
+                              <TextButton onPress={()=>{this.inputPass()}} bgColor="#3B80F4" textColor="#fff" text="输入密码" style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
                             </View>
                           </View>
                         }
                         {
                           this.state.action == "password" && <View style={{flexDirection:'row'}}>
                             <View style={{width:"50%"}}>
-                              <TextButton onPress={()=>{this.cancel()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
+                              <TextButton onPress={()=>{this.cancel()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(44),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
                             </View>
                             <View style={{width:"50%"}}>
-                              <TextButton onPress={()=>{this.okPass()}} bgColor="#6DA0F8" textColor="#fff" text="确定" style={{height:ScreenUtil.setSpText(49),borderBottomRightRadius:4}} />
+                              <TextButton onPress={()=>{this.okPass()}} bgColor="#3B80F4" textColor="#fff" text="确定" style={{height:ScreenUtil.setSpText(44),borderBottomRightRadius:4}} />
                             </View>
                           </View>
                         }
                         {
                           this.state.action == "setFinger" && <View style={{flexDirection:'row'}}>
                             <View style={{width:"100%"}}>
-                              <TextButton onPress={()=>{this.cancel()}} bgColor="#fff" text="取消" style={{height:ScreenUtil.setSpText(49),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
+                              <TextButton onPress={()=>{this.cancel()}} bgColor="#fff" textColor="#D9D9D9" text="取消" style={{height:ScreenUtil.setSpText(44),borderTopWidth:ScreenUtil.setSpText(0.3),borderColor:"rgba(204,204,204,0.5)",borderBottomLeftRadius:4}} />
                             </View>
                           </View>
                         }
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     backgroundColor:"#fff"
   },
   title:{
-    color:"#1A1A1A",
+    color:"#3B80F4",
     textAlign:"center",
     lineHeight:ScreenUtil.setSpText(26),
     fontSize:ScreenUtil.setSpText(16),
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
   },
   input:{
     marginBottom:ScreenUtil.autowidth(11),
-    borderColor:"#E6E6E6",
+    borderColor:"#D9D9D9",
     borderWidth:ScreenUtil.autowidth(0.4),
     borderRadius:4,
     backgroundColor:"#F7F8F9",
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
   bottom:{
     flex:1,
     flexDirection: 'row',
-    maxHeight:ScreenUtil.autowidth(49),
+    maxHeight:ScreenUtil.autowidth(44),
     marginTop:ScreenUtil.autowidth(10)
   },
   input:{
@@ -342,6 +342,6 @@ const styles = StyleSheet.create({
     flexDirection:"row",
     justifyContent:"space-between",
     alignItems:"center",
-    height:ScreenUtil.autowidth(45),
+    height:ScreenUtil.autowidth(42),
   }
 });
