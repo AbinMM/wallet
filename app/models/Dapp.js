@@ -69,6 +69,24 @@ export default {
             yield put({ type: 'updateCollection', payload: { data: tmp_collectionDapp, ...payload } });
             if(callback) callback(tmp_collectionDapp);
         },
+        *deleteCollectionDapp({ payload,callback}, { call, put }) {
+            var collectionDapp = yield call(store.get, 'collectionDapp');        
+            if (!collectionDapp) {
+                return ;    
+            }
+
+            for (var i = 0; i < collectionDapp.length; i++) {
+                if ((collectionDapp[i].id == payload.id) && (collectionDapp[i].categoryId == payload.categoryId)) {
+                        collectionDapp.splice(i,1);
+                    break;
+                }
+            }
+
+            yield call(store.save, 'collectionDapp', collectionDapp);
+            let tmp_collectionDapp = collectionDapp.reverse();
+            yield put({ type: 'updateCollection', payload: { data: tmp_collectionDapp, ...payload } });
+            if(callback) callback(tmp_collectionDapp);
+        },
 
         //搜索的历史记录History
         *historyDappInfo({ payload,callback }, { call, put }) {

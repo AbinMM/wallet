@@ -1,24 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, Image, ScrollView, StyleSheet, View, Text, TextInput, TouchableOpacity, ListView } from 'react-native';
+import { Dimensions, Image, DeviceEventEmitter, StyleSheet, View, Text, TextInput, TouchableOpacity, ListView } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import UImage from '../../utils/Img';
 import UColor from '../../utils/Colors'
-import { kapimg } from '../../utils/Api'
-import Button from '../../components/Button'
 import Header from '../../components/Header'
-import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
-import {encryptedMsg} from '../../utils/AlgoUtil';
 import { EasyToast } from '../../components/Toast';
-import AnalyticsUtil from '../../utils/AnalyticsUtil';
-import { EasyShowLD } from "../../components/EasyShow"
 import BaseComponent from "../../components/BaseComponent";
-import {AlertModal,AlertModalView} from '../../components/modals/AlertModal'
-const ScreenWidth = Dimensions.get('window').width;
-const ScreenHeight = Dimensions.get('window').height;
-var tick = 60;
-var dismissKeyboard = require('dismissKeyboard');
+import {AlertModal,} from '../../components/modals/AlertModal'
 
 @connect(({ login, wallet, dapp }) => ({ ...login, ...wallet, ...dapp }))
 class HistoryCollection extends BaseComponent {
@@ -41,16 +31,26 @@ class HistoryCollection extends BaseComponent {
 
   //组件加载完成
   componentDidMount() {
-    this.setDapplist('isHistory');
+    this.getDapplist();
+
+    DeviceEventEmitter.addListener('access_dappweb', (data) => {
+      if(data)
+      {
+        this.getDapplist();  //更新记录
+      }
+    });
   }
 
   componentWillUnmount(){
     //结束页面前，资源释放操作
+    for(var i = 0;i < this.state.dappListCollection.length;i++)
+    {
+      if(this.state.dappListCollection[i].isCollect == false)
+      {
+        this.props.dispatch({ type: 'dapp/deleteCollectionDapp', payload: this.state.dappListCollection[i] }, );   
+      }
+    } 
     super.componentWillUnmount();
-  }
-
-  dismissKeyboardClick() {
-    dismissKeyboard();
   }
 
   businesButton(style, selectedSate, stateType, buttonTitle) {
@@ -78,11 +78,10 @@ class HistoryCollection extends BaseComponent {
             this.setState(newState);
         }
     }
-    this.setDapplist(currentPressed);
   }
 
-  setDapplist(currentPressed) {
-    if(currentPressed == "isHistory") {
+  getDapplist() {
+      //取历史记录
       this.props.dispatch({ type: 'dapp/mydappInfo', payload: {}, 
         callback: (mydappBook) => {
           if(mydappBook){
@@ -90,15 +89,21 @@ class HistoryCollection extends BaseComponent {
           }
         }  
       });
-    }else if(currentPressed == "isCollection"){
+      //取收藏记录
       this.props.dispatch({ type: 'dapp/collectionDappInfo', payload: {},
         callback: (collectionDapp) => {
-          if(collectionDapp){
-            this.setState({dappListCollection: collectionDapp})
+          if(collectionDapp && collectionDapp.length > 0){
+            var tmp_collectionDapp = new Array();
+            for(var i = 0 ; i < collectionDapp.length;i++){
+              var obj = collectionDapp[i];
+              obj.isCollect = true;
+              tmp_collectionDapp[i] = obj;
+            }
+            this.setState({dappListCollection: tmp_collectionDapp});
           }
         } 
       });
-    }
+
   }
 
   //点DAPP跳转
@@ -109,9 +114,16 @@ class HistoryCollection extends BaseComponent {
     AlertModal.show(title,content,'确认','取消',(resp)=>{
       if(resp){
           navigate('DappWeb', { data: data});
-          this.props.dispatch({ type: 'dapp/saveMyDapp', payload: data });
         }
     });
+  }
+  checkClick(rowData,sectionID, rowID) {
+    let tmparray = this.state.dappListCollection;
+    tmparray[rowID].isCollect = !tmparray[rowID].isCollect;
+    this.setState({
+      dappListCollection: tmparray
+    });
+
   }
 
   showDappList()
@@ -133,7 +145,7 @@ class HistoryCollection extends BaseComponent {
         <View style={{flex: 1,}}>
           <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{backgroundColor:'#FFFFFF'}]}
             dataSource={this.state.dataSource.cloneWithRows(this.showDappList())} 
-            renderRow={(rowData) => (  
+            renderRow={(rowData, sectionID, rowID) => (  
               <TouchableOpacity  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headDAPP}>
                   <View style={styles.headbtnout}>
                       <Image source={{uri:rowData.icon}} style={styles.imgBtnDAPP} resizeMode='stretch'/>
@@ -142,8 +154,8 @@ class HistoryCollection extends BaseComponent {
                           <Text style={[styles.descriptiontext,{color: '#808080'}]} numberOfLines={1}>{rowData.description}</Text>
                       </View>
                       {this.state.isCollection &&
-                      <TouchableOpacity onPress={() => {}}>
-                        <Image source={UImage.collection_h} style={{ width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),margin: ScreenUtil.autowidth(15),}} resizeMode='stretch'/>
+                      <TouchableOpacity onPress={() => {this.checkClick(rowData,sectionID, rowID);}}>
+                        <Image source={rowData.isCollect ? UImage.collection_h : UImage.collection} style={{ width: ScreenUtil.autowidth(20),height: ScreenUtil.autowidth(20),margin: ScreenUtil.autowidth(15),}} resizeMode='stretch'/>
                       </TouchableOpacity>
                       }
                   </View>
@@ -157,6 +169,11 @@ class HistoryCollection extends BaseComponent {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+
   businestab: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -184,7 +201,7 @@ const styles = StyleSheet.create({
 
   listViewStyle:{ 
     flexDirection:'column', 
-    width: ScreenWidth, 
+    width: ScreenUtil.screenWidth, 
   }, 
   headDAPP: {
     paddingVertical: ScreenUtil.autoheight(8),
@@ -208,120 +225,7 @@ const styles = StyleSheet.create({
     fontSize: ScreenUtil.setSpText(10),
     lineHeight: ScreenUtil.autoheight(14), 
   },
-
-
-
-  butimg: { 
-    width: ScreenUtil.autowidth(100), 
-    height: ScreenUtil.autowidth(45), 
-  },
-  inp: {
-    textAlign: "center",
-    width: ScreenUtil.autowidth(120),
-    height: ScreenUtil.autoheight(45),
-    fontSize: ScreenUtil.setSpText(15),
-    marginLeft: ScreenUtil.autowidth(10),
-  },
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-  outsource: {
-    flexDirection: 'column',
-  },
-  inptout: {
-    padding: ScreenUtil.autowidth(20), 
-    height: ScreenUtil.autoheight(80), 
-  },
-  inpt: {
-    fontSize: ScreenUtil.setSpText(15),
-    height: ScreenUtil.autoheight(40),
-    paddingLeft: ScreenUtil.autowidth(2),
-  },
-  inptitle: {
-    fontSize: ScreenUtil.setSpText(14), 
-  },
-  separate: {
-    height: 0.5,
-  },
-  forgetpass: {
-    flexDirection: "row",
-    justifyContent: 'flex-end',
-    padding: ScreenUtil.autowidth(20),
-  },
-  forgettext: {
-    fontSize: ScreenUtil.setSpText(15),
-  },
-  vfanout: {
-    flexDirection: 'row',
-  },
-  vfantext: {
-    width: ScreenUtil.autowidth(200),
-    height: ScreenUtil.autoheight(80),
-    padding: ScreenUtil.autowidth(20),
-  },
-  verificationout: {
-    flex: 1,
-    flexDirection: "row",
-    alignSelf: 'center',
-    justifyContent: "flex-end",
-    marginRight: ScreenUtil.autowidth(10),
-  },
-  verification: {
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: ScreenUtil.autowidth(100),
-    height: ScreenUtil.autoheight(40),
-    marginTop: ScreenUtil.autoheight(15),
-  },
-  verificationtext: {
-    fontSize: ScreenUtil.setSpText(15),
-  },
-  butout: {
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: ScreenUtil.autoheight(45),
-    marginVertical: ScreenUtil.autoheight(20),
-    marginHorizontal: ScreenUtil.autowidth(20),
-  },
-  buttext: {
-    fontSize: ScreenUtil.setSpText(15),
-  },
-  readout: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: ScreenUtil.autoheight(20),
-  },
-  readtext: {
-    fontSize: ScreenUtil.setSpText(14),
-  },
-  servicetext: {
-    fontSize: ScreenUtil.setSpText(14),
-    paddingLeft: ScreenUtil.autowidth(5),
-  },
-
-  logoutone:{
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    height: ScreenUtil.autoheight(320),
-    paddingBottom: ScreenUtil.autoheight(100),
-  },
-  logouttow:{
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: ScreenUtil.autoheight(100),
-  },
-  logimg: {
-    width: ScreenUtil.autowidth(50), 
-    height: ScreenUtil.autowidth(50)
-  },
-  logtext: {
-    fontSize: ScreenUtil.setSpText(14),
-    lineHeight: ScreenUtil.autoheight(30),
-  }
+ 
 });
 
 export default HistoryCollection;
