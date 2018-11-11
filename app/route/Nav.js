@@ -439,7 +439,7 @@ class Route extends React.Component {
     //调取是否有钱包账户
     this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
       this.props.dispatch({ type: 'wallet/walletList', payload: {}, callback: (walletArr) => {
-        if(walletArr == null || walletArr.length == 0){
+        if(walletArr == null || walletArr.length == 0 || this.isWalletListActive(walletArr)==false){
           this.props.dispatch({ type: 'wallet/updateGuideState', payload: {guide: true}});
         }
       }
