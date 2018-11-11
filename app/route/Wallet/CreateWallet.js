@@ -54,29 +54,11 @@ class createWallet extends BaseComponent {
     super.componentWillUnmount();
     
   }
-  importKey() {
-     // 钱包
-     const { navigate } = this.props.navigation;
-    navigate('ImportKey', {});
-  }
-  
-  importWallet() {
-    // 导入钱包
-    const { navigate } = this.props.navigation;
-    navigate('ImportEosKey',{});
-    // EasyToast.show('测试网络暂不开放');
-  }
+
   backupWallet(wallet) {
      // 备份私钥
      const { navigate } = this.props.navigation;
-     navigate('BackupsWarning', {wallet: wallet, password: this.state.walletPassword, entry: "createWallet"});
-    //  navigate('BackupsPkey', {wallet: wallet, password: this.state.walletPassword, entry: "createWallet"});
-     
-  }
-  importAPkey() {
-     // 账号支付激活
-     const { navigate } = this.props.navigation;
-     navigate('APactivation', {});
+     navigate('BackupsWarning', {wallet: wallet, password: this.state.walletPassword, entry: "createWallet"});     
   }
 
   checkAccountAndCreateWallet(){
@@ -122,30 +104,6 @@ class createWallet extends BaseComponent {
         }else if(resp.code == 500){
           EasyToast.show(resp.msg);
         }else{
-          // 创建未激活钱包，并进入备份私钥流程
-          // var arr_owner = [];
-          // var arr_active = [];
-          // var words_owner = [];
-          // var words_active = [];
-          // var wordsStr_owner = '';
-          // var wordsStr_active = '';
-
-          // for (var i = 0; i < 15; i++) {
-          //   var randomNum = this.getx(arr_owner);
-          //   words_owner.push(english[randomNum]);
-          // }
-          // for (var i = 0; i < arr_owner.length; i++) {
-          //   words_owner[i] = english[arr_owner[i]];
-          //   wordsStr_owner = wordsStr_owner + "," + words_owner[i];
-          // }
-          // for (var i = 0; i < 15; i++) {
-          //   var randomNum = this.getx(arr_active);
-          //   words_active.push(english[randomNum]);
-          // }
-          // for (var i = 0; i < arr_active.length; i++) {
-          //   words_active[i] = english[arr_active[i]];
-          //   wordsStr_active = wordsStr_active + "," + words_active[i];
-          // }
           var arr_key = [];
           var words_key = [];
           var wordsStr_key = '';
@@ -191,21 +149,6 @@ class createWallet extends BaseComponent {
     }
   }
 
-  ExplainPopup(){
-    EasyShowLD.dialogShow("EOS账号创建说明", (<View>
-      <View style={{flexDirection: 'column', marginBottom: 10,}}>
-        <Text style={{textAlign: 'left', color: UColor.showy,}}>生成账号失败：{this.state.errormsg}</Text>
-        <Text style={{textAlign: 'left', color: UColor.showy,}}>错误码：{this.state.errorcode}</Text>
-      </View>
-      <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>1.如果您没有注册EosToken账号，创建的EOS钱包将无法激活</Text>
-      <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>2.激活EOS钱包需达到{this.state.integral}点积分（每个用户仅限一个）</Text>
-      <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>3.活跃用户每天均可获得对应的积分（详情参考积分细则）</Text>
-      <Text style={[styles.Becarefultext,{color: UColor.showy}]}>注意：不要向未激活的钱包进行转账！</Text>
-    </View>), "知道了", null, () => {
-      EasyShowLD.dialogClose();
-      this.props.navigation.goBack();
-    }, () => { EasyShowLD.dialogClose() });
-  }
 
   clearFoucs = () => {
     this._raccount.blur();
@@ -317,54 +260,50 @@ class createWallet extends BaseComponent {
   }
 
   render() {
-    return <View style={[styles.container,{ backgroundColor: UColor.secdfont,}]}>  
+    return <View style={{flex: 1,flexDirection: 'column',backgroundColor: UColor.secdfont,}}>  
     <Header {...this.props} onPressLeft={true} title="创建钱包" />  
-    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "padding" : null} style={styles.tab}>
+    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "padding" : null} style={{flex: 1}}>
     <ScrollView  keyboardShouldPersistTaps="always">
-      <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex: 1,}}>
+      <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex: 1}}>
         <View style={styles.header}>
 
           <View >
-            <View style={styles.inptout} >
-              <Text style={[styles.inptitle,{color: '#323232'}]}>账号名称</Text>
+            <View style={styles.subTitleView} >
+              <Text style={[styles.inputTitleStyle,{color: '#323232'}]}>账号名称</Text>
             </View>
-            <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]} >
+            <View style={[styles.subTitleView,{backgroundColor: UColor.mainColor}]} >
               <View style={{flexDirection: 'row',justifyContent: 'center',alignItems: 'center',}}>
                 <TextInput ref={(ref) => this._raccount = ref} value={this.state.walletName} returnKeyType="next" 
-                  selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={'#D9D9D9'} 
+                  selectionColor={UColor.tintColor} style={styles.inputTextStyle} placeholderTextColor={'#D9D9D9'} 
                   placeholder="输入a-z小写字母和1-5数字组合字符" underlineColorAndroid="transparent" onChange={this.intensity()} 
                   keyboardType="default" maxLength={12} onChangeText={(walletName) => this.setState({ walletName:this.chkAccount(walletName) })} />
-                {/* <Button onPress={() => this.random()}>
-                  <View style={{width: ScreenUtil.autowidth(60), height: ScreenUtil.autoheight(35),justifyContent: 'center',alignItems: 'center',}}>
-                    <Text style={[styles.createWallet,{color: UColor.tintColor}]}>随机</Text>
-                  </View>
-                </Button> */}
               </View>
             </View>
 
-            <View style={styles.inptout} >
+            <View style={styles.subTitleView} >
               <PasswordInput password={this.state.walletPassword} onCallbackFun={(walletPassword) => this.setState({ walletPassword })} 
               repeatpassword={this.state.reWalletPassword} onCallbackFunRepeat={(reWalletPassword) => this.setState({ reWalletPassword })}/>
             </View>
 
-            <View style={[styles.inptout,]} >
-              <Text style={[styles.inptitle,{color: '#323232'}]}>设置密码提示</Text>
+            <View style={[styles.subTitleView,]} >
+              <Text style={[styles.inputTitleStyle,{color: '#323232'}]}>设置密码提示</Text>
             </View>
-            <View style={[styles.inptout,{backgroundColor: UColor.mainColor}]} >
+            <View style={[styles.subTitleView,{backgroundColor: UColor.mainColor}]} >
               <TextInput ref={(ref) => this._lnote = ref} value={this.state.passwordNote} selectionColor={UColor.tintColor} maxLength={40}
-                returnKeyType="go" placeholderTextColor={'#D9D9D9'} placeholder="密码提示信息(可不填)"  style={styles.inpt} 
+                returnKeyType="go" placeholderTextColor={'#D9D9D9'} placeholder="密码提示信息(可不填)"  style={styles.inputTextStyle} 
                 underlineColorAndroid="transparent" onChangeText={(passwordNote) => this.setState({ passwordNote })}  />
             </View>
           </View>
-          <View style={styles.clauseout}>
+
+          <View style={{flexDirection: 'row',marginTop: ScreenUtil.autowidth(15),marginBottom: ScreenUtil.autowidth(10),marginHorizontal: ScreenUtil.autowidth(20),}}>
             <CheckMarkCircle  width={ScreenUtil.autowidth(13)} height={ScreenUtil.autowidth(13)} selected={this.state.isChecked} onPress={() => this.checkClick()}/>
-            <Text style={[styles.welcome,{color: UColor.arrow}]} > 我已经仔细阅读并同意 <Text onPress={() => this.prot()} style={[styles.clausetext,{color: UColor.arrow}]}>【服务及隐私条款】</Text></Text>
+            <Text style={{fontSize: ScreenUtil.setSpText(12),lineHeight: ScreenUtil.autoheight(14),color: UColor.arrow}} > 我已经仔细阅读并同意 <Text onPress={() => this.prot()} style={{fontSize: ScreenUtil.setSpText(12),color: UColor.arrow}}>【服务及隐私条款】</Text></Text>
           </View>
 
 
-          <View style={[styles.significantout,{backgroundColor: UColor.mainColor}]}>
-            <Text style={[styles.significanttext,{color: UColor.turnout_eos}]} >• 密码用于保护私钥和交易授权，建议设置高强度密码；</Text>
-            <Text style={[styles.significanttext,{color: UColor.turnout_eos}]} >• EosToken不存储密码，也无法帮您找回，请务必牢记。</Text>
+          <View style={{flexDirection: "column",paddingVertical: ScreenUtil.autowidth(5),paddingHorizontal: ScreenUtil.autowidth(15),backgroundColor: UColor.mainColor}}>
+            <Text style={[styles.warningTextStyle,{color: UColor.turnout_eos}]} >• 密码用于保护私钥和交易授权，建议设置高强度密码；</Text>
+            <Text style={[styles.warningTextStyle,{color: UColor.turnout_eos}]} >• EosToken不存储密码，也无法帮您找回，请务必牢记。</Text>
           </View>
 
         <View style={{flex: 1, justifyContent: 'flex-end', marginHorizontal: ScreenUtil.autowidth(16), marginTop: ScreenUtil.autowidth(24),}}>
@@ -381,11 +320,6 @@ class createWallet extends BaseComponent {
 }
 
 const styles = StyleSheet.create({
-  inptpasstext: {
-    fontSize: ScreenUtil.setSpText(12),
-    lineHeight: ScreenUtil.autoheight(20),
-    marginBottom: ScreenUtil.autoheight(15),
-  },
   header: { 
     flex: 1,
     justifyContent: 'center',
@@ -395,53 +329,25 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: UColor.mainColor,
     paddingBottom:ScreenUtil.autowidth(55),
+  },
 
-  },
-  Becarefultext: {
-     fontSize: ScreenUtil.setSpText(12),
-  },
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-  significantout: {
-    flexDirection: "column",
-    paddingVertical: ScreenUtil.autowidth(5),
-    paddingHorizontal: ScreenUtil.autowidth(15),
-  },
-  imgBtn: {
-    width: ScreenUtil.autowidth(25),
-    height: ScreenUtil.autowidth(25),
-    marginRight: ScreenUtil.autowidth(10),
-  },
-  statementtext: {
-    fontWeight: "bold",
-    fontSize: ScreenUtil.setSpText(16), 
-  },
-  significanttext: {
+  warningTextStyle: {
     marginLeft: ScreenUtil.autowidth(10),
     fontSize: ScreenUtil.setSpText(10), 
     lineHeight: ScreenUtil.autoheight(25),
   },
-  inptout: {
+  subTitleView: {
     paddingTop:ScreenUtil.autowidth(15),
     paddingHorizontal: ScreenUtil.autowidth(15),
   },
-  Strengthout: {
-    borderRadius: 4,
-    paddingHorizontal: ScreenUtil.autowidth(8),
-    paddingVertical: ScreenUtil.autowidth(6),
-  },
-  Strengthtext: {
-    fontSize: ScreenUtil.setSpText(15), 
-  },
-  inptitle: {
+
+  inputTitleStyle: {
     flex: 1,
     fontSize: ScreenUtil.setSpText(16),
     lineHeight: ScreenUtil.autoheight(23),
     // fontWeight:"bold"
   },
-  inpt: {
+  inputTextStyle: {
     flex: 1,
     paddingVertical: 0,
     borderBottomWidth:0.5,
@@ -452,36 +358,6 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D5D5D5'
   },
 
-  clauseout: {
-    flexDirection: 'row',
-    marginTop: ScreenUtil.autowidth(15),
-    marginBottom: ScreenUtil.autowidth(10),
-    marginHorizontal: ScreenUtil.autowidth(20),
-  },
-  clauseimg: { 
-    width: ScreenUtil.autowidth(20), 
-    height: ScreenUtil.autowidth(20),
-    marginRight: ScreenUtil.autowidth(10), 
-  },
-  welcome: {
-    fontSize: ScreenUtil.setSpText(12),
-    lineHeight: ScreenUtil.autoheight(14),
-  },
-  clausetext: {
-    fontSize: ScreenUtil.setSpText(12),
-  },
-  createWalletout: {
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: ScreenUtil.autoheight(50),
-  },
-  createWallet: {
-    fontSize: ScreenUtil.setSpText(15),
-  },
-  tab: {
-    flex: 1,
-  },
 });
 
 export default createWallet;
