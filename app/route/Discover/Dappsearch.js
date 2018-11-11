@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, StyleSheet, Image, View, Text, TextInput, ListView, TouchableOpacity, Platform, Linking  } from 'react-native';
+import { Dimensions, StyleSheet, Image, View, Text, TextInput, ListView, TouchableOpacity, Platform, Linking,  } from 'react-native';
 import UColor from '../../utils/Colors'
 import UImage from '../../utils/Img'
 import Constants from '../../utils/Constants';
@@ -10,7 +10,7 @@ import { EasyToast } from '../../components/Toast';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 var dismissKeyboard = require('dismissKeyboard');
-import {AlertModal,AlertModalView} from '../../components/modals/AlertModal'
+import {AlertModal} from '../../components/modals/AlertModal'
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 @connect(({ login, wallet, dapp }) => ({ ...login, ...wallet, ...dapp }))
@@ -26,9 +26,9 @@ class Dappsearch extends BaseComponent {
         super(props);
         this.state = {
             labelname: '',
-            showDapp: false,
             showgoDapp: false,
-            dappList: [],
+            historydappList: [], //历史搜索记录
+            vagueDappList: [],//模糊查询结果 后台返回
             dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
         }
     }
@@ -48,7 +48,7 @@ class Dappsearch extends BaseComponent {
         this.props.dispatch({ type: 'dapp/historyDappInfo', payload: {}, 
             callback: (historyDappInfo) => {
                 if(historyDappInfo){
-                    this.setState({dappList: historyDappInfo});
+                    this.setState({historydappList: historyDappInfo});
                 }
             }  
         });
@@ -61,18 +61,15 @@ class Dappsearch extends BaseComponent {
             EasyToast.show('请输入DAPP网址');
             return;
         }else{
-            this.setState({ showDapp: true,})
             this.props.dispatch({ type: 'dapp/dappfindByName', payload: {variable: labelname},
                 callback: (resp) => {
                 if (resp && resp.code == '0') {
                     if(resp.data){
                         this.setState({
-                            dappList: resp.data,
+                            vagueDappList: resp.data,  //模糊查询的记录
                         });
                     }
-                } else {
-                    console.log("dappfindByName error");
-                }
+                } 
                 }
             });
         }
@@ -95,9 +92,12 @@ class Dappsearch extends BaseComponent {
             }else{
                 tmpUrl = 'http://' + labelname;
             }
+            //前往要保存历史搜索记录
+            var tmpdata = {name: labelname, url: tmpUrl,icon:"http://static.eostoken.im/images/20181025/1540434919469.png"};
+            this.props.dispatch({ type: 'dapp/savehistoryDapp', payload: tmpdata });
 
             const { navigate } = this.props.navigation;
-            navigate('DappWeb', { data: {name: labelname, url: tmpUrl,icon:"http://static.eostoken.im/images/20181025/1540434919469.png"}});
+            navigate('DappWeb', { data: tmpdata});
         }
     }
  
@@ -115,14 +115,26 @@ class Dappsearch extends BaseComponent {
         var content = '提示：您所访问的页面将跳转至第三方DApp'+ data.name +'。您在第三方DApp上的使用行为将适用该第三方DApp的用户协议和隐私政策，由其直接并单独向您承担责任。';
         AlertModal.show(title,content,'确认','取消',(resp)=>{
         if(resp){
-            navigate('DappWeb', { data: data});
             this.props.dispatch({ type: 'dapp/savehistoryDapp', payload: data });
+            navigate('DappWeb', { data: data});
             }
         });
     }
 
     dismissKeyboardClick() {
         dismissKeyboard();
+    }
+
+    getListValue()
+    {
+        if(this.state.labelname.length <= 0){
+            //显示历史记录
+            return  this.state.historydappList == null ? [] : this.state.historydappList;
+        }else{
+            //模糊查询记录
+            return  this.state.vagueDappList == null ? [] : this.state.vagueDappList;
+        }
+       
     }
 
     render() {
@@ -144,7 +156,7 @@ class Dappsearch extends BaseComponent {
             </View> 
             <View style={{flex: 1,}}>
                 <View style={{backgroundColor: '#FFFFFF' }}>
-                    {this.state.dappList != '' && this.state.dappList != [] && 
+                    {this.state.labelname.length<= 0 && this.state.historydappList  && this.state.historydappList.length > 0 && 
                      <View style={{height: ScreenUtil.autoheight(30),flexDirection: 'row', justifyContent: 'center'}}>
                         <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(12),color: '#D9D9D9',lineHeight: ScreenUtil.autoheight(17),paddingLeft:  ScreenUtil.autowidth(15)}}>历史记录</Text>
                         <TouchableOpacity onPress={() => {this._emptyHistory()}}>
@@ -153,7 +165,7 @@ class Dappsearch extends BaseComponent {
                     </View>
                     }
                    
-                    {this.state.labelname !='' &&
+                    {this.state.labelname.length > 0 &&
                     <TouchableOpacity onPress={() => {this._goDapps(this.state.labelname)}} style={{height: ScreenUtil.autoheight(44),flexDirection: 'row', alignItems: 'center',}}>
                         <Text style={{fontSize: ScreenUtil.setSpText(12),color: '#323232',lineHeight: ScreenUtil.autoheight(17),paddingLeft:  ScreenUtil.autowidth(15)}}>前往DApp:</Text>
                         <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(12),color: '#3B80F4',lineHeight: ScreenUtil.autoheight(17),}}  numberOfLines={1}>{this.state.labelname}</Text>
@@ -161,14 +173,14 @@ class Dappsearch extends BaseComponent {
                     </TouchableOpacity>
                     }
                     
-                    {this.state.showDapp && 
+                    {this.state.labelname.length > 0 && this.state.vagueDappList && this.state.vagueDappList.length > 0 && 
                     <View style={{height: ScreenUtil.autoheight(30),paddingHorizontal:ScreenUtil.autowidth(15), justifyContent: 'center'}}>
                         <Text style={{fontSize: ScreenUtil.setSpText(12),color: '#808080',lineHeight: ScreenUtil.autoheight(17),}}>DApps</Text>
                     </View>
                     }
                 </View>
                 <ListView  enableEmptySections={true}  contentContainerStyle={[styles.listViewStyle,{backgroundColor:'#FFFFFF'}]}
-                    dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)} 
+                    dataSource={this.state.dataSource.cloneWithRows(this.getListValue())} 
                     renderRow={(rowData) => (  
                     <TouchableOpacity  onPress={this.onPressDapp.bind(this, rowData)}  style={styles.headDAPP}>
                         <View style={styles.headbtnout}>
