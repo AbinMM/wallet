@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Platform,BackHandler,DeviceEventEmitter,Clipboard,InteractionManager,Text,View,WebView,Animated,TextInput,Dimensions,StyleSheet,Modal,TouchableHighlight,TouchableOpacity,Image} from 'react-native'
+import {Platform,BackHandler,DeviceEventEmitter,Clipboard,InteractionManager,Text,View,WebView,Animated,Linking,Dimensions,StyleSheet,Modal,TouchableHighlight,TouchableOpacity,Image} from 'react-native'
 import UColor from '../../utils/Colors'
 import { EasyShowLD } from '../../components/EasyShow'
 import { EasyToast } from '../../components/Toast';
@@ -208,37 +208,41 @@ onBackAndroid = () => {
             optionShow: !isShow,
         });
     }
-
-    //
-    pressRefalsh(){
+    getServiceName(){
+        var service = "此服务由eostoken.im提供";
+        try {
+            var url = this.props.navigation.state.params.data.url;
+            if(url){
+                url = url.replace('http://',"");
+                url = url.replace('https://',"");
+                url = url.replace('/',"");
+                service = "此服务由" + url + "提供";
+            }
+        } catch (error) {
+            
+        }
+        return service;
+    }
+    onPressTool(choose)
+    {
         this.moreOption();
-        if(this.refs.refWebview)
-        {
-            this.refs.refWebview.reload();
+        if(0 == choose){
+            if(this.refs.refWebview)
+            {
+                this.refs.refWebview.reload();
+            }
+        }else if(1 == choose){
+            Clipboard.setString(this.props.navigation.state.params.data.url);
+            EasyToast.show("复制成功!");
+        }else if(2 == choose){
+            DeviceEventEmitter.emit('dappShare', this.props.navigation.state.params.data.url);
+        }else if(3 == choose){
+            Linking.openURL(this.props.navigation.state.params.data.url); // 外部浏览器打开
+        }else if(4 == choose){
+            EasyToast.show("已收藏");
+            this.props.dispatch({ type: 'dapp/saveCollectionDapp', payload: this.props.navigation.state.params.data }, );
         }
     }
-
-    //
-    pressCopyUrl(){
-        this.moreOption();
-        Clipboard.setString(this.props.navigation.state.params.data.url);
-        EasyToast.show("复制成功!");
-    }
-
-    pressShare(){
-        this.moreOption();
-        DeviceEventEmitter.emit('dappShare', this.props.navigation.state.params.data.url);
-    }
-
-    pressBrowser() {
-
-    }
-
-    pressCollection(){
-        this.setState({ optionShow:false })
-        EasyToast.show("已收藏");
-        this.props.dispatch({ type: 'dapp/saveCollectionDapp', payload: this.props.navigation.state.params.data }, );
-    } 
 
   sendMessageToWebview(strinfo)
   {
@@ -916,25 +920,25 @@ scatter_linkAccount(result)
                 <TouchableOpacity onPress={() => {{ this.setState({ optionShow:false }) }}}
                 style={[styles.modalStyle,{ backgroundColor: UColor.mask}]} activeOpacity={1.0}>
                 <View style={{width: ScreenWidth, backgroundColor: '#FFFFFF',paddingTop:  ScreenUtil.autoheight(5), borderTopLeftRadius: 6, borderTopRightRadius: 6,}}>
-                    <Text style={{fontSize: ScreenUtil.setSpText(12),color: '#808080', lineHeight: ScreenUtil.autoheight(17),textAlign: 'center',}}>此服务由eostoken.com提供</Text> 
+                    <Text style={{fontSize: ScreenUtil.setSpText(12),color: '#808080', lineHeight: ScreenUtil.autoheight(17),textAlign: 'center',}}>{this.getServiceName()}</Text> 
                     <View style={[styles.head,{paddingVertical:  ScreenUtil.autoheight(28),}]}>
-                        <TouchableOpacity onPress={this.pressRefalsh.bind(this)} style={styles.headbtnout}>
+                        <TouchableOpacity onPress={this.onPressTool.bind(this,0)} style={styles.headbtnout}>
                             <Image source={UImage.refresh_dapp} style={styles.imgBtnBig} />
                             <Text style={[styles.headbtntext,{color: '#808080'}]}>刷新</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.pressCopyUrl.bind(this)} style={styles.headbtnout}>
+                        <TouchableOpacity onPress={this.onPressTool.bind(this,1)} style={styles.headbtnout}>
                             <Image source={UImage.copy_dapp} style={styles.imgBtnBig} />
                             <Text style={[styles.headbtntext,{color: '#808080'}]}>复制URL</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity  onPress={this.pressShare.bind(this)}  style={styles.headbtnout}>
+                        <TouchableOpacity  onPress={this.onPressTool.bind(this,2)}  style={styles.headbtnout}>
                             <Image source={UImage.share_dapp} style={styles.imgBtnBig} />
                             <Text style={[styles.headbtntext,{color: '#808080'}]}>分享</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity  onPress={this.pressBrowser.bind(this)}  style={styles.headbtnout}>
+                        <TouchableOpacity  onPress={this.onPressTool.bind(this,3)}  style={styles.headbtnout}>
                             <Image source={UImage.browser_dapp} style={styles.imgBtnBig} />
                             <Text style={[styles.headbtntext,{color: '#808080'}]}>浏览器打开</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity  onPress={this.pressCollection.bind(this)}  style={styles.headbtnout}>
+                        <TouchableOpacity  onPress={this.onPressTool.bind(this,4)}  style={styles.headbtnout}>
                             <Image source={UImage.collection} style={styles.imgBtnBig} />
                             <Text style={[styles.headbtntext,{color: '#808080'}]}>收藏</Text>
                         </TouchableOpacity>
