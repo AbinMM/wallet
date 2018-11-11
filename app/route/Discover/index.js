@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions,Image,  ScrollView,TextInput,TouchableOpacity,
-         InteractionManager, ListView, StyleSheet, View,  Text,  SectionList,
+import { Dimensions,Image,  ScrollView,DeviceEventEmitter,TouchableOpacity,
+         ListView, StyleSheet, View,  Text,  SectionList,
          Linking, } from 'react-native';
 
 import UImage from '../../utils/Img'
@@ -10,9 +10,7 @@ import Button from '../../components/Button'
 import Constants from '../../utils/Constants'
 import ScreenUtil from '../../utils/ScreenUtil'
 import { EasyToast } from '../../components/Toast';
-import {AlertModal,AlertModalView} from '../../components/modals/AlertModal'
-import AnalyticsUtil from '../../utils/AnalyticsUtil';
-import LinearGradient from 'react-native-linear-gradient'
+import {AlertModal} from '../../components/modals/AlertModal'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Carousel from 'react-native-banner-carousel';
 require('moment/locale/zh-cn');
@@ -21,7 +19,7 @@ require('moment/locale/zh-cn');
 var ScreenWidth = Dimensions.get('window').width;
 var ScreenHeight = Dimensions.get('window').height;
 
-@connect(({ banner, dapp,}) => ({ ...banner,...dapp}))
+@connect(({ wallet,banner, dapp,}) => ({ ...wallet,...banner,...dapp}))
 class Discover extends React.Component {
 
   static navigationOptions = {
@@ -48,20 +46,17 @@ class Discover extends React.Component {
   
   //组件加载完成
   componentDidMount() {
+    this.props.dispatch({ type: 'wallet/getDefaultWallet',});
     //获取banner图
     this.props.dispatch({ type: 'banner/list', payload: {} });
     //获取我的Dapp
-    this.props.dispatch({ type: 'dapp/mydappInfo', callback: (resp) => {
-      if (resp && resp.code == '0') {
-        if(resp.data){
-          this.setState({
-            mydappBook: resp.data,
-          });
-        }
-      } else {
-        console.log("dappfindAllHotRecommend error");
+    this.getMyDapp();
+    DeviceEventEmitter.addListener('access_dappweb', (data) => {
+      if(data)
+      {
+        this.getMyDapp();
       }
-    } });
+  });
     //获取热门推荐
     this.props.dispatch({ type: 'dapp/dappfindAllHotRecommend', 
       callback: (resp) => {
@@ -90,7 +85,7 @@ class Discover extends React.Component {
     //     }
     //   } 
     // });
-    //获取DAPP树状列表
+    //获取DAPP所有列表
     this.props.dispatch({ type: 'dapp/dappfindAllRecommend', 
       callback: (resp) => {
         if (resp && resp.code == '0') {
@@ -104,12 +99,22 @@ class Discover extends React.Component {
         }
       }
     });
+
+    
   }
 
   componentWillUnmount() {
 
   }
-
+  
+  //更新我的Dapps
+  getMyDapp = ()=>{
+    this.props.dispatch({ type: 'dapp/mydappInfo', callback: (resp) => {
+        if (resp) {
+            this.setState({mydappBook: resp});
+        } 
+    } });
+  };
   //点击banner图跳转
   bannerPress(banner) {
    
@@ -162,26 +167,32 @@ class Discover extends React.Component {
 
   //点DAPP跳转
   onPressTool(data) {
+    if(this.props.defaultWallet == null || this.props.defaultWallet.name == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
+      EasyToast.show("请先导入已激活账号!");
+      return;
+    }
+
+    if(!data || !data.hasOwnProperty('name' || !data.hasOwnProperty('url') || !data.hasOwnProperty('icon'))){
+      EasyToast.show("无效链接!");
+      return;
+    }
     const { navigate } = this.props.navigation;
     var title = '您所访问的页面将跳至第三方DApp' + data.name;
     var content = '提示：您所访问的页面将跳转至第三方DApp'+ data.name +'。您在第三方DApp上的使用行为将适用该第三方DApp的用户协议和隐私政策，由其直接并单独向您承担责任。';
     AlertModal.show(title,content,'确认','取消',(resp)=>{
       if(resp){
-        navigate('DappWeb', { data: data});
+        navigate('DappWeb', { data: data,callback:()=>{
+
+        }});
       }
     });
   }
 
-  query = (labelname) =>{
-    if (labelname == ""||labelname == undefined||labelname==null) {
-      EasyToast.show('请输入账号');
-      return;
-    }else{
-
-    }
-  }
-
   onDappSearch ()  {
+    if(this.props.defaultWallet == null || this.props.defaultWallet.name == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
+      EasyToast.show("请先导入已激活账号!");
+      return;
+    }
     const { navigate } = this.props.navigation;
     navigate('Dappsearch', { });
   }
@@ -214,7 +225,7 @@ class Discover extends React.Component {
                 <Image source={UImage.Magnifier_ash} style={styles.headleftimg} />
                 <Text style={{fontSize: ScreenUtil.setSpText(12),color: '#D9D9D9'}}>HASH FUN</Text>
               </TouchableOpacity> 
-              {this.state.mydappBook != '' && this.state.mydappBook != [] &&<View>
+              {this.state.mydappBook && this.state.mydappBook.length > 0 &&<View>
                 <View style={{marginVertical:ScreenUtil.autoheight(15),flexDirection: 'row',marginHorizontal: ScreenUtil.autowidth(20),}}>
                   <Text style={{flex: 1, fontSize: ScreenUtil.setSpText(14),color: '#323232',fontWeight:'bold',}}>我的DApps</Text>
                   <TouchableOpacity onPress={this.onHistoryCollection.bind(this)} style={{flexDirection: 'row',}} >
@@ -234,7 +245,7 @@ class Discover extends React.Component {
                   )}
                 />
               </View>}
-              {this.state.hotdappList.list != '' && this.state.hotdappList.list != [] &&<View>
+              {this.state.hotdappList && this.state.hotdappList.list && this.state.hotdappList.list.length > 0 &&<View>
                 <View style={{marginVertical:ScreenUtil.autoheight(15),marginHorizontal: ScreenUtil.autowidth(20),}}>
                   <Text style={{fontSize: ScreenUtil.setSpText(14),color: '#323232',fontWeight:'bold',}}>{this.state.hotdappList.name}</Text>
                 </View>
@@ -311,50 +322,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     fontSize: ScreenUtil.setSpText(12),
   },
-
-  canceltext: {
-    textAlign: 'center',
-    fontSize: ScreenUtil.setSpText(15),
-    paddingRight: ScreenUtil.autowidth(15),
-  },
-
-
-
-
-
-  selflist:{
-    flexWrap:'wrap',
-    flexDirection:'row',
-    alignItems:'center',
-    width: ScreenWidth,
-    marginTop:ScreenUtil.autoheight(10),
-    borderBottomWidth: 1,
-  },
-  selfDAPP: {
-    width: ScreenWidth/4,
-    paddingBottom: ScreenUtil.autoheight(10),
-  },
-  selfbtnout: {
-    flex:1,
-    alignItems: 'center',
-    justifyContent: "center",
-  },
-  selfBtnDAPP: {
-    width: ScreenUtil.autowidth(40),
-    height: ScreenUtil.autoheight(40),
-    margin: ScreenUtil.autowidth(5),
-  },
-  listViewStyle:{
-    flexDirection:'row',
-    flexWrap:'wrap',
-    //alignItems:'center',
-    alignItems:'flex-start',
-    paddingHorizontal: ScreenUtil.autowidth(6),
-  },
-  headDAPP: {
-    // paddingBottom: ScreenUtil.autoheight(15),
-    // paddingHorizontal: ScreenUtil.autowidth(8),
-  },
+ 
   headbtnout: {
     flexDirection: 'column',
     alignItems: 'center',

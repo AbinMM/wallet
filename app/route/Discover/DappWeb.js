@@ -16,13 +16,9 @@ import Constants from '../../utils/Constants'
 import {formatEosQua} from '../../utils/FormatUtil';
 import TextButton from '../../components/TextButton'
 import CustomWebView from './CustomWebView.android';
-import {DappSignModal,DappSignModalView} from '../../components/modals/DappSignModal'
-import {AuthModal,AuthModalView} from '../../components/modals/AuthModal'
-import {AlertModal,AlertModalView} from '../../components/modals/AlertModal'
-
-
-var AES = require("crypto-js/aes");
-var CryptoJS = require("crypto-js");
+import {DappSignModal} from '../../components/modals/DappSignModal'
+import {AuthModal} from '../../components/modals/AuthModal'
+import {AlertModal} from '../../components/modals/AlertModal'
 
 @connect(({ wallet,dapp,vote }) => ({ ...wallet,...dapp,...vote }))
 export default class DappWeb extends Component {
@@ -140,6 +136,7 @@ onLeftCloseFun() {
         if (this.props.navigation.state.params.callback) {
             this.props.navigation.state.params.callback()
         }
+        DeviceEventEmitter.emit('access_dappweb',true);
     } catch (error) {
 
     }
@@ -162,6 +159,11 @@ onBackAndroid = () => {
         this.setState({
             backButtonEnabled: false,
         });
+
+        if (this.props.navigation.state.params.callback) {
+            this.props.navigation.state.params.callback()
+        }
+        DeviceEventEmitter.emit('access_dappweb',true);
         return false;
     }
 };

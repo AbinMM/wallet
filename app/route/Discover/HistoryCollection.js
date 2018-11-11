@@ -33,7 +33,7 @@ class HistoryCollection extends BaseComponent {
     this.state = {
       isHistory: true,
       isCollection: false,
-      dappList: [],
+      dappList: [],           //历史记录
       dappListCollection: [], //收藏列表
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
     };
