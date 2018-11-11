@@ -16,6 +16,8 @@ import AnalyticsUtil from '../../utils/AnalyticsUtil';
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import WalletWelcome from '../Wallet/WalletWelcome'
+
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
@@ -768,23 +770,10 @@ class Home extends React.Component {
     if(this.props.guide){
       return (
         <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-          <LinearGradient colors={UColor.Navigation} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={{width: ScreenWidth,height: ScreenHeight, paddingBottom: ScreenUtil.autowidth(15),}} >
-            <View style={{flex:3, alignItems: 'center', justifyContent: 'center',}}>
-              <Image source={UImage.guide} style={styles.imgTop} resizeMode="stretch"/>
-            </View>
-            <View style={styles.btnestablish}>
-              <Button onPress={() => this.Establish()}>
-                <View style={[styles.btnimport,{backgroundColor: UColor.btnColor, borderColor: UColor.btnColor}]}>
-                    <Text style={[styles.btntext,{color: UColor.tintColor}]}>创建账号</Text>
-                </View>
-              </Button>
-              <Button onPress={this.Import.bind(this)}>
-                <View style={[styles.btnimport,{borderColor: UColor.btnColor}]}>
-                    <Text style={[styles.btntext,{color: UColor.btnColor}]}>导入账号</Text>
-                </View>
-              </Button>
-            </View>
-          </LinearGradient>
+          <View style={{with:ScreenWidth,height:ScreenUtil.autoheight(44), marginTop:20,justifyContent:"center",backgroundColor: "#FFFFFF"}}>
+            <Text style={{fontSize: ScreenUtil.setSpText(20),lineHeight: ScreenUtil.autoheight(25),textAlign: 'center',color: "#323232"}}>创建钱包</Text>
+          </View>
+          <WalletWelcome {...this.props}/>        
         </View>
       )
     }else{
@@ -908,7 +897,7 @@ class Home extends React.Component {
             </TouchableWithoutFeedback>
           </View>}
 
-          <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.isTipShow()} onRequestClose={()=>{}}>
+          {/* <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.isTipShow()} onRequestClose={()=>{}}>
             <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
               <View style={{ width: ScreenWidth-20, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
                 <View style={styles.subViewBackup}>
@@ -928,7 +917,7 @@ class Home extends React.Component {
                 </Button>
               </View>
             </TouchableOpacity>
-          </Modal>
+          </Modal> */}
 
           <Modal style={styles.touchableouts} animationType={'slide'} transparent={true}  visible={this.props.Invalid} onRequestClose={()=>{}}>
             <TouchableOpacity style={styles.pupuo} activeOpacity={1.0}>
