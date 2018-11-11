@@ -36,8 +36,8 @@ class Discover extends React.Component {
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
       hotdappList:[],
       advertisdapplist: [
-        {adPhoto: UImage.gg_bg01},
-        {adPhoto: UImage.gg_bg02},
+        // {adPhoto: UImage.gg_bg01},
+        // {adPhoto: UImage.gg_bg02},
       ],
       holdallList: [],
       mydappBook: [],
