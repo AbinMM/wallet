@@ -895,6 +895,17 @@ class Route extends React.Component {
     this.txTimer && clearTimeout(this.txTimer);
   }
 
+  isWalletListActive(wlist){
+    if(wlist.length){
+      for(var ii=0;ii<wlist.length;ii++){
+        if(wlist[ii].isactived){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   switchRoute = (prevNav, nav, action) => {
     //关闭loading显示,防止进入下一页面，上一个页面的loading显示还在
     if(action && action.routeName){
@@ -913,10 +924,11 @@ class Route extends React.Component {
     //切换到钱包判断是否创建钱包
     if (action && action.routeName && action.routeName == "Home") {
       this.stopTxTimer();
-      if(this.props.walletList == null || this.props.walletList.length == 0){
+      if(this.props.walletList == null || this.props.walletList.length == 0 || this.isWalletListActive(this.props.walletList)==false){
         this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" }, callback: () => {
           this.props.dispatch({ type: 'wallet/walletList', payload: {}, callback: (walletArr) => {
-            if(walletArr == null || walletArr.length == 0){
+
+            if(walletArr == null || walletArr.length == 0 || this.isWalletListActive(walletArr)==false){
               this.props.dispatch({ type: 'wallet/updateGuideState', payload: {guide: true}, callback: (data) => {
                 if (action && action.routeName) {
                   DeviceEventEmitter.emit('changeTab', action.routeName);
