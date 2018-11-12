@@ -20,11 +20,11 @@ class ItemButton extends Component {
     }
     render(){
       return (
-        <TouchableOpacity style={{marginTop: this.props.first?10:0}} onPress={this.props.onPress}>
+        <Button style={{marginTop: this.props.first?10:0}} onPress={this.props.onPress}>
           <View style={[styles.button,{height: itemHeight?itemHeight: ScreenUtil.autoheight(55)}]}>
             <Text style={{color: this.props.color || UColor.riseColor}}>{this.props.name}</Text>
           </View>
-        </TouchableOpacity>
+        </Button>
       )
     }
   }
@@ -88,7 +88,7 @@ export default class Item extends Component {
     onPress = onPress || (() => {})
     return disable?
       this._render():
-      <TouchableOpacity onPress={onPress}>{this._render()}</TouchableOpacity>
+      <Button onPress={onPress}>{this._render()}</Button>
   }
 }
 Item.Button = ItemButton

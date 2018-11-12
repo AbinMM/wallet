@@ -294,12 +294,11 @@ const styles = StyleSheet.create({
         height: ScreenUtil.autoheight(45),
     },
 
-
     tab: {
         width: ScreenWidth - ScreenUtil.autowidth(30),
         backgroundColor:'#FFFFFF',
         borderRadius: 6,
-        paddingVertical: ScreenUtil.autowidth(15),
+        
     },
     btn: {
         flex: 1,
@@ -308,13 +307,10 @@ const styles = StyleSheet.create({
 
     latelytext: {
         fontSize: ScreenUtil.setSpText(14),
-        
-       
     },
 
     tabbutton: {  
         flex: 1,
-        
         alignItems: 'center',   
         justifyContent: 'center', 
         height: ScreenUtil.autoheight(33),
@@ -337,6 +333,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#F9FAF9',
         borderBottomWidth: ScreenUtil.autoheight(1), 
         marginHorizontal: ScreenUtil.autowidth(20),
+        marginVertical: ScreenUtil.autowidth(15),
     },
     timequantity: {
         flex: 1,
