@@ -26,31 +26,14 @@ class BackupsAOkey extends BaseComponent {
         header:null,             
     };
     
-    _rightTopClick = () =>{
-        var entry = this.props.navigation.state.params.entry;
-        if(entry == "createWallet"){
-            this.pop(2, true);
-            return;
-        }
-        this.pop(3, true);
-        // const { navigate } = this.props.navigation;
-        // navigate('WalletManage', {});
-    }
-
     // 构造函数  
     constructor(props) { 
         super(props);
-        this.props.navigation.setParams({ onPress: this._rightTopClick });
         this.state = {
             password: "",
-            ownerPk: '',
-            activePk: '',
+            walletPK: '',
             txt_owner: '',
             txt_active: '',
-            PromptOwner: '',
-            PromptActtve: '',
-            samePk:false,
-            show: false,
         };
     }
 
@@ -62,19 +45,11 @@ class BackupsAOkey extends BaseComponent {
     var activePrivateKey = this.props.navigation.state.params.wallet.activePrivate;
     var bytes_words_active = CryptoJS.AES.decrypt(activePrivateKey.toString(), this.props.navigation.state.params.password + this.props.navigation.state.params.wallet.salt);
     var plaintext_words_active = bytes_words_active.toString(CryptoJS.enc.Utf8);
-    if (plaintext_words_owner.indexOf('eostoken') != - 1) {
-        if(plaintext_words_owner==plaintext_words_active){
-            this.setState({
-                txt_active: plaintext_words_active.substr(8, plaintext_words_active.length),
-                samePk:true,
-            })
-        }else{
-            this.setState({
-                txt_owner: plaintext_words_owner.substr(8, plaintext_words_owner.length),
-                txt_active: plaintext_words_active.substr(8, plaintext_words_active.length),
-                samePk:false,
-            })
-        }
+    if ((plaintext_words_active.indexOf('eostoken') != - 1)&&(plaintext_words_owner.indexOf('eostoken') != - 1))  {
+        this.setState({
+            txt_active: plaintext_words_active.substr(8, plaintext_words_active.length),
+            txt_owner: plaintext_words_owner.substr(8, plaintext_words_owner.length),
+        })
     }
   }
 
@@ -89,7 +64,6 @@ class BackupsAOkey extends BaseComponent {
   }
 
   activeWalletOnServer(){
-    const { navigate } = this.props.navigation;
     let entry = this.props.navigation.state.params.entry;
     var wallet = this.props.navigation.state.params.wallet;
     let name = wallet.account;
@@ -104,11 +78,10 @@ class BackupsAOkey extends BaseComponent {
                 EasyShowLD.loadingClose();
                 wallet.isactived = true
                 this.props.dispatch({type: 'wallet/activeWallet', wallet: wallet});
-                //msg:success,data:true, code:0 账号已存在
-                EasyShowLD.dialogShow("恭喜激活成功", (<View>
-                    <Text style={[styles.passoutsource,{color: UColor.showy}]}>{name}</Text>
-                    {/* <Text style={styles.inptpasstext}>您申请的账号已经被***激活成功</Text> */}
-                </View>), "知道了", null,  () => {EasyShowLD.dialogClose(), this.pop(3, true) });
+                    AlertModal.show("恭喜激活成功",""+{name},'关闭',"知道了",(resp)=>{
+                        EasyShowLD.dialogClose();
+                        this.pop(3, true);
+                    });
             }else {
                 EasyShowLD.loadingClose();
                 this.goToPayForActive({parameter:wallet, entry: entry});
@@ -132,84 +105,42 @@ class BackupsAOkey extends BaseComponent {
   }
 
   backupOK(){
-    const { navigate } = this.props.navigation;
-    // 将钱包备份状态修改为已备份
     var wallet = this.props.navigation.state.params.wallet;
     wallet.isBackups = true;
     this.props.dispatch({type: 'wallet/updateWallet', wallet: wallet, callback: () => {
         // 跳转至下一步
         if(wallet.isactived){
-            // 已经激活，这时钱包为已激活已备份状态，则跳回至钱包管理页面
-            this.pop(3, true);
-            EasyToast.show('备份成功');
+            this.pop(3, true);// 已经激活，这时钱包为已激活已备份状态，则跳回至钱包管理页面
         }else{
-            // 未激活，这时钱包为已备份未激活状态，则开始激活账号流程
-            this.activeWalletOnServer();
+            this.activeWalletOnServer();// 未激活，这时钱包为已备份未激活状态，则开始激活账号流程
         }
     }});
   }
 
   backupConfirm() {
-    // if(this.state.txt_owner == ""){ // 由于导入私钥只导入active, 可能这里备份没有active私钥
-        if(this.state.activePk == ""){
-            EasyToast.show('请输入私钥');
-            return;
-        }
-        if(this.state.activePk != this.state.txt_active){
-            this.setState({PromptActtve: '该私钥内容有误'})
-            return;
-        }
-        if(this.state.activePk == this.state.txt_active ){
-            this.backupOK();
-            return;
-        }
-    // }else if(this.state.activePk == ""){
 
-    //     if (this.state.ownerPk == "") {
-    //         EasyToast.show('请输入owner私钥');
-    //         return;
-    //     }
+      var walletPkTemp = this.state.walletPK.replace(/\s+/g, "");
+      walletPkTemp = walletPkTemp.replace(/<\/?.+?>/g, "");
+      walletPkTemp = walletPkTemp.replace(/[\r\n]/g, "");
 
-    //     if(this.state.ownerPk != this.state.txt_owner){
-    //         this.setState({PromptOwner: '该私钥内容有误'})
-    //         return;
-    //     }
-    //     if(this.state.ownerPk == this.state.txt_owner){
-    //         this.backupOK();
-    //         return;
-    //     }
-    // }else{
-    //     if (this.state.activePk == "") {
-    //         EasyToast.show('请输入active私钥');
-    //         return;
-    //     }
-    //     if (this.state.ownerPk == "") {
-    //         EasyToast.show('请输入owner私钥');
-    //         return;
-    //     }
-    //     if(this.state.activePk != this.state.txt_active){
-    //         this.setState({PromptActtve: '该私钥内容有误'})
-    //         return;
-    //     }
-    //     if(this.state.ownerPk != this.state.txt_owner){
-    //         this.setState({PromptOwner: '该私钥内容有误'})
-    //         return;
-    //     }
-    //     if(this.state.activePk == this.state.txt_active && this.state.ownerPk == this.state.txt_owner){
-    //         this.backupOK();
-    //         return;
-    //     }
-    // }
+      if (walletPkTemp == "") {
+          EasyToast.show('请输入私钥');
+          return;
+      }
 
-  }
+      if (walletPkTemp.length > 51) {
+          EasyToast.show('active私钥有效长度不对!');
+          return;
+      }
 
-  intensity() {
-    if (this.state.activePk == ""){
-        this.state.PromptActtve = ''
-    }
-    if(this.state.ownerPk == ""){
-        this.state.PromptOwner = ''
-    }
+      if (walletPkTemp != this.state.txt_active || walletPkTemp != this.state.txt_owner) {
+          EasyToast.show('该私钥内容有误');
+          return;
+      }
+      if (walletPkTemp == this.state.txt_active) {
+          this.backupOK();
+          return;
+      }
   }
 
   dismissKeyboardClick() {
@@ -219,30 +150,30 @@ class BackupsAOkey extends BaseComponent {
     render() {
         return (<View style={[styles.container,{backgroundColor: UColor.secdColor}]}>      
             <Header {...this.props} onPressLeft={true} title="备份私钥" />   
-            <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={styles.scrollView}>
+            <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex: 1,}}>
                 <View style={styles.header}>
 
-           <View style={{paddingTop: ScreenUtil.autowidth(20), flexDirection: 'row', alignItems: 'center',justifyContent: 'center',} }>
-                <Text style={{fontSize: ScreenUtil.setSpText(18),lineHeight: ScreenUtil.autoheight(25),fontWeight:"bold", 
-                color: "#262626"}}>确认您的钱包私钥</Text>
-            </View>
-       
-            <Text style={{fontSize: ScreenUtil.setSpText(13),lineHeight: ScreenUtil.autoheight(18),paddingHorizontal:ScreenUtil.autowidth(40), 
-            paddingTop: ScreenUtil.autowidth(15),color: "#808080"}}>请输入钱包私钥，验证备份的私钥是否正确</Text>
+                    <View style={{paddingTop: ScreenUtil.autowidth(20), flexDirection: 'row', alignItems: 'center',justifyContent: 'center',} }>
+                        <Text style={{fontSize: ScreenUtil.setSpText(18),lineHeight: ScreenUtil.autoheight(25),fontWeight:"bold", 
+                        color: "#262626"}}>确认您的钱包私钥</Text>
+                    </View>
 
-            <View style={{paddingTop: ScreenUtil.autowidth(50),marginHorizontal: ScreenUtil.autowidth(16), flexDirection: 'row',alignContent: 'center',justifyContent: 'center',} }>
-                <TextInput ref={(ref) => this._lphone = ref} value={this.state.activePk} returnKeyType="next" editable={true}
-                    selectionColor={UColor.tintColor} placeholderTextColor={'#D9D9D9'} autoFocus={false} maxLength={64}
-                    style={[styles.inpt,{color: UColor.arrow}]} 
-                    onChangeText={(activePk) => this.setState({ activePk })}  onChange={this.intensity()} keyboardType="default"
-                    placeholder="请输入或粘贴您的私钥" underlineColorAndroid="transparent"  multiline={true}  />
-            </View>
+                    <Text style={{fontSize: ScreenUtil.setSpText(13),lineHeight: ScreenUtil.autoheight(18),paddingHorizontal:ScreenUtil.autowidth(40), 
+                    paddingTop: ScreenUtil.autowidth(15),color: "#808080"}}>请输入钱包私钥，验证备份的私钥是否正确</Text>
 
-            <View style={{flex: 1, marginHorizontal: ScreenUtil.autowidth(16), paddingTop:ScreenUtil.autowidth(150)}}>
-                <View style={{paddingVertical: ScreenUtil.autowidth(16), alignItems: 'center',justifyContent: 'center',} }>
-                    <TextButton onPress={() => this.backupConfirm()} textColor="#FFFFFF" text="下一步"  shadow={true}  style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
-                </View>
-            </View>
+                    <View style={{paddingTop: ScreenUtil.autowidth(50),marginHorizontal: ScreenUtil.autowidth(16), flexDirection: 'row',alignContent: 'center',justifyContent: 'center',} }>
+                        <TextInput ref={(ref) => this._lphone = ref} value={this.state.walletPK} returnKeyType="next" editable={true}
+                            selectionColor={UColor.tintColor} placeholderTextColor={'#D9D9D9'} autoFocus={false} maxLength={64}
+                            style={[styles.inputTextStyle,{color: UColor.arrow}]} 
+                            onChangeText={(walletPK) => this.setState({ walletPK })}   keyboardType="default"
+                            placeholder="请输入或粘贴您的私钥" underlineColorAndroid="transparent"  multiline={true}  />
+                    </View>
+
+                    <View style={{flex: 1, marginHorizontal: ScreenUtil.autowidth(16), paddingTop:ScreenUtil.autowidth(150)}}>
+                        <View style={{paddingVertical: ScreenUtil.autowidth(16), alignItems: 'center',justifyContent: 'center',} }>
+                            <TextButton onPress={() => this.backupConfirm()} textColor="#FFFFFF" text="下一步"  shadow={true}  style={{width: ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42),borderRadius: 25}} />
+                        </View>
+                    </View>
 
                 </View>
             </TouchableOpacity>
@@ -250,17 +181,12 @@ class BackupsAOkey extends BaseComponent {
     }
 }
 const styles = StyleSheet.create({
-    passoutsource: {
-        textAlign: 'center',
-        fontSize: ScreenUtil.setSpText(20), 
-    },
+
     container: {
         flex: 1,
         flexDirection: 'column',
     },
-    scrollView: {
-        flex: 1,
-    },
+
     header: {
         flex: 1,
         justifyContent: 'center',
@@ -272,82 +198,14 @@ const styles = StyleSheet.create({
         paddingBottom:ScreenUtil.autowidth(55),
     },
 
-    inpt: {
+    inputTextStyle: {
         flex: 1,
         paddingVertical: 0,
         borderBottomWidth:0.5,
         fontSize: ScreenUtil.setSpText(18),
         paddingLeft: ScreenUtil.autowidth(2),
-        // paddingTop: ScreenUtil.autowidth(10), 
         color: '#808080',
         borderBottomColor: '#323232',
-        // fontWeight:"bold"
       },
-
-
-
-    inptoutbg: {
-        paddingHorizontal: ScreenUtil.autowidth(20),
-    },
-    headout: {
-        paddingTop: ScreenUtil.autoheight(20),
-        paddingBottom: ScreenUtil.autoheight(15),
-    },
-    headtitle: {
-        fontSize: ScreenUtil.setSpText(14),
-        lineHeight: ScreenUtil.autoheight(25),
-    },
-    inptoutgo: {
-        paddingBottom: ScreenUtil.autoheight(15),
-        width: ScreenWidth - ScreenUtil.autowidth(40),
-    },
-    ionicout: {
-        flexDirection: "row",
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-    },
-    inptitle: {
-        fontSize: ScreenUtil.setSpText(15),
-        lineHeight: ScreenUtil.autoheight(30),
-    },
-    prompttext: {
-        textAlign: 'right',
-        fontSize: ScreenUtil.setSpText(14),
-        lineHeight: ScreenUtil.autoheight(30),
-    },
-    inptgo: {
-        flexWrap: 'wrap',
-        textAlignVertical: 'top',
-        height: ScreenUtil.autoheight(60),
-        fontSize: ScreenUtil.setSpText(14),
-        lineHeight: ScreenUtil.autoheight(25),
-        paddingHorizontal: ScreenUtil.autowidth(10),
-    },
-    importPriout: {
-        borderRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: ScreenUtil.autoheight(45),
-        marginTop: ScreenUtil.autoheight(50),
-        marginHorizontal: ScreenUtil.autowidth(20),
-    },
-    importPritext: {
-        fontSize: ScreenUtil.setSpText(15),
-    },
-    logout:{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        minHeight: ScreenUtil.autoheight(160),
-        paddingBottom: ScreenUtil.autoheight(20),
-    },
-    logimg: {
-        width: ScreenUtil.autowidth(50), 
-        height: ScreenUtil.autowidth(50)
-    },
-    logtext: {
-        fontSize: ScreenUtil.setSpText(14),
-        lineHeight: ScreenUtil.autoheight(30),
-    }
 });
 export default BackupsAOkey;
