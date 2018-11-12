@@ -36,6 +36,7 @@
     "https-proxy-agent": "^2.2.1",
     "jcore-react-native": "^1.2.5",
     "jpush-react-native": "^2.1.12",
+    "merge": "^1.2.1",
     "moment": "^2.20.1",
     "native-echarts": "^0.4.0",
     "path-browserify": "0.0.0",
