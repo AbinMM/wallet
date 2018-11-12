@@ -441,26 +441,16 @@ class Home extends React.Component {
     }else {
       const { dispatch } = this.props;
       try {
-        this.setState({assetRefreshing: true});
         this.props.dispatch({ type: 'wallet/changeWallet', payload: { data }, callback: () => {
           this.props.dispatch({ type: 'assets/setCurrentAccount', payload: { accountName: data.account }, callback: () => {
-            this.getMyAssetsInfo(() => {
-              this.setState({assetRefreshing: false});
-            }, true);
+            this.getMyAssetsInfo(() => { }, true);
           }});
         }});
-        // this.props.dispatch({ type: 'vote/getaccountinfo', payload: { page:1,username: data.account },callback: (resources) => {
-        //   if(resources != null){
-        //     this.setState({
-        //       mortgage: resources.self_delegated_bandwidth ? Math.floor(resources.self_delegated_bandwidth.cpu_weight.replace("EOS", "")*100 + resources.self_delegated_bandwidth.net_weight.replace("EOS", "")*100)/100 : '0',
-        //       allowance: resources.display_data ? resources.display_data.ram_left.replace("kb", "") : '0',
-        //     })
-        //   }
-        // } });
+     
         this.getResourcesinfo(data.account);
-        // this.props.dispatch({ type: 'wallet/info', payload: { address: "1111" } });
+       
       } catch (error) {
-        this.setState({assetRefreshing: false});
+        
       }
     }
   }
@@ -877,12 +867,6 @@ class Home extends React.Component {
                             <Text style={[styles.establishtext,{color: '#262626'}]}>添加钱包</Text>
                           </View>
                         </Button>
-                        {/* <Button onPress={() => this.importWallet()} >
-                          <View style={[styles.establishout,{borderTopWidth: 0.5,borderTopColor: '#F0F0F0'}]}>
-                            <Image source={UImage.xin_import} style={{width: ScreenUtil.autowidth(12),height: ScreenUtil.autowidth(12)}} />
-                            <Text style={[styles.establishtext,{color: '#262626'}]}>导入钱包</Text>
-                          </View>
-                        </Button> */}
                       </View>
                     </View>
                   </Animated.View>
@@ -890,67 +874,6 @@ class Home extends React.Component {
               </View>
             </TouchableWithoutFeedback>
           </View>}
-
-          {/* <Modal style={styles.touchableouts} animationType={'none'} transparent={true}  visible={this.isTipShow()} onRequestClose={()=>{}}>
-            <TouchableOpacity style={[styles.pupuoBackup,{backgroundColor: UColor.mask}]} activeOpacity={1.0}>
-              <View style={{ width: ScreenWidth-20, backgroundColor: UColor.btnColor, borderRadius: 5, position: 'absolute', }}>
-                <View style={styles.subViewBackup}>
-                  <Button onPress={this._disableTipVisible.bind(this) } style={styles.buttonView2}>
-                      <Ionicons style={{ color: UColor.baseline}} name="ios-close-outline" size={30} />
-                  </Button>
-                </View>
-                <Text style={styles.contentText}>IOS用户重要提示</Text>
-                <View style={[styles.warningout,{borderColor: UColor.showy}]}>
-                    <Image source={UImage.warning_h} style={styles.imgBtn} />
-                    <Text style={[styles.headtitle,{color: UColor.showy}]}>亲爱的eostoken用户：由于App Store平台自身存在证书授权过期问题导致app无法打开的情况发生，造成数据丢失。当前系统检测到您尚未备份钱包，为了避免资产损失，请您及时备份。</Text>
-                </View>
-                <Button onPress={this.WalletDetailBackup.bind(this,this.props.defaultWallet)}>
-                    <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
-                        <Text style={[styles.deletetext,{color: UColor.btnColor}]}>立即备份</Text>
-                    </View>
-                </Button>
-              </View>
-            </TouchableOpacity>
-          </Modal> */}
-
-          <Modal style={styles.touchableouts} animationType={'slide'} transparent={true}  visible={this.props.Invalid} onRequestClose={()=>{}}>
-            <TouchableOpacity style={styles.pupuo} activeOpacity={1.0}>
-              <View style={[styles.modalStyle,{backgroundColor: UColor.fontColor}]}>
-                <View style={styles.subView}>
-                  <Text style={styles.titleText}/>
-                  <Text style={styles.contentText}>无效账户删除提示</Text>
-                  <Button onPress={this._setModalInvalid.bind(this)}>
-                    <Text style={[styles.titleText,{color: UColor.baseline}]}>×</Text>
-                  </Button>
-                </View>
-                <Text style={[styles.prompt,{color: UColor.showy}]}>警告：系统检测到您有无效账号残留，为了避免误转账至无效账户带来不必要的损失，请即时清理无效账户！</Text>
-                <ListView style={styles.btn} renderRow={this.renderRow} enableEmptySections={true}
-                    dataSource={this.state.dataSource.cloneWithRows(this.props.invalidWalletList == null ? [] : this.props.invalidWalletList)}
-                    renderRow={(rowData, sectionID, rowID) => (
-                      <View>
-                          <Button >
-                              <View style={[styles.codeout,{borderBottomColor: UColor.riceWhite}]} >
-                                  <View style={styles.copyout}>
-                                      <Text style={[styles.copytext,{color: UColor.secdColor}]}>{rowData.name}</Text>
-                                  </View>
-                                  <TouchableOpacity style={styles.taboue} >
-                                      <View style={[styles.tabview,{borderColor: UColor.lightgray}]} >
-                                          <Image source={rowData.isChecked ? UImage.Tick:null} style={styles.tabimg} />
-                                      </View>
-                                  </TouchableOpacity>
-                              </View>
-                          </Button>
-                      </View>
-                    )}
-                  />
-                  <Button onPress={this.delInvalidWallet.bind(this)}>
-                      <View style={[styles.deleteout,{backgroundColor: UColor.tintColor}]}>
-                        <Text style={[styles.deletetext,{color: UColor.fontColor}]}>一键删除</Text>
-                      </View>
-                  </Button>
-              </View>
-            </TouchableOpacity>
-          </Modal>
         </View>
       )
     };
