@@ -95,6 +95,7 @@ export const dappfindAllHotRecommend = rootaddr + '/dapp/findAllHotRecommend'; /
 export const dappfindAllRecommend = rootaddr + '/dapp/findAllRecommendNew'; //首页分类推荐
 export const dappfindAllByType = rootaddr + '/dapp/findAllByType'; //更多接口带分页
 export const dappAdvertisement = rootaddr + '/advertising/getDappAd'; //两个广告位 
+export const dappAdvertisementDetail = rootaddr + '/advertising/findById'; //读广告详情
 export const dappfindByName = rootaddr + '/dapp/findByName'; //模糊搜索
 
 export const atcgetInfo = rootaddr + '/act/getInfo';

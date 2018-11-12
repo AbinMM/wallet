@@ -1,5 +1,5 @@
 import Request from '../utils/RequestUtil';
-import {getEosTableRows, dappfindAllHotRecommend, dappfindAllRecommend, dappAdvertisement, dappfindByName, dappfindAllByType} from '../utils/Api';
+import {getEosTableRows, dappfindAllHotRecommend, dappfindAllRecommend, dappAdvertisement,dappAdvertisementDetail, dappfindByName, dappfindAllByType} from '../utils/Api';
 import { EasyToast } from '../components/Toast';
 
 import store from 'react-native-simple-store';
@@ -198,6 +198,17 @@ export default {
             }
             if (callback) callback(result);          
         },
+        //获取广告详情
+        *dappAdvertisementDetail({ payload, callback }, { call, put }) {
+            try{
+                const resp = yield call(Request.request,  dappAdvertisementDetail, 'post', payload);
+                if (callback) callback(resp);       
+            } catch (error) {
+                EasyToast.show('网络繁忙,请稍后!');
+                if (callback) callback({ code: 500, msg: "网络异常" });   
+            }
+        },
+
         //根据关键字模糊查询url
         *dappfindByName({ payload, callback }, { call, put }) {
             try{

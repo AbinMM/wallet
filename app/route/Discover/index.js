@@ -34,10 +34,10 @@ class Discover extends React.Component {
     super(props);
     this.state = {
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
-      hotdappList:[],
-      advertisdapplist: [],
-      holdallList: [],
-      mydappBook: [],
+      hotdappList:[],  //热门推荐
+      advertisdapplist: [], //广告位
+      holdallList: [], //所有热门推荐
+      mydappBook: [],  //我的dapp
     }
   }
   
@@ -162,6 +162,16 @@ class Discover extends React.Component {
       EasyToast.show("请先导入已激活账号!");
       return;
     }
+
+    this.props.dispatch({ type: 'dapp/dappAdvertisementDetail', payload: {adIdentifyId: data.adIdentifyId,adTop:data.adTop},
+      callback: (resp) => {
+        if (resp && resp.code == '0') {
+          if(resp.data){
+            this.accessDapp(resp.data);
+          }
+        }
+      } 
+    });
     
   }
   //点DAPP跳转
@@ -170,19 +180,20 @@ class Discover extends React.Component {
       EasyToast.show("请先导入已激活账号!");
       return;
     }
-
+    this.accessDapp(data);
+  }
+  accessDapp(data){
     if(!data || !data.hasOwnProperty('name' || !data.hasOwnProperty('url') || !data.hasOwnProperty('icon'))){
       EasyToast.show("无效链接!");
       return;
     }
+
     const { navigate } = this.props.navigation;
     var title = '您所访问的页面将跳至第三方DApp' + data.name;
     var content = '提示：您所访问的页面将跳转至第三方DApp'+ data.name +'。您在第三方DApp上的使用行为将适用该第三方DApp的用户协议和隐私政策，由其直接并单独向您承担责任。';
     AlertModal.show(title,content,'确认','取消',(resp)=>{
       if(resp){
-        navigate('DappWeb', { data: data,callback:()=>{
-
-        }});
+        navigate('DappWeb', { data: data});
       }
     });
   }
@@ -199,6 +210,10 @@ class Discover extends React.Component {
   onHistoryCollection() {
     const { navigate } = this.props.navigation;
     navigate('HistoryCollection', { });
+  }
+  onAllRecommendMore(data) {
+    const { navigate } = this.props.navigation;
+    navigate('DappAllList', {id:data.id,name:data.name});
   }
 
   render() {
@@ -280,8 +295,13 @@ class Discover extends React.Component {
               keyExtractor={(item, index) => index + item}
               sections={this.state.holdallList}
               renderSectionHeader={(info,index) => (
-                <View style={[{width:ScreenWidth, justifyContent: 'center',paddingHorizontal: ScreenUtil.autowidth(7.5),paddingTop: ScreenUtil.autoheight(15)}]}>
-                  <Text style={{width:ScreenWidth,color: '#B5B5B5',fontWeight:'bold', fontSize: ScreenUtil.setSpText(14) }}>{info.section.name}</Text>
+                <View style={[{width:ScreenWidth,flexDirection:"row", justifyContent: 'center',paddingHorizontal: ScreenUtil.autowidth(20),paddingTop: ScreenUtil.autoheight(15)}]}>
+                  <Text style={{width:ScreenWidth,color: '#B5B5B5',fontWeight:'bold', fontSize: ScreenUtil.setSpText(14),flex:1 }}>{info.section.name}</Text>
+                  {info.section.is_there_more && <TouchableOpacity onPress={this.onAllRecommendMore.bind(this,info.section)} style={{flexDirection: 'row',}} >
+                    <Text style={{fontSize: ScreenUtil.setSpText(12),color: '#3B80F4',paddingRight: ScreenUtil.autowidth(5),}}>更多</Text>
+                    <Ionicons name="ios-arrow-forward-outline" size={14} color='#3B80F4' />
+                  </TouchableOpacity>
+                  }
                 </View>
                 )}
               renderItem={ (rowData) => (

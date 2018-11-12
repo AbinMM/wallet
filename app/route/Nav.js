@@ -43,6 +43,7 @@ import Register from './Login/Register'
 import SignIn from './Login/SignIn'
 
 import Discover from './Discover'
+import DappAllList from './Discover/DappAllList'
 import DappWeb from './Discover/DappWeb'
 import Dappsearch from './Discover/Dappsearch'
 import HistoryCollection from './Discover/HistoryCollection'
@@ -275,6 +276,9 @@ const Nav = StackNavigator(
     },
     HistoryCollection: {
       screen: HistoryCollection
+    },
+    DappAllList: {
+      screen: DappAllList
     },
     DappWeb: {
       screen: DappWeb

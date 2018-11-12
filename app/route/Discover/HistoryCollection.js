@@ -10,7 +10,7 @@ import { EasyToast } from '../../components/Toast';
 import BaseComponent from "../../components/BaseComponent";
 import {AlertModal,} from '../../components/modals/AlertModal'
 
-@connect(({ login, wallet, dapp }) => ({ ...login, ...wallet, ...dapp }))
+@connect(({ dapp }) => ({ ...dapp }))
 class HistoryCollection extends BaseComponent {
 
   static navigationOptions = {
