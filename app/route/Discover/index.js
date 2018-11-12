@@ -35,10 +35,7 @@ class Discover extends React.Component {
     this.state = {
       dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
       hotdappList:[],
-      advertisdapplist: [
-        // {adPhoto: UImage.gg_bg01},
-        // {adPhoto: UImage.gg_bg02},
-      ],
+      advertisdapplist: [],
       holdallList: [],
       mydappBook: [],
     }
@@ -66,25 +63,21 @@ class Discover extends React.Component {
               hotdappList: resp.data,
             });
           }
-        } else {
-          console.log("dappfindAllHotRecommend error");
         }
       }
     });
     //获取两个广告位
-    // this.props.dispatch({ type: 'dapp/dappAdvertisement', payload: {adPositionId: '1'},
-    //   callback: (resp) => {
-    //     if (resp && resp.code == '0') {
-    //       if(resp.data){
-    //         this.setState({
-    //           advertisdapplist: resp.data,
-    //         });
-    //       }
-    //     } else {
-    //       console.log("dappAdvertisement error");
-    //     }
-    //   } 
-    // });
+    this.props.dispatch({ type: 'dapp/dappAdvertisement', payload: {adPositionId: '1'},
+      callback: (resp) => {
+        if (resp && resp.code == '0') {
+          if(resp.data){
+            this.setState({
+              advertisdapplist: resp.data,
+            });
+          }
+        }
+      } 
+    });
     //获取DAPP所有列表
     this.props.dispatch({ type: 'dapp/dappfindAllRecommend', 
       callback: (resp) => {
@@ -94,9 +87,7 @@ class Discover extends React.Component {
               holdallList: resp.data,
             });
           }
-        } else {
-          console.log("dappfindAllRecommend error");
-        }
+        } 
       }
     });
 
@@ -165,6 +156,14 @@ class Discover extends React.Component {
     }
   }
 
+  //广告
+  onAdvertisement(data){
+    if(this.props.defaultWallet == null || this.props.defaultWallet.name == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
+      EasyToast.show("请先导入已激活账号!");
+      return;
+    }
+    
+  }
   //点DAPP跳转
   onPressTool(data) {
     if(this.props.defaultWallet == null || this.props.defaultWallet.name == null || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived'))){
@@ -268,9 +267,9 @@ class Discover extends React.Component {
             <ListView enableEmptySections = {true} contentContainerStyle={{flexDirection:'row',paddingHorizontal: ScreenUtil.autowidth(12.5)}}
               dataSource={this.state.dataSource.cloneWithRows(this.state.advertisdapplist == null ? [] : this.state.advertisdapplist)}
               renderRow={(rowData) => (
-                <Button  onPress={this.onPressTool.bind(this, rowData)}  style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2, marginHorizontal: ScreenUtil.autowidth(7.5)}}>
+                <Button  onPress={this.onAdvertisement.bind(this, rowData)}  style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2, marginHorizontal: ScreenUtil.autowidth(7.5)}}>
                   <View style={{alignItems: 'center', justifyContent: "center", backgroundColor: '#FFFFFF',borderRadius: 5,}}>
-                    <Image source={rowData.adPhoto} style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2,height: (ScreenWidth-ScreenUtil.autowidth(55))/2*0.5,}} resizeMode='stretch'/>
+                    <Image source={{uri:rowData.adPhoto}} style={{width: (ScreenWidth-ScreenUtil.autowidth(55))/2,height: (ScreenWidth-ScreenUtil.autowidth(55))/2*0.5,}} resizeMode='stretch'/>
                   </View>
                 </Button>
               )}
