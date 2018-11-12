@@ -2,18 +2,18 @@ import React from 'react';
 import { connect } from 'react-redux'
 import {CameraRoll, Linking, Dimensions, StyleSheet, View, Text, Image, ImageBackground, ScrollView } from 'react-native';
 import moment from 'moment';
-import UImage from '../../utils/Img'
-import UColor from '../../utils/Colors'
-import { kapimg } from '../../utils/Api'
-import Button from '../../components/Button'
-import Header from '../../components/Header'
-import Constants from '../../utils/Constants'
-import ScreenUtil from '../../utils/ScreenUtil'
-import { EasyToast } from '../../components/Toast';
-import { EasyShowLD } from "../../components/EasyShow"
+import UImage from '../utils/Img'
+import UColor from '../utils/Colors'
+import { kapimg } from '../utils/Api'
+import Button from '../components/Button'
+import Header from '../components/Header'
+import Constants from '../utils/Constants'
+import ScreenUtil from '../utils/ScreenUtil'
+import { EasyToast } from '../components/Toast';
+import { EasyShowLD } from "../components/EasyShow"
 import LinearGradient from 'react-native-linear-gradient'
-import BaseComponent from "../../components/BaseComponent";
-import { redirect } from '../../utils/Api'
+import BaseComponent from "../components/BaseComponent";
+import { redirect } from '../utils/Api'
 import ViewShot from "react-native-view-shot";
 import QRCode from 'react-native-qrcode-svg';
 const ScreenWidth = Dimensions.get('window').width;
@@ -24,20 +24,40 @@ var WeChat = require('react-native-wechat');
 class Shareing extends BaseComponent {
 
   static navigationOptions = {
-    title: '分享资讯',
+    title: '分享',
     header:null, 
   };
   
   constructor(props) {
     super(props);
     WeChat.registerApp('wxc5eefa670a40cc46');
+   
+
     this.state = {
-      news: this.props.navigation.state.params.news,
-    }
+      news: {},
+      showShare: false,
+      turninAsset: {},
+      showVoteShare:false,
+
+      showTurninShare:false,
+      showActivationPay:false,
+    };
   }
 
   componentDidMount() {
-  
+    if(this.props.navigation.state.params.news){
+      this.setState({
+        showShare: true, 
+        news: this.props.navigation.state.params.news
+      });
+     
+    }else if(this.props.navigation.state.params.turninAsset){
+      this.setState({
+        showTurninShare: true,
+        turninAsset: this.props.navigation.state.params.turninAsset
+       });
+     
+    }
    
   }
 
@@ -65,15 +85,6 @@ class Shareing extends BaseComponent {
       });
     } else if (e == 2) {
       this.refs.viewShot.capture().then(uri => {
-        CameraRoll.saveToCameraRoll(uri);
-        EasyToast.show("图片已保存到您的相册,打开QQ并选择图片发送吧");
-        setTimeout(() => {
-          Linking.openURL('mqqwpa://');
-          th.setState({ showShare: false });
-        }, 2000);
-      });
-    } else if (e == 3) {
-      this.refs.viewShot.capture().then(uri => {
         WeChat.isWXAppInstalled()
           .then((isInstalled) => {
             th.setState({ showShare: false });
@@ -90,6 +101,16 @@ class Shareing extends BaseComponent {
               EasyToast.show('没有安装微信软件，请您安装微信之后再试');
             }
           });
+      });
+     
+    } else if (e == 3) {
+      this.refs.viewShot.capture().then(uri => {
+        CameraRoll.saveToCameraRoll(uri);
+        EasyToast.show("图片已保存到您的相册,打开QQ并选择图片发送吧");
+        setTimeout(() => {
+          Linking.openURL('mqqwpa://');
+          th.setState({ showShare: false });
+        }, 2000);
       });
     } else if (e == 4) {
       EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
@@ -115,8 +136,8 @@ class Shareing extends BaseComponent {
     return <View style={[styles.container,{backgroundColor: '#FFFFFF'}]}>
       <ScrollView style={{height: ScreenHeight-ScreenUtil.autowidth(200),}}>
         <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-          <ViewShot ref="viewShot" style={{}} options={{ format: "jpg", quality: 0.9 }}>
-            <View style={{ backgroundColor: UColor.btnColor, flex: 1}}>
+          <ViewShot ref="viewShot"  options={{ format: "jpg", quality: 0.9 }}>
+            {this.state.showShare && <View style={{ backgroundColor: UColor.btnColor, flex: 1}}>
               <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893, justifyContent: 'center', alignItems: 'center'}} source={UImage.home_bg}>
                 <Image source={UImage.share_banner} resizeMode="stretch" style={{ width: ScreenWidth - ScreenUtil.autowidth(120), height: (ScreenWidth - ScreenUtil.autowidth(120))*0.5275}} />
               </ImageBackground>
@@ -143,10 +164,33 @@ class Shareing extends BaseComponent {
                 </View>
               </View>
               <Image source={UImage.my_footbg} style={{width: ScreenWidth,height: ScreenWidth*0.2106}} />
-            </View>
+            </View>}
+            {this.state.showTurninShare && 
+              <View style={{ backgroundColor: UColor.btnColor, flex: 1}}>
+                <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893, justifyContent: 'center', alignItems: 'center',  top: 0,position:'absolute', }} source={UImage.home_bg} />
+                <View style={{paddingTop: ScreenUtil.autowidth(120),paddingBottom: ScreenUtil.autowidth(57),}}>
+                  <Text style={{color: '#FFFFFF', fontSize: ScreenUtil.setSpText(20), textAlign: 'center', lineHeight: ScreenUtil.autowidth(28),marginVertical: ScreenUtil.autowidth(27),}}>打开eostoken扫一扫</Text>
+                  
+                  <View style={{justifyContent: 'center', alignSelf: 'center', padding: ScreenUtil.autowidth(16), backgroundColor:'#FFFFFF'}}>
+                    <QRCode size={ScreenUtil.autowidth(175)}  logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(45)} logoBorderRadius={2}
+                    value={this.state.turninAsset.symbol.toLowerCase() +':' + this.state.turninAsset.toaccount + '?amount=' + ((this.state.turninAsset.amount == "")?'0':this.state.turninAsset.amount) + '&contractAccount=' + this.state.turninAsset.contractAccount + '&token=' + this.state.turninAsset.symbol.toUpperCase()}/>
+                  </View>
+                <Text style={{color: '#323232', fontSize: ScreenUtil.setSpText(20), textAlign: 'center', lineHeight: ScreenUtil.autowidth(28),marginVertical: ScreenUtil.autowidth(30),}}>{this.state.turninAsset.toaccount}</Text>
+                </View>
+                <View style={{flex: 1, justifyContent: 'flex-end'}}>
+                  <ImageBackground style={{width: ScreenWidth,height: ScreenWidth*0.2106}} source={UImage.my_footbg}>
+                      <View style={styles.logout}>
+                        <Text style={[styles.logtext,{color: UColor.mainfont, textAlign:"right"}]}>我也用ET钱包</Text>
+                        <Text style={[styles.logtext,{color: UColor.mainfont, textAlign:"right", paddingBottom: ScreenUtil.autowidth(14),}]}>eostoken.im</Text>
+                      </View>
+                  </ImageBackground>
+                </View>
+              </View>
+            }
           </ViewShot>
         </View>
       </ScrollView>
+     
       <View style={{ height: ScreenUtil.autowidth(200), backgroundColor: '#FFFFFF', borderTopLeftRadius: 5,borderTopRightRadius: 5, 
               shadowColor: '#4A90E2',shadowOffset:{height: 0,width: 0},shadowRadius: 5,shadowOpacity:1,elevation: 12,}}>
           <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#333333', marginVertical: ScreenUtil.autowidth(7), width: "100%", textAlign: "center" }}>-分享到-</Text>
@@ -157,13 +201,13 @@ class Shareing extends BaseComponent {
                 <Text style={[styles.sharetext,{color: '#323232'}]}>微信</Text>
               </View>
             </Button>
-            <Button onPress={() => { this.shareAction(3) }} >
+            <Button onPress={() => { this.shareAction(2) }} >
               <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/4, }}>
                 <Image source={UImage.share_pyq} style={styles.sharepyqimg} />
                 <Text style={[styles.sharetext,{color: '#323232'}]}>朋友圈</Text>
               </View>
             </Button>
-            <Button onPress={() => { this.shareAction(2) }} >
+            <Button onPress={() => { this.shareAction(3) }} >
               <View style={{justifyContent: 'center', alignSelf: 'center', width: ScreenWidth/4, }}>
                 <Image source={UImage.share_qq} style={styles.shareqqimg} />
                 <Text style={[styles.sharetext,{color: '#323232'}]}>QQ</Text>
@@ -248,6 +292,16 @@ const styles = StyleSheet.create({
   canceltext: {
     textAlign: "center",
     fontSize: ScreenUtil.setSpText(14),
+  },
+
+  logout:{
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+  },
+  logtext: {
+    fontSize: ScreenUtil.setSpText(10),
+    paddingRight: ScreenUtil.autowidth(15),
   },
   
 });

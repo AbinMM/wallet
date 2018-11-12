@@ -773,7 +773,7 @@ class Home extends React.Component {
     if(this.props.guide){
       return (
         <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
-          <View style={{with:ScreenWidth,height:ScreenUtil.autoheight(44), marginTop:20,justifyContent:"center",backgroundColor: "#FFFFFF"}}>
+          <View style={{width:ScreenWidth,height:ScreenUtil.autoheight(44), marginTop:20,justifyContent:"center",backgroundColor: "#FFFFFF"}}>
             <Text style={{fontSize: ScreenUtil.setSpText(20),lineHeight: ScreenUtil.autoheight(25),textAlign: 'center',color: "#323232"}}>添加钱包</Text>
           </View>
           <WalletWelcome {...this.props}/>        

@@ -24,18 +24,28 @@ class TurnInAsset extends BaseComponent {
   };
 
   _rightTopClick = () => {
-    DeviceEventEmitter.emit(
-      "turninShare",
-      '{"toaccount":"' +
-        this.props.defaultWallet.account +
-        '","amount":"' +
-        this.state.amount +
-        '","symbol":"' +
-        this.state.symbol +
-        '", "contractAccount":"' +
-        this.state.contractAccount +
-        '"}'
-    );
+    // DeviceEventEmitter.emit(
+    //   "turninShare",
+    //   '{"toaccount":"' +
+    //     this.props.defaultWallet.account +
+    //     '","amount":"' +
+    //     this.state.amount +
+    //     '","symbol":"' +
+    //     this.state.symbol +
+    //     '", "contractAccount":"' +
+    //     this.state.contractAccount +
+    //     '"}'
+    // );
+
+    var  turninAsset = {
+      toaccount: this.props.defaultWallet.account,
+      amount: this.state.amount,
+      symbol: this.state.symbol,
+      contractAccount: this.state.contractAccount
+    }
+
+    const { navigate } = this.props.navigation;
+    navigate('Shareing', {turninAsset});
   };
 
   // 构造函数
@@ -140,17 +150,15 @@ class TurnInAsset extends BaseComponent {
     return (
       <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
         <Header {...this.props} onPressLeft={true} title="收款" avatar={UImage.share_i} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(18)}/> 
-        <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} >
+        <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={{flex:1,}}>
           <View style={styles.taboutsource}>
-              <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(23),color: UColor.fontColor}]}>收款金额</Text>
+              <Text style={[styles.inptitle,{color: UColor.fontColor}]}>收款金额</Text>
               <View style={[styles.inptoutsource,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor,}]}>
                 <View style={{borderRightColor: UColor.secdColor,borderRightWidth: ScreenUtil.autowidth(1),}}>
                   {this.state.Choicesymbol ? 
-                  <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>    
-                      <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center', paddingRight: ScreenUtil.autowidth(10),}}>                              
-                          <Text style={{fontSize: ScreenUtil.setSpText(14),color: UColor.fontColor, marginRight: ScreenUtil.autowidth(5),lineHeight: ScreenUtil.autowidth(25),}}>{this.state.symbol}</Text>
-                          <Ionicons color={UColor.fontColor} name="md-arrow-dropdown" size={20} />
-                      </View>
+                  <TouchableOpacity onPress={() => this.openChoiceToken()} style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center', paddingRight: ScreenUtil.autowidth(10),}}>    
+                    <Text style={{fontSize: ScreenUtil.setSpText(14),color: UColor.fontColor, marginRight: ScreenUtil.autowidth(5),lineHeight: ScreenUtil.autowidth(25),}}>{this.state.symbol}</Text>
+                    <Ionicons color={UColor.fontColor} name="md-arrow-dropdown" size={20} />
                   </TouchableOpacity>
                   :
                   <Text style={[styles.tokenText,{color: UColor.arrow}]}>{this.state.symbol}</Text>
@@ -158,8 +166,8 @@ class TurnInAsset extends BaseComponent {
                 </View>
                 <TextInput autoFocus={false} onChangeText={amount => this.setState({ amount: this.chkPrice(amount) })}
                   value = {this.state.amount} maxLength = {15} returnKeyType="go" selectionColor={UColor.tintColor}
-                  style={[styles.inpt,{color: UColor.arrow}]} placeholderTextColor={UColor.inputtip} 
-                  underlineColorAndroid="transparent" secureTextEntry={false} keyboardType="numeric"
+                  style={[styles.inpt,{color: '#808080'}]} placeholderTextColor={'#D9D9D9'} keyboardType="numeric"
+                  underlineColorAndroid="transparent" secureTextEntry={false}  placeholder="请输入收款金额" 
                 />
               </View>
               <View style={{alignItems: 'center', justifyContent: 'center',paddingVertical: ScreenUtil.autoheight(40)}}>
@@ -169,16 +177,20 @@ class TurnInAsset extends BaseComponent {
               </View>
               
               <Text style={[styles.prompttext,{color: UColor.fontColor}]}>{this.state.toAccount}</Text>
-              <View style={{marginTop: ScreenUtil.autowidth(19), marginBottom: ScreenUtil.autowidth(40),  justifyContent: 'center', alignItems:'center'}}>
+              <View style={{marginTop: ScreenUtil.autowidth(19), justifyContent: 'center', alignItems:'center'}}>
                   <TextButton text='复制收款账号' onPress={this.copy.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
               </View>
+              
+          
+            <View style={{flex: 1, justifyContent: 'flex-end'}}>
               <ImageBackground style={{width: ScreenWidth - ScreenUtil.autowidth(30) , height: (ScreenWidth - ScreenUtil.autowidth(30))*0.2521}} source={UImage.bottom_turnin}>
-                <View style={styles.logout}>
-                  <Text style={[styles.logtext,{color: UColor.mainfont, textAlign:"right"}]}>我也用ET钱包</Text>
-                  <Text style={[styles.logtext,{color: UColor.mainfont, textAlign:"right", paddingBottom: ScreenUtil.autowidth(14),}]}>eostoken.im</Text>
-                </View>
+                  <View style={styles.logout}>
+                    <Text style={[styles.logtext,{color: UColor.mainfont, textAlign:"right"}]}>我也用ET钱包</Text>
+                    <Text style={[styles.logtext,{color: UColor.mainfont, textAlign:"right", paddingBottom: ScreenUtil.autowidth(14),}]}>eostoken.im</Text>
+                  </View>
               </ImageBackground>
-          </View>
+            </View>
+          </View>   
         </TouchableOpacity>
       </View>
     );
@@ -191,12 +203,12 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   taboutsource: {
-    justifyContent: 'center',
-    marginHorizontal: ScreenUtil.autowidth(15),
+    flex: 1,
+    borderRadius: 6,
+    backgroundColor: UColor.mainColor,
     marginTop: ScreenUtil.autowidth(10),
     marginBottom: ScreenUtil.autowidth(20),
-    backgroundColor: UColor.mainColor,
-    borderRadius: 6,
+    marginHorizontal: ScreenUtil.autowidth(15),
   },
   accountoue: {
     flexDirection: "row",
@@ -273,10 +285,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
-  },
-  logimg: {
-    // width: ScreenUtil.autowidth(50), 
-    height: ScreenUtil.autowidth(50)
   },
   logtext: {
     fontSize: ScreenUtil.setSpText(10),
