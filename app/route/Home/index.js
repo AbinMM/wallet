@@ -423,13 +423,13 @@ class Home extends React.Component {
     this._disableTipVisible();
   }
 
-  importWallet() {
-    const { navigate } = this.props.navigation;
-    navigate('ImportEosKey', {});
-    this._wldimss ();
-    this._plusDimss ();
-    this._disableTipVisible();
-  }
+  // importWallet() {
+  //   const { navigate } = this.props.navigation;
+  //   navigate('ImportEosKey', {});
+  //   this._wldimss ();
+  //   this._plusDimss ();
+  //   this._disableTipVisible();
+  // }
 
   changeWallet(data) {
     this._wldimss();
@@ -774,7 +774,7 @@ class Home extends React.Component {
       return (
         <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
           <View style={{with:ScreenWidth,height:ScreenUtil.autoheight(44), marginTop:20,justifyContent:"center",backgroundColor: "#FFFFFF"}}>
-            <Text style={{fontSize: ScreenUtil.setSpText(20),lineHeight: ScreenUtil.autoheight(25),textAlign: 'center',color: "#323232"}}>创建钱包</Text>
+            <Text style={{fontSize: ScreenUtil.setSpText(20),lineHeight: ScreenUtil.autoheight(25),textAlign: 'center',color: "#323232"}}>添加钱包</Text>
           </View>
           <WalletWelcome {...this.props}/>        
         </View>
@@ -858,7 +858,7 @@ class Home extends React.Component {
                   <Animated.View style={{opacity:this.state.alert,}}>
                     <View style={{paddingTop: ScreenUtil.autowidth(10),}}>
                       <Ionicons color={'#FFFFFF'} style={{position: 'absolute', top: Platform.OS === 'ios' ? - ScreenUtil.autowidth(7) : - ScreenUtil.autowidth(9), right: ScreenUtil.autowidth(6)}} name={'md-arrow-dropup'} size={30} />
-                      <View style={{width:ScreenUtil.autowidth(112),height: ScreenUtil.autoheight(160),backgroundColor: '#FFFFFF',borderRadius: 5,}}>
+                      <View style={{width:ScreenUtil.autowidth(112),height: ScreenUtil.autoheight(120),backgroundColor: '#FFFFFF',borderRadius: 5,}}>
                         <Button onPress={() => this.scan()} >
                           <View style={[styles.establishout,{}]}>
                             <Image source={UImage.scan} style={{width: ScreenUtil.autowidth(12),height: ScreenUtil.autowidth(12)}} />
@@ -874,15 +874,15 @@ class Home extends React.Component {
                         <Button onPress={() => this.createWallet()} >
                           <View style={[styles.establishout,{borderTopWidth: 0.5,borderTopColor: '#F0F0F0'}]}>
                             <Image source={UImage.xin_qr} style={{width: ScreenUtil.autowidth(12),height: ScreenUtil.autowidth(12)}} />
-                            <Text style={[styles.establishtext,{color: '#262626'}]}>创建钱包</Text>
+                            <Text style={[styles.establishtext,{color: '#262626'}]}>添加钱包</Text>
                           </View>
                         </Button>
-                        <Button onPress={() => this.importWallet()} >
+                        {/* <Button onPress={() => this.importWallet()} >
                           <View style={[styles.establishout,{borderTopWidth: 0.5,borderTopColor: '#F0F0F0'}]}>
                             <Image source={UImage.xin_import} style={{width: ScreenUtil.autowidth(12),height: ScreenUtil.autowidth(12)}} />
                             <Text style={[styles.establishtext,{color: '#262626'}]}>导入钱包</Text>
                           </View>
-                        </Button>
+                        </Button> */}
                       </View>
                     </View>
                   </Animated.View>

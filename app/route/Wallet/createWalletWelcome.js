@@ -8,7 +8,7 @@ import WalletWelcome from '../Wallet/WalletWelcome'
 class createWalletWelcome extends BaseComponent {
     
     static navigationOptions =  {
-        headerTitle: '创建钱包',
+        headerTitle: '添加钱包',
         header:null,
     };
 
@@ -23,7 +23,7 @@ class createWalletWelcome extends BaseComponent {
     render() {
         return (
         <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-                <Header {...this.props} onPressLeft={true} title="创建钱包" />
+                <Header {...this.props} onPressLeft={true} title="添加钱包" />
                 <WalletWelcome {...this.props}/>        
         </View>)
     }
