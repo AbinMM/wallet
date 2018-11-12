@@ -44,7 +44,7 @@ class Setting extends React.Component {
       // { avatar:UImage.my_help, name: "帮助中心", onPress: this.goPage.bind(this, "Helpcenter") },
       // { avatar:UImage.my_community, name: "ET社区", onPress: this.goPage.bind(this, "Community") },
       {first: 1, avatar:UImage.my_wallet, name: "钱包管理", onPress: this.goPage.bind(this, "WalletManage") },
-      {first: 1, avatar:UImage.my_record, name: "交易记录",  },
+      // {first: 1, avatar:UImage.my_record, name: "交易记录",  },
       {first: 1, avatar:UImage.my_share, name: "有奖邀请", onPress: this.goPage.bind(this, "share") },
       {first: 1, avatar:UImage.account_manage, name: "通讯录", onPress: this.goPage.bind(this, "AccountManage") },
       {first: 1, avatar:UImage.my_system, name: "系统设置",  onPress: this.goPage.bind(this, "set") },

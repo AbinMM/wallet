@@ -61,40 +61,35 @@ class ChoiceToken extends BaseComponent {
 
   render() {
     return <View style={[styles.container,{backgroundColor: UColor.secdColor}]}>
-        <Header {...this.props} onPressLeft={true} title="选择代币" />
-        <ListView initialListSize={1} enableEmptySections={true} 
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.assetRefreshing}
-                onRefresh={() => this.onRefresh()}
-                tintColor={UColor.fontColor}
-                colors={[UColor.tintColor]}
-                progressBackgroundColor={UColor.btnColor}
-              />
-            }
-            dataSource={this.state.dataSource.cloneWithRows(this.props.myAssets == null ? [] : this.props.myAssets)} 
-            renderRow={(rowData, sectionID, rowID) => (      
-              <View style={[styles.listItem,{borderBottomColor: UColor.secdColor}]}>
-                <Button onPress={this.assetInfo.bind(this, rowData)}>
-                  <View style={[styles.row,{backgroundColor: UColor.mainColor}]}>
-                    <View style={styles.lefts}>
-                      <View style={{borderRadius: 25,backgroundColor: UColor.titletop,marginRight: ScreenUtil.autowidth(10),marginVertical: ScreenUtil.autowidth(8)}}> 
-                        <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} />
-                      </View>
-                      <Text style={[styles.lefttext,{color: UColor.fontColor}]}>{rowData.asset.name}</Text>
-                    </View>
-                    <View style={styles.rights}>
-                      <View style={styles.rightout}>
-                          <Text style={[styles.rightbalance,{color: UColor.fontColor}]}>{(rowData.balance==null || rowData.balance=="" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.0000" : rowData.balance.replace(rowData.asset.name, "")}</Text>
-                          <Text style={[styles.rightmarket,{color:  UColor.arrow}]}>{(rowData.balance==null || rowData.balance=="" || rowData.asset.value == null || rowData.asset.value == "" || rowData.asset.value == 0 || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? " " :  "≈（￥）" + (rowData.balance.replace(rowData.asset.name, "")*rowData.asset.value).toFixed(2)}</Text>
-                      </View>
-                    </View>
-                  </View>
-                </Button>
+      <Header {...this.props} onPressLeft={true} title="选择代币" />
+      <ListView initialListSize={1} enableEmptySections={true} 
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.assetRefreshing}
+              onRefresh={() => this.onRefresh()}
+              tintColor={UColor.fontColor}
+              colors={[UColor.tintColor]}
+              progressBackgroundColor={UColor.btnColor}
+            />
+          }
+          dataSource={this.state.dataSource.cloneWithRows(this.props.myAssets == null ? [] : this.props.myAssets)} 
+          renderRow={(rowData, sectionID, rowID) => (      
+            <TouchableOpacity onPress={this.assetInfo.bind(this, rowData)}>
+              <View style={[styles.row,{backgroundColor: '#FFFFFF',shadowColor: '#EFF4F8',shadowOffset:{height: 2,width: 0},shadowRadius: 5,shadowOpacity: 0.5,elevation: 5,}]}>
+                <View style={styles.lefts}>
+                  <Image source={rowData.asset.icon==null ? UImage.eos : { uri: rowData.asset.icon }} style={styles.leftimg} resizeMode='stretch'/>
+                  <Text style={[styles.lefttext,{color: '#262626'}]}>{rowData.asset.name}</Text>
+                </View>
+                
+                <View style={styles.rightout}>
+                    <Text style={[styles.rightbalance,{color: '#262626'}]}>{(rowData.balance==null || rowData.balance=="" || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? "0.0000" : rowData.balance.replace(rowData.asset.name, "")}</Text>
+                    <Text style={[styles.rightmarket,{color:  '#808080'}]}>{(rowData.balance==null || rowData.balance=="" || rowData.asset.value == null || rowData.asset.value == "" || rowData.asset.value == 0 || (!this.props.defaultWallet.isactived || !this.props.defaultWallet.hasOwnProperty('isactived')))? " " :  "≈（￥）" + (rowData.balance.replace(rowData.asset.name, "")*rowData.asset.value).toFixed(2)}</Text>
+                </View>
               </View>
-            )}                
-          />  
-  </View>
+            </TouchableOpacity>
+          )}                
+        />  
+    </View>
   }
 }
 
@@ -104,13 +99,13 @@ const styles = StyleSheet.create({
     flexDirection:'column',
   },
 
-  listItem: {
-    borderBottomWidth: 1,
-  },
   row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: ScreenUtil.autowidth(5),
+    borderRadius: 6,
+    flexDirection:"row",
+    justifyContent:"center",
+    marginVertical: ScreenUtil.autoheight(7.5),
+    marginHorizontal: ScreenUtil.autowidth(15),
+    paddingVertical: ScreenUtil.autoheight(16),
     paddingHorizontal: ScreenUtil.autowidth(20),
   },
   lefts: {
@@ -119,12 +114,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftimg: {
-    width: ScreenUtil.autowidth(25), 
-    height: ScreenUtil.autowidth(25),
+    width: ScreenUtil.autowidth(39), 
+    height: ScreenUtil.autowidth(39),
   },
   lefttext: {
-    fontSize: ScreenUtil.setSpText(18),
-    marginLeft: ScreenUtil.autowidth(20),
+    fontSize: ScreenUtil.setSpText(16),
+    marginLeft: ScreenUtil.autowidth(15),
   },
   rights: {
     flex: 1,
@@ -144,8 +139,8 @@ const styles = StyleSheet.create({
   },
   rightmarket: {
     textAlign: 'right',
-    fontSize: ScreenUtil.setSpText(12),
-    marginTop: ScreenUtil.autoheight(3),
+    fontSize: ScreenUtil.setSpText(10),
+    lineHeight: ScreenUtil.autoheight(14),
   },
 
 
