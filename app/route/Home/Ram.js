@@ -535,13 +535,13 @@ class Ram extends BaseComponent {
                                 </View>
 
                                <View style={[styles.tablayout,{backgroundColor: UColor.mainColor}]}>
-                                    <TouchableOpacity style={{flexDirection:'row', alignItems: 'center',justifyContent: 'center',}} onPress={() => {this.setState({isBuy: true, isSell:false}); this.init()}}>
+                                    <TouchableOpacity style={{flexDirection:'row', alignItems: 'center',justifyContent: 'center',paddingRight: ScreenUtil.autowidth(12),}} onPress={() => {this.setState({isBuy: true, isSell:false}); this.init()}}>
                                         <CheckMarkCircle selected={this.state.isBuy} />
-                                        <Text style={[styles.tabText, {color: UColor.fontColor, paddingLeft: ScreenUtil.autowidth(5), paddingRight: ScreenUtil.autowidth(24)}]}>购买</Text>
+                                        <Text style={[styles.tabText, {color: UColor.fontColor, paddingLeft: ScreenUtil.autowidth(5),}]}>购买</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={{flexDirection:'row', alignItems: 'center',justifyContent: 'center',}} onPress={() => {this.setState({isBuy: false, isSell:true}); this.init()}}>
+                                    <TouchableOpacity style={{flexDirection:'row', alignItems: 'center',justifyContent: 'center',paddingLeft: ScreenUtil.autowidth(12),}} onPress={() => {this.setState({isBuy: false, isSell:true}); this.init()}}>
                                         <CheckMarkCircle selected={this.state.isSell} />
-                                        <Text style={[styles.tabText, {color: UColor.fontColor, paddingLeft: ScreenUtil.autowidth(5)}]}>出售</Text>
+                                        <Text style={[styles.tabText, {color: UColor.fontColor, paddingLeft: ScreenUtil.autowidth(5),}]}>出售</Text>
                                     </TouchableOpacity>
                                 </View>
                                 

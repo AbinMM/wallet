@@ -685,7 +685,7 @@ class CpuNet extends BaseComponent {
                                     <View style={{flex:1}}/>
                                     <TouchableOpacity style={{flex:1,flexDirection:'row', alignItems: 'center',justifyContent: 'center',}} onPress={() => {this.setState({isMortgage: true, isRedeem:false}); this.init()}}>
                                         <CheckMarkCircle selected={this.state.isMortgage} />
-                                        <Text style={[styles.tabText, {color: UColor.fontColor, paddingLeft: ScreenUtil.autowidth(5), paddingRight: ScreenUtil.autowidth(24)}]}>抵押</Text>
+                                        <Text style={[styles.tabText, {color: UColor.fontColor, paddingLeft: ScreenUtil.autowidth(5), }]}>抵押</Text>
                                     </TouchableOpacity>   
                                     <TouchableOpacity style={{flex:1,flexDirection:'row', alignItems: 'center',justifyContent: 'center', }} onPress={() => {this.setState({isMortgage: false, isRedeem:true}); this.init()}}>
                                         <CheckMarkCircle selected={this.state.isRedeem} />

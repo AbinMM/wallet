@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { DeviceEventEmitter, Clipboard, StyleSheet, Image, ImageBackground, View, Text, TextInput, TouchableOpacity } from "react-native";
+import {Dimensions, Platform, DeviceEventEmitter, Clipboard, StyleSheet, Image, ImageBackground, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import UImage from "../../utils/Img";
 import UColor from "../../utils/Colors";
 import Header from '../../components/Header'
@@ -11,8 +11,9 @@ import { EasyToast } from "../../components/Toast";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import BaseComponent from "../../components/BaseComponent";
 import TextButton from '../../components/TextButton';
-
 let dismissKeyboard = require("dismissKeyboard");
+const ScreenWidth = Dimensions.get('window').width;
+const ScreenHeight = Dimensions.get('window').height;
 
 @connect(({ wallet }) => ({ ...wallet }))
 class TurnInAsset extends BaseComponent {
@@ -139,18 +140,16 @@ class TurnInAsset extends BaseComponent {
     return (
       <View style={[styles.container,{backgroundColor: UColor.secdfont}]}>
         <Header {...this.props} onPressLeft={true} title="收款" avatar={UImage.share_i} onPressRight={this._rightTopClick.bind()} imgWidth={ScreenUtil.autowidth(18)} imgHeight={ScreenUtil.autowidth(18)}/> 
-        <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} style={styles.tab}>
+        <TouchableOpacity activeOpacity={1.0} onPress={this.dismissKeyboardClick.bind(this)} >
           <View style={styles.taboutsource}>
-              <View style={styles.accountoue} >
-                  <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(48),color: UColor.fontColor}]}>收款金额</Text>
-              </View>
-              <View style={[styles.inptoutsource,{backgroundColor: UColor.mainColor},{borderBottomColor: UColor.secdColor,borderBottomWidth:ScreenUtil.autowidth(2)}]}>
-                <View style={{paddingHorizontal: ScreenUtil.autowidth(20),borderRightColor: UColor.secdColor,borderRightWidth: 1,}}>
+              <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autoheight(23),color: UColor.fontColor}]}>收款金额</Text>
+              <View style={[styles.inptoutsource,{backgroundColor: UColor.mainColor,borderBottomColor: UColor.secdColor,}]}>
+                <View style={{borderRightColor: UColor.secdColor,borderRightWidth: ScreenUtil.autowidth(1),}}>
                   {this.state.Choicesymbol ? 
                   <TouchableOpacity onPress={() => this.openChoiceToken()} style={{alignSelf: 'flex-end',justifyContent: "flex-end",}}>    
-                      <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center',}}>                              
-                          <Text style={{fontSize: ScreenUtil.setSpText(14),color: UColor.fontColor, marginRight: ScreenUtil.autowidth(5),lineHeight: ScreenUtil.autowidth(36),}}>{this.state.symbol}</Text>
-                          <Ionicons color={UColor.fontColor} name="ios-arrow-down-outline" size={20} />
+                      <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center', paddingRight: ScreenUtil.autowidth(10),}}>                              
+                          <Text style={{fontSize: ScreenUtil.setSpText(14),color: UColor.fontColor, marginRight: ScreenUtil.autowidth(5),lineHeight: ScreenUtil.autowidth(25),}}>{this.state.symbol}</Text>
+                          <Ionicons color={UColor.fontColor} name="md-arrow-dropdown" size={20} />
                       </View>
                   </TouchableOpacity>
                   :
@@ -163,31 +162,22 @@ class TurnInAsset extends BaseComponent {
                   underlineColorAndroid="transparent" secureTextEntry={false} keyboardType="numeric"
                 />
               </View>
-              
-              <View style={[styles.codeout,{backgroundColor: UColor.mainColor}]}>
-                <Text style={[styles.accountText,{color: UColor.fontColor}]}></Text>
+              <View style={{alignItems: 'center', justifyContent: 'center',paddingVertical: ScreenUtil.autoheight(40)}}>
                 <View style={[styles.qrcode,{backgroundColor: UColor.btnColor,borderColor: UColor.secdColor }]}>
-                  <QRCode size={170} style={{ width: 170 }} value = {this.getQRCode()} logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(35)} logoBorderRadius={5}/>
+                  <QRCode size={ScreenUtil.autowidth(170)}  value = {this.getQRCode()} logo={UImage.etlogo} logoSize={ScreenUtil.setSpText(35)} logoBorderRadius={5}/>
                 </View>
               </View>
-                <Text style={[styles.prompttext,{color: UColor.fontColor}]}>{this.state.toAccount}</Text>
-              {/* <Button onPress={this.copy.bind()} style={styles.btnnextstep}>
-                <View style={[styles.nextstep,{backgroundColor: '#6DA0F8'}]}>
-                  <Text style={[styles.nextsteptext,{color: UColor.btnColor}]}>复制收款账号</Text>
-                </View>
-              </Button> */}
-              <View style={{marginTop: ScreenUtil.autowidth(19),justifyContent: 'center', alignItems:'center'}}>
+              
+              <Text style={[styles.prompttext,{color: UColor.fontColor}]}>{this.state.toAccount}</Text>
+              <View style={{marginTop: ScreenUtil.autowidth(19), marginBottom: ScreenUtil.autowidth(40),  justifyContent: 'center', alignItems:'center'}}>
                   <TextButton text='复制收款账号' onPress={this.copy.bind(this)} textColor={UColor.btnColor} fontSize={ScreenUtil.autowidth(14)}　shadow={true} borderRadius={25} style={{width:ScreenUtil.autowidth(175), height: ScreenUtil.autowidth(42)}}></TextButton>
               </View>
-              <View style={styles.logout}>
-                <ImageBackground style={{width: ScreenUtil.autoheight(345), height: ScreenUtil.autoheight(87)}} source={UImage.bottom_turnin}>
-                  {/* <Image source={UImage.bottom_turnin} style={styles.logimg}/> */}
-                  <View style={styles.logout}>
-                    <Text style={[styles.logtext,{color: UColor.mainfont, textAlign:"right"}]}>我也用ET钱包</Text>
-                    <Text style={[styles.logtext,{color: UColor.mainfont, textAlign:"right", paddingBottom: ScreenUtil.autowidth(14),}]}>eostoken.im</Text>
-                  </View>
-                </ImageBackground>
-              </View>
+              <ImageBackground style={{width: ScreenWidth - ScreenUtil.autowidth(30) , height: (ScreenWidth - ScreenUtil.autowidth(30))*0.2521}} source={UImage.bottom_turnin}>
+                <View style={styles.logout}>
+                  <Text style={[styles.logtext,{color: UColor.mainfont, textAlign:"right"}]}>我也用ET钱包</Text>
+                  <Text style={[styles.logtext,{color: UColor.mainfont, textAlign:"right", paddingBottom: ScreenUtil.autowidth(14),}]}>eostoken.im</Text>
+                </View>
+              </ImageBackground>
           </View>
         </TouchableOpacity>
       </View>
@@ -201,7 +191,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   taboutsource: {
-    flex: 1,
     justifyContent: 'center',
     marginHorizontal: ScreenUtil.autowidth(15),
     marginTop: ScreenUtil.autowidth(10),
@@ -214,11 +203,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingLeft: ScreenUtil.autowidth(20),
-},
-inptitle: {
-  flex: 1,
-  fontSize: ScreenUtil.setSpText(16),
-},
+  },
+  inptitle: {
+    fontSize: ScreenUtil.setSpText(16),
+    paddingTop: ScreenUtil.autoheight(26),
+    paddingHorizontal: ScreenUtil.autowidth(20),
+  },
 
   accountText: {
     textAlign: "left",
@@ -242,14 +232,15 @@ inptitle: {
     textAlign: "center",
     height: ScreenUtil.autoheight(30),
     fontSize: ScreenUtil.setSpText(18),
-    marginTop: ScreenUtil.autoheight(36),
+    marginTop: ScreenUtil.autoheight(6),
   },
   inptoutsource: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    // paddingVertical: ScreenUtil.autoheight(12),
-    // marginVertical: ScreenUtil.autoheight(15),
+    borderBottomWidth:ScreenUtil.autowidth(1),
+    paddingVertical: ScreenUtil.autoheight(5),
+    marginHorizontal: ScreenUtil.autowidth(20),
   },
   tokenText: {
     textAlign: "left",
