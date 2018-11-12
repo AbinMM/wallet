@@ -212,6 +212,7 @@ export default {
   
   //王新版图片
   home_bg: require('../img/wimg/home_bg.png'),
+  share_bg: require('../img/wimg/share_bg.png'),
   qr_h: require('../img/wimg/qr_h.png'),
   resources_h: require('../img/wimg/resources_h.png'),
   transfer_h: require('../img/wimg/transfer_h.png'),

@@ -138,8 +138,8 @@ class Shareing extends BaseComponent {
         <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
           <ViewShot ref="viewShot"  options={{ format: "jpg", quality: 0.9 }}>
             {this.state.showShare && <View style={{ backgroundColor: UColor.btnColor, flex: 1}}>
-              <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.7893, justifyContent: 'center', alignItems: 'center'}} source={UImage.home_bg}>
-                <Image source={UImage.share_banner} resizeMode="stretch" style={{ width: ScreenWidth - ScreenUtil.autowidth(120), height: (ScreenWidth - ScreenUtil.autowidth(120))*0.5275}} />
+              <ImageBackground style={{width: ScreenWidth, height: ScreenWidth*0.6226,  alignItems: 'center',paddingTop: ScreenUtil.autowidth(39)}} source={UImage.share_bg}>
+                <Image source={UImage.share_banner} resizeMode="stretch" style={{ width: ScreenWidth - ScreenUtil.autowidth(120), height: (ScreenWidth - ScreenUtil.autowidth(120))*0.4862}} />
               </ImageBackground>
               <View style={{minHeight: ScreenUtil.autoheight(200), marginHorizontal: ScreenUtil.autowidth(25), paddingVertical: ScreenUtil.autoheight(20), borderBottomWidth: 0.5, borderBottomColor: '#D9D9D9',}}>
                 <View style={{flexDirection: 'column',}}>

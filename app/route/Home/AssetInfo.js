@@ -235,7 +235,6 @@ class AssetInfo extends BaseComponent {
             <View style={[{alignItems: "center",justifyContent: "center",}]}>
                 <Text style={[styles.headbalance,{color: UColor.mainColor,}]}>{this.state.balance==""? "0.0000" :this.state.balance.replace(c.asset.name, "")} <Text style={{fontSize: ScreenUtil.setSpText(20),color: UColor.mainColor, }}>{c.asset.name}</Text></Text>
                 <Text style={[styles.headmarket,{color: UColor.mainColor,}]}>(≈￥{(this.state.balance == null || c.asset.value == null) ? "0.00" : (this.state.balance.replace(c.asset.name, "") * c.asset.value).toFixed(2)})</Text>
-                
             </View>
             <View style={styles.Subcolumn}>
                 <Text style={[styles.recordText,{color: UColor.mainColor}]}>交易记录</Text>
@@ -284,7 +283,7 @@ class AssetInfo extends BaseComponent {
                                         <Text style={[styles.timetext,{color: UColor.arrow}]}>{this.transferTimeZone(rowData.blockTime)}</Text>
                                     </View>
                                     <View style={styles.typedescription}>
-                                        <Text style={[styles.typeto,{color:rowData.type=='转出'?UColor.tradedetail_prompt:'#FFB02E'}]}>{(rowData.type=='转出'?'-':'+') +  Math.floor(rowData.quantity.replace(c.asset.name, "")*10000)/10000 + c.asset.name}</Text>
+                                        <Text style={[styles.typeto,{color:rowData.type=='转出'?UColor.tradedetail_prompt:'#FFB02E'}]} numberOfLines={1}>{(rowData.type=='转出'?'-':'+') +  Math.floor(rowData.quantity.replace(c.asset.name, "")*10000)/10000 + c.asset.name}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -391,7 +390,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     timequantity: {
-        flex: 4,
+        flex: 1,
         flexDirection: "column",
         alignItems: 'flex-start',
         justifyContent: "space-between",
@@ -413,7 +412,7 @@ const styles = StyleSheet.create({
 
 
     typedescription: {
-        flex: 2,
+        flex: 1,
         alignItems: 'flex-end',
         flexDirection: "column",
         justifyContent: "space-around",
@@ -463,9 +462,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: "row",
         height:  ScreenUtil.autoheight(38),
-        marginHorizontal: ScreenUtil.autowidth(36),
-        // marginLeft:ScreenUtil.autowidth(20),
-        // marginRight:ScreenUtil.autowidth(20),
+        marginHorizontal: ScreenUtil.autowidth(15),
     },
     
     recordText: {
