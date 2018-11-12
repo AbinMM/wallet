@@ -102,6 +102,7 @@ import Security from '../utils/Security';
 import {AlertModalView} from '../components/modals/AlertModal'
 import {AuthModalView} from '../components/modals/AuthModal'
 import {DappSignModalView} from '../components/modals/DappSignModal'
+import { CodeModalView } from '../components/modals/CodeModal';
 
 require('moment/locale/zh-cn');
 var DeviceInfo = require('react-native-device-info');
@@ -1054,14 +1055,14 @@ class Route extends React.Component {
           </Animated.View>
           <View style={{ height: ScreenUtil.autowidth(200),position: 'absolute', bottom: 0,}}>
             <Animated.View style={{
-              height: ScreenUtil.autowidth(200), flex: 1, backgroundColor: '#FFFFFF', borderTopLeftRadius: 5,borderTopRightRadius: 5, 
+              height: ScreenUtil.autowidth(200), flex: 1, backgroundColor: '#FFFFFF', borderTopLeftRadius: 5,borderTopRightRadius: 5,
               shadowColor: '#4A90E2',shadowOffset:{height: -7,width: 0},shadowRadius: 5,shadowOpacity:1,elevation: 12,
               transform: [
                 { translateX: 0 },
                 { translateY: this.state.transformY },
               ]
             }}>
-             
+
               <Text style={{fontSize: ScreenUtil.setSpText(16), color: '#333333', marginVertical: ScreenUtil.autowidth(7), width: "100%", textAlign: "center" }}>-分享到-</Text>
               <View style={{ flexDirection: "row",marginVertical: ScreenUtil.autowidth(14), }}>
                 <Button onPress={() => { this.shareAction(1) }} >
@@ -1089,7 +1090,7 @@ class Route extends React.Component {
                   </View>
                 </Button>
               </View>
-              
+
               <Button onPress={() => { this.setState({ showShare: false }) }}>
                   <View style={[styles.cancelout,{backgroundColor: '#D9D9D9'}]}>
                     <Text style={[styles.canceltext,{color: '#FFFFFF'}]}>取消</Text>
@@ -1352,7 +1353,7 @@ class Route extends React.Component {
                             <Text style={{fontSize: 16, color: "#323232", marginVertical: 5, }}>Owner公钥：</Text>
                             <Text style={{fontSize: 12, color: "#808080",}}>{this.state.turninamount}</Text>
                         </View>
-                        
+
                         <View style={{paddingHorizontal: 15, paddingVertical: 50,}}>
                             <ImageBackground source={UImage.cardbule} style={{width: ScreenWidth - 70, height: (ScreenWidth - 70)*0.232}}>
                               <Text style={{color: UColor.mainColor, paddingLeft:120,paddingRight:2,paddingTop:40, fontSize: 10, lineHeight: 14,}}>    您的好友正在使用ET钱包激活账户 请您在确认之后，帮他支付，完成激活</Text>
@@ -1513,6 +1514,7 @@ class Route extends React.Component {
       <DappSignModalView />
       <AlertModalView />
       <AuthModalView />
+      <CodeModalView />
     </View>)
   }
 }
@@ -1556,7 +1558,7 @@ const styles = StyleSheet.create({
     lineHeight: ScreenUtil.autowidth(17),
   },
 
-  
+
   cancelout: {
     borderRadius: 25,
     alignSelf: 'center' ,
