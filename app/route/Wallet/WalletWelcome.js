@@ -44,11 +44,9 @@ class WalletWelcome extends BaseComponent {
                 if(result.code == 0 && result.data == true){
                     wallet.isactived = true
                     this.props.dispatch({type: 'wallet/activeWallet', wallet: wallet});
-                    //msg:success,data:true, code:0 账号已存在
-                    EasyShowLD.dialogShow("恭喜激活成功", (<View>
-                        <Text style={{fontSize: ScreenUtil.setSpText(20), color: UColor.showy, textAlign: 'center',}}>{name}</Text>
-                        {/* <Text style={[styles.inptpasstext,{color: UColor.arrow}]}>您申请的账号已经被***激活成功</Text> */}
-                    </View>), "知道了", null,  () => { EasyShowLD.dialogClose() });
+                    AlertModal.show("恭喜激活成功",""+{name},'关闭',"知道了",(resp)=>{
+                        EasyShowLD.dialogClose();
+                    });
                 }else if(result.code == 500){ // 网络异常
                   EasyToast.show(result.msg);
                 }else if(result.code == 515){
@@ -81,7 +79,8 @@ class WalletWelcome extends BaseComponent {
             }
         });
         DeviceEventEmitter.addListener('delete_wallet', (tab) => {
-            this.props.navigation.goBack();
+            // this.props.navigation.goBack();
+            EasyToast.show('删除成功');
         });
     }
 

@@ -153,7 +153,7 @@ export default {
 
             yield call(store.save, 'walletArr', walletArr);
             DeviceEventEmitter.emit('key_created');
-            if(wallet.isactived || (walletArr.length == 1)){
+            if(wallet.isactived){
                 yield call(store.save, 'defaultWallet', _wallet);
                 yield put({ type: 'updateDefaultWallet', payload: { defaultWallet: _wallet } });
                 yield put({ type: 'updateGuide', payload: { guide: false } });
