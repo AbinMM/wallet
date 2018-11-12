@@ -26,7 +26,7 @@ class Set extends BaseComponent {
 
   static navigationOptions = {
     title: '系统设置',
-    header:null, 
+    header:null,
   };
 
   constructor(props) {
@@ -37,7 +37,7 @@ class Set extends BaseComponent {
       skin: false,
     }
   }
-  
+
   componentDidMount() {
     const {dispatch}=this.props;
     dispatch({type:'login/getJpush',callback:(jpush)=>{
@@ -46,7 +46,7 @@ class Set extends BaseComponent {
       });
     }});
     dispatch({type:'login/getthemeSwitching',callback:(theme)=>{
-      
+
       this.setState({
         skin:theme.theme,
       });
@@ -84,9 +84,9 @@ class Set extends BaseComponent {
     }else{
       const { navigate } = this.props.navigation;
       navigate('Login', {});
-    } 
+    }
   }
- 
+
   gesturepass(){
     EasyShowLD.dialogShow("温馨提示", "该功能正在紧急开发中，敬请期待！", "知道了", null, () => { EasyShowLD.dialogClose() });
   }
@@ -113,7 +113,7 @@ class Set extends BaseComponent {
       this.setState({skin:theme.theme,});
       codePush.restartApp();
     }})
-    
+
   }
 
   doUpgrade = (url, version) => {
@@ -155,7 +155,7 @@ class Set extends BaseComponent {
             value={this.state.value} onValueChange={(value)=>{ this.setState({ value:value, });this.changeJpush(value);}}/>
           </View>
         </View>
-         
+
         <View style={[styles.listItem,{borderBottomColor: '#FAFAF9'}]}>
           <Text style={[styles.listInfoTitle,{color:'#323232'}]}>夜间模式</Text>
           <View style={styles.listInfoRight}>
@@ -171,18 +171,11 @@ class Set extends BaseComponent {
             value={this.state.gesture} onValueChange={(gesture)=>{this.setState({gesture:gesture,});this.gesturepass(gesture);}}/>
           </View>
         </View>
-        <View style={[styles.listItem,{borderBottomColor: '#FAFAF9'}]}>
-            <Text style={[styles.listInfoTitle,{color:'#323232'}]}>指纹支付</Text>
-          <View style={styles.listInfoRight}>
-            <Switch  tintColor={'#D9D9D9'} onTintColor={'#3B80F4'} thumbTintColor={'#EDEDED'}
-            value={this.state.fingerprint} onValueChange={(fingerprint)=>{this.setState({fingerprint:fingerprint,});this.gesturepass(fingerprint);}}/>
-          </View>
-        </View>
-         
+
         <TouchableOpacity onPress={() => this.checkVersion()}>
           <View style={[styles.listItem,{borderBottomColor: '#FAFAF9'}]}>
             <Text style={[styles.listInfoTitle,{color:'#323232'}]}>检查新版本</Text>
-            {/* <View style={styles.listInfoRight}>            
+            {/* <View style={styles.listInfoRight}>
               <Font.Ionicons name="ios-arrow-forward-outline" size={16} color={UColor.arrow} />
             </View> */}
           </View>
@@ -225,7 +218,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btnout: {
-    height:  ScreenUtil.autoheight(80), 
+    height:  ScreenUtil.autoheight(80),
     marginBottom:  ScreenUtil.autoheight(30),
   },
   btnloginUser: {
@@ -238,7 +231,7 @@ const styles = StyleSheet.create({
   btntext: {
     fontSize: ScreenUtil.setSpText(15),
   },
-  
+
 });
 
 export default Set;
