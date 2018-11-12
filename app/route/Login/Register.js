@@ -285,7 +285,7 @@ class Register extends BaseComponent {
           <Text style={[styles.inptitle,{color: '#323232'}]}>手机号</Text>
           <TextInput ref={(ref) => this._rphone = ref} value={this.state.phone} returnKeyType="next" 
             selectionColor={UColor.tintColor} style={[styles.inpt,{color: '#808080',borderBottomWidth:0.5, borderBottomColor: '#D5D5D5'}]} placeholderTextColor={'#D9D9D9'} 
-            placeholder="输入手机号" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
+            placeholder="请输入您的手机号" underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
             onChangeText={(phone) => this.setState({ phone })}/>
 
           <PasswordInput password={this.state.password} onCallbackFun={(password) => this.setState({ password })} 

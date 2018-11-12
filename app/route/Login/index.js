@@ -161,7 +161,7 @@ class Login extends BaseComponent {
             <View style={[styles.outsource,{backgroundColor: '#FFFFFF'}]}>
                 <Text style={[styles.inptitle,{color: '#323232'}]}>手机号</Text>
                 <TextInput ref={(ref) => this._lphone = ref} autoFocus={false} editable={true} 
-                  value={this.state.loginPhone} returnKeyType="next"  placeholder="输入手机号" 
+                  value={this.state.loginPhone} returnKeyType="next"  placeholder="请输入您的手机号" 
                   selectionColor={UColor.tintColor} style={styles.inpt} placeholderTextColor={'#D9D9D9'}
                   underlineColorAndroid="transparent" keyboardType="phone-pad" maxLength={11}
                   onChangeText={(loginPhone) => this.setState({ loginPhone })} />
@@ -169,7 +169,7 @@ class Login extends BaseComponent {
                 <Text style={[styles.inptitle,{color: '#323232'}]}>密码</Text>
                 <TextInput ref={(ref) => this._lpass = ref}  
                   value={this.state.loginPwd} returnKeyType="go" autoFocus={false} editable={true} 
-                  selectionColor={UColor.tintColor} style={styles.inpt} placeholder="输入密码" 
+                  selectionColor={UColor.tintColor} style={styles.inpt} placeholder="请输入您的密码" 
                   underlineColorAndroid="transparent" secureTextEntry={true} maxLength={20} placeholderTextColor={'#D9D9D9'}
                   onSubmitEditing={() => this.loginKcaptrue()} onChangeText={(loginPwd) => this.setState({ loginPwd })}
                 />
