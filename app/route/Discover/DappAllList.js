@@ -11,6 +11,8 @@ import {AlertModal,} from '../../components/modals/AlertModal'
 var ScreenWidth = Dimensions.get('window').width;
 var ScreenHeight = Dimensions.get('window').height;
 
+let pageNo = 1;
+
 @connect(({ dapp }) => ({ ...dapp }))
 class DappAllList extends BaseComponent {
 
@@ -31,7 +33,9 @@ class DappAllList extends BaseComponent {
 
   //组件加载完成
   componentDidMount() {
-    this.getDapplistByPage(1);
+      pageNo=1;
+      this.loadDappList(pageNo);
+
   }
 
   componentWillUnmount(){
@@ -39,19 +43,39 @@ class DappAllList extends BaseComponent {
     super.componentWillUnmount();
   }
 
-  getDapplistByPage(page){
+  loadDappList = (page) =>{
 
-    this.props.dispatch({ type: 'dapp/dappfindAllByType', payload: {tid:this.state.id,page:page,pagesize:20}, 
+    this.props.dispatch({ type: 'dapp/dappfindAllByType', payload: {tid:this.state.id,page:page,pageSize:20}, 
     callback: (resp) => {
       if(resp && resp.code == '0'){
         if(resp.data && resp.data.length > 0){
-          this.setState({dappList: resp.data});
+           if(page == 1)
+           {  
+            this.setState({ dappList: resp.data});
+           }else{
+            let old = this.state.dappList;
+            let news = old.concat(resp.data);
+            this.setState({ dappList: news});
+           }
         }
       }
     }  
   });
 
   }
+
+    //加载更多
+    onEndReached () {
+      pageNo = pageNo+1;
+      this.loadDappList(pageNo);
+    };
+  
+    //下拉刷新
+    onRefresh () {
+      pageNo=1;
+      this.loadDappList(pageNo);
+    };
+
   //点DAPP跳转
   onPressDapp(data) {
     const { navigate } = this.props.navigation;
@@ -70,7 +94,10 @@ class DappAllList extends BaseComponent {
         <Header {...this.props} onPressLeft={true} title= {this.state.name}/>
         <ScrollView  keyboardShouldPersistTaps="always" style={{flex: 1,}}>
         <View style={{flex: 1,}}>
-         <ListView enableEmptySections = {true} contentContainerStyle={{flexDirection:'row',flexWrap:'wrap',alignItems:'flex-start',paddingHorizontal: ScreenUtil.autowidth(12.5)}}
+         <ListView initialListSize={10} enableEmptySections = {true} contentContainerStyle={{flexDirection:'row',flexWrap:'wrap',alignItems:'flex-start',paddingHorizontal: ScreenUtil.autowidth(12.5)}}
+              onEndReachedThreshold={20}   onEndReached={() => this.onEndReached()}
+            //   refreshControl={<RefreshControl refreshing={this.props.newsRefresh} onRefresh={() => this.onRefresh()}
+            // tintColor={UColor.fontColor} colors={[UColor.tintColor]} progressBackgroundColor={UColor.btnColor}/>}
               dataSource={this.state.dataSource.cloneWithRows(this.state.dappList == null ? [] : this.state.dappList)}
               renderRow={(rowData) => (
 
