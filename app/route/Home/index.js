@@ -409,7 +409,7 @@ class Home extends React.Component {
     } else {
       address = this.state.account;
     }
-    this._setModalVisible();
+    this._wldimss();
     Clipboard.setString(address);
     EasyToast.show("复制成功");
   }
@@ -528,8 +528,8 @@ class Home extends React.Component {
     return ret + '%';
   }
 
-  copyname(wallet) {
-    Clipboard.setString(wallet.name);
+  copyname = (walletName) => {
+    Clipboard.setString(walletName);
     EasyToast.show('账号复制成功');
   }
 
@@ -696,6 +696,9 @@ class Home extends React.Component {
               <TouchableOpacity onPress={()=>{this.iswlShowDimss()}} style={{flex: 1, height: ScreenUtil.autowidth(44), paddingHorizontal: ScreenUtil.autowidth(20),alignItems: 'flex-start',justifyContent: 'center', }}>
                 <View style={{flexDirection: 'row',alignItems:"center"}}>
                   <Text style={{fontSize: ScreenUtil.setSpText(14), color: '#FFFFFF', marginRight: ScreenUtil.autowidth(5)}}>{this.props.defaultWallet.account}</Text>
+                  <TouchableOpacity onPress={()=>{this.copy()}}> 
+                    <Image source={UImage.copy} style={{width: ScreenUtil.autowidth(12),height: ScreenUtil.autowidth(12),marginHorizontal: ScreenUtil.autowidth(15),}} />
+                  </TouchableOpacity>
                   <Ionicons color={'#FFFFFF'} style={{marginTop:4}} name={this.state.modalwl ? "md-arrow-dropdown" : "md-arrow-dropright"} size={18} />
                 </View>
               </TouchableOpacity>
@@ -820,32 +823,23 @@ class Home extends React.Component {
                 <Animated.View style={[styles.mask,{opacity:this.state.mask,}]} />
                 <View style={styles.alertContent}>
                   <Animated.View style={[styles.alert,{opacity:this.state.alert}]}>
-                    <View style={{paddingTop: ScreenUtil.autowidth(10),}}>
-                     <Ionicons color={'#FFFFFF'} style={{position: 'absolute', top: Platform.OS === 'ios' ? - ScreenUtil.autowidth(7) : - ScreenUtil.autowidth(9), left: ScreenUtil.autowidth(15),}} name={'md-arrow-dropup'} size={30} />
+                    <View style={{paddingTop: ScreenUtil.autowidth(10),paddingLeft: ScreenUtil.autowidth(15),}}>
+                     <Ionicons color={'#FFFFFF'} style={{position: 'absolute', top: Platform.OS === 'ios' ? - ScreenUtil.autowidth(7) : - ScreenUtil.autowidth(9), left: ScreenUtil.autowidth(20),}} name={'md-arrow-dropup'} size={30} />
                       <View style={[styles.touchableout,{backgroundColor:'#F9FAF9'}]}>
-                        <ListView initialListSize={5} style={[styles.touchablelist,]}
-                          enableEmptySections={true} dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
+                        <ListView initialListSize={5} enableEmptySections={true} 
+                          dataSource={this.state.dataSource.cloneWithRows(this.props.walletList == null ? [] : this.props.walletList)}
                           renderRow={(rowData) => (
                             (!rowData.isactived || !rowData.hasOwnProperty('isactived'))?null:
-                            <Button onPress={this.changeWallet.bind(this, rowData)} >
+                            <TouchableOpacity onPress={this.changeWallet.bind(this, rowData)} >
                               <View style={[styles.walletlist]}>
                                 <CheckMarkCircle markSize={ScreenUtil.autowidth(10)} width={ScreenUtil.autowidth(14)} height={ScreenUtil.autowidth(14)} 
                                 selected={(this.props.defaultWallet == null || this.props.defaultWallet.name == rowData.account)} onPress={this.changeWallet.bind(this, rowData)}/>
-                                <View style={styles.topout}>
-                                  <Text style={[styles.outname,{color: '#262626'}]}>{rowData.name}</Text>
-                                  {/* {(!rowData.isactived || !rowData.hasOwnProperty('isactived')) ?
-                                  <View style={[styles.stopoutBackupsout,{borderColor: UColor.showy}]}>
-                                    <Text style={[styles.stopoutBackups,{color: UColor.showy}]} onPress={this.WalletDetail.bind(this, rowData)}>未激活</Text>
-                                  </View>
-                                  :
-                                  (rowData.isBackups ? null :
-                                  <View style={[styles.stopoutBackupsout,{borderColor: UColor.tintColor}]}>
-                                    <Text style={[styles.stopoutBackups,{color: UColor.tintColor}]} onPress={this.WalletDetail.bind(this, rowData)}>未备份</Text>
-                                  </View>)} */}
-                                </View>
-                                <Text style={[styles.walletaccount,{color: '#808080'}]} numberOfLines={1} ellipsizeMode='middle'>{this.state.isEye ? (rowData.isactived && rowData.balance != null && rowData.balance != ""? rowData.balance : '0.0000') : '****'} EOS</Text>
+                                <Text style={[styles.outname,{color: '#262626'}]}>{rowData.name}</Text>
+                                <TouchableOpacity onPress={this.copyname.bind(this,rowData.name)}> 
+                                  <Image source={UImage.copy_h} style={{width: ScreenUtil.autowidth(12),height: ScreenUtil.autowidth(12),marginHorizontal: ScreenUtil.autowidth(15),}} />
+                                </TouchableOpacity>
                               </View>
-                            </Button>
+                            </TouchableOpacity>
                           )}
                         />
                       </View>
@@ -860,32 +854,32 @@ class Home extends React.Component {
             <TouchableWithoutFeedback onPress={()=>{this._plusDimss()}} >
               <View style={{alignItems: 'flex-end', justifyContent: 'flex-start',width: "100%",height:"100%",}}>
                 <Animated.View style={[styles.mask,{opacity:this.state.mask,}]} />
-                <View style={{width:ScreenUtil.autowidth(100),height: ScreenUtil.autoheight(130), marginRight: ScreenUtil.autowidth(15), shadowColor: '#999999',shadowOffset:{height: 4,width: 0},shadowRadius: 12,shadowOpacity: 0.3,elevation: 5,}}>
+                <View style={{width:ScreenUtil.autowidth(112),height: ScreenUtil.autoheight(170), marginRight: ScreenUtil.autowidth(15), shadowColor: '#999999',shadowOffset:{height: 4,width: 0},shadowRadius: 12,shadowOpacity: 0.3,elevation: 5,}}>
                   <Animated.View style={{opacity:this.state.alert,}}>
                     <View style={{paddingTop: ScreenUtil.autowidth(10),}}>
                       <Ionicons color={'#FFFFFF'} style={{position: 'absolute', top: Platform.OS === 'ios' ? - ScreenUtil.autowidth(7) : - ScreenUtil.autowidth(9), right: ScreenUtil.autowidth(6)}} name={'md-arrow-dropup'} size={30} />
-                      <View style={{width:ScreenUtil.autowidth(100),height: ScreenUtil.autoheight(120),backgroundColor: '#FFFFFF',borderRadius: 5,}}>
+                      <View style={{width:ScreenUtil.autowidth(112),height: ScreenUtil.autoheight(160),backgroundColor: '#FFFFFF',borderRadius: 5,}}>
                         <Button onPress={() => this.scan()} >
                           <View style={[styles.establishout,{}]}>
-                            <Image source={UImage.scan} style={{width: ScreenUtil.autowidth(11),height: ScreenUtil.autowidth(11)}} />
+                            <Image source={UImage.scan} style={{width: ScreenUtil.autowidth(12),height: ScreenUtil.autowidth(12)}} />
                             <Text style={[styles.establishtext,{color: '#262626'}]}>扫一扫</Text>
                           </View>
                         </Button>
                         <Button onPress={this.onPress.bind(this, 'addAssets')} >
                           <View style={[styles.establishout,{borderTopWidth: 0.5,borderTopColor: '#F0F0F0'}]}>
-                            <Image source={UImage.xin_add} style={{width: ScreenUtil.autowidth(11),height: ScreenUtil.autowidth(11)}} />
+                            <Image source={UImage.xin_add} style={{width: ScreenUtil.autowidth(12),height: ScreenUtil.autowidth(12)}} />
                             <Text style={[styles.establishtext,{color: '#262626'}]}>添加资产</Text>
                           </View>
                         </Button>
                         <Button onPress={() => this.createWallet()} >
                           <View style={[styles.establishout,{borderTopWidth: 0.5,borderTopColor: '#F0F0F0'}]}>
-                            <Image source={UImage.xin_qr} style={{width: ScreenUtil.autowidth(11),height: ScreenUtil.autowidth(11)}} />
+                            <Image source={UImage.xin_qr} style={{width: ScreenUtil.autowidth(12),height: ScreenUtil.autowidth(12)}} />
                             <Text style={[styles.establishtext,{color: '#262626'}]}>创建钱包</Text>
                           </View>
                         </Button>
                         <Button onPress={() => this.importWallet()} >
                           <View style={[styles.establishout,{borderTopWidth: 0.5,borderTopColor: '#F0F0F0'}]}>
-                            <Image source={UImage.xin_import} style={{width: ScreenUtil.autowidth(11),height: ScreenUtil.autowidth(11)}} />
+                            <Image source={UImage.xin_import} style={{width: ScreenUtil.autowidth(12),height: ScreenUtil.autowidth(12)}} />
                             <Text style={[styles.establishtext,{color: '#262626'}]}>导入钱包</Text>
                           </View>
                         </Button>
@@ -1000,7 +994,6 @@ const styles = StyleSheet.create({
     flex:1,
     width:"100%",
     borderRadius:4,
-    alignItems: 'center',
     flexDirection: 'column',
   },
   title:{
@@ -1156,10 +1149,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     alignItems: 'center',
     paddingBottom: ScreenUtil.autowidth(1),
-    width: ScreenWidth - ScreenUtil.autowidth(30),
-  },
-  touchablelist: {
-    width: '100%',
+    width: ScreenUtil.autowidth(180),
   },
 
   imgBtn: {
@@ -1169,24 +1159,18 @@ const styles = StyleSheet.create({
   },
 
   walletlist: {
-    width: '100%',
     flexDirection: "row",
     alignItems: 'center',
-    justifyContent: 'center',
-    height: ScreenUtil.autoheight(38),
+    height: ScreenUtil.autoheight(48),
+    width: ScreenUtil.autowidth(180),
     paddingHorizontal: ScreenUtil.autowidth(10),
   },
 
-  topout: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: 'center',
-    paddingLeft: ScreenUtil.autowidth(8),
-  },
   outname: {
+    flex: 1,
     textAlign: 'left',
     fontSize: ScreenUtil.setSpText(14),
-    marginRight: ScreenUtil.autowidth(10),
+    marginLeft: ScreenUtil.autowidth(10),
   },
   stopoutBackupsout: {
     borderWidth: 1,
@@ -1233,8 +1217,8 @@ const styles = StyleSheet.create({
   establishout: {
     flexDirection: "row",
     alignItems: 'center',
-    height: ScreenUtil.autoheight(30),
-    paddingHorizontal: ScreenUtil.autowidth(8),
+    height: ScreenUtil.autoheight(40),
+    paddingLeft: ScreenUtil.autowidth(16),
   },
   establishimg:{
     width: ScreenUtil.autowidth(17),
@@ -1242,8 +1226,9 @@ const styles = StyleSheet.create({
   },
   establishtext: {
     flex: 1,
-    textAlign: 'right',
-    fontSize: ScreenUtil.setSpText(12),
+    textAlign: 'left',
+    fontSize: ScreenUtil.setSpText(13),
+    paddingLeft: ScreenUtil.autowidth(15),
   },
 
   pupuo: {

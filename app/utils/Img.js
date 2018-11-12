@@ -78,7 +78,7 @@ export default {
   c:require('../img/c.png'),
   Calculation:require('../img/Calculation.png'),
   character_jh:require('../img/character_jh.png'),
-  copy:require('../img/copy.png'),
+  
   commonwt: require('../img/commonwt.png'),
   Currency_my: require('../img/Currency_my.png'),
   d: require('../img/d.png'),
@@ -252,6 +252,9 @@ export default {
   Magnifier_ash: require('../img/wimg/Magnifier_ash.png'),
 
   scanning: require('../img/wimg/scanning.png'),
+
+  copy:require('../img/wimg/copy.png'),
+  copy_h:require('../img/wimg/copy_h.png'),
 
   //DAPP
   share_dapp:require('../img/wimg/share_dapp.png'),
