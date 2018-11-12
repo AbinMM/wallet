@@ -59,3 +59,6 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 *.apk
+
+RequestUtil.js
+gradle.properties
