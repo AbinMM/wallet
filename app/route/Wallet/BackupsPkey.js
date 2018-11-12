@@ -132,13 +132,13 @@ class BackupsPkey extends BaseComponent {
                 color: "#262626"}}>抄写下您的钱包私钥</Text>
             </View>
        
-            <Text style={{fontSize: ScreenUtil.setSpText(13),lineHeight: ScreenUtil.autoheight(18),paddingHorizontal:ScreenUtil.autowidth(15), 
+            <Text style={{fontSize: ScreenUtil.setSpText(13),lineHeight: ScreenUtil.autoheight(18),paddingHorizontal:ScreenUtil.autowidth(15),  textAlign: 'center',
             paddingTop: ScreenUtil.autowidth(15),color: "#808080"}}>私钥用于回复钱包或充值钱包密码，请将它准确抄写在之上，并存放在只有你知道的安全的地方。</Text>
 
             <View style={{paddingTop: ScreenUtil.autowidth(20), flexDirection: 'row',alignContent: 'center',justifyContent: 'center',} }>
                 <TouchableHighlight style={{flexDirection: 'row',alignContent: 'center',justifyContent: 'center',}} onPress={this.prot.bind(this, 'activePk')}>
                     <Text style={{fontSize: ScreenUtil.setSpText(18),lineHeight: ScreenUtil.autoheight(25),paddingHorizontal:ScreenUtil.autowidth(16), textAlign: 'center',
-                    color: "#323232"}}>{""+this.state.activePk.replace(/(.{4})/g,'$1 ')}</Text>
+                    color: "#323232",backgroundColor: UColor.mainColor}}>{""+this.state.activePk.replace(/(.{4})/g,'$1 ')}</Text>
                 </TouchableHighlight>
             </View>
 
