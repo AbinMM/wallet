@@ -582,7 +582,7 @@ class ImportEosKey extends BaseComponent {
 
                 {this.state.isSenior==true &&<View >
                   <View style={[styles.inptout,]}>
-                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(56),color: UColor.fontColor}]}>owner私钥</Text>
+                    <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(56),color: UColor.fontColor}]}>Owner私钥</Text>
                   </View>
                   <View style={[styles.biginptout,{backgroundColor: UColor.mainColor}]} >
                     <TextInput ref={(ref) => this._lphone = ref} value={this.state.ownerPk} returnKeyType="next" editable={true}
@@ -594,7 +594,7 @@ class ImportEosKey extends BaseComponent {
 
                 </View>}
                 <View style={[styles.inptout,]}>
-                  <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(56),color: UColor.fontColor}]}>active私钥</Text>
+                  <Text style={[styles.inptitle,{lineHeight: ScreenUtil.autowidth(56),color: UColor.fontColor}]}>Active私钥</Text>
                 </View>
                 <View style={[styles.biginptout,{backgroundColor: UColor.mainColor}]} >
                   <TextInput ref={(ref) => this._lphone = ref} value={this.state.activePk} returnKeyType="next" editable={true}
