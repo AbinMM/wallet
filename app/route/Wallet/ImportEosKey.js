@@ -15,6 +15,7 @@ import BaseComponent from "../../components/BaseComponent";
 import TextButton from '../../components/TextButton'
 import CheckMarkCircle from '../../components/CheckMarkCircle'
 import PasswordInput from '../../components/PasswordInput'
+import {NavigationActions} from 'react-navigation';
 
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -86,9 +87,14 @@ class ImportEosKey extends BaseComponent {
 
   //高级导入
   seniorImport = () =>{  
-    this.props.navigation.goBack();                                 
+    this.props.navigation.goBack();
     const { navigate } = this.props.navigation;
-    navigate('ImportEosKey',{isSenior:true});
+    var entry = this.props.navigation.state.params.entry;
+    if(entry == "walletWelcome"){
+      navigate('ImportEosKey',{isSenior:true, entry: "ImportEosKeySenior"});
+    }else{
+      navigate('ImportEosKey',{isSenior:true});
+    }
   }
 
   checkClick() {
@@ -411,6 +417,13 @@ class ImportEosKey extends BaseComponent {
  
   }
 
+  pop(nPage, immediate) {
+    const action = NavigationActions.pop({
+        n: nPage,
+        immediate: immediate,
+    });
+    this.props.navigation.dispatch(action);
+}
 
   specifiedAccountToWallet(account_names){
     var walletList = [];
@@ -472,7 +485,12 @@ class ImportEosKey extends BaseComponent {
             });
             DeviceEventEmitter.emit('updateDefaultWallet');
             DeviceEventEmitter.emit('modify_password');
-            this.props.navigation.goBack();
+            var entry = this.props.navigation.state.params.entry;
+            if(entry == "walletWelcome" || entry=="ImportEosKeySenior"){
+                this.pop(2, true);
+            }else{
+              this.props.navigation.goBack();
+            }
 
           }
         }

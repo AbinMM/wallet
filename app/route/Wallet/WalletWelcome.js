@@ -54,13 +54,13 @@ class WalletWelcome extends BaseComponent {
                 }else if(result.code == 515){
                   EasyToast.show("账号已被别人占用，请换个账号吧！");
                 }else{
-                  navigate('ActivationAt', {parameter:wallet, entry: "activeWallet"});
+                  navigate('ActivationAt', {parameter:wallet, entry: "walletWelcome"});
                 }
             }
         });
         } catch (error) {
           EasyShowLD.loadingClose();
-          navigate('ActivationAt', {parameter:wallet});
+          navigate('ActivationAt', {parameter:wallet,entry: "walletWelcome"});
           return false;
         }
       
@@ -107,13 +107,13 @@ class WalletWelcome extends BaseComponent {
         const {
             navigate
         } = this.props.navigation;
-        navigate('CreateWallet', {});
+        navigate('CreateWallet', {entry: "walletWelcome"});
     }
 
     // 导入钱包
     importWallet() {
         const { navigate } = this.props.navigation;
-        navigate('ImportEosKey',{});
+        navigate('ImportEosKey',{entry: "walletWelcome"});
     }
 
     prot = () => {
