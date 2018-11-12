@@ -1,6 +1,6 @@
 an eos wallet
 
-钱包唯一官网：https://www.eostoken.im
+钱包唯一官网：https://www.eostoken.im <br>
 et交易所链接：https://www.etdac.io
 
 ## Build project:<br> 
